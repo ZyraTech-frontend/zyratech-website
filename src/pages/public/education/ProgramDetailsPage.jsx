@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CheckCircle, ChevronRight, Calendar, Zap, Users, Wrench, Lightbulb, Award, ChevronDown, Check, Code2, Cpu, Database, Globe, Terminal, Rocket } from 'lucide-react';
+import { CheckCircle, ChevronRight, Calendar, Zap, Users, Wrench, Lightbulb, Award, ChevronDown, Check, Code2, Cpu, Database, Globe, Terminal, Rocket, Palette, Lock, Server, Wifi } from 'lucide-react';
 import EducationNavbar from '../../../components/EducationNavbar';
 import Breadcrumb from '../../../components/pages/education/Breadcrumb';
 
@@ -116,172 +116,172 @@ const membershipData = {
 };
 
 const courseData = {
-  'maker-hardware': {
-    title: 'Maker: Hardware & Repair',
-    tagline: 'Master Electronics, Fabrication & Repair',
-    price: 400,
+  'web-development': {
+    title: 'Web Development',
+    tagline: 'Learn HTML, CSS, React & Tailwind CSS',
+    price: 350,
     priceType: 'one-time',
-    duration: '6 months',
-    image: '/images/image2.png',
-    description: 'Master electronics, fabrication, and repair skills. Build devices from e-waste and access professional tools. This comprehensive course teaches you hands-on skills in electronics, 3D printing, laser cutting, and device repair.',
+    duration: '3-6 months',
+    image: '/images/image1.png',
+    description: 'Learn HTML, CSS, React, and Tailwind CSS to build responsive websites and web applications. This comprehensive internship covers web development fundamentals, modern frameworks, and real-world project development.',
     benefits: [
-      'Learn electronics fundamentals and circuit design',
-      'Master 3D printing and laser cutting',
-      'Repair and refurbish electronic devices',
-      'Build functional hardware projects',
-      'Access to professional fabrication tools',
-      'Expert mentorship throughout the course'
+      'Learn HTML5, CSS3, and modern JavaScript',
+      'Master React and component-based architecture',
+      'Build responsive designs with Tailwind CSS',
+      'Work on real-world web projects',
+      'Professional mentorship and guidance',
+      'Industry-recognized certification'
     ],
     whatYouLearn: [
-      'Electronics & Circuit Design',
-      'Soldering & Component Assembly',
-      '3D Printing & Design',
-      'Laser Cutting & Fabrication',
-      'Device Repair Techniques',
-      'Project Documentation'
+      'HTML5 & Semantic Markup',
+      'CSS3 & Responsive Design',
+      'JavaScript Fundamentals',
+      'React Framework & Components',
+      'Tailwind CSS Styling',
+      'Web Development Best Practices'
     ],
     technologies: [
-      { icon: Cpu, title: 'Electronics & Circuits', description: 'Master circuit design, microcontrollers, and sensor integration' },
-      { icon: Wrench, title: 'Fabrication Tools', description: 'Learn 3D printing, laser cutting, and CNC machining' },
-      { icon: Zap, title: 'Power Systems', description: 'Understand power management, batteries, and energy efficiency' },
-      { icon: Code2, title: 'Embedded Systems', description: 'Program microcontrollers and IoT devices' },
-      { icon: Lightbulb, title: 'Problem Solving', description: 'Troubleshoot and repair electronic devices' },
-      { icon: Rocket, title: 'Project Deployment', description: 'Build and deploy functional hardware projects' }
+      { icon: Code2, title: 'Frontend Development', description: 'Master HTML5, CSS3, JavaScript, and React framework' },
+      { icon: Palette, title: 'UI/UX Design', description: 'Learn responsive design and Tailwind CSS styling' },
+      { icon: Wrench, title: 'Development Tools', description: 'Use Git, VS Code, and modern development workflows' },
+      { icon: Globe, title: 'Web APIs', description: 'Integrate APIs and work with external services' },
+      { icon: Zap, title: 'Performance', description: 'Optimize web applications for speed and efficiency' },
+      { icon: Rocket, title: 'Deployment', description: 'Deploy applications to production environments' }
     ],
     realWorldProjects: [
       {
-        title: 'Smart Home Device',
-        description: 'Build an IoT-enabled smart home device with sensors and wireless connectivity.',
-        technologies: ['Arduino', 'Sensors', '3D Printing', 'WiFi Module']
+        title: 'Responsive Website',
+        description: 'Build a fully responsive website using HTML, CSS, and JavaScript.',
+        technologies: ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design']
       },
       {
-        title: 'E-Waste Refurbishment',
-        description: 'Repair and refurbish electronic devices from e-waste, extending their lifespan.',
-        technologies: ['Soldering', 'Diagnostics', 'Component Replacement', 'Testing']
+        title: 'React Web Application',
+        description: 'Create a dynamic web app using React with component-based architecture.',
+        technologies: ['React', 'JavaScript', 'API Integration', 'State Management']
       },
       {
-        title: 'Custom Hardware Project',
-        description: 'Design and build a custom hardware solution for a real-world problem.',
-        technologies: ['Circuit Design', 'PCB Layout', 'Fabrication', 'Assembly']
+        title: 'E-Commerce Frontend',
+        description: 'Build a professional e-commerce interface with product catalog and cart functionality.',
+        technologies: ['React', 'Tailwind CSS', 'JavaScript', 'API Integration']
       }
     ],
     projects: [
-      { title: 'Custom Electronics Build', description: 'Design and build a functional electronic device of your choice' },
-      { title: '3D Printed Device', description: 'Create a 3D-printed enclosure or mechanical part' },
-      { title: 'Device Repair Project', description: 'Repair and refurbish a broken electronic device' },
-      { title: 'Capstone Project', description: 'Complete a comprehensive hardware project combining all skills' }
+      { title: 'Personal Portfolio Website', description: 'Build your own portfolio website to showcase your work' },
+      { title: 'React Component Library', description: 'Create reusable components for web applications' },
+      { title: 'Responsive Landing Page', description: 'Design and develop a modern, responsive landing page' },
+      { title: 'Capstone Project', description: 'Build a complete web application from concept to deployment' }
     ]
   },
-  'coder-software': {
-    title: 'Coder: Software Foundations',
-    tagline: 'Learn to Code from Scratch',
-    price: 400,
+  'ai-robotics': {
+    title: 'AI & Robotics',
+    tagline: 'Master Artificial Intelligence & Robotics',
+    price: 350,
     priceType: 'one-time',
-    duration: '4 months',
+    duration: '3-6 months',
+    image: '/images/image2.png',
+    description: 'Master artificial intelligence and robotics fundamentals through hands-on projects and real-world applications. Learn to build intelligent systems and robotic solutions.',
+    benefits: [
+      'Learn AI and machine learning fundamentals',
+      'Master robotics programming and control',
+      'Work with real robotic hardware',
+      'Develop intelligent automation solutions',
+      'Expert mentorship in AI/Robotics',
+      'Professional certification upon completion'
+    ],
+    whatYouLearn: [
+      'AI & Machine Learning Basics',
+      'Python Programming for AI',
+      'Robotics Fundamentals',
+      'Sensor Integration & Control',
+      'Computer Vision Basics',
+      'Real-World AI Applications'
+    ],
+    technologies: [
+      { icon: Cpu, title: 'Machine Learning', description: 'Learn ML algorithms, neural networks, and TensorFlow' },
+      { icon: Code2, title: 'Python Programming', description: 'Master Python for AI and data science applications' },
+      { icon: Zap, title: 'Robotics Control', description: 'Program robots and control systems with Arduino/ROS' },
+      { icon: Lightbulb, title: 'Computer Vision', description: 'Implement image recognition and visual processing' },
+      { icon: Wrench, title: 'Hardware Integration', description: 'Work with sensors, motors, and embedded systems' },
+      { icon: Rocket, title: 'Project Deployment', description: 'Deploy AI models and robotic solutions' }
+    ],
+    realWorldProjects: [
+      {
+        title: 'Autonomous Robot',
+        description: 'Build a robot that can navigate and make decisions using AI algorithms.',
+        technologies: ['Arduino', 'Python', 'Sensors', 'Machine Learning']
+      },
+      {
+        title: 'Image Recognition System',
+        description: 'Create an AI system that recognizes objects and patterns in images.',
+        technologies: ['Python', 'TensorFlow', 'OpenCV', 'Neural Networks']
+      },
+      {
+        title: 'Smart Automation System',
+        description: 'Develop an intelligent system that automates tasks based on AI predictions.',
+        technologies: ['Python', 'Machine Learning', 'IoT', 'Robotics']
+      }
+    ],
+    projects: [
+      { title: 'AI Chatbot', description: 'Build an intelligent chatbot using natural language processing' },
+      { title: 'Robotic Arm Control', description: 'Program and control a robotic arm with precision' },
+      { title: 'Computer Vision Project', description: 'Create an image recognition system for real-world use' },
+      { title: 'Capstone Project', description: 'Develop a complete AI/Robotics solution' }
+    ]
+  },
+  'networking-it': {
+    title: 'Networking & IT Setup',
+    tagline: 'Master LAN/WAN, WiFi & Cloud Infrastructure',
+    price: 350,
+    priceType: 'one-time',
+    duration: '3-6 months',
     image: '/images/image3.png',
-    description: 'Learn to code from scratch and build practical applications. From mobile apps to smart home systems. This course covers programming fundamentals, web development, and application building with hands-on projects.',
+    description: 'Learn LAN/WAN installation, WiFi setup, server deployment, and cloud fundamentals for IT infrastructure. Build professional IT solutions for schools and businesses.',
     benefits: [
-      'Learn programming from the ground up',
-      'Build web and mobile applications',
-      'Understand software design principles',
-      'Work on real-world projects',
-      'Access to development tools and resources',
-      'Guidance from experienced developers'
+      'Learn network design and implementation',
+      'Master WiFi and LAN/WAN setup',
+      'Understand server and cloud deployment',
+      'Hands-on experience with professional tools',
+      'Industry-standard certifications',
+      'Real-world IT infrastructure projects'
     ],
     whatYouLearn: [
-      'Programming Fundamentals',
-      'Web Development (HTML, CSS, JavaScript)',
-      'Backend Development',
-      'Mobile App Development',
-      'Database Design',
-      'Software Best Practices'
+      'Network Fundamentals & Protocols',
+      'LAN/WAN Installation & Configuration',
+      'WiFi Setup & Security',
+      'Server Deployment & Management',
+      'Cloud Infrastructure Basics',
+      'Network Security & Troubleshooting'
     ],
     technologies: [
-      { icon: Code2, title: 'Frontend Development', description: 'Master HTML5, CSS3, JavaScript, and modern frameworks like React' },
-      { icon: Terminal, title: 'Backend Development', description: 'Build robust server-side applications with Node.js and Express' },
-      { icon: Database, title: 'Database Management', description: 'Learn both SQL and NoSQL databases with PostgreSQL and MongoDB' },
-      { icon: Globe, title: 'Web APIs', description: 'Create and consume RESTful APIs and implement authentication' },
-      { icon: Wrench, title: 'Development Tools', description: 'Use professional tools like Git, VS Code, and command line' },
-      { icon: Rocket, title: 'Deployment', description: 'Deploy applications using cloud platforms and CI/CD pipelines' }
+      { icon: Globe, title: 'Network Design', description: 'Design and implement LAN/WAN networks' },
+      { icon: Wifi, title: 'WiFi Infrastructure', description: 'Setup, configure, and secure WiFi networks' },
+      { icon: Server, title: 'Server Management', description: 'Deploy and manage servers and cloud infrastructure' },
+      { icon: Lock, title: 'Network Security', description: 'Implement security protocols and firewall management' },
+      { icon: Wrench, title: 'System Administration', description: 'Manage IT systems and infrastructure' },
+      { icon: Rocket, title: 'Cloud Solutions', description: 'Deploy applications on cloud platforms' }
     ],
     realWorldProjects: [
       {
-        title: 'E-Commerce Platform',
-        description: 'Build a full-featured online store with product catalog, shopping cart, and payment integration.',
-        technologies: ['React', 'Node.js', 'PostgreSQL', 'Stripe']
+        title: 'School Network Setup',
+        description: 'Design and implement a complete network infrastructure for a school.',
+        technologies: ['LAN/WAN', 'WiFi', 'Servers', 'Network Security']
       },
       {
-        title: 'Social Media Dashboard',
-        description: 'Create a real-time social media analytics dashboard with data visualization.',
-        technologies: ['React', 'D3.js', 'Express', 'WebSocket']
+        title: 'Business IT Infrastructure',
+        description: 'Build a professional IT infrastructure for a business with multiple locations.',
+        technologies: ['Network Design', 'Cloud Services', 'Security', 'Monitoring']
       },
       {
-        title: 'Task Management System',
-        description: 'Develop a collaborative task management system with real-time updates.',
-        technologies: ['React', 'Redux', 'Node.js', 'MongoDB']
+        title: 'Cloud Migration Project',
+        description: 'Migrate on-premise systems to cloud infrastructure.',
+        technologies: ['Cloud Platforms', 'Server Setup', 'Data Migration', 'Security']
       }
     ],
     projects: [
-      { title: 'Personal Website', description: 'Build a responsive personal or portfolio website' },
-      { title: 'Web Application', description: 'Create a functional web app with database integration' },
-      { title: 'Mobile App', description: 'Develop a mobile application for iOS or Android' },
-      { title: 'Capstone Project', description: 'Build a complete software solution from concept to deployment' }
-    ]
-  },
-  'junior-stem-basic': {
-    title: 'Junior STEM Basic',
-    tagline: 'Perfect for Beginners',
-    price: 150,
-    priceType: 'one-time',
-    duration: '3 months',
-    image: '/images/image2.png',
-    description: 'Perfect for beginners. Learn fundamental STEM concepts through hands-on projects and interactive workshops. This course introduces you to electronics, coding, and fabrication in an accessible way.',
-    benefits: [
-      'Learn STEM fundamentals in an engaging way',
-      'Hands-on projects and experiments',
-      'Introduction to electronics and coding',
-      'Explore 3D printing and fabrication',
-      'Build confidence in technical skills',
-      'Supportive learning environment'
-    ],
-    whatYouLearn: [
-      'STEM Fundamentals',
-      'Basic Electronics',
-      'Introduction to Coding',
-      'Problem Solving',
-      '3D Design Basics',
-      'Project Planning'
-    ],
-    technologies: [
-      { icon: Zap, title: 'Electronics Basics', description: 'Learn circuits, components, and how electricity works' },
-      { icon: Code2, title: 'Introduction to Coding', description: 'Start with block-based coding and simple programming' },
-      { icon: Cpu, title: 'Microcontrollers', description: 'Understand Arduino and basic microcontroller programming' },
-      { icon: Lightbulb, title: '3D Design Basics', description: 'Learn fundamentals of 3D modeling and design' },
-      { icon: Wrench, title: 'Hands-On Making', description: 'Build and prototype with real tools and materials' },
-      { icon: Rocket, title: 'Project Building', description: 'Combine skills to create your first STEM projects' }
-    ],
-    realWorldProjects: [
-      {
-        title: 'LED Light Showghdgkj;lrhkjrhi',
-        description: 'Build an interactive LED circuit that responds to sensors and creates light patterns.',
-        technologies: ['Arduino', 'LEDs', 'Sensors', 'Breadboard']
-      },
-      {
-        title: 'Simple Robot',
-        description: 'Create a basic robot that can move and respond to obstacles.',
-        technologies: ['Arduino', 'Motors', 'Sensors', '3D Printing']
-      },
-      {
-        title: 'Smart Device Project',
-        description: 'Build a smart device that combines electronics, coding, and design.',
-        technologies: ['Arduino', 'Coding', '3D Design', 'Assembly']
-      }
-    ],
-    projects: [
-      { title: 'LED Circuit Project', description: 'Build your first electronic circuit with LEDs' },
-      { title: 'Simple Code Program', description: 'Write your first program and see it in action' },
-      { title: '3D Design & Print', description: 'Design and 3D print a simple object' },
-      { title: 'Final Project', description: 'Combine all skills in a fun STEM project' }
+      { title: 'WiFi Network Setup', description: 'Install and configure a secure WiFi network' },
+      { title: 'Server Deployment', description: 'Deploy and configure a web server' },
+      { title: 'Network Monitoring', description: 'Setup monitoring and management tools' },
+      { title: 'Capstone Project', description: 'Design a complete IT infrastructure solution' }
     ]
   }
 };
@@ -293,7 +293,7 @@ const ProgramDetailsPage = () => {
   const [scrollY, setScrollY] = useState(0);
   const projectsSectionRef = useRef(null);
   
-  const programId = searchParams.get('program') || 'junior-stem';
+  const programId = searchParams.get('program') || 'web-development';
   const isMembership = programId === 'junior-stem';
   const currentData = isMembership ? membershipData : courseData[programId];
 

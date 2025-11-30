@@ -11,19 +11,19 @@
  * - Reducers are like the rules for how data changes
  */
 
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, createSlice } from '@reduxjs/toolkit'
 
-// Import slices (we'll create these next)
-// import authSlice from './slices/authSlice'
-// import contentSlice from './slices/contentSlice'
-// import uiSlice from './slices/uiSlice'
+// Dummy reducer to prevent Redux store errors
+const dummySlice = createSlice({
+  name: 'dummy',
+  initialState: { value: null },
+  reducers: {}
+})
 
 // Configure the Redux store
 export const store = configureStore({
   reducer: {
-    // auth: authSlice,        // User authentication state
-    // content: contentSlice,  // Dynamic content from CMS
-    // ui: uiSlice,           // UI state (loading, modals, etc.)
+    dummy: dummySlice.reducer,
   },
   // Middleware for handling async actions and API calls
   middleware: (getDefaultMiddleware) =>

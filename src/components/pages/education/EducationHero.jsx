@@ -15,10 +15,14 @@ const EducationHero = () => {
       <div className="max-w-none px-0">
         {/* Full-bleed hero container */}
         <div 
-          className="relative overflow-hidden min-h-screen bg-white"
+          className="relative overflow-hidden min-h-screen bg-cover bg-center"
+          style={{
+            backgroundImage: 'url(/images/image1.png)',
+            backgroundAttachment: 'fixed'
+          }}
         >
           <div className="absolute inset-0 bg-white"></div>
-          <div className="absolute inset-0 bg-black/30"></div>
+          <div className="absolute inset-0 bg-black/40"></div>
           <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-32 min-h-[500px] md:min-h-[580px] lg:min-h-[680px] flex items-center">
             
             {/* Left Content */}
