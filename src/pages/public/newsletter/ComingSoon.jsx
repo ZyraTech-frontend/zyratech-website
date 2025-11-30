@@ -18,8 +18,8 @@ const ComingSoon = () => {
             <ArrowLeft size={16} />
             Back to Newsletter
           </Link>
-          <Link to="/news" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#004fa2] text-white hover:bg-[#000000]">
-            Back to News & Insights
+          <Link to="/newsletter" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#004fa2] text-white hover:bg-[#000000]">
+            Back to Newsletter
           </Link>
         </div>
         <div className="mt-8 inline-flex items-center gap-2 text-sm text-gray-500">

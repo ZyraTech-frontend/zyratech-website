@@ -101,7 +101,7 @@ const SubscriptionConfirmationPage = () => {
               </a>
               
               <a 
-                href="mailto:support@eraaxis.com" 
+                href="mailto:info@zyratechhub.com" 
                 className="flex items-center gap-4 bg-white/10 hover:bg-white/20 rounded-xl p-5 transition-all duration-300 group"
               >
                 <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
@@ -109,7 +109,7 @@ const SubscriptionConfirmationPage = () => {
                 </div>
                 <div className="flex-1">
                   <div className="text-sm text-white/70 mb-1">Email us</div>
-                  <div className="font-semibold text-lg">support@eraaxis.com</div>
+                  <div className="font-semibold text-lg">info@zyratechhub.com</div>
                 </div>
               </a>
             </div>
@@ -149,5 +149,6 @@ const SubscriptionConfirmationPage = () => {
 };
 
 export default SubscriptionConfirmationPage;
+
 
 

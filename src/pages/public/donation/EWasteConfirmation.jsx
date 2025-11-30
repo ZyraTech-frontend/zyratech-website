@@ -141,7 +141,7 @@ const EWasteConfirmation = () => {
                 <div className="bg-white border-2 border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md hover:border-[#004fa2] transition-all duration-300">
                   <h4 className="text-sm font-semibold text-black mb-3">Need Support?</h4>
                   <p className="text-xs text-gray-600 mb-3">
-                    Need help? Contact our support team at info@era-axis.com or call +233 000 000 000.
+                    Need help? Contact our support team at info@zyratechhub.com or call +233 000 000 000.
                   </p>
                   <p className="text-xs text-gray-600">
                     Visit FAQ
@@ -165,4 +165,5 @@ const EWasteConfirmation = () => {
 };
 
 export default EWasteConfirmation;
+
 

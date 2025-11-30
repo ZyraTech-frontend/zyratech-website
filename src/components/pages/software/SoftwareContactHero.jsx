@@ -189,7 +189,7 @@ const SoftwareContactHero = () => {
                   </div>
                   <div>
                     <div className="text-sm text-gray-500 mb-1">Email Address</div>
-                    <span className="text-base text-gray-900 font-semibold">info@era-axis.com</span>
+                    <span className="text-base text-gray-900 font-semibold">info@zyratechhub.com</span>
                   </div>
                 </div>
               </div>
@@ -246,5 +246,6 @@ const SoftwareContactHero = () => {
 };
 
 export default SoftwareContactHero;
+
 
 

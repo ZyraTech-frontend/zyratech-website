@@ -272,8 +272,8 @@ const BookSessionPage = () => {
               </div>
               <div>
                 <p className="font-semibold text-black mb-1">Phone</p>
-                <a href="tel:+233000000000" className="text-sm text-[#004fa2] hover:underline">
-                  +233 000 000 000
+                <a href="tel:+233509582497" className="text-sm text-[#004fa2] hover:underline">
+                  +233 50 958 2497
                 </a>
               </div>
             </div>
@@ -284,8 +284,8 @@ const BookSessionPage = () => {
               </div>
               <div>
                 <p className="font-semibold text-black mb-1">Email</p>
-                <a href="mailto:labs@era-axis.com" className="text-sm text-[#004fa2] hover:underline">
-                  labs@era-axis.com
+                <a href="mailto:info@zyratechhub.com" className="text-sm text-[#004fa2] hover:underline">
+                  info@zyratechhub.com
                 </a>
               </div>
             </div>

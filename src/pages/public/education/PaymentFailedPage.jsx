@@ -98,8 +98,8 @@ const PaymentFailedPage = () => {
             <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
               <p className="text-sm text-blue-900">
                 <span className="font-semibold">💡 Need help?</span> Our support team is here to assist you. Contact us at{' '}
-                <a href="mailto:support@era-axis.com" className="underline hover:text-blue-700">
-                  support@era-axis.com
+                <a href="mailto:info@zyratechhub.com" className="underline hover:text-blue-700">
+                  info@zyratechhub.com
                 </a>{' '}
                 or call <span className="font-semibold">+233 XXX XXX XXX</span>.
               </p>
@@ -149,5 +149,6 @@ const PaymentFailedPage = () => {
 };
 
 export default PaymentFailedPage;
+
 
 

@@ -96,7 +96,7 @@ const PaymentFailedModal = ({ isOpen, onClose }) => {
             </div>
             
             <p className="text-xs text-gray-500">
-              If the problem continues, please reach out to us at support@era-axis.com or call +233 xxx xxx xxx.
+              If the problem continues, please reach out to us at info@zyratechhub.com or call +233 xxx xxx xxx.
             </p>
           </div>
 
@@ -127,4 +127,5 @@ const PaymentFailedModal = ({ isOpen, onClose }) => {
 };
 
 export default PaymentFailedModal;
+
 
