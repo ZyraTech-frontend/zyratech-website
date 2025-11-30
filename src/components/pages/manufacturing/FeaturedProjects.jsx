@@ -10,21 +10,21 @@ const FeaturedProjects = () => {
       title: 'BagaBoard',
       description: 'Developed a fire-resistant, eco-friendly electrical extension board casing made from sugarcane bagasse to replace unsafe plastic alternatives.',
       image: '/images/Manufacturing/bagaboard.png',
-      link: '/services/manufacturing/projects',
+      link: '/services/projectShowcase',
       featured: true
     },
     {
       title: 'Automated School Alarm System',
       description: 'Designed a programmable bell and notification system that automates school time management and eliminates manual bell ringing.',
       image: '/images/Manufacturing/Automated School Alarm System .png',
-      link: '/services/manufacturing/projects',
+      link: '/services/projectShowcase',
       featured: false
     },
     {
       title: 'Audio Amplifier',
       description: 'Built a high-fidelity audio amplification system delivering clear, powerful sound output for classroom, auditorium, and public-use applications.',
       image: '/images/Manufacturing/Audio Amplifier .png',
-      link: '/services/manufacturing/projects',
+      link: '/services/projectShowcase',
       featured: false
     }
   ];

@@ -99,7 +99,7 @@ const ProjectShowcase = () => (
       </div>
       <div className="flex justify-end">
         <a
-          href="/services/open-labs/projects"
+          href="/projects"
           className="bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center gap-2 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
         >
           See More

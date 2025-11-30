@@ -96,7 +96,7 @@ const Footer = () => {
         <div className="pt-6 border-t border-gray-800">
           <div className="text-center">
             <p className="text-sm text-gray-400">
-              © 2025 Zyra Tech Hub. All rights reserved. | <a href="/privacy" className="hover:text-[#004fa2] transition-colors">Privacy Policy</a> | <a href="/terms" className="hover:text-[#004fa2] transition-colors">Terms of Service</a>
+              © 2025 Zyra Tech Hub. All rights reserved.
             </p>
           </div>
         </div>
