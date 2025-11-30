@@ -1,0 +1,23 @@
+import React from 'react';
+
+const ProjectsCTA = () => {
+  return (
+    <section className="py-12 bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-[#004fa2] rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 hover:shadow-lg transition-all duration-300">
+          
+          <h2 className="text-xl sm:text-2xl font-bold text-white">
+            Have an idea? Let's build it together.
+          </h2>
+          
+          <button className="bg-white hover:bg-gray-100 text-[#004fa2] px-6 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 flex-shrink-0">
+            Submit a Project Idea
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ProjectsCTA;
+

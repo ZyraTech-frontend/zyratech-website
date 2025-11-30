@@ -1,0 +1,92 @@
+import React from 'react';
+import { School, Building, Users, Beaker, Wrench, Recycle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
+
+const categories = [
+  {
+    icon: Beaker,
+    title: 'For Schools',
+    description: 'Lab equipment, teaching tools, and STEM kits.',
+    color: '#004fa2'
+  },
+  {
+    icon: Wrench,
+    title: 'For Companies',
+    description: 'Specialized machinery, office tools, and custom devices.',
+    color: '#004fa2'
+  },
+  {
+    icon: Recycle,
+    title: 'For Communities',
+    description: 'Public infrastructure, recycling systems, and local solutions.',
+    color: '#000000'
+  }
+];
+
+const ServiceCategories = () => {
+  const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
+
+  return (
+    <section id="service-categories" className="py-8 sm:py-10 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Section Header */}
+        <motion.div 
+          className="mb-6"
+          ref={titleAnimation.ref}
+          initial={titleAnimation.initial}
+          animate={titleAnimation.animate}
+          variants={titleAnimation.variants}
+          transition={titleAnimation.transition}
+        >
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-3">
+            Service Categories
+          </h2>
+        </motion.div>
+
+        {/* Categories Grid */}
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-3 gap-5"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={{
+            visible: {
+              transition: {
+                staggerChildren: 0.12
+              }
+            }
+          }}
+        >
+          {categories.map((category, index) => {
+            return (
+              <motion.div
+                key={index}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                transition={{ duration: 0.5 }}
+                className="bg-white border-2 border-gray-200 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 hover:border-[#004fa2]/40 group"
+              >
+                {/* Title */}
+                <h3 className="text-xl font-bold text-black mb-3 group-hover:text-[#004fa2] transition-colors">
+                  {category.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-gray-600 text-base leading-relaxed">
+                  {category.description}
+                </p>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default ServiceCategories;
+
