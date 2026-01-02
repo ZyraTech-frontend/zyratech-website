@@ -9,7 +9,7 @@ const FacilitiesCTA = () => {
         {/* First CTA */}
         <div className="bg-white rounded-2xl p-8 sm:p-12 text-center shadow-xl">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-            Choose a membership plan that works for you.
+            Choose a lab access plan that works for you.
           </h2>
           <p className="text-lg text-white/90 mb-6 max-w-2xl mx-auto">
             Flexible plans for students, startups, and organizations.
@@ -18,7 +18,7 @@ const FacilitiesCTA = () => {
             href="/services/open-labs"
             className="bg-white text-[#004fa2] hover:bg-gray-100 px-8 py-3.5 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 inline-flex items-center justify-center gap-2"
           >
-            View Membership Plans
+            View Lab Access Plans
             <ChevronRight size={18} />
           </a>
         </div>

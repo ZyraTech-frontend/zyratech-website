@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Update with your production sitemap URL when available
+Sitemap: https://zyratech-hub.netlify.app/sitemap.xml

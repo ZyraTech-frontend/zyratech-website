@@ -2,7 +2,7 @@
 
 ## 📋 Overview
 
-This document outlines the complete scroll animation implementation across the ERA AXIS website using **Framer Motion**. All animations are subtle, performance-optimized, and enhance user experience without being distracting.
+This document outlines the complete scroll animation implementation across the ZyraTech website using **Framer Motion**. All animations are subtle, performance-optimized, and enhance user experience without being distracting.
 
 ---
 

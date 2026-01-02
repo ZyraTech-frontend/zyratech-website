@@ -53,7 +53,7 @@ const OpenLabsContactPage = () => {
             <div>
               <h2 className="text-3xl font-bold text-black mb-6">Get in Touch</h2>
               <p className="text-gray-600 mb-8">
-                Our Open Labs team is ready to help you access our facilities, answer questions about membership, and book sessions.
+                Our Open Labs team is ready to help you access our facilities, answer questions about our services, and book sessions.
               </p>
 
               <div className="space-y-6">
@@ -63,7 +63,7 @@ const OpenLabsContactPage = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-black mb-1">Email</h3>
-                    <p className="text-gray-600">openlabs@eraaxis.org</p>
+                    <p className="text-gray-600">openlabs@zyratechhub.com</p>
                   </div>
                 </div>
 
@@ -163,7 +163,7 @@ const OpenLabsContactPage = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#000000] focus:border-transparent"
                   >
                     <option value="">Select an option</option>
-                    <option value="membership">Membership Plans</option>
+
                     <option value="booking">Booking a Session</option>
                     <option value="facilities">Facility Information</option>
                     <option value="tour">Scheduling a Tour</option>

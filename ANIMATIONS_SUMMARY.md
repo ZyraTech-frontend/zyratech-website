@@ -126,7 +126,7 @@ const MyComponent = () => {
 ## 📁 File Structure
 
 ```
-era-axis-website/
+zyratech-website/
 ├── src/
 │   ├── hooks/
 │   │   └── useScrollAnimation.js (NEW)
@@ -370,7 +370,7 @@ For each new component:
 
 ## 📝 Summary
 
-You now have a **complete scroll animation system** for the ERA AXIS website:
+You now have a **complete scroll animation system** for the ZyraTech website:
 
 ✅ **Reusable hook** for easy implementation
 ✅ **8 animated components** on home page

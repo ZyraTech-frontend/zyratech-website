@@ -1,42 +1,38 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-const OpenLabsNavbar = () => {
+const TrainingNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const openLabsLinks = [
-    { name: 'Home', path: '/services/open-labs' },
-    { name: 'Facilities', path: '/services/open-labs/facilities' },
-
-    { name: 'Projects', path: '/services/open-labs/projects' },
-    { name: 'Book Session', path: '/services/open-labs/book-session' },
-    { name: 'Contact', path: '/contact', state: { from: 'open-labs' } }
+  const trainingLinks = [
+    { name: 'Courses', path: '/training' },
+    { name: 'Enrollment', path: '/training#enrollment' },
+    { name: 'Contact', path: '/training#contact' }
   ];
 
   return (
     <nav className="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-24">
           
           {/* Logo/Brand */}
           <div className="flex items-center">
-            <NavLink to="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <NavLink to="/training" className="flex items-center hover:opacity-80 transition-opacity">
               <img 
                 src="/zyratecpng.png" 
                 alt="Zyra Tech Hub Logo" 
-                className="h-12 w-auto object-contain"
+                className="h-20 w-auto object-contain"
               />
             </NavLink>
           </div>
           
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
-            {openLabsLinks.map((link) => (
+            {trainingLinks.map((link) => (
               <NavLink
                 key={link.name}
                 to={link.path}
-                state={link.state}
-                end={link.path === '/services/open-labs'}
+                end={link.path === '/training'}
                 className={({ isActive }) =>
                   `text-gray-700 hover:text-[#004fa2] px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap rounded-lg ${
                     isActive ? 'bg-[#004fa2]/10 text-[#004fa2] font-semibold' : ''
@@ -82,12 +78,11 @@ const OpenLabsNavbar = () => {
       {isOpen && (
         <div className="lg:hidden bg-white border-t shadow-lg">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {openLabsLinks.map((link) => (
+            {trainingLinks.map((link) => (
               <NavLink
                 key={link.name}
                 to={link.path}
-                state={link.state}
-                end={link.path === '/services/open-labs'}
+                end={link.path === '/training'}
                 onClick={() => setIsOpen(false)}
                 className={({ isActive }) =>
                   `block px-3 py-2 text-base font-medium transition-colors rounded-lg ${
@@ -117,8 +112,4 @@ const OpenLabsNavbar = () => {
   );
 };
 
-export default OpenLabsNavbar;
-
-
-
-
+export default TrainingNavbar;

@@ -19,7 +19,7 @@ const MapSection = () => {
           {/* Map Container */}
           <div className="relative h-80 md:h-96 bg-gray-100">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3974.8793207774065!2d-1.7167443000000002!3d4.9597231!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfe77b000eec9f9b%3A0x26cc1a1276bcd1c1!2sERA%20Axis%20Hub!5e0!3m2!1sen!2sgh!4v1764130262261!5m2!1sen!2sgh"
+              src="https://www.google.com/maps?q=Zyra%20Tech%20Hub%2C%20Koforidua%2C%20Ghana&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0 }}

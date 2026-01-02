@@ -366,7 +366,7 @@ const OnlineEnrollmentPage = () => {
                   <div className="bg-[#F0F4FF] border border-[#2A2D7C]/20 rounded-lg p-4 mb-4">
                     <p className="text-sm text-[#2A2D7C] font-semibold mb-2">What's Next?</p>
                     <p className="text-sm text-[#2A2D7C]">
-                      After completing this form, you'll proceed to payment to activate your membership.
+                      After completing this form, you'll proceed to payment to complete your enrollment.
                     </p>
                   </div>
 

@@ -48,7 +48,6 @@ This guide provides instructions for adding scroll animations to all service pag
 **Components to animate:**
 - OpenLabsHero.jsx
 - OpenLabsFeatures.jsx
-- OpenLabsMembership.jsx
 - OpenLabsSpaces.jsx
 - OpenLabsCTA.jsx
 

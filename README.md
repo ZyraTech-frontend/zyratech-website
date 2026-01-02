@@ -1,10 +1,10 @@
-# ERA AXIS Website
+# ZyraTech Website
 
-A modern, responsive web application for ERA AXIS - Empowering Innovators, Transforming Communities. This platform showcases STEM education, circular manufacturing, open-source software, and community makerspaces across Africa.
+A modern, responsive web application for ZyraTech - Empowering Innovators, Transforming Communities. This platform showcases STEM education, circular manufacturing, open-source software, and community makerspaces across Africa.
 
 ##  Overview
 
-ERA AXIS is an innovation ecosystem advancing technology education, circular manufacturing, and open software to solve real community challenges across Africa. The website serves as a comprehensive platform for:
+ZyraTech is an innovation ecosystem advancing technology education, circular manufacturing, and open software to solve real community challenges across Africa. The website serves as a comprehensive platform for:
 
 - **Education Programs** - Technology education and skill development
 - **Circular Manufacturing** - Sustainable e-waste transformation and upcycling
@@ -31,7 +31,6 @@ ERA AXIS is an innovation ecosystem advancing technology education, circular man
 ## 📁 Project Structure
 
 ```
-era-axis-website/
 ├── public/                 # Static assets
 ├── src/
 │   ├── components/         # Reusable UI components
@@ -72,7 +71,7 @@ era-axis-website/
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd era-axis-website
+   cd zyratech-website
    ```
 
 2. **Install dependencies**
@@ -217,18 +216,18 @@ npm run preview
 
 ##  License
 
-This project is private property of ERA AXIS. All rights reserved.
+This project is private property of ZyraTech. All rights reserved.
 
 ##  Support
 
 For questions or support:
-- **Email**: info@eraaxis.com
-- **Address**: ERA AXIS HQ – Essikado, Ghana
+- **Email**: info@zyratechhub.com
+- **Address**: ZyraTech HQ – Essikado, Ghana
 - **Phone**: +233 [insert]
 
 ---
 
-**Built with ❤️ for the ERA AXIS community**
+**Built with ❤️ for the ZyraTech community**
 
 The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 

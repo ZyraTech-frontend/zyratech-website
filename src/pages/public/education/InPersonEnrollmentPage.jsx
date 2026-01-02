@@ -86,16 +86,7 @@ const InPersonEnrollmentPage = () => {
                 </div>
                 
                 <form onSubmit={handleSubmit} className="p-6">
-                  {/* Membership Dues Alert */}
-                  <div className="mb-6 bg-[#F0F4FF] border-l-4 border-[#2A2D7C] rounded-lg p-4 flex gap-3">
-                    <AlertCircle size={20} className="text-[#2A2D7C] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-semibold text-[#2A2D7C] mb-1">⚠️ Membership Required</p>
-                      <p className="text-sm text-[#2A2D7C]">
-                        To enroll in this course, you must also maintain an active Zyra Tech Hub Membership (GHS 15/month). This is in addition to the course fee. You can activate your membership during the payment process.
-                      </p>
-                    </div>
-                  </div>
+
 
                   {/* Personal Information Card */}
                   <div className="mb-6 bg-gray-50 rounded-lg p-4 border border-gray-100">

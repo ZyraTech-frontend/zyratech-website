@@ -33,7 +33,6 @@
 - [ ] EnrollmentPage.jsx
 - [ ] EducationContactPage.jsx
 - [ ] FAQPage.jsx
-- [ ] MembershipEnrollmentPage.jsx
 
 ### Core Pages (0% Complete)
 - [ ] About Page (about/index.jsx)

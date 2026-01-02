@@ -63,7 +63,7 @@ const EducationContactPage = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-black mb-1">Email</h3>
-                    <p className="text-gray-600">education@eraaxis.org</p>
+                    <p className="text-gray-600">education@zyratechhub.com</p>
                   </div>
                 </div>
 
@@ -156,9 +156,9 @@ const EducationContactPage = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent"
                   >
                     <option value="">Select a program</option>
-                    <option value="junior-stem">Junior STEM Basics</option>
-                    <option value="maker-hardware">Maker: Hardware & Repair</option>
-                    <option value="coder-software">Coder: Software Foundations</option>
+                    <option value="web-development">Web Development</option>
+                    <option value="ai-robotics">AI & Robotics</option>
+                    <option value="networking-it">Networking & IT Setup</option>
                   </select>
                 </div>
 

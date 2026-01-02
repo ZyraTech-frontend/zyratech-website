@@ -3,6 +3,7 @@ import Breadcrumb from '../../../components/pages/about/Breadcrumb';
 import AboutHero from '../../../components/pages/about/AboutHero';
 import OurStory from '../../../components/pages/about/OurStory';
 import MissionVision from '../../../components/pages/about/MissionVision';
+import CoreValues from '../../../components/pages/about/CoreValues';
 import OurDifference from '../../../components/pages/about/OurDifference';
 import TeamSection from '../../../components/pages/about/TeamSection';
 import AwardsRecognition from '../../../components/pages/about/AwardsRecognition';
@@ -15,8 +16,9 @@ const AboutPage = () => {
       <AboutHero />
       <OurStory />
       <MissionVision />
+      <CoreValues />
       <OurDifference />
-      {/* <TeamSection /> */}
+      <TeamSection />
       <AwardsRecognition />
       <PartnerCTA />
     </div>

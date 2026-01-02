@@ -171,7 +171,7 @@ const ContactHero = () => {
                   </div>
                   <div>
                     <div className="text-sm text-gray-500 mb-1">Phone Number</div>
-                    <span className="text-base text-gray-900 font-semibold">+233 (0) XX XXX XXXX</span>
+                    <span className="text-base text-gray-900 font-semibold">+233 50 958 2497</span>
                   </div>
                 </div>
               </div>

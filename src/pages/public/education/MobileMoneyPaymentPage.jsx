@@ -187,7 +187,7 @@ const MobileMoneyPaymentPage = () => {
                     <div className="flex justify-between items-center">
                       <span className="text-base font-semibold text-gray-700">Total Amount</span>
                       <span className="text-2xl font-bold text-[#004fa2]">
-                        ${program.price}
+                        GHS {program.price}
                       </span>
                     </div>
                   </div>

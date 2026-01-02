@@ -243,7 +243,7 @@ const BookSessionPage = () => {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-black mb-1">Equipment Access</p>
-                      <p className="text-sm text-gray-600">Use tools based on your membership level.</p>
+                      <p className="text-sm text-gray-600">Use tools based on your booking level.</p>
                     </div>
                   </div>
                 </div>
@@ -251,7 +251,7 @@ const BookSessionPage = () => {
                 {/* Info Box */}
                 <div className="p-4 bg-blue-50 border border-blue-100 rounded-lg">
                   <p className="text-sm text-blue-900">
-                    <span className="font-semibold">💡 Note:</span> Membership required for extended access. Walk-ins welcome for tours!
+                    <span className="font-semibold">💡 Note:</span> Extended access is available with approved bookings. Walk-ins welcome for tours!
                   </p>
                 </div>
               </div>

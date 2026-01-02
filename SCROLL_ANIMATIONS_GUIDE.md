@@ -1,7 +1,7 @@
 # Scroll Animations Implementation Guide
 
 ## Overview
-This guide explains the scroll animation system implemented on the ERA AXIS landing page using **Framer Motion**. The animations provide subtle fade-in and slide-up effects as elements enter the viewport, enhancing user experience without overwhelming the design.
+This guide explains the scroll animation system implemented on the ZyraTech landing page using **Framer Motion**. The animations provide subtle fade-in and slide-up effects as elements enter the viewport, enhancing user experience without overwhelming the design.
 
 ## Architecture
 

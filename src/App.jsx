@@ -16,6 +16,7 @@ import SafeDriveGalleryPage from './pages/public/projects/SafeDriveGalleryPage';
 import AgrizPlanterGalleryPage from './pages/public/projects/AgrizPlanterGalleryPage';
 import ContactPage from './pages/public/contact';
 import AdminPage from './pages/admin/DashboardPage';
+import LoginPage from './pages/admin/LoginPage';
 
 // Service pages
 import EducationPage from './pages/public/education';
@@ -28,9 +29,6 @@ import PhysicalConfirmationPage from './pages/public/education/PhysicalConfirmat
 import OnlineEnrollmentPage from './pages/public/education/OnlineEnrollmentPage';
 import InPersonEnrollmentPage from './pages/public/education/InPersonEnrollmentPage';
 import InPersonConfirmationPage from './pages/public/education/InPersonConfirmationPage';
-import MembershipEnrollmentPage from './pages/public/education/MembershipEnrollmentPage';
-import MembershipPaymentPage from './pages/public/education/MembershipPaymentPage';
-import MembershipConfirmationPage from './pages/public/education/MembershipConfirmationPage';
 import FAQPage from './pages/public/education/FAQPage';
 import EducationMobileMoneyPage from './pages/public/education/MobileMoneyPaymentPage';
 import ProgramDetailsPage from './pages/public/education/ProgramDetailsPage';
@@ -67,10 +65,13 @@ import FaqPage from './pages/public/faq';
 import ImpactPage from './pages/public/impact';
 import PartnershipPage from './pages/public/partnership';
 import PartnershipApplicationPage from './pages/public/partnership/apply';
+import TrainingPage from './pages/public/training';
+import CourseDetailPage from './pages/public/training/CourseDetailPage';
 import BlogPage from './pages/public/blog';
 import GalleryPage from './pages/public/gallery';
 import NewsletterPage from './pages/public/newsletter';
 import ArticlePage from './pages/public/newsletter/ArticlePage';
+import NotFoundPage from './pages/public/NotFound';
 
 
 function App() {
@@ -83,11 +84,12 @@ function App() {
   const isOpenLabsPage = location.pathname.startsWith('/services/open-labs');
   const isProjectsPage = location.pathname.startsWith('/projects');
   const isProjectsShowcase = location.pathname === '/services/projectShowcase';
+  const isTrainingPage = location.pathname.startsWith('/training');
   
   // Check if on contact page with service context
   const isContactWithService = location.pathname === '/contact' && location.state?.from;
   
-  const hideMainNavbar = isSoftwarePage || isEducationPage || isManufacturingPage || isOpenLabsPage || isProjectsPage || isContactWithService || isProjectsShowcase;
+  const hideMainNavbar = isSoftwarePage || isEducationPage || isManufacturingPage || isOpenLabsPage || isProjectsPage || isContactWithService || isProjectsShowcase || isTrainingPage;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -111,7 +113,9 @@ function App() {
           <Route path="/news/yeco-2025-selection" element={<Navigate to="/newsletter/article/2" replace />} />
           <Route path="/news/bagaboard-nexora-2025" element={<Navigate to="/newsletter/article/3" replace />} />
                     <Route path="/contact" element={<ContactPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+          <Route path="/admin/login" element={<LoginPage />} />
+          <Route path="/admin/dashboard" element={<AdminPage />} />
           
           {/* Service Pages */}
           <Route path="/services/education" element={<EducationPage />} />
@@ -124,9 +128,6 @@ function App() {
           <Route path="/services/education/online-enrollment" element={<OnlineEnrollmentPage />} />
           <Route path="/services/education/in-person-enrollment" element={<InPersonEnrollmentPage />} />
           <Route path="/services/education/in-person-confirmation" element={<InPersonConfirmationPage />} />
-          <Route path="/services/education/membership-enrollment" element={<MembershipEnrollmentPage />} />
-          <Route path="/services/education/membership-payment" element={<MembershipPaymentPage />} />
-          <Route path="/services/education/membership-confirmation" element={<MembershipConfirmationPage />} />
           <Route path="/services/education/mobile-money" element={<EducationMobileMoneyPage />} />
           <Route path="/services/education/faq" element={<FAQPage />} />
           <Route path="/services/education/program-details" element={<ProgramDetailsPage />} />
@@ -163,6 +164,8 @@ function App() {
           <Route path="/impact" element={<ImpactPage />} />
           <Route path="/partner" element={<PartnershipPage />} />
           <Route path="/partner/apply" element={<PartnershipApplicationPage />} />
+          <Route path="/training" element={<TrainingPage />} />
+          <Route path="/training/course/:courseId" element={<CourseDetailPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/newsletter" element={<NewsletterPage />} />
@@ -171,9 +174,11 @@ function App() {
           {/* Redirects for old/broken links */}
           <Route path="/labs" element={<Navigate to="/services/open-labs" replace />} />
           <Route path="/enroll" element={<Navigate to="/services/education" replace />} />
+          {/* 404 Catch-all */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-      <Footer />
+      {!hideMainNavbar && <Footer />}
     </div>
   );
 }

@@ -1,29 +1,34 @@
 // Centralized education programs configuration
 export const EDUCATION_PROGRAMS = {
-  'junior-stem': { 
-    name: 'Zyra Tech Hub Membership Dues', 
-    duration: 'Monthly', 
-    price: 15,
-    priceType: 'monthly',
+  'tech-internship': { 
+    name: 'Tech Internship Program', 
+    duration: '3-6 months', 
+    price: 350,
+    priceType: 'GHS',
     level: 'All Levels',
-    students: '500+ members',
-    rating: 4.8
-  },
-  'maker-hardware': { 
-    name: 'Maker: Hardware & Repair', 
-    duration: '3 months', 
-    price: 400,
-    level: 'Intermediate',
-    students: '300+ enrolled',
-    rating: 4.9
-  },
-  'coder-software': { 
-    name: 'Coder: Software Foundations', 
-    duration: '3 months', 
-    price: 400,
-    level: 'Beginner to Intermediate',
-    students: '400+ enrolled',
-    rating: 4.7
+    students: '500+ interns',
+    rating: 4.8,
+    description: 'Practical training in coding, robotics, and IT systems with professional mentorship and real-world experience.',
+    learningAreas: [
+      'Web Development (HTML, CSS, React, Tailwind CSS)',
+      'Basic AI & Robotics',
+      'Networking and IT Setup',
+      'Cloud Fundamentals',
+      'Entrepreneurship and Tech Innovation'
+    ],
+    targetAudience: [
+      'JHS and SHS students',
+      'University and Polytechnic students', 
+      'Graduates and tech enthusiasts'
+    ],
+    benefits: [
+      'Hands-on practical training',
+      'Professional mentorship',
+      'Industry certification',
+      'Real work experience',
+      'Career guidance',
+      'Portfolio development'
+    ]
   }
 };
 

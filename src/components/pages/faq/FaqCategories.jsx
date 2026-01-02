@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ChevronDown, ChevronUp, HelpCircle, MessageCircle, Phone, Mail } from 'lucide-react';
 
 const FaqCategories = () => {
   const [openCategory, setOpenCategory] = useState(null);
@@ -8,41 +9,45 @@ const FaqCategories = () => {
   const faqCategories = [
     {
       title: "Internship Program",
+      icon: HelpCircle,
+      color: "#004fa2",
       count: 5,
       faqs: [
         {
-          question: "Who can apply for Zyra Tech Hub's internship program?",
-          answer: "University students, graduates, and anyone eager to gain real-world tech experience in coding, robotics, AI, and IT systems."
+          question: "Q1: Who can apply for Zyra Tech Hub's internship program?",
+          answer: "University students, graduates, and anyone eager to gain real-world tech experience."
         },
         {
-          question: "How much does the internship cost?",
-          answer: "GHS 350, covering mentorship, training, and professional certification."
+          question: "Q2: How much does the internship cost?",
+          answer: "GHS 350, covering mentorship, training, and certification."
         },
         {
-          question: "How long is the internship program?",
-          answer: "The program runs for 3–6 months with hands-on training and real-world project experience."
+          question: "Q3: Do you partner with schools outside Koforidua?",
+          answer: "Currently we focus on Koforidua but will expand regionally and internationally."
         },
         {
-          question: "What will I learn?",
-          answer: "Web Development (HTML, CSS, React, Tailwind CSS), Basic AI & Robotics, Networking and IT Setup, Cloud Fundamentals, and Entrepreneurship and Tech Innovation."
+          question: "Q4: Can institutions request IT or web services?",
+          answer: "Yes, we provide professional IT, web, and networking services for schools and organizations."
         },
         {
-          question: "Do I get a certificate?",
-          answer: "Yes, each participant receives a professional certificate upon completion of the internship program."
+          question: "Q5: How can individuals or companies support your programs?",
+          answer: "Through sponsorships, partnerships, or donations of funds and equipment."
         }
       ]
     },
     {
-      title: "Services",
+      title: "Services & Support",
+      icon: Phone,
+      color: "#004fa2",
       count: 4,
       faqs: [
         {
           question: "What IT and digital services do you offer?",
-          answer: "We provide Education Technology (EdTech), IT & Networking, Web & Software Development, and Consulting & Support services."
+          answer: "We provide Education Technology (EdTech), IT & Networking, Web & Software Development, and Consulting & Support services for schools and businesses."
         },
         {
-          question: "Can institutions request IT or web services?",
-          answer: "Yes, we provide professional IT, web, and networking services for schools and organizations at affordable rates."
+          question: "What specific IT services are available?",
+          answer: "LAN/WAN installation, WiFi setup, server deployment, school websites, management systems, and IT consulting."
         },
         {
           question: "Do you offer long-term support contracts?",
@@ -56,33 +61,37 @@ const FaqCategories = () => {
     },
     {
       title: "Partnerships",
+      icon: MessageCircle,
+      color: "#004fa2",
       count: 4,
       faqs: [
         {
-          question: "Do you partner with schools outside Koforidua?",
-          answer: "Currently we focus on Koforidua but will expand regionally and internationally in the future."
-        },
-        {
           question: "What types of partnerships do you offer?",
-          answer: "Educational partnerships, Corporate sponsorships, NGO & Government collaborations, and Technology co-development."
+          answer: "Educational partnerships (introduce digital learning programs), Corporate partnerships (sponsor or host interns), NGO & Government partnerships (support youth capacity-building), and Technology partnerships (co-develop tools and solutions)."
         },
         {
-          question: "How can individuals or companies support your programs?",
-          answer: "Through sponsorships, partnerships, donations of funds, or equipment donations."
+          question: "How can our organization partner with Zyra Tech Hub?",
+          answer: "Contact us through our partnership page or email info@zyratechhub.com to discuss collaboration opportunities."
         },
         {
           question: "Can my company sponsor a student?",
-          answer: "Yes, we welcome corporate sponsorships to help students access our tech programs."
+          answer: "Yes, we welcome corporate sponsorships to help students access our tech programs and create meaningful impact."
+        },
+        {
+          question: "What are the benefits of partnership?",
+          answer: "Partners gain access to skilled interns, enhanced CSR impact, technology solutions, and opportunities to shape the next generation of tech talent."
         }
       ]
     },
     {
       title: "Donations & Support",
+      icon: Mail,
+      color: "#004fa2",
       count: 3,
       faqs: [
         {
           question: "How can I support Zyra Tech Hub?",
-          answer: "You can fund students to access programs, donate equipment (laptops, kits, accessories), or sponsor school-based technology programs."
+          answer: "You can fund students to access tech programs, donate equipment (laptops, kits, accessories), or sponsor school-based technology programs."
         },
         {
           question: "What equipment donations do you accept?",
@@ -98,6 +107,7 @@ const FaqCategories = () => {
 
   const toggleCategory = (index) => {
     setOpenCategory(openCategory === index ? null : index);
+    setOpenFAQ({}); // Reset FAQ states when category changes
   };
 
   const toggleFAQ = (categoryIndex, faqIndex) => {
@@ -109,73 +119,94 @@ const FaqCategories = () => {
   };
 
   return (
-    <section className="py-6 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 bg-gray-50">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* FAQ Categories */}
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold text-black mb-4">FAQ Categories</h2>
-          
-          <div className="space-y-4">
-            {faqCategories.map((category, categoryIndex) => (
-              <div key={categoryIndex} className="border border-gray-200 rounded-lg overflow-hidden">
-                
-                {/* Category Header */}
-                <button
-                  onClick={() => toggleCategory(categoryIndex)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg font-semibold text-black">{category.title}</span>
-                    <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-sm">
-                      {category.count}
-                    </span>
+        <div className="space-y-6">
+          {faqCategories.map((category, categoryIndex) => (
+            <motion.div
+              key={categoryIndex}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
+              className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+            >
+              
+              {/* Category Header */}
+              <button
+                onClick={() => toggleCategory(categoryIndex)}
+                className="w-full px-6 sm:px-8 py-4 sm:py-6 flex items-center justify-between text-left hover:bg-gray-50 transition-colors duration-200"
+              >
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div 
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: `${category.color}15`, color: category.color }}
+                  >
+                    <category.icon size={20} className="sm:w-6 sm:h-6" />
                   </div>
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold text-black">{category.title}</h3>
+                    <p className="text-sm text-gray-500">{category.count} questions</p>
+                  </div>
+                </div>
+                <div className="text-gray-400">
                   {openCategory === categoryIndex ? (
-                    <ChevronUp className="text-gray-400" size={20} />
+                    <ChevronUp size={20} className="sm:w-6 sm:h-6" />
                   ) : (
-                    <ChevronDown className="text-gray-400" size={20} />
+                    <ChevronDown size={20} className="sm:w-6 sm:h-6" />
                   )}
-                </button>
+                </div>
+              </button>
 
-                {/* Category FAQs */}
-                {openCategory === categoryIndex && (
-                  <div className="border-t border-gray-200">
-                    {category.faqs.map((faq, faqIndex) => {
-                      const faqKey = `${categoryIndex}-${faqIndex}`;
-                      const isOpen = openFAQ[faqKey];
-                      
-                      return (
-                        <div key={faqIndex} className="border-b border-gray-100 last:border-b-0">
-                          <button
-                            onClick={() => toggleFAQ(categoryIndex, faqIndex)}
-                            className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
-                          >
-                            <span className="text-base font-medium text-gray-900 pr-4">
+              {/* Category FAQs */}
+              {openCategory === categoryIndex && (
+                <div className="border-t border-gray-200">
+                  {category.faqs.map((faq, faqIndex) => {
+                    const key = `${categoryIndex}-${faqIndex}`;
+                    const isOpen = openFAQ[key];
+                    
+                    return (
+                      <div key={faqIndex} className="border-b border-gray-100 last:border-b-0">
+                        <button
+                          onClick={() => toggleFAQ(categoryIndex, faqIndex)}
+                          className="w-full px-6 sm:px-8 py-4 text-left hover:bg-gray-50 transition-colors duration-200"
+                        >
+                          <div className="flex items-start justify-between gap-4">
+                            <h4 className="text-base sm:text-lg font-semibold text-black pr-4">
                               {faq.question}
-                            </span>
-                            {isOpen ? (
-                              <ChevronUp className="text-[#004fa2]" size={16} />
-                            ) : (
-                              <ChevronDown className="text-gray-400" size={16} />
-                            )}
-                          </button>
-                          
-                          {isOpen && (
-                            <div className="px-6 pb-4 bg-gray-50">
-                              <p className="text-sm text-gray-600 leading-relaxed">
-                                {faq.answer}
-                              </p>
+                            </h4>
+                            <div className="text-gray-400 flex-shrink-0 mt-1">
+                              {isOpen ? (
+                                <ChevronUp size={18} />
+                              ) : (
+                                <ChevronDown size={18} />
+                              )}
                             </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+                          </div>
+                        </button>
+                        
+                        {isOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="px-6 sm:px-8 pb-4"
+                          >
+                            <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
+                              {faq.answer}
+                            </p>
+                          </motion.div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </motion.div>
+          ))}
         </div>
 
       </div>

@@ -54,7 +54,6 @@
 ### Open Labs Service Page
 - [ ] OpenLabsHero.jsx
 - [ ] OpenLabsFeatures.jsx
-- [ ] OpenLabsMembership.jsx
 - [ ] OpenLabsSpaces.jsx
 - [ ] OpenLabsCTA.jsx
 
@@ -171,9 +170,8 @@
 ### Phase 3: Open Labs Page (30 min)
 1. OpenLabsHero.jsx
 2. OpenLabsFeatures.jsx
-3. OpenLabsMembership.jsx
-4. OpenLabsSpaces.jsx
-5. OpenLabsCTA.jsx
+3. OpenLabsSpaces.jsx
+4. OpenLabsCTA.jsx
 
 ### Phase 4: Other Pages (1 hour)
 1. Contact Page

@@ -6,7 +6,7 @@ const ContactMethods = () => {
     {
       icon: Mail,
       title: 'Email',
-      description: 'hello@eraaxis.org',
+      description: 'hello@zyratechhub.com',
       subtext: 'We reply within 24 hours'
     },
     {

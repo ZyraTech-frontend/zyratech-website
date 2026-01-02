@@ -134,7 +134,7 @@ const EducationFAQ = () => {
         },
         {
           question: "How can I contact the education team?",
-          answer: "Email us at education@eraaxis.org, call +233 XXX XXXXXX, or visit our facility. Our team is always happy to help with any questions or concerns."
+          answer: "Email us at education@zyratechhub.com, call +233 XXX XXXXXX, or visit our facility. Our team is always happy to help with any questions or concerns."
         }
       ]
     }

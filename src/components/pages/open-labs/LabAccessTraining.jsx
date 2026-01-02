@@ -14,7 +14,7 @@ const accessInfo = [
   },
   {
     icon: Users,
-    title: 'Membership Required',
+    title: 'Lab Access Required',
     details: [
       'Student: $5/month',
       'Startup: $25/month',

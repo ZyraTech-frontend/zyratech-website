@@ -8,6 +8,7 @@ import Testimonials from '../../../components/pages/home/Testimonials';
 import Partners from '../../../components/pages/home/Partners';
 import NewsInsights from '../../../components/pages/home/NewsInsights';
 import Gallery from '../../../components/pages/home/Gallery';
+import ImpactStories from '../../../components/pages/home/ImpactStories';
 import Newsletter from '../../../components/pages/home/Newsletter';
 
 const HomePage = () => {
@@ -19,6 +20,7 @@ const HomePage = () => {
       <Pillars />
       <Projects />
       <Testimonials />
+      <ImpactStories />
       <Partners />
       <NewsInsights />
       <Gallery />

@@ -63,7 +63,7 @@ const ManufacturingContactPage = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-black mb-1">Email</h3>
-                    <p className="text-gray-600">manufacturing@eraaxis.org</p>
+                    <p className="text-gray-600">manufacturing@zyratechhub.com</p>
                   </div>
                 </div>
 

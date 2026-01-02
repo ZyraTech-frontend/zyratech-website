@@ -307,7 +307,7 @@ const PaymentPage = () => {
                   <div className="border-t border-gray-200 pt-4">
                     <div className="flex justify-between items-center mb-6">
                       <span className="text-base font-bold text-black">Amount</span>
-                      <span className="text-2xl font-bold text-[#004fa2]">${program.price}.00</span>
+                      <span className="text-2xl font-bold text-[#004fa2]">GHS {program.price}.00</span>
                     </div>
                   </div>
 

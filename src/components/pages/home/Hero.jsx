@@ -7,16 +7,34 @@ const Hero = () => {
   const slides = [
     {
       title: "EDUCATION & INTERNSHIP",
-      description: "Practical training in coding, robotics, and IT systems with professional mentorship and real-world experience. Bridge the gap between classroom learning and industry skills.",
+      description: "Practical training in coding, robotics, AI, and IT systems. Bridge the gap between classroom learning and real-world experience with our 3-6 month internship program. Join 500+ students transforming their futures.",
       pillar: "Education & Internship",
       icon: "🎓",
       backgroundImage: "/images/image1.png",
-      cta1: { text: "Explore Programs", link: "/services/education" },
-      cta2: { text: "Enroll Now", link: "/services/education" }
+      cta1: { text: "Apply for Internship", link: "/services/education" },
+      cta2: { text: "Read Success Stories", link: "/#impact-stories" }
+    },
+    {
+      title: "TRANSFORMING LIVES THROUGH TECH",
+      description: "Meet Naomi, Isaac, and student teams who built educational apps, installed school networks, and created SME solutions. Real stories of innovation and impact from our internship program.",
+      pillar: "Impact Stories",
+      icon: "🌟",
+      backgroundImage: "/images/stories/hero.jpg",
+      cta1: { text: "Explore Stories", link: "/#impact-stories" },
+      cta2: { text: "Join Our Program", link: "/services/education" }
+    },
+    {
+      title: "INNOVATION & COMMUNITY",
+      description: "A passionate team driven by innovation and education. From AWS-certified leadership to dedicated coordinators, we're empowering Ghana's next generation of tech talent.",
+      pillar: "About & Team",
+      icon: "👥",
+      backgroundImage: "/images/team/hero.jpg",
+      cta1: { text: "Meet Our Team", link: "/about#team" },
+      cta2: { text: "Partner With Us", link: "/partner" }
     },
     {
       title: "IT & NETWORKING SOLUTIONS",
-      description: "LAN/WAN installation, WiFi setup, server deployment, and digital infrastructure solutions. Build robust networks that power your organization.",
+      description: "LAN/WAN installation, WiFi setup, server deployment, and digital infrastructure solutions. Build robust networks that power your organization with professional support.",
       pillar: "IT & Networking",
       icon: "🌐",
       backgroundImage: "/images/image2.png",

@@ -28,6 +28,7 @@ const Navbar = () => {
     { name: 'Home', path: '/' },
     { name: 'About Us', path: '/about' },
     { name: 'Services', dropdown: 'services' },
+    { name: 'Training', path: '/training', external: true },
     { name: 'Projects & Impact', dropdown: 'projects' },
     { name: 'Partnership', path: '/partner' },
     { name: 'Blog & Media', dropdown: 'blogMedia' },
@@ -85,17 +86,32 @@ const Navbar = () => {
                   )}
                 </div>
               ) : (
-                <NavLink
-                  key={item.name}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    `text-gray-700 hover:text-[#004fa2] px-3 py-2 text-base font-medium transition-colors whitespace-nowrap ${
-                      isActive ? 'text-[#004fa2] font-semibold' : ''
-                    }`
-                  }
-                >
-                  {item.name}
-                </NavLink>
+                item.external ? (
+                  <a
+                    key={item.name}
+                    href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-700 hover:text-[#004fa2] px-3 py-2 text-base font-medium transition-colors whitespace-nowrap flex items-center gap-1"
+                  >
+                    {item.name}
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                ) : (
+                  <NavLink
+                    key={item.name}
+                    to={item.path}
+                    className={({ isActive }) =>
+                      `text-gray-700 hover:text-[#004fa2] px-3 py-2 text-base font-medium transition-colors whitespace-nowrap ${
+                        isActive ? 'text-[#004fa2] font-semibold' : ''
+                      }`
+                    }
+                  >
+                    {item.name}
+                  </NavLink>
+                )
               )
             ))}
           </div>
@@ -172,20 +188,35 @@ const Navbar = () => {
                   )}
                 </div>
               ) : (
-                <NavLink
-                  key={item.name}
-                  to={item.path}
-                  onClick={() => setIsOpen(false)}
-                  className={({ isActive }) =>
-                    `block px-3 py-2 text-base font-medium transition-colors ${
-                      isActive
-                        ? 'text-[#004fa2] bg-purple-50 font-semibold'
-                        : 'text-gray-700 hover:text-[#004fa2] hover:bg-gray-50'
-                    }`
-                  }
-                >
-                  {item.name}
-                </NavLink>
+                item.external ? (
+                  <a
+                    key={item.name}
+                    href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 hover:text-[#004fa2] hover:bg-gray-50 transition-colors"
+                  >
+                    <span>{item.name}</span>
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                ) : (
+                  <NavLink
+                    key={item.name}
+                    to={item.path}
+                    onClick={() => setIsOpen(false)}
+                    className={({ isActive }) =>
+                      `block px-3 py-2 text-base font-medium transition-colors ${
+                        isActive
+                          ? 'text-[#004fa2] bg-purple-50 font-semibold'
+                          : 'text-gray-700 hover:text-[#004fa2] hover:bg-gray-50'
+                      }`
+                    }
+                  >
+                    {item.name}
+                  </NavLink>
+                )
               )
             ))}
           </div>
