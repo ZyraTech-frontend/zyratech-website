@@ -13,11 +13,10 @@ const TrainingHero = () => {
         <div 
           className="relative overflow-hidden min-h-screen bg-cover bg-center"
           style={{
-            backgroundImage: 'url(/images/image1.png)',
+            backgroundImage: 'url(/images/image2.png)',
             backgroundAttachment: 'fixed'
           }}
         >
-          <div className="absolute inset-0 bg-white"></div>
           <div className="absolute inset-0 bg-black/40"></div>
           <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-32 min-h-[500px] md:min-h-[580px] lg:min-h-[680px] flex items-center">
             
@@ -30,7 +29,7 @@ const TrainingHero = () => {
             >
               {/* Main Heading */}
               <motion.h1 
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.1 }}
@@ -41,7 +40,7 @@ const TrainingHero = () => {
 
               {/* Subtitle */}
               <motion.p 
-                className="text-base sm:text-lg md:text-xl text-white/90 mb-10 sm:mb-12 md:mb-14 leading-relaxed"
+                className="text-base sm:text-lg md:text-xl font-bold text-white mb-10 sm:mb-12 md:mb-14 leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}

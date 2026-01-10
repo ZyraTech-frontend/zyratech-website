@@ -1,0 +1,319 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { BookOpen, Award, Brain, Briefcase, Users, ChevronRight, Mail, Phone, MapPin } from 'lucide-react';
+import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
+
+const ProgramsPage = () => {
+  const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
+
+  const programCategories = [
+    {
+      id: 'basic',
+      title: 'Basic Programs',
+      description: 'Perfect for beginners and those new to technology. Start your tech journey with our foundational programs.',
+      icon: BookOpen,
+      link: '/training/programs/basic',
+      color: 'bg-blue-500'
+    },
+    {
+      id: 'intermediate',
+      title: 'Intermediate Programs',
+      description: 'For those with some experience looking to advance their skills. Take your career to the next level.',
+      icon: Award,
+      link: '/training/programs/intermediate',
+      color: 'bg-green-500'
+    },
+    {
+      id: 'advanced',
+      title: 'Advanced Programs',
+      description: 'For experienced professionals ready to master cutting-edge technologies. Lead innovation with expert-level training.',
+      icon: Brain,
+      link: '/training/programs/advanced',
+      color: 'bg-purple-500'
+    },
+    {
+      id: 'internship',
+      title: 'Immersive Internship Programme',
+      description: 'Gain real-world experience through hands-on projects. Build your portfolio and launch your tech career.',
+      icon: Briefcase,
+      link: '/training/programs/internship',
+      color: 'bg-orange-500'
+    },
+    {
+      id: 'matured',
+      title: 'Matured Programme',
+      description: 'Designed specifically for mature professionals and career changers. Learn at your pace with flexible schedules.',
+      icon: Users,
+      link: '/training/programs/matured',
+      color: 'bg-indigo-500'
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-white">
+      
+      {/* Hero Section */}
+      <section className="relative isolate overflow-hidden">
+        <div className="max-w-none px-0">
+          {/* Full-bleed hero container */}
+          <div 
+            className="relative overflow-hidden bg-cover bg-center"
+            style={{
+              backgroundImage: 'url(/images/image3.png)',
+              backgroundAttachment: 'fixed'
+            }}
+          >
+            <div className="absolute inset-0 bg-black/40"></div>
+            <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-12 sm:py-16 md:py-20 min-h-[400px] md:min-h-[450px] flex items-center">
+              
+              {/* Left Content */}
+              <motion.div 
+                className="max-w-3xl"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                {/* Main Heading */}
+                <motion.h1 
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.1 }}
+                >
+                  Transform Your Career with
+                  <span className="text-[#FFD700] block"> Professional Tech Training in Ghana</span>
+                </motion.h1>
+
+                {/* Subtitle */}
+                <motion.p 
+                  className="text-sm sm:text-base md:text-lg font-bold text-white mb-6 sm:mb-8 leading-relaxed"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                >
+                  Unlock your potential with industry-validated training programs designed to empower you with the skills and experience needed to excel in the technology industry.
+                </motion.p>
+
+                {/* CTA Button */}
+                <motion.div 
+                  className="flex flex-col sm:flex-row gap-4 md:gap-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                >
+                  <a 
+                    href="#program-categories"
+                    className="group bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-3 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 inline-flex items-center justify-center gap-3 transform hover:-translate-y-1 w-full sm:w-auto"
+                  >
+                    Discover Your Path
+                    <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                  </a>
+                </motion.div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section Header - White Background */}
+      <section className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            ref={titleAnimation.ref}
+            initial={titleAnimation.initial}
+            animate={titleAnimation.animate}
+            variants={titleAnimation.variants}
+            transition={titleAnimation.transition}
+            className="text-center"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Explore Our Programmes In Ghana
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Unlock your potential with our diverse range of programmes in Ghana, designed to empower you with the skills and experience needed to excel in the technology industry. Discover more about our programmes today and take the first step towards a rewarding career in tech.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Program Categories - Brand Background */}
+      <section id="program-categories" className="py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
+        <div className="max-w-6xl mx-auto">
+          {/* Program Categories Grid - 3-2 Balanced Stack Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            {programCategories.slice(0, 3).map((category, index) => {
+              const IconComponent = category.icon;
+              
+              return (
+                <motion.div
+                  key={category.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="bg-white rounded-xl p-6 hover:shadow-xl transition-all duration-300 text-center border border-white/20 relative"
+                >
+                  {/* Icon - Right Corner */}
+                  <div className="absolute top-4 right-4">
+                    <div className={`w-12 h-12 ${category.color} rounded-full flex items-center justify-center`}>
+                      <IconComponent size={24} className="text-white" />
+                    </div>
+                  </div>
+                  
+                  {/* Title */}
+                  <h3 className="text-xl font-bold text-gray-900 mb-6 pr-16">{category.title}</h3>
+                  
+                  {/* Button */}
+                  <a
+                    href={category.link}
+                    className="inline-flex items-center gap-2 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:shadow-lg text-sm"
+                  >
+                    Explore Programme
+                    <ChevronRight size={16} />
+                  </a>
+                </motion.div>
+              );
+            })}
+          </div>
+          
+          {/* Bottom Row - 2 Programs (Centered) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            {programCategories.slice(3, 5).map((category, index) => {
+              const IconComponent = category.icon;
+              
+              return (
+                <motion.div
+                  key={category.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: (index + 3) * 0.1 }}
+                  className="bg-white rounded-xl p-6 hover:shadow-xl transition-all duration-300 text-center border border-white/20 relative"
+                >
+                  {/* Icon - Right Corner */}
+                  <div className="absolute top-4 right-4">
+                    <div className={`w-12 h-12 ${category.color} rounded-full flex items-center justify-center`}>
+                      <IconComponent size={24} className="text-white" />
+                    </div>
+                  </div>
+                  
+                  {/* Title */}
+                  <h3 className="text-xl font-bold text-gray-900 mb-6 pr-16">{category.title}</h3>
+                  
+                  {/* Button */}
+                  <a
+                    href={category.link}
+                    className="inline-flex items-center gap-2 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:shadow-lg text-sm"
+                  >
+                    Explore Programme
+                    <ChevronRight size={16} />
+                  </a>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col md:flex-row items-center gap-8 lg:gap-12"
+          >
+            {/* Left Column - Content */}
+            <div className="w-full md:w-2/5 lg:w-2/5">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                Do you have any questions?
+              </h2>
+              <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                Please feel free to contact Magdalene, our HR Team Lead in Ghana. We're here to help you with any questions about our training programs and enrollment process.
+              </p>
+              
+              <a
+                href="mailto:magdalene@zyratech.com"
+                className="inline-flex items-center gap-3 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
+              >
+                <Mail size={20} />
+                Contact Us
+              </a>
+            </div>
+            
+            {/* Right Column - Featured Image with Overlay */}
+            <div className="w-full md:w-3/5 lg:w-3/5 relative">
+              <div className="relative rounded-xl overflow-hidden">
+                {/* Placeholder Image */}
+                <div 
+                  className="w-full h-80 md:h-96 bg-cover bg-center"
+                  style={{
+                    backgroundImage: 'url(/images/image2.png)',
+                    backgroundPosition: 'center'
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                </div>
+                
+                {/* Text Overlay - Bottom Right */}
+                <div className="absolute bottom-6 right-6 text-right">
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                    Magdalene
+                  </h3>
+                  <div className="w-16 h-1 bg-[#004fa2] mb-2 ml-auto"></div>
+                  <p className="text-lg text-white">Human Resources Team Lead</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Newsletter Subscription Section */}
+      <section className="py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Subscribe to Our Newsletter
+            </h2>
+            <p className="text-lg text-white/90 mb-8 max-w-3xl mx-auto">
+              Stay updated with our latest training programs, industry insights, and exclusive offers. Join our community of tech professionals in Ghana.
+            </p>
+            
+            <div className="max-w-md mx-auto">
+              <form className="flex flex-col sm:flex-row gap-4">
+                <input
+                  type="email"
+                  placeholder="Enter your email address"
+                  className="flex-grow px-4 py-3 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent text-gray-900 bg-white"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="bg-white hover:bg-gray-100 text-[#004fa2] px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
+                >
+                  Subscribe
+                </button>
+              </form>
+              
+              <p className="text-sm text-white/80 mt-4">
+                By subscribing, you agree to our privacy policy. You can unsubscribe at any time.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+    </div>
+  );
+};
+
+export default ProgramsPage;

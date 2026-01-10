@@ -28,12 +28,12 @@ const Navbar = () => {
     { name: 'Home', path: '/' },
     { name: 'About Us', path: '/about' },
     { name: 'Services', dropdown: 'services' },
-    { name: 'Training', path: '/training', external: true },
     { name: 'Projects & Impact', dropdown: 'projects' },
     { name: 'Partnership', path: '/partner' },
     { name: 'Blog & Media', dropdown: 'blogMedia' },
     { name: 'FAQ', path: '/faq' },
-    { name: 'Contact', path: '/contact' }
+    { name: 'Contact', path: '/contact' },
+    { name: 'ZyraTech Training', path: '/training', external: true, highlight: true }
   ];
 
   return (
@@ -92,10 +92,14 @@ const Navbar = () => {
                     href={item.path}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-700 hover:text-[#004fa2] px-3 py-2 text-base font-medium transition-colors whitespace-nowrap flex items-center gap-1"
+                    className={`${
+                      item.highlight 
+                        ? 'bg-[#004fa2] text-white font-bold px-4 py-2 rounded-lg hover:bg-[#2A2D7C] transition-all duration-300 shadow-lg hover:shadow-xl inline-flex items-center gap-2' 
+                        : 'text-gray-700 hover:text-[#004fa2] px-3 py-2 text-base font-medium transition-colors whitespace-nowrap flex items-center gap-1'
+                    }`}
                   >
                     {item.name}
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className={`w-3 h-3 ${item.highlight ? 'text-white' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
                   </a>
@@ -194,10 +198,15 @@ const Navbar = () => {
                     href={item.path}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 hover:text-[#004fa2] hover:bg-gray-50 transition-colors"
+                    onClick={() => setIsOpen(false)}
+                    className={`${
+                      item.highlight
+                        ? 'flex items-center justify-between px-3 py-2 text-base font-bold bg-[#004fa2] text-white rounded-lg transition-colors mt-4'
+                        : 'flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 hover:text-[#004fa2] hover:bg-gray-50 transition-colors'
+                    }`}
                   >
                     <span>{item.name}</span>
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className={`w-3 h-3 ${item.highlight ? 'text-white' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
                   </a>

@@ -67,6 +67,12 @@ import PartnershipPage from './pages/public/partnership';
 import PartnershipApplicationPage from './pages/public/partnership/apply';
 import TrainingPage from './pages/public/training';
 import CourseDetailPage from './pages/public/training/CourseDetailPage';
+import TrainingProgramsPage from './pages/public/training/programs';
+import BasicProgramsRoute from './pages/public/training/programs/basic';
+import IntermediateProgramsRoute from './pages/public/training/programs/intermediate';
+import AdvancedProgramsRoute from './pages/public/training/programs/advanced';
+import MaturedProgramsRoute from './pages/public/training/programs/matured';
+import InternshipProgramsRoute from './pages/public/training/programs/internship';
 import BlogPage from './pages/public/blog';
 import GalleryPage from './pages/public/gallery';
 import NewsletterPage from './pages/public/newsletter';
@@ -90,6 +96,7 @@ function App() {
   const isContactWithService = location.pathname === '/contact' && location.state?.from;
   
   const hideMainNavbar = isSoftwarePage || isEducationPage || isManufacturingPage || isOpenLabsPage || isProjectsPage || isContactWithService || isProjectsShowcase || isTrainingPage;
+  const hideMainFooter = isSoftwarePage || isEducationPage || isManufacturingPage || isOpenLabsPage || isProjectsPage || isContactWithService || isProjectsShowcase;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -165,6 +172,12 @@ function App() {
           <Route path="/partner" element={<PartnershipPage />} />
           <Route path="/partner/apply" element={<PartnershipApplicationPage />} />
           <Route path="/training" element={<TrainingPage />} />
+          <Route path="/training/programs" element={<TrainingProgramsPage />} />
+          <Route path="/training/programs/basic" element={<BasicProgramsRoute />} />
+          <Route path="/training/programs/intermediate" element={<IntermediateProgramsRoute />} />
+          <Route path="/training/programs/advanced" element={<AdvancedProgramsRoute />} />
+          <Route path="/training/programs/matured" element={<MaturedProgramsRoute />} />
+          <Route path="/training/programs/internship" element={<InternshipProgramsRoute />} />
           <Route path="/training/course/:courseId" element={<CourseDetailPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
@@ -178,7 +191,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-      {!hideMainNavbar && <Footer />}
+      {!hideMainFooter && <Footer />}
     </div>
   );
 }
