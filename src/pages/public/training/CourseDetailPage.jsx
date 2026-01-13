@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Clock, Users, Star, Award, Play, CheckCircle, Calendar, MapPin, Shield, BookOpen, Target } from 'lucide-react';
+import { ArrowLeft, Clock, Users, Star, Award, CheckCircle, Check, Calendar, Briefcase, TrendingUp, UsersRound, Target, BookOpen } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import TrainingNavbar from '../../../components/TrainingNavbar';
+import NewsletterCTA from '../../../components/pages/gallery/NewsletterCTA';
 
 const CourseDetailPage = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('overview');
 
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
 
@@ -29,12 +29,29 @@ const CourseDetailPage = () => {
       badge: 'Popular',
       description: 'Master CI/CD pipelines, containerization, cloud deployment, and infrastructure automation with hands-on projects and real-world scenarios.',
       longDescription: 'Our comprehensive DevOps Engineering program is designed to transform you into a skilled DevOps professional. You\'ll learn industry-standard tools and practices, work on real projects, and gain the confidence to implement DevOps solutions in any organization.',
+      programOverview: 'DevOps Engineering is a comprehensive 8-week program that prepares unemployed or underemployed individuals for entry-level careers in cloud computing and DevOps. ZyraTech will support learners throughout the DevOps Engineering program and help them launch careers in technology.',
       instructor: 'Michael Afedi',
       instructorTitle: 'Senior DevOps Engineer',
       instructorBio: '15+ years of experience in cloud infrastructure and DevOps transformation for Fortune 500 companies.',
       schedule: 'Weekdays 6PM-8PM',
       format: 'Online + Onsite',
       certificate: 'Professional DevOps Certificate',
+      deadline: '31st January, 2026',
+      targetAudience: [
+        'Software Developers',
+        'System Administrators',
+        'IT Operations Staff',
+        'Cloud Engineers',
+        'Technical Leads'
+      ],
+      careerOutcomes: [
+        'DevOps Engineer',
+        'Cloud Engineer',
+        'Site Reliability Engineer',
+        'Infrastructure Engineer',
+        'Automation Engineer'
+      ],
+      partnership: 'In collaboration with industry leaders, ZyraTech offers cutting-edge technology training and fosters digital skills development in Africa.',
       topics: [
         'Docker & Containerization',
         'Kubernetes Orchestration',
@@ -88,18 +105,265 @@ const CourseDetailPage = () => {
         'Experience with Git version control',
         'Dedication to complete hands-on projects'
       ],
+      applicationProcess: [
+        {
+          step: 1,
+          title: 'Apply Now',
+          description: 'Click on the "Apply Now" button below to complete the enrollment form'
+        },
+        {
+          step: 2,
+          title: 'Application Screening',
+          description: 'Application screening and validation by our admissions team'
+        },
+        {
+          step: 3,
+          title: 'Phone Interview',
+          description: 'Personal interview to assess your motivation and fit'
+        },
+        {
+          step: 4,
+          title: 'Assessment',
+          description: 'Complete the learner assessment, which will be sent to your email'
+        },
+        {
+          step: 5,
+          title: 'Decision',
+          description: 'Email notification of application decision'
+        },
+        {
+          step: 6,
+          title: 'Join Program',
+          description: 'Join us and become part of a community dedicated to shaping the future of technology'
+        }
+      ],
+      contactPerson: {
+        name: 'Magdalene',
+        title: 'Human Resources Team Lead',
+        email: 'hr@zyratech.com',
+        phone: '+233 24 123 4567'
+      }
+    },
+    2: {
+      id: 2,
+      title: 'Web Development Fundamentals',
+      category: 'basic',
+      icon: 'Code',
+      duration: '12 weeks',
+      level: 'Beginner',
+      participants: '20-25',
+      rating: 4.8,
+      reviews: 95,
+      price: 'GHS 2,500',
+      originalPrice: 'GHS 3,000',
+      badge: 'Bestseller',
+      description: 'Learn modern web development from scratch. Build responsive websites and web applications using HTML, CSS, JavaScript, and popular frameworks.',
+      longDescription: 'Our Web Development Fundamentals program is perfect for beginners who want to start a career in web development. You\'ll learn from industry experts, work on real projects, and build a portfolio that showcases your skills to potential employers.',
+      programOverview: 'Web Development Fundamentals is a comprehensive 12-week program that prepares unemployed or underemployed individuals for entry-level careers in web development. ZyraTech will support learners throughout the program and help them launch careers in technology.',
+      instructor: 'Sarah Johnson',
+      instructorTitle: 'Senior Web Developer',
+      instructorBio: '10+ years of experience in full-stack web development and digital product design.',
+      schedule: 'Weekdays 5PM-7PM',
+      format: 'Online + Onsite',
+      certificate: 'Professional Web Development Certificate',
+      deadline: '15th February, 2026',
       targetAudience: [
-        'Software Developers',
-        'System Administrators',
-        'IT Operations Staff',
-        'Cloud Engineers',
-        'Technical Leads'
-      ]
+        'Complete Beginners',
+        'Career Changers',
+        'Students',
+        'Entrepreneurs',
+        'Designers'
+      ],
+      careerOutcomes: [
+        'Frontend Developer',
+        'Backend Developer',
+        'Full Stack Developer',
+        'Web Designer',
+        'UI/UX Developer'
+      ],
+      partnership: 'In collaboration with industry leaders, ZyraTech offers cutting-edge technology training and fosters digital skills development in Africa.',
+      topics: [
+        'HTML5 & Semantic Markup',
+        'CSS3 & Responsive Design',
+        'JavaScript ES6+',
+        'React.js Framework',
+        'Node.js & Express',
+        'MongoDB Database',
+        'RESTful APIs',
+        'Git & Version Control',
+        'Deployment & Hosting',
+        'Performance Optimization'
+      ],
+      outcomes: [
+        'Build responsive and accessible websites',
+        'Create interactive web applications',
+        'Develop RESTful APIs and backend services',
+        'Work with modern JavaScript frameworks',
+        'Deploy applications to production',
+        'Build a professional portfolio'
+      ],
+      modules: [
+        {
+          title: 'Module 1: HTML & CSS Fundamentals',
+          duration: '3 weeks',
+          lessons: ['HTML5 Structure', 'CSS3 Styling', 'Responsive Design', 'CSS Frameworks']
+        },
+        {
+          title: 'Module 2: JavaScript Programming',
+          duration: '3 weeks',
+          lessons: ['JS Basics', 'DOM Manipulation', 'ES6+ Features', 'Async Programming']
+        },
+        {
+          title: 'Module 3: Frontend Frameworks',
+          duration: '3 weeks',
+          lessons: ['React Basics', 'Components', 'State Management', 'Routing']
+        },
+        {
+          title: 'Module 4: Backend Development',
+          duration: '2 weeks',
+          lessons: ['Node.js', 'Express.js', 'REST APIs', 'Authentication']
+        },
+        {
+          title: 'Module 5: Database & Deployment',
+          duration: '1 week',
+          lessons: ['MongoDB', 'Deployment', 'Hosting', 'CI/CD']
+        }
+      ],
+      requirements: [
+        'Basic computer literacy',
+        'No prior programming experience required',
+        'Access to a computer with internet',
+        'Commitment to complete the program'
+      ],
+      applicationProcess: [
+        {
+          step: 1,
+          title: 'Apply Now',
+          description: 'Click on the "Apply Now" button below to complete the enrollment form'
+        },
+        {
+          step: 2,
+          title: 'Application Screening',
+          description: 'Application screening and validation by our admissions team'
+        },
+        {
+          step: 3,
+          title: 'Phone Interview',
+          description: 'Personal interview to assess your motivation and fit'
+        },
+        {
+          step: 4,
+          title: 'Assessment',
+          description: 'Complete the learner assessment, which will be sent to your email'
+        },
+        {
+          step: 5,
+          title: 'Decision',
+          description: 'Email notification of application decision'
+        },
+        {
+          step: 6,
+          title: 'Join Program',
+          description: 'Join us and become part of a community dedicated to shaping the future of technology'
+        }
+      ],
+      contactPerson: {
+        name: 'Magdalene',
+        title: 'Human Resources Team Lead',
+        email: 'hr@zyratech.com',
+        phone: '+233 24 123 4567'
+      }
     }
     // Add other courses as needed
   };
 
   const course = courses[courseId] || courses[1];
+  const heroImage = course?.id === 2 ? '/images/image2.png' : '/images/image1.png';
+  const parallaxImage = '/images/image3.png';
+
+  const programmeObjectives = course?.id === 2
+    ? [
+        {
+          title: 'Build responsive, modern websites',
+          description: 'Create clean layouts that look great on mobile, tablet, and desktop using modern HTML and CSS.'
+        },
+        {
+          title: 'Write real JavaScript for the web',
+          description: 'Work with the DOM, events, APIs, and modern ES6+ patterns to build interactive user experiences.'
+        },
+        {
+          title: 'Learn React fundamentals',
+          description: 'Understand components, state, props, routing, and how to structure a real-world frontend project.'
+        },
+        {
+          title: 'Ship a portfolio-ready project',
+          description: 'Build and deploy a complete project you can show employers or clients with confidence.'
+        }
+      ]
+    : [
+        {
+          title: 'Understand modern DevOps workflows',
+          description: 'Learn how teams deliver software reliably through collaboration, automation, and measurable practices.'
+        },
+        {
+          title: 'Automate delivery with CI/CD',
+          description: 'Build pipelines that test, package, and deploy applications consistently and safely.'
+        },
+        {
+          title: 'Work with containers and orchestration',
+          description: 'Use Docker and Kubernetes concepts to package and run applications at scale.'
+        },
+        {
+          title: 'Deploy and monitor cloud infrastructure',
+          description: 'Apply cloud best practices to improve performance, reliability, cost control, and security.'
+        }
+      ];
+
+  const pillars = [
+    {
+      title: 'Employment Pathways',
+      description: 'Build job-ready skills and a portfolio that positions you for real opportunities.',
+      Icon: Briefcase,
+    },
+    {
+      title: 'Skill Enhancement',
+      description: 'Gain practical, in-demand skills aligned with modern software development roles.',
+      Icon: TrendingUp,
+    },
+    {
+      title: 'Talent Development',
+      description: 'Learn with mentorship, peer support, and structured feedback throughout the program.',
+      Icon: UsersRound,
+    },
+    {
+      title: 'Bridging the Gap',
+      description: 'Bridge theory to practice with hands-on labs, projects, and real-world workflows.',
+      Icon: Target,
+    },
+  ];
+
+  const deliveryModel = [
+    {
+      title: 'Instructor-led Sessions',
+      description: 'Guided lessons, reviews, and practical walkthroughs with direct instructor support.',
+    },
+    {
+      title: 'Hands-on Practice',
+      description: 'Labs and projects to apply concepts and build confidence through doing.',
+    },
+    {
+      title: 'Self-paced Learning',
+      description: 'Structured exercises and assessments to reinforce learning at your own pace.',
+    },
+    {
+      title: 'Collaborative Learning',
+      description: 'Peer learning, group check-ins, and teamwork to strengthen problem-solving skills.',
+    },
+    {
+      title: 'Individual Feedback',
+      description: 'Targeted feedback to help you improve faster and stay on track.',
+    },
+  ];
 
   const handleEnroll = () => {
     navigate('/training#training-enrollment', { 
@@ -115,300 +379,334 @@ const CourseDetailPage = () => {
       <TrainingNavbar />
       <div className="flex-grow">
         {/* Course Header */}
-        <section className="bg-gradient-to-br from-[#004fa2] to-[#2A2D7C] text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            ref={titleAnimation.ref}
-            initial={titleAnimation.initial}
-            animate={titleAnimation.animate}
-            variants={titleAnimation.variants}
-            transition={titleAnimation.transition}
-          >
-            {/* Back Button */}
-            <button
-              onClick={() => navigate('/training')}
-              className="flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
-            >
-              <ArrowLeft size={20} />
-              Back to Courses
-            </button>
+        <section
+          className="relative min-h-[80vh] flex items-center bg-center bg-cover"
+          style={{ backgroundImage: `url('${heroImage}')` }}
+        >
+          <div className="absolute inset-0 bg-black/60" />
+          <div className="relative z-10 w-full py-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <motion.div
+                ref={titleAnimation.ref}
+                initial={titleAnimation.initial}
+                animate={titleAnimation.animate}
+                variants={titleAnimation.variants}
+                transition={titleAnimation.transition}
+              >
+                <button
+                  onClick={() => navigate('/training')}
+                  className="flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
+                >
+                  <ArrowLeft size={20} />
+                  Back to Programs
+                </button>
 
-            <div className="grid lg:grid-cols-3 gap-12">
-              {/* Main Content */}
-              <div className="lg:col-span-2">
-                <div className="flex items-center gap-4 mb-6">
-                  {course.badge && (
-                    <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-bold">
-                      {course.badge}
-                    </span>
-                  )}
-                  <div className="flex items-center gap-2">
-                    <Star size={16} className="text-yellow-400 fill-current" />
-                    <span className="font-semibold">{course.rating}</span>
-                    <span className="text-white/80">({course.reviews} reviews)</span>
+                <div className="grid lg:grid-cols-3 gap-10 items-start">
+                  <div className="lg:col-span-2">
+                    <div className="flex flex-wrap items-center gap-4 mb-6">
+                      {course.badge && (
+                        <span className="px-3 py-1 bg-white/15 text-white rounded-full text-xs font-bold backdrop-blur-sm">
+                          {course.badge}
+                        </span>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <Star size={16} className="text-yellow-400 fill-current" />
+                        <span className="font-semibold">{course.rating}</span>
+                        <span className="text-white/80">({course.reviews} reviews)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Calendar size={16} className="text-yellow-300" />
+                        <span className="text-white/90">
+                          Deadline: <span className="font-semibold">{course.deadline}</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight text-white">
+                      {course.title}
+                    </h1>
+
+                    <p className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed max-w-3xl">
+                      {course.programOverview}
+                    </p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                        <div className="flex items-center gap-2 text-white/90">
+                          <Clock size={18} className="text-yellow-300" />
+                          <span className="font-semibold">{course.duration}</span>
+                        </div>
+                        <div className="text-white/70 text-sm mt-1">Duration</div>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                        <div className="flex items-center gap-2 text-white/90">
+                          <Users size={18} className="text-yellow-300" />
+                          <span className="font-semibold">{course.participants}</span>
+                        </div>
+                        <div className="text-white/70 text-sm mt-1">Participants</div>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                        <div className="flex items-center gap-2 text-white/90">
+                          <Award size={18} className="text-yellow-300" />
+                          <span className="font-semibold">Certificate</span>
+                        </div>
+                        <div className="text-white/70 text-sm mt-1">{course.certificate}</div>
+                      </div>
+                    </div>
+
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8">
+                      <p className="text-white/90 leading-relaxed">
+                        {course.partnership}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <button
+                        onClick={handleEnroll}
+                        className="bg-yellow-400 hover:bg-yellow-300 text-gray-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                      >
+                        Apply Now
+                      </button>
+                      <a
+                        href={`mailto:${course.contactPerson.email}`}
+                        className="bg-white/15 hover:bg-white/25 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 backdrop-blur-sm inline-flex items-center justify-center"
+                      >
+                        Contact Us
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="lg:col-span-1">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/15">
+                      <div className="text-center mb-6">
+                        <div className="text-3xl font-bold text-yellow-300 mb-2">{course.price}</div>
+                        {course.originalPrice && (
+                          <div className="text-white/60 line-through">{course.originalPrice}</div>
+                        )}
+                      </div>
+
+                      <div className="space-y-3 text-white/90 mb-6">
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="text-white/70">Level</span>
+                          <span className="font-semibold">{course.level}</span>
+                        </div>
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="text-white/70">Format</span>
+                          <span className="font-semibold">{course.format}</span>
+                        </div>
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="text-white/70">Schedule</span>
+                          <span className="font-semibold">{course.schedule}</span>
+                        </div>
+                      </div>
+
+                      <div className="border-t border-white/15 pt-5">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Calendar size={16} className="text-yellow-300" />
+                          <span className="text-sm text-yellow-300 font-semibold">Application Deadline</span>
+                        </div>
+                        <div className="text-lg font-bold text-white mb-4">{course.deadline}</div>
+                        <button
+                          onClick={handleEnroll}
+                          className="w-full bg-yellow-400 hover:bg-yellow-300 text-gray-900 px-6 py-3 rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl"
+                        >
+                          Apply Now
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                <h1 className="text-4xl md:text-5xl font-bold mb-6">{course.title}</h1>
-                <p className="text-xl text-white/90 mb-8 leading-relaxed">{course.description}</p>
-
-                {/* Quick Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-                  <div className="flex items-center gap-3">
-                    <Clock className="w-5 h-5 text-[#FFD700]" />
-                    <div>
-                      <div className="font-semibold">{course.duration}</div>
-                      <div className="text-sm text-white/80">Duration</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Users className="w-5 h-5 text-[#FFD700]" />
-                    <div>
-                      <div className="font-semibold">{course.participants}</div>
-                      <div className="text-sm text-white/80">Class Size</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Target className="w-5 h-5 text-[#FFD700]" />
-                    <div>
-                      <div className="font-semibold">{course.level}</div>
-                      <div className="text-sm text-white/80">Level</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Award className="w-5 h-5 text-[#FFD700]" />
-                    <div>
-                      <div className="font-semibold">Certificate</div>
-                      <div className="text-sm text-white/80">Included</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Enrollment Card */}
-              <div className="lg:col-span-1">
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                  <div className="text-center mb-6">
-                    {course.originalPrice && (
-                      <div className="text-lg text-white/80 line-through mb-2">{course.originalPrice}</div>
-                    )}
-                    <div className="text-4xl font-bold text-[#FFD700] mb-2">{course.price}</div>
-                    <div className="text-white/80">One-time payment</div>
-                  </div>
-
-                  <button
-                    onClick={handleEnroll}
-                    className="w-full bg-[#FFD700] text-[#004fa2] hover:bg-yellow-400 px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 mb-4"
-                  >
-                    Enroll Now
-                  </button>
-
-                  <div className="space-y-3 text-sm">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle size={16} className="text-green-400" />
-                      <span>Expert instructor guidance</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle size={16} className="text-green-400" />
-                      <span>Hands-on projects</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle size={16} className="text-green-400" />
-                      <span>Certificate of completion</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle size={16} className="text-green-400" />
-                      <span>Lifetime access to materials</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              </motion.div>
             </div>
-          </motion.div>
-        </div>
-      </section>
+          </div>
+        </section>
 
-      {/* Course Content Tabs */}
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {pillars.map(({ title, description, Icon }) => (
+                <div key={title} className="bg-gray-50 rounded-xl p-6 border border-gray-200 shadow-sm">
+                  <div className="w-12 h-12 rounded-lg bg-[#004fa2]/10 flex items-center justify-center mb-5">
+                    <Icon className="w-6 h-6 text-[#004fa2]" />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+      {/* Program Overview Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Tab Navigation */}
-          <div className="flex flex-wrap gap-2 mb-12 border-b border-gray-200">
-            {['overview', 'curriculum', 'instructor', 'requirements'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-6 py-3 font-medium transition-all duration-300 border-b-2 ${
-                  activeTab === tab
-                    ? 'text-[#004fa2] border-[#004fa2]'
-                    : 'text-gray-500 border-transparent hover:text-gray-700'
-                }`}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            ))}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Program Overview
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              {course.programOverview}
+            </p>
+          </motion.div>
 
-          {/* Tab Content */}
-          <div className="grid lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2">
-              {activeTab === 'overview' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  className="space-y-8"
-                >
-                  <div>
-                    <h3 className="text-2xl font-bold text-black mb-4">About This Course</h3>
-                    <p className="text-gray-600 leading-relaxed">{course.longDescription}</p>
-                  </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="flex flex-col justify-center">
+              <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8">Programme Objectives</h3>
 
-                  <div>
-                    <h3 className="text-2xl font-bold text-black mb-4">What You'll Learn</h3>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      {course.outcomes.map((outcome, index) => (
-                        <div key={index} className="flex items-start gap-3">
-                          <CheckCircle size={20} className="text-green-500 flex-shrink-0 mt-1" />
-                          <span className="text-gray-600">{outcome}</span>
-                        </div>
-                      ))}
+              <div className="space-y-6">
+                {programmeObjectives.map((objective) => (
+                  <div key={objective.title} className="flex items-start gap-4">
+                    <div className="mt-1 flex-shrink-0">
+                      <Check className="w-5 h-5 text-orange-600" />
+                    </div>
+                    <div>
+                      <div className="font-bold text-slate-900">{objective.title}</div>
+                      <p className="text-slate-600 leading-relaxed">{objective.description}</p>
                     </div>
                   </div>
-
-                  <div>
-                    <h3 className="text-2xl font-bold text-black mb-4">Course Topics</h3>
-                    <div className="grid md:grid-cols-2 gap-3">
-                      {course.topics.map((topic, index) => (
-                        <div key={index} className="flex items-center gap-2 text-gray-600">
-                          <div className="w-2 h-2 bg-[#004fa2] rounded-full"></div>
-                          {topic}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {activeTab === 'curriculum' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  className="space-y-6"
-                >
-                  <h3 className="text-2xl font-bold text-black mb-6">Course Curriculum</h3>
-                  {course.modules.map((module, index) => (
-                    <div key={index} className="bg-white rounded-xl p-6 border border-gray-200">
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="text-lg font-semibold text-black">{module.title}</h4>
-                        <span className="text-sm text-gray-500">{module.duration}</span>
-                      </div>
-                      <div className="space-y-2">
-                        {module.lessons.map((lesson, lessonIndex) => (
-                          <div key={lessonIndex} className="flex items-center gap-3 text-gray-600">
-                            <Play size={16} className="text-[#004fa2]" />
-                            <span>{lesson}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </motion.div>
-              )}
-
-              {activeTab === 'instructor' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <div className="bg-white rounded-xl p-8 border border-gray-200">
-                    <div className="flex items-center gap-6 mb-6">
-                      <div className="w-20 h-20 bg-[#004fa2]/10 rounded-full flex items-center justify-center">
-                        <span className="text-2xl font-bold text-[#004fa2]">{course.instructor.charAt(0)}</span>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-black">{course.instructor}</h3>
-                        <p className="text-gray-600">{course.instructorTitle}</p>
-                      </div>
-                    </div>
-                    <p className="text-gray-600 leading-relaxed">{course.instructorBio}</p>
-                  </div>
-                </motion.div>
-              )}
-
-              {activeTab === 'requirements' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  className="space-y-8"
-                >
-                  <div>
-                    <h3 className="text-2xl font-bold text-black mb-4">Prerequisites</h3>
-                    <div className="space-y-3">
-                      {course.requirements.map((req, index) => (
-                        <div key={index} className="flex items-start gap-3">
-                          <Shield size={20} className="text-[#004fa2] flex-shrink-0 mt-1" />
-                          <span className="text-gray-600">{req}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-2xl font-bold text-black mb-4">Target Audience</h3>
-                    <div className="grid md:grid-cols-2 gap-3">
-                      {course.targetAudience.map((audience, index) => (
-                        <div key={index} className="flex items-center gap-2 text-gray-600">
-                          <Users size={16} className="text-[#004fa2]" />
-                          {audience}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
+                ))}
+              </div>
             </div>
 
-            {/* Sidebar */}
-            <div className="space-y-8">
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
-                <h4 className="font-bold text-black mb-4">Course Details</h4>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="w-5 h-5 text-gray-400" />
-                    <div>
-                      <div className="font-medium text-black">Schedule</div>
-                      <div className="text-sm text-gray-600">{course.schedule}</div>
-                    </div>
+            <div className="relative p-8 sm:p-10">
+              <div className="absolute left-0 top-10 bottom-10 w-3 sm:w-4 bg-orange-600 z-0 rounded-sm" />
+              <div className="relative z-10">
+                <img
+                  src={heroImage}
+                  alt="Trainee working"
+                  className="w-full h-[320px] sm:h-[380px] lg:h-[420px] object-cover rounded-2xl shadow-xl"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* Parallax Divider Section */}
+      <section
+        className="relative h-96 bg-fixed bg-center bg-cover"
+        style={{ backgroundImage: `url('${parallaxImage}')` }}
+      >
+        <div className="absolute inset-0 bg-black/60" />
+      </section>
+      {/* Available Cohorts Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Available cohorts for 2026</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-slate-50 rounded-xl border border-gray-200 p-6 shadow-sm">
+              <div className="font-bold text-lg text-[#004fa2] mb-2">January to April</div>
+            </div>
+            <div className="bg-slate-50 rounded-xl border border-gray-200 p-6 shadow-sm">
+              <div className="font-bold text-lg text-[#004fa2] mb-2">April to July</div>
+            </div>
+            <div className="bg-slate-50 rounded-xl border border-gray-200 p-6 shadow-sm">
+              <div className="font-bold text-lg text-[#004fa2] mb-2">July to October</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* Parallax Divider Section */}
+      <section
+        className="relative h-96 bg-fixed bg-center bg-cover"
+        style={{ backgroundImage: `url('${parallaxImage}')` }}
+      >
+        <div className="absolute inset-0 bg-black/60" />
+      </section>
+      {/* Modern CTA Section with Brand Colors and Clean Layout */}
+      <section className="bg-[#004fa2] py-20 text-center font-sans text-white">
+        <div className="max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 flex flex-col items-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Join Us?</h2>
+          <p className="text-lg md:text-xl leading-relaxed mb-8 text-[#e0e0e0]">
+            Become part of a community shaping the future of technology. This is more than training—it's your launchpad to a tech career.
+          </p>
+          <p className="text-lg font-medium mb-10">
+            <span className="text-white/80">Deadline:</span> <span className="font-bold">31st December, 2025</span>
+          </p>
+          <button
+            onClick={handleEnroll}
+            className="inline-block bg-[#ff5a00] hover:bg-[#e04e00] text-white font-bold py-4 px-12 rounded transition-colors duration-300 text-lg shadow-md"
+          >
+            Apply Now
+          </button>
+        </div>
+      </section>
+      {/* Parallax Divider Section */}
+      <section
+        className="relative h-96 bg-fixed bg-center bg-cover"
+        style={{ backgroundImage: `url('${parallaxImage}')` }}
+      >
+        <div className="absolute inset-0 bg-black/60" />
+      </section>
+
+      {/* Parallax Contact Section with Brand Styling */}
+      <section
+        className="relative flex items-center justify-center h-96 bg-fixed bg-center bg-cover"
+        style={{ backgroundImage: `url('${parallaxImage}')` }}
+      >
+        <div className="absolute inset-0 bg-[#004fa2]/90" />
+        {/* Parallax background only, content removed as requested */}
+      </section>
+
+      {/* Contact Section */}
+      <section className="py-16 bg-white" id="training-contact">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-10 items-stretch">
+            <div
+              className="relative rounded-2xl overflow-hidden min-h-[380px] bg-center bg-cover"
+              style={{ backgroundImage: `url('/images/image1.png')` }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <div className="text-white font-bold text-xl">{course.contactPerson.name}</div>
+                <div className="text-white/80">{course.contactPerson.title}</div>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl border border-gray-200 p-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Do you have any questions?</h2>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                Please feel free to contact {course.contactPerson.name}, {course.contactPerson.title}. We’ll help you understand the program requirements, schedule, and how to apply.
+              </p>
+
+              <div className="space-y-4 mb-8">
+                <a
+                  href={`mailto:${course.contactPerson.email}`}
+                  className="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4 hover:border-[#004fa2]/40 transition-colors"
+                >
+                  <div>
+                    <div className="text-sm text-gray-500">Email</div>
+                    <div className="font-semibold text-gray-900">{course.contactPerson.email}</div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-gray-400" />
-                    <div>
-                      <div className="font-medium text-black">Format</div>
-                      <div className="text-sm text-gray-600">{course.format}</div>
-                    </div>
+                  <span className="text-[#004fa2] font-bold">→</span>
+                </a>
+                <a
+                  href={`tel:${course.contactPerson.phone}`}
+                  className="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4 hover:border-[#004fa2]/40 transition-colors"
+                >
+                  <div>
+                    <div className="text-sm text-gray-500">Phone</div>
+                    <div className="font-semibold text-gray-900">{course.contactPerson.phone}</div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Award className="w-5 h-5 text-gray-400" />
-                    <div>
-                      <div className="font-medium text-black">Certificate</div>
-                      <div className="text-sm text-gray-600">{course.certificate}</div>
-                    </div>
-                  </div>
-                </div>
+                  <span className="text-[#004fa2] font-bold">→</span>
+                </a>
               </div>
 
-              <div className="bg-[#004fa2] text-white rounded-xl p-6">
-                <h4 className="font-bold mb-4">Need Help?</h4>
-                <p className="text-white/90 mb-4 text-sm">
-                  Have questions about this course? Our training coordinators are here to help.
-                </p>
-                <a 
-                  href="#training-contact"
-                  className="inline-flex items-center gap-2 bg-white text-[#004fa2] px-4 py-2 rounded-lg font-semibold transition-all duration-300"
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={handleEnroll}
+                  className="bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-8 py-4 rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  Apply Now
+                </button>
+                <a
+                  href={`mailto:${course.contactPerson.email}`}
+                  className="bg-yellow-400 hover:bg-yellow-300 text-gray-900 px-8 py-4 rounded-lg font-bold transition-all duration-300 inline-flex items-center justify-center"
                 >
                   Contact Us
                 </a>
@@ -417,36 +715,14 @@ const CourseDetailPage = () => {
           </div>
         </div>
       </section>
-      </div>
-      
-      {/* Simple Training Footer */}
-      <footer className="bg-gray-900 text-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="flex items-center justify-center mb-4">
-              <img 
-                src="/zyratecpng.png" 
-                alt="Zyra Tech Hub" 
-                className="h-8 w-auto object-contain"
-              />
-              <span className="ml-3 text-xl font-bold">Training</span>
-            </div>
-            <p className="text-gray-400 mb-4">
-              Professional Training Programs for Modern Tech Skills
-            </p>
-            <div className="flex justify-center space-x-6 text-sm text-gray-400">
-              <a href="/training#contact" className="hover:text-white transition-colors">Contact</a>
-              <a href="/training#enrollment" className="hover:text-white transition-colors">Enrollment</a>
-              <a href="/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Main Site</a>
-            </div>
-            <div className="mt-6 pt-6 border-t border-gray-800 text-center text-sm text-gray-500">
-              © 2024 Zyra Tech Hub. All rights reserved.
-            </div>
-          </div>
-        </div>
-      </footer>
+
+      {/* Newsletter Subscription Section */}
+      <NewsletterCTA />
+
+    </div>
     </div>
   );
 };
 
 export default CourseDetailPage;
+

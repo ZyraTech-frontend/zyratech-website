@@ -41,7 +41,6 @@ const IntermediateProgramsPage = () => {
       description: 'Transform data into insights with machine learning, statistics, and data visualization.',
       topics: ['Python for Data Science', 'Machine Learning', 'Data Visualization', 'Statistical Analysis', 'Big Data Tools'],
       outcomes: ['Build ML models', 'Data-driven decisions', 'Advanced analytics', 'Business intelligence'],
-      instructor: 'Data Science Team',
       schedule: 'Saturdays 10AM-2PM',
       format: 'Onsite',
       certificate: 'Data Science Certificate'

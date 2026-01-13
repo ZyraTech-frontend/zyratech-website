@@ -197,87 +197,64 @@ const BasicProgramsPage = () => {
       </section>
 
       {/* Learning Experience Section */}
-      <section className="py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Your Learning Experience
-            </h2>
-            <p className="text-lg text-white/90 max-w-3xl mx-auto">
-              We've designed our basic programs with your success in mind. Learn through hands-on projects, expert guidance, and real-world applications.
-            </p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Your Learning Experience</h3>
+            <p className="text-gray-600">We've designed our basic programs with your success in mind. Learn through hands-on projects, expert guidance, and real-world applications.</p>
           </motion.div>
 
-          {/* Learning Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-center"
-            >
-              <div className="w-16 h-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Code size={32} className="text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Hands-On Projects</h3>
-              <p className="text-white/80 text-sm">Build real applications and solve practical problems from day one</p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-center"
-            >
-              <div className="w-16 h-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users size={32} className="text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Expert Mentorship</h3>
-              <p className="text-white/80 text-sm">Get personalized guidance from industry professionals</p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-center"
-            >
-              <div className="w-16 h-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Target size={32} className="text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Portfolio Building</h3>
-              <p className="text-white/80 text-sm">Create impressive projects to showcase your skills to employers</p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="text-center"
-            >
-              <div className="w-16 h-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Star size={32} className="text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Community Support</h3>
-              <p className="text-white/80 text-sm">Join a supportive community of fellow learners</p>
-            </motion.div>
+            {[
+              {
+                icon: Code,
+                title: "Hands-On Projects",
+                description: "Build real applications and solve practical problems from day one"
+              },
+              {
+                icon: Users,
+                title: "Expert Mentorship",
+                description: "Get personalized guidance from industry professionals"
+              },
+              {
+                icon: Star,
+                title: "Portfolio Building",
+                description: "Create impressive projects to showcase your skills to employers"
+              },
+              {
+                icon: Target,
+                title: "Community Support",
+                description: "Join a supportive community of fellow learners"
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="text-center"
+              >
+                <div className="w-16 h-16 bg-[#004fa2]/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <feature.icon className="text-[#004fa2]" size={32} />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-2">{feature.title}</h4>
+                <p className="text-gray-600 text-sm">{feature.description}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Learning Journey Section */}
       <section className="py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -285,282 +262,176 @@ const BasicProgramsPage = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h3 className="text-2xl font-bold text-white mb-4">Your Learning Journey</h3>
-            <p className="text-white/80">From complete beginner to job-ready professional</p>
+            <h3 className="text-5xl font-black text-yellow-300 mb-8 drop-shadow-lg leading-tight">Your Learning Journey</h3>
+            <p className="text-yellow-100 text-xl font-semibold drop-shadow leading-relaxed">From complete beginner to job-ready professional</p>
           </motion.div>
 
-          {/* Journey Path */}
-          <div className="relative">
-            {/* Vertical Connecting Line */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-[#004fa2]/20 to-[#2A2D7C]/20 hidden md:block"></div>
+          {/* Vertical Alternating Timeline */}
+          <div className="relative max-w-4xl mx-auto">
+            {/* The Spine - Central Vertical Line */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-1 bg-white/20"></div>
             
-            {/* Journey Steps */}
-            <div className="space-y-16 max-w-5xl mx-auto">
-              {/* Step 1 */}
-              <motion.div
-                initial={{ opacity: 0, y: 50, rotate: -3 }}
-                whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="relative"
-              >
-                {/* Step Connector */}
+            {/* Step 1 - Left of Spine */}
+            <div className="relative flex items-center mb-8">
+              {/* Node Marker */}
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-white rounded-full border-4 border-white shadow-md z-10"></div>
+              
+              {/* Card - Left Side */}
+              <div className="w-5/12 pr-8">
                 <motion.div
-                  initial={{ scaleY: 0 }}
-                  whileInView={{ scaleY: 1 }}
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 0.2 }}
-                  className="absolute left-1/2 transform -translate-x-1/2 top-full w-1 h-16 bg-gradient-to-b from-[#004fa2] to-[#2A2D7C] origin-top hidden md:block"
-                ></motion.div>
-                
-                {/* Step Circle */}
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: 0.1 }}
-                  className="absolute left-1/2 transform -translate-x-1/2 -top-8 w-14 h-14 bg-[#004fa2] rounded-full flex items-center justify-center border-4 border-white shadow-lg z-10"
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                  className="bg-blue-900 border border-blue-700 rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow"
                 >
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.2, delay: 0.3 }}
-                    className="text-white font-bold text-lg"
-                  >
-                    1
-                  </motion.span>
-                </motion.div>
-                
-                {/* Step Card - Stepped Left */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9, x: -30 }}
-                  whileInView={{ opacity: 1, scale: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  className="bg-white rounded-lg p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 mx-auto mt-8 max-w-md transform -rotate-2 hover:rotate-0"
-                >
-                  <div className="flex items-center justify-center mb-4">
-                    <motion.div
-                      initial={{ rotate: -180 }}
-                      whileInView={{ rotate: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.3 }}
-                      className="w-16 h-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C] rounded-full flex items-center justify-center"
-                    >
-                      <Code size={32} className="text-white" />
-                    </motion.div>
-                  </div>
-                  <h4 className="font-bold text-gray-900 mb-2 text-center">Start Your Foundation</h4>
-                  <p className="text-sm text-gray-600 text-center">Begin with core concepts and fundamental skills. No prior experience needed.</p>
-                  <div className="mt-4 flex justify-center">
-                    <div className="flex items-center gap-2 text-[#004fa2]">
-                      <Code size={16} />
-                      <span className="text-sm font-medium">Basic Concepts</span>
+                  {/* Light Blue Icon Box - Top Left */}
+                  <div className="flex items-start mb-4">
+                    <div className="w-12 h-12 bg-blue-800 rounded-lg flex items-center justify-center mr-4">
+                      <Code className="text-yellow-300" size={20} />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-2xl font-bold text-white mb-2">1</div>
+                      <h4 className="text-lg font-bold text-white mb-2">Start Your Foundation</h4>
+                      <p className="text-white/90 text-sm mb-4">Begin with core concepts and fundamental skills. No prior experience needed.</p>
                     </div>
                   </div>
+                  <p className="text-white/90 mb-4">Begin with core concepts and fundamental skills. No prior experience needed.</p>
+                  <ul className="space-y-2">
+                    <li className="flex items-center text-white/80">
+                      <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
+                      Basic Concepts
+                    </li>
+                  </ul>
                 </motion.div>
-              </motion.div>
+              </div>
+              {/* Empty Right Side */}
+              <div className="w-5/12 pl-8"></div>
+            </div>
 
-              {/* Step 2 */}
-              <motion.div
-                initial={{ opacity: 0, y: 50, rotate: 2 }}
-                whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="relative"
-              >
-                {/* Step Connector */}
+            {/* Step 2 - Right of Spine */}
+            <div className="relative flex items-center mb-8">
+              {/* Empty Left Side */}
+              <div className="w-5/12 pr-8"></div>
+              
+              {/* Card - Right Side */}
+              <div className="w-5/12 pl-8">
                 <motion.div
-                  initial={{ scaleY: 0 }}
-                  whileInView={{ scaleY: 1 }}
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 0.3 }}
-                  className="absolute left-1/2 transform -translate-x-1/2 top-full w-1 h-16 bg-gradient-to-b from-[#004fa2] to-[#2A2D7C] origin-top hidden md:block"
-                ></motion.div>
-                
-                {/* Step Circle */}
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
-                  className="absolute left-1/2 transform -translate-x-1/2 -top-8 w-14 h-14 bg-[#004fa2] rounded-full flex items-center justify-center border-4 border-white shadow-lg z-10"
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="bg-blue-900 border border-blue-700 rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow"
                 >
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.2, delay: 0.4 }}
-                    className="text-white font-bold text-lg"
-                  >
-                    2
-                  </motion.span>
-                </motion.div>
-                
-                {/* Step Card - Stepped Right */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9, x: 30 }}
-                  whileInView={{ opacity: 1, scale: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="bg-white rounded-lg p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 mx-auto mt-8 max-w-md transform rotate-2 hover:rotate-0"
-                >
-                  <div className="flex items-center justify-center mb-4">
-                    <motion.div
-                      initial={{ rotate: -180 }}
-                      whileInView={{ rotate: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.4 }}
-                      className="w-16 h-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C] rounded-full flex items-center justify-center"
-                    >
-                      <Target size={32} className="text-white" />
-                    </motion.div>
-                  </div>
-                  <h4 className="font-bold text-gray-900 mb-2 text-center">Build Practical Skills</h4>
-                  <p className="text-sm text-gray-600 text-center">Apply your knowledge through hands-on exercises and real-world projects.</p>
-                  <div className="mt-4 flex justify-center">
-                    <div className="flex items-center gap-2 text-[#004fa2]">
-                      <Target size={16} />
-                      <span className="text-sm font-medium">Hands-On Practice</span>
+                  {/* Light Blue Icon Box - Top Left */}
+                  <div className="flex items-start mb-4">
+                    <div className="w-12 h-12 bg-blue-800 rounded-lg flex items-center justify-center mr-4">
+                      <Target className="text-yellow-300" size={20} />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-2xl font-bold text-white mb-2">2</div>
+                      <h4 className="text-lg font-bold text-white mb-2">Build Practical Skills</h4>
+                      <p className="text-white/90 text-sm mb-4">Apply your knowledge through hands-on exercises and real-world projects.</p>
                     </div>
                   </div>
+                  <p className="text-white/90 mb-4">Apply your knowledge through hands-on exercises and real-world projects.</p>
+                  <ul className="space-y-2">
+                    <li className="flex items-center text-white/80">
+                      <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
+                      Hands-On Practice
+                    </li>
+                  </ul>
                 </motion.div>
-              </motion.div>
+              </div>
+              
+              {/* Node Marker */}
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-white rounded-full border-4 border-white shadow-md z-10"></div>
+            </div>
 
-              {/* Step 3 */}
-              <motion.div
-                initial={{ opacity: 0, y: 50, rotate: -2 }}
-                whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="relative"
-              >
-                {/* Step Connector */}
+            {/* Step 3 - Left of Spine */}
+            <div className="relative flex items-center mb-8">
+              {/* Node Marker */}
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-white rounded-full border-4 border-white shadow-md z-10"></div>
+              
+              {/* Card - Left Side */}
+              <div className="w-5/12 pr-8">
                 <motion.div
-                  initial={{ scaleY: 0 }}
-                  whileInView={{ scaleY: 1 }}
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 0.4 }}
-                  className="absolute left-1/2 transform -translate-x-1/2 top-full w-1 h-16 bg-gradient-to-b from-[#004fa2] to-[#2A2D7C] origin-top hidden md:block"
-                ></motion.div>
-                
-                {/* Step Circle */}
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: 0.3 }}
-                  className="absolute left-1/2 transform -translate-x-1/2 -top-8 w-14 h-14 bg-[#004fa2] rounded-full flex items-center justify-center border-4 border-white shadow-lg z-10"
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  className="bg-blue-900 border border-blue-700 rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow"
                 >
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.2, delay: 0.5 }}
-                    className="text-white font-bold text-lg"
-                  >
-                    3
-                  </motion.span>
-                </motion.div>
-                
-                {/* Step Card - Stepped Left */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9, x: -30 }}
-                  whileInView={{ opacity: 1, scale: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  className="bg-white rounded-lg p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 mx-auto mt-8 max-w-md transform -rotate-2 hover:rotate-0"
-                >
-                  <div className="flex items-center justify-center mb-4">
-                    <motion.div
-                      initial={{ rotate: -180 }}
-                      whileInView={{ rotate: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.5 }}
-                      className="w-16 h-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C] rounded-full flex items-center justify-center"
-                    >
-                      <Star size={32} className="text-white" />
-                    </motion.div>
-                  </div>
-                  <h4 className="font-bold text-gray-900 mb-2 text-center">Create Your Portfolio</h4>
-                  <p className="text-sm text-gray-600 text-center">Build impressive projects that showcase your skills to potential employers.</p>
-                  <div className="mt-4 flex justify-center">
-                    <div className="flex items-center gap-2 text-[#004fa2]">
-                      <Star size={16} />
-                      <span className="text-sm font-medium">Real Projects</span>
+                  {/* Light Blue Icon Box - Top Left */}
+                  <div className="flex items-start mb-4">
+                    <div className="w-12 h-12 bg-blue-800 rounded-lg flex items-center justify-center mr-4">
+                      <Star className="text-yellow-300" size={20} />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-2xl font-bold text-white mb-2">3</div>
+                      <h4 className="text-lg font-bold text-white mb-2">Create Your Portfolio</h4>
+                      <p className="text-white/90 text-sm mb-4">Build impressive projects that showcase your skills to potential employers.</p>
                     </div>
                   </div>
+                  <p className="text-white/90 mb-4">Build impressive projects that showcase your skills to potential employers.</p>
+                  <ul className="space-y-2">
+                    <li className="flex items-center text-white/80">
+                      <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
+                      Real Projects
+                    </li>
+                  </ul>
                 </motion.div>
-              </motion.div>
+              </div>
+              {/* Empty Right Side */}
+              <div className="w-5/12 pl-8"></div>
+            </div>
 
-              {/* Step 4 */}
-              <motion.div
-                initial={{ opacity: 0, y: 50, rotate: 1 }}
-                whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="relative"
-              >
-                {/* Step Circle */}
+            {/* Step 4 - Right of Spine */}
+            <div className="relative flex items-center">
+              {/* Empty Left Side */}
+              <div className="w-5/12 pr-8"></div>
+              
+              {/* Card - Right Side */}
+              <div className="w-5/12 pl-8">
                 <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: 0.4 }}
-                  className="absolute left-1/2 transform -translate-x-1/2 -top-8 w-14 h-14 bg-gradient-to-r from-[#004fa2] to-[#2A2D7C] rounded-full flex items-center justify-center border-4 border-white shadow-lg z-10"
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="bg-gradient-to-r from-blue-900 to-blue-800 border border-blue-600 rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow"
                 >
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.2, delay: 0.6 }}
-                    className="text-white font-bold text-lg"
-                  >
-                    4
-                  </motion.span>
-                </motion.div>
-                
-                {/* Step Card - Stepped Right */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9, x: 30 }}
-                  whileInView={{ opacity: 1, scale: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.5 }}
-                  className="bg-gradient-to-r from-[#004fa2] to-[#2A2D7C] rounded-lg p-6 shadow-lg border border-[#004fa2] hover:shadow-xl transition-all duration-300 mx-auto mt-8 max-w-md transform rotate-1 hover:rotate-0"
-                >
-                  <div className="flex items-center justify-center mb-4">
-                    <motion.div
-                      initial={{ rotate: -180 }}
-                      whileInView={{ rotate: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.6 }}
-                      className="w-16 h-16 bg-white rounded-full flex items-center justify-center"
-                    >
-                      <Users size={32} className="text-[#004fa2]" />
-                    </motion.div>
-                  </div>
-                  <h4 className="font-bold text-white mb-2 text-center">Launch Your Career</h4>
-                  <p className="text-sm text-white/90 text-center">Graduate with job-ready skills and confidence to start your tech career.</p>
-                  <div className="mt-4 flex justify-center">
-                    <div className="flex items-center gap-2 text-white">
-                      <Users size={16} />
-                      <span className="text-sm font-medium">Career Ready</span>
+                  {/* Light Blue Icon Box - Top Left */}
+                  <div className="flex items-start mb-4">
+                    <div className="w-12 h-12 bg-blue-800 rounded-lg flex items-center justify-center mr-4">
+                      <Users className="text-yellow-300" size={20} />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-2xl font-bold text-white mb-2">4</div>
+                      <h4 className="text-lg font-bold text-white mb-2">Launch Your Career</h4>
+                      <p className="text-white/90 text-sm mb-4">Graduate with job-ready skills and confidence to start your tech career.</p>
                     </div>
                   </div>
+                  <p className="text-white/90 mb-4">Graduate with job-ready skills and confidence to start your tech career.</p>
+                  <ul className="space-y-2">
+                    <li className="flex items-center text-white/80">
+                      <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
+                      Career Ready
+                    </li>
+                  </ul>
                 </motion.div>
-              </motion.div>
+              </div>
+              
+              {/* Node Marker */}
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-white rounded-full border-4 border-white shadow-md z-10"></div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Programs Section */}
-      <section id="programs" className="py-12 bg-gray-50">
+      <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Header */}
-          <motion.div 
+          <motion.div
             ref={titleAnimation.ref}
             initial={titleAnimation.initial}
             animate={titleAnimation.animate}
