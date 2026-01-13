@@ -5,6 +5,7 @@ import { ArrowLeft, Clock, Users, Star, Award, CheckCircle, Check, Calendar, Bri
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import TrainingNavbar from '../../../components/TrainingNavbar';
 import NewsletterCTA from '../../../components/pages/gallery/NewsletterCTA';
+import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 
 const CourseDetailPage = () => {
   const { courseId } = useParams();
@@ -118,21 +119,11 @@ const CourseDetailPage = () => {
         },
         {
           step: 3,
-          title: 'Phone Interview',
-          description: 'Personal interview to assess your motivation and fit'
-        },
-        {
-          step: 4,
-          title: 'Assessment',
-          description: 'Complete the learner assessment, which will be sent to your email'
-        },
-        {
-          step: 5,
           title: 'Decision',
           description: 'Email notification of application decision'
         },
         {
-          step: 6,
+          step: 4,
           title: 'Join Program',
           description: 'Join us and become part of a community dedicated to shaping the future of technology'
         }
@@ -248,21 +239,11 @@ const CourseDetailPage = () => {
         },
         {
           step: 3,
-          title: 'Phone Interview',
-          description: 'Personal interview to assess your motivation and fit'
-        },
-        {
-          step: 4,
-          title: 'Assessment',
-          description: 'Complete the learner assessment, which will be sent to your email'
-        },
-        {
-          step: 5,
           title: 'Decision',
           description: 'Email notification of application decision'
         },
         {
-          step: 6,
+          step: 4,
           title: 'Join Program',
           description: 'Join us and become part of a community dedicated to shaping the future of technology'
         }
@@ -378,145 +359,210 @@ const CourseDetailPage = () => {
     <div className="min-h-screen bg-white flex flex-col">
       <TrainingNavbar />
       <div className="flex-grow">
-        {/* Course Header */}
+        {/* HERO SECTION: JOMACS Full Stack Web Development Style */}
         <section
-          className="relative min-h-[80vh] flex items-center bg-center bg-cover"
-          style={{ backgroundImage: `url('${heroImage}')` }}
+          className="hero-section relative min-h-[800px] flex items-center"
+          style={{
+            background: `linear-gradient(rgba(0,0,0,0.9),rgba(0,0,0,0.9)), url('/images/code-dark-bg.jpg')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
         >
-          <div className="absolute inset-0 bg-black/60" />
-          <div className="relative z-10 w-full py-16">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.div
-                ref={titleAnimation.ref}
-                initial={titleAnimation.initial}
-                animate={titleAnimation.animate}
-                variants={titleAnimation.variants}
-                transition={titleAnimation.transition}
-              >
-                <button
-                  onClick={() => navigate('/training')}
-                  className="flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
-                >
-                  <ArrowLeft size={20} />
-                  Back to Programs
-                </button>
-
-                <div className="grid lg:grid-cols-3 gap-10 items-start">
-                  <div className="lg:col-span-2">
-                    <div className="flex flex-wrap items-center gap-4 mb-6">
-                      {course.badge && (
-                        <span className="px-3 py-1 bg-white/15 text-white rounded-full text-xs font-bold backdrop-blur-sm">
-                          {course.badge}
-                        </span>
-                      )}
-                      <div className="flex items-center gap-2">
-                        <Star size={16} className="text-yellow-400 fill-current" />
-                        <span className="font-semibold">{course.rating}</span>
-                        <span className="text-white/80">({course.reviews} reviews)</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Calendar size={16} className="text-yellow-300" />
-                        <span className="text-white/90">
-                          Deadline: <span className="font-semibold">{course.deadline}</span>
-                        </span>
-                      </div>
-                    </div>
-
-                    <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight text-white">
-                      {course.title}
-                    </h1>
-
-                    <p className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed max-w-3xl">
-                      {course.programOverview}
-                    </p>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                        <div className="flex items-center gap-2 text-white/90">
-                          <Clock size={18} className="text-yellow-300" />
-                          <span className="font-semibold">{course.duration}</span>
-                        </div>
-                        <div className="text-white/70 text-sm mt-1">Duration</div>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                        <div className="flex items-center gap-2 text-white/90">
-                          <Users size={18} className="text-yellow-300" />
-                          <span className="font-semibold">{course.participants}</span>
-                        </div>
-                        <div className="text-white/70 text-sm mt-1">Participants</div>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                        <div className="flex items-center gap-2 text-white/90">
-                          <Award size={18} className="text-yellow-300" />
-                          <span className="font-semibold">Certificate</span>
-                        </div>
-                        <div className="text-white/70 text-sm mt-1">{course.certificate}</div>
-                      </div>
-                    </div>
-
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8">
-                      <p className="text-white/90 leading-relaxed">
-                        {course.partnership}
-                      </p>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row gap-4">
-                      <button
-                        onClick={handleEnroll}
-                        className="bg-yellow-400 hover:bg-yellow-300 text-gray-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
-                      >
-                        Apply Now
-                      </button>
-                      <a
-                        href={`mailto:${course.contactPerson.email}`}
-                        className="bg-white/15 hover:bg-white/25 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 backdrop-blur-sm inline-flex items-center justify-center"
-                      >
-                        Contact Us
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="lg:col-span-1">
-                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/15">
-                      <div className="text-center mb-6">
-                        <div className="text-3xl font-bold text-yellow-300 mb-2">{course.price}</div>
-                        {course.originalPrice && (
-                          <div className="text-white/60 line-through">{course.originalPrice}</div>
-                        )}
-                      </div>
-
-                      <div className="space-y-3 text-white/90 mb-6">
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="text-white/70">Level</span>
-                          <span className="font-semibold">{course.level}</span>
-                        </div>
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="text-white/70">Format</span>
-                          <span className="font-semibold">{course.format}</span>
-                        </div>
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="text-white/70">Schedule</span>
-                          <span className="font-semibold">{course.schedule}</span>
-                        </div>
-                      </div>
-
-                      <div className="border-t border-white/15 pt-5">
-                        <div className="flex items-center gap-2 mb-3">
-                          <Calendar size={16} className="text-yellow-300" />
-                          <span className="text-sm text-yellow-300 font-semibold">Application Deadline</span>
-                        </div>
-                        <div className="text-lg font-bold text-white mb-4">{course.deadline}</div>
-                        <button
-                          onClick={handleEnroll}
-                          className="w-full bg-yellow-400 hover:bg-yellow-300 text-gray-900 px-6 py-3 rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl"
-                        >
-                          Apply Now
-                        </button>
-                      </div>
-                    </div>
+          <div className="w-full max-w-6xl mx-auto px-6 py-16 flex flex-col lg:flex-row items-center justify-between gap-12">
+            {/* Left Content */}
+            <div className="flex-1 flex flex-col justify-center items-start text-left">
+              <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight font-sans">
+                Full Stack Web Development
+              </h1>
+              <p className="text-lg md:text-xl text-white/80 mb-8 max-w-xl leading-relaxed">
+                Master both frontend and backend development. Build real-world web applications, learn modern frameworks, and launch your tech career with hands-on projects and expert mentorship.
+              </p>
+              {/* Status Box */}
+              <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-5 py-2 mb-8">
+                <Calendar size={18} className="text-blue-400" />
+                <span className="text-white/90 font-medium text-base">Next Cohort: Date to be Decided</span>
+              </div>
+              {/* Icon Grid */}
+              <div className="grid grid-cols-2 gap-6 mb-10 w-full max-w-md">
+                <div className="flex items-center gap-3">
+                  <Clock size={22} className="text-white" />
+                  <div>
+                    <div className="text-white font-semibold text-base">6 Months</div>
+                    <div className="text-white/60 text-xs">Duration</div>
                   </div>
                 </div>
-              </motion.div>
+                <div className="flex items-center gap-3">
+                  <BookOpen size={22} className="text-white" />
+                  <div>
+                    <div className="text-white font-semibold text-base">Live Online</div>
+                    <div className="text-white/60 text-xs">Format</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Award size={22} className="text-white" />
+                  <div>
+                    <div className="text-white font-semibold text-base">Certificate</div>
+                    <div className="text-white/60 text-xs">Credential</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Users size={22} className="text-white" />
+                  <div>
+                    <div className="text-white font-semibold text-base">Expert Support</div>
+                    <div className="text-white/60 text-xs">Support</div>
+                  </div>
+                </div>
+              </div>
+              {/* CTA Button */}
+              <button
+                onClick={handleEnroll}
+                className="bg-[#2563eb] hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-lg text-lg shadow-lg transition-colors duration-300"
+              >
+                Enroll Now - $500
+              </button>
+            </div>
+            {/* Right Media Card */}
+            <div className="flex-1 flex justify-center items-center w-full max-w-md mt-12 lg:mt-0">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl w-full">
+                <img
+                  src={heroImage}
+                  alt="Laptop with code"
+                  className="w-full h-[380px] object-cover rounded-2xl"
+                />
+                {/* Caption Overlay */}
+                <div className="absolute bottom-0 left-0 right-0 backdrop-blur-md bg-black/60 py-3 px-4 text-center">
+                  <span className="text-white text-sm font-medium">
+                    Learn modern web development technologies and best practices.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Program Overview Section */}
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Program Overview
+              </h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                {course.programOverview}
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              <div className="flex flex-col justify-center">
+                <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8">Programme Objectives</h3>
+
+                <div className="space-y-6">
+                  {programmeObjectives.map((objective) => (
+                    <div key={objective.title} className="flex items-start gap-4">
+                      <div className="mt-1 flex-shrink-0">
+                        <Check className="w-5 h-5 text-orange-600" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-slate-900">{objective.title}</div>
+                        <p className="text-slate-600 leading-relaxed">{objective.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="relative p-8 sm:p-10">
+                <div className="absolute left-0 top-10 bottom-10 w-3 sm:w-4 bg-orange-600 z-0 rounded-sm" />
+                <div className="relative z-10">
+                  <img
+                    src={heroImage}
+                    alt="Trainee working"
+                    className="w-full h-[320px] sm:h-[380px] lg:h-[420px] object-cover rounded-2xl shadow-xl"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Parallax Divider Section */}
+        <section
+          className="relative h-96 bg-fixed bg-center bg-cover"
+          style={{ backgroundImage: `url('${parallaxImage}')` }}
+        >
+          <div className="absolute inset-0 bg-black/60" />
+        </section>
+
+        {/* Application Process Section */}
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              {/* Steps List */}
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">Application Process</h2>
+                <ol className="relative border-l-4 border-[#004fa2] pl-8 space-y-8">
+                  {course.applicationProcess
+                    .filter(step => step.title !== 'Phone Interview' && step.title !== 'Assessment')
+                    .map((step, idx, arr) => (
+                      <li key={step.title} className="ml-2">
+                        <div className="absolute -left-5 top-1.5 w-6 h-6 rounded-full bg-[#004fa2] flex items-center justify-center text-white font-bold text-base shadow-md">
+                          {idx + 1}
+                        </div>
+                        <div className="ml-4">
+                          <div className="font-bold text-lg text-[#004fa2] mb-1">{step.title}</div>
+                          <div className="text-gray-700 text-base">{step.description}</div>
+                        </div>
+                      </li>
+                    ))}
+                </ol>
+              </div>
+              {/* Illustration or Accent Image */}
+              <div className="flex justify-center items-center">
+                <img src="/images/image2.png" alt="Application Process" className="w-full max-w-lg h-[300px] sm:h-[340px] object-cover rounded-2xl shadow-xl border-4 border-[#004fa2]/10" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Parallax Divider Section */}
+        <section
+          className="relative h-64 bg-fixed bg-center bg-cover"
+          style={{ backgroundImage: `url('${parallaxImage}')` }}
+        >
+          <div className="absolute inset-0 bg-black/60" />
+        </section>
+
+        {/* How the Program Works Section */}
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              {/* Illustration or Accent Image */}
+              <div className="flex justify-center items-center order-2 md:order-1">
+                <img src="/images/image1.png" alt="How the Program Works" className="w-full max-w-lg h-[300px] sm:h-[340px] object-cover rounded-2xl shadow-xl border-4 border-[#004fa2]/10" />
+              </div>
+              {/* Steps List */}
+              <div className="order-1 md:order-2">
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">How the Program Works</h2>
+                <ul className="space-y-6">
+                  {deliveryModel.map((item, idx) => (
+                    <li key={item.title} className="flex items-start gap-4">
+                      <div className="mt-1 flex-shrink-0">
+                        <CheckCircle className="w-6 h-6 text-[#004fa2]" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-lg text-[#004fa2]">{item.title}</div>
+                        <p className="text-gray-700 leading-relaxed">{item.description}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </section>
@@ -537,77 +583,23 @@ const CourseDetailPage = () => {
           </div>
         </section>
 
-      {/* Program Overview Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Program Overview
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              {course.programOverview}
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div className="flex flex-col justify-center">
-              <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8">Programme Objectives</h3>
-
-              <div className="space-y-6">
-                {programmeObjectives.map((objective) => (
-                  <div key={objective.title} className="flex items-start gap-4">
-                    <div className="mt-1 flex-shrink-0">
-                      <Check className="w-5 h-5 text-orange-600" />
-                    </div>
-                    <div>
-                      <div className="font-bold text-slate-900">{objective.title}</div>
-                      <p className="text-slate-600 leading-relaxed">{objective.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="relative p-8 sm:p-10">
-              <div className="absolute left-0 top-10 bottom-10 w-3 sm:w-4 bg-orange-600 z-0 rounded-sm" />
-              <div className="relative z-10">
-                <img
-                  src={heroImage}
-                  alt="Trainee working"
-                  className="w-full h-[320px] sm:h-[380px] lg:h-[420px] object-cover rounded-2xl shadow-xl"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* Parallax Divider Section */}
-      <section
-        className="relative h-96 bg-fixed bg-center bg-cover"
-        style={{ backgroundImage: `url('${parallaxImage}')` }}
-      >
-        <div className="absolute inset-0 bg-black/60" />
-      </section>
       {/* Available Cohorts Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-[#004fa2]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Available cohorts for 2026</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Available cohorts for 2026</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-slate-50 rounded-xl border border-gray-200 p-6 shadow-sm">
-              <div className="font-bold text-lg text-[#004fa2] mb-2">January to April</div>
-            </div>
-            <div className="bg-slate-50 rounded-xl border border-gray-200 p-6 shadow-sm">
-              <div className="font-bold text-lg text-[#004fa2] mb-2">April to July</div>
-            </div>
-            <div className="bg-slate-50 rounded-xl border border-gray-200 p-6 shadow-sm">
-              <div className="font-bold text-lg text-[#004fa2] mb-2">July to October</div>
-            </div>
+            {['January to April', 'April to July', 'July to October'].map((cohort, idx) => (
+              <motion.div
+                key={cohort}
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.15, type: 'spring', stiffness: 80 }}
+                className="bg-[#004fa2] rounded-xl border border-white/20 p-6 shadow-lg hover:scale-105 hover:shadow-2xl transition-transform duration-300 cursor-pointer"
+              >
+                <div className="font-bold text-lg text-white mb-2">{cohort}</div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -635,22 +627,6 @@ const CourseDetailPage = () => {
             Apply Now
           </button>
         </div>
-      </section>
-      {/* Parallax Divider Section */}
-      <section
-        className="relative h-96 bg-fixed bg-center bg-cover"
-        style={{ backgroundImage: `url('${parallaxImage}')` }}
-      >
-        <div className="absolute inset-0 bg-black/60" />
-      </section>
-
-      {/* Parallax Contact Section with Brand Styling */}
-      <section
-        className="relative flex items-center justify-center h-96 bg-fixed bg-center bg-cover"
-        style={{ backgroundImage: `url('${parallaxImage}')` }}
-      >
-        <div className="absolute inset-0 bg-[#004fa2]/90" />
-        {/* Parallax background only, content removed as requested */}
       </section>
 
       {/* Contact Section */}
@@ -716,8 +692,16 @@ const CourseDetailPage = () => {
         </div>
       </section>
 
+      {/* Parallax Divider Section */}
+      <section
+        className="relative h-96 bg-fixed bg-center bg-cover"
+        style={{ backgroundImage: `url('${parallaxImage}')` }}
+      >
+        <div className="absolute inset-0 bg-black/60" />
+      </section>
+
       {/* Newsletter Subscription Section */}
-      <NewsletterCTA />
+      <NewsletterHero />
 
     </div>
     </div>
