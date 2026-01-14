@@ -363,7 +363,7 @@ const CourseDetailPage = () => {
         <section
           className="hero-section relative min-h-[800px] flex items-center"
           style={{
-            background: `linear-gradient(rgba(0,0,0,0.9),rgba(0,0,0,0.9)), url('/images/code-dark-bg.jpg')`,
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/image2.png')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
@@ -413,28 +413,17 @@ const CourseDetailPage = () => {
                   </div>
                 </div>
               </div>
-              {/* CTA Button */}
-              <button
-                onClick={handleEnroll}
-                className="bg-[#2563eb] hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-lg text-lg shadow-lg transition-colors duration-300"
-              >
-                Enroll Now - $500
-              </button>
-            </div>
-            {/* Right Media Card */}
-            <div className="flex-1 flex justify-center items-center w-full max-w-md mt-12 lg:mt-0">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl w-full">
-                <img
-                  src={heroImage}
-                  alt="Laptop with code"
-                  className="w-full h-[380px] object-cover rounded-2xl"
-                />
-                {/* Caption Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 backdrop-blur-md bg-black/60 py-3 px-4 text-center">
-                  <span className="text-white text-sm font-medium">
-                    Learn modern web development technologies and best practices.
-                  </span>
-                </div>
+              {/* CTA Button + Text Inline */}
+              <div className="flex items-center gap-8">
+                <button
+                  onClick={handleEnroll}
+                  className="bg-[#2563eb] hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-lg text-lg shadow-lg transition-colors duration-300"
+                >
+                  Enroll Now - $500
+                </button>
+                <p className="text-white/80 text-sm leading-relaxed max-w-md">
+                  Learn modern web development technologies and best practices.
+                </p>
               </div>
             </div>
           </div>

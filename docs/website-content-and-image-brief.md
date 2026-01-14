@@ -302,6 +302,9 @@ Use consistent visuals across the site:
 12) `course-contact-lead.jpg` (4:3)
 - Description: HR/recruitment lead portrait, office background.
 
+13) `code-dark-bg.jpg` (16:9)
+- Description: dark-themed code background with subtle glow, suitable for hero overlays with text.
+
 ### Projects
 13) `projects-hero.jpg` (16:9)
 - Description: product mockups on laptop/phone, clean premium product photography.
