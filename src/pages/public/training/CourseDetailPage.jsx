@@ -1,11 +1,9 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Clock, Users, Star, Award, CheckCircle, Check, Calendar, Briefcase, TrendingUp, UsersRound, Target, BookOpen } from 'lucide-react';
+import { ArrowLeft, Clock, Users, Star, Award, Check, CheckCircle, Calendar, Briefcase, TrendingUp, UsersRound, Target, BookOpen } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import TrainingNavbar from '../../../components/TrainingNavbar';
-import NewsletterCTA from '../../../components/pages/gallery/NewsletterCTA';
-import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 
 const CourseDetailPage = () => {
   const { courseId } = useParams();
@@ -355,95 +353,100 @@ const CourseDetailPage = () => {
     });
   };
 
+  const heroTitle = course?.id === 2 ? 'Full Stack Web Development' : course.title;
+  const heroSubtitle = course?.id === 2 ? course.description : course.longDescription;
+  const heroInfoText = course?.id === 2
+    ? 'Learn modern web development technologies and best practices.'
+    : 'Learn modern technologies and best practices.';
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <TrainingNavbar />
       <div className="flex-grow">
-        {/* HERO SECTION: JOMACS Full Stack Web Development Style */}
+        {/* Course Header */}
         <section
-          className="hero-section relative min-h-[800px] flex items-center"
-          style={{
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
+          className="relative min-h-[80vh] flex items-center bg-center bg-cover"
+          style={{ backgroundImage: `url('${heroImage}')` }}
         >
-          <div className="w-full max-w-6xl mx-auto px-6 py-16 flex flex-col lg:flex-row items-center justify-between gap-12">
-            {/* Left Content */}
-            <div className="flex-1 flex flex-col justify-center items-start text-left">
-              <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight font-sans">
-                Full Stack Web Development
-              </h1>
-              <p className="text-lg md:text-xl text-white/80 mb-8 max-w-xl leading-relaxed">
-                Master both frontend and backend development. Build real-world web applications, learn modern frameworks, and launch your tech career with hands-on projects and expert mentorship.
-              </p>
-              {/* Status Box */}
-              <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-5 py-2 mb-8">
-                <Calendar size={18} className="text-blue-400" />
-                <span className="text-white/90 font-medium text-base">Next Cohort: Date to be Decided</span>
-              </div>
-              {/* Icon Grid */}
-              <div className="grid grid-cols-2 gap-6 mb-10 w-full max-w-md">
-                <div className="flex items-center gap-3">
-                  <Clock size={22} className="text-white" />
-                  <div>
-                    <div className="text-white font-semibold text-base">6 Months</div>
-                    <div className="text-white/60 text-xs">Duration</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <BookOpen size={22} className="text-white" />
-                  <div>
-                    <div className="text-white font-semibold text-base">Live Online</div>
-                    <div className="text-white/60 text-xs">Format</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Award size={22} className="text-white" />
-                  <div>
-                    <div className="text-white font-semibold text-base">Certificate</div>
-                    <div className="text-white/60 text-xs">Credential</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Users size={22} className="text-white" />
-                  <div>
-                    <div className="text-white font-semibold text-base">Expert Support</div>
-                    <div className="text-white/60 text-xs">Support</div>
-                  </div>
-                </div>
-              </div>
-              {/* CTA Button */}
-              <div className="flex items-center">
+          <div className="absolute inset-0 bg-black/60" />
+          <div className="relative z-10 w-full py-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <motion.div
+                ref={titleAnimation.ref}
+                initial={titleAnimation.initial}
+                animate={titleAnimation.animate}
+                variants={titleAnimation.variants}
+                transition={titleAnimation.transition}
+              >
                 <button
-                  onClick={handleEnroll}
-                  className="bg-[#2563eb] hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-lg text-lg shadow-lg transition-colors duration-300"
+                  onClick={() => navigate('/training')}
+                  className="flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
                 >
-                  Enroll Now - $500
+                  <ArrowLeft size={20} />
+                  Back to Programs
                 </button>
-              </div>
-            </div>
 
-            {/* Right Media Card */}
-            <div className="flex-1 flex justify-center items-center w-full max-w-md mt-12 lg:mt-0">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl w-full">
-                <img
-                  src={heroImage}
-                  alt="Laptop with code"
-                  className="w-full h-[380px] object-cover rounded-2xl"
-                />
-                {/* Caption Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 backdrop-blur-md bg-black/60 py-4 px-6 text-center">
-                  <p className="text-white text-sm font-medium leading-relaxed">
-                    Learn modern web development technologies and best practices.
-                  </p>
+                <div className="grid lg:grid-cols-3 gap-10 items-start">
+                  <div className="lg:col-span-2">
+                    <div className="flex flex-wrap items-center gap-4 mb-6">
+                      <span className="px-4 py-1.5 bg-white/15 text-white rounded-full text-xs font-bold backdrop-blur-sm">
+                        Next Cohort
+                      </span>
+                    </div>
+
+                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                      {heroTitle}
+                    </h1>
+                    <p className="text-white/90 text-lg leading-relaxed max-w-2xl">
+                      {heroSubtitle}
+                    </p>
+                  </div>
+
+                  <div className="flex justify-start lg:justify-end">
+                    <div className="bg-white/10 backdrop-blur-[10px] rounded-2xl px-6 py-4 border border-white/20 shadow-lg whitespace-nowrap w-fit">
+                      <div className="text-white font-semibold">
+                        {heroInfoText}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
 
-        {/* Program Overview Section */}
+        <section className="bg-white border-b border-gray-200 rounded-b-[40px] overflow-hidden shadow-lg">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div className="flex flex-wrap items-center gap-6">
+                <div className="flex items-center gap-3">
+                  <Clock size={18} className="text-[#004fa2]" />
+                  <div className="text-sm font-semibold text-gray-900">6 Months</div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <BookOpen size={18} className="text-[#004fa2]" />
+                  <div className="text-sm font-semibold text-gray-900">Live Online</div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Award size={18} className="text-[#004fa2]" />
+                  <div className="text-sm font-semibold text-gray-900">Certificate</div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <UsersRound size={18} className="text-[#004fa2]" />
+                  <div className="text-sm font-semibold text-gray-900">Expert Support</div>
+                </div>
+              </div>
+
+              <button
+                onClick={handleEnroll}
+                className="bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-8 py-4 rounded font-bold transition-colors shadow-md"
+              >
+                Enroll Now - $500
+              </button>
+            </div>
+          </div>
+        </section>
+
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
@@ -703,10 +706,7 @@ const CourseDetailPage = () => {
         <div className="absolute inset-0 bg-black/60" />
       </section>
 
-      {/* Newsletter Subscription Section */}
-      <NewsletterHero />
-
-    </div>
+      </div>
     </div>
   );
 };
