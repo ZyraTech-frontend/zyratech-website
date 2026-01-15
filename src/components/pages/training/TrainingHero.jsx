@@ -56,7 +56,7 @@ const TrainingHero = () => {
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
                 <a 
-                  href="#training-programs"
+                  href="/training/programs"
                   className="group bg-[#004fa2] hover:bg-[#000000] text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 inline-flex items-center justify-center gap-3 transform hover:-translate-y-1 w-full sm:w-auto"
                 >
                   Explore Programs
@@ -64,7 +64,7 @@ const TrainingHero = () => {
                 </a>
                 
                 <a 
-                  href="#training-contact"
+                  href="/training/programs"
                   className="group bg-transparent border-2 border-white text-white hover:bg-white hover:text-[#004fa2] px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 inline-flex items-center justify-center gap-3 transform hover:-translate-y-1 w-full sm:w-auto"
                 >
                   Get Quote

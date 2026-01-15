@@ -5,9 +5,7 @@ const TrainingNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const trainingLinks = [
-    { name: 'Our Programs', path: '/training/programs' },
-    { name: 'Enrollment', path: '/training#enrollment' },
-    { name: 'Contact', path: '/training#contact' }
+    { name: 'Our Programs', path: '/training/programs' }
   ];
 
   return (

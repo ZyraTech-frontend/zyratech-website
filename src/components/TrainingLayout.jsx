@@ -22,8 +22,7 @@ const TrainingLayout = ({ children }) => {
               Professional Training Programs for Modern Tech Skills
             </p>
             <div className="flex justify-center space-x-6 text-sm text-gray-400">
-              <a href="/training#contact" className="hover:text-white transition-colors">Contact</a>
-              <a href="/training#enrollment" className="hover:text-white transition-colors">Enrollment</a>
+              <a href="/training/programs" className="hover:text-white transition-colors">Our Programs</a>
               <a href="/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Main Site</a>
             </div>
             <div className="mt-8 pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
