@@ -345,7 +345,7 @@ const CourseDetailPage = () => {
   ];
 
   const handleEnroll = () => {
-    navigate('/training#training-enrollment', { 
+    navigate('/training/programs', { 
       state: { 
         course: course.title,
         courseId: course.id 

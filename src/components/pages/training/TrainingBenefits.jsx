@@ -134,7 +134,7 @@ const TrainingBenefits = () => {
               Join hundreds of companies that have elevated their teams through our professional training programs. Start your transformation journey today.
             </p>
             <a 
-              href="#training-enrollment"
+              href="/training/programs"
               className="bg-white text-[#004fa2] hover:bg-gray-100 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 inline-flex items-center gap-2"
             >
               Get Started Now

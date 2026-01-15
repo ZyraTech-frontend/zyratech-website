@@ -3,6 +3,15 @@ import { motion } from 'framer-motion';
 import { CheckCircle, Users, Award, Target, BookOpen, Briefcase, Heart, ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 
+const ParallaxDivider = ({ heightClassName = 'h-56 sm:h-64 md:h-72' }) => (
+  <div
+    className={`relative ${heightClassName} w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-scroll md:bg-fixed bg-center bg-cover`}
+    style={{ backgroundImage: "url('/images/image3.png')" }}
+  >
+    <div className="absolute inset-0 bg-black/60" />
+  </div>
+);
+
 const TrainingAbout = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
   const featuresAnimation = useScrollAnimation({ type: 'slideUp', delay: 0.1 });
@@ -30,6 +39,8 @@ const TrainingAbout = () => {
             your existing skills, our academy is designed to take you to the next level.
           </p>
         </motion.div>
+
+        <ParallaxDivider />
 
         {/* Why Choose ZyraTech - AmaliTech Structure */}
         <div className="mb-16">
@@ -105,6 +116,8 @@ const TrainingAbout = () => {
                 </div>
               </div>
             </div>
+
+            <ParallaxDivider />
 
             {/* Second 3 Benefits */}
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -282,7 +295,7 @@ const TrainingAbout = () => {
             software engineering and beyond, we have something for everyone.
           </p>
           <a 
-            href="#training-programs"
+            href="/training/programs"
             className="inline-flex items-center gap-2 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
           >
             Explore Training Programs
