@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Clock, Users, Star, Award, Check, CheckCircle, Calendar, Briefcase, TrendingUp, UsersRound, Target, BookOpen } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import TrainingNavbar from '../../../components/TrainingNavbar';
+import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 
 const CourseDetailPage = () => {
   const { courseId } = useParams();
@@ -12,12 +13,40 @@ const CourseDetailPage = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
 
   // Course data - in a real app, this would come from an API
+  const defaultApplicationProcess = [
+    {
+      step: 1,
+      title: 'Apply Now',
+      description: 'Click on the "Apply Now" button below to complete the enrollment form'
+    },
+    {
+      step: 2,
+      title: 'Application Screening',
+      description: 'Application screening and validation by our admissions team'
+    },
+    {
+      step: 3,
+      title: 'Decision',
+      description: 'Email notification of application decision'
+    },
+    {
+      step: 4,
+      title: 'Join Program',
+      description: 'Join us and become part of a community dedicated to shaping the future of technology'
+    }
+  ];
+
+  const defaultContactPerson = {
+    name: 'Magdalene',
+    title: 'Human Resources Team Lead',
+    email: 'hr@zyratech.com',
+    phone: '+233 24 123 4567'
+  };
+
   const courses = {
     1: {
       id: 1,
       title: 'DevOps Engineering',
-      category: 'technical',
-      icon: 'Cloud',
       duration: '8 weeks',
       level: 'Intermediate',
       participants: '15-20',
@@ -26,260 +55,16 @@ const CourseDetailPage = () => {
       price: 'GHS 3,500',
       originalPrice: 'GHS 4,500',
       badge: 'Popular',
-      description: 'Master CI/CD pipelines, containerization, cloud deployment, and infrastructure automation with hands-on projects and real-world scenarios.',
-      longDescription: 'Our comprehensive DevOps Engineering program is designed to transform you into a skilled DevOps professional. You\'ll learn industry-standard tools and practices, work on real projects, and gain the confidence to implement DevOps solutions in any organization.',
-      programOverview: 'DevOps Engineering is a comprehensive 8-week program that prepares unemployed or underemployed individuals for entry-level careers in cloud computing and DevOps. ZyraTech will support learners throughout the DevOps Engineering program and help them launch careers in technology.',
       instructor: 'Michael Afedi',
-      instructorTitle: 'Senior DevOps Engineer',
-      instructorBio: '15+ years of experience in cloud infrastructure and DevOps transformation for Fortune 500 companies.',
       schedule: 'Weekdays 6PM-8PM',
       format: 'Online + Onsite',
       certificate: 'Professional DevOps Certificate',
       deadline: '31st January, 2026',
-      targetAudience: [
-        'Software Developers',
-        'System Administrators',
-        'IT Operations Staff',
-        'Cloud Engineers',
-        'Technical Leads'
-      ],
-      careerOutcomes: [
-        'DevOps Engineer',
-        'Cloud Engineer',
-        'Site Reliability Engineer',
-        'Infrastructure Engineer',
-        'Automation Engineer'
-      ],
-      partnership: 'In collaboration with industry leaders, ZyraTech offers cutting-edge technology training and fosters digital skills development in Africa.',
-      topics: [
-        'Docker & Containerization',
-        'Kubernetes Orchestration',
-        'AWS/Azure Cloud Services',
-        'Jenkins CI/CD Pipelines',
-        'Infrastructure as Code (Terraform)',
-        'Monitoring & Logging (ELK Stack)',
-        'GitOps & ArgoCD',
-        'Security Best Practices',
-        'Performance Optimization',
-        'Cost Management'
-      ],
-      outcomes: [
-        'Deploy applications at scale using container orchestration',
-        'Automate infrastructure provisioning and management',
-        'Implement robust CI/CD pipelines for continuous delivery',
-        'Monitor and optimize application performance',
-        'Design secure and scalable cloud architectures',
-        'Prepare for AWS/Azure DevOps certifications'
-      ],
-      modules: [
-        {
-          title: 'Module 1: DevOps Fundamentals',
-          duration: '1 week',
-          lessons: ['Introduction to DevOps', 'Culture & Practices', 'Toolchain Overview', 'Case Studies']
-        },
-        {
-          title: 'Module 2: Containerization with Docker',
-          duration: '2 weeks',
-          lessons: ['Docker Basics', 'Dockerfile Writing', 'Docker Compose', 'Container Security']
-        },
-        {
-          title: 'Module 3: Kubernetes Orchestration',
-          duration: '2 weeks',
-          lessons: ['K8s Architecture', 'Pods & Services', 'Deployments', 'Ingress & Networking']
-        },
-        {
-          title: 'Module 4: CI/CD Pipelines',
-          duration: '2 weeks',
-          lessons: ['Jenkins Setup', 'Pipeline Creation', 'Testing Integration', 'Deployment Strategies']
-        },
-        {
-          title: 'Module 5: Infrastructure as Code',
-          duration: '1 week',
-          lessons: ['Terraform Basics', 'Resource Management', 'State Management', 'Best Practices']
-        }
-      ],
-      requirements: [
-        'Basic understanding of Linux command line',
-        'Familiarity with programming concepts',
-        'Experience with Git version control',
-        'Dedication to complete hands-on projects'
-      ],
-      applicationProcess: [
-        {
-          step: 1,
-          title: 'Apply Now',
-          description: 'Click on the "Apply Now" button below to complete the enrollment form'
-        },
-        {
-          step: 2,
-          title: 'Application Screening',
-          description: 'Application screening and validation by our admissions team'
-        },
-        {
-          step: 3,
-          title: 'Decision',
-          description: 'Email notification of application decision'
-        },
-        {
-          step: 4,
-          title: 'Join Program',
-          description: 'Join us and become part of a community dedicated to shaping the future of technology'
-        }
-      ],
-      contactPerson: {
-        name: 'Magdalene',
-        title: 'Human Resources Team Lead',
-        email: 'hr@zyratech.com',
-        phone: '+233 24 123 4567'
-      }
-    },
-    2: {
-      id: 2,
-      title: 'Web Development Fundamentals',
-      category: 'basic',
-      icon: 'Code',
-      duration: '12 weeks',
-      level: 'Beginner',
-      participants: '20-25',
-      rating: 4.8,
-      reviews: 95,
-      price: 'GHS 2,500',
-      originalPrice: 'GHS 3,000',
-      badge: 'Bestseller',
-      description: 'Learn modern web development from scratch. Build responsive websites and web applications using HTML, CSS, JavaScript, and popular frameworks.',
-      longDescription: 'Our Web Development Fundamentals program is perfect for beginners who want to start a career in web development. You\'ll learn from industry experts, work on real projects, and build a portfolio that showcases your skills to potential employers.',
-      programOverview: 'Web Development Fundamentals is a comprehensive 12-week program that prepares unemployed or underemployed individuals for entry-level careers in web development. ZyraTech will support learners throughout the program and help them launch careers in technology.',
-      instructor: 'Sarah Johnson',
-      instructorTitle: 'Senior Web Developer',
-      instructorBio: '10+ years of experience in full-stack web development and digital product design.',
-      schedule: 'Weekdays 5PM-7PM',
-      format: 'Online + Onsite',
-      certificate: 'Professional Web Development Certificate',
-      deadline: '15th February, 2026',
-      targetAudience: [
-        'Complete Beginners',
-        'Career Changers',
-        'Students',
-        'Entrepreneurs',
-        'Designers'
-      ],
-      careerOutcomes: [
-        'Frontend Developer',
-        'Backend Developer',
-        'Full Stack Developer',
-        'Web Designer',
-        'UI/UX Developer'
-      ],
-      partnership: 'In collaboration with industry leaders, ZyraTech offers cutting-edge technology training and fosters digital skills development in Africa.',
-      topics: [
-        'HTML5 & Semantic Markup',
-        'CSS3 & Responsive Design',
-        'JavaScript ES6+',
-        'React.js Framework',
-        'Node.js & Express',
-        'MongoDB Database',
-        'RESTful APIs',
-        'Git & Version Control',
-        'Deployment & Hosting',
-        'Performance Optimization'
-      ],
-      outcomes: [
-        'Build responsive and accessible websites',
-        'Create interactive web applications',
-        'Develop RESTful APIs and backend services',
-        'Work with modern JavaScript frameworks',
-        'Deploy applications to production',
-        'Build a professional portfolio'
-      ],
-      modules: [
-        {
-          title: 'Module 1: HTML & CSS Fundamentals',
-          duration: '3 weeks',
-          lessons: ['HTML5 Structure', 'CSS3 Styling', 'Responsive Design', 'CSS Frameworks']
-        },
-        {
-          title: 'Module 2: JavaScript Programming',
-          duration: '3 weeks',
-          lessons: ['JS Basics', 'DOM Manipulation', 'ES6+ Features', 'Async Programming']
-        },
-        {
-          title: 'Module 3: Frontend Frameworks',
-          duration: '3 weeks',
-          lessons: ['React Basics', 'Components', 'State Management', 'Routing']
-        },
-        {
-          title: 'Module 4: Backend Development',
-          duration: '2 weeks',
-          lessons: ['Node.js', 'Express.js', 'REST APIs', 'Authentication']
-        },
-        {
-          title: 'Module 5: Database & Deployment',
-          duration: '1 week',
-          lessons: ['MongoDB', 'Deployment', 'Hosting', 'CI/CD']
-        }
-      ],
-      requirements: [
-        'Basic computer literacy',
-        'No prior programming experience required',
-        'Access to a computer with internet',
-        'Commitment to complete the program'
-      ],
-      applicationProcess: [
-        {
-          step: 1,
-          title: 'Apply Now',
-          description: 'Click on the "Apply Now" button below to complete the enrollment form'
-        },
-        {
-          step: 2,
-          title: 'Application Screening',
-          description: 'Application screening and validation by our admissions team'
-        },
-        {
-          step: 3,
-          title: 'Decision',
-          description: 'Email notification of application decision'
-        },
-        {
-          step: 4,
-          title: 'Join Program',
-          description: 'Join us and become part of a community dedicated to shaping the future of technology'
-        }
-      ],
-      contactPerson: {
-        name: 'Magdalene',
-        title: 'Human Resources Team Lead',
-        email: 'hr@zyratech.com',
-        phone: '+233 24 123 4567'
-      }
-    }
-    // Add other courses as needed
-  };
-
-  const course = courses[courseId] || courses[1];
-  const heroImage = course?.id === 2 ? '/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png' : '/images/image1.png';
-  const parallaxImage = '/images/image3.png';
-
-  const programmeObjectives = course?.id === 2
-    ? [
-        {
-          title: 'Build responsive, modern websites',
-          description: 'Create clean layouts that look great on mobile, tablet, and desktop using modern HTML and CSS.'
-        },
-        {
-          title: 'Write real JavaScript for the web',
-          description: 'Work with the DOM, events, APIs, and modern ES6+ patterns to build interactive user experiences.'
-        },
-        {
-          title: 'Learn React fundamentals',
-          description: 'Understand components, state, props, routing, and how to structure a real-world frontend project.'
-        },
-        {
-          title: 'Ship a portfolio-ready project',
-          description: 'Build and deploy a complete project you can show employers or clients with confidence.'
-        }
-      ]
-    : [
+      description: 'Master CI/CD pipelines, containerization, cloud deployment, and infrastructure automation.',
+      longDescription: 'Build modern delivery pipelines and infrastructure automation skills through practical labs and real-world workflows.',
+      programOverview: 'An 8-week intensive program that prepares learners for DevOps and cloud delivery roles with hands-on projects and mentorship.',
+      heroInfoText: 'Learn modern DevOps technologies and best practices.',
+      programmeObjectives: [
         {
           title: 'Understand modern DevOps workflows',
           description: 'Learn how teams deliver software reliably through collaboration, automation, and measurable practices.'
@@ -294,9 +79,520 @@ const CourseDetailPage = () => {
         },
         {
           title: 'Deploy and monitor cloud infrastructure',
-          description: 'Apply cloud best practices to improve performance, reliability, cost control, and security.'
+          description: 'Apply cloud best practices to improve reliability, performance, and security.'
         }
-      ];
+      ],
+      applicationProcess: defaultApplicationProcess,
+      contactPerson: defaultContactPerson,
+    },
+    2: {
+      id: 2,
+      title: 'Cloud Computing (AWS/Azure)',
+      duration: '12 weeks',
+      level: 'Beginner to Advanced',
+      participants: '20-25',
+      rating: 4.8,
+      reviews: 98,
+      price: 'GHS 4,200',
+      badge: 'Bestseller',
+      instructor: 'Sarah Johnson',
+      schedule: 'Weekends 9AM-1PM',
+      format: 'Online',
+      certificate: 'Cloud Computing Certificate',
+      deadline: '15th February, 2026',
+      description: 'Comprehensive cloud training with AWS/Azure certification preparation.',
+      longDescription: 'Learn cloud fundamentals and hands-on services across AWS and Azure, including compute, storage, networking, security, and certification readiness.',
+      programOverview: 'A 12-week cloud computing program designed to build practical cloud skills and prepare learners for entry-level cloud roles and certifications.',
+      heroInfoText: 'Build cloud fundamentals and prepare for certification.',
+      programmeObjectives: [
+        {
+          title: 'Understand cloud foundations',
+          description: 'Learn core concepts such as regions, availability, shared responsibility, and cloud economics.'
+        },
+        {
+          title: 'Work with essential services',
+          description: 'Practice compute, storage, networking, and identity services across AWS and Azure.'
+        },
+        {
+          title: 'Build secure cloud solutions',
+          description: 'Apply security best practices including IAM, encryption, and network security controls.'
+        },
+        {
+          title: 'Prepare for certification',
+          description: 'Use guided preparation, mock questions, and labs aligned with common cloud certification tracks.'
+        }
+      ],
+      applicationProcess: defaultApplicationProcess,
+      contactPerson: defaultContactPerson,
+    },
+    3: {
+      id: 3,
+      title: 'Full Stack Web Development',
+      duration: '16 weeks',
+      level: 'Beginner',
+      participants: '18-22',
+      rating: 4.7,
+      reviews: 156,
+      price: 'GHS 3,800',
+      instructor: 'David Mensah',
+      schedule: 'Weekdays 5PM-7PM',
+      format: 'Hybrid',
+      certificate: 'Full Stack Developer Certificate',
+      deadline: '31st January, 2026',
+      heroImage: '/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png',
+      description: 'Learn modern web development from frontend to backend with real projects.',
+      longDescription: 'Start from the basics and progress to building full stack applications with modern frontend, backend APIs, databases, and deployment practices.',
+      programOverview: 'A 16-week beginner-friendly program focused on building real web apps and a portfolio to help learners transition into junior developer roles.',
+      heroInfoText: 'Learn modern web development technologies and best practices.',
+      programmeObjectives: [
+        {
+          title: 'Build responsive, modern websites',
+          description: 'Create clean layouts that look great on mobile, tablet, and desktop using modern HTML and CSS.'
+        },
+        {
+          title: 'Write real JavaScript for the web',
+          description: 'Work with the DOM, events, APIs, and modern ES6+ patterns to build interactive user experiences.'
+        },
+        {
+          title: 'Develop full stack applications',
+          description: 'Build backend APIs, integrate databases, and connect everything into complete products.'
+        },
+        {
+          title: 'Ship portfolio-ready projects',
+          description: 'Build and deploy complete projects you can show employers or clients with confidence.'
+        }
+      ],
+      applicationProcess: defaultApplicationProcess,
+      contactPerson: defaultContactPerson,
+    },
+    4: {
+      id: 4,
+      title: 'Corporate Digital Transformation',
+      duration: 'Custom',
+      level: 'All Levels',
+      participants: 'Custom',
+      rating: 5.0,
+      reviews: 45,
+      price: 'Custom Quote',
+      badge: 'Premium',
+      instructor: 'Team of Experts',
+      schedule: 'Flexible',
+      format: 'Onsite/Online',
+      certificate: 'Certificate of Participation',
+      deadline: 'Flexible',
+      description: 'Tailored training programs for corporate digital transformation initiatives.',
+      longDescription: 'A customized engagement for organizations to align strategy, processes, and teams for digital transformation—delivered through workshops and practical implementation support.',
+      programOverview: 'A flexible corporate program designed to upskill teams, improve digital workflows, and accelerate transformation outcomes across departments.',
+      heroInfoText: 'Upskill teams and accelerate transformation outcomes.',
+      programmeObjectives: [
+        {
+          title: 'Build a transformation roadmap',
+          description: 'Identify opportunities, define priorities, and establish measurable milestones.'
+        },
+        {
+          title: 'Improve processes with technology',
+          description: 'Learn how to evaluate and apply tools for automation and productivity improvements.'
+        },
+        {
+          title: 'Strengthen digital culture',
+          description: 'Develop change management approaches to support adoption and long-term success.'
+        },
+        {
+          title: 'Align teams and stakeholders',
+          description: 'Create shared understanding of goals, responsibilities, and delivery expectations.'
+        }
+      ],
+      applicationProcess: defaultApplicationProcess,
+      contactPerson: defaultContactPerson,
+    },
+    5: {
+      id: 5,
+      title: 'Data Science & Analytics',
+      duration: '10 weeks',
+      level: 'Intermediate',
+      participants: '12-15',
+      rating: 4.6,
+      reviews: 73,
+      price: 'GHS 4,000',
+      originalPrice: 'GHS 5,800',
+      badge: 'Advanced',
+      instructor: 'Data Science Team',
+      schedule: 'Saturdays 10AM-2PM',
+      format: 'Onsite',
+      certificate: 'Data Science Certificate',
+      deadline: '15th February, 2026',
+      description: 'Transform data into insights with machine learning, statistics, and data visualization.',
+      longDescription: 'Learn how to clean, analyze, and model data—then communicate insights through strong visual storytelling and applied machine learning workflows.',
+      programOverview: 'A 10-week program for professionals looking to build analytics confidence and apply data science tools to real business problems.',
+      heroInfoText: 'Turn data into decisions with modern analytics.',
+      programmeObjectives: [
+        {
+          title: 'Analyze and visualize data',
+          description: 'Work with real datasets and create clear visual insights that drive decisions.'
+        },
+        {
+          title: 'Build machine learning models',
+          description: 'Train, evaluate, and iterate on models for common predictive tasks.'
+        },
+        {
+          title: 'Apply statistics confidently',
+          description: 'Use statistical thinking to validate assumptions and interpret results correctly.'
+        },
+        {
+          title: 'Communicate findings',
+          description: 'Tell a compelling story with data and present results for technical and non-technical audiences.'
+        }
+      ],
+      applicationProcess: defaultApplicationProcess,
+      contactPerson: defaultContactPerson,
+    },
+    6: {
+      id: 6,
+      title: 'Cloud Architecture',
+      duration: '8 weeks',
+      level: 'Advanced',
+      participants: '10-15',
+      rating: 4.8,
+      reviews: 95,
+      price: 'GHS 4,200',
+      originalPrice: 'GHS 5,200',
+      badge: 'Premium',
+      instructor: 'Cloud Architects',
+      schedule: 'Weekdays 6PM-8PM',
+      format: 'Online',
+      certificate: 'Cloud Architect Certificate',
+      deadline: '31st January, 2026',
+      description: 'Design and implement scalable cloud solutions on AWS, Azure, and Google Cloud.',
+      longDescription: 'Learn modern architecture patterns, reliability practices, cloud migration strategy, and cost optimization for scalable systems.',
+      programOverview: 'An advanced 8-week program for experienced practitioners to design cloud-native architectures and lead solution delivery.',
+      heroInfoText: 'Architect scalable, secure, and cost-effective cloud systems.',
+      programmeObjectives: [
+        {
+          title: 'Design cloud-native architectures',
+          description: 'Apply design patterns for scalability, resilience, and maintainability.'
+        },
+        {
+          title: 'Plan migrations and modernization',
+          description: 'Evaluate workloads and choose strategies for moving systems to the cloud.'
+        },
+        {
+          title: 'Improve reliability and security',
+          description: 'Build architectures that prioritize observability, threat modeling, and safe operations.'
+        },
+        {
+          title: 'Optimize costs',
+          description: 'Use practical frameworks to estimate, track, and reduce cloud spend.'
+        }
+      ],
+      applicationProcess: defaultApplicationProcess,
+      contactPerson: defaultContactPerson,
+    },
+    7: {
+      id: 7,
+      title: 'AI & Machine Learning',
+      duration: '12 weeks',
+      level: 'Advanced',
+      participants: '10-12',
+      rating: 4.9,
+      reviews: 142,
+      price: 'GHS 5,500',
+      originalPrice: 'GHS 6,500',
+      badge: 'Premium',
+      instructor: 'AI Research Team',
+      schedule: 'Saturdays 9AM-1PM',
+      format: 'Hybrid',
+      certificate: 'AI Engineer Certificate',
+      deadline: '15th February, 2026',
+      description: 'Deep dive into artificial intelligence, neural networks, and cutting-edge ML techniques.',
+      longDescription: 'Explore practical model development workflows, deep learning fundamentals, and how to ship ML models responsibly into real products.',
+      programOverview: 'A 12-week advanced program covering modern machine learning, model evaluation, deployment foundations, and ethical AI practices.',
+      heroInfoText: 'Build and deploy modern machine learning solutions.',
+      programmeObjectives: [
+        {
+          title: 'Understand ML foundations',
+          description: 'Learn core concepts in supervised/unsupervised learning and model evaluation.'
+        },
+        {
+          title: 'Work with neural networks',
+          description: 'Build deep learning models and understand training workflows and pitfalls.'
+        },
+        {
+          title: 'Apply ML to real domains',
+          description: 'Use techniques for NLP, computer vision, and structured data problems.'
+        },
+        {
+          title: 'Practice responsible AI',
+          description: 'Consider bias, fairness, privacy, and ethical deployment concerns.'
+        }
+      ],
+      applicationProcess: defaultApplicationProcess,
+      contactPerson: defaultContactPerson,
+    },
+    8: {
+      id: 8,
+      title: 'IT Fundamentals for Professionals',
+      duration: '6 weeks',
+      level: 'Beginner Friendly',
+      participants: '15-20',
+      rating: 4.7,
+      reviews: 89,
+      price: 'GHS 2,800',
+      badge: 'Popular',
+      instructor: 'Senior IT Team',
+      schedule: 'Weekends 2PM-5PM',
+      format: 'Flexible',
+      certificate: 'IT Fundamentals Certificate',
+      deadline: '31st January, 2026',
+      description: 'Designed for mature professionals transitioning into IT careers with foundational training.',
+      longDescription: 'Build confidence with essential computer skills, digital security awareness, and an overview of common IT roles and pathways.',
+      programOverview: 'A 6-week foundation program for career changers and professionals seeking practical IT readiness for the workplace.',
+      heroInfoText: 'Build foundational IT skills at a comfortable pace.',
+      programmeObjectives: [
+        {
+          title: 'Build core computer skills',
+          description: 'Understand file management, operating systems basics, and everyday troubleshooting.'
+        },
+        {
+          title: 'Improve digital communication',
+          description: 'Work confidently with email, online collaboration tools, and common productivity workflows.'
+        },
+        {
+          title: 'Practice digital security',
+          description: 'Learn safe habits around passwords, phishing, privacy, and device security.'
+        },
+        {
+          title: 'Explore IT career pathways',
+          description: 'Understand entry-level roles, required skills, and a plan to progress into tech.'
+        }
+      ],
+      applicationProcess: defaultApplicationProcess,
+      contactPerson: defaultContactPerson,
+    },
+    9: {
+      id: 9,
+      title: 'Digital Literacy & Office Automation',
+      duration: '4 weeks',
+      level: 'All Levels',
+      participants: '20-25',
+      rating: 4.6,
+      reviews: 67,
+      price: 'GHS 1,800',
+      instructor: 'Office Skills Team',
+      schedule: 'Weekdays 5PM-7PM',
+      format: 'Hybrid',
+      certificate: 'Digital Literacy Certificate',
+      deadline: '15th February, 2026',
+      description: 'Enhance digital skills and improve workplace productivity through technology.',
+      longDescription: 'Learn practical office productivity skills with modern tools for documents, spreadsheets, presentations, and collaboration.',
+      programOverview: 'A 4-week programme to help professionals become more efficient and confident with digital tools in the workplace.',
+      heroInfoText: 'Improve productivity with modern office tools.',
+      programmeObjectives: [
+        {
+          title: 'Master office productivity tools',
+          description: 'Work effectively with documents, spreadsheets, and presentations.'
+        },
+        {
+          title: 'Improve workplace collaboration',
+          description: 'Use cloud collaboration tools to share, review, and manage work efficiently.'
+        },
+        {
+          title: 'Organize information professionally',
+          description: 'Apply file management, naming conventions, and data hygiene practices.'
+        },
+        {
+          title: 'Communicate clearly with technology',
+          description: 'Use email, calendars, and communication tools responsibly and effectively.'
+        }
+      ],
+      applicationProcess: defaultApplicationProcess,
+      contactPerson: defaultContactPerson,
+    },
+    10: {
+      id: 10,
+      title: 'Career Transition to Tech Program',
+      duration: '12 weeks',
+      level: 'Career Changers',
+      participants: '12-15',
+      rating: 4.8,
+      reviews: 102,
+      price: 'GHS 4,500',
+      badge: 'Premium',
+      instructor: 'Career Development Team',
+      schedule: 'Flexible Schedule',
+      format: 'Online + Mentorship',
+      certificate: 'Career Transition Certificate',
+      deadline: '31st January, 2026',
+      description: 'A program for professionals from other fields to transition into technology careers.',
+      longDescription: 'Get structured guidance to assess strengths, build a learning plan, develop a portfolio, and prepare for interviews and networking in tech.',
+      programOverview: 'A 12-week guided programme for career changers that combines mentorship, practical projects, and job-readiness support.',
+      heroInfoText: 'Plan your transition and build a tech-ready portfolio.',
+      programmeObjectives: [
+        {
+          title: 'Assess skills and choose a pathway',
+          description: 'Identify roles that fit your strengths and build a realistic transition plan.'
+        },
+        {
+          title: 'Build job-ready competencies',
+          description: 'Develop practical skills aligned with modern tech roles and real workplace expectations.'
+        },
+        {
+          title: 'Create a professional portfolio',
+          description: 'Showcase your progress through projects that demonstrate capability and growth.'
+        },
+        {
+          title: 'Prepare for interviews and networking',
+          description: 'Improve your resume, interview readiness, and professional presence to land opportunities.'
+        }
+      ],
+      applicationProcess: defaultApplicationProcess,
+      contactPerson: defaultContactPerson,
+    },
+    11: {
+      id: 11,
+      title: 'Software Development Internship',
+      duration: '3 months',
+      level: 'Hands-on Training',
+      participants: '8-10',
+      rating: 4.9,
+      reviews: 145,
+      price: 'GHS 3,200',
+      badge: 'Popular',
+      instructor: 'Development Team',
+      schedule: 'Full-time (Mon-Fri)',
+      format: 'Onsite',
+      certificate: 'Internship Completion Certificate',
+      deadline: '31st January, 2026',
+      description: 'Hands-on experience in real software development projects with mentorship.',
+      longDescription: 'Join a professional team environment, work on real deliverables, and build a portfolio of practical development work with structured mentorship.',
+      programOverview: 'A 3-month immersive internship designed to build real-world development experience and workplace readiness.',
+      heroInfoText: 'Work on real projects and build your portfolio.',
+      programmeObjectives: [
+        {
+          title: 'Work in a real dev environment',
+          description: 'Learn workflows, teamwork, and tooling used in professional software development.'
+        },
+        {
+          title: 'Build practical development skills',
+          description: 'Deliver features, fix bugs, and learn testing and debugging best practices.'
+        },
+        {
+          title: 'Collaborate effectively',
+          description: 'Practice communication, task planning, and teamwork using modern project tools.'
+        },
+        {
+          title: 'Grow career readiness',
+          description: 'Improve CV, portfolio, and interview readiness with mentor feedback.'
+        }
+      ],
+      applicationProcess: defaultApplicationProcess,
+      contactPerson: defaultContactPerson,
+    },
+    12: {
+      id: 12,
+      title: 'IT Infrastructure Internship',
+      duration: '3 months',
+      level: 'Practical Experience',
+      participants: '6-8',
+      rating: 4.7,
+      reviews: 89,
+      price: 'GHS 2,800',
+      instructor: 'Infrastructure Team',
+      schedule: 'Full-time (Mon-Fri)',
+      format: 'Onsite',
+      certificate: 'Internship Completion Certificate',
+      deadline: '31st January, 2026',
+      description: 'Real-world experience in network administration, system maintenance, and IT support.',
+      longDescription: 'Gain hands-on exposure to enterprise IT environments—covering support operations, networking basics, security practices, and systems maintenance.',
+      programOverview: 'A 3-month internship designed to develop practical IT support and infrastructure skills in a professional environment.',
+      heroInfoText: 'Build practical IT support and infrastructure experience.',
+      programmeObjectives: [
+        {
+          title: 'Understand enterprise IT operations',
+          description: 'Learn how IT teams manage users, devices, systems, and incidents.'
+        },
+        {
+          title: 'Practice networking fundamentals',
+          description: 'Work with LAN/WAN basics, configurations, and troubleshooting approaches.'
+        },
+        {
+          title: 'Apply security best practices',
+          description: 'Learn safe operational habits, access control concepts, and basic hardening steps.'
+        },
+        {
+          title: 'Improve troubleshooting skills',
+          description: 'Develop structured thinking for diagnosing and resolving common IT issues.'
+        }
+      ],
+      applicationProcess: defaultApplicationProcess,
+      contactPerson: defaultContactPerson,
+    },
+    13: {
+      id: 13,
+      title: 'Digital Marketing Internship',
+      duration: '2 months',
+      level: 'Creative Training',
+      participants: '10-12',
+      rating: 4.6,
+      reviews: 76,
+      price: 'GHS 2,200',
+      badge: 'Creative',
+      instructor: 'Marketing Team',
+      schedule: 'Part-time Flexible',
+      format: 'Hybrid',
+      certificate: 'Internship Completion Certificate',
+      deadline: '15th February, 2026',
+      description: 'Learn digital marketing strategies through real campaigns and hands-on tools.',
+      longDescription: 'Work on real marketing campaigns and learn practical skills in content creation, SEO, email marketing, analytics, and brand communication.',
+      programOverview: 'A 2-month internship focused on practical digital marketing execution and measurable campaign outcomes.',
+      heroInfoText: 'Work on real campaigns and learn modern marketing tools.',
+      programmeObjectives: [
+        {
+          title: 'Plan and execute campaigns',
+          description: 'Learn how to design and launch marketing campaigns with clear goals and KPIs.'
+        },
+        {
+          title: 'Create content consistently',
+          description: 'Develop content for social media, email, and web with a strong brand voice.'
+        },
+        {
+          title: 'Understand SEO and analytics',
+          description: 'Use basic SEO practices and interpret analytics to improve performance.'
+        },
+        {
+          title: 'Build practical portfolio work',
+          description: 'Document your work and results to showcase skills for future opportunities.'
+        }
+      ],
+      applicationProcess: defaultApplicationProcess,
+      contactPerson: defaultContactPerson,
+    },
+  };
+
+  const course = courses[courseId];
+  const heroImage = course?.heroImage || '/images/image1.png';
+  const parallaxImage = '/images/image3.png';
+
+  if (!course) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col">
+        <TrainingNavbar />
+        <div className="flex-grow flex items-center justify-center px-4">
+          <div className="text-center max-w-md">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Program not found</h1>
+            <p className="text-gray-600 mb-8">The program you’re looking for doesn’t exist or may have been moved.</p>
+            <button
+              onClick={() => navigate('/training/programs')}
+              className="bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-6 py-3 rounded-lg font-bold transition-colors"
+            >
+              Back to Programs
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const programmeObjectives = course.programmeObjectives || [];
 
   const pillars = [
     {
@@ -353,11 +649,9 @@ const CourseDetailPage = () => {
     });
   };
 
-  const heroTitle = course?.id === 2 ? 'Full Stack Web Development' : course.title;
-  const heroSubtitle = course?.id === 2 ? course.description : course.longDescription;
-  const heroInfoText = course?.id === 2
-    ? 'Learn modern web development technologies and best practices.'
-    : 'Learn modern technologies and best practices.';
+  const heroTitle = course.title;
+  const heroSubtitle = course.longDescription || course.description;
+  const heroInfoText = course.heroInfoText || 'Learn modern technologies and best practices.';
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -413,15 +707,15 @@ const CourseDetailPage = () => {
               <div className="flex flex-wrap items-center gap-6">
                 <div className="flex items-center gap-3">
                   <Clock size={18} className="text-[#004fa2]" />
-                  <div className="text-sm font-semibold text-gray-900">6 Months</div>
+                  <div className="text-sm font-semibold text-gray-900">{course.duration}</div>
                 </div>
                 <div className="flex items-center gap-3">
                   <BookOpen size={18} className="text-[#004fa2]" />
-                  <div className="text-sm font-semibold text-gray-900">Live Online</div>
+                  <div className="text-sm font-semibold text-gray-900">{course.format}</div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Award size={18} className="text-[#004fa2]" />
-                  <div className="text-sm font-semibold text-gray-900">Certificate</div>
+                  <div className="text-sm font-semibold text-gray-900">{course.certificate || 'Certificate'}</div>
                 </div>
                 <div className="flex items-center gap-3">
                   <UsersRound size={18} className="text-[#004fa2]" />
@@ -433,7 +727,7 @@ const CourseDetailPage = () => {
                 onClick={handleEnroll}
                 className="bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-8 py-4 rounded font-bold transition-colors shadow-md"
               >
-                Enroll Now - $500
+                Enroll Now - {course.price}
               </button>
             </div>
           </div>
@@ -616,7 +910,7 @@ const CourseDetailPage = () => {
             Become part of a community shaping the future of technology. This is more than training—it's your launchpad to a tech career.
           </p>
           <p className="text-lg font-medium mb-10">
-            <span className="text-white/80">Deadline:</span> <span className="font-bold">31st December, 2025</span>
+            <span className="text-white/80">Deadline:</span> <span className="font-bold">{course.deadline}</span>
           </p>
           <button
             onClick={handleEnroll}
@@ -697,6 +991,8 @@ const CourseDetailPage = () => {
       >
         <div className="absolute inset-0 bg-black/60" />
       </section>
+
+      <NewsletterHero />
 
       </div>
     </div>

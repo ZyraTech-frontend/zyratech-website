@@ -5,7 +5,22 @@ const TrainingNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const trainingLinks = [
+    { name: 'Home', path: '/training' },
     { name: 'Our Programs', path: '/training/programs' }
+  ];
+
+  const programCategoryLinks = [
+    { name: 'Basic Programs', path: '/training/programs/basic' },
+    { name: 'Intermediate Programs', path: '/training/programs/intermediate' },
+    { name: 'Advanced Programs', path: '/training/programs/advanced' },
+    { name: 'Internship Programme', path: '/training/programs/internship' },
+    { name: 'Matured Programme', path: '/training/programs/matured' }
+  ];
+
+  const quickLinks = [
+    { name: 'About', path: '/training#training-about' },
+    { name: 'Benefits', path: '/training#training-benefits' },
+    { name: 'Process', path: '/training#training-process' }
   ];
 
   return (
@@ -40,6 +55,63 @@ const TrainingNavbar = () => {
                 {link.name}
               </NavLink>
             ))}
+
+            <div className="relative group">
+              <button
+                type="button"
+                className="text-gray-700 hover:text-[#004fa2] px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap rounded-lg"
+              >
+                Program Categories
+              </button>
+              <div className="absolute left-0 top-full pt-2 hidden group-hover:block">
+                <div className="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden min-w-[240px]">
+                  {programCategoryLinks.map((link) => (
+                    <NavLink
+                      key={link.name}
+                      to={link.path}
+                      className={({ isActive }) =>
+                        `block px-4 py-3 text-sm transition-colors ${
+                          isActive
+                            ? 'bg-[#004fa2]/10 text-[#004fa2] font-semibold'
+                            : 'text-gray-700 hover:bg-gray-50 hover:text-[#004fa2]'
+                        }`
+                      }
+                    >
+                      {link.name}
+                    </NavLink>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <NavLink
+              to="/training/programs"
+              className="ml-2 bg-[#004fa2] hover:bg-[#000000] text-white px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200"
+            >
+              View Programs
+            </NavLink>
+
+            <div className="relative group">
+              <button
+                type="button"
+                className="text-gray-700 hover:text-[#004fa2] px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap rounded-lg"
+              >
+                Quick Links
+              </button>
+              <div className="absolute left-0 top-full pt-2 hidden group-hover:block">
+                <div className="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden min-w-[200px]">
+                  {quickLinks.map((link) => (
+                    <a
+                      key={link.name}
+                      href={link.path}
+                      className="block px-4 py-3 text-sm transition-colors text-gray-700 hover:bg-gray-50 hover:text-[#004fa2]"
+                    >
+                      {link.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
             
             {/* Back to Main Site */}
             <a
@@ -92,6 +164,40 @@ const TrainingNavbar = () => {
               >
                 {link.name}
               </NavLink>
+            ))}
+
+            <div className="px-3 pt-4 pb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              Program Categories
+            </div>
+            {programCategoryLinks.map((link) => (
+              <NavLink
+                key={link.name}
+                to={link.path}
+                onClick={() => setIsOpen(false)}
+                className={({ isActive }) =>
+                  `block px-3 py-2 text-base font-medium transition-colors rounded-lg ${
+                    isActive
+                      ? 'text-[#004fa2] bg-purple-50 font-semibold'
+                      : 'text-gray-700 hover:text-[#004fa2] hover:bg-gray-50'
+                  }`
+                }
+              >
+                {link.name}
+              </NavLink>
+            ))}
+
+            <div className="px-3 pt-4 pb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              Quick Links
+            </div>
+            {quickLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.path}
+                onClick={() => setIsOpen(false)}
+                className="block px-3 py-2 text-base font-medium transition-colors rounded-lg text-gray-700 hover:text-[#004fa2] hover:bg-gray-50"
+              >
+                {link.name}
+              </a>
             ))}
             
             {/* Back to Main Site - Mobile */}

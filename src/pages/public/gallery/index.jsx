@@ -6,7 +6,6 @@ import FilterNavigation from '../../../components/pages/gallery/FilterNavigation
 import OrganizedContentGrid from '../../../components/pages/gallery/OrganizedContentGrid';
 import FeaturedJourney from '../../../components/pages/gallery/FeaturedJourney';
 import VideoSection from '../../../components/pages/gallery/VideoSection';
-import NewsletterCTA from '../../../components/pages/gallery/NewsletterCTA';
 
 const GalleryPage = () => {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -31,9 +30,6 @@ const GalleryPage = () => {
       
       {/* Video Section */}
       <VideoSection />
-      
-      {/* Newsletter CTA */}
-      <NewsletterCTA />
     </div>
   );
 };

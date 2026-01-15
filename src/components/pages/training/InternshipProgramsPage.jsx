@@ -1,10 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Briefcase, Users, Clock, Star, Award, Target, BookOpen, Building, Rocket, Handshake } from 'lucide-react';
+import { Briefcase, Users, Clock, Star, Award, Target, BookOpen, Building, Rocket, Handshake, ChevronRight } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 
 const InternshipProgramsPage = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
+  const navigate = useNavigate();
 
   const internshipPrograms = [
     {
@@ -82,163 +84,468 @@ const InternshipProgramsPage = () => {
     }
   ];
 
+  const learningFeatures = [
+    {
+      icon: BookOpen,
+      title: "Hands-on Projects",
+      description: "Work on real projects from day one"
+    },
+    {
+      icon: Users,
+      title: "Team Collaboration",
+      description: "Learn in a collaborative team environment"
+    },
+    {
+      icon: Target,
+      title: "Skill Building",
+      description: "Develop practical, job-ready skills"
+    },
+    {
+      icon: Rocket,
+      title: "Career Launch",
+      description: "Launch your career with confidence"
+    }
+  ];
+
+  const journeySteps = [
+    {
+      step: 1,
+      icon: BookOpen,
+      title: 'Learn Fundamentals',
+      description: 'Master the essential skills and concepts needed for your chosen field.',
+      detail: 'Master the essential skills and concepts needed for your chosen field.',
+      highlight: 'Core Skills',
+      position: 'left'
+    },
+    {
+      step: 2,
+      icon: Building,
+      title: 'Apply Knowledge',
+      description: 'Put your learning into practice through real-world projects.',
+      detail: 'Put your learning into practice through real-world projects.',
+      highlight: 'Practical Experience',
+      position: 'right'
+    },
+    {
+      step: 3,
+      icon: Users,
+      title: 'Build Portfolio',
+      description: 'Create a professional portfolio showcasing your work and achievements.',
+      detail: 'Create a professional portfolio showcasing your work and achievements.',
+      highlight: 'Portfolio Development',
+      position: 'left'
+    },
+    {
+      step: 4,
+      icon: Briefcase,
+      title: 'Launch Career',
+      description: 'Transition smoothly into your professional career with confidence.',
+      detail: 'Transition smoothly into your professional career with confidence.',
+      highlight: 'Career Launch',
+      position: 'right',
+      isLast: true
+    }
+  ];
+
+  const handleEnroll = (programId) => {
+    navigate(`/training/course/${programId}`);
+  };
+
   return (
-    <section className="py-12 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
-        <motion.div 
-          ref={titleAnimation.ref}
-          initial={titleAnimation.initial}
-          animate={titleAnimation.animate}
-          variants={titleAnimation.variants}
-          transition={titleAnimation.transition}
-          className="text-center mb-8"
-        >
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Immersive Internship Programme
-          </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Gain real-world experience through our immersive internship programs. Work on actual projects, build your portfolio, and launch your tech career with hands-on training.
-          </p>
-        </motion.div>
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="relative isolate overflow-hidden">
+        <div className="max-w-none px-0">
+          {/* Full-bleed hero container */}
+          <div 
+            className="relative overflow-hidden bg-cover bg-center"
+            style={{
+              backgroundImage: 'url(/images/image3.png)',
+              backgroundAttachment: 'fixed'
+            }}
+          >
+            <div className="absolute inset-0 bg-black/40"></div>
+            <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-12 sm:py-16 md:py-20 min-h-[400px] md:min-h-[450px] flex items-center">
+              
+              {/* Hero Content */}
+              <motion.div 
+                className="max-w-3xl"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                {/* Main Heading */}
+                <motion.h1 
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.1 }}
+                >
+                  Start Your Career with
+                  <span className="text-[#FFD700] block"> Immersive Internships</span>
+                </motion.h1>
 
-        {/* Benefits Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
-        >
-          {benefits.map((benefit, index) => {
-            const IconComponent = benefit.icon;
-            return (
-              <div key={index} className="bg-white p-6 rounded-lg border border-gray-200 text-center">
-                <div className="w-12 h-12 bg-[#004fa2] rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <IconComponent size={24} className="text-white" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{benefit.title}</h3>
-                <p className="text-sm text-gray-600">{benefit.description}</p>
-              </div>
-            );
-          })}
-        </motion.div>
+                {/* Subtitle */}
+                <motion.p 
+                  className="text-sm sm:text-base md:text-lg font-bold text-white mb-6 sm:mb-8 leading-relaxed"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                >
+                  Gain real-world experience through hands-on projects. Build your portfolio and launch your tech career with expert mentorship.
+                </motion.p>
 
-        {/* Programs Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {internshipPrograms.map((program, index) => {
-            const IconComponent = program.icon;
-            
-            return (
+                {/* CTA Button */}
+                <motion.div 
+                  className="flex flex-col sm:flex-row gap-4 md:gap-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  <a 
+                    href="#programs"
+                    className="group bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-3 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 inline-flex items-center justify-center gap-3 transform hover:-translate-y-1 w-full sm:w-auto"
+                  >
+                    Explore Internship Programme
+                    <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                  </a>
+                  <a 
+                    href="/training/programs"
+                    className="group bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 backdrop-blur-sm inline-flex items-center justify-center gap-3 w-full sm:w-auto"
+                  >
+                    View All Programs
+                    <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                  </a>
+                </motion.div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Programs Section */}
+      <section className="py-12 bg-white" id="programs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            ref={titleAnimation.ref}
+            initial={titleAnimation.initial}
+            animate={titleAnimation.animate}
+            variants={titleAnimation.variants}
+            transition={titleAnimation.transition}
+            className="text-center mb-8"
+          >
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Immersive Internship Programme
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Gain real-world experience through hands-on projects. Build your portfolio and launch your tech career with confidence.
+            </p>
+          </motion.div>
+
+          {/* Programs Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {internshipPrograms.map((program, index) => {
+              const IconComponent = program.icon;
+              
+              return (
+                <motion.div
+                  key={program.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group"
+                >
+                  {/* Program Header */}
+                  <div className="p-6 border-b border-gray-100">
+                    {/* Badge */}
+                    {program.badge && (
+                      <div className="inline-block mb-3">
+                        <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                          program.badge === 'Popular' ? 'bg-orange-100 text-orange-700' :
+                          program.badge === 'Creative' ? 'bg-purple-100 text-purple-700' :
+                          'bg-gray-100 text-gray-700'
+                        }`}>
+                          {program.badge}
+                        </span>
+                      </div>
+                    )}
+                    
+                    {/* Program Title and Icon */}
+                    <div className="flex items-start gap-4 mb-4">
+                      <div className="w-12 h-12 bg-[#004fa2] rounded-lg flex items-center justify-center flex-shrink-0">
+                        <IconComponent size={24} className="text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-gray-900 mb-1 leading-tight">{program.title}</h3>
+                        <p className="text-sm text-gray-600">{program.instructor}</p>
+                      </div>
+                    </div>
+                    
+                    {/* Rating and Reviews */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <Star 
+                            key={i} 
+                            className={i < Math.floor(program.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'} 
+                            size={16}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">{program.rating}</span>
+                      <span className="text-sm text-gray-500">({program.reviews} reviews)</span>
+                    </div>
+                    
+                    {/* Program Description */}
+                    <p className="text-sm text-gray-600 line-clamp-2 mb-4">{program.description}</p>
+                    
+                    {/* Program Meta Info */}
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <div className="flex items-center gap-1">
+                        <Clock size={14} />
+                        <span>{program.duration}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Users size={14} />
+                        <span>{program.participants}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Program Footer */}
+                  <div className="p-6 bg-gray-50">
+                    {/* Level and Format */}
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="px-2 py-1 bg-[#004fa2]/10 text-[#004fa2] rounded text-xs font-medium">
+                        {program.level}
+                      </span>
+                      <span className="text-xs text-gray-500">{program.format}</span>
+                    </div>
+                    
+                    {/* Topics Preview */}
+                    <div className="mb-4">
+                      <div className="flex flex-wrap gap-1">
+                        {program.topics.slice(0, 3).map((topic, topicIndex) => (
+                          <span key={topicIndex} className="text-xs text-gray-600 bg-white px-2 py-1 rounded border border-gray-200">
+                            {topic}
+                          </span>
+                        ))}
+                      </div>
+                      {program.topics.length > 3 && (
+                        <div className="text-xs text-gray-500 mt-1">+{program.topics.length - 3} more topics</div>
+                      )}
+                    </div>
+                    
+                    {/* Price and CTA */}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-lg font-bold text-[#004fa2]">{program.price}</div>
+                      </div>
+                      <button 
+                        onClick={() => handleEnroll(program.id)}
+                        className="bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                      >
+                        View Program
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Key Benefits Section */}
+      <section className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Why Choose Our Internship Programme?
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Perfect for students and recent graduates. Gain practical experience, build your portfolio, and launch your career with confidence.
+            </p>
+          </motion.div>
+
+          {/* Benefits Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {benefits.map((benefit, index) => (
               <motion.div
-                key={program.id}
+                key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group"
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="text-center"
               >
-                {/* Program Header */}
-                <div className="p-6 border-b border-gray-100">
-                  {/* Badge */}
-                  {program.badge && (
-                    <div className="inline-block mb-3">
-                      <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                        program.badge === 'Popular' ? 'bg-orange-100 text-orange-700' :
-                        program.badge === 'Creative' ? 'bg-purple-100 text-purple-700' :
-                        'bg-gray-100 text-gray-700'
-                      }`}>
-                        {program.badge}
-                      </span>
-                    </div>
-                  )}
-                  
-                  {/* Program Title and Icon */}
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="w-12 h-12 bg-[#004fa2] rounded-lg flex items-center justify-center flex-shrink-0">
-                      <IconComponent size={24} className="text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-gray-900 mb-1 leading-tight">{program.title}</h3>
-                      <p className="text-sm text-gray-600">{program.instructor}</p>
-                    </div>
-                  </div>
-                  
-                  {/* Rating and Reviews */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star 
-                          key={i} 
-                          className={i < Math.floor(program.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'} 
-                          size={16}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-sm font-medium text-gray-900">{program.rating}</span>
-                    <span className="text-sm text-gray-500">({program.reviews} reviews)</span>
-                  </div>
-                  
-                  {/* Program Description */}
-                  <p className="text-sm text-gray-600 line-clamp-2 mb-4">{program.description}</p>
-                  
-                  {/* Program Meta Info */}
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <Clock size={14} />
-                      <span>{program.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Users size={14} />
-                      <span>{program.participants}</span>
-                    </div>
-                  </div>
+                <div className="w-16 h-16 bg-[#004fa2] rounded-full flex items-center justify-center mx-auto mb-4">
+                  <benefit.icon size={32} className="text-white" />
                 </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{benefit.title}</h3>
+                <p className="text-gray-600">{benefit.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-                {/* Program Footer */}
-                <div className="p-6 bg-gray-50">
-                  {/* Level and Format */}
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-2 py-1 bg-[#004fa2]/10 text-[#004fa2] rounded text-xs font-medium">
-                      {program.level}
-                    </span>
-                    <span className="text-xs text-gray-500">{program.format}</span>
-                  </div>
-                  
-                  {/* Topics Preview */}
-                  <div className="mb-4">
-                    <div className="flex flex-wrap gap-1">
-                      {program.topics.slice(0, 3).map((topic, topicIndex) => (
-                        <span key={topicIndex} className="text-xs text-gray-600 bg-white px-2 py-1 rounded border border-gray-200">
-                          {topic}
-                        </span>
-                      ))}
+
+      {false && (
+        <>
+          {/* Learning Experience Section */}
+          <section className="py-16 bg-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="text-center mb-12"
+              >
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Your Internship Experience</h3>
+                <p className="text-gray-600">Our internship programs provide hands-on experience in real-world environments. Learn by doing, build your portfolio, and launch your career.</p>
+              </motion.div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                {learningFeatures.map((feature, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="text-center"
+                  >
+                    <div className="w-16 h-16 bg-[#004fa2]/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <feature.icon className="text-[#004fa2]" size={32} />
                     </div>
-                    {program.topics.length > 3 && (
-                      <div className="text-xs text-gray-500 mt-1">+{program.topics.length - 3} more topics</div>
+                    <h4 className="font-semibold text-gray-900 mb-2">{feature.title}</h4>
+                    <p className="text-gray-600 text-sm">{feature.description}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Learning Journey Section */}
+          <section className="py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="text-center mb-12"
+              >
+                <h3 className="text-5xl font-black text-yellow-300 mb-8 drop-shadow-lg leading-tight">Your Internship Journey</h3>
+                <p className="text-yellow-100 text-xl font-semibold drop-shadow leading-relaxed">From learning fundamentals to launching your career</p>
+              </motion.div>
+
+              {/* Vertical Alternating Timeline */}
+              <div className="relative max-w-4xl mx-auto">
+                {/* The Spine - Central Vertical Line */}
+                <div className="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-1 bg-white/20"></div>
+                
+                {journeySteps.map((step) => (
+                  <div key={step.step} className="relative flex items-center mb-8">
+                    {/* Node Marker */}
+                    <div className="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-white rounded-full border-4 border-white shadow-md z-10"></div>
+                    
+                    {/* Card - Position based on step.position */}
+                    {step.position === 'left' ? (
+                      <>
+                        {/* Card - Left Side */}
+                        <div className="w-5/12 pr-8">
+                          <motion.div
+                            initial={{ opacity: 0, x: -50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: 0.1 }}
+                            className={`${
+                              step.isLast 
+                                ? 'bg-gradient-to-r from-blue-900 to-blue-800 border border-blue-600' 
+                                : 'bg-blue-900 border border-blue-700'
+                            } rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow`}
+                          >
+                            {/* Light Blue Icon Box - Top Left */}
+                            <div className="flex items-start mb-4">
+                              <div className="w-12 h-12 bg-blue-800 rounded-lg flex items-center justify-center mr-4">
+                                <step.icon className="text-yellow-300" size={20} />
+                              </div>
+                              <div className="flex-1">
+                                <div className="text-2xl font-bold text-white mb-2">{step.step}</div>
+                                <h4 className="text-lg font-bold text-white mb-2">{step.title}</h4>
+                                <p className="text-white/90 text-sm mb-4">{step.description}</p>
+                              </div>
+                            </div>
+                            <p className="text-white/90 mb-4">{step.detail}</p>
+                            <ul className="space-y-2">
+                              <li className="flex items-center text-white/80">
+                                <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
+                                {step.highlight}
+                              </li>
+                            </ul>
+                          </motion.div>
+                        </div>
+                        {/* Empty Right Side */}
+                        <div className="w-5/12 pl-8"></div>
+                      </>
+                    ) : (
+                      <>
+                        {/* Empty Left Side */}
+                        <div className="w-5/12 pr-8"></div>
+                        
+                        {/* Card - Right Side */}
+                        <div className="w-5/12 pl-8">
+                          <motion.div
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            className={`${
+                              step.isLast 
+                                ? 'bg-gradient-to-r from-blue-900 to-blue-800 border border-blue-600' 
+                                : 'bg-blue-900 border border-blue-700'
+                            } rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow`}
+                          >
+                            {/* Light Blue Icon Box - Top Left */}
+                            <div className="flex items-start mb-4">
+                              <div className="w-12 h-12 bg-blue-800 rounded-lg flex items-center justify-center mr-4">
+                                <step.icon className="text-yellow-300" size={20} />
+                              </div>
+                              <div className="flex-1">
+                                <div className="text-2xl font-bold text-white mb-2">{step.step}</div>
+                                <h4 className="text-lg font-bold text-white mb-2">{step.title}</h4>
+                                <p className="text-white/90 text-sm mb-4">{step.description}</p>
+                              </div>
+                            </div>
+                            <p className="text-white/90 mb-4">{step.detail}</p>
+                            <ul className="space-y-2">
+                              <li className="flex items-center text-white/80">
+                                <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
+                                {step.highlight}
+                              </li>
+                            </ul>
+                          </motion.div>
+                        </div>
+                      </>
                     )}
                   </div>
-                  
-                  {/* Price and CTA */}
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-lg font-bold text-[#004fa2]">{program.price}</div>
-                    </div>
-                    <button 
-                      onClick={() => window.location.href = `/training/course/${program.id}`}
-                      className="bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-                    >
-                      View Program
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
+                ))}
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+    </div>
   );
 };
 
