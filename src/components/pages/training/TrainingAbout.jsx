@@ -17,7 +17,7 @@ const TrainingAbout = () => {
   const featuresAnimation = useScrollAnimation({ type: 'slideUp', delay: 0.1 });
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+    <section id="training-about" className="py-20 bg-gradient-to-br from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header - AmaliTech Style */}

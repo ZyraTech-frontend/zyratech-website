@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Cloud, Code, Shield, Database, Globe, Cpu, ChevronRight, Clock, Users, Star, BookOpen, Award, Target, BarChart, Smartphone, Brain } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 
 const TrainingPrograms = () => {
   const [activeCategory, setActiveCategory] = useState('all');
+  const navigate = useNavigate();
   
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
 
@@ -297,7 +299,7 @@ const TrainingPrograms = () => {
                       <div className="text-lg font-bold text-[#004fa2]">{program.price}</div>
                     </div>
                     <button 
-                      onClick={() => window.location.href = `/training/course/${program.id}`}
+                      onClick={() => navigate(`/training/course/${program.id}`)}
                       className="bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
                     >
                       View Program
