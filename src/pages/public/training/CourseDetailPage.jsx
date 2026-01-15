@@ -257,7 +257,7 @@ const CourseDetailPage = () => {
   };
 
   const course = courses[courseId] || courses[1];
-  const heroImage = course?.id === 2 ? '/images/image2.png' : '/images/image1.png';
+  const heroImage = course?.id === 2 ? '/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png' : '/images/image1.png';
   const parallaxImage = '/images/image3.png';
 
   const programmeObjectives = course?.id === 2
@@ -365,10 +365,24 @@ const CourseDetailPage = () => {
       <div className="flex-grow">
         {/* Course Header */}
         <section
-          className="relative min-h-[80vh] flex items-center bg-center bg-cover"
+          className="relative min-h-screen flex items-center bg-center bg-cover"
           style={{ backgroundImage: `url('${heroImage}')` }}
         >
           <div className="absolute inset-0 bg-black/60" />
+          <button
+            onClick={() => navigate('/training')}
+            className="absolute z-20 top-6 left-4 sm:left-6 lg:left-8 flex items-center gap-2 text-white/80 hover:text-white transition-colors"
+          >
+            <ArrowLeft size={20} />
+            Back to Programs
+          </button>
+          <div className="absolute z-20 bottom-10 left-4 right-4 sm:left-6 sm:right-6 lg:left-auto lg:right-8">
+            <div className="bg-white/10 backdrop-blur-[10px] rounded-2xl px-6 py-4 border border-white/20 shadow-lg whitespace-nowrap w-fit mx-auto lg:mx-0">
+              <div className="text-white font-semibold">
+                {heroInfoText}
+              </div>
+            </div>
+          </div>
           <div className="relative z-10 w-full py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <motion.div
@@ -378,36 +392,14 @@ const CourseDetailPage = () => {
                 variants={titleAnimation.variants}
                 transition={titleAnimation.transition}
               >
-                <button
-                  onClick={() => navigate('/training')}
-                  className="flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
-                >
-                  <ArrowLeft size={20} />
-                  Back to Programs
-                </button>
-
                 <div className="grid lg:grid-cols-3 gap-10 items-start">
-                  <div className="lg:col-span-2">
-                    <div className="flex flex-wrap items-center gap-4 mb-6">
-                      <span className="px-4 py-1.5 bg-white/15 text-white rounded-full text-xs font-bold backdrop-blur-sm">
-                        Next Cohort
-                      </span>
-                    </div>
-
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                  <div className="lg:col-span-2 text-center lg:text-left">
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
                       {heroTitle}
                     </h1>
-                    <p className="text-white/90 text-lg leading-relaxed max-w-2xl">
+                    <p className="text-white/90 text-base sm:text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0">
                       {heroSubtitle}
                     </p>
-                  </div>
-
-                  <div className="flex justify-start lg:justify-end">
-                    <div className="bg-white/10 backdrop-blur-[10px] rounded-2xl px-6 py-4 border border-white/20 shadow-lg whitespace-nowrap w-fit">
-                      <div className="text-white font-semibold">
-                        {heroInfoText}
-                      </div>
-                    </div>
                   </div>
                 </div>
               </motion.div>
