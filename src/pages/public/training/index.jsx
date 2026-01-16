@@ -5,6 +5,7 @@ import TrainingAbout from '../../../components/pages/training/TrainingAbout';
 import TrainingHero from '../../../components/pages/training/TrainingHero';
 import TrainingBenefits from '../../../components/pages/training/TrainingBenefits';
 import TrainingProcess from '../../../components/pages/training/TrainingProcess';
+import HrContactSection from '../../../components/common/HrContactSection.jsx';
  
 
 const ParallaxDivider = ({ heightClassName = 'h-72 sm:h-80 md:h-96' }) => (
@@ -39,6 +40,12 @@ const TrainingPage = () => {
         <TrainingBenefits />
         <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" />
         <TrainingProcess />
+        <HrContactSection
+          name="Magdalene"
+          title="HR Team Lead"
+          imageUrl="/images/Dalene.png"
+          email="magdalene@zyratech.com"
+        />
       </div>
     </div>
   );

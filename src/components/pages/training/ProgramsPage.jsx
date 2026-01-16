@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, Award, Brain, Briefcase, Users, ChevronRight, Mail, Phone, MapPin, Check } from 'lucide-react';
+import { BookOpen, Award, Brain, Briefcase, Users, ChevronRight, Check } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
+import HrContactSection from '../../common/HrContactSection.jsx';
 
 const ProgramsPage = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
@@ -316,61 +317,12 @@ const ProgramsPage = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col md:flex-row items-center gap-8 lg:gap-12"
-          >
-            {/* Left Column - Content */}
-            <div className="w-full md:w-2/5 lg:w-2/5">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                Do you have any questions?
-              </h2>
-              <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                Please feel free to contact Magdalene, our HR Team Lead in Ghana. We're here to help you with any questions about our training programs and enrollment process.
-              </p>
-              
-              <a
-                href="mailto:magdalene@zyratech.com"
-                className="inline-flex items-center gap-3 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
-              >
-                <Mail size={20} />
-                Contact Us
-              </a>
-            </div>
-            
-            {/* Right Column - Featured Image with Overlay */}
-            <div className="w-full md:w-3/5 lg:w-3/5 relative">
-              <div className="relative rounded-xl overflow-hidden">
-                {/* Placeholder Image */}
-                <div 
-                  className="w-full h-80 md:h-96 bg-cover bg-center"
-                  style={{
-                    backgroundImage: 'url(/images/Dalene.png)',
-                    backgroundPosition: 'center'
-                  }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                </div>
-                
-                {/* Text Overlay - Bottom Right */}
-                <div className="absolute bottom-6 right-6 text-right">
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                    Magdalene
-                  </h3>
-                  <div className="w-16 h-1 bg-[#004fa2] mb-2 ml-auto"></div>
-                  <p className="text-lg text-white">Human Resources Team Lead</p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <HrContactSection
+        name="Magdalene"
+        title="HR Team Lead"
+        imageUrl="/images/Dalene.png"
+        email="magdalene@zyratech.com"
+      />
 
       {/* Newsletter Subscription Section */}
       <section className="py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">

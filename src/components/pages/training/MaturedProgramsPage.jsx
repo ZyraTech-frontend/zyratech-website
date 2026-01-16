@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Users, Clock, Star, Award, Target, BookOpen, Briefcase, GraduationCap, ChevronRight } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
+import HrContactSection from '../../common/HrContactSection.jsx';
 
 const MaturedProgramsPage = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
@@ -545,6 +546,13 @@ const MaturedProgramsPage = () => {
           </section>
         </>
       )}
+
+      <HrContactSection
+        name="Magdalene"
+        title="HR Team Lead"
+        imageUrl="/images/Dalene.png"
+        email="magdalene@zyratech.com"
+      />
     </div>
   );
 };
