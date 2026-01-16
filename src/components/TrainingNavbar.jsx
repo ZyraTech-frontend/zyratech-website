@@ -17,12 +17,6 @@ const TrainingNavbar = () => {
     { name: 'Matured Programme', path: '/training/programs/matured' }
   ];
 
-  const quickLinks = [
-    { name: 'About', path: '/training#training-about' },
-    { name: 'Benefits', path: '/training#training-benefits' },
-    { name: 'Process', path: '/training#training-process' }
-  ];
-
   return (
     <nav className="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -85,33 +79,15 @@ const TrainingNavbar = () => {
             </div>
 
             <NavLink
-              to="/training/programs"
-              className="ml-2 bg-[#004fa2] hover:bg-[#000000] text-white px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200"
+              to="/training/contact"
+              className={({ isActive }) =>
+                `text-gray-700 hover:text-[#004fa2] px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap rounded-lg ${
+                  isActive ? 'bg-[#004fa2]/10 text-[#004fa2] font-semibold' : ''
+                }`
+              }
             >
-              View Programs
+              Contact
             </NavLink>
-
-            <div className="relative group">
-              <button
-                type="button"
-                className="text-gray-700 hover:text-[#004fa2] px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap rounded-lg"
-              >
-                Quick Links
-              </button>
-              <div className="absolute left-0 top-full pt-2 hidden group-hover:block">
-                <div className="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden min-w-[200px]">
-                  {quickLinks.map((link) => (
-                    <a
-                      key={link.name}
-                      href={link.path}
-                      className="block px-4 py-3 text-sm transition-colors text-gray-700 hover:bg-gray-50 hover:text-[#004fa2]"
-                    >
-                      {link.name}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
             
             {/* Back to Main Site */}
             <a
@@ -186,19 +162,19 @@ const TrainingNavbar = () => {
               </NavLink>
             ))}
 
-            <div className="px-3 pt-4 pb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-              Quick Links
-            </div>
-            {quickLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.path}
-                onClick={() => setIsOpen(false)}
-                className="block px-3 py-2 text-base font-medium transition-colors rounded-lg text-gray-700 hover:text-[#004fa2] hover:bg-gray-50"
-              >
-                {link.name}
-              </a>
-            ))}
+            <NavLink
+              to="/training/contact"
+              onClick={() => setIsOpen(false)}
+              className={({ isActive }) =>
+                `block px-3 py-2 text-base font-medium transition-colors rounded-lg ${
+                  isActive
+                    ? 'text-[#004fa2] bg-purple-50 font-semibold'
+                    : 'text-gray-700 hover:text-[#004fa2] hover:bg-gray-50'
+                }`
+              }
+            >
+              Contact
+            </NavLink>
             
             {/* Back to Main Site - Mobile */}
             <a

@@ -67,6 +67,7 @@ import PartnershipPage from './pages/public/partnership';
 import PartnershipApplicationPage from './pages/public/partnership/apply';
 import TrainingPage from './pages/public/training';
 import CourseDetailPage from './pages/public/training/CourseDetailPage';
+import TrainingContactPage from './pages/public/training/contact';
 import TrainingProgramsPage from './pages/public/training/programs';
 import BasicProgramsRoute from './pages/public/training/programs/basic';
 import IntermediateProgramsRoute from './pages/public/training/programs/intermediate';
@@ -172,6 +173,7 @@ function App() {
           <Route path="/partner" element={<PartnershipPage />} />
           <Route path="/partner/apply" element={<PartnershipApplicationPage />} />
           <Route path="/training" element={<TrainingPage />} />
+          <Route path="/training/contact" element={<TrainingContactPage />} />
           <Route path="/training/programs" element={<TrainingProgramsPage />} />
           <Route path="/training/programs/basic" element={<BasicProgramsRoute />} />
           <Route path="/training/programs/intermediate" element={<IntermediateProgramsRoute />} />
