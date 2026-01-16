@@ -5,7 +5,7 @@ import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 
 const ParallaxDivider = ({ heightClassName = 'h-56 sm:h-64 md:h-72' }) => (
   <div
-    className={`relative ${heightClassName} w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-scroll md:bg-fixed bg-center bg-cover`}
+    className={`relative ${heightClassName} my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-scroll md:bg-fixed bg-center bg-cover`}
     style={{ backgroundImage: "url('/images/image3.png')" }}
   >
     <div className="absolute inset-0 bg-black/60" />
