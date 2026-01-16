@@ -643,11 +643,10 @@ const CourseDetailPage = () => {
   ];
 
   const handleEnroll = () => {
-    navigate('/training/programs', { 
-      state: { 
-        course: course.title,
-        courseId: course.id 
-      } 
+    navigate(`/training/course/${course.id}/apply`, {
+      state: {
+        courseTitle: course.title
+      }
     });
   };
 

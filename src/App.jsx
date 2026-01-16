@@ -67,6 +67,8 @@ import PartnershipPage from './pages/public/partnership';
 import PartnershipApplicationPage from './pages/public/partnership/apply';
 import TrainingPage from './pages/public/training';
 import CourseDetailPage from './pages/public/training/CourseDetailPage';
+import CourseApplicationPage from './pages/public/training/CourseApplicationPage';
+import ApplicationSuccessPage from './pages/public/training/ApplicationSuccessPage';
 import TrainingContactPage from './pages/public/training/contact';
 import TrainingProgramsPage from './pages/public/training/programs';
 import BasicProgramsRoute from './pages/public/training/programs/basic';
@@ -181,6 +183,8 @@ function App() {
           <Route path="/training/programs/matured" element={<MaturedProgramsRoute />} />
           <Route path="/training/programs/internship" element={<InternshipProgramsRoute />} />
           <Route path="/training/course/:courseId" element={<CourseDetailPage />} />
+          <Route path="/training/course/:courseId/apply" element={<CourseApplicationPage />} />
+          <Route path="/training/application-success" element={<ApplicationSuccessPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/newsletter" element={<NewsletterPage />} />
