@@ -5,6 +5,7 @@ import { ArrowLeft, Clock, Users, Star, Award, Check, CheckCircle, Calendar, Bri
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import TrainingNavbar from '../../../components/TrainingNavbar';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
+import HrContactCard from '../../../components/common/HrContactCard';
 
 const CourseDetailPage = () => {
   const { courseId } = useParams();
@@ -39,6 +40,7 @@ const CourseDetailPage = () => {
   const defaultContactPerson = {
     name: 'Magdalene',
     title: 'Human Resources Team Lead',
+    imageUrl: '/images/Dalene.png',
     email: 'hr@zyratech.com',
     phone: '+233 24 123 4567'
   };
@@ -925,16 +927,13 @@ const CourseDetailPage = () => {
       <section className="py-16 bg-white" id="training-contact">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-10 items-stretch">
-            <div
-              className="relative rounded-2xl overflow-hidden min-h-[380px] bg-center bg-cover"
-              style={{ backgroundImage: `url('/images/image1.png')` }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div className="text-white font-bold text-xl">{course.contactPerson.name}</div>
-                <div className="text-white/80">{course.contactPerson.title}</div>
-              </div>
-            </div>
+            <HrContactCard
+              name={course.contactPerson.name}
+              title={course.contactPerson.title}
+              imageUrl={course.contactPerson.imageUrl || '/images/Dalene.png'}
+              heightClassName="h-[380px] md:h-[420px]"
+              className="rounded-2xl max-w-none w-full mx-0 md:ml-0"
+            />
 
             <div className="bg-slate-50 rounded-2xl border border-gray-200 p-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Do you have any questions?</h2>
