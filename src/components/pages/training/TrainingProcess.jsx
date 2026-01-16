@@ -94,7 +94,7 @@ const TrainingProcess = () => {
           transition={titleAnimation.transition}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-black mb-6">
             How Our Training Works
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">

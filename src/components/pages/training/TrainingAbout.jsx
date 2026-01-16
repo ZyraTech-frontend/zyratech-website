@@ -51,12 +51,12 @@ const TrainingAbout = () => {
             variants={featuresAnimation.variants}
             transition={featuresAnimation.transition}
           >
-            <h3 className="text-3xl font-bold text-gray-900 mb-12 text-center">
+            <h3 className="text-4xl md:text-5xl font-bold text-gray-900 mb-16 text-center">
               Why Choose ZyraTech
             </h3>
 
             {/* First 3 Benefits */}
-            <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div className="grid lg:grid-cols-2 gap-12 items-center mt-6 mb-16">
               {/* Left Column - Benefits 1-3 */}
               <div className="space-y-8">
                 {/* Industry-Relevant Curriculum */}
@@ -120,7 +120,7 @@ const TrainingAbout = () => {
             <ParallaxDivider />
 
             {/* Second 3 Benefits */}
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="grid lg:grid-cols-2 gap-12 items-center mt-10">
               {/* Left Column - Benefits 4-6 */}
               <div className="space-y-8">
                 {/* Experienced Mentors */}
