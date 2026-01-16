@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, Award, Brain, Briefcase, Users, ChevronRight, Mail, Phone, MapPin } from 'lucide-react';
+import { BookOpen, Award, Brain, Briefcase, Users, ChevronRight, Mail, Phone, MapPin, Check } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 
 const ProgramsPage = () => {
@@ -124,7 +124,7 @@ const ProgramsPage = () => {
             animate={titleAnimation.animate}
             variants={titleAnimation.variants}
             transition={titleAnimation.transition}
-            className="text-center"
+            className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Explore Our Programmes In Ghana
@@ -133,12 +133,105 @@ const ProgramsPage = () => {
               Unlock your potential with our diverse range of programmes in Ghana, designed to empower you with the skills and experience needed to excel in the technology industry. Discover more about our programmes today and take the first step towards a rewarding career in tech.
             </p>
           </motion.div>
+
+          <div className="pt-4 sm:pt-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+            <div className="flex flex-col justify-center">
+              <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8">How to Choose a Programme</h3>
+
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 flex-shrink-0">
+                    <Check className="w-5 h-5 text-orange-600" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-slate-900">Basic Programs</div>
+                    <p className="text-slate-600 leading-relaxed">New to tech or starting from zero</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 flex-shrink-0">
+                    <Check className="w-5 h-5 text-orange-600" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-slate-900">Intermediate Programs</div>
+                    <p className="text-slate-600 leading-relaxed">You have fundamentals and want to specialize</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 flex-shrink-0">
+                    <Check className="w-5 h-5 text-orange-600" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-slate-900">Advanced Programs</div>
+                    <p className="text-slate-600 leading-relaxed">You’re experienced and want expert-level mastery</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 flex-shrink-0">
+                    <Check className="w-5 h-5 text-orange-600" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-slate-900">Immersive Internship Programme</div>
+                    <p className="text-slate-600 leading-relaxed">You want real projects and a portfolio</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 flex-shrink-0">
+                    <Check className="w-5 h-5 text-orange-600" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-slate-900">Matured Programme</div>
+                    <p className="text-slate-600 leading-relaxed">Career switchers who need flexible learning</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">Next Steps</h3>
+              <ol className="relative border-l-4 border-[#004fa2] pl-8 space-y-8">
+                <li className="relative ml-2">
+                  <div className="absolute -left-5 top-1.5 w-6 h-6 rounded-full bg-[#004fa2] flex items-center justify-center text-white font-bold text-base shadow-md">
+                    1
+                  </div>
+                  <div className="ml-4">
+                    <div className="font-bold text-lg text-[#004fa2] mb-1">Choose a category</div>
+                    <div className="text-gray-700 text-base">Pick a category below that matches your experience level.</div>
+                  </div>
+                </li>
+
+                <li className="relative ml-2">
+                  <div className="absolute -left-5 top-1.5 w-6 h-6 rounded-full bg-[#004fa2] flex items-center justify-center text-white font-bold text-base shadow-md">
+                    2
+                  </div>
+                  <div className="ml-4">
+                    <div className="font-bold text-lg text-[#004fa2] mb-1">Explore programmes</div>
+                    <div className="text-gray-700 text-base">Open the category and review the programmes inside it.</div>
+                  </div>
+                </li>
+
+                <li className="relative ml-2">
+                  <div className="absolute -left-5 top-1.5 w-6 h-6 rounded-full bg-[#004fa2] flex items-center justify-center text-white font-bold text-base shadow-md">
+                    3
+                  </div>
+                  <div className="ml-4">
+                    <div className="font-bold text-lg text-[#004fa2] mb-1">Open a programme</div>
+                    <div className="text-gray-700 text-base">View programme details and proceed from there.</div>
+                  </div>
+                </li>
+              </ol>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Program Categories - Brand Background */}
       <section id="program-categories" className="py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Program Categories Grid - 3-2 Balanced Stack Layout */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             {programCategories.slice(0, 3).map((category, index) => {
@@ -162,6 +255,10 @@ const ProgramsPage = () => {
                   
                   {/* Title */}
                   <h3 className="text-xl font-bold text-gray-900 mb-6 pr-16">{category.title}</h3>
+
+                  <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                    {category.description}
+                  </p>
                   
                   {/* Button */}
                   <a
@@ -199,6 +296,10 @@ const ProgramsPage = () => {
                   
                   {/* Title */}
                   <h3 className="text-xl font-bold text-gray-900 mb-6 pr-16">{category.title}</h3>
+
+                  <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                    {category.description}
+                  </p>
                   
                   {/* Button */}
                   <a
@@ -250,7 +351,7 @@ const ProgramsPage = () => {
                 <div 
                   className="w-full h-80 md:h-96 bg-cover bg-center"
                   style={{
-                    backgroundImage: 'url(/images/image2.png)',
+                    backgroundImage: 'url(/images/Dalene.png)',
                     backgroundPosition: 'center'
                   }}
                 >

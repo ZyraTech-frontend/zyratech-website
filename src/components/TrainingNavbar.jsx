@@ -6,7 +6,7 @@ const TrainingNavbar = () => {
 
   const trainingLinks = [
     { name: 'Home', path: '/training' },
-    { name: 'Our Programs', path: '/training/programs' }
+    { name: 'About Programs', path: '/training/programs' }
   ];
 
   const programCategoryLinks = [
