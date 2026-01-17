@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
@@ -55,21 +56,21 @@ const TrainingHero = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                <a 
-                  href="/training/programs"
+                <Link 
+                  to="/training/programs"
                   className="group bg-[#004fa2] hover:bg-[#000000] text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 inline-flex items-center justify-center gap-3 transform hover:-translate-y-1 w-full sm:w-auto"
                 >
                   Explore Programs
                   <ChevronRight size={20} className="group-hover:translate-x-2 transition-transform" />
-                </a>
+                </Link>
                 
-                <a 
-                  href="/training/programs"
+                <Link 
+                  to="/training/programs"
                   className="group bg-transparent border-2 border-white text-white hover:bg-white hover:text-[#004fa2] px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 inline-flex items-center justify-center gap-3 transform hover:-translate-y-1 w-full sm:w-auto"
                 >
                   Get Quote
                   <ChevronRight size={20} className="group-hover:translate-x-2 transition-transform" />
-                </a>
+                </Link>
               </motion.div>
             </motion.div>
           </div>

@@ -1,50 +1,29 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Globe, Cpu, Brain, Clock, Users, Star, ChevronRight, Target } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
+import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
+import TrainingBreadcrumb from './TrainingBreadcrumb';
+import useSEO from '../../../hooks/useSEO';
 
 const AdvancedProgramsPage = () => {
+  useSEO({
+    title: 'Advanced Training Programs',
+    description: 'Master cutting-edge technologies with advanced courses in AI, machine learning, and full-stack development at Zyra Tech Hub.'
+  });
+
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
   const navigate = useNavigate();
+  const _motion = motion;
 
-  const advancedPrograms = [
-    {
-      id: 6,
-      title: 'Cloud Architecture',
-      icon: Globe,
-      duration: '8 weeks',
-      level: 'Advanced',
-      participants: '10-15',
-      rating: 4.8,
-      reviews: 95,
-      price: 'GHS 4,200',
-      originalPrice: 'GHS 5,200',
-      badge: 'Premium',
-      instructor: 'Cloud Architects',
-      schedule: 'Weekdays 6PM-8PM',
-      format: 'Online',
-      description: 'Design and implement scalable cloud solutions on AWS, Azure, and Google Cloud.',
-      topics: ['Cloud Design Patterns', 'Microservices', 'Serverless Architecture', 'Cloud Migration', 'Cost Optimization']
-    },
-    {
-      id: 7,
-      title: 'AI & Machine Learning',
-      icon: Cpu,
-      duration: '12 weeks',
-      level: 'Advanced',
-      participants: '10-12',
-      rating: 4.9,
-      reviews: 142,
-      price: 'GHS 5,500',
-      instructor: 'AI Research Team',
-      originalPrice: 'GHS 6,500',
-      badge: 'Premium',
-      description: 'Deep dive into artificial intelligence, neural networks, and cutting-edge ML techniques.',
-      topics: ['Deep Learning', 'Neural Networks', 'NLP & Computer Vision', 'ML Operations', 'AI Ethics']
-    }
-  ];
+  const iconMap = {
+    globe: Globe,
+    cpu: Cpu
+  };
+
+  const advancedPrograms = getTrainingCoursesByCategory('advanced');
 
   const benefits = [
     {
@@ -189,13 +168,13 @@ const AdvancedProgramsPage = () => {
                     Explore Advanced Programs
                     <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
                   </a>
-                  <a 
-                    href="/training/programs"
+                  <Link 
+                    to="/training/programs"
                     className="group bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 backdrop-blur-sm inline-flex items-center justify-center gap-3 w-full sm:w-auto"
                   >
                     View All Programs
                     <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
-                  </a>
+                  </Link>
                 </motion.div>
               </motion.div>
             </div>
@@ -206,6 +185,13 @@ const AdvancedProgramsPage = () => {
       {/* Programs Section */}
       <section className="py-12 bg-white" id="programs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TrainingBreadcrumb
+            className="mb-8"
+            items={[
+              { label: 'Programs', link: '/training/programs' },
+              { label: 'Advanced' }
+            ]}
+          />
           <motion.div
             ref={titleAnimation.ref}
             initial={titleAnimation.initial}
@@ -225,7 +211,7 @@ const AdvancedProgramsPage = () => {
           {/* Programs Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {advancedPrograms.map((program, index) => {
-              const IconComponent = program.icon;
+              const IconComponent = iconMap[program.iconKey] || Globe;
               
               return (
                 <motion.div
@@ -380,7 +366,7 @@ const AdvancedProgramsPage = () => {
       </section>
 
 
-      {false && (
+      {import.meta.env.DEV && (
         <>
           {/* Learning Experience Section */}
           <section className="py-16 bg-white">

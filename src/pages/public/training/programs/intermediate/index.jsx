@@ -1,15 +1,12 @@
 import React from 'react';
-import TrainingNavbar from '../../../../../components/TrainingNavbar';
+import TrainingLayout from '../../../../../components/TrainingLayout';
 import IntermediateProgramsPage from '../../../../../components/pages/training/IntermediateProgramsPage';
 
 const IntermediateProgramsRoute = () => {
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <TrainingNavbar />
-      <div className="flex-grow">
-        <IntermediateProgramsPage />
-      </div>
-    </div>
+    <TrainingLayout>
+      <IntermediateProgramsPage />
+    </TrainingLayout>
   );
 };
 

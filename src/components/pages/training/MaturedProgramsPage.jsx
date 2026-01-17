@@ -1,66 +1,30 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Users, Clock, Star, Award, Target, BookOpen, Briefcase, GraduationCap, ChevronRight } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
+import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
+import TrainingBreadcrumb from './TrainingBreadcrumb';
+import useSEO from '../../../hooks/useSEO';
 
 const MaturedProgramsPage = () => {
+  useSEO({
+    title: 'Matured Learner Programs',
+    description: 'Specialized tech training for working professionals and adults. Flexible schedules and practical skills for career advancement at Zyra Tech Hub.'
+  });
+
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
   const navigate = useNavigate();
+  const _motion = motion;
 
-  const maturedPrograms = [
-    {
-      id: 8,
-      title: 'IT Fundamentals for Professionals',
-      icon: BookOpen,
-      duration: '6 weeks',
-      level: 'Beginner Friendly',
-      participants: '15-20',
-      rating: 4.7,
-      reviews: 89,
-      price: 'GHS 2,800',
-      badge: 'Popular',
-      instructor: 'Senior IT Team',
-      schedule: 'Weekends 2PM-5PM',
-      format: 'Flexible',
-      description: 'Designed specifically for mature professionals looking to transition into IT careers with comprehensive foundational training.',
-      topics: ['Computer Basics', 'Internet & Email', 'Office Software', 'Digital Security', 'IT Career Paths', 'Professional Skills']
-    },
-    {
-      id: 9,
-      title: 'Digital Literacy & Office Automation',
-      icon: Target,
-      duration: '4 weeks',
-      level: 'All Levels',
-      participants: '20-25',
-      rating: 4.6,
-      reviews: 67,
-      price: 'GHS 1,800',
-      instructor: 'Office Skills Team',
-      schedule: 'Weekdays 5PM-7PM',
-      format: 'Hybrid',
-      description: 'Perfect for professionals wanting to enhance their digital skills and improve workplace productivity through technology.',
-      topics: ['Microsoft Office', 'Google Workspace', 'Digital Communication', 'Data Management', 'Presentation Skills', 'Time Management Tools']
-    },
-    {
-      id: 10,
-      title: 'Career Transition to Tech Program',
-      icon: Briefcase,
-      duration: '12 weeks',
-      level: 'Career Changers',
-      participants: '12-15',
-      rating: 4.8,
-      reviews: 102,
-      price: 'GHS 4,500',
-      badge: 'Premium',
-      instructor: 'Career Development Team',
-      schedule: 'Flexible Schedule',
-      format: 'Online + Mentorship',
-      description: 'Comprehensive program designed for professionals from other fields looking to successfully transition into technology careers.',
-      topics: ['Tech Industry Overview', 'Skill Assessment', 'Career Planning', 'Portfolio Building', 'Interview Preparation', 'Networking Skills']
-    }
-  ];
+  const iconMap = {
+    bookOpen: BookOpen,
+    target: Target,
+    briefcase: Briefcase
+  };
+
+  const maturedPrograms = getTrainingCoursesByCategory('matured');
 
   const benefits = [
     {
@@ -210,13 +174,13 @@ const MaturedProgramsPage = () => {
                     Explore Matured Programme
                     <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
                   </a>
-                  <a 
-                    href="/training/programs"
+                  <Link 
+                    to="/training/programs"
                     className="group bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 backdrop-blur-sm inline-flex items-center justify-center gap-3 w-full sm:w-auto"
                   >
                     View All Programs
                     <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
-                  </a>
+                  </Link>
                 </motion.div>
               </motion.div>
             </div>
@@ -227,6 +191,13 @@ const MaturedProgramsPage = () => {
       {/* Programs Section */}
       <section className="py-12 bg-white" id="programs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TrainingBreadcrumb
+            className="mb-8"
+            items={[
+              { label: 'Programs', link: '/training/programs' },
+              { label: 'Matured' }
+            ]}
+          />
           <motion.div
             ref={titleAnimation.ref}
             initial={titleAnimation.initial}
@@ -246,7 +217,7 @@ const MaturedProgramsPage = () => {
           {/* Programs Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {maturedPrograms.map((program, index) => {
-              const IconComponent = program.icon;
+              const IconComponent = iconMap[program.iconKey] || Users;
               
               return (
                 <motion.div
@@ -399,7 +370,7 @@ const MaturedProgramsPage = () => {
       </section>
 
 
-      {false && (
+      {import.meta.env.DEV && (
         <>
           {/* Learning Experience Section */}
           <section className="py-16 bg-white">

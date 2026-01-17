@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CheckCircle, Users, Award, Target, BookOpen, Briefcase, Heart, ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
@@ -294,13 +295,13 @@ const TrainingAbout = () => {
             cloud engineers, and digital professionals. From internship programs to specialized programs in 
             software engineering and beyond, we have something for everyone.
           </p>
-          <a 
-            href="/training/programs"
+          <Link 
+            to="/training/programs"
             className="inline-flex items-center gap-2 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
           >
             Explore Training Programs
             <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
-          </a>
+          </Link>
         </motion.div>
       </div>
     </section>
