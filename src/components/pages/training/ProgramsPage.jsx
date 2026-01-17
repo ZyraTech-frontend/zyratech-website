@@ -67,10 +67,9 @@ const ProgramsPage = () => {
         <div className="max-w-none px-0">
           {/* Full-bleed hero container */}
           <div 
-            className="relative overflow-hidden bg-cover bg-center"
+            className="relative overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed"
             style={{
-              backgroundImage: 'url(/images/image3.png)',
-              backgroundAttachment: 'fixed'
+              backgroundImage: 'url(/images/image3.png)'
             }}
           >
             <div className="absolute inset-0 bg-black/40"></div>
@@ -134,21 +133,21 @@ const ProgramsPage = () => {
             animate={titleAnimation.animate}
             variants={titleAnimation.variants}
             transition={titleAnimation.transition}
-            className="text-center mb-16"
+            className="text-center mb-10 sm:mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               Explore Our Programmes In Ghana
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
               Unlock your potential with our diverse range of programmes in Ghana, designed to empower you with the skills and experience needed to excel in the technology industry. Discover more about our programmes today and take the first step towards a rewarding career in tech.
             </p>
           </motion.div>
 
-          <div className="pt-4 sm:pt-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+          <div className="pt-4 sm:pt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
             <div className="flex flex-col justify-center">
-              <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8">How to Choose a Programme</h3>
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-6 sm:mb-8">How to Choose a Programme</h3>
 
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <div className="flex items-start gap-4">
                   <div className="mt-1 flex-shrink-0">
                     <Check className="w-5 h-5 text-orange-600" />
@@ -202,8 +201,8 @@ const ProgramsPage = () => {
             </div>
 
             <div>
-              <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">Next Steps</h3>
-              <ol className="relative border-l-4 border-[#004fa2] pl-8 space-y-8">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">Next Steps</h3>
+              <ol className="relative border-l-4 border-[#004fa2] pl-6 sm:pl-8 space-y-6 sm:space-y-8">
                 <li className="relative ml-2">
                   <div className="absolute -left-5 top-1.5 w-6 h-6 rounded-full bg-[#004fa2] flex items-center justify-center text-white font-bold text-base shadow-md">
                     1
@@ -344,7 +343,7 @@ const ProgramsPage = () => {
       />
 
       {/* Newsletter Subscription Section */}
-      <section className="py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
+      <section className="py-12 sm:py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
@@ -353,10 +352,10 @@ const ProgramsPage = () => {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
               Subscribe to Our Newsletter
             </h2>
-            <p className="text-lg text-white/90 mb-8 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg text-white/90 mb-6 sm:mb-8 max-w-3xl mx-auto">
               Stay updated with our latest training programs, industry insights, and exclusive offers. Join our community of tech professionals in Ghana.
             </p>
             

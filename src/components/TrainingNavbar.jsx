@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 const TrainingNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [mobileDropdown, setMobileDropdown] = useState(false);
 
   const trainingLinks = [
     { name: 'Home', path: '/training' },
@@ -142,25 +143,46 @@ const TrainingNavbar = () => {
               </NavLink>
             ))}
 
-            <div className="px-3 pt-4 pb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-              Program Categories
-            </div>
-            {programCategoryLinks.map((link) => (
-              <NavLink
-                key={link.name}
-                to={link.path}
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) =>
-                  `block px-3 py-2 text-base font-medium transition-colors rounded-lg ${
-                    isActive
-                      ? 'text-[#004fa2] bg-purple-50 font-semibold'
-                      : 'text-gray-700 hover:text-[#004fa2] hover:bg-gray-50'
-                  }`
-                }
+            {/* Program Categories Dropdown */}
+            <div>
+              <button
+                onClick={() => setMobileDropdown(!mobileDropdown)}
+                className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 hover:text-[#004fa2] hover:bg-gray-50 transition-colors rounded-lg"
               >
-                {link.name}
-              </NavLink>
-            ))}
+                <span>Program Categories</span>
+                <svg 
+                  className={`w-4 h-4 transition-transform duration-200 ${mobileDropdown ? 'rotate-180' : ''}`}
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {mobileDropdown && (
+                <div className="pl-4 space-y-1 py-2 bg-gray-50 rounded-lg mt-1">
+                  {programCategoryLinks.map((link) => (
+                    <NavLink
+                      key={link.name}
+                      to={link.path}
+                      onClick={() => {
+                        setIsOpen(false);
+                        setMobileDropdown(false);
+                      }}
+                      className={({ isActive }) =>
+                        `block px-3 py-2 text-sm font-medium transition-colors rounded-lg ${
+                          isActive
+                            ? 'text-[#004fa2] bg-white font-semibold'
+                            : 'text-gray-600 hover:text-[#004fa2] hover:bg-white'
+                        }`
+                      }
+                    >
+                      {link.name}
+                    </NavLink>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <NavLink
               to="/training/contact"

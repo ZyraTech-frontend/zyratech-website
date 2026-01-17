@@ -123,10 +123,9 @@ const MaturedProgramsPage = () => {
         <div className="max-w-none px-0">
           {/* Full-bleed hero container */}
           <div 
-            className="relative overflow-hidden bg-cover bg-center"
+            className="relative overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed"
             style={{
-              backgroundImage: 'url(/images/image3.png)',
-              backgroundAttachment: 'fixed'
+              backgroundImage: 'url(/images/image3.png)'
             }}
           >
             <div className="absolute inset-0 bg-black/40"></div>
@@ -330,25 +329,25 @@ const MaturedProgramsPage = () => {
       </section>
 
       {/* Key Benefits Section */}
-      <section className="py-12 bg-white">
+      <section className="py-10 sm:py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               Why Choose Our Matured Professionals Program?
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
               Designed for mature professionals and career changers. Enjoy flexible learning, peer support, and personalized career guidance.
             </p>
           </motion.div>
 
           {/* Benefits Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto">
             {benefits.map((benefit, index) => (
               <motion.div
                 key={index}
@@ -358,11 +357,12 @@ const MaturedProgramsPage = () => {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="w-16 h-16 bg-[#004fa2] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <benefit.icon size={32} className="text-white" />
+                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#004fa2] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                  <benefit.icon size={20} className="text-white sm:hidden" />
+                  <benefit.icon size={28} className="text-white hidden sm:block" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{benefit.title}</h3>
-                <p className="text-gray-600">{benefit.description}</p>
+                <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-1 sm:mb-2">{benefit.title}</h3>
+                <p className="text-xs sm:text-sm md:text-base text-gray-600">{benefit.description}</p>
               </motion.div>
             ))}
           </div>
@@ -373,20 +373,20 @@ const MaturedProgramsPage = () => {
       {import.meta.env.DEV && (
         <>
           {/* Learning Experience Section */}
-          <section className="py-16 bg-white">
+          <section className="py-12 sm:py-16 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="text-center mb-12"
+                className="text-center mb-8 sm:mb-12"
               >
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Your Learning Experience</h3>
-                <p className="text-gray-600">Our matured professionals program offers flexible learning schedules, peer support, and personalized career guidance to ensure your success.</p>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Your Learning Experience</h3>
+                <p className="text-sm sm:text-base text-gray-600">Our matured professionals program offers flexible learning schedules, peer support, and personalized career guidance to ensure your success.</p>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
                 {learningFeatures.map((feature, index) => (
                   <motion.div
                     key={index}
@@ -396,121 +396,12 @@ const MaturedProgramsPage = () => {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="text-center"
                   >
-                    <div className="w-16 h-16 bg-[#004fa2]/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <feature.icon className="text-[#004fa2]" size={32} />
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#004fa2]/10 rounded-lg flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                      <feature.icon className="text-[#004fa2]" size={20} />
                     </div>
-                    <h4 className="font-semibold text-gray-900 mb-2">{feature.title}</h4>
-                    <p className="text-gray-600 text-sm">{feature.description}</p>
+                    <h4 className="text-sm sm:text-base font-semibold text-gray-900 mb-1 sm:mb-2">{feature.title}</h4>
+                    <p className="text-gray-600 text-xs sm:text-sm">{feature.description}</p>
                   </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Learning Journey Section */}
-          <section className="py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-center mb-12"
-              >
-                <h3 className="text-5xl font-black text-yellow-300 mb-8 drop-shadow-lg leading-tight">Your Career Journey</h3>
-                <p className="text-yellow-100 text-xl font-semibold drop-shadow leading-relaxed">From foundation building to successful career transition</p>
-              </motion.div>
-
-              {/* Vertical Alternating Timeline */}
-              <div className="relative max-w-4xl mx-auto">
-                {/* The Spine - Central Vertical Line */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-1 bg-white/20"></div>
-                
-                {journeySteps.map((step) => (
-                  <div key={step.step} className="relative flex items-center mb-8">
-                    {/* Node Marker */}
-                    <div className="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-white rounded-full border-4 border-white shadow-md z-10"></div>
-                    
-                    {/* Card - Position based on step.position */}
-                    {step.position === 'left' ? (
-                      <>
-                        {/* Card - Left Side */}
-                        <div className="w-5/12 pr-8">
-                          <motion.div
-                            initial={{ opacity: 0, x: -50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className={`${
-                              step.isLast 
-                                ? 'bg-gradient-to-r from-blue-900 to-blue-800 border border-blue-600' 
-                                : 'bg-blue-900 border border-blue-700'
-                            } rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow`}
-                          >
-                            {/* Light Blue Icon Box - Top Left */}
-                            <div className="flex items-start mb-4">
-                              <div className="w-12 h-12 bg-blue-800 rounded-lg flex items-center justify-center mr-4">
-                                <step.icon className="text-yellow-300" size={20} />
-                              </div>
-                              <div className="flex-1">
-                                <div className="text-2xl font-bold text-white mb-2">{step.step}</div>
-                                <h4 className="text-lg font-bold text-white mb-2">{step.title}</h4>
-                                <p className="text-white/90 text-sm mb-4">{step.description}</p>
-                              </div>
-                            </div>
-                            <p className="text-white/90 mb-4">{step.detail}</p>
-                            <ul className="space-y-2">
-                              <li className="flex items-center text-white/80">
-                                <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                                {step.highlight}
-                              </li>
-                            </ul>
-                          </motion.div>
-                        </div>
-                        {/* Empty Right Side */}
-                        <div className="w-5/12 pl-8"></div>
-                      </>
-                    ) : (
-                      <>
-                        {/* Empty Left Side */}
-                        <div className="w-5/12 pr-8"></div>
-                        
-                        {/* Card - Right Side */}
-                        <div className="w-5/12 pl-8">
-                          <motion.div
-                            initial={{ opacity: 0, x: 50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            className={`${
-                              step.isLast 
-                                ? 'bg-gradient-to-r from-blue-900 to-blue-800 border border-blue-600' 
-                                : 'bg-blue-900 border border-blue-700'
-                            } rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow`}
-                          >
-                            {/* Light Blue Icon Box - Top Left */}
-                            <div className="flex items-start mb-4">
-                              <div className="w-12 h-12 bg-blue-800 rounded-lg flex items-center justify-center mr-4">
-                                <step.icon className="text-yellow-300" size={20} />
-                              </div>
-                              <div className="flex-1">
-                                <div className="text-2xl font-bold text-white mb-2">{step.step}</div>
-                                <h4 className="text-lg font-bold text-white mb-2">{step.title}</h4>
-                                <p className="text-white/90 text-sm mb-4">{step.description}</p>
-                              </div>
-                            </div>
-                            <p className="text-white/90 mb-4">{step.detail}</p>
-                            <ul className="space-y-2">
-                              <li className="flex items-center text-white/80">
-                                <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                                {step.highlight}
-                              </li>
-                            </ul>
-                          </motion.div>
-                        </div>
-                      </>
-                    )}
-                  </div>
                 ))}
               </div>
             </div>

@@ -11,7 +11,7 @@ import useSEO from '../../../hooks/useSEO';
 
 const ParallaxDivider = ({ heightClassName = 'h-72 sm:h-80 md:h-96' }) => (
   <section
-    className={`relative ${heightClassName} bg-scroll md:bg-fixed bg-center bg-cover`}
+    className={`hidden md:block relative ${heightClassName} md:bg-fixed bg-center bg-cover`}
     style={{ backgroundImage: "url('/images/image3.png')" }}
   >
     <div className="absolute inset-0 bg-black/60" />

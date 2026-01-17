@@ -171,6 +171,7 @@ const TrainingSuccess = () => {
                   <img 
                     src={story.image}
                     alt={story.company}
+                    loading="lazy"
                     className="w-full h-full object-cover min-h-[400px]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>

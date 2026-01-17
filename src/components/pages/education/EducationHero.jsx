@@ -15,10 +15,9 @@ const EducationHero = () => {
       <div className="max-w-none px-0">
         {/* Full-bleed hero container */}
         <div 
-          className="relative overflow-hidden min-h-screen bg-cover bg-center"
+          className="relative overflow-hidden min-h-screen bg-cover bg-center bg-scroll md:bg-fixed"
           style={{
-            backgroundImage: 'url(/images/image1.png)',
-            backgroundAttachment: 'fixed'
+            backgroundImage: 'url(/images/image1.png)'
           }}
         >
           <div className="absolute inset-0 bg-white"></div>

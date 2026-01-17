@@ -190,17 +190,17 @@ const TrainingPaymentSuccessPage = () => {
       {/* Support Banner */}
       <section className="bg-[#004fa2] py-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="text-center md:text-left">
+          <div className="flex flex-col items-center text-center gap-6">
+            <div>
               <h3 className="text-xl font-bold text-white mb-2">Need Help?</h3>
               <p className="text-white/80">
                 Our training team is here to assist you with any questions.
               </p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
               <a 
                 href="mailto:training@zyratech.com"
-                className="flex items-center gap-2 px-6 py-3 bg-white text-[#004fa2] font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex items-center justify-center gap-2 px-6 py-3 bg-white text-[#004fa2] font-semibold rounded-lg hover:bg-gray-100 transition-colors w-full sm:w-auto"
               >
                 <Mail size={18} />
                 Email Us
@@ -209,7 +209,7 @@ const TrainingPaymentSuccessPage = () => {
                 href="https://wa.me/233241234567"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-6 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors"
+                className="flex items-center justify-center gap-2 px-6 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors w-full sm:w-auto"
               >
                 <MessageSquare size={18} />
                 WhatsApp
