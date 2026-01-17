@@ -1,11 +1,20 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { BookOpen, Award, Brain, Briefcase, Users, ChevronRight, Check } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
+import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
+import useSEO from '../../../hooks/useSEO';
 
 const ProgramsPage = () => {
+  useSEO({
+    title: 'All Training Programs',
+    description: 'Browse all training categories at Zyra Tech Hub - Basic, Intermediate, Advanced, Internship, and Matured programs for every skill level.'
+  });
+
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
+  const _motion = motion;
 
   const programCategories = [
     {
@@ -237,6 +246,7 @@ const ProgramsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             {programCategories.slice(0, 3).map((category, index) => {
               const IconComponent = category.icon;
+              const programCount = getTrainingCoursesByCategory(category.id).length;
               
               return (
                 <motion.div
@@ -260,15 +270,19 @@ const ProgramsPage = () => {
                   <p className="text-sm text-gray-600 mb-6 leading-relaxed">
                     {category.description}
                   </p>
+
+                  <div className="text-xs font-semibold text-gray-500 mb-5">
+                    {programCount} programme{programCount === 1 ? '' : 's'}
+                  </div>
                   
                   {/* Button */}
-                  <a
-                    href={category.link}
+                  <Link
+                    to={category.link}
                     className="inline-flex items-center gap-2 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:shadow-lg text-sm"
                   >
                     Explore Programme
                     <ChevronRight size={16} />
-                  </a>
+                  </Link>
                 </motion.div>
               );
             })}
@@ -278,6 +292,7 @@ const ProgramsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {programCategories.slice(3, 5).map((category, index) => {
               const IconComponent = category.icon;
+              const programCount = getTrainingCoursesByCategory(category.id).length;
               
               return (
                 <motion.div
@@ -301,15 +316,19 @@ const ProgramsPage = () => {
                   <p className="text-sm text-gray-600 mb-6 leading-relaxed">
                     {category.description}
                   </p>
+
+                  <div className="text-xs font-semibold text-gray-500 mb-5">
+                    {programCount} programme{programCount === 1 ? '' : 's'}
+                  </div>
                   
                   {/* Button */}
-                  <a
-                    href={category.link}
+                  <Link
+                    to={category.link}
                     className="inline-flex items-center gap-2 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:shadow-lg text-sm"
                   >
                     Explore Programme
                     <ChevronRight size={16} />
-                  </a>
+                  </Link>
                 </motion.div>
               );
             })}

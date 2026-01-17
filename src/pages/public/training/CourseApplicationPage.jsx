@@ -1,15 +1,12 @@
 import React from 'react';
-import TrainingNavbar from '../../../components/TrainingNavbar';
+import TrainingLayout from '../../../components/TrainingLayout';
 import CourseApplicationForm from '../../../components/pages/training/CourseApplicationForm';
 
 const CourseApplicationPage = () => {
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <TrainingNavbar />
-      <div className="flex-grow">
-        <CourseApplicationForm />
-      </div>
-    </div>
+    <TrainingLayout>
+      <CourseApplicationForm />
+    </TrainingLayout>
   );
 };
 

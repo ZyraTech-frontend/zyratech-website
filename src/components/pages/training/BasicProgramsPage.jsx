@@ -1,66 +1,30 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Cloud, Code, Target, Clock, Users, Star, ChevronRight } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
+import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
+import TrainingBreadcrumb from './TrainingBreadcrumb';
+import useSEO from '../../../hooks/useSEO';
 
 const BasicProgramsPage = () => {
+  useSEO({
+    title: 'Basic Training Programs',
+    description: 'Start your tech journey with foundational courses in computer basics, digital literacy, and introductory programming at Zyra Tech Hub.'
+  });
+
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
   const navigate = useNavigate();
+  const _motion = motion;
 
-  const basicPrograms = [
-    {
-      id: 2,
-      title: 'Cloud Computing (AWS/Azure)',
-      icon: Cloud,
-      duration: '12 weeks',
-      level: 'Beginner to Advanced',
-      participants: '20-25',
-      rating: 4.8,
-      reviews: 98,
-      price: 'GHS 4,200',
-      badge: 'Bestseller',
-      instructor: 'Sarah Johnson',
-      schedule: 'Weekends 9AM-1PM',
-      format: 'Online',
-      description: 'Comprehensive cloud training with AWS/Azure certification preparation.',
-      topics: ['Cloud Foundations', 'Compute Services', 'Storage', 'Networking', 'Security', 'Certification Prep']
-    },
-    {
-      id: 3,
-      title: 'Full Stack Web Development',
-      icon: Code,
-      duration: '16 weeks',
-      level: 'Beginner',
-      participants: '18-22',
-      rating: 4.7,
-      reviews: 156,
-      price: 'GHS 3,800',
-      instructor: 'David Mensah',
-      schedule: 'Weekdays 5PM-7PM',
-      format: 'Hybrid',
-      description: 'Learn modern web development from frontend to backend with real projects.',
-      topics: ['HTML/CSS/JS', 'React', 'Node.js', 'Databases', 'APIs', 'Deployment']
-    },
-    {
-      id: 4,
-      title: 'Corporate Digital Transformation',
-      icon: Target,
-      duration: 'Custom',
-      level: 'All Levels',
-      participants: 'Custom',
-      rating: 5.0,
-      reviews: 45,
-      price: 'Custom Quote',
-      badge: 'Premium',
-      instructor: 'Team of Experts',
-      schedule: 'Flexible',
-      format: 'Onsite/Online',
-      description: 'Tailored training programs for corporate digital transformation initiatives.',
-      topics: ['Digital Strategy', 'Process Automation', 'Team Training', 'Change Management']
-    }
-  ];
+  const iconMap = {
+    cloud: Cloud,
+    code: Code,
+    target: Target
+  };
+
+  const basicPrograms = getTrainingCoursesByCategory('basic');
 
   return (
     <div className="min-h-screen bg-white">
@@ -120,13 +84,13 @@ const BasicProgramsPage = () => {
                     Explore Basic Programs
                     <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
                   </a>
-                  <a 
-                    href="/training/programs"
+                  <Link 
+                    to="/training/programs"
                     className="group bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 backdrop-blur-sm inline-flex items-center justify-center gap-3 w-full sm:w-auto"
                   >
                     View All Programs
                     <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
-                  </a>
+                  </Link>
                 </motion.div>
               </motion.div>
             </div>
@@ -137,6 +101,13 @@ const BasicProgramsPage = () => {
       {/* Programs Section */}
       <section id="programs" className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TrainingBreadcrumb
+            className="mb-8"
+            items={[
+              { label: 'Programs', link: '/training/programs' },
+              { label: 'Basic' }
+            ]}
+          />
           <motion.div
             ref={titleAnimation.ref}
             initial={titleAnimation.initial}
@@ -156,7 +127,7 @@ const BasicProgramsPage = () => {
           {/* Programs Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {basicPrograms.map((program, index) => {
-              const IconComponent = program.icon;
+              const IconComponent = iconMap[program.iconKey] || Target;
               
               return (
                 <motion.div
@@ -337,7 +308,7 @@ const BasicProgramsPage = () => {
         </div>
       </section>
 
-      {false && (
+      {import.meta.env.DEV && (
         <>
           {/* Learning Experience Section */}
           <section className="py-16 bg-white">

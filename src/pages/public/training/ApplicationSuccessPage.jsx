@@ -1,11 +1,17 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CheckCircle, Mail, MessageSquare, Calendar, ChevronRight } from 'lucide-react';
-import TrainingNavbar from '../../../components/TrainingNavbar';
+import TrainingLayout from '../../../components/TrainingLayout';
+import useSEO from '../../../hooks/useSEO';
 
 const ApplicationSuccessPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  useSEO({
+    title: 'Application Submitted',
+    description: 'Your training application has been successfully submitted to Zyra Tech Hub. We will contact you with next steps.'
+  });
 
   const applicantName = location.state?.applicantName;
   const courseTitle = location.state?.courseTitle;
@@ -37,9 +43,7 @@ const ApplicationSuccessPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white from-gray-50 to-white">
-      <TrainingNavbar />
-
+    <TrainingLayout>
       <section className="pt-16 pb-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center justify-center mb-6">
@@ -150,7 +154,7 @@ const ApplicationSuccessPage = () => {
           </div>
         </div>
       </section>
-    </div>
+    </TrainingLayout>
   );
 };
 

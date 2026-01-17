@@ -1,66 +1,30 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Briefcase, Users, Clock, Star, Award, Target, BookOpen, Building, Rocket, Handshake, ChevronRight } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
+import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
+import TrainingBreadcrumb from './TrainingBreadcrumb';
+import useSEO from '../../../hooks/useSEO';
 
 const InternshipProgramsPage = () => {
+  useSEO({
+    title: 'Immersive Internship Programmes',
+    description: 'Gain real-world experience with hands-on internship programs at Zyra Tech Hub. Build your portfolio while learning from industry professionals.'
+  });
+
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
   const navigate = useNavigate();
+  const _motion = motion;
 
-  const internshipPrograms = [
-    {
-      id: 11,
-      title: 'Software Development Internship',
-      icon: BookOpen,
-      duration: '3 months',
-      level: 'Hands-on Training',
-      participants: '8-10',
-      rating: 4.9,
-      reviews: 145,
-      price: 'GHS 3,200',
-      badge: 'Popular',
-      instructor: 'Development Team',
-      schedule: 'Full-time (Mon-Fri)',
-      format: 'Onsite',
-      description: 'Immersive hands-on experience in real software development projects with mentorship from senior developers.',
-      topics: ['Web Development', 'Mobile Apps', 'Database Design', 'API Development', 'Testing & Debugging', 'Version Control']
-    },
-    {
-      id: 12,
-      title: 'IT Infrastructure Internship',
-      icon: Building,
-      duration: '3 months',
-      level: 'Practical Experience',
-      participants: '6-8',
-      rating: 4.7,
-      reviews: 89,
-      price: 'GHS 2,800',
-      instructor: 'Infrastructure Team',
-      schedule: 'Full-time (Mon-Fri)',
-      format: 'Onsite',
-      description: 'Gain real-world experience in network administration, system maintenance, and IT support in enterprise environments.',
-      topics: ['Network Setup', 'Server Management', 'IT Support', 'Security Implementation', 'Cloud Services', 'Hardware Maintenance']
-    },
-    {
-      id: 13,
-      title: 'Digital Marketing Internship',
-      icon: Rocket,
-      duration: '2 months',
-      level: 'Creative Training',
-      participants: '10-12',
-      rating: 4.6,
-      reviews: 76,
-      price: 'GHS 2,200',
-      badge: 'Creative',
-      instructor: 'Marketing Team',
-      schedule: 'Part-time Flexible',
-      format: 'Hybrid',
-      description: 'Learn digital marketing strategies through real campaigns and projects with hands-on experience in various marketing tools.',
-      topics: ['Social Media Marketing', 'Content Creation', 'SEO/SEM', 'Email Marketing', 'Analytics', 'Brand Management']
-    }
-  ];
+  const iconMap = {
+    bookOpen: BookOpen,
+    building: Building,
+    rocket: Rocket
+  };
+
+  const internshipPrograms = getTrainingCoursesByCategory('internship');
 
   const benefits = [
     {
@@ -210,13 +174,13 @@ const InternshipProgramsPage = () => {
                     Explore Internship Programme
                     <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
                   </a>
-                  <a 
-                    href="/training/programs"
+                  <Link 
+                    to="/training/programs"
                     className="group bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 backdrop-blur-sm inline-flex items-center justify-center gap-3 w-full sm:w-auto"
                   >
                     View All Programs
                     <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
-                  </a>
+                  </Link>
                 </motion.div>
               </motion.div>
             </div>
@@ -227,6 +191,13 @@ const InternshipProgramsPage = () => {
       {/* Programs Section */}
       <section className="py-12 bg-white" id="programs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TrainingBreadcrumb
+            className="mb-8"
+            items={[
+              { label: 'Programs', link: '/training/programs' },
+              { label: 'Internship' }
+            ]}
+          />
           <motion.div
             ref={titleAnimation.ref}
             initial={titleAnimation.initial}
@@ -246,7 +217,7 @@ const InternshipProgramsPage = () => {
           {/* Programs Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {internshipPrograms.map((program, index) => {
-              const IconComponent = program.icon;
+              const IconComponent = iconMap[program.iconKey] || Briefcase;
               
               return (
                 <motion.div
@@ -399,7 +370,7 @@ const InternshipProgramsPage = () => {
       </section>
 
 
-      {false && (
+      {import.meta.env.DEV && (
         <>
           {/* Learning Experience Section */}
           <section className="py-16 bg-white">

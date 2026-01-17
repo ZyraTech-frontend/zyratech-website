@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import TrainingNavbar from '../../../components/TrainingNavbar';
+import TrainingLayout from '../../../components/TrainingLayout';
 import TrainingAbout from '../../../components/pages/training/TrainingAbout';
 import TrainingHero from '../../../components/pages/training/TrainingHero';
 import TrainingBenefits from '../../../components/pages/training/TrainingBenefits';
 import TrainingProcess from '../../../components/pages/training/TrainingProcess';
 import HrContactSection from '../../../components/common/HrContactSection.jsx';
+import useSEO from '../../../hooks/useSEO';
  
 
 const ParallaxDivider = ({ heightClassName = 'h-72 sm:h-80 md:h-96' }) => (
@@ -20,6 +21,11 @@ const ParallaxDivider = ({ heightClassName = 'h-72 sm:h-80 md:h-96' }) => (
 const TrainingPage = () => {
   const location = useLocation();
 
+  useSEO({
+    title: 'Training Programs',
+    description: 'Explore hands-on tech training programs at Zyra Tech Hub. From beginner to advanced levels, gain practical skills in software development, data analytics, and more.'
+  });
+
   useEffect(() => {
     if (!location.hash) return;
 
@@ -31,23 +37,20 @@ const TrainingPage = () => {
   }, [location.hash]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <TrainingNavbar />
-      <div className="flex-grow">
-        <TrainingHero />
-        <TrainingAbout />
-        <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" />
-        <TrainingBenefits />
-        <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" />
-        <TrainingProcess />
-        <HrContactSection
-          name="Magdalene"
-          title="HR Team Lead"
-          imageUrl="/images/Dalene.png"
-          email="magdalene@zyratech.com"
-        />
-      </div>
-    </div>
+    <TrainingLayout>
+      <TrainingHero />
+      <TrainingAbout />
+      <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" />
+      <TrainingBenefits />
+      <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" />
+      <TrainingProcess />
+      <HrContactSection
+        name="Magdalene"
+        title="HR Team Lead"
+        imageUrl="/images/Dalene.png"
+        email="magdalene@zyratech.com"
+      />
+    </TrainingLayout>
   );
 };
 

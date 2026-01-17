@@ -1,38 +1,13 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { getTrainingCourseById } from '../../../data/trainingCourses.js';
+import TrainingBreadcrumb from './TrainingBreadcrumb';
+import useSEO from '../../../hooks/useSEO';
 
-const CourseApplicationForm = () => {
-  const { courseId } = useParams();
-  const location = useLocation();
-  const navigate = useNavigate();
+const DRAFT_STORAGE_KEY = 'trainingApplicationDraft';
 
-  const courseOptions = useMemo(
-    () => [
-      { id: 1, title: 'DevOps Engineering' },
-      { id: 2, title: 'Cloud Computing (AWS/Azure)' },
-      { id: 3, title: 'Full Stack Web Development' },
-      { id: 4, title: 'Corporate Digital Transformation' },
-      { id: 5, title: 'Data Science & Analytics' },
-      { id: 6, title: 'Cloud Architecture' },
-      { id: 7, title: 'AI & Machine Learning' },
-      { id: 8, title: 'IT Fundamentals for Professionals' },
-      { id: 9, title: 'Digital Literacy & Office Automation' },
-      { id: 10, title: 'Career Transition to Tech Program' },
-      { id: 11, title: 'Software Development Internship' }
-    ],
-    []
-  );
-
-  const resolvedCourseTitle = useMemo(() => {
-    if (location.state?.courseTitle) return location.state.courseTitle;
-    const id = Number(courseId);
-    const match = courseOptions.find((c) => c.id === id);
-    if (match) return match.title;
-    if (!courseId) return '';
-    return `Course #${courseId}`;
-  }, [courseId, courseOptions, location.state]);
-
-  const [formData, setFormData] = useState({
+const getInitialFormData = (courseId) => {
+  const defaultData = {
     fullName: '',
     emailAddress: '',
     phoneNumber: '',
@@ -43,9 +18,71 @@ const CourseApplicationForm = () => {
     preferredCohort: '',
     learningMode: '',
     message: ''
+  };
+
+  try {
+    const saved = localStorage.getItem(DRAFT_STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Only restore if it's for the same course (or no course specified in draft)
+      if (!parsed.courseId || parsed.courseId === courseId) {
+        return { formData: { ...defaultData, ...parsed.formData }, stepIndex: parsed.stepIndex || 0 };
+      }
+    }
+  } catch {
+    // Ignore parse errors
+  }
+  return { formData: defaultData, stepIndex: 0 };
+};
+
+const CourseApplicationForm = () => {
+  const { courseId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const resolvedCourseTitle = useMemo(() => {
+    if (location.state?.courseTitle) return location.state.courseTitle;
+    const course = getTrainingCourseById(courseId);
+    if (course) return course.title;
+    if (!courseId) return '';
+    return `Course #${courseId}`;
+  }, [courseId, location.state]);
+
+  useSEO({
+    title: resolvedCourseTitle ? `Apply - ${resolvedCourseTitle}` : 'Course Application',
+    description: `Apply for ${resolvedCourseTitle || 'training'} at Zyra Tech Hub. Complete your application to start your tech education journey.`
   });
 
+  const initialState = useMemo(() => getInitialFormData(courseId), [courseId]);
+
+  const [formData, setFormData] = useState(initialState.formData);
+  const [stepIndex, setStepIndex] = useState(initialState.stepIndex);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+
+  // Save draft to localStorage whenever form data or step changes
+  const saveDraft = useCallback(() => {
+    try {
+      localStorage.setItem(
+        DRAFT_STORAGE_KEY,
+        JSON.stringify({ courseId, formData, stepIndex })
+      );
+    } catch {
+      // Ignore storage errors (e.g., private browsing)
+    }
+  }, [courseId, formData, stepIndex]);
+
+  useEffect(() => {
+    saveDraft();
+  }, [saveDraft]);
+
+  // Clear draft after successful submission
+  const clearDraft = () => {
+    try {
+      localStorage.removeItem(DRAFT_STORAGE_KEY);
+    } catch {
+      // Ignore
+    }
+  };
 
   const steps = useMemo(
     () => [
@@ -57,7 +94,6 @@ const CourseApplicationForm = () => {
     []
   );
 
-  const [stepIndex, setStepIndex] = useState(0);
   const [errors, setErrors] = useState({});
 
   const validateStep = (index) => {
@@ -102,6 +138,7 @@ const CourseApplicationForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateStep(3)) return;
+    clearDraft(); // Clear saved draft on successful submission
     navigate('/training/application-success', {
       state: {
         courseId,
@@ -148,6 +185,14 @@ const CourseApplicationForm = () => {
   return (
     <section className="py-6 sm:py-8 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <TrainingBreadcrumb
+          className="mb-6"
+          items={[
+            { label: 'Programs', link: '/training/programs' },
+            { label: resolvedCourseTitle, link: `/training/course/${courseId}` },
+            { label: 'Apply' }
+          ]}
+        />
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center items-start justify-between gap-4">
           <div>
             <h2 className="text-2xl sm:text-4xl font-bold text-black">Course Application</h2>

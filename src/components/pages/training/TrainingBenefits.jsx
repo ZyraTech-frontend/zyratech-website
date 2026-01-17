@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { TrendingUp, Users, Target, Award, Clock, Shield } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
@@ -133,13 +134,13 @@ const TrainingBenefits = () => {
             <p className="text-white/90 mb-8 max-w-2xl mx-auto">
               Join hundreds of companies that have elevated their teams through our professional training programs. Start your transformation journey today.
             </p>
-            <a 
-              href="/training/programs"
+            <Link 
+              to="/training/programs"
               className="bg-white text-[#004fa2] hover:bg-gray-100 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 inline-flex items-center gap-2"
             >
               Get Started Now
               <TrendingUp size={20} />
-            </a>
+            </Link>
           </div>
         </motion.div>
       </div>
