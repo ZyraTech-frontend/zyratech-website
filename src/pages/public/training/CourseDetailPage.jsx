@@ -241,7 +241,7 @@ const CourseDetailPage = () => {
 
         {/* Parallax Divider Section */}
         <section
-          className="relative h-96 bg-fixed bg-center bg-cover"
+          className="relative h-64 sm:h-80 md:h-96 bg-scroll md:bg-fixed bg-center bg-cover"
           style={{ backgroundImage: `url('${parallaxImage}')` }}
         >
           <div className="absolute inset-0 bg-black/60" />
@@ -280,7 +280,7 @@ const CourseDetailPage = () => {
 
         {/* Parallax Divider Section */}
         <section
-          className="relative h-64 bg-fixed bg-center bg-cover"
+          className="relative h-48 sm:h-56 md:h-64 bg-scroll md:bg-fixed bg-center bg-cover"
           style={{ backgroundImage: `url('${parallaxImage}')` }}
         >
           <div className="absolute inset-0 bg-black/60" />
@@ -353,7 +353,7 @@ const CourseDetailPage = () => {
       </section>
       {/* Parallax Divider Section */}
       <section
-        className="relative h-96 bg-fixed bg-center bg-cover"
+        className="relative h-64 sm:h-80 md:h-96 bg-scroll md:bg-fixed bg-center bg-cover"
         style={{ backgroundImage: `url('${parallaxImage}')` }}
       >
         <div className="absolute inset-0 bg-black/60" />
@@ -439,7 +439,7 @@ const CourseDetailPage = () => {
 
       {/* Parallax Divider Section */}
       <section
-        className="relative h-96 bg-fixed bg-center bg-cover"
+        className="relative h-64 sm:h-80 md:h-96 bg-scroll md:bg-fixed bg-center bg-cover"
         style={{ backgroundImage: `url('${parallaxImage}')` }}
       >
         <div className="absolute inset-0 bg-black/60" />

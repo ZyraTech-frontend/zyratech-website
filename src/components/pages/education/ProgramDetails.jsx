@@ -77,10 +77,9 @@ const ProgramDetails = () => {
     <div className="bg-gray-50 min-h-screen">
       {/* Hero Section with Parallax Effect */}
       <div 
-        className="relative h-96 bg-cover bg-center bg-fixed" 
+        className="relative h-72 sm:h-80 md:h-96 bg-cover bg-center bg-scroll md:bg-fixed" 
         style={{
           backgroundImage: `url(${program.image})`,
-          backgroundAttachment: 'fixed',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover'
