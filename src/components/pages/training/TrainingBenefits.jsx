@@ -66,7 +66,7 @@ const TrainingBenefits = () => {
           transition={titleAnimation.transition}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-black mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6">
             Transform Your Workforce
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -76,24 +76,24 @@ const TrainingBenefits = () => {
 
         {/* Stats Bar */}
         <motion.div 
-          className="bg-gradient-to-r from-[#004fa2] to-[#2A2D7C] rounded-2xl p-8 mb-12"
+          className="bg-gradient-to-r from-[#004fa2] to-[#2A2D7C] rounded-2xl p-4 sm:p-6 md:p-8 mb-8 sm:mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 text-center text-white">
             {stats.map((stat, index) => (
               <div key={index}>
-                <div className="text-3xl md:text-4xl font-bold mb-2">{stat.number}</div>
-                <div className="text-white/90 text-sm">{stat.label}</div>
+                <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">{stat.number}</div>
+                <div className="text-white/90 text-[10px] sm:text-xs md:text-sm">{stat.label}</div>
               </div>
             ))}
           </div>
         </motion.div>
 
         {/* Benefits Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 md:gap-8">
           {benefits.map((benefit, index) => {
             const IconComponent = benefit.icon;
             
@@ -106,13 +106,15 @@ const TrainingBenefits = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="group"
               >
-                <div className="bg-gray-50 rounded-2xl p-8 h-full border border-gray-200 hover:border-[#004fa2] hover:shadow-lg transition-all duration-300">
-                  <div className="w-16 h-16 bg-[#004fa2]/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#004fa2] transition-colors duration-300">
-                    <IconComponent size={32} className="text-[#004fa2] group-hover:text-white transition-colors duration-300" />
+                <div className="bg-gray-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 h-full border border-gray-200 hover:border-[#004fa2] hover:shadow-lg transition-all duration-300">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-[#004fa2]/10 rounded-lg sm:rounded-xl flex items-center justify-center mb-3 sm:mb-4 md:mb-6 group-hover:bg-[#004fa2] transition-colors duration-300">
+                    <IconComponent size={18} className="text-[#004fa2] group-hover:text-white transition-colors duration-300 sm:hidden" />
+                    <IconComponent size={24} className="text-[#004fa2] group-hover:text-white transition-colors duration-300 hidden sm:block md:hidden" />
+                    <IconComponent size={32} className="text-[#004fa2] group-hover:text-white transition-colors duration-300 hidden md:block" />
                   </div>
                   
-                  <h3 className="text-xl font-bold text-black mb-4">{benefit.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{benefit.description}</p>
+                  <h3 className="text-sm sm:text-base md:text-xl font-bold text-black mb-2 sm:mb-3 md:mb-4">{benefit.title}</h3>
+                  <p className="text-gray-600 leading-relaxed text-xs sm:text-sm md:text-base">{benefit.description}</p>
                 </div>
               </motion.div>
             );
@@ -121,22 +123,22 @@ const TrainingBenefits = () => {
 
         {/* Call to Action */}
         <motion.div 
-          className="text-center mt-16"
+          className="text-center mt-10 sm:mt-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <div className="bg-[#004fa2] text-white rounded-2xl p-8 md:p-12">
-            <h3 className="text-2xl md:text-3xl font-bold mb-4">
+          <div className="bg-[#004fa2] text-white rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-12">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">
               Ready to Transform Your Team?
             </h3>
-            <p className="text-white/90 mb-8 max-w-2xl mx-auto">
+            <p className="text-white/90 mb-6 sm:mb-8 max-w-2xl mx-auto text-sm sm:text-base">
               Join hundreds of companies that have elevated their teams through our professional training programs. Start your transformation journey today.
             </p>
             <Link 
               to="/training/programs"
-              className="bg-white text-[#004fa2] hover:bg-gray-100 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 inline-flex items-center gap-2"
+              className="w-full sm:w-auto bg-white text-[#004fa2] hover:bg-gray-100 px-6 sm:px-8 py-4 rounded-lg font-bold text-base sm:text-lg transition-all duration-300 inline-flex items-center justify-center gap-2"
             >
               Get Started Now
               <TrendingUp size={20} />

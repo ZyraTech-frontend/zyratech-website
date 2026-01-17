@@ -18,18 +18,18 @@ const TrainingBreadcrumb = ({ items = [], variant = 'dark', className = '' }) =>
   const separatorClass = isLight ? 'text-white/50' : 'text-gray-400';
 
   return (
-    <nav className={`flex items-center gap-2 text-sm ${className}`}>
+    <nav className={`flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm flex-wrap ${className}`}>
       <Link 
         to="/training" 
-        className={`flex items-center gap-1.5 ${baseTextClass} ${hoverClass} transition-colors`}
+        className={`flex items-center gap-1 sm:gap-1.5 ${baseTextClass} ${hoverClass} transition-colors`}
       >
-        <GraduationCap className="w-4 h-4" />
+        <GraduationCap className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         <span>Training</span>
       </Link>
       
       {items.map((item, index) => (
         <React.Fragment key={index}>
-          <ChevronRight className={`w-4 h-4 ${separatorClass}`} />
+          <ChevronRight className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${separatorClass} flex-shrink-0`} />
           {item.link ? (
             <Link 
               to={item.link}
@@ -38,7 +38,7 @@ const TrainingBreadcrumb = ({ items = [], variant = 'dark', className = '' }) =>
               {item.label}
             </Link>
           ) : (
-            <span className={activeClass}>{item.label}</span>
+            <span className={`${activeClass} break-words`}>{item.label}</span>
           )}
         </React.Fragment>
       ))}

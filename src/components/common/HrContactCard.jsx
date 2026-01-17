@@ -11,13 +11,13 @@ const HrContactCard = ({
     <div
       className={`relative rounded-xl overflow-hidden max-w-md sm:max-w-lg mx-auto md:ml-auto border-r-4 border-[#004fa2] shadow-[0_12px_24px_-12px_rgba(0,79,162,0.35)] ${className}`}
     >
-      <div
-        className={`w-full ${heightClassName} bg-cover bg-center`}
-        style={{
-          backgroundImage: `url(${imageUrl})`,
-          backgroundPosition: 'center'
-        }}
-      >
+      <div className={`w-full ${heightClassName} relative`}>
+        <img
+          src={imageUrl}
+          alt={`${name} - ${title}`}
+          loading="lazy"
+          className="w-full h-full object-cover object-center"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
       </div>
 

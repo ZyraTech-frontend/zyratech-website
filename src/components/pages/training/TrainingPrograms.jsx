@@ -242,6 +242,7 @@ const TrainingPrograms = () => {
                       {[...Array(5)].map((_, i) => (
                         <Star 
                           key={i} 
+                          size={16}
                           className={i < Math.floor(program.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'} 
                         />
                       ))}

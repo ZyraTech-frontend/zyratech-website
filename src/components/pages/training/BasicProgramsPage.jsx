@@ -33,10 +33,9 @@ const BasicProgramsPage = () => {
         <div className="max-w-none px-0">
           {/* Full-bleed hero container */}
           <div 
-            className="relative overflow-hidden bg-cover bg-center"
+            className="relative overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed"
             style={{
-              backgroundImage: 'url(/images/image3.png)',
-              backgroundAttachment: 'fixed'
+              backgroundImage: 'url(/images/image3.png)'
             }}
           >
             <div className="absolute inset-0 bg-black/40"></div>
@@ -244,25 +243,25 @@ const BasicProgramsPage = () => {
       </section>
 
       {/* Key Benefits Section */}
-      <section className="py-10 bg-white">
+      <section className="py-10 sm:py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               Why Choose Our Basic Programs?
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
               Perfect for beginners and those new to technology. Build your foundation with expert-led courses designed to launch your career in tech.
             </p>
           </motion.div>
 
           {/* Benefits Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-3 gap-3 sm:gap-6 md:gap-8 max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -270,11 +269,12 @@ const BasicProgramsPage = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-center"
             >
-              <div className="w-16 h-16 bg-[#004fa2] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Target size={32} className="text-white" />
+              <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#004fa2] rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4">
+                <Target size={18} className="text-white sm:hidden" />
+                <Target size={28} className="text-white hidden sm:block" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">No Experience Required</h3>
-              <p className="text-gray-600">Start from scratch with our beginner-friendly approach</p>
+              <h3 className="text-xs sm:text-base md:text-xl font-bold text-gray-900 mb-1 sm:mb-2">No Experience Required</h3>
+              <p className="text-[10px] sm:text-sm md:text-base text-gray-600 leading-tight">Start from scratch with our beginner-friendly approach</p>
             </motion.div>
 
             <motion.div
@@ -284,11 +284,12 @@ const BasicProgramsPage = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-center"
             >
-              <div className="w-16 h-16 bg-[#004fa2] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users size={32} className="text-white" />
+              <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#004fa2] rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4">
+                <Users size={18} className="text-white sm:hidden" />
+                <Users size={28} className="text-white hidden sm:block" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Expert Instructors</h3>
-              <p className="text-gray-600">Learn from industry professionals with real-world experience</p>
+              <h3 className="text-xs sm:text-base md:text-xl font-bold text-gray-900 mb-1 sm:mb-2">Expert Instructors</h3>
+              <p className="text-[10px] sm:text-sm md:text-base text-gray-600 leading-tight">Learn from industry professionals with real-world experience</p>
             </motion.div>
 
             <motion.div
@@ -298,11 +299,12 @@ const BasicProgramsPage = () => {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="text-center"
             >
-              <div className="w-16 h-16 bg-[#004fa2] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Star size={32} className="text-white" />
+              <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#004fa2] rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4">
+                <Star size={18} className="text-white sm:hidden" />
+                <Star size={28} className="text-white hidden sm:block" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Job-Ready Skills</h3>
-              <p className="text-gray-600">Gain practical skills that employers are looking for</p>
+              <h3 className="text-xs sm:text-base md:text-xl font-bold text-gray-900 mb-1 sm:mb-2">Job-Ready Skills</h3>
+              <p className="text-[10px] sm:text-sm md:text-base text-gray-600 leading-tight">Gain practical skills that employers are looking for</p>
             </motion.div>
           </div>
         </div>
@@ -311,20 +313,20 @@ const BasicProgramsPage = () => {
       {import.meta.env.DEV && (
         <>
           {/* Learning Experience Section */}
-          <section className="py-16 bg-white">
+          <section className="py-12 sm:py-16 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="text-center mb-12"
+                className="text-center mb-8 sm:mb-12"
               >
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Your Learning Experience</h3>
-                <p className="text-gray-600">We've designed our basic programs with your success in mind. Learn through hands-on projects, expert guidance, and real-world applications.</p>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Your Learning Experience</h3>
+                <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">We've designed our basic programs with your success in mind. Learn through hands-on projects, expert guidance, and real-world applications.</p>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
                 {[
                   {
                     icon: Code,
@@ -355,189 +357,13 @@ const BasicProgramsPage = () => {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="text-center"
                   >
-                    <div className="w-16 h-16 bg-[#004fa2]/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <feature.icon className="text-[#004fa2]" size={32} />
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#004fa2]/10 rounded-lg flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                      <feature.icon className="text-[#004fa2]" size={20} />
                     </div>
-                    <h4 className="font-semibold text-gray-900 mb-2">{feature.title}</h4>
-                    <p className="text-gray-600 text-sm">{feature.description}</p>
+                    <h4 className="font-semibold text-sm sm:text-base text-gray-900 mb-1 sm:mb-2">{feature.title}</h4>
+                    <p className="text-gray-600 text-xs sm:text-sm">{feature.description}</p>
                   </motion.div>
                 ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Learning Journey Section */}
-          <section className="py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-center mb-12"
-              >
-                <h3 className="text-5xl font-black text-yellow-300 mb-8 drop-shadow-lg leading-tight">Your Learning Journey</h3>
-                <p className="text-yellow-100 text-xl font-semibold drop-shadow leading-relaxed">From complete beginner to job-ready professional</p>
-              </motion.div>
-
-              {/* Vertical Alternating Timeline */}
-              <div className="relative max-w-4xl mx-auto">
-                {/* The Spine - Central Vertical Line */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-1 bg-white/20"></div>
-                
-                {/* Step 1 - Left of Spine */}
-                <div className="relative flex items-center mb-8">
-                  {/* Node Marker */}
-                  <div className="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-white rounded-full border-4 border-white shadow-md z-10"></div>
-                  
-                  {/* Card - Left Side */}
-                  <div className="w-5/12 pr-8">
-                    <motion.div
-                      initial={{ opacity: 0, x: -50 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.1 }}
-                      className="bg-blue-900 border border-blue-700 rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow"
-                    >
-                      {/* Light Blue Icon Box - Top Left */}
-                      <div className="flex items-start mb-4">
-                        <div className="w-12 h-12 bg-blue-800 rounded-lg flex items-center justify-center mr-4">
-                          <Code className="text-yellow-300" size={20} />
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-2xl font-bold text-white mb-2">1</div>
-                          <h4 className="text-lg font-bold text-white mb-2">Start Your Foundation</h4>
-                          <p className="text-white/90 text-sm mb-4">Begin with core concepts and fundamental skills. No prior experience needed.</p>
-                        </div>
-                      </div>
-                      <p className="text-white/90 mb-4">Begin with core concepts and fundamental skills. No prior experience needed.</p>
-                      <ul className="space-y-2">
-                        <li className="flex items-center text-white/80">
-                          <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                          Basic Concepts
-                        </li>
-                      </ul>
-                    </motion.div>
-                  </div>
-                  {/* Empty Right Side */}
-                  <div className="w-5/12 pl-8"></div>
-                </div>
-
-                {/* Step 2 - Right of Spine */}
-                <div className="relative flex items-center mb-8">
-                  {/* Empty Left Side */}
-                  <div className="w-5/12 pr-8"></div>
-                  
-                  {/* Card - Right Side */}
-                  <div className="w-5/12 pl-8">
-                    <motion.div
-                      initial={{ opacity: 0, x: 50 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.2 }}
-                      className="bg-blue-900 border border-blue-700 rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow"
-                    >
-                      {/* Light Blue Icon Box - Top Left */}
-                      <div className="flex items-start mb-4">
-                        <div className="w-12 h-12 bg-blue-800 rounded-lg flex items-center justify-center mr-4">
-                          <Target className="text-yellow-300" size={20} />
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-2xl font-bold text-white mb-2">2</div>
-                          <h4 className="text-lg font-bold text-white mb-2">Build Practical Skills</h4>
-                          <p className="text-white/90 text-sm mb-4">Apply your knowledge through hands-on exercises and real-world projects.</p>
-                        </div>
-                      </div>
-                      <p className="text-white/90 mb-4">Apply your knowledge through hands-on exercises and real-world projects.</p>
-                      <ul className="space-y-2">
-                        <li className="flex items-center text-white/80">
-                          <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                          Hands-On Practice
-                        </li>
-                      </ul>
-                    </motion.div>
-                  </div>
-                  
-                  {/* Node Marker */}
-                  <div className="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-white rounded-full border-4 border-white shadow-md z-10"></div>
-                </div>
-
-                {/* Step 3 - Left of Spine */}
-                <div className="relative flex items-center mb-8">
-                  {/* Node Marker */}
-                  <div className="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-white rounded-full border-4 border-white shadow-md z-10"></div>
-                  
-                  {/* Card - Left Side */}
-                  <div className="w-5/12 pr-8">
-                    <motion.div
-                      initial={{ opacity: 0, x: -50 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.3 }}
-                      className="bg-blue-900 border border-blue-700 rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow"
-                    >
-                      {/* Light Blue Icon Box - Top Left */}
-                      <div className="flex items-start mb-4">
-                        <div className="w-12 h-12 bg-blue-800 rounded-lg flex items-center justify-center mr-4">
-                          <Star className="text-yellow-300" size={20} />
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-2xl font-bold text-white mb-2">3</div>
-                          <h4 className="text-lg font-bold text-white mb-2">Create Your Portfolio</h4>
-                          <p className="text-white/90 text-sm mb-4">Build impressive projects that showcase your skills to potential employers.</p>
-                        </div>
-                      </div>
-                      <p className="text-white/90 mb-4">Build impressive projects that showcase your skills to potential employers.</p>
-                      <ul className="space-y-2">
-                        <li className="flex items-center text-white/80">
-                          <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                          Real Projects
-                        </li>
-                      </ul>
-                    </motion.div>
-                  </div>
-                  {/* Empty Right Side */}
-                  <div className="w-5/12 pl-8"></div>
-                </div>
-
-                {/* Step 4 - Right of Spine */}
-                <div className="relative flex items-center">
-                  {/* Empty Left Side */}
-                  <div className="w-5/12 pr-8"></div>
-                  
-                  {/* Card - Right Side */}
-                  <div className="w-5/12 pl-8">
-                    <motion.div
-                      initial={{ opacity: 0, x: 50 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.4 }}
-                      className="bg-gradient-to-r from-blue-900 to-blue-800 border border-blue-600 rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow"
-                    >
-                      {/* Light Blue Icon Box - Top Left */}
-                      <div className="flex items-start mb-4">
-                        <div className="w-12 h-12 bg-blue-800 rounded-lg flex items-center justify-center mr-4">
-                          <Users className="text-yellow-300" size={20} />
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-2xl font-bold text-white mb-2">4</div>
-                          <h4 className="text-lg font-bold text-white mb-2">Launch Your Career</h4>
-                          <p className="text-white/90 text-sm mb-4">Graduate with job-ready skills and confidence to start your tech career.</p>
-                        </div>
-                      </div>
-                      <p className="text-white/90 mb-4">Graduate with job-ready skills and confidence to start your tech career.</p>
-                      <ul className="space-y-2">
-                        <li className="flex items-center text-white/80">
-                          <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                          Career Ready
-                        </li>
-                      </ul>
-                    </motion.div>
-                  </div>
-                  
-                  {/* Node Marker */}
-                  <div className="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 bg-white rounded-full border-4 border-white shadow-md z-10"></div>
-                </div>
               </div>
             </div>
           </section>

@@ -173,27 +173,54 @@ const TrainingPaymentPage = () => {
             <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
                 
-                {/* Progress Indicator */}
-                <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-100">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center">
-                      <CheckCircle size={18} />
+                {/* Progress Indicator - Vertical on mobile, horizontal on tablet+ */}
+                <div className="mb-8 pb-6 border-b border-gray-100">
+                  {/* Mobile: Vertical Stack */}
+                  <div className="flex flex-col gap-3 sm:hidden">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle size={18} />
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">Application Submitted</span>
                     </div>
-                    <span className="text-sm font-medium text-gray-900">Application</span>
+                    <div className="w-0.5 h-4 bg-green-500 ml-[15px]"></div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle size={18} />
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">Accepted</span>
+                    </div>
+                    <div className="w-0.5 h-4 bg-[#004fa2] ml-[15px]"></div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-[#004fa2] text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                        3
+                      </div>
+                      <span className="text-sm font-semibold text-[#004fa2]">Payment</span>
+                    </div>
                   </div>
-                  <ChevronRight size={16} className="text-gray-400" />
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center">
-                      <CheckCircle size={18} />
+                  
+                  {/* Tablet+: Horizontal */}
+                  <div className="hidden sm:flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center">
+                        <CheckCircle size={18} />
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">Application</span>
                     </div>
-                    <span className="text-sm font-medium text-gray-900">Accepted</span>
-                  </div>
-                  <ChevronRight size={16} className="text-gray-400" />
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-[#004fa2] text-white rounded-full flex items-center justify-center text-sm font-bold">
-                      3
+                    <ChevronRight size={16} className="text-gray-400" />
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center">
+                        <CheckCircle size={18} />
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">Accepted</span>
                     </div>
-                    <span className="text-sm font-semibold text-[#004fa2]">Payment</span>
+                    <ChevronRight size={16} className="text-gray-400" />
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-[#004fa2] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                        3
+                      </div>
+                      <span className="text-sm font-semibold text-[#004fa2]">Payment</span>
+                    </div>
                   </div>
                 </div>
 

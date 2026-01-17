@@ -293,15 +293,9 @@ const ProgramDetailsPage = () => {
       {currentData.realWorldProjects && (
         <section 
           ref={projectsSectionRef}
-          className="relative py-20 bg-gray-100"
+          className="relative py-20 bg-gray-100 min-h-screen flex items-center bg-cover bg-center bg-scroll md:bg-fixed"
           style={{
-            backgroundImage: `url(${currentData.image})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed',
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center'
+            backgroundImage: `url(${currentData.image})`
           }}
         >
           {/* Semi-transparent overlay */}
