@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 
+import ScrollToTop from './components/ScrollToTop';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -105,6 +106,9 @@ function App() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Scroll to top on route change */}
+      <ScrollToTop />
+      
       {/* Only show main Navbar if NOT on software or projects pages */}
       {!hideMainNavbar && <Navbar />}
       

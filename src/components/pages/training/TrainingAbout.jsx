@@ -65,7 +65,7 @@ const TrainingAbout = () => {
                     <CheckCircle className="text-white" size={16} />
                   </div>
                   <h4 className="text-xs font-bold text-gray-900 mb-1 leading-tight">Industry-Relevant Curriculum</h4>
-                  <p className="text-[10px] text-gray-600 leading-snug">Real-world skills from industry experts.</p>
+                  <p className="text-xs text-gray-600 leading-snug">Real-world skills from industry experts.</p>
                 </div>
 
                 {/* Hands-On Learning */}
@@ -74,7 +74,7 @@ const TrainingAbout = () => {
                     <BookOpen className="text-white" size={16} />
                   </div>
                   <h4 className="text-xs font-bold text-gray-900 mb-1 leading-tight">Hands-On Learning</h4>
-                  <p className="text-[10px] text-gray-600 leading-snug">Projects & labs to build your portfolio.</p>
+                  <p className="text-xs text-gray-600 leading-snug">Projects & labs to build your portfolio.</p>
                 </div>
 
                 {/* Career Support */}
@@ -83,7 +83,7 @@ const TrainingAbout = () => {
                     <Award className="text-white" size={16} />
                   </div>
                   <h4 className="text-xs font-bold text-gray-900 mb-1 leading-tight">Career Support</h4>
-                  <p className="text-[10px] text-gray-600 leading-snug">Job offers upon completion.</p>
+                  <p className="text-xs text-gray-600 leading-snug">Job offers upon completion.</p>
                 </div>
 
                 {/* Experienced Mentors */}
@@ -92,7 +92,7 @@ const TrainingAbout = () => {
                     <Users className="text-white" size={16} />
                   </div>
                   <h4 className="text-xs font-bold text-gray-900 mb-1 leading-tight">Experienced Mentors</h4>
-                  <p className="text-[10px] text-gray-600 leading-snug">Learn from industry practitioners.</p>
+                  <p className="text-xs text-gray-600 leading-snug">Learn from industry practitioners.</p>
                 </div>
 
                 {/* Inclusive Environment */}
@@ -101,7 +101,7 @@ const TrainingAbout = () => {
                     <Heart className="text-white" size={16} />
                   </div>
                   <h4 className="text-xs font-bold text-gray-900 mb-1 leading-tight">Inclusive Environment</h4>
-                  <p className="text-[10px] text-gray-600 leading-snug">Supportive community for all levels.</p>
+                  <p className="text-xs text-gray-600 leading-snug">Supportive community for all levels.</p>
                 </div>
 
                 {/* Social Impact */}
@@ -110,7 +110,7 @@ const TrainingAbout = () => {
                     <Target className="text-white" size={16} />
                   </div>
                   <h4 className="text-xs font-bold text-gray-900 mb-1 leading-tight">Social Impact</h4>
-                  <p className="text-[10px] text-gray-600 leading-snug">Opportunities for underserved communities.</p>
+                  <p className="text-xs text-gray-600 leading-snug">Opportunities for underserved communities.</p>
                 </div>
               </div>
 

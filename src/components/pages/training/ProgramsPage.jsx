@@ -239,98 +239,139 @@ const ProgramsPage = () => {
       </section>
 
       {/* Program Categories - Brand Background */}
-      <section id="program-categories" className="py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
+      <section id="program-categories" className="py-10 sm:py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Program Categories Grid - 3-2 Balanced Stack Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            {programCategories.slice(0, 3).map((category, index) => {
+          
+          {/* Mobile Layout - Compact horizontal cards */}
+          <div className="sm:hidden space-y-3">
+            {programCategories.map((category, index) => {
               const IconComponent = category.icon;
               const programCount = getTrainingCoursesByCategory(category.id).length;
               
               return (
                 <motion.div
                   key={category.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white rounded-xl p-6 hover:shadow-xl transition-all duration-300 text-center border border-white/20 relative"
+                  transition={{ duration: 0.4, delay: index * 0.05 }}
                 >
-                  {/* Icon - Right Corner */}
-                  <div className="absolute top-4 right-4">
-                    <div className={`w-12 h-12 ${category.color} rounded-full flex items-center justify-center`}>
-                      <IconComponent size={24} className="text-white" />
-                    </div>
-                  </div>
-                  
-                  {/* Title */}
-                  <h3 className="text-xl font-bold text-gray-900 mb-6 pr-16">{category.title}</h3>
-
-                  <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-                    {category.description}
-                  </p>
-
-                  <div className="text-xs font-semibold text-gray-500 mb-5">
-                    {programCount} programme{programCount === 1 ? '' : 's'}
-                  </div>
-                  
-                  {/* Button */}
                   <Link
                     to={category.link}
-                    className="inline-flex items-center gap-2 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:shadow-lg text-sm"
+                    className="flex items-center gap-3 bg-white rounded-lg p-3 hover:shadow-lg transition-all duration-300 group"
                   >
-                    Explore Programme
-                    <ChevronRight size={16} />
+                    {/* Icon */}
+                    <div className={`w-10 h-10 ${category.color} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                      <IconComponent size={20} className="text-white" />
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-bold text-gray-900 truncate">{category.title}</h3>
+                      <p className="text-xs text-gray-500">{programCount} programme{programCount === 1 ? '' : 's'}</p>
+                    </div>
+                    
+                    {/* Arrow */}
+                    <ChevronRight size={18} className="text-[#004fa2] flex-shrink-0 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </motion.div>
               );
             })}
           </div>
-          
-          {/* Bottom Row - 2 Programs (Centered) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-            {programCategories.slice(3, 5).map((category, index) => {
-              const IconComponent = category.icon;
-              const programCount = getTrainingCoursesByCategory(category.id).length;
-              
-              return (
-                <motion.div
-                  key={category.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: (index + 3) * 0.1 }}
-                  className="bg-white rounded-xl p-6 hover:shadow-xl transition-all duration-300 text-center border border-white/20 relative"
-                >
-                  {/* Icon - Right Corner */}
-                  <div className="absolute top-4 right-4">
-                    <div className={`w-12 h-12 ${category.color} rounded-full flex items-center justify-center`}>
-                      <IconComponent size={24} className="text-white" />
-                    </div>
-                  </div>
-                  
-                  {/* Title */}
-                  <h3 className="text-xl font-bold text-gray-900 mb-6 pr-16">{category.title}</h3>
 
-                  <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-                    {category.description}
-                  </p>
-
-                  <div className="text-xs font-semibold text-gray-500 mb-5">
-                    {programCount} programme{programCount === 1 ? '' : 's'}
-                  </div>
-                  
-                  {/* Button */}
-                  <Link
-                    to={category.link}
-                    className="inline-flex items-center gap-2 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:shadow-lg text-sm"
+          {/* Tablet/Desktop Layout - Original 3-2 grid */}
+          <div className="hidden sm:block">
+            {/* Program Categories Grid - 3-2 Balanced Stack Layout */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              {programCategories.slice(0, 3).map((category, index) => {
+                const IconComponent = category.icon;
+                const programCount = getTrainingCoursesByCategory(category.id).length;
+                
+                return (
+                  <motion.div
+                    key={category.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="bg-white rounded-xl p-6 hover:shadow-xl transition-all duration-300 text-center border border-white/20 relative"
                   >
-                    Explore Programme
-                    <ChevronRight size={16} />
-                  </Link>
-                </motion.div>
-              );
-            })}
+                    {/* Icon - Right Corner */}
+                    <div className="absolute top-4 right-4">
+                      <div className={`w-12 h-12 ${category.color} rounded-full flex items-center justify-center`}>
+                        <IconComponent size={24} className="text-white" />
+                      </div>
+                    </div>
+                    
+                    {/* Title */}
+                    <h3 className="text-xl font-bold text-gray-900 mb-6 pr-16">{category.title}</h3>
+
+                    <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                      {category.description}
+                    </p>
+
+                    <div className="text-xs font-semibold text-gray-500 mb-5">
+                      {programCount} programme{programCount === 1 ? '' : 's'}
+                    </div>
+                    
+                    {/* Button */}
+                    <Link
+                      to={category.link}
+                      className="inline-flex items-center gap-2 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:shadow-lg text-sm"
+                    >
+                      Explore Programme
+                      <ChevronRight size={16} />
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
+            
+            {/* Bottom Row - 2 Programs (Centered) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              {programCategories.slice(3, 5).map((category, index) => {
+                const IconComponent = category.icon;
+                const programCount = getTrainingCoursesByCategory(category.id).length;
+                
+                return (
+                  <motion.div
+                    key={category.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: (index + 3) * 0.1 }}
+                    className="bg-white rounded-xl p-6 hover:shadow-xl transition-all duration-300 text-center border border-white/20 relative"
+                  >
+                    {/* Icon - Right Corner */}
+                    <div className="absolute top-4 right-4">
+                      <div className={`w-12 h-12 ${category.color} rounded-full flex items-center justify-center`}>
+                        <IconComponent size={24} className="text-white" />
+                      </div>
+                    </div>
+                    
+                    {/* Title */}
+                    <h3 className="text-xl font-bold text-gray-900 mb-6 pr-16">{category.title}</h3>
+
+                    <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                      {category.description}
+                    </p>
+
+                    <div className="text-xs font-semibold text-gray-500 mb-5">
+                      {programCount} programme{programCount === 1 ? '' : 's'}
+                    </div>
+                    
+                    {/* Button */}
+                    <Link
+                      to={category.link}
+                      className="inline-flex items-center gap-2 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:shadow-lg text-sm"
+                    >
+                      Explore Programme
+                      <ChevronRight size={16} />
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
