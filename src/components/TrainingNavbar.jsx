@@ -21,7 +21,7 @@ const TrainingNavbar = () => {
   return (
     <nav className="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-24">
+        <div className="flex justify-between items-center h-16 sm:h-20 lg:h-24">
           
           {/* Logo/Brand */}
           <div className="flex items-center">
@@ -29,7 +29,7 @@ const TrainingNavbar = () => {
               <img 
                 src="/zyratecpng.png" 
                 alt="Zyra Tech Hub Logo" 
-                className="h-20 w-auto object-contain"
+                className="h-12 sm:h-16 lg:h-20 w-auto object-contain"
               />
             </NavLink>
           </div>
@@ -54,6 +54,7 @@ const TrainingNavbar = () => {
             <div className="relative group">
               <button
                 type="button"
+                aria-haspopup="true"
                 className="text-gray-700 hover:text-[#004fa2] px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap rounded-lg"
               >
                 Program Categories
@@ -91,20 +92,20 @@ const TrainingNavbar = () => {
             </NavLink>
             
             {/* Back to Main Site */}
-            <a
-              href="/"
-              target="_blank"
-              rel="noopener noreferrer"
+            <NavLink
+              to="/"
               className="ml-4 bg-[#004fa2] hover:bg-[#000000] text-white px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200"
             >
               Main Site
-            </a>
+            </NavLink>
           </div>
 
           {/* Mobile menu button */}
           <div className="lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isOpen}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100"
             >
               {isOpen ? (
@@ -147,6 +148,8 @@ const TrainingNavbar = () => {
             <div>
               <button
                 onClick={() => setMobileDropdown(!mobileDropdown)}
+                aria-expanded={mobileDropdown}
+                aria-haspopup="true"
                 className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 hover:text-[#004fa2] hover:bg-gray-50 transition-colors rounded-lg"
               >
                 <span>Program Categories</span>

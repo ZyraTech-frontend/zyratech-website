@@ -152,7 +152,7 @@ const TrainingProcess = () => {
                       {/* Details - Compact grid on mobile */}
                       <div className="grid grid-cols-2 gap-1 sm:gap-2 sm:block sm:space-y-2">
                         {step.details.map((detail, detailIndex) => (
-                          <div key={detailIndex} className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm text-gray-600">
+                          <div key={detailIndex} className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-600">
                             <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-[#004fa2] rounded-full flex-shrink-0"></div>
                             <span className="leading-tight">{detail}</span>
                           </div>
@@ -180,15 +180,15 @@ const TrainingProcess = () => {
           <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 text-center">
             <div>
               <div className="text-lg sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">6-12 Weeks</div>
-              <div className="text-white/90 text-[10px] sm:text-xs md:text-sm">Average Program Duration</div>
+              <div className="text-white/90 text-xs sm:text-xs md:text-sm">Average Program Duration</div>
             </div>
             <div>
               <div className="text-lg sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">100%</div>
-              <div className="text-white/90 text-[10px] sm:text-xs md:text-sm">Customized Content</div>
+              <div className="text-white/90 text-xs sm:text-xs md:text-sm">Customized Content</div>
             </div>
             <div>
               <div className="text-lg sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">Lifetime</div>
-              <div className="text-white/90 text-[10px] sm:text-xs md:text-sm">Support & Resources</div>
+              <div className="text-white/90 text-xs sm:text-xs md:text-sm">Support & Resources</div>
             </div>
           </div>
         </motion.div>

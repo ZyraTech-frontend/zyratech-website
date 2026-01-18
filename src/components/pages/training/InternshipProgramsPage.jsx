@@ -205,10 +205,10 @@ const InternshipProgramsPage = () => {
             transition={titleAnimation.transition}
             className="text-center mb-8"
           >
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Immersive Internship Programme
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
               Gain real-world experience through hands-on projects. Build your portfolio and launch your tech career with confidence.
             </p>
           </motion.div>
@@ -217,6 +217,8 @@ const InternshipProgramsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {internshipPrograms.map((program, index) => {
               const IconComponent = iconMap[program.iconKey] || Briefcase;
+              const placeholderImages = ['/images/image1.png', '/images/image2.png', '/images/image3.png'];
+              const imageUrl = placeholderImages[index % placeholderImages.length];
               
               return (
                 <motion.div
@@ -225,99 +227,74 @@ const InternshipProgramsPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group"
+                  className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
                 >
-                  {/* Program Header */}
-                  <div className="p-6 border-b border-gray-100">
-                    {/* Badge */}
-                    {program.badge && (
-                      <div className="inline-block mb-3">
-                        <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                          program.badge === 'Popular' ? 'bg-orange-100 text-orange-700' :
-                          program.badge === 'Creative' ? 'bg-purple-100 text-purple-700' :
-                          'bg-gray-100 text-gray-700'
-                        }`}>
-                          {program.badge}
-                        </span>
-                      </div>
-                    )}
+                  {/* Image Header */}
+                  <div className="relative h-60 overflow-hidden">
+                    <img 
+                      src={imageUrl} 
+                      alt={program.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40"></div>
                     
-                    {/* Program Title and Icon */}
-                    <div className="flex items-start gap-4 mb-4">
-                      <div className="w-12 h-12 bg-[#004fa2] rounded-lg flex items-center justify-center flex-shrink-0">
-                        <IconComponent size={24} className="text-white" />
+                    {/* Content on Image */}
+                    <div className="absolute inset-0 p-5 flex flex-col justify-end">
+                      {/* Icon + Title */}
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center flex-shrink-0">
+                          <IconComponent size={20} className="text-white" />
+                        </div>
+                        <h3 className="text-xl font-bold text-white leading-tight">{program.title}</h3>
                       </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-bold text-gray-900 mb-1 leading-tight">{program.title}</h3>
-                        <p className="text-sm text-gray-600">{program.instructor}</p>
-                      </div>
-                    </div>
-                    
-                    {/* Rating and Reviews */}
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star 
-                            key={i} 
-                            className={i < Math.floor(program.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'} 
-                            size={16}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm font-medium text-gray-900">{program.rating}</span>
-                      <span className="text-sm text-gray-500">({program.reviews} reviews)</span>
-                    </div>
-                    
-                    {/* Program Description */}
-                    <p className="text-sm text-gray-600 line-clamp-2 mb-4">{program.description}</p>
-                    
-                    {/* Program Meta Info */}
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <div className="flex items-center gap-1">
+                      
+                      {/* Duration */}
+                      <div className="flex items-center gap-2 text-white/90 text-sm">
                         <Clock size={14} />
                         <span>{program.duration}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Users size={14} />
-                        <span>{program.participants}</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Program Footer */}
-                  <div className="p-6 bg-gray-50">
-                    {/* Level and Format */}
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="px-2 py-1 bg-[#004fa2]/10 text-[#004fa2] rounded text-xs font-medium">
-                        {program.level}
-                      </span>
-                      <span className="text-xs text-gray-500">{program.format}</span>
-                    </div>
+                  {/* Card Body */}
+                  <div className="p-5">
+                    {/* Description */}
+                    <p className="text-gray-600 text-sm leading-relaxed mb-5 line-clamp-3">{program.description}</p>
                     
-                    {/* Topics Preview */}
-                    <div className="mb-4">
-                      <div className="flex flex-wrap gap-1">
-                        {program.topics.slice(0, 3).map((topic, topicIndex) => (
-                          <span key={topicIndex} className="text-xs text-gray-600 bg-white px-2 py-1 rounded border border-gray-200">
-                            {topic}
-                          </span>
-                        ))}
+                    {/* Feature Grid 2x2 */}
+                    <div className="grid grid-cols-2 gap-3 mb-5">
+                      <div className="flex items-center gap-2 text-sm text-gray-700">
+                        <Target size={14} className="text-[#004fa2]" />
+                        <span>{program.topics[0] || 'Tech Skills'}</span>
                       </div>
-                      {program.topics.length > 3 && (
-                        <div className="text-xs text-gray-500 mt-1">+{program.topics.length - 3} more topics</div>
-                      )}
+                      <div className="flex items-center gap-2 text-sm text-gray-700">
+                        <Star size={14} className="text-[#004fa2]" />
+                        <span>{program.level}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-700">
+                        <Users size={14} className="text-[#004fa2]" />
+                        <span>{program.format || 'Live Classes'}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-700">
+                        <Award size={14} className="text-[#004fa2]" />
+                        <span>Certificate</span>
+                      </div>
                     </div>
                     
-                    {/* Price and CTA */}
+                    {/* Divider */}
+                    <div className="border-t border-gray-200 my-4"></div>
+                    
+                    {/* Footer */}
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="text-lg font-bold text-[#004fa2]">{program.price}</div>
+                        <div className="text-xs text-gray-500 mb-0.5">Course Fee</div>
+                        <div className="text-xl font-bold text-[#004fa2]">{program.price}</div>
                       </div>
                       <button 
                         onClick={() => handleEnroll(program.id)}
-                        className="bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                        className="bg-[#004fa2] hover:bg-[#003d80] text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200"
                       >
-                        View Program
+                        View Details
                       </button>
                     </div>
                   </div>

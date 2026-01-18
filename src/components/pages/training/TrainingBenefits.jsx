@@ -86,7 +86,7 @@ const TrainingBenefits = () => {
             {stats.map((stat, index) => (
               <div key={index}>
                 <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">{stat.number}</div>
-                <div className="text-white/90 text-[10px] sm:text-xs md:text-sm">{stat.label}</div>
+                <div className="text-white/90 text-xs sm:text-xs md:text-sm">{stat.label}</div>
               </div>
             ))}
           </div>

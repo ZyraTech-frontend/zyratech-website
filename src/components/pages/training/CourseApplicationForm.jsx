@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
+import { Upload, X, FileText, Linkedin, Globe } from 'lucide-react';
 
 const DRAFT_STORAGE_KEY = 'trainingApplicationDraft';
 
@@ -14,10 +15,14 @@ const getInitialFormData = (courseId) => {
     country: '',
     currentLocation: '',
     educationLevel: '',
-    experienceLevel: '',
     preferredCohort: '',
     learningMode: '',
-    message: ''
+    message: '',
+    cvFile: null,
+    cvFileName: '',
+    motivationStatement: '',
+    linkedinUrl: '',
+    websiteUrl: ''
   };
 
   try {
@@ -47,6 +52,17 @@ const CourseApplicationForm = () => {
     if (!courseId) return '';
     return `Course #${courseId}`;
   }, [courseId, location.state]);
+
+  // Get course category to determine if extra fields are needed
+  const courseCategory = useMemo(() => {
+    const course = getTrainingCourseById(courseId);
+    return course?.category || 'basic';
+  }, [courseId]);
+
+  // Check if this is a non-basic program (requires CV, motivation, etc.)
+  const requiresExtraFields = useMemo(() => {
+    return ['intermediate', 'advanced', 'internship', 'matured'].includes(courseCategory);
+  }, [courseCategory]);
 
   useSEO({
     title: resolvedCourseTitle ? `Apply - ${resolvedCourseTitle}` : 'Course Application',
@@ -85,39 +101,52 @@ const CourseApplicationForm = () => {
   };
 
   const steps = useMemo(
-    () => [
-      { key: 'personal', title: 'Personal Details' },
-      { key: 'background', title: 'Background' },
-      { key: 'preferences', title: 'Preferences' },
-      { key: 'review', title: 'Review & Submit' }
-    ],
-    []
+    () => {
+      const baseSteps = [
+        { key: 'personal', title: 'Personal Details' },
+        { key: 'background', title: 'Background' },
+        { key: 'preferences', title: 'Preferences' }
+      ];
+      
+      if (requiresExtraFields) {
+        baseSteps.push({ key: 'professional', title: 'Professional Info' });
+      }
+      
+      baseSteps.push({ key: 'review', title: 'Review & Submit' });
+      return baseSteps;
+    },
+    [requiresExtraFields]
   );
 
   const [errors, setErrors] = useState({});
 
   const validateStep = (index) => {
     const nextErrors = {};
+    const currentStepKey = steps[index]?.key;
 
-    if (index === 0) {
+    if (currentStepKey === 'personal') {
       if (!formData.fullName.trim()) nextErrors.fullName = 'Full name is required.';
       if (!formData.emailAddress.trim()) nextErrors.emailAddress = 'Email is required.';
-      if (!formData.phoneNumber.trim()) nextErrors.phoneNumber = 'Phone/WhatsApp is required.';
+      if (!formData.phoneNumber.trim()) nextErrors.phoneNumber = 'Phone number is required.';
     }
 
-    if (index === 1) {
+    if (currentStepKey === 'background') {
       if (!formData.country.trim()) nextErrors.country = 'Country is required.';
       if (!formData.currentLocation.trim()) nextErrors.currentLocation = 'Location is required.';
       if (!formData.educationLevel) nextErrors.educationLevel = 'Select your education level.';
-      if (!formData.experienceLevel) nextErrors.experienceLevel = 'Select your experience level.';
     }
 
-    if (index === 2) {
+    if (currentStepKey === 'preferences') {
       if (!formData.preferredCohort) nextErrors.preferredCohort = 'Select a preferred cohort.';
       if (!formData.learningMode) nextErrors.learningMode = 'Select a learning mode.';
     }
 
-    if (index === 3) {
+    if (currentStepKey === 'professional' && requiresExtraFields) {
+      if (!formData.cvFile && !formData.cvFileName) nextErrors.cvFile = 'Please upload your CV/Resume.';
+      if (!formData.motivationStatement.trim()) nextErrors.motivationStatement = 'Please tell us why you want to join this course.';
+    }
+
+    if (currentStepKey === 'review') {
       if (!agreedToTerms) nextErrors.agreedToTerms = 'Please confirm to proceed.';
     }
 
@@ -137,7 +166,7 @@ const CourseApplicationForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validateStep(3)) return;
+    if (!validateStep(steps.length - 1)) return;
     clearDraft(); // Clear saved draft on successful submission
     navigate('/training/application-success', {
       state: {
@@ -156,18 +185,43 @@ const CourseApplicationForm = () => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (!allowedTypes.includes(file.type)) {
+        setErrors(prev => ({ ...prev, cvFile: 'Please upload a PDF or Word document.' }));
+        return;
+      }
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setErrors(prev => ({ ...prev, cvFile: 'File size must be less than 5MB.' }));
+        return;
+      }
+      setFormData(prev => ({
+        ...prev,
+        cvFile: file,
+        cvFileName: file.name
+      }));
+      setErrors(prev => ({ ...prev, cvFile: undefined }));
+    }
+  };
+
+  const removeFile = () => {
+    setFormData(prev => ({
+      ...prev,
+      cvFile: null,
+      cvFileName: ''
+    }));
+  };
+
   const educationLevels = [
     'JHS / SHS',
     'Diploma',
     'Undergraduate',
     'Graduate',
     'Other'
-  ];
-
-  const experienceLevels = [
-    'Beginner',
-    'Intermediate',
-    'Advanced'
   ];
 
   const cohorts = [
@@ -248,7 +302,7 @@ const CourseApplicationForm = () => {
           </div>
 
           <form onSubmit={handleSubmit}>
-            {stepIndex === 0 && (
+            {steps[stepIndex]?.key === 'personal' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
@@ -277,7 +331,7 @@ const CourseApplicationForm = () => {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone / WhatsApp</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
                   <input
                     type="tel"
                     name="phoneNumber"
@@ -291,7 +345,7 @@ const CourseApplicationForm = () => {
               </div>
             )}
 
-            {stepIndex === 1 && (
+            {steps[stepIndex]?.key === 'background' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
@@ -319,7 +373,7 @@ const CourseApplicationForm = () => {
                   {errors.currentLocation && <div className="text-sm text-red-600 mt-1">{errors.currentLocation}</div>}
                 </div>
 
-                <div>
+                <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Education Level</label>
                   <select
                     name="educationLevel"
@@ -336,28 +390,10 @@ const CourseApplicationForm = () => {
                   </select>
                   {errors.educationLevel && <div className="text-sm text-red-600 mt-1">{errors.educationLevel}</div>}
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Experience Level</label>
-                  <select
-                    name="experienceLevel"
-                    value={formData.experienceLevel}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-200"
-                  >
-                    <option value="">Select level</option>
-                    {experienceLevels.map((level) => (
-                      <option key={level} value={level}>
-                        {level}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.experienceLevel && <div className="text-sm text-red-600 mt-1">{errors.experienceLevel}</div>}
-                </div>
               </div>
             )}
 
-            {stepIndex === 2 && (
+            {steps[stepIndex]?.key === 'preferences' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Preferred Cohort</label>
@@ -396,20 +432,122 @@ const CourseApplicationForm = () => {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Message (optional)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Additional Message (optional)</label>
                   <textarea
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
-                    rows={4}
-                    placeholder="Tell us why you want to join this course, your background, or any questions..."
+                    rows={3}
+                    placeholder="Any additional information or questions..."
                     className="w-full px-4 py-3 text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-200"
                   />
                 </div>
               </div>
             )}
 
-            {stepIndex === 3 && (
+            {/* Professional Info Step - Only for non-basic programs */}
+            {steps[stepIndex]?.key === 'professional' && requiresExtraFields && (
+              <div className="space-y-6">
+                {/* CV Upload */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    CV / Resume <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    {formData.cvFileName ? (
+                      <div className="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <FileText size={24} className="text-green-600" />
+                          <div>
+                            <p className="font-medium text-gray-900">{formData.cvFileName}</p>
+                            <p className="text-sm text-gray-500">File uploaded successfully</p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={removeFile}
+                          className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                          <X size={20} />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#004fa2] hover:bg-gray-50 transition-all">
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <Upload size={32} className="text-gray-400 mb-2" />
+                          <p className="text-sm text-gray-600">
+                            <span className="font-medium text-[#004fa2]">Click to upload</span> or drag and drop
+                          </p>
+                          <p className="text-xs text-gray-500 mt-1">PDF or Word document (max 5MB)</p>
+                        </div>
+                        <input
+                          type="file"
+                          accept=".pdf,.doc,.docx"
+                          onChange={handleFileChange}
+                          className="hidden"
+                        />
+                      </label>
+                    )}
+                  </div>
+                  {errors.cvFile && <div className="text-sm text-red-600 mt-1">{errors.cvFile}</div>}
+                </div>
+
+                {/* Motivation Statement */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Why do you want to join this course? <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    name="motivationStatement"
+                    value={formData.motivationStatement}
+                    onChange={handleInputChange}
+                    rows={5}
+                    placeholder="Tell us about your motivation, career goals, and what you hope to achieve from this program..."
+                    className="w-full px-4 py-3 text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-200"
+                  />
+                  {errors.motivationStatement && <div className="text-sm text-red-600 mt-1">{errors.motivationStatement}</div>}
+                </div>
+
+                {/* LinkedIn & Website - Optional */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <span className="flex items-center gap-2">
+                        <Linkedin size={16} className="text-[#0077B5]" />
+                        LinkedIn Profile (optional)
+                      </span>
+                    </label>
+                    <input
+                      type="url"
+                      name="linkedinUrl"
+                      value={formData.linkedinUrl}
+                      onChange={handleInputChange}
+                      placeholder="https://linkedin.com/in/yourprofile"
+                      className="w-full px-4 py-3 text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-200"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <span className="flex items-center gap-2">
+                        <Globe size={16} className="text-gray-500" />
+                        Personal Website / Portfolio (optional)
+                      </span>
+                    </label>
+                    <input
+                      type="url"
+                      name="websiteUrl"
+                      value={formData.websiteUrl}
+                      onChange={handleInputChange}
+                      placeholder="https://yourwebsite.com"
+                      className="w-full px-4 py-3 text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-200"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {steps[stepIndex]?.key === 'review' && (
               <div>
                 <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-8 mb-6">
                   <div className="text-base font-bold text-gray-900 mb-4">Review your application</div>
@@ -428,7 +566,7 @@ const CourseApplicationForm = () => {
                       <div className="font-semibold text-gray-900 break-words">{formData.emailAddress || '-'}</div>
                     </div>
                     <div>
-                      <div className="text-xs text-gray-500">Phone/WhatsApp</div>
+                      <div className="text-xs text-gray-500">Phone Number</div>
                       <div className="font-semibold text-gray-900 break-words">{formData.phoneNumber || '-'}</div>
                     </div>
                     <div>
@@ -436,15 +574,60 @@ const CourseApplicationForm = () => {
                       <div className="font-semibold text-gray-900 break-words">{formData.currentLocation || '-'}, {formData.country || '-'}</div>
                     </div>
                     <div>
-                      <div className="text-xs text-gray-500">Education / Experience</div>
-                      <div className="font-semibold text-gray-900 break-words">{formData.educationLevel || '-'} / {formData.experienceLevel || '-'}</div>
+                      <div className="text-xs text-gray-500">Education Level</div>
+                      <div className="font-semibold text-gray-900 break-words">{formData.educationLevel || '-'}</div>
                     </div>
                     <div>
                       <div className="text-xs text-gray-500">Cohort / Mode</div>
                       <div className="font-semibold text-gray-900 break-words">{formData.preferredCohort || '-'} / {formData.learningMode || '-'}</div>
                     </div>
+                    
+                    {/* Professional Info - Only show for non-basic programs */}
+                    {requiresExtraFields && (
+                      <>
+                        <div className="md:col-span-2 pt-4 border-t border-gray-200 mt-2">
+                          <div className="text-xs text-gray-500 font-semibold text-[#004fa2] mb-1">Professional Information</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-gray-500">CV/Resume</div>
+                          <div className="font-semibold text-gray-900 break-words flex items-center gap-2">
+                            {formData.cvFileName ? (
+                              <>
+                                <FileText size={16} className="text-green-600" />
+                                {formData.cvFileName}
+                              </>
+                            ) : '-'}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-gray-500">LinkedIn</div>
+                          <div className="font-semibold text-gray-900 break-words">
+                            {formData.linkedinUrl ? (
+                              <a href={formData.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-[#0077B5] hover:underline">
+                                {formData.linkedinUrl}
+                              </a>
+                            ) : '-'}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-gray-500">Website/Portfolio</div>
+                          <div className="font-semibold text-gray-900 break-words">
+                            {formData.websiteUrl ? (
+                              <a href={formData.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-[#004fa2] hover:underline">
+                                {formData.websiteUrl}
+                              </a>
+                            ) : '-'}
+                          </div>
+                        </div>
+                        <div className="md:col-span-2">
+                          <div className="text-xs text-gray-500">Motivation Statement</div>
+                          <div className="font-semibold text-gray-900 break-words whitespace-pre-wrap">{formData.motivationStatement?.trim() || '-'}</div>
+                        </div>
+                      </>
+                    )}
+                    
                     <div className="md:col-span-2">
-                      <div className="text-xs text-gray-500">Message</div>
+                      <div className="text-xs text-gray-500">Additional Message</div>
                       <div className="font-semibold text-gray-900 break-words">{formData.message?.trim() ? formData.message : '-'}</div>
                     </div>
                   </div>
