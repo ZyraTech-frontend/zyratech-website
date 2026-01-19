@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Cloud, Code, Target, Clock, Users, Star, ChevronRight, Award } from 'lucide-react';
+import { Code, Terminal, Database, Clock, Users, Star, ChevronRight, Award, BookOpen, FileCode, Target, Cloud } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
 import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
@@ -21,7 +21,10 @@ const BasicProgramsPage = () => {
   const iconMap = {
     cloud: Cloud,
     code: Code,
-    target: Target
+    target: BookOpen,
+    terminal: Terminal,
+    database: Database,
+    bookOpen: BookOpen
   };
 
   const basicPrograms = getTrainingCoursesByCategory('basic');
@@ -33,35 +36,35 @@ const BasicProgramsPage = () => {
         <div className="max-w-none px-0">
           {/* Full-bleed hero container */}
           <div 
-            className="relative overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed"
+            className="relative overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed min-h-[70vh] sm:min-h-[80vh] lg:min-h-screen flex items-center"
             style={{
               backgroundImage: 'url(/images/image3.png)'
             }}
           >
             <div className="absolute inset-0 bg-black/40"></div>
-            <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-12 sm:py-16 md:py-20 min-h-[400px] md:min-h-[450px] flex items-center">
+            <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-32 min-h-[500px] md:min-h-[580px] lg:min-h-[680px] flex items-center">
               
               {/* Hero Content */}
               <motion.div 
-                className="max-w-3xl"
+                className="max-w-3xl pt-8 sm:pt-12 md:pt-16 lg:pt-20"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
               >
                 {/* Main Heading */}
                 <motion.h1 
-                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight"
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.1 }}
                 >
-                  Start Your Tech Journey with
-                  <span className="text-[#FFD700] block"> Basic Training Programs</span>
+                  Start Your Tech Journey
+                  <span className="text-[#FFD700] block"> with Basic Training Programs</span>
                 </motion.h1>
 
                 {/* Subtitle */}
                 <motion.p 
-                  className="text-sm sm:text-base md:text-lg font-bold text-white mb-6 sm:mb-8 leading-relaxed"
+                  className="text-base sm:text-lg md:text-xl font-bold text-white mb-10 sm:mb-12 md:mb-14 leading-relaxed"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
@@ -71,7 +74,7 @@ const BasicProgramsPage = () => {
 
                 {/* CTA Button */}
                 <motion.div 
-                  className="flex flex-col sm:flex-row gap-4 md:gap-6"
+                  className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
@@ -282,66 +285,6 @@ const BasicProgramsPage = () => {
           </div>
         </div>
       </section>
-
-      {import.meta.env.DEV && (
-        <>
-          {/* Learning Experience Section */}
-          <section className="py-12 sm:py-16 bg-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-center mb-8 sm:mb-12"
-              >
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Your Learning Experience</h3>
-                <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">We've designed our basic programs with your success in mind. Learn through hands-on projects, expert guidance, and real-world applications.</p>
-              </motion.div>
-
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-                {[
-                  {
-                    icon: Code,
-                    title: "Hands-On Projects",
-                    description: "Build real applications and solve practical problems from day one"
-                  },
-                  {
-                    icon: Users,
-                    title: "Expert Mentorship",
-                    description: "Get personalized guidance from industry professionals"
-                  },
-                  {
-                    icon: Star,
-                    title: "Portfolio Building",
-                    description: "Create impressive projects to showcase your skills to employers"
-                  },
-                  {
-                    icon: Target,
-                    title: "Community Support",
-                    description: "Join a supportive community of fellow learners"
-                  }
-                ].map((feature, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="text-center"
-                  >
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#004fa2]/10 rounded-lg flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                      <feature.icon className="text-[#004fa2]" size={20} />
-                    </div>
-                    <h4 className="font-semibold text-sm sm:text-base text-gray-900 mb-1 sm:mb-2">{feature.title}</h4>
-                    <p className="text-gray-600 text-xs sm:text-sm">{feature.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-        </>
-      )}
 
       <HrContactSection
         name="Magdalene"

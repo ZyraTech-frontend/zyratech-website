@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BookOpen, Award, Brain, Briefcase, Users, ChevronRight, Check } from 'lucide-react';
+import { BookOpen, Award, Rocket, Briefcase, Users, ChevronRight, Check } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
 import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
@@ -37,7 +37,7 @@ const ProgramsPage = () => {
       id: 'advanced',
       title: 'Advanced Programs',
       description: 'For experienced professionals ready to master cutting-edge technologies. Lead innovation with expert-level training.',
-      icon: Brain,
+      icon: Rocket,
       link: '/training/programs/advanced',
       color: 'bg-purple-500'
     },
@@ -67,35 +67,35 @@ const ProgramsPage = () => {
         <div className="max-w-none px-0">
           {/* Full-bleed hero container */}
           <div 
-            className="relative overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed"
+            className="relative overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed min-h-[70vh] sm:min-h-[80vh] lg:min-h-screen flex items-center"
             style={{
               backgroundImage: 'url(/images/image3.png)'
             }}
           >
             <div className="absolute inset-0 bg-black/40"></div>
-            <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-12 sm:py-16 md:py-20 min-h-[400px] md:min-h-[450px] flex items-center">
+            <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-32 min-h-[500px] md:min-h-[580px] lg:min-h-[680px] flex items-center">
               
               {/* Left Content */}
               <motion.div 
-                className="max-w-3xl"
+                className="max-w-3xl pt-8 sm:pt-12 md:pt-16 lg:pt-20"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
               >
                 {/* Main Heading */}
                 <motion.h1 
-                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight"
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.1 }}
                 >
-                  Transform Your Career with
-                  <span className="text-[#FFD700] block"> Professional Tech Training in Ghana</span>
+                  Transform Your Career
+                  <span className="text-[#FFD700] block"> with Professional Tech Training in Ghana</span>
                 </motion.h1>
 
                 {/* Subtitle */}
                 <motion.p 
-                  className="text-sm sm:text-base md:text-lg font-bold text-white mb-6 sm:mb-8 leading-relaxed"
+                  className="text-base sm:text-lg md:text-xl font-bold text-white mb-10 sm:mb-12 md:mb-14 leading-relaxed"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
@@ -105,7 +105,7 @@ const ProgramsPage = () => {
 
                 {/* CTA Button */}
                 <motion.div 
-                  className="flex flex-col sm:flex-row gap-4 md:gap-6"
+                  className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.3 }}

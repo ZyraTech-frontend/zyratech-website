@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Mail, Phone, Facebook, Linkedin, Youtube, Instagram } from 'lucide-react';
-import Breadcrumb from '../../Breadcrumb';
+import Breadcrumb from './Breadcrumb';
 
 const SoftwareContactHero = () => {
   const breadcrumbItems = [
