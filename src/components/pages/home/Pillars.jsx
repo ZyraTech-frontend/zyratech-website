@@ -12,7 +12,7 @@ const Pillars = () => {
       description: 'Practical training in coding, robotics, and IT systems with professional mentorship and real-world experience.',
       icon: Monitor,
       color: '#004fa2',
-      link: '/services/education'
+      link: '/training'
     },
     {
       title: 'IT & Networking',

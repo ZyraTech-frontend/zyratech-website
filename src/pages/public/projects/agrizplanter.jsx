@@ -1,5 +1,5 @@
 import React from 'react';
-import SoftwareNavbar from '../../../components/SoftwareNavbar';
+import Navbar from '../../../components/Navbar';
 import ProjectDetailHero from '../../../components/pages/projects/ProjectDetailHero';
 import ProjectOverview from '../../../components/pages/projects/ProjectOverview';
 import ProjectChallenges from '../../../components/pages/projects/ProjectChallenges';
@@ -89,7 +89,7 @@ const AgrizPlanterPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <SoftwareNavbar />
+      <Navbar />
       <ProjectDetailHero project={projectData} />
       <ProjectOverview overview={overview} />
       <ProjectChallenges challenges={challenges} />

@@ -200,11 +200,11 @@ const NewsletterPage = () => {
                     <a href="/about" className="block text-gray-700 hover:text-[#004fa2] transition-colors">
                       About Zyra Tech Hub
                     </a>
-                    <a href="/services/manufacturing" className="block text-gray-700 hover:text-[#004fa2] transition-colors">
-                      Manufacturing Services
+                    <a href="/training" className="block text-gray-700 hover:text-[#004fa2] transition-colors">
+                      Training Programs
                     </a>
-                    <a href="/services/open-labs" className="block text-gray-700 hover:text-[#004fa2] transition-colors">
-                      Open Labs
+                    <a href="/projects" className="block text-gray-700 hover:text-[#004fa2] transition-colors">
+                      Projects
                     </a>
                     <a href="/contact" className="block text-gray-700 hover:text-[#004fa2] transition-colors">
                       Contact Us

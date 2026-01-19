@@ -11,7 +11,7 @@ const Hero = () => {
       pillar: "Education & Internship",
       icon: "🎓",
       backgroundImage: "/images/image1.png",
-      cta1: { text: "Apply for Internship", link: "/services/education" },
+      cta1: { text: "Apply for Internship", link: "/training/programs/internship" },
       cta2: { text: "Read Success Stories", link: "/#impact-stories" }
     },
     {
@@ -21,7 +21,7 @@ const Hero = () => {
       icon: "🌟",
       backgroundImage: "/images/stories/hero.jpg",
       cta1: { text: "Explore Stories", link: "/#impact-stories" },
-      cta2: { text: "Join Our Program", link: "/services/education" }
+      cta2: { text: "Join Our Program", link: "/training" }
     },
     {
       title: "INNOVATION & COMMUNITY",
@@ -168,7 +168,7 @@ const Hero = () => {
       </div>
 
       {/* CSS for animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes fade-in-up {
           from { 
             opacity: 0;

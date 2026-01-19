@@ -14,7 +14,7 @@ const PaymentFailedModal = ({ isOpen, onClose }) => {
 
   const handleChangePaymentMethod = () => {
     onClose();
-    navigate('/donate/payment');
+    navigate('/contact');
   };
 
   const handleContactSupport = () => {

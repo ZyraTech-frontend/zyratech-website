@@ -7,9 +7,7 @@ const FilterNavigation = ({ onFilterChange, onSearchChange }) => {
 
   const categories = [
     { key: 'all', label: 'All' },
-    { key: 'education', label: 'Education' },
-    { key: 'manufacturing', label: 'Manufacturing' },
-    { key: 'open-labs', label: 'Open Labs' },
+    { key: 'training', label: 'Training' },
     { key: 'projects', label: 'Projects' },
     { key: 'events', label: 'Events' },
     { key: 'impact', label: 'Impact' }

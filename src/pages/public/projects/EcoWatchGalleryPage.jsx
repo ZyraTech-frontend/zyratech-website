@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, X } from 'lucide-react';
-import SoftwareNavbar from '../../../components/SoftwareNavbar';
+import Navbar from '../../../components/Navbar';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const EcoWatchGalleryPage = () => {
@@ -26,7 +26,7 @@ const EcoWatchGalleryPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <SoftwareNavbar />
+      <Navbar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-10">
           <Link 

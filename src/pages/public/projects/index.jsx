@@ -1,5 +1,5 @@
 import React from 'react';
-import SoftwareNavbar from '../../../components/SoftwareNavbar';
+import Navbar from '../../../components/Navbar';
 import ProjectsHero from '../../../components/pages/projects/ProjectsHero';
 import ProjectsGrid from '../../../components/pages/projects/ProjectsGrid';
 import FeaturedCaseStudy from '../../../components/pages/projects/FeaturedCaseStudy';
@@ -9,7 +9,7 @@ import ProjectsCTA from '../../../components/pages/projects/ProjectsCTA';
 const ProjectsPage = () => {
   return (
     <div className="min-h-screen bg-white">
-      <SoftwareNavbar />
+      <Navbar />
       <ProjectsHero />
       <ProjectsGrid />
       <FeaturedCaseStudy />

@@ -176,10 +176,10 @@ const ImpactStats = () => {
           })}
         </motion.div>
 
-        {/* Donate CTA */}
+        {/* Partner CTA */}
         <div className="flex justify-center mt-8">
           <a 
-            href="/donate"
+            href="/partner"
             className="bg-white hover:from-[#000000] hover:to-[#000000] text-white font-bold text-base px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 inline-flex items-center gap-2"
           >
             Support Our Mission
