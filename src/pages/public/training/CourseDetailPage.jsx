@@ -126,14 +126,14 @@ const CourseDetailPage = () => {
               ]}
             />
           </div>
-          <div className="absolute z-20 bottom-4 sm:bottom-10 left-4 right-4 sm:left-6 sm:right-6 lg:left-auto lg:right-8">
+          <div className="absolute z-20 bottom-4 sm:bottom-36 left-4 right-4 sm:left-6 sm:right-6 lg:left-auto lg:right-8">
             <div className="bg-white/10 backdrop-blur-[10px] rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 border border-white/20 shadow-lg w-full sm:w-fit mx-auto lg:mx-0">
               <div className="text-white font-semibold text-sm sm:text-base text-center lg:text-left">
                 {heroInfoText}
               </div>
             </div>
           </div>
-          <div className="relative z-10 w-full py-10 sm:py-16 pt-16 sm:pt-24">
+          <div className="relative z-10 w-full py-10 sm:py-6 pt-16 sm:pt-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <motion.div
                 ref={titleAnimation.ref}
@@ -144,10 +144,10 @@ const CourseDetailPage = () => {
               >
                 <div className="grid lg:grid-cols-3 gap-4 sm:gap-10 items-start">
                   <div className="lg:col-span-2 text-center lg:text-left">
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 leading-tight">
+                    <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 leading-tight">
                       {heroTitle}
                     </h1>
-                    <p className="text-white/90 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                    <p className="text-white/90 text-sm sm:text-base md:text-xl lg:text-2xl leading-relaxed max-w-2xl mx-auto lg:mx-0">
                       {heroSubtitle}
                     </p>
                   </div>

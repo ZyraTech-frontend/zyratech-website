@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Breadcrumb from '../../Breadcrumb';
+import Breadcrumb from './Breadcrumb';
 
 const ProjectsHero = () => {
   const [activeFilter, setActiveFilter] = useState('All');
