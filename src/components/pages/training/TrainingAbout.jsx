@@ -21,7 +21,7 @@ const TrainingAbout = () => {
     <section id="training-about" className="py-20 bg-gradient-to-br from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header - AmaliTech Style */}
+        {/* Section Header - ZyraTech Style */}
         <motion.div 
           ref={titleAnimation.ref}
           initial={titleAnimation.initial}
@@ -262,7 +262,7 @@ const TrainingAbout = () => {
 
         <ParallaxDivider />
 
-        {/* Testimonial Section - AmaliTech Style */}
+        {/* Testimonial Section - ZyraTech Style */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -290,7 +290,7 @@ const TrainingAbout = () => {
           </div>
         </motion.div>
 
-        {/* Our Training Team - AmaliTech Style */}
+        {/* Our Training Team - ZyraTech Style */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -328,7 +328,7 @@ const TrainingAbout = () => {
           </div>
         </motion.div>
 
-        {/* Stats Section - AmaliTech Style */}
+        {/* Stats Section - ZyraTech Style */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -357,7 +357,7 @@ const TrainingAbout = () => {
           </div>
         </motion.div>
 
-        {/* CTA Section - AmaliTech Style */}
+        {/* CTA Section - ZyraTech Style */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

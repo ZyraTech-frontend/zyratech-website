@@ -26,10 +26,10 @@ const PartnerCTA = () => {
                 Partner With Us
               </a>
               <a 
-                href="/donate"
+                href="/contact"
                 className="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-[#004fa2] transition-all duration-300 text-center"
               >
-                Donate
+                Contact Us
               </a>
             </div>
           </div>

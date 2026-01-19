@@ -32,10 +32,9 @@ const Footer = () => {
             
             <h4 className="text-sm font-semibold text-white mb-3">Programs</h4>
             <ul className="space-y-1.5">
-              <li><a href="/services/education" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Education</a></li>
-              <li><a href="/services/manufacturing" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Manufacturing</a></li>
-              <li><a href="/services/software" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Software</a></li>
-              <li><a href="/services/open-labs" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Open Labs</a></li>
+              <li><a href="/training" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Training</a></li>
+              <li><a href="/projects" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Projects</a></li>
+              <li><a href="/impact" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Impact</a></li>
             </ul>
           </div>
           
@@ -43,7 +42,6 @@ const Footer = () => {
           <div>
             <h4 className="text-sm font-semibold text-white mb-3">Get Involved</h4>
             <ul className="space-y-1.5 mb-4">
-              <li><a href="/donate" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Donate</a></li>
               <li><a href="/partner" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Partner</a></li>
               <li><a href="/contact" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Join Us</a></li>
             </ul>
