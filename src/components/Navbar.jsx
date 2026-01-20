@@ -109,7 +109,7 @@ const Navbar = () => {
               <img 
                 src="/zyratecpng.png" 
                 alt="Zyra Tech Hub Logo" 
-                className="h-10 lg:h-28 w-auto object-contain"
+                className="h-16 md:h-20 lg:h-28 w-auto object-contain"
               />
             </NavLink>
           </div>
