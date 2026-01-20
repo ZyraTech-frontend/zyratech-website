@@ -1,26 +1,26 @@
 import React from 'react';
 import Breadcrumb from '../../../components/pages/about/Breadcrumb';
 import AboutHero from '../../../components/pages/about/AboutHero';
-import OurStory from '../../../components/pages/about/OurStory';
-import MissionVision from '../../../components/pages/about/MissionVision';
-import CoreValues from '../../../components/pages/about/CoreValues';
-import OurDifference from '../../../components/pages/about/OurDifference';
-import TeamSection from '../../../components/pages/about/TeamSection';
-import AwardsRecognition from '../../../components/pages/about/AwardsRecognition';
-import PartnerCTA from '../../../components/pages/about/PartnerCTA';
+import OurMission from '../../../components/pages/about/OurMission';
+import WhyGhana from '../../../components/pages/about/WhyGhana';
+import CommunityImpact from '../../../components/pages/about/CommunityImpact';
+import Milestones from '../../../components/pages/about/Milestones';
+import Approach from '../../../components/pages/about/Approach';
+import ImpactTestimonial from '../../../components/pages/about/ImpactTestimonial';
+import Timeline from '../../../components/pages/about/Timeline';
 
 const AboutPage = () => {
   return (
     <div>
       <Breadcrumb />
       <AboutHero />
-      <OurStory />
-      <MissionVision />
-      <CoreValues />
-      <OurDifference />
-      <TeamSection />
-      <AwardsRecognition />
-      <PartnerCTA />
+      <OurMission />
+      <WhyGhana />
+      <Milestones />
+      <ImpactTestimonial />
+      <Approach />
+      <Timeline />
+      <CommunityImpact />
     </div>
   );
 };
