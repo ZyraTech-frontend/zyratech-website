@@ -22,6 +22,10 @@ import LoginPage from './pages/admin/LoginPage';
 import FaqPage from './pages/public/faq';
 import ImpactPage from './pages/public/impact';
 import PartnershipPage from './pages/public/partnership';
+import CollaborationModelsPage from './pages/public/collaboration-models/CollaborationModels';
+import OurServicesPage from './pages/public/our-services/OurServices';
+import WorkWithUsPage from './pages/public/work-with-us/WorkWithUs';
+import QualityAssurancePage from './pages/public/quality-assurance/QualityAssurance';
 import PartnershipApplicationPage from './pages/public/partnership/apply';
 import TrainingPage from './pages/public/training';
 import CourseDetailPage from './pages/public/training/CourseDetailPage';
@@ -109,6 +113,10 @@ function App() {
           <Route path="/partner" element={<PartnershipPage />} />
           <Route path="/partner/apply" element={<PartnershipApplicationPage />} />
           <Route path="/training" element={<TrainingPage />} />
+          <Route path="/collaboration-models" element={<CollaborationModelsPage />} />
+          <Route path="/our-services" element={<OurServicesPage />} />
+          <Route path="/work-with-us" element={<WorkWithUsPage />} />
+          <Route path="/quality-assurance" element={<QualityAssurancePage />} />
           <Route path="/training/contact" element={<TrainingContactPage />} />
           <Route path="/training/programs" element={<TrainingProgramsPage />} />
           <Route path="/training/programs/basic" element={<BasicProgramsRoute />} />
