@@ -29,7 +29,7 @@ const TrainingNavbar = () => {
               <img 
                 src="/zyratecpng.png" 
                 alt="Zyra Tech Hub Logo" 
-                className="h-12 sm:h-16 lg:h-20 w-auto object-contain"
+                className="h-18 sm:h-22 lg:h-20 w-auto object-contain"
               />
             </NavLink>
           </div>
