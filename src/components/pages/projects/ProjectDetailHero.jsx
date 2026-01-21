@@ -36,10 +36,10 @@ const ProjectDetailHero = ({ project }) => {
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-4">
-              <button className="bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-3 font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5">
+              <button className="cta-btn px-6 py-3 font-semibold rounded-lg">
                 View Live Demo
               </button>
-              <button className="border-2 border-gray-300 text-gray-700 hover:border-[#004fa2] hover:text-[#004fa2] px-6 py-3 font-medium rounded-lg transition-all duration-200">
+              <button className="cta-ghost px-6 py-3 font-medium rounded-lg">
                 Download PDF
               </button>
             </div>

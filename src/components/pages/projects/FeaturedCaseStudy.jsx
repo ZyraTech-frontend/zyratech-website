@@ -46,7 +46,7 @@ const FeaturedCaseStudy = () => {
               </div>
             </div>
             
-            <button className="bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5">
+            <button className="cta-btn px-6 py-2.5 text-sm font-semibold rounded-lg">
               Read Full Story
             </button>
           </div>

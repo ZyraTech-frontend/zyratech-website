@@ -94,7 +94,7 @@ const TrainingNavbar = () => {
             {/* Back to Main Site */}
             <NavLink
               to="/"
-              className="ml-4 bg-[#004fa2] hover:bg-[#000000] text-white px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200"
+              className="ml-4 cta-ghost cta-btn-sm"
             >
               Main Site
             </NavLink>
@@ -206,7 +206,7 @@ const TrainingNavbar = () => {
               href="/"
               target="_blank"
               rel="noopener noreferrer"
-              className="block px-3 py-2 text-base font-medium text-white bg-[#004fa2] hover:bg-[#000000] rounded-lg transition-colors mt-4"
+              className="block px-3 py-2 text-base font-medium cta-ghost mt-4 text-center"
             >
               Main Site
             </a>

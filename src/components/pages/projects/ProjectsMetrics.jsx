@@ -58,13 +58,13 @@ const ProjectsMetrics = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-[#004fa2] hover:bg-[#000000] text-white px-8 py-3 rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl">
-                Explore All Projects
-              </button>
+                <button className="cta-btn px-8 py-3 rounded-xl font-medium shadow-lg">
+                  Explore All Projects
+                </button>
               
-              <button className="border-2 border-gray-200 text-gray-700 hover:border-[#004fa2] hover:text-[#004fa2] px-8 py-3 rounded-xl font-medium transition-all duration-300 bg-white hover:bg-[#004fa2]/5">
-                Partner With Us
-              </button>
+                <button className="cta-ghost px-8 py-3 rounded-xl font-medium">
+                  Partner With Us
+                </button>
             </div>
           </div>
         </div>

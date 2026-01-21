@@ -124,7 +124,7 @@ const TrainingPaymentPage = () => {
             </p>
             <button
               onClick={() => navigate('/training/programs')}
-              className="bg-[#004fa2] hover:bg-black text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+              className="cta-btn px-6 py-3 rounded-lg"
             >
               Browse Programs
             </button>
@@ -455,8 +455,8 @@ const TrainingPaymentPage = () => {
                       disabled={isProcessing}
                       className={`flex-1 flex items-center justify-center gap-2 py-4 px-6 rounded-xl font-semibold text-white transition-all ${
                         isProcessing
-                          ? 'bg-gray-400 cursor-not-allowed'
-                          : 'bg-[#004fa2] hover:bg-black shadow-lg hover:shadow-xl hover:-translate-y-0.5'
+                            ? 'bg-gray-400 cursor-not-allowed'
+                              : 'cta-btn shadow-lg hover:shadow-xl hover:-translate-y-0.5'
                       }`}
                     >
                       {isProcessing ? (

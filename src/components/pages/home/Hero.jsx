@@ -130,7 +130,7 @@ const Hero = () => {
             >
             <a 
               href={slides[currentSlide].cta1.link}
-              className="group bg-[#004fa2] hover:bg-[#000000] text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 flex items-center justify-center gap-4 transform hover:-translate-y-1"
+              className="cta-btn px-8 py-4 rounded-xl text-lg transform hover:-translate-y-1"
             >
               {slides[currentSlide].cta1.text}
               <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,7 +139,7 @@ const Hero = () => {
             </a>
             <a 
               href={slides[currentSlide].cta2.link}
-              className="group bg-transparent border-3 border-white hover:bg-white hover:text-[#004fa2] text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 flex items-center justify-center gap-4 transform hover:-translate-y-1"
+              className="cta-ghost px-8 py-4 rounded-xl text-lg transform hover:-translate-y-1"
             >
               {slides[currentSlide].cta2.text}
               <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -3,11 +3,11 @@ import Breadcrumb from '../../../components/pages/about/Breadcrumb';
 import AboutHero from '../../../components/pages/about/AboutHero';
 import OurMission from '../../../components/pages/about/OurMission';
 import WhyGhana from '../../../components/pages/about/WhyGhana';
-import CommunityImpact from '../../../components/pages/about/CommunityImpact';
 import Milestones from '../../../components/pages/about/Milestones';
-import Approach from '../../../components/pages/about/Approach';
-import ImpactTestimonial from '../../../components/pages/about/ImpactTestimonial';
+import SplitTestimonial from '../../../components/pages/about/SplitTestimonial';
+import ImpactCTA from '../../../components/pages/about/ImpactCTA';
 import Timeline from '../../../components/pages/about/Timeline';
+import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 
 const AboutPage = () => {
   return (
@@ -17,10 +17,10 @@ const AboutPage = () => {
       <OurMission />
       <WhyGhana />
       <Milestones />
-      <ImpactTestimonial />
-      <Approach />
+      <SplitTestimonial />
+      <ImpactCTA />
       <Timeline />
-      <CommunityImpact />
+      <NewsletterHero />
     </div>
   );
 };

@@ -71,7 +71,7 @@ const DashboardPage = () => {
     { title: 'Total Users', value: stats.totalUsers, icon: Users, color: 'bg-blue-500', change: '+12%' },
     { title: 'Revenue', value: `GHS ${stats.totalRevenue.toLocaleString()}`, icon: DollarSign, color: 'bg-green-500', change: '+8%' },
     { title: 'Active Courses', value: stats.activeCourses, icon: BookOpen, color: 'bg-purple-500', change: '+2' },
-    { title: 'Active Projects', value: stats.activeProjects, icon: Wrench, color: 'bg-orange-500', change: '+1' },
+    { title: 'Active Projects', value: stats.activeProjects, icon: Wrench, color: 'bg-[#5c3a21]', change: '+1' },
     { title: 'Pending Bookings', value: stats.pendingBookings, icon: Calendar, color: 'bg-red-500', change: '+3' },
     { title: 'New Inquiries', value: stats.newInquiries, icon: Mail, color: 'bg-indigo-500', change: '+15' }
   ];

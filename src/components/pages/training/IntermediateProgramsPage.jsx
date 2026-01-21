@@ -165,10 +165,10 @@ const IntermediateProgramsPage = () => {
                 >
                   <a 
                     href="#programs"
-                    className="group bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-3 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 inline-flex items-center justify-center gap-3 transform hover:-translate-y-1 w-full sm:w-auto"
+                    className="cta-btn px-6 py-3 rounded-xl text-base sm:text-lg w-full sm:w-auto"
                   >
                     Explore Intermediate Programs
-                    <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                    <ChevronRight size={18} className="ml-2" />
                   </a>
                   <Link 
                     to="/training/programs"
@@ -292,12 +292,12 @@ const IntermediateProgramsPage = () => {
                         className="bg-[#004fa2] hover:bg-[#003d80] text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200"
                       >
                         View Details
+                      <button 
+                        onClick={() => navigate(`/training/course/${program.id}`)}
+                        className="cta-btn-sm cta-btn px-5 py-2.5 text-sm"
+                      >
+                        View Details
                       </button>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
           </div>
         </div>
       </section>

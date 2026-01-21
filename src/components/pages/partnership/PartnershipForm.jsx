@@ -187,7 +187,7 @@ const PartnershipForm = () => {
               <div className="pt-4">
                 <button
                   type="submit"
-                  className="w-full bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-3 text-sm font-semibold rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2"
+                  className="cta-btn w-full px-6 py-3 text-sm font-semibold rounded-lg flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" />
                   Submit Partnership Inquiry

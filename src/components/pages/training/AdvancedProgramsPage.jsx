@@ -165,7 +165,7 @@ const AdvancedProgramsPage = () => {
                 >
                   <a 
                     href="#programs"
-                    className="group bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-3 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 inline-flex items-center justify-center gap-3 transform hover:-translate-y-1 w-full sm:w-auto"
+                    className="cta-btn px-6 py-3 rounded-xl text-base sm:text-lg w-full sm:w-auto"
                   >
                     Explore Advanced Programs
                     <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
@@ -287,9 +287,9 @@ const AdvancedProgramsPage = () => {
                         <div className="text-xs text-gray-500 mb-0.5">Course Fee</div>
                         <div className="text-xl font-bold text-[#004fa2]">{program.price}</div>
                       </div>
-                      <button 
+                      <button
                         onClick={() => handleEnroll(program.id)}
-                        className="bg-[#004fa2] hover:bg-[#003d80] text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200"
+                        className="cta-btn-sm cta-btn px-5 py-2.5 text-sm"
                       >
                         View Details
                       </button>

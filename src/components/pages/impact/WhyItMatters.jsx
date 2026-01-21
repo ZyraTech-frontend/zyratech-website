@@ -24,11 +24,11 @@ const WhyItMatters = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-sm hover:shadow-md">
+              <button className="cta-btn px-6 py-3 rounded-lg font-medium">
                 Support Our Mission
               </button>
               
-              <button className="border border-gray-300 text-gray-700 hover:border-gray-400 hover:text-gray-900 px-6 py-3 rounded-lg font-medium transition-all duration-300 bg-white">
+              <button className="cta-ghost px-6 py-3 rounded-lg font-medium">
                 Partner With Us
               </button>
             </div>
