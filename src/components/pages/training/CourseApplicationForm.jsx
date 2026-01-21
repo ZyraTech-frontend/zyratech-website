@@ -673,14 +673,14 @@ const CourseApplicationForm = () => {
                 <button
                   type="button"
                   onClick={goNext}
-                  className="w-full sm:w-auto bg-[#004fa2] hover:bg-[#000000] text-white px-7 py-3 text-base font-semibold rounded-lg transition-all duration-200 hover:shadow-lg"
+                  className="cta-btn px-7 py-3 text-base font-semibold w-full sm:w-auto rounded-lg"
                 >
                   Continue
                 </button>
               ) : (
                 <button
                   type="submit"
-                  className="w-full sm:w-auto bg-[#004fa2] hover:bg-[#000000] text-white px-7 py-3 text-base font-semibold rounded-lg transition-all duration-200 hover:shadow-lg"
+                  className="cta-btn px-7 py-3 text-base font-semibold w-full sm:w-auto rounded-lg"
                 >
                   Submit Application
                 </button>

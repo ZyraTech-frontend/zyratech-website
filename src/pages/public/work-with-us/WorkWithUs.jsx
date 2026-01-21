@@ -79,7 +79,7 @@ const WorkWithUs = () => {
               <li className="flex items-center"><MapPin className="mr-2" /> Remote roles</li>
             </ul>
             <div className="mt-6">
-              <Link to="/contact" className="block text-center bg-[#004fa2] text-white px-4 py-3 rounded-lg">Talk to recruiting</Link>
+              <Link to="/contact" className="block text-center cta-btn px-4 py-3">Talk to recruiting</Link>
             </div>
           </aside>
         </div>

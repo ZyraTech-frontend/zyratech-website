@@ -243,7 +243,7 @@ const PartnerApplicationForm = () => {
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+                className="cta-btn px-6 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
               >
                 Submit Partnership Request
               </button>

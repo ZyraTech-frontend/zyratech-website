@@ -1,3 +1,4 @@
+import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Calendar, Clock, User, Share2, ArrowUp } from 'lucide-react';
@@ -152,46 +153,7 @@ const NewsletterPage = () => {
             <div className="lg:col-span-1">
               <div className="sticky top-8 space-y-8">
                 {/* Newsletter Subscription Form */}
-                <div className="bg-[#004fa2] rounded-2xl shadow-xl p-8 text-white">
-                  <div className="text-center mb-6">
-                    <h3 className="text-2xl font-bold mb-3">
-                      Join the Innovation Hub
-                    </h3>
-                    <p className="text-white/90">
-                      Get exclusive insights directly to your inbox.
-                    </p>
-                  </div>
-
-                  <form onSubmit={handleSubscribe} className="space-y-4">
-                    <div>
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Enter your email address"
-                        className="w-full px-4 py-3 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
-                        required
-                      />
-                    </div>
-                    
-                    <button
-                      type="submit"
-                      className="w-full bg-white hover:bg-gray-100 text-[#004fa2] px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
-                    >
-                      Subscribe Now →
-                    </button>
-                  </form>
-
-                  {isSubscribed && (
-                    <div className="mt-4 p-3 bg-green-500/20 border border-green-400/30 rounded-lg text-center">
-                      <p className="text-green-100 text-sm">Thank you for subscribing!</p>
-                    </div>
-                  )}
-
-                  <p className="text-xs text-white/70 text-center mt-4">
-                    We respect your privacy. Unsubscribe anytime.
-                  </p>
-                </div>
+                <NewsletterHero />
 
                 {/* Quick Links */}
                 <div className="bg-white rounded-2xl shadow-lg p-6">

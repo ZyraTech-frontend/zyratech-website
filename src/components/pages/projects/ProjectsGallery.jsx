@@ -131,12 +131,12 @@ const ProjectsGallery = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="flex items-center gap-2 justify-center bg-[#004fa2] hover:bg-[#000000] text-white px-8 py-3 rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl">
+            <button className="cta-btn inline-flex items-center gap-2 px-8 py-3 rounded-xl font-medium shadow-lg">
               View Complete Gallery
               <ExternalLink size={16} />
             </button>
             
-            <button className="border-2 border-gray-200 text-gray-700 hover:border-[#004fa2] hover:text-[#004fa2] px-8 py-3 rounded-xl font-medium transition-all duration-300 bg-white hover:bg-[#004fa2]/5">
+            <button className="cta-ghost px-8 py-3 rounded-xl font-medium">
               See Our Impact
             </button>
           </div>

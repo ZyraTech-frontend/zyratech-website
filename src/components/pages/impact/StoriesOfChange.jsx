@@ -92,7 +92,7 @@ const StoriesOfChange = () => {
 
         {/* Watch More Stories Button */}
         <div className="text-left">
-          <button className="bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-sm hover:shadow-md flex items-center gap-2">
+          <button className="cta-btn inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-sm">
             <Play size={16} />
             Watch More Stories
           </button>

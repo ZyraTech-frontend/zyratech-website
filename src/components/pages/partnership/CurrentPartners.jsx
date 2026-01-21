@@ -86,7 +86,7 @@ const CurrentPartners = () => {
             <p className="text-sm text-gray-600 mb-4">
               Ready to make a lasting impact on African innovation? Let's explore partnership opportunities.
             </p>
-            <button className="bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-2.5 text-sm font-semibold rounded-lg transition-colors duration-200">
+            <button className="cta-btn px-6 py-2.5 text-sm font-semibold rounded-lg">
               Become a Partner
             </button>
           </div>

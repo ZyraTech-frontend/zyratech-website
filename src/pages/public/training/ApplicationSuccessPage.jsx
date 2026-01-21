@@ -74,7 +74,7 @@ const ApplicationSuccessPage = () => {
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
             <button
               onClick={() => navigate('/training/programs')}
-              className="bg-[#004fa2] hover:bg-[#000000] text-white px-7 py-3.5 rounded-lg text-base font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 inline-flex items-center justify-center gap-2"
+              className="cta-btn px-7 py-3.5 rounded-lg inline-flex items-center gap-2"
             >
               View Other Programs
               <ChevronRight size={18} />
@@ -82,7 +82,7 @@ const ApplicationSuccessPage = () => {
 
             <button
               onClick={() => navigate('/')}
-              className="border-2 border-[#004fa2] text-[#004fa2] hover:bg-[#004fa2] hover:text-white px-7 py-3.5 rounded-lg text-base font-semibold transition-all duration-300 hover:shadow-lg hover:-translate-y-1 inline-flex items-center justify-center gap-2"
+              className="cta-ghost px-7 py-3.5 rounded-lg inline-flex items-center gap-2"
             >
               Go to Homepage
             </button>
@@ -144,7 +144,7 @@ const ApplicationSuccessPage = () => {
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <button
                   onClick={() => navigate('/training/contact')}
-                  className="w-full bg-[#004fa2] hover:bg-[#000000] text-white px-7 py-3.5 rounded-lg text-base font-semibold transition-all duration-300 shadow-md hover:shadow-lg inline-flex items-center justify-center gap-2"
+                  className="cta-btn px-7 py-3.5 rounded-lg w-full inline-flex items-center justify-center gap-2"
                 >
                   Contact Training Team
                   <ChevronRight size={18} />

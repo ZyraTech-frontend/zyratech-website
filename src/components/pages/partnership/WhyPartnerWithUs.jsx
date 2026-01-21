@@ -66,7 +66,7 @@ const WhyPartnerWithUs = () => {
               <div className="pt-4">
                 <button 
                   onClick={() => navigate('/partner/apply')}
-                  className="bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-2.5 text-sm font-semibold rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                  className="cta-btn px-6 py-2.5 text-sm font-semibold rounded-lg"
                 >
                   Become a Partner
                 </button>

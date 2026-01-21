@@ -171,14 +171,14 @@ const TrainingPaymentSuccessPage = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/training/programs"
-              className="flex items-center justify-center gap-2 px-8 py-4 bg-[#004fa2] hover:bg-black text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              className="cta-btn px-8 py-4 rounded-xl inline-flex items-center gap-2"
             >
               <GraduationCap size={20} />
               Explore More Programs
             </Link>
             <Link
               to="/training/contact"
-              className="flex items-center justify-center gap-2 px-8 py-4 border-2 border-gray-300 text-gray-700 hover:border-[#004fa2] hover:text-[#004fa2] font-semibold rounded-xl transition-all"
+              className="cta-ghost px-8 py-4 rounded-xl inline-flex items-center gap-2"
             >
               <Phone size={20} />
               Contact Support

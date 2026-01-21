@@ -87,7 +87,7 @@ const OurServices = () => {
               <li><span className="text-[#004fa2] mr-2">•</span>Flexible collaboration models</li>
             </ul>
             <div className="mt-6">
-              <Link to="/partner/apply" className="block text-center bg-[#004fa2] text-white px-4 py-3 rounded-lg">Apply as a partner</Link>
+              <Link to="/partner/apply" className="block text-center cta-ghost px-4 py-3">Apply as a partner</Link>
             </div>
           </aside>
         </div>
@@ -98,7 +98,7 @@ const OurServices = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h3 className="text-2xl font-bold mb-4">Ready to work with us?</h3>
           <p className="mb-6">Reach out to explore a project, partnership or training collaboration.</p>
-          <Link to="/contact" className="inline-block bg-white text-[#004fa2] px-6 py-3 rounded-lg font-semibold">Contact Us</Link>
+          <Link to="/contact" className="inline-block cta-btn px-6 py-3 rounded-lg font-semibold">Contact Us</Link>
         </div>
       </section>
     </div>

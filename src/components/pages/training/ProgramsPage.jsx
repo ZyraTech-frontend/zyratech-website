@@ -47,7 +47,7 @@ const ProgramsPage = () => {
       description: 'Gain real-world experience through hands-on projects. Build your portfolio and launch your tech career.',
       icon: Briefcase,
       link: '/training/programs/internship',
-      color: 'bg-orange-500'
+      color: 'bg-[#5c3a21]'
     },
     {
       id: 'matured',
@@ -112,10 +112,10 @@ const ProgramsPage = () => {
                 >
                   <a 
                     href="#program-categories"
-                    className="group bg-[#004fa2] hover:bg-[#000000] text-white px-6 py-3 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 inline-flex items-center justify-center gap-3 transform hover:-translate-y-1 w-full sm:w-auto"
+                    className="cta-btn px-6 py-3 rounded-xl text-base sm:text-lg w-full sm:w-auto"
                   >
                     Discover Your Path
-                    <ChevronRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                    <ChevronRight size={18} className="ml-2" />
                   </a>
                 </motion.div>
               </motion.div>
@@ -150,7 +150,7 @@ const ProgramsPage = () => {
               <div className="space-y-4 sm:space-y-6">
                 <div className="flex items-start gap-4">
                   <div className="mt-1 flex-shrink-0">
-                    <Check className="w-5 h-5 text-orange-600" />
+                    <Check className="w-5 h-5 text-[#5c3a21]" />
                   </div>
                   <div>
                     <div className="font-bold text-slate-900">Basic Programs</div>
@@ -160,7 +160,7 @@ const ProgramsPage = () => {
 
                 <div className="flex items-start gap-4">
                   <div className="mt-1 flex-shrink-0">
-                    <Check className="w-5 h-5 text-orange-600" />
+                    <Check className="w-5 h-5 text-[#5c3a21]" />
                   </div>
                   <div>
                     <div className="font-bold text-slate-900">Intermediate Programs</div>
@@ -170,7 +170,7 @@ const ProgramsPage = () => {
 
                 <div className="flex items-start gap-4">
                   <div className="mt-1 flex-shrink-0">
-                    <Check className="w-5 h-5 text-orange-600" />
+                    <Check className="w-5 h-5 text-[#5c3a21]" />
                   </div>
                   <div>
                     <div className="font-bold text-slate-900">Advanced Programs</div>
@@ -180,7 +180,7 @@ const ProgramsPage = () => {
 
                 <div className="flex items-start gap-4">
                   <div className="mt-1 flex-shrink-0">
-                    <Check className="w-5 h-5 text-orange-600" />
+                    <Check className="w-5 h-5 text-[#5c3a21]" />
                   </div>
                   <div>
                     <div className="font-bold text-slate-900">Immersive Internship Programme</div>
@@ -190,7 +190,7 @@ const ProgramsPage = () => {
 
                 <div className="flex items-start gap-4">
                   <div className="mt-1 flex-shrink-0">
-                    <Check className="w-5 h-5 text-orange-600" />
+                    <Check className="w-5 h-5 text-[#5c3a21]" />
                   </div>
                   <div>
                     <div className="font-bold text-slate-900">Matured Programme</div>

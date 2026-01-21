@@ -38,7 +38,7 @@ const CourseDetailPage = () => {
             <p className="text-gray-600 mb-8">The program you’re looking for doesn’t exist or may have been moved.</p>
             <button
               onClick={() => navigate('/training/programs')}
-              className="bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-6 py-3 rounded-lg font-bold transition-colors"
+              className="cta-btn px-6 py-3 rounded-lg"
             >
               Back to Programs
             </button>
@@ -181,7 +181,7 @@ const CourseDetailPage = () => {
 
               <button
                 onClick={handleEnroll}
-                className="w-full sm:w-auto bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-6 sm:px-8 py-3 sm:py-4 rounded font-bold transition-colors shadow-md text-sm sm:text-base"
+                className="cta-btn px-6 sm:px-8 py-3 sm:py-4 rounded font-bold w-full sm:w-auto"
               >
                 Enroll Now - {course.price}
               </button>
@@ -214,7 +214,7 @@ const CourseDetailPage = () => {
                   {programmeObjectives.map((objective) => (
                     <div key={objective.title} className="flex items-start gap-3 sm:gap-4">
                       <div className="mt-0.5 flex-shrink-0">
-                        <Check className="w-5 h-5 text-orange-600" />
+                        <Check className="w-5 h-5 text-[#5c3a21]" />
                       </div>
                       <div>
                         <div className="font-bold text-sm sm:text-base text-slate-900">{objective.title}</div>
@@ -226,7 +226,7 @@ const CourseDetailPage = () => {
               </div>
 
               <div className="relative p-6 sm:p-8 lg:p-10">
-                <div className="absolute left-0 top-8 sm:top-10 bottom-8 sm:bottom-10 w-2 sm:w-3 lg:w-4 bg-orange-600 z-0 rounded-sm" />
+                <div className="absolute left-0 top-8 sm:top-10 bottom-8 sm:bottom-10 w-2 sm:w-3 lg:w-4 bg-[#5c3a21] z-0 rounded-sm" />
                 <div className="relative z-10">
                   <img
                     src={heroImage}
@@ -371,7 +371,7 @@ const CourseDetailPage = () => {
           </p>
           <button
             onClick={handleEnroll}
-            className="w-full sm:w-auto inline-block bg-[#ff5a00] hover:bg-[#e04e00] text-white font-bold py-3 sm:py-4 px-8 sm:px-12 rounded transition-colors duration-300 text-base sm:text-lg shadow-md"
+            className="cta-btn px-8 sm:px-12 py-3 sm:py-4 rounded font-bold w-full sm:w-auto"
           >
             Apply Now
           </button>
@@ -422,13 +422,13 @@ const CourseDetailPage = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={handleEnroll}
-                  className="bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-8 py-4 rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="cta-btn px-8 py-4 rounded-lg font-bold w-full sm:w-auto"
                 >
                   Apply Now
                 </button>
                 <a
                   href={`mailto:${course.contactPerson.email}`}
-                  className="bg-yellow-400 hover:bg-yellow-300 text-gray-900 px-8 py-4 rounded-lg font-bold transition-all duration-300 inline-flex items-center justify-center"
+                  className="cta-ghost px-8 py-4 rounded-lg font-bold w-full sm:w-auto inline-flex items-center justify-center"
                 >
                   Contact Us
                 </a>

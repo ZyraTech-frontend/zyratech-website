@@ -14,11 +14,11 @@ const ComingSoon = () => {
           We're updating our article experience. Please check back soon.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link to="/newsletter" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">
+          <Link to="/newsletter" className="cta-ghost inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg">
             <ArrowLeft size={16} />
             Back to Newsletter
           </Link>
-          <Link to="/newsletter" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#004fa2] text-white hover:bg-[#000000]">
+          <Link to="/newsletter" className="cta-btn inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg">
             Back to Newsletter
           </Link>
         </div>
