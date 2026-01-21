@@ -299,6 +299,11 @@ const MaturedProgramsPage = () => {
                       >
                         View Details
                       </button>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>

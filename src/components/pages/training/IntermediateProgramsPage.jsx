@@ -287,17 +287,17 @@ const IntermediateProgramsPage = () => {
                         <div className="text-xs text-gray-500 mb-0.5">Course Fee</div>
                         <div className="text-xl font-bold text-[#004fa2]">{program.price}</div>
                       </div>
-                      <button 
+                      <button
                         onClick={() => handleEnroll(program.id)}
-                        className="bg-[#004fa2] hover:bg-[#003d80] text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200"
-                      >
-                        View Details
-                      <button 
-                        onClick={() => navigate(`/training/course/${program.id}`)}
                         className="cta-btn-sm cta-btn px-5 py-2.5 text-sm"
                       >
                         View Details
                       </button>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>

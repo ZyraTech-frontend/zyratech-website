@@ -51,9 +51,9 @@ const SplitTestimonial = () => {
               <h3 className="text-2xl md:text-3xl font-extrabold mb-3">We’re Impacting The Local Economy!</h3>
 
               <p className="text-white/90 text-base leading-relaxed mb-5">
-                "In 2019, a business moved into the office building across the street. Below the company sign 
+                "In 2024, a business moved into the office building across the street. Below the company sign 
                 “AmaliTech”, it said, “IT Service Company”. I didn’t exactly know what they were doing. But now I 
-                know many people who work there. They come to shop with me regularly. I doubled my shop area in 2020! 
+                know many people who work there. They come to shop with me regularly. I doubled my shop area in 2025! 
                 I also built a storage room for my fruit. Just look around – the fruit varieties in the assortment have 
                 grown quite a bit."
               </p>

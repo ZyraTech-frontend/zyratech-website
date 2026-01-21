@@ -7,7 +7,6 @@ const WhyGhana = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
   const contentAnimation = useScrollAnimation({ type: 'slideUp', delay: 0.1 });
   const statsAnimation = useScrollAnimation({ type: 'slideUp', delay: 0.2 });
-  const imageAnimation = useScrollAnimation({ type: 'slideUp', delay: 0.3 });
 
   return (
     <section className="py-16 bg-gray-50">
@@ -41,26 +40,6 @@ const WhyGhana = () => {
           <p className="text-lg text-gray-700 leading-relaxed">
             We design programs that meet local market needs, partner with businesses to co-create training, and support startups with mentorship and seed funding.
           </p>
-        </motion.div>
-
-
-
-        <motion.div
-          ref={imageAnimation.ref}
-          initial={imageAnimation.initial}
-          animate={imageAnimation.animate}
-          variants={imageAnimation.variants}
-          transition={imageAnimation.transition}
-          className="relative max-w-md mx-auto"
-        >
-          <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
-            <img
-              src="/images/image1.png"
-              alt="ZyraTech team member working on technology projects in Ghana"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              loading="lazy"
-            />
-          </div>
         </motion.div>
       </div>
     </section>
