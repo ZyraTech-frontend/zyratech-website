@@ -32,12 +32,12 @@ const ImpactCTA = () => {
         animate={anim.animate}
         variants={anim.variants}
         transition={anim.transition}
-        className="relative z-10 max-w-full px-4 sm:px-6 lg:px-8 text-center text-white"
+        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white"
       >
         <div className="max-w-2xl mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight mb-4 text-center max-w-[640px] mx-auto">
-            <span className="block whitespace-nowrap">Our Approach Builds The Ecosystem</span>
-            <span className="block whitespace-nowrap">And Creates Sustainable Growth In Ghana And Rwanda</span>
+            <span className="block">Our Approach Builds The Ecosystem</span>
+            <span className="block">And Creates Sustainable Growth In Ghana And Rwanda</span>
           </h2>
 
           <p className="text-white/90 max-w-[700px] mb-6 text-base sm:text-lg mx-auto text-center">

@@ -1,7 +1,6 @@
 import React from 'react';
 import Hero from '../../../components/pages/home/Hero';
 import ImpactStats from '../../../components/pages/home/ImpactStats';
-import ModernTimeline from '../../../components/pages/home/ModernTimeline';
 import About from '../../../components/pages/home/About';
 import Pillars from '../../../components/pages/home/Pillars';
 import Projects from '../../../components/pages/home/Projects';
@@ -15,7 +14,6 @@ const HomePage = () => {
   return (
     <div>
       <Hero />
-      <ModernTimeline />
       <ImpactStats />
       <About />
       <Pillars />
