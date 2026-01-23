@@ -11,7 +11,7 @@ const Milestones = () => {
 
 					{/* Left - text list */}
 					<div className="lg:col-span-7">
-						<h2 className="text-3xl font-bold text-black mb-6">Our Milestones</h2>
+						<h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6">Our Milestones</h2>
 
 						<ul className="space-y-8">
 							<li className="flex gap-4">

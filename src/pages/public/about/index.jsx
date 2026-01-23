@@ -1,5 +1,4 @@
 import React from 'react';
-import Breadcrumb from '../../../components/pages/about/Breadcrumb';
 import AboutHero from '../../../components/pages/about/AboutHero';
 import OurMission from '../../../components/pages/about/OurMission';
 import WhyGhana from '../../../components/pages/about/WhyGhana';
@@ -12,7 +11,6 @@ import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 const AboutPage = () => {
   return (
     <div>
-      <Breadcrumb />
       <AboutHero />
       <OurMission />
       <WhyGhana />
