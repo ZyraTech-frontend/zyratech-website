@@ -7,17 +7,39 @@ import SplitTestimonial from '../../../components/pages/about/SplitTestimonial';
 import ImpactCTA from '../../../components/pages/about/ImpactCTA';
 import Timeline from '../../../components/pages/about/Timeline';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
+import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
 
-const AboutPage = () => {
+ const AboutPage = () => {
   return (
     <div>
       <AboutHero />
+
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+
       <OurMission />
+
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+
       <WhyGhana />
+
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+
       <Milestones />
+
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+
       <SplitTestimonial />
+
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+
       <ImpactCTA />
+
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+
       <Timeline />
+
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+
       <NewsletterHero />
     </div>
   );

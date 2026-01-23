@@ -3,15 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CheckCircle, Users, Award, Target, BookOpen, Briefcase, Heart, ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
-
-const ParallaxDivider = ({ heightClassName = 'h-56 sm:h-64 md:h-72' }) => (
-  <div
-    className={`hidden md:block relative ${heightClassName} my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] md:bg-fixed bg-center bg-cover`}
-    style={{ backgroundImage: "url('/images/image3.png')" }}
-  >
-    <div className="absolute inset-0 bg-black/60" />
-  </div>
-);
+import ParallaxDivider from '../../common/ParallaxDivider.jsx';
 
 const TrainingAbout = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
@@ -41,7 +33,10 @@ const TrainingAbout = () => {
           </p>
         </motion.div>
 
-        <ParallaxDivider />
+        <ParallaxDivider
+          heightClassName="h-56 sm:h-64 md:h-72"
+          className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
+        />
 
         {/* Why Choose ZyraTech */}
         <div className="mb-16">
@@ -191,7 +186,10 @@ const TrainingAbout = () => {
                 </div>
               </div>
 
-              <ParallaxDivider />
+              <ParallaxDivider
+                heightClassName="h-56 sm:h-64 md:h-72"
+                className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
+              />
 
               {/* Second 3 Benefits */}
               <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mt-10">
@@ -260,7 +258,10 @@ const TrainingAbout = () => {
           </motion.div>
         </div>
 
-        <ParallaxDivider />
+        <ParallaxDivider
+          heightClassName="h-56 sm:h-64 md:h-72"
+          className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
+        />
 
         {/* Testimonial Section - ZyraTech Style */}
         <motion.div

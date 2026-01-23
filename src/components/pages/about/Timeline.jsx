@@ -16,43 +16,67 @@ const Timeline = () => {
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">Key milestones from 2024 to 2026.</p>
         </div>
 
-        <ol className="relative max-w-3xl mx-auto pl-6">
-          <div className="absolute left-3 top-0 bottom-0 w-px bg-[#004fa2]/20" />
-          <div className="space-y-10 sm:space-y-12">
-            {timelineData.map((item) => {
-              const Icon = item.icon;
-              return (
-                <li key={item.year} className="relative">
-                  <div className="absolute left-3 top-1 w-8 h-8 rounded-full bg-[#eaf6ff] flex items-center justify-center -translate-x-1/2 border border-[#004fa2]/20 shadow-sm">
-                    <Icon className="w-4 h-4 text-[#004fa2]" />
-                  </div>
+        <div className="hidden md:block">
+          <div className="relative max-w-6xl mx-auto">
+            <div className="absolute left-0 right-0 top-6 h-px bg-[#004fa2]/20" />
 
-                  <div className="ml-6 bg-white rounded-xl p-6 border border-[#004fa2]/10 shadow-sm">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
-                      <div className="text-sm font-semibold text-[#004fa2] bg-[#004fa2]/10 px-3 py-1 rounded-full w-fit">{item.year}</div>
-                      <div className="mt-2 sm:mt-0 text-base font-semibold text-gray-900">{item.title}</div>
+            <div className="grid grid-cols-3 gap-8">
+              {timelineData.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <div key={item.year} className="relative pt-12">
+                    <div className="absolute top-6 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white flex items-center justify-center border border-[#004fa2]/20 shadow-sm z-10">
+                      <Icon className="w-5 h-5 text-[#004fa2]" />
                     </div>
-                    <div className="mt-2 text-sm sm:text-base text-gray-600 leading-relaxed">{item.desc}</div>
-                  </div>
-                </li>
-              );
-            })}
-          </div>
-        </ol>
 
-        <div className="hidden mt-8">
-          <svg className="w-full h-12" viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 30 L1150 30" stroke="#dbeafe" strokeWidth="6" strokeLinecap="round" />
-            {timelineData.map((_, i) => {
-              const x = 50 + (1100 / (timelineData.length - 1)) * i;
-              return <circle key={i} cx={x} cy={30} r={6} fill="#ff6a00" />;
-            })}
-            {/* small connecting traces to look 'circuit-like' */}
-            {timelineData.map((_, i) => {
-              const x = 50 + (1100 / (timelineData.length - 1)) * i;
-              return <rect key={`r-${i}`} x={x - 2} y={20} width={4} height={6} fill="#ff6a00" opacity="0.6" />;
-            })}
-          </svg>
+                    <div className="text-center">
+                      <div className="inline-flex text-sm font-semibold text-[#004fa2] bg-[#004fa2]/10 px-3 py-1 rounded-full">
+                        {item.year}
+                      </div>
+                    </div>
+
+                    <div className="mt-4 bg-white rounded-2xl p-6 border border-[#004fa2]/10 shadow-sm">
+                      <div className="text-lg font-semibold text-gray-900">{item.title}</div>
+                      <div className="mt-2 text-sm sm:text-base text-gray-600 leading-relaxed">{item.desc}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <div className="md:hidden">
+          <ol className="relative max-w-5xl mx-auto">
+            <div className="absolute left-4 sm:left-6 top-0 bottom-0 w-px bg-[#004fa2]/20" />
+            <div className="space-y-8 sm:space-y-10">
+              {timelineData.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <li key={item.year} className="relative">
+                    <div className="absolute left-4 sm:left-6 top-6 w-10 h-10 rounded-full bg-white flex items-center justify-center -translate-x-1/2 border border-[#004fa2]/20 shadow-sm">
+                      <Icon className="w-5 h-5 text-[#004fa2]" />
+                    </div>
+
+                    <div className="pl-12 sm:pl-16">
+                      <div className="grid gap-3 sm:gap-4 sm:grid-cols-[140px_1fr] items-start">
+                        <div className="pt-2">
+                          <div className="text-sm font-semibold text-[#004fa2] bg-[#004fa2]/10 px-3 py-1 rounded-full w-fit">
+                            {item.year}
+                          </div>
+                        </div>
+
+                        <div className="bg-white rounded-2xl p-6 border border-[#004fa2]/10 shadow-sm">
+                          <div className="text-lg font-semibold text-gray-900">{item.title}</div>
+                          <div className="mt-2 text-sm sm:text-base text-gray-600 leading-relaxed">{item.desc}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </div>
+          </ol>
         </div>
       </div>
     </section>
