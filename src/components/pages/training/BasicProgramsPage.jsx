@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Code, Terminal, Database, Clock, Users, Star, ChevronRight, Award, BookOpen, FileCode, Target, Cloud } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
+import ParallaxDivider from '../../common/ParallaxDivider.jsx';
 import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
@@ -217,6 +218,8 @@ const BasicProgramsPage = () => {
           </div>
         </div>
       </section>
+
+      <ParallaxDivider />
 
       {/* Key Benefits Section */}
       <section className="py-10 sm:py-12 bg-white">
