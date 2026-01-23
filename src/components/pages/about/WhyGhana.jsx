@@ -19,7 +19,7 @@ const WhyGhana = () => {
           transition={titleAnimation.transition}
           className="mb-8"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-black mb-8">Why We Chose Ghana</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6">Why We Chose Ghana</h2>
           <p className="text-gray-700 mb-4">Ghana's rapid urbanization is concentrating populations around improved infrastructure, digital connectivity and education, creating strong conditions for skills development and technology-driven economic growth.</p>
           <Link to="/impact" className="inline-flex items-center text-[#004fa2] hover:text-[#003d7a] font-semibold transition-colors">
             Learn More About Our Impact
