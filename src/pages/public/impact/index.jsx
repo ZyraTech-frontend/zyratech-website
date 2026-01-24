@@ -4,6 +4,7 @@ import ImpactHeroSection from '../../../components/pages/impact/ImpactHeroSectio
 import ImpactCommunitySection from '../../../components/pages/impact/ImpactCommunitySection';
 import ImpactValuesSection from '../../../components/pages/impact/ImpactValuesSection';
 import ImpactPeopleHighlightsSection from '../../../components/pages/impact/ImpactPeopleHighlightsSection';
+import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
 
 const ImpactPage = () => {
   const values = [
@@ -40,9 +41,25 @@ const ImpactPage = () => {
       role: 'Human Resources Team Lead',
       organization: 'ZyraTech',
       location: 'Koforidua, Ghana',
-      image: '/images/team/magdalene.jpg',
+      image: '/images/Dalene.png',
       quote:
-        'Working with the ZyraTech team in Koforidua has shown me how integrity and collaboration create real opportunities for learners—when we stay consistent, people grow and teams deliver.'
+        'ZyraTech’s integrity and teamwork create real opportunities for learners. When we stay consistent, people grow and teams deliver.'
+    },
+    {
+      name: 'Ama',
+      role: 'Junior STEM Basics',
+      organization: 'ZyraTech',
+      location: 'Koforidua, Ghana',
+      image: '/images/image2.png',
+      quote: 'The hands-on lessons helped me build my first circuit—and it worked.'
+    },
+    {
+      name: 'Kofi',
+      role: 'Maker: Hardware & Repair',
+      organization: 'ZyraTech',
+      location: 'Koforidua, Ghana',
+      image: '/images/image3.png',
+      quote: 'The mentorship is practical and supportive. I’m now repairing devices in my community.'
     }
   ];
 
@@ -70,9 +87,18 @@ const ImpactPage = () => {
   return (
     <div className="min-h-screen bg-white">
       <ImpactHeroSection />
+
       <ImpactCommunitySection />
+
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/image3.png" overlayClassName="bg-black/50" />
+
       <ImpactValuesSection items={values} />
+
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/image1.png" overlayClassName="bg-black/50" />
+
       <ImpactPeopleHighlightsSection people={highlights} />
+
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png" overlayClassName="bg-black/50" />
 
       <section className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -87,7 +113,7 @@ const ImpactPage = () => {
             {livingOurValues.map((item) => (
               <div
                 key={item.title}
-                className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm flex flex-col"
+                className="group bg-white rounded-2xl border border-gray-200 p-6 shadow-sm flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-[#004fa2]/25 cursor-pointer"
               >
                 <h3 className="text-lg font-bold text-gray-900">{item.title}</h3>
                 <p className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed flex-1">
@@ -106,6 +132,8 @@ const ImpactPage = () => {
           </div>
         </div>
       </section>
+
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/image2.png" overlayClassName="bg-black/50" />
 
       <NewsletterHero />
     </div>

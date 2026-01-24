@@ -7,14 +7,14 @@ const ImpactPeopleHighlightsSection = ({
   const isSingle = people.length === 1;
 
   return (
-    <section className="py-12 bg-white">
+    <section className="py-12 bg-[#004fa2]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6">{title}</h2>
-          <p className="text-lg text-gray-700 leading-relaxed">{description}</p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">{title}</h2>
+          <p className="text-lg text-white/90 leading-relaxed">{description}</p>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
           {people.map((person) => {
             const hasQuote = Boolean(person.quote);
             const cardLayoutClass = isSingle ? 'lg:col-start-2' : '';
@@ -27,23 +27,24 @@ const ImpactPeopleHighlightsSection = ({
 
             return (
               <div
-                key={person.name}
-                tabIndex={0}
-                className={`rounded-2xl bg-white border-[3px] border-[#004fa2] shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004fa2]/35 focus-visible:ring-offset-2 ${cardLayoutClass}`}
+                key={`${person.name}-${person.role || ''}`}
+                className={`group relative overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-[#004fa2]/25 cursor-pointer h-full ${cardLayoutClass}`}
               >
-                <div className="p-6 sm:p-7">
+                <div className="relative p-6 sm:p-7 flex flex-col h-full">
                   {hasQuote ? (
                     <>
-                      <div className="text-[#004fa2] text-5xl leading-none font-extrabold">“</div>
-                      <p className="mt-3 text-base sm:text-lg text-gray-700 leading-relaxed">
+                      <div className="absolute top-6 right-6 text-6xl text-[#004fa2]/10 font-serif leading-none select-none">
+                        “
+                      </div>
+                      <blockquote className="text-[15px] sm:text-base text-gray-800 leading-relaxed pr-10 line-clamp-5">
                         {person.quote}
-                      </p>
+                      </blockquote>
                     </>
                   ) : null}
 
                   <div className={hasQuote ? 'mt-6' : ''}>
                     <div className="flex items-center gap-4">
-                      <div className="relative h-12 w-12 rounded-full bg-[#004fa2] text-white flex items-center justify-center font-bold overflow-hidden">
+                      <div className="relative h-12 w-12 rounded-full bg-[#004fa2] text-white flex items-center justify-center font-bold overflow-hidden transition-transform duration-200 group-hover:scale-105">
                         <span className="relative z-10">{initials || 'ZT'}</span>
                         {person.image ? (
                           <img
@@ -60,7 +61,7 @@ const ImpactPeopleHighlightsSection = ({
 
                       <div>
                         <div className="text-lg font-bold text-gray-900">{person.name}</div>
-                        <div className="mt-1 text-sm sm:text-base text-gray-600 leading-relaxed">
+                        <div className="mt-1 text-sm sm:text-[15px] text-gray-600 leading-snug">
                           {person.role}
                           {person.organization ? `, ${person.organization}` : ''}
                         </div>

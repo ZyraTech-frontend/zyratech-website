@@ -19,16 +19,14 @@ const ImpactValuesSection = ({
             return (
               <div
                 key={item.title}
-                tabIndex={0}
-                className={`group relative overflow-hidden rounded-2xl bg-white border-[3px] border-[#004fa2] shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004fa2]/35 focus-visible:ring-offset-2 ${
+                className={`group relative overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-[#004fa2]/25 cursor-pointer ${
                   isFeatured ? 'md:col-span-2 lg:col-span-2' : ''
                 }`}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#004fa2]/0 via-[#004fa2]/0 to-[#004fa2]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative p-6 sm:p-7">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-4">
-                      <div className="h-11 w-11 rounded-2xl bg-[#004fa2] text-white flex items-center justify-center font-bold">
+                      <div className="h-11 w-11 rounded-2xl bg-[#004fa2] text-white flex items-center justify-center font-bold transition-transform duration-200 group-hover:scale-105">
                         {String(idx + 1).padStart(2, '0')}
                       </div>
                       <div>
