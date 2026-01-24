@@ -36,16 +36,13 @@ const ImpactPage = () => {
 
   const highlights = [
     {
-      name: '— Magdalene',
-      role: 'Human Resources Team Lead, Ghana'
-    },
-    {
-      name: '— Zyra Tech Hub',
-      role: 'STEM Education & Innovation Community, Ghana'
-    },
-    {
-      name: '— Our Learners',
-      role: 'Builders, problem-solvers, and future tech leaders'
+      name: 'Magdalene',
+      role: 'Human Resources Team Lead',
+      organization: 'ZyraTech',
+      location: 'Koforidua, Ghana',
+      image: '/images/team/magdalene.jpg',
+      quote:
+        'Working with the ZyraTech team in Koforidua has shown me how integrity and collaboration create real opportunities for learners—when we stay consistent, people grow and teams deliver.'
     }
   ];
 
@@ -80,8 +77,8 @@ const ImpactPage = () => {
       <section className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">How We Live Our Values</h2>
-            <p className="mt-4 text-base sm:text-lg text-gray-600 leading-relaxed">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6">How We Live Our Values</h2>
+            <p className="text-lg text-gray-700 leading-relaxed">
               Our values are not just words. They guide how we show up for our learners, how we collaborate with partners, and how we build solutions.
             </p>
           </div>

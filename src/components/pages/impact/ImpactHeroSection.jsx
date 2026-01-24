@@ -8,17 +8,17 @@ const ImpactHeroSection = ({
   backgroundImage = '/images/image1.png'
 }) => {
   return (
-    <section className="relative isolate overflow-hidden min-h-screen">
+    <section className="relative isolate overflow-hidden">
       <div className="max-w-none px-0">
         <div
-          className="relative overflow-hidden min-h-screen bg-cover bg-center bg-scroll md:bg-fixed"
+          className="relative overflow-hidden h-[70vh] min-h-[520px] max-h-[780px] bg-cover bg-center bg-scroll md:bg-fixed"
           style={{
             backgroundImage: `url(${backgroundImage})`
           }}
         >
           <div className="absolute inset-0 bg-black/45" />
 
-          <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-32 min-h-[500px] md:min-h-[580px] lg:min-h-[680px] flex items-center">
+          <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-28 h-full flex items-center">
             <motion.div
               className="max-w-4xl"
               initial={{ opacity: 0, y: 30 }}
