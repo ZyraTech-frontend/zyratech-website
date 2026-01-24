@@ -1,7 +1,7 @@
 const ImpactPeopleHighlightsSection = ({
-  title = 'People Behind the Impact',
+  title = 'Voices from Our Community',
   description =
-    'Our work is powered by people—students, mentors, and partners committed to meaningful progress.',
+    'Our values come alive through the people who learn with us, build with us, and partner with us.',
   people = []
 }) => {
   return (
