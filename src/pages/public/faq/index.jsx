@@ -1,16 +1,15 @@
-import React from 'react';
-import Breadcrumb from '../../../components/pages/faq/Breadcrumb';
 import FaqHero from '../../../components/pages/faq/FaqHero';
 import FaqCategories from '../../../components/pages/faq/FaqCategories';
-import FaqSupport from '../../../components/pages/faq/FaqSupport';
+import HrContactSection from '../../../components/common/HrContactSection';
+import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 
 const FaqPage = () => {
   return (
     <div className="min-h-screen bg-white">
-      <Breadcrumb />
       <FaqHero />
       <FaqCategories />
-      <FaqSupport />
+      <HrContactSection title="HR Team Lead" />
+      <NewsletterHero />
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Mail } from 'lucide-react';
 import HrContactCard from './HrContactCard.jsx';
 
