@@ -1,18 +1,40 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+
 const ImpactHeroSection = ({
-  title = 'Our Impact',
+  title = 'Our Values',
   description =
-    'Zyra Tech Hub exists to create measurable change—by expanding access to STEM education, building practical skills, and supporting purpose-driven innovation for communities in Ghana.'
+    'Our values shape how we teach, how we partner, and how we build technology that serves real needs.',
+  backgroundImage = '/images/image1.png'
 }) => {
   return (
-    <section className="pt-20 sm:pt-28 lg:pt-32 pb-10 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-            {title}
-          </h1>
-          <p className="mt-5 text-base sm:text-lg text-gray-600 leading-relaxed">
-            {description}
-          </p>
+    <section className="relative isolate overflow-hidden min-h-screen">
+      <div className="max-w-none px-0">
+        <div
+          className="relative overflow-hidden min-h-screen bg-cover bg-center bg-scroll md:bg-fixed"
+          style={{
+            backgroundImage: `url(${backgroundImage})`
+          }}
+        >
+          <div className="absolute inset-0 bg-black/45" />
+
+          <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-32 min-h-[500px] md:min-h-[580px] lg:min-h-[680px] flex items-center">
+            <motion.div
+              className="max-w-4xl"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-0 leading-tight">
+                {title}
+                <span className="text-[#004fa2] block"> what guides us</span>
+              </h1>
+
+              <p className="mt-6 text-base sm:text-lg md:text-xl font-semibold text-white/90 leading-relaxed max-w-3xl">
+                {description}
+              </p>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>

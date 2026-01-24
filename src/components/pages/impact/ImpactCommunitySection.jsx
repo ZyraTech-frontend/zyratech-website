@@ -1,7 +1,7 @@
 const ImpactCommunitySection = ({
-  title = 'The Zyra Tech Community',
+  title = 'The ZyraTech Community',
   description =
-    'Our community is a growing network of learners, mentors, educators, and partners working together to drive technology transformation and social impact. We build with local context in mind—so solutions are practical, sustainable, and rooted in real needs.'
+    'The ZyraTech community is a vibrant and diverse network of learners, mentors, educators, and partners dedicated to building practical skills and technology solutions that matter. United by a common goal, we collaborate across different backgrounds and perspectives—working together to create opportunity, strengthen local innovation, and build a more connected future through technology.'
 }) => {
   return (
     <section className="py-12 bg-white">

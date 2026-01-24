@@ -60,7 +60,7 @@ const Navbar = () => {
   const dropdownMenus = {
     about: [
       { name: 'Who We Are', path: '/about' },
-      { name: 'Our Impact', path: '/impact' },
+      { name: 'Our Values', path: '/impact' },
       { name: 'FAQ', path: '/faq' }
     ],
     insights: [

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import ImpactHeroSection from '../../../components/pages/impact/ImpactHeroSection';
 import ImpactCommunitySection from '../../../components/pages/impact/ImpactCommunitySection';
@@ -48,12 +49,66 @@ const ImpactPage = () => {
     }
   ];
 
+  const livingOurValues = [
+    {
+      title: 'Learning by doing',
+      description:
+        'We create hands-on experiences that help learners build confidence, teamwork, and real-world problem-solving skills.',
+      to: '/blog'
+    },
+    {
+      title: 'Building with community',
+      description:
+        'We collaborate with schools, mentors, and partners to design initiatives that are grounded in local context and real needs.',
+      to: '/blog'
+    },
+    {
+      title: 'Quality that lasts',
+      description:
+        'We focus on craftsmanship and continuous improvement—so what we teach and build can be trusted and scaled.',
+      to: '/blog'
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-white">
       <ImpactHeroSection />
       <ImpactCommunitySection />
       <ImpactValuesSection items={values} />
       <ImpactPeopleHighlightsSection people={highlights} />
+
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">How We Live Our Values</h2>
+            <p className="mt-4 text-base sm:text-lg text-gray-600 leading-relaxed">
+              Our values are not just words. They guide how we show up for our learners, how we collaborate with partners, and how we build solutions.
+            </p>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {livingOurValues.map((item) => (
+              <div
+                key={item.title}
+                className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm flex flex-col"
+              >
+                <h3 className="text-lg font-bold text-gray-900">{item.title}</h3>
+                <p className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed flex-1">
+                  {item.description}
+                </p>
+                <div className="mt-4">
+                  <Link
+                    to={item.to}
+                    className="inline-flex items-center font-semibold text-[#004fa2] hover:text-[#003d7a]"
+                  >
+                    Read more
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <NewsletterHero />
     </div>
