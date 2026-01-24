@@ -26,7 +26,7 @@ const AboutHero = () => {
             >
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-0 leading-tight">
                 Building the next generation of
-                <span className="text-[#FFD700] block"> tech talent</span>
+                <span className="text-[#004fa2] block"> tech talent</span>
               </h1>
 
               <p className="mt-6 text-base sm:text-lg md:text-xl font-semibold text-white/90 leading-relaxed max-w-3xl">

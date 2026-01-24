@@ -46,7 +46,7 @@ const ImpactCTA = () => {
 
           <Link
             to="/impact"
-            className="inline-flex items-center gap-3 bg-[#5c3a21] hover:bg-[#7a4f33] text-white font-semibold px-6 py-2.5 rounded-md shadow-lg hover:shadow-2xl transform transition-all duration-200 hover:scale-105 mx-auto"
+            className="inline-flex items-center gap-3 bg-white hover:bg-white/90 text-[#004fa2] font-semibold px-6 py-2.5 rounded-md shadow-lg hover:shadow-2xl transform transition-all duration-200 hover:scale-105 mx-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#004fa2]"
             aria-label="Learn more about our impact"
           >
             Learn More

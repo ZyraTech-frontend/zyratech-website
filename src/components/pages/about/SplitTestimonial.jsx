@@ -47,7 +47,7 @@ const SplitTestimonial = () => {
             className="md:w-1/2 bg-[#004fa2] text-white px-6 sm:px-8 md:px-12 py-6 md:py-10 flex flex-col justify-center order-2 md:order-1"
           >
             <div className="max-w-xl mx-auto">
-              <div className="text-[#5c3a21] text-5xl leading-none font-extrabold mb-3">“</div>
+              <div className="text-[#004fa2] text-5xl leading-none font-extrabold mb-3">“</div>
               <h3 className="text-2xl md:text-3xl font-extrabold mb-3">We’re Impacting The Local Economy!</h3>
 
               <p className="text-white/90 text-base leading-relaxed mb-5">
@@ -59,7 +59,7 @@ const SplitTestimonial = () => {
               </p>
 
               <div className="flex items-center gap-3">
-                <span className="text-[#5c3a21] font-bold">—</span>
+                <span className="text-[#004fa2] font-bold">—</span>
                 <div>
                   <div className="font-semibold">Theresa</div>
                   <div className="text-sm text-white/80">Foodshop Owner in Takoradi</div>
