@@ -1,5 +1,3 @@
-import React from 'react';
-
 const FaqHero = () => {
   return (
     <section className="pt-16 sm:pt-20 lg:pt-24 pb-6 bg-white">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown, ChevronUp, HelpCircle, MessageCircle, Phone, Mail } from 'lucide-react';
 
@@ -11,7 +11,6 @@ const FaqCategories = () => {
       title: "Internship Program",
       icon: HelpCircle,
       color: "#004fa2",
-      count: 5,
       faqs: [
         {
           question: "Q1: Who can apply for Zyra Tech Hub's internship program?",
@@ -39,7 +38,6 @@ const FaqCategories = () => {
       title: "Services & Support",
       icon: Phone,
       color: "#004fa2",
-      count: 4,
       faqs: [
         {
           question: "What IT and digital services do you offer?",
@@ -63,7 +61,6 @@ const FaqCategories = () => {
       title: "Partnerships",
       icon: MessageCircle,
       color: "#004fa2",
-      count: 4,
       faqs: [
         {
           question: "What types of partnerships do you offer?",
@@ -87,7 +84,6 @@ const FaqCategories = () => {
       title: "Donations & Support",
       icon: Mail,
       color: "#004fa2",
-      count: 3,
       faqs: [
         {
           question: "How can I support Zyra Tech Hub?",
@@ -136,19 +132,24 @@ const FaqCategories = () => {
               
               {/* Category Header */}
               <button
+                type="button"
                 onClick={() => toggleCategory(categoryIndex)}
-                className="w-full px-6 sm:px-8 py-4 sm:py-6 flex items-center justify-between text-left hover:bg-gray-50 transition-colors duration-200"
+                aria-expanded={openCategory === categoryIndex}
+                aria-controls={`faq-category-panel-${categoryIndex}`}
+                className="w-full px-6 sm:px-8 py-4 sm:py-6 flex items-center justify-between text-left hover:bg-gray-50 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004fa2] focus-visible:ring-offset-2"
               >
                 <div className="flex items-center gap-3 sm:gap-4">
                   <div 
-                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: `${category.color}15`, color: category.color }}
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-200"
+                    style={{ color: category.color }}
                   >
                     <category.icon size={20} className="sm:w-6 sm:h-6" />
                   </div>
                   <div>
                     <h3 className="text-lg sm:text-xl font-bold text-black">{category.title}</h3>
-                    <p className="text-sm text-gray-500">{category.count} questions</p>
+                    <p className="text-sm text-gray-500">
+                      {category.faqs.length} {category.faqs.length === 1 ? 'question' : 'questions'}
+                    </p>
                   </div>
                 </div>
                 <div className="text-gray-400">
@@ -162,20 +163,24 @@ const FaqCategories = () => {
 
               {/* Category FAQs */}
               {openCategory === categoryIndex && (
-                <div className="border-t border-gray-200">
+                <div id={`faq-category-panel-${categoryIndex}`} className="border-t border-gray-200">
                   {category.faqs.map((faq, faqIndex) => {
                     const key = `${categoryIndex}-${faqIndex}`;
                     const isOpen = openFAQ[key];
+                    const questionText = faq.question.replace(/^Q\d+:\s*/i, '');
                     
                     return (
                       <div key={faqIndex} className="border-b border-gray-100 last:border-b-0">
                         <button
+                          type="button"
                           onClick={() => toggleFAQ(categoryIndex, faqIndex)}
-                          className="w-full px-6 sm:px-8 py-4 text-left hover:bg-gray-50 transition-colors duration-200"
+                          aria-expanded={!!isOpen}
+                          aria-controls={`faq-answer-${categoryIndex}-${faqIndex}`}
+                          className="w-full px-6 sm:px-8 py-4 text-left hover:bg-gray-50 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004fa2] focus-visible:ring-offset-2"
                         >
                           <div className="flex items-start justify-between gap-4">
                             <h4 className="text-base sm:text-lg font-semibold text-black pr-4">
-                              {faq.question}
+                              {questionText}
                             </h4>
                             <div className="text-gray-400 flex-shrink-0 mt-1">
                               {isOpen ? (
@@ -193,6 +198,7 @@ const FaqCategories = () => {
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.3 }}
+                            id={`faq-answer-${categoryIndex}-${faqIndex}`}
                             className="px-6 sm:px-8 pb-4"
                           >
                             <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
