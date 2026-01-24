@@ -14,8 +14,6 @@ import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
     <div>
       <AboutHero />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
-
       <OurMission />
 
       <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />

@@ -16,7 +16,7 @@ const NewsletterHero = () => {
   };
 
   return (
-    <section className="py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
+    <section className="py-16 bg-[#004fa2]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -38,7 +38,7 @@ const NewsletterHero = () => {
               />
               <button
                 type="submit"
-                className="bg-[#5c3a21] hover:bg-[#7a4f33] text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 disabled:opacity-60"
+                className="bg-white hover:bg-white/90 text-[#004fa2] px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#004fa2]"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Subscribing...' : 'Subscribe'}

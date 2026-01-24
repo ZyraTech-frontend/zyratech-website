@@ -18,14 +18,14 @@ const Timeline = () => {
 
         <div className="hidden md:block">
           <div className="relative max-w-6xl mx-auto">
-            <div className="absolute left-0 right-0 top-6 h-px bg-[#004fa2]/20" />
+            <div className="absolute left-0 right-0 top-6 -translate-y-1/2 h-2 bg-[#004fa2] rounded-full" />
 
             <div className="grid grid-cols-3 gap-8">
               {timelineData.map((item) => {
                 const Icon = item.icon;
                 return (
-                  <div key={item.year} className="relative pt-12">
-                    <div className="absolute top-6 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white flex items-center justify-center border border-[#004fa2]/20 shadow-sm z-10">
+                  <div key={item.year} className="relative pt-12 group">
+                    <div className="absolute top-6 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white flex items-center justify-center border border-[#004fa2]/25 shadow-sm z-10 transition-transform duration-200 group-hover:scale-105 group-focus-within:scale-105">
                       <Icon className="w-5 h-5 text-[#004fa2]" />
                     </div>
 
@@ -35,7 +35,10 @@ const Timeline = () => {
                       </div>
                     </div>
 
-                    <div className="mt-4 bg-white rounded-2xl p-6 border border-[#004fa2]/10 shadow-sm">
+                    <div
+                      tabIndex={0}
+                      className="mt-4 bg-white rounded-2xl p-6 border-[3px] border-[#004fa2] shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004fa2]/35 focus-visible:ring-offset-2"
+                    >
                       <div className="text-lg font-semibold text-gray-900">{item.title}</div>
                       <div className="mt-2 text-sm sm:text-base text-gray-600 leading-relaxed">{item.desc}</div>
                     </div>
@@ -48,13 +51,13 @@ const Timeline = () => {
 
         <div className="md:hidden">
           <ol className="relative max-w-5xl mx-auto">
-            <div className="absolute left-4 sm:left-6 top-0 bottom-0 w-px bg-[#004fa2]/20" />
+            <div className="absolute left-4 sm:left-6 top-0 bottom-0 -translate-x-1/2 w-2 bg-[#004fa2] rounded-full" />
             <div className="space-y-8 sm:space-y-10">
               {timelineData.map((item) => {
                 const Icon = item.icon;
                 return (
-                  <li key={item.year} className="relative">
-                    <div className="absolute left-4 sm:left-6 top-6 w-10 h-10 rounded-full bg-white flex items-center justify-center -translate-x-1/2 border border-[#004fa2]/20 shadow-sm">
+                  <li key={item.year} className="relative group">
+                    <div className="absolute left-4 sm:left-6 top-6 w-10 h-10 rounded-full bg-white flex items-center justify-center -translate-x-1/2 border border-[#004fa2]/25 shadow-sm transition-transform duration-200 group-hover:scale-105 group-focus-within:scale-105">
                       <Icon className="w-5 h-5 text-[#004fa2]" />
                     </div>
 
@@ -66,7 +69,10 @@ const Timeline = () => {
                           </div>
                         </div>
 
-                        <div className="bg-white rounded-2xl p-6 border border-[#004fa2]/10 shadow-sm">
+                        <div
+                          tabIndex={0}
+                          className="bg-white rounded-2xl p-6 border-[3px] border-[#004fa2] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004fa2]/35 focus-visible:ring-offset-2"
+                        >
                           <div className="text-lg font-semibold text-gray-900">{item.title}</div>
                           <div className="mt-2 text-sm sm:text-base text-gray-600 leading-relaxed">{item.desc}</div>
                         </div>

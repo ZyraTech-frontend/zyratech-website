@@ -14,7 +14,7 @@ const Breadcrumb = () => {
             Home
           </Link>
           
-          <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
+          <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#004fa2] flex-shrink-0" />
           
           <span className="text-black font-medium whitespace-nowrap">
             About

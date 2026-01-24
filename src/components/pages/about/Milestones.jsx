@@ -16,7 +16,7 @@ const Milestones = () => {
 						<ul className="space-y-8">
 							<li className="flex gap-4">
 								<div className="mt-1">
-								<CheckCircle className="text-[#5c3a21]" size={22} />
+								<CheckCircle className="text-[#004fa2]" size={22} />
 								</div>
 								<div>
 									<h4 className="font-semibold text-black">Expansions to New Regions</h4>
@@ -26,7 +26,7 @@ const Milestones = () => {
 
 							<li className="flex gap-4">
 								<div className="mt-1">
-								<CheckCircle className="text-[#5c3a21]" size={22} />
+								<CheckCircle className="text-[#004fa2]" size={22} />
 								</div>
 								<div>
 									<h4 className="font-semibold text-black">Successful Projects</h4>
@@ -36,7 +36,7 @@ const Milestones = () => {
 
 							<li className="flex gap-4">
 								<div className="mt-1">
-								<CheckCircle className="text-[#5c3a21]" size={22} />
+								<CheckCircle className="text-[#004fa2]" size={22} />
 								</div>
 								<div>
 									<h4 className="font-semibold text-black">Strategic Partnerships</h4>
@@ -46,7 +46,7 @@ const Milestones = () => {
 
 							<li className="flex gap-4">
 								<div className="mt-1">
-								<CheckCircle className="text-[#5c3a21]" size={22} />
+								<CheckCircle className="text-[#004fa2]" size={22} />
 								</div>
 								<div>
 									<h4 className="font-semibold text-black">Awards and Recognition</h4>
@@ -59,7 +59,7 @@ const Milestones = () => {
 					{/* Right - image with brown offset */}
 					<div className="lg:col-span-5 flex justify-center lg:justify-end">
 						<div className="relative w-full max-w-md">
-							<div className="absolute -right-6 top-8 w-6 bg-[#5c3a21] h-48 hidden md:block" />
+							<div className="absolute -right-6 top-8 w-6 bg-[#004fa2] h-48 hidden md:block" />
 							<div className="rounded-lg overflow-hidden shadow-lg border border-gray-100">
 								<img src="/images/milestones.jpg" alt="Milestone" className="w-full h-96 object-cover" onError={(e)=>{e.target.src='https://images.unsplash.com/photo-1556157382-97eda2d62296?w=1200'}} />
 							</div>
