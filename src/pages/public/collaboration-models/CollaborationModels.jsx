@@ -6,6 +6,7 @@ import CollaborationModelSection from '../../../components/pages/collaboration-m
 import CollaborationTestimonialSection from '../../../components/pages/collaboration-models/CollaborationTestimonialSection';
 import CollaborationProcessSection from '../../../components/pages/collaboration-models/CollaborationProcessSection';
 import BackToTopButton from '../../../components/common/BackToTopButton';
+import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
 import {
   collaborationHero,
   collaborationModels,
@@ -19,17 +20,25 @@ const CollaborationModels = () => {
       {/* Hero */}
       <CollaborationHeroSection hero={collaborationHero} />
 
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+
       {/* Models */}
       <CollaborationModelsNavSection models={collaborationModels} />
       {collaborationModels.map((model, idx) => (
         <CollaborationModelSection key={model.id} model={model} reverse={idx % 2 !== 0} />
       ))}
 
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+
       {/* Value Proposition + Markets */}
       <CollaborationTestimonialSection testimonial={collaborationTestimonial} />
 
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+
       {/* Process / Steps */}
       <CollaborationProcessSection steps={collaborationProcessSteps} />
+
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
 
       {/* CTA */}
       <NewsletterHero />

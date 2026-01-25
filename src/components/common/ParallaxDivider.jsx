@@ -8,7 +8,7 @@ const ParallaxDivider = ({
   children
 }) => (
   <section
-    className={`relative ${heightClassName} bg-scroll md:bg-fixed bg-center bg-cover ${className}`}
+    className={`relative ${heightClassName} bg-scroll md:bg-fixed motion-reduce:bg-scroll motion-reduce:md:bg-scroll bg-center bg-cover ${className}`}
     style={{ backgroundImage: `url('${imageUrl}')` }}
   >
     <div className={`absolute inset-0 ${overlayClassName}`} />

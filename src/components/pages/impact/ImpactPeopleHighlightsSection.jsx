@@ -1,3 +1,7 @@
+import React from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
+
 const ImpactPeopleHighlightsSection = ({
   title = 'Voices from Our Community',
   description =
@@ -5,17 +9,38 @@ const ImpactPeopleHighlightsSection = ({
   people = []
 }) => {
   const isSingle = people.length === 1;
+  const shouldReduceMotion = useReducedMotion();
+  const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
+  const descAnimation = useScrollAnimation({ type: 'slideUp', delay: 0.1 });
 
   return (
     <section className="py-12 bg-[#004fa2]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">{title}</h2>
-          <p className="text-lg text-white/90 leading-relaxed">{description}</p>
+          <motion.h2
+            ref={titleAnimation.ref}
+            initial={titleAnimation.initial}
+            animate={titleAnimation.animate}
+            variants={titleAnimation.variants}
+            transition={titleAnimation.transition}
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6"
+          >
+            {title}
+          </motion.h2>
+          <motion.p
+            ref={descAnimation.ref}
+            initial={descAnimation.initial}
+            animate={descAnimation.animate}
+            variants={descAnimation.variants}
+            transition={descAnimation.transition}
+            className="text-lg text-white/90 leading-relaxed"
+          >
+            {description}
+          </motion.p>
         </div>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-          {people.map((person) => {
+          {people.map((person, idx) => {
             const hasQuote = Boolean(person.quote);
             const cardLayoutClass = isSingle ? 'lg:col-start-2' : '';
             const initials = String(person.name || '')
@@ -26,9 +51,13 @@ const ImpactPeopleHighlightsSection = ({
               .join('');
 
             return (
-              <div
+              <motion.div
                 key={`${person.name}-${person.role || ''}`}
                 className={`group relative overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-[#004fa2]/25 cursor-pointer h-full ${cardLayoutClass}`}
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : idx * 0.08 }}
               >
                 <div className="relative p-6 sm:p-7 flex flex-col h-full">
                   {hasQuote ? (
@@ -76,7 +105,7 @@ const ImpactPeopleHighlightsSection = ({
                     ) : null}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
