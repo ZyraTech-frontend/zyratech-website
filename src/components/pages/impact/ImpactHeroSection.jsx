@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const ImpactHeroSection = ({
   title = 'Our Values',
@@ -7,6 +7,8 @@ const ImpactHeroSection = ({
     'Our values shape how we teach, how we partner, and how we build technology that serves real needs.',
   backgroundImage = '/images/image1.png'
 }) => {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section className="relative isolate overflow-hidden">
       <div className="max-w-none px-0">
@@ -21,9 +23,9 @@ const ImpactHeroSection = ({
           <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-28 h-full flex items-center">
             <motion.div
               className="max-w-4xl"
-              initial={{ opacity: 0, y: 30 }}
+              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.8 }}
             >
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-0 leading-tight">
                 {title}

@@ -1,5 +1,5 @@
-import { useRef, useEffect } from 'react';
-import { useInView } from 'framer-motion';
+import { useRef } from 'react';
+import { useInView, useReducedMotion } from 'framer-motion';
 
 /**
  * Custom hook for scroll-triggered animations
@@ -17,6 +17,8 @@ export const useScrollAnimation = (options = {}) => {
     duration = 0.6,
     threshold = 0.2
   } = options;
+
+  const shouldReduceMotion = useReducedMotion();
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: threshold });
@@ -46,11 +48,16 @@ export const useScrollAnimation = (options = {}) => {
 
   const selectedVariant = variants[type] || variants.fadeIn;
 
+  const reducedMotionVariant = {
+    hidden: { opacity: 1 },
+    visible: { opacity: 1 }
+  };
+
   return {
     ref,
     initial: 'hidden',
-    animate: isInView ? 'visible' : 'hidden',
-    variants: selectedVariant,
-    transition: { duration, delay }
+    animate: shouldReduceMotion ? 'visible' : isInView ? 'visible' : 'hidden',
+    variants: shouldReduceMotion ? reducedMotionVariant : selectedVariant,
+    transition: shouldReduceMotion ? { duration: 0, delay: 0 } : { duration, delay }
   };
 };

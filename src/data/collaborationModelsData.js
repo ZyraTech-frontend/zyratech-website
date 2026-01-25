@@ -1,9 +1,9 @@
 export const collaborationHero = {
   bannerImage: '/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png',
   bannerFallback: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1600',
-  title: 'Our Collaboration Models Seamlessly Integrate With Your Operations',
+  title: 'Our Engagement Models Seamlessly Integrate With Your Operations',
   description:
-    "At ZyraTech, we understand that every business has unique needs, which is why we've developed three flexible collaboration models to cater to diverse client requirements. Each model is crafted to offer tailored solutions, ensuring that your organization benefits from enhanced efficiency and successful partnerships. Whether you are looking for dedicated teams, project-based engagements, or a blended approach, our models are designed to integrate seamlessly with your operations.",
+    "At ZyraTech, we understand that every business has unique needs, which is why we've developed three flexible engagement models to cater to diverse client requirements. Each model is crafted to offer tailored solutions, ensuring that your organization benefits from enhanced efficiency and successful partnerships. Whether you are looking for dedicated teams, project-based engagements, or a blended approach, our models are designed to integrate seamlessly with your operations.",
   introImage: '/images/Dalene.png',
   introFallback: 'https://images.unsplash.com/photo-1587614382346-acce7f3b8a31?w=1600'
 };
@@ -28,7 +28,7 @@ export const collaborationModels = [
     tab: 'Interdisciplinary Development Teams',
     title: 'Interdisciplinary Development Teams',
     bullets: [
-      "ZyraTech's interdisciplinary development teams offer a robust collaboration model designed to deliver comprehensive end-to-end solutions.",
+      "ZyraTech's interdisciplinary development teams offer a robust engagement model designed to deliver comprehensive end-to-end solutions.",
       'Our full delivery team is dedicated to managing every aspect of the development process, ensuring seamless integration and execution.',
       "Central to this approach is close collaboration between ZyraTech and the client's stakeholders. This partnership focuses on refining requirements and aligning them with strategic goals, enabling the delivery of high-quality, tailored solutions.",
       'By bringing together diverse expertise and agile methodologies, this model ensures projects not only meet but exceed client expectations, driving innovation and success in dynamic business environments.',

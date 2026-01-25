@@ -1,5 +1,6 @@
 import React from 'react';
 import { Users, MapPin, TrendingUp } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const timelineData = [
   { year: '2024', title: 'Established', desc: 'Zyra Tech Hub was formally established in Koforidua, Ghana.', icon: Users },
@@ -8,23 +9,38 @@ const timelineData = [
 ];
 
 const Timeline = () => {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section className="py-16 sm:py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-12">
+        <motion.div
+          className="max-w-3xl mx-auto text-center mb-10 sm:mb-12"
+          initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.6 }}
+        >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#004fa2] mb-6">Our Journey</h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">Key milestones from 2024 to 2026.</p>
-        </div>
+        </motion.div>
 
         <div className="hidden md:block">
           <div className="relative max-w-6xl mx-auto">
             <div className="absolute left-0 right-0 top-6 -translate-y-1/2 h-2 bg-[#004fa2] rounded-full" />
 
             <div className="grid grid-cols-3 gap-8">
-              {timelineData.map((item) => {
+              {timelineData.map((item, idx) => {
                 const Icon = item.icon;
                 return (
-                  <div key={item.year} className="relative pt-12 group">
+                  <motion.div
+                    key={item.year}
+                    className="relative pt-12 group"
+                    initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.25 }}
+                    transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : idx * 0.08 }}
+                  >
                     <div className="absolute top-6 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white flex items-center justify-center border border-[#004fa2]/25 shadow-sm z-10 transition-transform duration-200 group-hover:scale-105 group-focus-within:scale-105">
                       <Icon className="w-5 h-5 text-[#004fa2]" />
                     </div>
@@ -42,7 +58,7 @@ const Timeline = () => {
                       <div className="text-lg font-semibold text-gray-900">{item.title}</div>
                       <div className="mt-2 text-sm sm:text-base text-gray-600 leading-relaxed">{item.desc}</div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -53,10 +69,17 @@ const Timeline = () => {
           <ol className="relative max-w-5xl mx-auto">
             <div className="absolute left-4 sm:left-6 top-0 bottom-0 -translate-x-1/2 w-2 bg-[#004fa2] rounded-full" />
             <div className="space-y-8 sm:space-y-10">
-              {timelineData.map((item) => {
+              {timelineData.map((item, idx) => {
                 const Icon = item.icon;
                 return (
-                  <li key={item.year} className="relative group">
+                  <motion.li
+                    key={item.year}
+                    className="relative group"
+                    initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.25 }}
+                    transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : idx * 0.08 }}
+                  >
                     <div className="absolute left-4 sm:left-6 top-6 w-10 h-10 rounded-full bg-white flex items-center justify-center -translate-x-1/2 border border-[#004fa2]/25 shadow-sm transition-transform duration-200 group-hover:scale-105 group-focus-within:scale-105">
                       <Icon className="w-5 h-5 text-[#004fa2]" />
                     </div>
@@ -78,7 +101,7 @@ const Timeline = () => {
                         </div>
                       </div>
                     </div>
-                  </li>
+                  </motion.li>
                 );
               })}
             </div>

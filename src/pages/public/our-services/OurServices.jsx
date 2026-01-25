@@ -22,7 +22,7 @@ const OurServices = () => {
             <p className="text-lg max-w-xl opacity-95">We design, build and scale technology solutions with partners — combining engineering rigor with practical delivery models.</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link to="/contact" className="inline-block bg-white text-[#004fa2] px-6 py-3 rounded-lg font-semibold shadow">Get Started</Link>
-              <Link to="/collaboration-models" className="inline-block border border-white text-white px-6 py-3 rounded-lg font-semibold">Collaboration Models</Link>
+              <Link to="/collaboration-models" className="inline-block border border-white text-white px-6 py-3 rounded-lg font-semibold">Engagement Models</Link>
             </div>
           </div>
           <div>
@@ -84,7 +84,7 @@ const OurServices = () => {
             <ul className="space-y-3 text-gray-700">
               <li><span className="text-[#004fa2] mr-2">•</span>Local delivery + international reach</li>
               <li><span className="text-[#004fa2] mr-2">•</span>Proven engineering practices</li>
-              <li><span className="text-[#004fa2] mr-2">•</span>Flexible collaboration models</li>
+              <li><span className="text-[#004fa2] mr-2">•</span>Flexible engagement models</li>
             </ul>
             <div className="mt-6">
               <Link to="/partner/apply" className="block text-center cta-ghost px-4 py-3">Apply as a partner</Link>

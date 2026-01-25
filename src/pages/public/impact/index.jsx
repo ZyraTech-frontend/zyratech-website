@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { motion, useReducedMotion } from 'framer-motion';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import ImpactHeroSection from '../../../components/pages/impact/ImpactHeroSection';
 import ImpactCommunitySection from '../../../components/pages/impact/ImpactCommunitySection';
@@ -7,6 +8,8 @@ import ImpactPeopleHighlightsSection from '../../../components/pages/impact/Impa
 import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
 
 const ImpactPage = () => {
+  const shouldReduceMotion = useReducedMotion();
+
   const values = [
     {
       title: 'Diversity',
@@ -102,18 +105,28 @@ const ImpactPage = () => {
 
       <section className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl">
+          <motion.div
+            className="max-w-4xl"
+            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.6 }}
+          >
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6">How We Live Our Values</h2>
             <p className="text-lg text-gray-700 leading-relaxed">
               Our values are not just words. They guide how we show up for our learners, how we collaborate with partners, and how we build solutions.
             </p>
-          </div>
+          </motion.div>
 
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {livingOurValues.map((item) => (
-              <div
+            {livingOurValues.map((item, idx) => (
+              <motion.div
                 key={item.title}
                 className="group bg-white rounded-2xl border border-gray-200 p-6 shadow-sm flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-[#004fa2]/25 cursor-pointer"
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : idx * 0.08 }}
               >
                 <h3 className="text-lg font-bold text-gray-900">{item.title}</h3>
                 <p className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed flex-1">
@@ -127,7 +140,7 @@ const ImpactPage = () => {
                     Read more
                   </Link>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

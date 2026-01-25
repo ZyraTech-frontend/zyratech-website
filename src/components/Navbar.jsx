@@ -19,7 +19,7 @@ const Navbar = () => {
     header: 'ZyraTech Services',
     mainLinks: [
       {
-        label: 'Our Collaboration Models',
+        label: 'Our Engagement Models',
         to: '/collaboration-models',
       },
       {
