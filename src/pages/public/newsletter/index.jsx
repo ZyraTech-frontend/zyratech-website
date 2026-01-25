@@ -2,6 +2,7 @@ import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Calendar, Clock, User, Share2, ArrowUp } from 'lucide-react';
+import BackToTopButton from '../../../components/common/BackToTopButton';
 
 // Sample insights data - Add your Zyra Tech Hub articles here
 const insights = [
@@ -22,16 +23,6 @@ const insights = [
 const NewsletterPage = () => {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const [showBackToTop, setShowBackToTop] = useState(false);
-
-  // Handle scroll for back to top button
-  React.useEffect(() => {
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 400);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -40,10 +31,6 @@ const NewsletterPage = () => {
       setTimeout(() => setIsSubscribed(false), 3000);
       setEmail('');
     }
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -178,15 +165,11 @@ const NewsletterPage = () => {
           </div>
         </div>
 
-        {/* Back to Top Button */}
-        {showBackToTop && (
-          <button
-            onClick={scrollToTop}
-            className="fixed bottom-8 right-8 bg-white text-white p-4 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 z-50"
-          >
-            <ArrowUp size={20} />
-          </button>
-        )}
+        <BackToTopButton
+          threshold={400}
+          className="fixed bottom-8 right-8 bg-white text-white p-4 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 z-50"
+          icon={<ArrowUp size={20} />}
+        />
       </div>
     </div>
   );
