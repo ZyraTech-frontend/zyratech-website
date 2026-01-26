@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const WhyPartnersChooseUsSection = () => {
   return (
-    <section className="bg-gray-50 py-16 sm:py-20">
+    <section className="bg-[#004fa2] py-16 sm:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2">
           <h3 className="text-2xl sm:text-3xl font-extrabold mb-4 text-gray-900">Why partners choose us</h3>
