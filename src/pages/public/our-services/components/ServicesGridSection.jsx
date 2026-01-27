@@ -35,27 +35,33 @@ const ServicesGridSection = () => {
                 variants={itemVariants}
                 whileHover={{ y: -2 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-                className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#004fa2]/30 hover:shadow-md cursor-pointer h-full"
+                className="group relative overflow-hidden rounded-xl border border-[#004fa2]/30 bg-[#004fa2] p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-white/40 hover:shadow-md cursor-pointer h-full"
               >
-                <div className="h-full flex flex-col items-center">
-                  <div className="text-sm font-bold text-gray-600 mb-4">{String(idx + 1).padStart(2, '0')}</div>
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-5 uppercase tracking-wide">{s.title}</h3>
-                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-6">{s.desc}</p>
+                <div className="h-full flex flex-col">
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-4 uppercase tracking-wide text-center">{s.title}</h3>
+                  <p className="text-sm sm:text-base text-blue-100/90 leading-relaxed mb-5 text-left">{s.desc}</p>
 
                   {Array.isArray(s.highlights) && s.highlights.length > 0 && (
-                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-8">
-                      <span className="font-semibold text-gray-900">Includes:</span>{' '}
-                      {s.highlights.join(' • ')}
-                    </p>
+                    <div className="w-full mb-6">
+                      <div className="text-sm sm:text-base font-semibold text-white mb-2 text-left">Includes:</div>
+                      <ul className="space-y-1.5 text-sm text-blue-50/90 leading-relaxed text-left">
+                        {s.highlights.map((h) => (
+                          <li key={h} className="flex items-start gap-3 text-left">
+                            <span className="mt-2 h-1.5 w-1.5 rounded-full bg-white/90 flex-shrink-0" />
+                            <span>{h}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
 
-                  <div className="mt-auto">
+                  <div className="mt-auto flex justify-center">
                     <Link
                       to="/contact"
                       state={{ from: 'our-services' }}
-                      className="inline-flex items-center justify-center border border-[#004fa2]/60 text-[#004fa2] px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-[#004fa2] hover:text-white text-sm"
+                      className="inline-flex items-center justify-center border border-white bg-white text-[#004fa2] px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:bg-white/90 text-sm"
                     >
-                      Learn more
+                      Contact us
                     </Link>
                   </div>
                 </div>
@@ -82,29 +88,35 @@ const ServicesGridSection = () => {
                   variants={itemVariants}
                   whileHover={{ y: -2 }}
                   transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-                  className={`group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#004fa2]/30 hover:shadow-md cursor-pointer h-full ${
+                  className={`group relative overflow-hidden rounded-xl border border-[#004fa2]/30 bg-[#004fa2] p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-white/40 hover:shadow-md cursor-pointer h-full ${
                     isSingle ? 'md:col-span-2 md:max-w-[560px] md:mx-auto' : ''
                   }`}
                 >
-                  <div className="h-full flex flex-col items-center">
-                    <div className="text-sm font-bold text-gray-600 mb-4">{String(globalIndex + 1).padStart(2, '0')}</div>
-                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-5 uppercase tracking-wide">{s.title}</h3>
-                    <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-6">{s.desc}</p>
+                  <div className="h-full flex flex-col">
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-4 uppercase tracking-wide text-center">{s.title}</h3>
+                    <p className="text-sm sm:text-base text-blue-100/90 leading-relaxed mb-5 text-left">{s.desc}</p>
 
                     {Array.isArray(s.highlights) && s.highlights.length > 0 && (
-                      <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-8">
-                        <span className="font-semibold text-gray-900">Includes:</span>{' '}
-                        {s.highlights.join(' • ')}
-                      </p>
+                      <div className="w-full mb-6">
+                        <div className="text-sm sm:text-base font-semibold text-white mb-2 text-left">Includes:</div>
+                        <ul className="space-y-1.5 text-sm text-blue-50/90 leading-relaxed text-left">
+                          {s.highlights.map((h) => (
+                            <li key={h} className="flex items-start gap-3 text-left">
+                              <span className="mt-2 h-1.5 w-1.5 rounded-full bg-white/90 flex-shrink-0" />
+                              <span>{h}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     )}
 
-                    <div className="mt-auto">
+                    <div className="mt-auto flex justify-center">
                       <Link
                         to="/contact"
                         state={{ from: 'our-services' }}
-                        className="inline-flex items-center justify-center border border-[#004fa2]/60 text-[#004fa2] px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-[#004fa2] hover:text-white text-sm"
+                        className="inline-flex items-center justify-center border border-white bg-white text-[#004fa2] px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:bg-white/90 text-sm"
                       >
-                        Learn more
+                        Contact us
                       </Link>
                     </div>
                   </div>
