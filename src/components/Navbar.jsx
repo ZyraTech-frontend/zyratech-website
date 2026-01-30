@@ -34,27 +34,6 @@ const Navbar = () => {
         label: 'Work With Us',
         to: '/work-with-us',
       },
-      {
-        label: 'Ambassador Programme',
-        to: '/ambassador-programme',
-      },
-      {
-        label: 'Our Value Proposition',
-        subLinks: [
-          {
-            label: 'European Market',
-            to: '/value-proposition/european-market',
-          },
-          {
-            label: 'US Market',
-            to: '/value-proposition/us-market',
-          },
-          {
-            label: 'African Market',
-            to: '/value-proposition/african-market',
-          },
-        ],
-      },
     ],
   };
   const dropdownMenus = {

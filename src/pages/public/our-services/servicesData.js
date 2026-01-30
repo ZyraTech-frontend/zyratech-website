@@ -1,4 +1,4 @@
-import { BadgeCheck, FlaskConical, Globe, Layers, Code2, ServerCog, Shield, Users } from 'lucide-react';
+import { BadgeCheck, Globe, Layers, Code2, ServerCog, Shield, Users } from 'lucide-react';
 
 export const services = [
   {
@@ -36,17 +36,5 @@ export const services = [
     desc: 'Upskill teams with hands-on programs that drive adoption of modern engineering practices.',
     icon: Users,
     highlights: ['Team training & workshops', 'Mentorship & coaching', 'Process & delivery enablement'],
-  },
-  {
-    title: 'Innovation Labs',
-    desc: 'Prototype quickly, validate ideas, and de-risk investments with rapid experimentation.',
-    icon: FlaskConical,
-    highlights: ['MVP design & prototyping', 'User validation & iteration', 'Roadmaps & execution plans'],
-  },
-  {
-    title: 'Market Access',
-    desc: 'Navigate expansion with support for regional compliance, rollout planning, and scaling.',
-    icon: Globe,
-    highlights: ['Go-to-market support', 'Localization & rollout planning', 'Operational readiness'],
   },
 ];
