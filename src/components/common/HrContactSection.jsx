@@ -1,5 +1,4 @@
 import { Mail } from 'lucide-react';
-import HrContactCard from './HrContactCard.jsx';
 
 const HrContactSection = ({
   name = 'Magdalene',
@@ -29,7 +28,13 @@ const HrContactSection = ({
           </div>
 
           <div className="w-full md:w-3/5 lg:w-3/5 relative">
-            <HrContactCard name={name} title={title} imageUrl={imageUrl} />
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <img 
+                src={imageUrl} 
+                alt={name}
+                className="w-full h-[380px] md:h-[420px] object-cover"
+              />
+            </div>
           </div>
         </div>
       </div>

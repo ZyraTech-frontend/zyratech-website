@@ -6,7 +6,6 @@ import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import TrainingLayout from '../../../components/TrainingLayout';
 import TrainingBreadcrumb from '../../../components/pages/training/TrainingBreadcrumb';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
-import HrContactCard from '../../../components/common/HrContactCard';
 import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import useSEO from '../../../hooks/useSEO';
 
@@ -382,13 +381,13 @@ const CourseDetailPage = () => {
       <section className="py-16 bg-white" id="training-contact">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-10 items-stretch">
-            <HrContactCard
-              name={course.contactPerson.name}
-              title={course.contactPerson.title}
-              imageUrl={course.contactPerson.imageUrl || '/images/Dalene.png'}
-              heightClassName="h-[380px] md:h-[420px]"
-              className="rounded-2xl max-w-none w-full mx-0 md:ml-0"
-            />
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <img 
+                src={course.contactPerson.imageUrl || '/images/Dalene.png'}
+                alt={course.contactPerson.name}
+                className="w-full h-[380px] md:h-[420px] object-cover"
+              />
+            </div>
 
             <div className="bg-slate-50 rounded-2xl border border-gray-200 p-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Do you have any questions?</h2>
