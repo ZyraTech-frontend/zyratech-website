@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { Cloud, BarChart3, Server, Clock, Users, Star, ChevronRight, Award, Database, Network, Target } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
-import ParallaxDivider from '../../common/ParallaxDivider.jsx';
 import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
@@ -288,9 +287,9 @@ const IntermediateProgramsPage = () => {
                         <div className="text-xs text-gray-500 mb-0.5">Course Fee</div>
                         <div className="text-xl font-bold text-[#004fa2]">{program.price}</div>
                       </div>
-                      <button
+                      <button 
                         onClick={() => handleEnroll(program.id)}
-                        className="cta-btn-sm cta-btn px-5 py-2.5 text-sm"
+                        className="bg-[#004fa2] hover:bg-[#003d80] text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200"
                       >
                         View Details
                       </button>
@@ -302,8 +301,6 @@ const IntermediateProgramsPage = () => {
           </div>
         </div>
       </section>
-
-      <ParallaxDivider />
 
       {/* Key Benefits Section */}
       <section className="py-10 sm:py-12 bg-white">
