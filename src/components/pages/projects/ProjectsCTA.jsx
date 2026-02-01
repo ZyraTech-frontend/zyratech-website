@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ProjectsCTA = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="py-12 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -10,7 +13,10 @@ const ProjectsCTA = () => {
             Have an idea? Let's build it together.
           </h2>
           
-          <button className="bg-white hover:bg-gray-100 text-[#004fa2] px-6 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 flex-shrink-0">
+          <button 
+            onClick={() => navigate('/projects/request')}
+            className="bg-white hover:bg-gray-100 text-[#004fa2] px-6 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 flex-shrink-0"
+          >
             Submit a Project Idea
           </button>
         </div>

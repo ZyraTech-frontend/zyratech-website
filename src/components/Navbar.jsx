@@ -34,6 +34,10 @@ const Navbar = () => {
         label: 'Work With Us',
         to: '/work-with-us',
       },
+      {
+        label: 'Request Custom Project',
+        to: '/projects/request',
+      },
     ],
   };
   const dropdownMenus = {
