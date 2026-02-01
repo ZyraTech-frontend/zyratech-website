@@ -42,8 +42,6 @@ import MaturedProgramsRoute from './pages/public/training/programs/matured';
 import InternshipProgramsRoute from './pages/public/training/programs/internship';
 import BlogPage from './pages/public/blog';
 import GalleryPage from './pages/public/gallery';
-import NewsletterPage from './pages/public/newsletter';
-import ArticlePage from './pages/public/newsletter/ArticlePage';
 import NotFoundPage from './pages/public/NotFound';
 
 
@@ -80,10 +78,7 @@ function App() {
           <Route path="/projects/agrizplanter" element={<AgrizPlanterPage />} />
           <Route path="/projects/agrizplanter/gallery" element={<AgrizPlanterGalleryPage />} />
           <Route path="/projects/era-technologies" element={<EraTechnologiesPage />} />
-          <Route path="/news/nef-2025-finalist" element={<Navigate to="/newsletter/article/1" replace />} />
-          <Route path="/news/yeco-2025-selection" element={<Navigate to="/newsletter/article/2" replace />} />
-          <Route path="/news/bagaboard-nexora-2025" element={<Navigate to="/newsletter/article/3" replace />} />
-                    <Route path="/contact" element={<ContactPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
           <Route path="/admin/login" element={<LoginPage />} />
           <Route path="/admin/dashboard" element={<AdminPage />} />
@@ -131,8 +126,6 @@ function App() {
           <Route path="/training/payment-success" element={<TrainingPaymentSuccessPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
-          <Route path="/newsletter" element={<NewsletterPage />} />
-          <Route path="/newsletter/article/:id" element={<ArticlePage />} />
           
           {/* Redirects for old/broken links */}
           <Route path="/labs" element={<Navigate to="/contact" replace />} />
