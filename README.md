@@ -129,10 +129,10 @@ ZyraTech is an innovation ecosystem advancing technology education, circular man
 ##  Design System
 
 ### Color Palette
-- **Primary**: `#39366F` (Deep Purple)
-- **Secondary**: `#2a2850` (Dark Purple)
-- **Accent**: `#5B9BD5` (Blue)
-- **Success**: `#002D25` (Dark Green)
+- **Primary**: `#004fa2` (Brand Blue)
+- **Secondary**: `#FFFFFF` (White)
+
+These are the only two colors used throughout the website for consistency and brand identity.
 
 ### Typography
 - **Headings**: Font-black, tight tracking

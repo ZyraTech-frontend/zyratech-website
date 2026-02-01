@@ -36,6 +36,8 @@ import MaturedProgramsRoute from './pages/public/training/programs/matured';
 import InternshipProgramsRoute from './pages/public/training/programs/internship';
 import BlogPage from './pages/public/blog';
 import GalleryPage from './pages/public/gallery';
+import JobsPage from './pages/public/jobs';
+import JobDetailPage from './pages/public/jobs/detail';
 import NotFoundPage from './pages/public/NotFound';
 
 
@@ -114,6 +116,8 @@ function App() {
           <Route path="/training/payment-success" element={<TrainingPaymentSuccessPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/jobs" element={<JobsPage />} />
+          <Route path="/jobs/:id" element={<JobDetailPage />} />
           
           {/* Redirects for old/broken links */}
           <Route path="/labs" element={<Navigate to="/contact" replace />} />
