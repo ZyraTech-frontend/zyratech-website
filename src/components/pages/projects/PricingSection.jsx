@@ -63,18 +63,18 @@ const PricingSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           {tiers.map((tier, index) => (
             <div 
               key={index}
               onMouseEnter={() => setHoveredTier(index)}
               onMouseLeave={() => setHoveredTier(null)}
-              className={`rounded-xl p-8 transition-all duration-300 cursor-pointer ${
+              className={`rounded-lg md:rounded-xl lg:rounded-2xl p-4 md:p-6 lg:p-8 transition-all duration-300 cursor-pointer ${
                 tier.highlight 
-                  ? 'bg-[#004fa2] text-white shadow-2xl scale-105' 
+                  ? 'bg-[#004fa2] text-white shadow-md md:shadow-lg lg:shadow-2xl lg:scale-105' 
                   : 'bg-white border-2 border-gray-200'
               } ${
-                hoveredTier === index ? 'shadow-2xl -translate-y-2' : ''
+                hoveredTier === index ? 'shadow-md md:shadow-lg lg:shadow-2xl -translate-y-0.5 md:-translate-y-1 lg:-translate-y-2' : ''
               }`}
             >
               {tier.highlight && (
@@ -85,23 +85,23 @@ const PricingSection = () => {
                 </div>
               )}
               
-              <h3 className={`text-2xl font-bold mb-2 ${tier.highlight ? 'text-white' : 'text-gray-900'}`}>
+              <h3 className={`text-xl md:text-2xl font-bold mb-2 ${tier.highlight ? 'text-white' : 'text-gray-900'}`}>
                 {tier.name}
               </h3>
               <div className="mb-4">
-                <span className={`text-3xl font-bold ${tier.highlight ? 'text-white' : 'text-[#004fa2]'}`}>
+                <span className={`text-2xl md:text-3xl font-bold ${tier.highlight ? 'text-white' : 'text-[#004fa2]'}`}>
                   GHS {tier.price}
                 </span>
               </div>
-              <p className={`mb-6 text-sm ${tier.highlight ? 'text-blue-100' : 'text-gray-600'}`}>
+              <p className={`mb-6 text-xs md:text-sm ${tier.highlight ? 'text-blue-100' : 'text-gray-600'}`}>
                 {tier.description}
               </p>
               
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-2 md:space-y-3 mb-6 md:mb-8">
                 {tier.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start">
-                    <Check className={`w-5 h-5 mr-2 flex-shrink-0 ${tier.highlight ? 'text-white' : 'text-[#004fa2]'}`} />
-                    <span className={`text-sm ${tier.highlight ? 'text-white' : 'text-gray-700'}`}>
+                    <Check className={`w-4 h-4 md:w-5 md:h-5 mr-2 flex-shrink-0 ${tier.highlight ? 'text-white' : 'text-[#004fa2]'}`} />
+                    <span className={`text-xs md:text-sm ${tier.highlight ? 'text-white' : 'text-gray-700'}`}>
                       {feature}
                     </span>
                   </li>
@@ -110,7 +110,7 @@ const PricingSection = () => {
               
               <button 
                 onClick={() => navigate('/projects/request')}
-                className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 ${
+                className={`w-full py-2 md:py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 text-sm md:text-base ${
                   tier.highlight
                     ? 'bg-white text-[#004fa2] hover:bg-gray-100'
                     : 'bg-[#004fa2] text-white hover:bg-[#003d7a]'

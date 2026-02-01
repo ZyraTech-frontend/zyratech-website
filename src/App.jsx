@@ -7,7 +7,7 @@ import Footer from './components/Footer';
 import HomePage from './pages/public/home';
 import AboutPage from './pages/public/about';
 import ProjectsPage from './pages/public/projects';
-import RequestProjectPage from './pages/public/projects/RequestProjectPage';
+import ProjectRequestPage from './pages/public/projects/request';
 import ContactPage from './pages/public/contact';
 import AdminPage from './pages/admin/DashboardPage';
 import LoginPage from './pages/admin/LoginPage';
@@ -65,7 +65,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
-          <Route path="/projects/request" element={<RequestProjectPage />} />
+          <Route path="/projects/request" element={<ProjectRequestPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
           <Route path="/admin/login" element={<LoginPage />} />
