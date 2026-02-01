@@ -8,7 +8,10 @@ const ProjectRequestPage = () => {
   const navigate = useNavigate();
 
   const handleFormSubmit = () => {
-    navigate('/projects');
+    // Keep the thank you message visible
+    setTimeout(() => {
+      navigate('/projects');
+    }, 3000);
   };
 
   return (
