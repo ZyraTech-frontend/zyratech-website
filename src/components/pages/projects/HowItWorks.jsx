@@ -5,22 +5,22 @@ const HowItWorks = () => {
   const [hoveredStep, setHoveredStep] = useState(null);
   const steps = [
     {
-      icon: <FileText className="w-10 h-10" />,
+      icon: <FileText className="w-5 h-5 md:w-7 md:h-7 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />,
       title: 'Submit Your Idea',
       description: 'Fill out our simple form with your project details, requirements, and timeline'
     },
     {
-      icon: <MessageSquare className="w-10 h-10" />,
+      icon: <MessageSquare className="w-5 h-5 md:w-7 md:h-7 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />,
       title: 'Get a Quote',
       description: 'We review your request and provide a detailed quote within 24 hours'
     },
     {
-      icon: <Code className="w-10 h-10" />,
+      icon: <Code className="w-5 h-5 md:w-7 md:h-7 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />,
       title: 'We Build Together',
       description: 'Collaborate with our team throughout development with regular updates'
     },
     {
-      icon: <Rocket className="w-10 h-10" />,
+      icon: <Rocket className="w-5 h-5 md:w-7 md:h-7 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />,
       title: 'Launch & Support',
       description: 'Deploy your project and get ongoing support for a successful launch'
     }
@@ -54,17 +54,19 @@ const HowItWorks = () => {
                 <div className="hidden lg:block absolute top-1/2 left-full w-full h-0.5 bg-white/30 -z-10"></div>
               )}
               
-              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-[#004fa2] text-white rounded-full mb-4 mx-auto transition-transform duration-300" style={{
-                transform: hoveredStep === index ? 'scale(1.1)' : 'scale(1)'
-              }}>
-                {step.icon}
+              <div className="flex items-center gap-3">
+                <div className="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 lg:w-8 lg:h-8 xl:w-10 xl:h-10 bg-[#004fa2] text-white rounded-full transition-transform duration-300" style={{
+                  transform: hoveredStep === index ? 'scale(1.1)' : 'scale(1)'
+                }}>
+                  {step.icon}
+                </div>
+                <h3 className="text-base md:text-lg lg:text-xl font-bold text-gray-900">
+                  {step.title}
+                </h3>
               </div>
               <div className="absolute top-2 right-2 bg-[#004fa2] text-white w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
                 {index + 1}
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                {step.title}
-              </h3>
               <p className="text-gray-600 text-xs sm:text-sm">
                 {step.description}
               </p>
