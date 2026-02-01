@@ -7,13 +7,7 @@ import Footer from './components/Footer';
 import HomePage from './pages/public/home';
 import AboutPage from './pages/public/about';
 import ProjectsPage from './pages/public/projects';
-import EcoWatchPage from './pages/public/projects/ecowatch';
-import SafeDrivePage from './pages/public/projects/safedrive';
-import AgrizPlanterPage from './pages/public/projects/agrizplanter';
-import EraTechnologiesPage from './pages/public/projects/eraTechnologies';
-import EcoWatchGalleryPage from './pages/public/projects/EcoWatchGalleryPage';
-import SafeDriveGalleryPage from './pages/public/projects/SafeDriveGalleryPage';
-import AgrizPlanterGalleryPage from './pages/public/projects/AgrizPlanterGalleryPage';
+import RequestProjectPage from './pages/public/projects/RequestProjectPage';
 import ContactPage from './pages/public/contact';
 import AdminPage from './pages/admin/DashboardPage';
 import LoginPage from './pages/admin/LoginPage';
@@ -71,13 +65,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
-          <Route path="/projects/ecowatch" element={<EcoWatchPage />} />
-          <Route path="/projects/ecowatch/gallery" element={<EcoWatchGalleryPage />} />
-          <Route path="/projects/safedrive" element={<SafeDrivePage />} />
-          <Route path="/projects/safedrive/gallery" element={<SafeDriveGalleryPage />} />
-          <Route path="/projects/agrizplanter" element={<AgrizPlanterPage />} />
-          <Route path="/projects/agrizplanter/gallery" element={<AgrizPlanterGalleryPage />} />
-          <Route path="/projects/era-technologies" element={<EraTechnologiesPage />} />
+          <Route path="/projects/request" element={<RequestProjectPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
           <Route path="/admin/login" element={<LoginPage />} />
