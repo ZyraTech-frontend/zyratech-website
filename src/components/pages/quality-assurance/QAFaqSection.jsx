@@ -39,7 +39,7 @@ const QAFaqSection = () => {
           {faqData.map((faq, index) => (
             <div
               key={index}
-              className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden transition-all duration-300 hover:border-[#39366F]/30 hover:shadow-md"
+              className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden transition-all duration-300 hover:border-[#004fa2]/30 hover:shadow-md"
             >
               <button
                 onClick={() => toggleFaq(index)}
@@ -49,7 +49,7 @@ const QAFaqSection = () => {
                   {faq.question}
                 </h3>
                 <ChevronDown
-                  className={`flex-shrink-0 w-6 h-6 text-[#39366F] transition-transform duration-300 ${
+                  className={`flex-shrink-0 w-6 h-6 text-[#004fa2] transition-transform duration-300 ${
                     openIndex === index ? 'rotate-180' : ''
                   }`}
                 />
