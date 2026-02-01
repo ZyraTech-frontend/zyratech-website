@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, HelpCircle } from 'lucide-react';
 
 const ProjectsFAQ = () => {
   const [openIndex, setOpenIndex] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const faqs = [
     {
@@ -40,28 +41,36 @@ const ProjectsFAQ = () => {
   ];
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Frequently Asked Questions
-          </h2>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <HelpCircle className="w-8 h-8 text-[#004fa2]" />
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+              Frequently Asked Questions
+            </h2>
+          </div>
           <p className="text-lg text-gray-600">
             Everything you need to know about custom projects
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {faqs.map((faq, index) => (
             <div 
               key={index}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              className="bg-white rounded-xl border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-[#004fa2]/30"
+              style={{
+                transform: hoveredIndex === index ? 'translateX(4px)' : 'translateX(0)'
+              }}
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? -1 : index)}
-                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-blue-50/50 transition-colors"
               >
-                <span className="font-semibold text-gray-900 pr-4">
+                <span className="font-semibold text-gray-900 pr-4 text-base">
                   {faq.question}
                 </span>
                 <ChevronDown 
@@ -76,24 +85,12 @@ const ProjectsFAQ = () => {
                   openIndex === index ? 'max-h-96' : 'max-h-0'
                 }`}
               >
-                <div className="px-6 pb-4 text-gray-600">
+                <div className="px-6 pb-4 text-gray-600 border-t border-gray-100 pt-4 leading-relaxed">
                   {faq.answer}
                 </div>
               </div>
             </div>
           ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <p className="text-gray-600 mb-4">
-            Still have questions?
-          </p>
-          <a 
-            href="/contact" 
-            className="text-[#004fa2] hover:text-[#003d7a] font-semibold"
-          >
-            Contact us directly →
-          </a>
         </div>
       </div>
     </section>

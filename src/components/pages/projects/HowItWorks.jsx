@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FileText, MessageSquare, Code, Rocket } from 'lucide-react';
 
 const HowItWorks = () => {
+  const [hoveredStep, setHoveredStep] = useState(null);
   const steps = [
     {
       icon: <FileText className="w-10 h-10" />,
@@ -37,24 +38,34 @@ const HowItWorks = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
           {steps.map((step, index) => (
-            <div key={index} className="relative bg-white rounded-2xl p-6 text-center">
+            <div 
+              key={index} 
+              className="relative bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center transition-all duration-300 cursor-pointer hover:shadow-lg sm:hover:shadow-2xl"
+              onMouseEnter={() => setHoveredStep(index)}
+              onMouseLeave={() => setHoveredStep(null)}
+              style={{
+                transform: hoveredStep === index ? 'translateY(-8px)' : 'translateY(0)'
+              }}
+            >
               {/* Connector Line */}
               {index < steps.length - 1 && (
                 <div className="hidden lg:block absolute top-1/2 left-full w-full h-0.5 bg-white/30 -z-10"></div>
               )}
               
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-[#004fa2] text-white rounded-full mb-4 mx-auto">
+              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-[#004fa2] text-white rounded-full mb-4 mx-auto transition-transform duration-300" style={{
+                transform: hoveredStep === index ? 'scale(1.1)' : 'scale(1)'
+              }}>
                 {step.icon}
               </div>
-              <div className="absolute top-2 right-2 bg-[#004fa2] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">
+              <div className="absolute top-2 right-2 bg-[#004fa2] text-white w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
                 {index + 1}
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
+              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
                 {step.title}
               </h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-xs sm:text-sm">
                 {step.description}
               </p>
             </div>
