@@ -17,19 +17,24 @@ const JobsList = () => {
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-16">
-      <div className="mb-12">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">Explore Opportunities</h2>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      <div className="mb-8 sm:mb-12">
+        <div className="max-w-4xl">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-4 sm:mb-6">Explore Opportunities</h2>
+          <p className="text-sm sm:text-base lg:text-lg text-gray-700 leading-relaxed mb-6 sm:mb-8">
+            Join our mission to empower innovators and transform communities across Africa. Discover career opportunities that align with your passion for technology and social impact.
+          </p>
+        </div>
         
         {/* Search Bar */}
-        <div className="relative mb-6">
-          <Search className="absolute left-4 top-3 w-5 h-5 text-gray-400" />
+        <div className="relative mb-4 sm:mb-6">
+          <Search className="absolute left-3 sm:left-4 top-3 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
           <input
             type="text"
             placeholder="Search by job title or keywords..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent"
+            className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent text-sm sm:text-base"
           />
         </div>
 
@@ -39,7 +44,7 @@ const JobsList = () => {
             <button
               key={type}
               onClick={() => setSelectedType(type)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
                 selectedType === type
                   ? 'bg-[#004fa2] text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -53,14 +58,14 @@ const JobsList = () => {
 
       {/* Jobs List */}
       {filtered.length > 0 ? (
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {filtered.map(job => (
             <JobCard key={job.id} job={job} />
           ))}
         </div>
       ) : (
-        <div className="text-center py-12">
-          <p className="text-gray-600 text-lg">No positions match your search.</p>
+        <div className="text-center py-8 sm:py-12">
+          <p className="text-gray-600 text-base sm:text-lg">No positions match your search.</p>
         </div>
       )}
     </div>

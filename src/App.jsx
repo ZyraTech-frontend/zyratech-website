@@ -38,6 +38,7 @@ import BlogPage from './pages/public/blog';
 import GalleryPage from './pages/public/gallery';
 import JobsPage from './pages/public/jobs';
 import JobDetailPage from './pages/public/jobs/detail';
+import JobApplicationPage from './pages/public/jobs/apply';
 import NotFoundPage from './pages/public/NotFound';
 
 
@@ -47,12 +48,13 @@ function App() {
   // Check if current route is a service page or projects page
   const isProjectsPage = location.pathname.startsWith('/projects');
   const isTrainingPage = location.pathname.startsWith('/training');
+  const isJobApplicationPage = location.pathname.includes('/jobs/') && location.pathname.includes('/apply');
   
   // Check if on contact page with service context
   const isContactWithService = location.pathname === '/contact' && location.state?.from;
   
-  const hideMainNavbar = isProjectsPage || isContactWithService || isTrainingPage;
-  const hideMainFooter = isProjectsPage || isContactWithService;
+  const hideMainNavbar = isProjectsPage || isContactWithService || isTrainingPage || isJobApplicationPage;
+  const hideMainFooter = isProjectsPage || isContactWithService || isJobApplicationPage;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -118,6 +120,7 @@ function App() {
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/jobs" element={<JobsPage />} />
           <Route path="/jobs/:id" element={<JobDetailPage />} />
+          <Route path="/jobs/:id/apply" element={<JobApplicationPage />} />
           
           {/* Redirects for old/broken links */}
           <Route path="/labs" element={<Navigate to="/contact" replace />} />
