@@ -112,7 +112,7 @@ const ImpactPage = () => {
             viewport={{ once: true, amount: 0.25 }}
             transition={{ duration: shouldReduceMotion ? 0 : 0.6 }}
           >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6">How We Live Our Values</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-6">How We Live Our Values</h2>
             <p className="text-lg text-gray-700 leading-relaxed">
               Our values are not just words. They guide how we show up for our learners, how we collaborate with partners, and how we build solutions.
             </p>

@@ -84,7 +84,7 @@ const ProgramsPage = () => {
               >
                 {/* Main Heading */}
                 <motion.h1 
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
+                  className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.1 }}
@@ -135,7 +135,7 @@ const ProgramsPage = () => {
             transition={titleAnimation.transition}
             className="text-center mb-10 sm:mb-16"
           >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-3 sm:mb-4">
               Explore Our Programmes In Ghana
             </h2>
             <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
@@ -145,7 +145,7 @@ const ProgramsPage = () => {
 
           <div className="pt-4 sm:pt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
             <div className="flex flex-col justify-center">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-6 sm:mb-8">How to Choose a Programme</h3>
+              <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 mb-6 sm:mb-8">How to Choose a Programme</h3>
 
               <div className="space-y-4 sm:space-y-6">
                 <div className="flex items-start gap-4">
@@ -201,7 +201,7 @@ const ProgramsPage = () => {
             </div>
 
             <div>
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">Next Steps</h3>
+              <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6 sm:mb-8">Next Steps</h3>
               <ol className="relative border-l-4 border-[#004fa2] pl-6 sm:pl-8 space-y-6 sm:space-y-8">
                 <li className="relative ml-2">
                   <div className="absolute -left-5 top-1.5 w-6 h-6 rounded-full bg-[#004fa2] flex items-center justify-center text-white font-bold text-base shadow-md">
@@ -393,7 +393,7 @@ const ProgramsPage = () => {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-3 sm:mb-4">
               Subscribe to Our Newsletter
             </h2>
             <p className="text-base sm:text-lg text-white/90 mb-6 sm:mb-8 max-w-3xl mx-auto">

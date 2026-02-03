@@ -10,7 +10,7 @@ const ProjectDetailCTA = () => {
         <div className="bg-white rounded-2xl p-8 sm:p-12 text-center shadow-xl">
           
           {/* Heading */}
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4">
             Interested in a similar solution?
           </h2>
 

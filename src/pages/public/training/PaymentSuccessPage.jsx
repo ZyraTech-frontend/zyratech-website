@@ -71,7 +71,7 @@ const TrainingPaymentSuccessPage = () => {
             </div>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4">
             Payment Successful!
           </h1>
           <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto">
@@ -144,7 +144,7 @@ const TrainingPaymentSuccessPage = () => {
 
           {/* Next Steps */}
           <div className="mb-10">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 text-center">What Happens Next?</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">What Happens Next?</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {nextSteps.map((step, index) => {
                 const Icon = step.icon;

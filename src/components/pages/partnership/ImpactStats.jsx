@@ -49,25 +49,25 @@ const CountUp = ({ end, suffix = '', duration = 2000 }) => {
 const ImpactStats = () => {
   const stats = [
     { number: '50', suffix: '+', label: 'Active Partners' },
-    { number: '10000', suffix: 'K+', label: 'Students Trained' },
+    { number: '100', suffix: 'K+', label: 'Students Trained' },
     { number: '100', suffix: '+', label: 'Projects Completed' },
-    { number: '5000000', suffix: 'M+', label: 'Lives Impacted' }
+    { number: '500', suffix: '+', label: 'Lives Impacted' }
   ];
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-4 gap-8">
+    <section className="py-12 sm:py-16 bg-gray-50">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-4 gap-4 sm:gap-8 lg:gap-10">
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-[#004fa2] mb-2">
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#004fa2] mb-1 sm:mb-2 lg:mb-3">
                 <CountUp 
                   end={stat.number} 
                   suffix={stat.suffix}
                   duration={2000 + index * 200}
                 />
               </div>
-              <p className="text-gray-600 text-lg">{stat.label}</p>
+              <p className="text-gray-600 text-[10px] sm:text-sm md:text-base lg:text-lg font-medium">{stat.label}</p>
             </div>
           ))}
         </div>

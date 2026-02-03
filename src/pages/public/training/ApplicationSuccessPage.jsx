@@ -61,7 +61,7 @@ const ApplicationSuccessPage = () => {
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-4">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-4">
             {applicantName ? `Thank You, ${applicantName}!` : 'Thank You for Applying!'}
           </h1>
 

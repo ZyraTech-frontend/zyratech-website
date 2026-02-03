@@ -8,8 +8,8 @@ const PartnershipCTA = () => {
   return (
     <section className="py-16 bg-[#004fa2]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Make an Impact?</h2>
-        <p className="text-lg text-white/90 mb-8">Let's discuss how we can work together to transform Africa's tech landscape.</p>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6">Ready to Make an Impact?</h2>
+        <p className="text-white/90 mb-8">Let's discuss how we can work together to transform Africa's tech landscape.</p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
@@ -18,12 +18,7 @@ const PartnershipCTA = () => {
           >
             Start Partnership <ArrowRight className="w-5 h-5" />
           </button>
-          <button
-            onClick={() => window.location.href = 'mailto:info@zyratechhub.com'}
-            className="px-8 py-3 border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors font-semibold"
-          >
-            Contact Us
-          </button>
+          
         </div>
       </div>
     </section>

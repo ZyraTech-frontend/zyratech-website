@@ -99,7 +99,7 @@ const ImpactStats = () => {
           transition={titleAnimation.transition}
           className="text-left mb-8"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black tracking-tight mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight mb-4">
             Our Impact
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl">

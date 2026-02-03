@@ -20,7 +20,7 @@ const JobsList = () => {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
       <div className="mb-8 sm:mb-12">
         <div className="max-w-4xl">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-4 sm:mb-6">Explore Opportunities</h2>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-4 sm:mb-6">Explore Opportunities</h2>
           <p className="text-sm sm:text-base lg:text-lg text-gray-700 leading-relaxed mb-6 sm:mb-8">
             Join our mission to empower innovators and transform communities across Africa. Discover career opportunities that align with your passion for technology and social impact.
           </p>

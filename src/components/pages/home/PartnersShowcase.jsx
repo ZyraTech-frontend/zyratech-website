@@ -29,7 +29,7 @@ const PartnersShowcase = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-xs sm:text-sm font-semibold tracking-wider uppercase mb-6 sm:mb-8">OUR PARTNERS</h2>
         
-        <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-8 sm:mb-16 max-w-4xl mx-auto leading-tight px-2 sm:px-0">
+        <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-8 sm:mb-16 max-w-4xl mx-auto leading-tight px-2 sm:px-0">
           At ZyraTech, our partnerships are the cornerstone of our mission to connect IT talent with global markets.
         </h3>
 

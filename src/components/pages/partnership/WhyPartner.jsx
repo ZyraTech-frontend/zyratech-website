@@ -43,10 +43,10 @@ const WhyPartner = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6">
             Why Partner With ZyraTech?
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-gray-600 max-w-4xl mx-auto">
             Join a network of forward-thinking organizations committed to driving technological innovation and sustainable development across Africa.
           </p>
         </motion.div>

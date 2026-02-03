@@ -26,7 +26,7 @@ const InterculturalCollaborationSection = () => {
   return (
     <section className="py-16 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6">Successful Intercultural Collaboration Is Important To Us</h2>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-6">Successful Intercultural Collaboration Is Important To Us</h2>
         <p className="text-lg text-gray-700 leading-relaxed max-w-3xl mb-10">
           Prior to the project beginning, we set up workshops covering technical expectations & intercultural collaboration.
         </p>

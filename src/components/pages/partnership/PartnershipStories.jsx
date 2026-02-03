@@ -1,4 +1,6 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 
 const PartnershipStories = () => {
   const stories = [
@@ -6,49 +8,88 @@ const PartnershipStories = () => {
       title: 'Tech Innovation Hub',
       category: 'Corporate Partner',
       story: 'By partnering with ZyraTech, we expanded our reach to underserved communities and trained 500+ students in cutting-edge technologies.',
-      impact: '500+ students trained, 20+ internships created'
-    },
-    {
-      title: 'Green Energy Solutions',
-      category: 'Sponsor Partner',
-      story: 'Our investment in ZyraTech initiatives has directly supported sustainable tech projects that address climate challenges across Africa.',
-      impact: '10 green tech projects, 50+ jobs created'
-    },
-    {
-      title: 'Local Community Center',
-      category: 'Community Partner',
-      story: 'Collaborating with ZyraTech brought digital skills training to our neighborhood, empowering 200+ youth with future-ready skills.',
-      impact: '200+ participants, 85% employment rate'
-    },
-    {
-      title: 'University of Ghana',
-      category: 'Educational Partner',
-      story: 'Our partnership enhanced curriculum with real-world projects, giving students practical experience in circular manufacturing and open-source development.',
-      impact: '300+ students, 15+ capstone projects'
+      impact: '500+ students trained, 20+ internships created',
+      image: '/images/partnership-tech-hub.jpg',
+      fallbackImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200'
     }
   ];
 
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-white mb-8 md:mb-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Partnership Stories</h2>
-          <p className="text-lg text-gray-600">See how our partners are creating real impact</p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Partnership Stories</h2>
+          <p className="text-gray-600 max-w-4xl mx-auto">See how our partners are creating real impact</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {stories.map((story, index) => (
-            <div key={index} className="bg-gray-50 rounded-xl p-8 border border-gray-200">
-              <div className="mb-4">
-                <h3 className="text-xl font-bold text-gray-900 mb-1">{story.title}</h3>
-                <p className="text-sm font-semibold text-[#004fa2]">{story.category}</p>
-              </div>
-              <p className="text-gray-700 mb-6 leading-relaxed">"{story.story}"</p>
-              <div className="border-t pt-4">
-                <p className="text-sm text-gray-600"><strong>Impact:</strong> {story.impact}</p>
-              </div>
-            </div>
-          ))}
+        <div className="space-y-8 md:space-y-12">
+          {stories.map((story, index) => {
+            const anim = useScrollAnimation({ type: 'fadeIn', delay: 0 });
+            const imageAnim = useScrollAnimation({ type: 'slideLeft', delay: 0.1 });
+            const contentAnim = useScrollAnimation({ type: 'slideRight', delay: 0.15 });
+            
+            return (
+              <motion.div
+                key={index}
+                ref={anim.ref}
+                initial={anim.initial}
+                animate={anim.animate}
+                variants={anim.variants}
+                transition={anim.transition}
+                className="w-screen -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden shadow-lg md:flex md:items-stretch"
+              >
+                {/* Image - alternates left/right */}
+                <motion.div
+                  ref={imageAnim.ref}
+                  initial={imageAnim.initial}
+                  animate={imageAnim.animate}
+                  variants={imageAnim.variants}
+                  transition={imageAnim.transition}
+                  className={`md:w-1/2 ${index % 2 === 0 ? 'order-1 md:order-2' : 'order-1 md:order-1'} h-48 md:h-[360px] relative overflow-hidden`}
+                >
+                  <img
+                    src={story.image}
+                    alt={story.title}
+                    className="w-full h-full object-cover object-center"
+                    style={{ objectPosition: 'center 30%' }}
+                    onError={(e) => { e.target.src = story.fallbackImage; }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-l from-[#004fa2]/10 to-transparent" />
+                </motion.div>
+
+                {/* Content */}
+                <motion.div
+                  ref={contentAnim.ref}
+                  initial={contentAnim.initial}
+                  animate={contentAnim.animate}
+                  variants={contentAnim.variants}
+                  transition={contentAnim.transition}
+                  className={`md:w-1/2 bg-[#004fa2] text-white px-6 sm:px-8 md:px-12 py-6 md:py-10 flex flex-col justify-center ${index % 2 === 0 ? 'order-2 md:order-1' : 'order-2 md:order-2'}`}
+                >
+                  <div className="max-w-xl mx-auto">
+                    <div className="text-[#004fa2] text-5xl leading-none font-extrabold mb-3">"</div>
+                    <h3 className="text-2xl md:text-3xl font-extrabold mb-3">{story.title}</h3>
+
+                    <p className="text-white/90 text-base leading-relaxed mb-5">
+                      "{story.story}"
+                    </p>
+
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-[#004fa2] font-bold">—</span>
+                      <div>
+                        <div className="font-semibold">{story.title}</div>
+                        <div className="text-sm text-white/80">{story.category}</div>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-white/20">
+                      <p className="text-sm text-white/90"><strong>Impact:</strong> {story.impact}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

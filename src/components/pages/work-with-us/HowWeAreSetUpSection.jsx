@@ -24,7 +24,7 @@ const HowWeAreSetUpSection = () => {
     <section className="py-16 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6">How Are We Set Up?</h2>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-6">How Are We Set Up?</h2>
           <p className="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
             A strategic structure designed for seamless collaboration and sustainable impact.
           </p>

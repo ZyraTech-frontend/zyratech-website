@@ -20,7 +20,7 @@ const ProjectSetupSection = () => {
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6">Our Project Set-up Ensures Smooth Delivery</h2>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-6">Our Project Set-up Ensures Smooth Delivery</h2>
         <p className="text-lg text-gray-700 leading-relaxed max-w-3xl mb-10">
           Pilot projects offer an opportunity to evaluate the collaboration before committing to a long-term partnership. Our track record indicates that clients often expand their teams with us after the successful completion of initial projects.
         </p>

@@ -10,7 +10,7 @@ const ProjectDetailHero = ({ project }) => {
           {/* Left - Content */}
           <div>
             {/* Title */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black mb-4 leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-4 leading-tight">
               {project.title}
             </h1>
             

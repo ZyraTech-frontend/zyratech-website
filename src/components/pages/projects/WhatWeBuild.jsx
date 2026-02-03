@@ -47,7 +47,7 @@ const WhatWeBuild = () => {
     <section id="what-we-build" className="pt-24 sm:pt-32 md:pt-32 pb-12 sm:pb-16 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-3 sm:mb-4">
             What We Can Build For You
           </h2>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-2">

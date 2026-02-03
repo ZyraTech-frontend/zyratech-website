@@ -22,7 +22,7 @@ const TrainingAbout = () => {
           transition={titleAnimation.transition}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6">
             About ZyraTech Training
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
@@ -47,7 +47,7 @@ const TrainingAbout = () => {
             variants={featuresAnimation.variants}
             transition={featuresAnimation.transition}
           >
-            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 sm:mb-12 md:mb-16 text-center">
+            <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6 sm:mb-12 md:mb-16">
               Why Choose ZyraTech
             </h3>
 

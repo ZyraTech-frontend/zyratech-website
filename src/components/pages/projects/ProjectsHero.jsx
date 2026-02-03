@@ -18,7 +18,7 @@ const ProjectsHero = () => {
 
         {/* Title */}
         <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-6 leading-tight">
             Real Projects. Real Impact.
           </h1>
         </div>

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { ChevronDown, HelpCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 
 const ProjectsFAQ = () => {
-  const [openIndex, setOpenIndex] = useState(0);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState(null);
 
   const faqs = [
     {
@@ -42,11 +41,11 @@ const ProjectsFAQ = () => {
 
   return (
     <section className="py-16 bg-white">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
             <HelpCircle className="w-8 h-8 text-[#004fa2]" />
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900">
               Frequently Asked Questions
             </h2>
           </div>
@@ -59,36 +58,33 @@ const ProjectsFAQ = () => {
           {faqs.map((faq, index) => (
             <div 
               key={index}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              className="bg-white rounded-xl border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-[#004fa2]/30"
-              style={{
-                transform: hoveredIndex === index ? 'translateX(4px)' : 'translateX(0)'
-              }}
+              className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
             >
               <button
-                onClick={() => setOpenIndex(openIndex === index ? -1 : index)}
-                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-blue-50/50 transition-colors"
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200 group"
               >
-                <span className="font-semibold text-gray-900 pr-4 text-base">
+                <h3 className="font-semibold text-gray-900 pr-4 text-base group-hover:text-[#004fa2] transition-colors">
                   {faq.question}
-                </span>
-                <ChevronDown 
-                  className={`w-5 h-5 text-[#004fa2] flex-shrink-0 transition-transform duration-300 ${
-                    openIndex === index ? 'rotate-180' : ''
-                  }`}
-                />
+                </h3>
+                <div className="flex-shrink-0">
+                  {openIndex === index ? (
+                    <ChevronUp className="text-[#004fa2]" size={20} />
+                  ) : (
+                    <ChevronDown className="text-gray-500 group-hover:text-[#004fa2]" size={20} />
+                  )}
+                </div>
               </button>
               
-              <div 
-                className={`overflow-hidden transition-all duration-300 ${
-                  openIndex === index ? 'max-h-96' : 'max-h-0'
-                }`}
-              >
-                <div className="px-6 pb-4 text-gray-600 border-t border-gray-100 pt-4 leading-relaxed">
-                  {faq.answer}
+              {openIndex === index && (
+                <div className="px-6 pb-5 bg-gray-50">
+                  <div className="pt-3">
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           ))}
         </div>

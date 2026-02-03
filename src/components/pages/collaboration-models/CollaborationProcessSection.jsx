@@ -8,7 +8,7 @@ const CollaborationProcessSection = ({ title = 'Our engagement process', steps =
     <section className="py-16 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h3
-          className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-10"
+          className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-10"
           initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}

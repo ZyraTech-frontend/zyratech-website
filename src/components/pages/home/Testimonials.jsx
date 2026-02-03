@@ -39,7 +39,7 @@ const Testimonials = () => {
           animate={titleAnimation.animate}
           variants={titleAnimation.variants}
           transition={titleAnimation.transition}
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-black tracking-tight mb-6"
+          className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight mb-6"
         >
           Testimonials
         </motion.h2>

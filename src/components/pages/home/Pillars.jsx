@@ -46,7 +46,7 @@ const Pillars = () => {
           animate={titleAnimation.animate}
           variants={titleAnimation.variants}
           transition={titleAnimation.transition}
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-6 tracking-tight"
+          className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-6 tracking-tight"
         >
           Our Core Services
         </motion.h2>

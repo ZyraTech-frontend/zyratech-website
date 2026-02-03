@@ -19,7 +19,7 @@ const ProjectRequestPage = () => {
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Submit Your Project Idea</h1>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-2">Submit Your Project Idea</h1>
           <p className="text-lg text-gray-600">Tell us about your project and let's build something amazing together.</p>
         </div>
         <MultiStepForm onSubmit={handleFormSubmit} />

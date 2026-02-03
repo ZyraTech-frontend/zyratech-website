@@ -45,7 +45,7 @@ const Gallery = () => {
           transition={titleAnimation.transition}
           className="flex justify-between items-center mb-6"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black tracking-tight">Media Gallery</h2>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight">Media Gallery</h2>
           <a 
             href="/gallery"
             className="bg-[#004fa2] hover:bg-[#000000] text-white px-5 py-2 rounded-md font-semibold inline-flex items-center gap-1 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm"

@@ -175,7 +175,7 @@ const MediaGrid = ({ filters = {} }) => {
         {/* Section Header */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
           <div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-2">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-2">
               Media Gallery
             </h2>
             <p className="text-gray-600">

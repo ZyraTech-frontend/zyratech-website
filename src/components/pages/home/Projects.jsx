@@ -39,7 +39,7 @@ const Projects = () => {
           transition={titleAnimation.transition}
           className="mb-8"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black tracking-tight">Featured Projects</h2>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight">Featured Projects</h2>
         </motion.div>
         
         {/* Project Cards */}
