@@ -77,10 +77,7 @@ const DashboardPage = () => {
   ];
 
   const navigationItems = [
-    { name: 'Dashboard', icon: Home, current: true, href: '/admin/dashboard' },
-    { name: 'Users', icon: Users, current: false, href: '/admin/users' },
-    { name: 'Analytics', icon: BarChart3, current: false, href: '/admin/analytics' },
-    { name: 'Settings', icon: Settings, current: false, href: '/admin/settings' }
+    { name: 'Dashboard', icon: Home, current: true, href: '/admin/dashboard' }
   ];
 
   if (isLoading) {

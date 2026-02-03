@@ -34,7 +34,6 @@ import IntermediateProgramsRoute from './pages/public/training/programs/intermed
 import AdvancedProgramsRoute from './pages/public/training/programs/advanced';
 import MaturedProgramsRoute from './pages/public/training/programs/matured';
 import InternshipProgramsRoute from './pages/public/training/programs/internship';
-import BlogPage from './pages/public/blog';
 import GalleryPage from './pages/public/gallery';
 import JobsPage from './pages/public/jobs';
 import JobDetailPage from './pages/public/jobs/detail';
@@ -116,7 +115,6 @@ function App() {
           <Route path="/training/application-success" element={<ApplicationSuccessPage />} />
           <Route path="/training/payment/:courseId" element={<TrainingPaymentPage />} />
           <Route path="/training/payment-success" element={<TrainingPaymentSuccessPage />} />
-          <Route path="/blog" element={<BlogPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/jobs" element={<JobsPage />} />
           <Route path="/jobs/:id" element={<JobDetailPage />} />
