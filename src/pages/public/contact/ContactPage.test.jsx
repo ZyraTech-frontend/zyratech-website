@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
-import ContactPage from './ContactPage';
+import ContactPage from './index';
 
 describe('Contact Form', () => {
   const renderContactForm = () => {
@@ -15,7 +15,8 @@ describe('Contact Form', () => {
 
   it('renders contact form', () => {
     renderContactForm();
-    expect(screen.getByText(/contact/i)).toBeInTheDocument();
+    // Check for the heading specifically
+    expect(screen.getByRole('heading', { name: /contact zyra tech hub/i })).toBeInTheDocument();
   });
 
   it('validates required fields', async () => {

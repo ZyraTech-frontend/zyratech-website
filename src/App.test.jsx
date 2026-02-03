@@ -11,8 +11,8 @@ describe('App Routing', () => {
       </MemoryRouter>
     );
     
-    // App should render
-    expect(document.body).toBeTruthy();
+    // App should render with navigation
+    expect(screen.getByRole('navigation')).toBeInTheDocument();
   });
 
   it('renders home page by default', () => {
@@ -22,9 +22,8 @@ describe('App Routing', () => {
       </MemoryRouter>
     );
     
-    // Check for common home page elements
-    const homeContent = document.querySelector('body');
-    expect(homeContent).toBeInTheDocument();
+    // Check for home page link in navbar
+    expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument();
   });
 
   it('renders about page', () => {
@@ -34,8 +33,8 @@ describe('App Routing', () => {
       </MemoryRouter>
     );
     
-    // About page should render
-    expect(document.querySelector('body')).toBeInTheDocument();
+    // About page should have navbar
+    expect(screen.getByRole('navigation')).toBeInTheDocument();
   });
 
   it('renders 404 page for invalid routes', () => {

@@ -49,26 +49,18 @@ describe('Partnership Application Form', () => {
     renderForm();
     
     // Fill organization name
-    const orgNameInput = screen.getByPlaceholderText(/Your Organization Name/i);
+    const orgNameInput = screen.getByPlaceholderText(/organization name/i);
     await user.type(orgNameInput, 'Test Organization');
     
-    // Fill organization type
+    // Fill organization type - now has proper htmlFor
     const orgTypeSelect = screen.getByLabelText(/Organization Type/i);
-    await user.selectOptions(orgTypeSelect, 'Corporate');
+    await user.selectOptions(orgTypeSelect, 'corporate');
     
     // Fill country
-    const countryInput = screen.getByPlaceholderText(/Ghana/i);
+    const countryInput = screen.getByPlaceholderText(/country/i);
     await user.type(countryInput, 'Ghana');
     
-    // Fill website
-    const websiteInput = screen.getByPlaceholderText(/https:\/\/yourwebsite.com/i);
-    await user.type(websiteInput, 'https://test.com');
-    
-    // Fill description
-    const descriptionTextarea = screen.getByPlaceholderText(/Brief description/i);
-    await user.type(descriptionTextarea, 'Test description for our organization');
-    
-    // Click next
+    // Click next (website is optional, no description on step 1)
     const nextButton = screen.getByRole('button', { name: /next/i });
     await user.click(nextButton);
     
@@ -81,11 +73,12 @@ describe('Partnership Application Form', () => {
   it('displays progress indicators', () => {
     renderForm();
     
-    // Check for step indicators
-    expect(screen.getByText(/Organization/i)).toBeInTheDocument();
-    expect(screen.getByText(/Contact/i)).toBeInTheDocument();
-    expect(screen.getByText(/Goals/i)).toBeInTheDocument();
-    expect(screen.getByText(/Review/i)).toBeInTheDocument();
+    // Check for step indicators - use getAllByText since text appears multiple times
+    const orgInfoElements = screen.getAllByText(/Organization Info/i);
+    expect(orgInfoElements.length).toBeGreaterThan(0);
+    expect(screen.getByText(/Contact Details/i)).toBeInTheDocument();
+    expect(screen.getByText(/Partnership Goals/i)).toBeInTheDocument();
+    expect(screen.getByText(/Review & Submit/i)).toBeInTheDocument();
   });
 
   it('allows going back to previous steps', async () => {
@@ -93,20 +86,14 @@ describe('Partnership Application Form', () => {
     renderForm();
     
     // Fill and move to step 2 (simplified)
-    const orgNameInput = screen.getByPlaceholderText(/Your Organization Name/i);
+    const orgNameInput = screen.getByPlaceholderText(/organization name/i);
     await user.type(orgNameInput, 'Test Org');
     
     const orgTypeSelect = screen.getByLabelText(/Organization Type/i);
-    await user.selectOptions(orgTypeSelect, 'Corporate');
+    await user.selectOptions(orgTypeSelect, 'corporate');
     
-    const countryInput = screen.getByPlaceholderText(/Ghana/i);
+    const countryInput = screen.getByPlaceholderText(/country/i);
     await user.type(countryInput, 'Ghana');
-    
-    const websiteInput = screen.getByPlaceholderText(/https:\/\/yourwebsite.com/i);
-    await user.type(websiteInput, 'https://test.com');
-    
-    const descriptionTextarea = screen.getByPlaceholderText(/Brief description/i);
-    await user.type(descriptionTextarea, 'Test description');
     
     const nextButton = screen.getByRole('button', { name: /next/i });
     await user.click(nextButton);

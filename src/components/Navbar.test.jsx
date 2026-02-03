@@ -14,8 +14,8 @@ describe('Navbar Component', () => {
 
   it('renders the ZyraTech logo/brand', () => {
     renderNavbar();
-    // Check for logo or brand name
-    const logo = screen.getByAltText(/zyratech/i) || screen.getByText(/zyratech/i);
+    // Check for logo image
+    const logo = screen.queryByAltText(/zyra.*tech/i);
     expect(logo).toBeInTheDocument();
   });
 
@@ -24,7 +24,9 @@ describe('Navbar Component', () => {
     
     // Check for main navigation items
     expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /about/i })).toBeInTheDocument();
+    // About is a dropdown button, not a direct link - just check it exists
+    const aboutButton = screen.queryByRole('button', { name: /about/i });
+    expect(aboutButton).toBeTruthy();
   });
 
   it('renders services navigation', () => {

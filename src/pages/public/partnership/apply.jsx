@@ -184,10 +184,11 @@ const PartnershipApplicationPage = () => {
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-3 sm:mb-5">Organization Information</h2>
               
               <div>
-                <label className={labelClasses}>
+                <label htmlFor="organizationName" className={labelClasses}>
                   Organization Name <span className="text-red-500">*</span>
                 </label>
                 <input
+                  id="organizationName"
                   type="text"
                   name="organizationName"
                   value={formData.organizationName}
@@ -200,10 +201,11 @@ const PartnershipApplicationPage = () => {
 
               <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
                 <div>
-                  <label className={labelClasses}>
+                  <label htmlFor="organizationType" className={labelClasses}>
                     Organization Type <span className="text-red-500">*</span>
                   </label>
                   <select
+                    id="organizationType"
                     name="organizationType"
                     value={formData.organizationType}
                     onChange={handleInputChange}
@@ -221,8 +223,9 @@ const PartnershipApplicationPage = () => {
                 </div>
 
                 <div>
-                  <label className={labelClasses}>Website</label>
+                  <label htmlFor="website" className={labelClasses}>Website</label>
                   <input
+                    id="website"
                     type="url"
                     name="website"
                     value={formData.website}
@@ -234,10 +237,11 @@ const PartnershipApplicationPage = () => {
               </div>
 
               <div>
-                <label className={labelClasses}>
+                <label htmlFor="country" className={labelClasses}>
                   Country <span className="text-red-500">*</span>
                 </label>
                 <input
+                  id="country"
                   type="text"
                   name="country"
                   value={formData.country}
