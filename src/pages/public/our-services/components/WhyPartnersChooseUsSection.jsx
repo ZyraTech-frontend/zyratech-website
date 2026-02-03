@@ -6,7 +6,7 @@ const WhyPartnersChooseUsSection = () => {
     <section className="bg-[#004fa2] py-16 sm:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2 self-start">
-          <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white">
+          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 text-white">
             Why partners choose <span className="whitespace-nowrap">Zyra Tech Hub</span>
           </h3>
           <p className="text-lg text-blue-100/90 mb-8 leading-relaxed">

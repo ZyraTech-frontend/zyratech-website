@@ -249,7 +249,7 @@ const CourseApplicationForm = () => {
         />
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center items-start justify-between gap-4">
           <div>
-            <h2 className="text-2xl sm:text-4xl font-bold text-black">Course Application</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black">Course Application</h2>
             <div className="text-sm sm:text-base text-gray-600 mt-2">
               Applying for <span className="font-semibold text-black">{resolvedCourseTitle}</span>
             </div>

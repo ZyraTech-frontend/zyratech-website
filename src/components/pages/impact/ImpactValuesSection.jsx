@@ -21,7 +21,7 @@ const ImpactValuesSection = ({
             animate={titleAnimation.animate}
             variants={titleAnimation.variants}
             transition={titleAnimation.transition}
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6"
+            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-6"
           >
             {title}
           </motion.h2>

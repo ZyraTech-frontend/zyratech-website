@@ -14,7 +14,7 @@ const CollaborationModelsNavSection = ({ title = 'Our Engagement Models', models
     <section className="bg-gradient-to-r from-[#004fa2] to-[#003d7a] py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h2
-          className="text-3xl lg:text-4xl font-bold text-white text-center mb-10"
+          className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-10"
           initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}

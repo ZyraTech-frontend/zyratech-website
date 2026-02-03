@@ -20,7 +20,7 @@ const About = () => {
           transition={titleAnimation.transition}
           className="flex justify-between items-center mb-2"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black tracking-tight">About Zyra Tech Hub</h2>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight">About Zyra Tech Hub</h2>
           <a 
             href="/about" 
             className="hidden sm:inline-flex text-[#004fa2] hover:text-[#000000] font-semibold items-center gap-1 transition-colors text-base underline hover:no-underline whitespace-nowrap"

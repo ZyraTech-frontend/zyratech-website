@@ -34,8 +34,8 @@ const AboutQuote = () => {
           >
             <Quote className="hidden sm:block absolute -top-4 -left-4 w-8 sm:w-12 h-8 sm:h-12 text-[#004fa2] opacity-50" />
             <blockquote className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-6 sm:mb-8 px-2 sm:px-0">
-              Our mission is to become a leading catalyst for technological transformation in Ghana, 
-              creating an ecosystem where talent flourishes and communities prosper.
+              Our mission is to lead Ghana’s technological transformation through world-class Software Engineering, robust Infrastructure & Cloud services, and impactful IT Education. 
+              We are building an ecosystem where innovation meets academic excellence
             </blockquote>
           </motion.div>
 

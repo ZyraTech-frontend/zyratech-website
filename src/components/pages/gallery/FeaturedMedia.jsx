@@ -45,7 +45,7 @@ const FeaturedMedia = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         
         <div className="text-left mb-6 sm:mb-8">
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-2 sm:mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-2 sm:mb-4">
             Featured Media
           </h2>
           <p className="text-gray-600 text-sm sm:text-base max-w-2xl">

@@ -35,7 +35,7 @@ const ImpactCTA = () => {
         className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white"
       >
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight mb-4 text-center max-w-[640px] mx-auto">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-4 max-w-4xl">
             <span className="block">Our Approach Builds The Ecosystem</span>
             <span className="block">And Creates Sustainable Growth In Ghana And Rwanda</span>
           </h2>

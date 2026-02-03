@@ -143,7 +143,7 @@ const CourseDetailPage = () => {
               >
                 <div className="grid lg:grid-cols-3 gap-4 sm:gap-10 items-start">
                   <div className="lg:col-span-2 text-center lg:text-left">
-                    <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 leading-tight">
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-3 sm:mb-4 leading-tight">
                       {heroTitle}
                     </h1>
                     <p className="text-white/90 text-sm sm:text-base md:text-xl lg:text-2xl leading-relaxed max-w-2xl mx-auto lg:mx-0">
@@ -197,7 +197,7 @@ const CourseDetailPage = () => {
               transition={{ duration: 0.6 }}
               className="text-center mb-8 sm:mb-12"
             >
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">
                 Program Overview
               </h2>
               <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -207,7 +207,7 @@ const CourseDetailPage = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
               <div className="flex flex-col justify-center">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-6 sm:mb-8">Programme Objectives</h3>
+                <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 mb-6 sm:mb-8">Programme Objectives</h3>
 
                 <div className="space-y-4 sm:space-y-6">
                   {programmeObjectives.map((objective) => (
@@ -253,7 +253,7 @@ const CourseDetailPage = () => {
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               {/* Steps List */}
               <div>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">Application Process</h2>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6 sm:mb-8">Application Process</h2>
                 <ol className="relative border-l-4 border-[#004fa2] pl-6 sm:pl-8 space-y-6 sm:space-y-8">
                   {course.applicationProcess
                     .filter(step => step.title !== 'Phone Interview' && step.title !== 'Assessment')
@@ -296,7 +296,7 @@ const CourseDetailPage = () => {
               </div>
               {/* Steps List */}
               <div className="order-1 md:order-2">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">How the Program Works</h2>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6 sm:mb-8">How the Program Works</h2>
                 <ul className="space-y-4 sm:space-y-6">
                   {deliveryModel.map((item) => (
                     <li key={item.title} className="flex items-start gap-3 sm:gap-4">
@@ -334,7 +334,7 @@ const CourseDetailPage = () => {
       {/* Available Cohorts Section */}
       <section className="py-12 sm:py-16 bg-[#004fa2]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6">Available cohorts for 2026</h2>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6">Available cohorts for 2026</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {['January to April', 'April to July', 'July to October'].map((cohort, idx) => (
               <motion.div
@@ -361,7 +361,7 @@ const CourseDetailPage = () => {
       {/* Modern CTA Section with Brand Colors and Clean Layout */}
       <section className="bg-[#004fa2] py-12 sm:py-16 md:py-20 text-center font-sans text-white">
         <div className="max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 sm:px-6 flex flex-col items-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">Ready to Join Us?</h2>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 sm:mb-6">Ready to Join Us?</h2>
           <p className="text-base sm:text-lg md:text-xl leading-relaxed mb-6 sm:mb-8 text-[#e0e0e0]">
             Become part of a community shaping the future of technology. This is more than training—it's your launchpad to a tech career.
           </p>
@@ -390,7 +390,7 @@ const CourseDetailPage = () => {
             </div>
 
             <div className="bg-slate-50 rounded-2xl border border-gray-200 p-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Do you have any questions?</h2>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Do you have any questions?</h2>
               <p className="text-gray-600 mb-6 leading-relaxed">
                 Please feel free to contact {course.contactPerson.name}, {course.contactPerson.title}. We’ll help you understand the program requirements, schedule, and how to apply.
               </p>

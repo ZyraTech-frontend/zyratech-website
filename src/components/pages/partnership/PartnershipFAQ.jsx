@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const PartnershipFAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
@@ -28,34 +29,74 @@ const PartnershipFAQ = () => {
   ];
 
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-        </div>
+    <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mb-12"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <HelpCircle className="w-8 h-8 text-[#004fa2]" />
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900">
+              Frequently Asked Questions
+            </h2>
+          </div>
+          <p className="text-gray-600">
+            Find answers to common questions about our partnership programs and how we can work together.
+          </p>
+        </motion.div>
 
-        <div className="space-y-4">
+        {/* FAQ Items */}
+        <div className="space-y-3">
           {faqs.map((faq, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg">
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.08 }}
+              viewport={{ once: true }}
+              className="group"
+            >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
               >
-                <span className="font-semibold text-gray-900 text-left">{faq.question}</span>
-                <ChevronDown
-                  className={`w-5 h-5 text-gray-600 transition-transform flex-shrink-0 ${
-                    openIndex === index ? 'rotate-180' : ''
-                  }`}
-                />
-              </button>
-              {openIndex === index && (
-                <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                  <p className="text-gray-700">{faq.answer}</p>
+                <div className="px-6 py-6 flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-gray-900 text-left group-hover:text-[#004fa2] transition-colors duration-200">
+                    {faq.question}
+                  </h3>
+                  <div className="flex-shrink-0 ml-4">
+                    {openIndex === index ? (
+                      <ChevronUp className="w-5 h-5 text-[#004fa2] transition-transform duration-300" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-[#004fa2] transition-colors duration-200" />
+                    )}
+                  </div>
                 </div>
-              )}
-            </div>
+              </button>
+
+              {/* Answer Section with Animation */}
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={openIndex === index ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                className="overflow-hidden"
+              >
+                <div className="bg-gradient-to-b from-gray-50 to-white border-t border-gray-100 px-6 py-6">
+                  <p className="text-gray-700 leading-relaxed text-base">
+                    {faq.answer}
+                  </p>
+                </div>
+              </motion.div>
+            </motion.div>
           ))}
         </div>
+
+       
       </div>
     </section>
   );

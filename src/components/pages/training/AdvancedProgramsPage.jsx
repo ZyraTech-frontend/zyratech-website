@@ -137,7 +137,7 @@ const AdvancedProgramsPage = () => {
               >
                 {/* Main Heading */}
                 <motion.h1 
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
+                  className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.1 }}
@@ -202,7 +202,7 @@ const AdvancedProgramsPage = () => {
             transition={titleAnimation.transition}
             className="text-center mb-8"
           >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">
               Advanced Programs
             </h2>
             <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
@@ -312,7 +312,7 @@ const AdvancedProgramsPage = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-8 sm:mb-12"
           >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-3 sm:mb-4">
               Why Choose Our Advanced Programs?
             </h2>
             <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">

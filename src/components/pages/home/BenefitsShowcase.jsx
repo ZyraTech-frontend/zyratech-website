@@ -55,7 +55,7 @@ const BenefitsShowcase = () => {
           <div className="inline-flex items-center px-4 py-2 bg-[#004fa2] text-white rounded-full text-sm font-medium mb-6">
             Why Choose ZyraTech
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6">
             Benefits Of Working With Us
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">

@@ -86,7 +86,7 @@ const QualityAssurance = () => {
         <section className="py-8 sm:py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-4 sm:mb-6">How Do We Work?</h2>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-4 sm:mb-6">How Do We Work?</h2>
               <p className="text-base sm:text-lg text-gray-700 leading-relaxed">We continuously work towards delivering high-quality digital products and services to our global and local client base. Our development environment allows us to efficiently and effectively achieve these goals: we work in teams following agile principles while combining them with carefully selected tools and the V-model to ensure quality.</p>
             </div>
           </div>
@@ -96,7 +96,7 @@ const QualityAssurance = () => {
         <section className="py-8 sm:py-12 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-4 sm:mb-6">Our Quality Standards</h2>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-4 sm:mb-6">Our Quality Standards</h2>
               <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-6 sm:mb-10">We follow the highest international operating and security standards. Our industry certificates validate our commitment to excellence in service delivery, information security, and technological expertise, propelling us to drive global digital transformation with continuous learning and advancement.</p>
             </div>
             <div className="space-y-4 sm:space-y-8">
@@ -120,7 +120,7 @@ const QualityAssurance = () => {
         <section className="py-8 sm:py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-4 sm:mb-6">Tools We Work With</h2>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-4 sm:mb-6">Tools We Work With</h2>
               <p className="text-base sm:text-lg text-gray-700 leading-relaxed">Our comprehensive toolkit spans the entire software development lifecycle, from cloud infrastructure to quality assurance.</p>
             </div>
           </div>

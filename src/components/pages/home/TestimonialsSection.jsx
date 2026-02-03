@@ -45,7 +45,7 @@ const TestimonialsSection = () => {
           transition={titleAnimation.transition}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6">
             What Our Community Says
           </h2>
           <p className="text-lg sm:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">

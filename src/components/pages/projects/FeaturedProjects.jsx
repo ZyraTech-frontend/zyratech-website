@@ -31,7 +31,7 @@ const FeaturedProjects = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="text-left mb-6">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black">
             Featured Projects
           </h2>
         </div>
