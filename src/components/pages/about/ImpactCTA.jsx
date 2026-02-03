@@ -36,13 +36,9 @@ const ImpactCTA = () => {
       >
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-4 max-w-4xl">
-            <span className="block">Our Approach Builds The Ecosystem</span>
-            <span className="block">And Creates Sustainable Growth In Ghana And Rwanda</span>
+            <span className="block">Building a Sustainable Tech Ecosystem</span>
+            <span className="block">To Drive Economic Growth Across Ghana</span>
           </h2>
-
-          <p className="text-white/90 max-w-[700px] mb-6 text-base sm:text-lg mx-auto text-center">
-            We have committed to training 3,000 individuals and providing 1,000 jobs by 2025 as part of the UN Decent Job For Youth Campaign.
-          </p>
 
           <Link
             to="/impact"

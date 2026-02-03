@@ -42,7 +42,7 @@ const Milestones = () => {
 								</div>
 								<div>
 									<h4 className="font-semibold text-black">Expansions to New Regions</h4>
-									<p className="text-gray-600">Our new locations in Ghana mark a significant chapter in our mission to bring digital opportunities to local talent. By establishing state-of-the-art offices, we continue to empower tech talent in Koforidua.</p>
+									<p className="text-gray-600">Expanding across Ghana represents a pivotal milestone in our mission to democratize digital opportunities for local talent. Through state-of-the-art facilities in Koforidua and beyond, we are cultivating the next generation of tech professionals and driving innovation across the region.</p>
 								</div>
 							</li>
 
@@ -52,7 +52,7 @@ const Milestones = () => {
 								</div>
 								<div>
 									<h4 className="font-semibold text-black">Successful Projects</h4>
-									<p className="text-gray-600">We have delivered cutting-edge solutions for clients worldwide. Our service portfolio showcases expertise across multiple industries.</p>
+									<p className="text-gray-600">We deliver transformative, cutting-edge solutions for clients across the globe. Our comprehensive service portfolio showcases deep technical expertise spanning multiple industries and emerging technology domains.</p>
 								</div>
 							</li>
 
@@ -62,7 +62,7 @@ const Milestones = () => {
 								</div>
 								<div>
 									<h4 className="font-semibold text-black">Strategic Partnerships</h4>
-									<p className="text-gray-600">Strong partnerships with global organisations enhance our capacity to deliver top-tier services and provide trainees with career opportunities.</p>
+									<p className="text-gray-600">Strategic alliances with leading global organizations amplify our ability to deliver world-class services while creating valuable career pathways and industry networks for our trainees.</p>
 								</div>
 							</li>
 
@@ -72,7 +72,7 @@ const Milestones = () => {
 								</div>
 								<div>
 									<h4 className="font-semibold text-black">Awards and Recognition</h4>
-									<p className="text-gray-600">Our dedication to excellence has earned us awards, highlighting our impact on the tech ecosystem and role in fostering sustainable development.</p>
+									<p className="text-gray-600">Our commitment to excellence has garnered prestigious awards and international recognition, underscoring our transformative impact on Africa's tech ecosystem and our leadership in driving sustainable development across the continent.</p>
 								</div>
 							</li>
 						</ul>

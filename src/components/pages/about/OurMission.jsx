@@ -28,15 +28,13 @@ const OurMission = () => {
           transition={contentAnimation.transition}
           className="text-lg text-gray-700 leading-relaxed max-w-4xl"
         >
-          Our mission is to become a leading catalyst for technological transformation in Ghana.
-          We strive to bridge the gap between education and industry, creating a robust ecosystem
-          where talent flourishes, businesses thrive, and communities prosper. By prioritizing
-          continuous learning and development, we ensure that our workforce remains at the forefront
-          of technological advancements, ready to meet the evolving needs of the global market.
-          In the coming years, Ghana will be increasingly recognized for its growing tech talent:
-          by 2030, Africa will be home to more than 40% of the world's youth (15-24). Ghana's
-          growing urbanization is bringing larger shares of the population closer to better
-          infrastructure, connectivity, and educational opportunities.
+          Our mission is to drive technological transformation across Ghana by bridging the gap between education and industry.
+          We are building a dynamic ecosystem where talent thrives, businesses scale, and communities prosper.
+          Through continuous learning and innovation, we equip our workforce with cutting-edge skills to meet
+          the evolving demands of the global technology landscape.
+          With Africa projected to be home to over 40% of the world's youth population (ages 15-24) by 2030,
+          Ghana's rapid urbanization is creating unprecedented opportunities. Improved infrastructure, expanding digital connectivity,
+          and enhanced educational access are positioning Ghana as a premier destination for tech talent development.
         </motion.div>
       </div>
     </section>
