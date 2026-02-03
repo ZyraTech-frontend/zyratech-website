@@ -20,7 +20,7 @@ const WhyGhana = () => {
           className="mb-8"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-6">Why We Chose Ghana</h2>
-          <p className="text-gray-700 mb-4">Ghana's rapid urbanization is concentrating populations around improved infrastructure, digital connectivity and education, creating strong conditions for skills development and technology-driven economic growth.</p>
+          <p className="text-gray-700 mb-4">Ghana's accelerating urbanization is converging populations with enhanced infrastructure, expanding digital connectivity, and improved educational access—creating an ideal environment for skills development and technology-driven economic transformation.</p>
           <Link to="/impact" className="inline-flex items-center text-[#004fa2] hover:text-[#004fa2] font-semibold transition-colors">
             Learn More About Our Impact
             <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,7 +38,7 @@ const WhyGhana = () => {
           className="mb-12"
         >
           <p className="text-lg text-gray-700 leading-relaxed">
-            We design programs that meet local market needs, partner with businesses to co-create training, and support startups with mentorship and seed funding.
+            We develop programs tailored to local market demands, partner with businesses to co-design training curricula, and empower startups through strategic mentorship and seed funding initiatives.
           </p>
         </motion.div>
       </div>

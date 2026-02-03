@@ -8,6 +8,7 @@ import ImpactCTA from '../../../components/pages/about/ImpactCTA';
 import Timeline from '../../../components/pages/about/Timeline';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
+import HrContactSection from '../../../components/common/HrContactSection.jsx';
 
  const AboutPage = () => {
   return (
@@ -37,6 +38,7 @@ import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
       <Timeline />
 
       <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+      <HrContactSection/>
 
       <NewsletterHero />
     </div>

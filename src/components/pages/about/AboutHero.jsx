@@ -5,7 +5,7 @@ const AboutHero = ({
   title = 'Building the next generation of',
   highlight = 'tech talent',
   description =
-    'We bridge learning and industry through hands-on training, internships, and real-world projects—helping people and organizations build practical, job-ready digital skills.',
+    'We bridge the gap between education and industry through comprehensive training, professional internships, and real-world projects—empowering individuals and organizations with job-ready digital skills.',
   backgroundImage = '/images/image1.png'
 }) => {
   const shouldReduceMotion = useReducedMotion();

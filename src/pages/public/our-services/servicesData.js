@@ -1,40 +1,34 @@
-import { BadgeCheck, Globe, Layers, Code2, ServerCog, Shield, Users } from 'lucide-react';
+import { BadgeCheck, Globe, Layers, Code2, ServerCog, Shield, Users, BookOpen, GraduationCap } from 'lucide-react';
 
 export const services = [
   {
-    title: 'Product Engineering',
+    title: 'SOFTWARE ENGINEERING',
     desc: 'Build and scale reliable digital products — from discovery and architecture to delivery and iteration.',
-    icon: Layers,
+    icon: Code2,
     highlights: ['Web & mobile applications', 'Backend systems & APIs', 'Cloud architecture & DevOps'],
   },
   {
-    title: 'Web and App Development',
-    desc: 'High-quality interfaces and performant apps that ship fast and remain maintainable over time.',
-    icon: Code2,
-    highlights: ['UI/UX implementation', 'Modern frameworks & tooling', 'Performance & accessibility'],
-  },
-  {
-    title: 'Quality Assurance',
-    desc: 'Confident releases through modern testing, automation, and quality engineering practices.',
-    icon: BadgeCheck,
-    highlights: ['Test strategy & planning', 'Automation & CI integration', 'Performance & regression testing'],
-  },
-  {
-    title: 'Security',
-    desc: 'Reduce risk with practical security reviews, baseline controls, and secure delivery practices.',
-    icon: Shield,
-    highlights: ['Security testing & hardening', 'Secure architecture guidance', 'Data protection best practices'],
-  },
-  {
-    title: 'Managed Services',
-    desc: 'Operate and improve critical systems with monitoring, maintenance, and responsive support.',
+    title: 'INFRASTRUCTURE & CLOUD SERVICES',
+    desc: 'Robust cloud infrastructure and DevOps solutions for scalable, secure, and reliable operations.',
     icon: ServerCog,
-    highlights: ['Monitoring & observability', 'Incident response & SLAs', 'Continuous improvements'],
+    highlights: ['Cloud architecture & migration', 'Infrastructure automation', 'Monitoring & optimization'],
   },
   {
-    title: 'Capacity Building',
-    desc: 'Upskill teams with hands-on programs that drive adoption of modern engineering practices.',
-    icon: Users,
-    highlights: ['Team training & workshops', 'Mentorship & coaching', 'Process & delivery enablement'],
+    title: 'ACADEMIC RESEARCH SUPPORT',
+    desc: 'Expert guidance and technical support for academic projects, research, and thesis development.',
+    icon: BookOpen,
+    highlights: ['Research methodology support', 'Data analysis & visualization', 'Technical writing & documentation'],
+  },
+  {
+    title: 'IT EDUCATION & TRAINING',
+    desc: 'Comprehensive training programs that equip individuals and teams with modern technology skills.',
+    icon: GraduationCap,
+    highlights: ['Hands-on bootcamps', 'Professional certifications', 'Corporate training programs'],
+  },
+  {
+    title: 'MANAGED SERVICES',
+    desc: 'Operate and improve critical systems with monitoring, maintenance, and responsive support.',
+    icon: Shield,
+    highlights: ['24/7 monitoring & support', 'System maintenance & updates', 'Incident response & SLAs'],
   },
 ];
