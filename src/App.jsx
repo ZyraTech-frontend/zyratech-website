@@ -20,6 +20,7 @@ const ProjectRequestPage = lazy(() => import('./pages/public/projects/request'))
 const ContactPage = lazy(() => import('./pages/public/contact'));
 const AdminPage = lazy(() => import('./pages/admin/DashboardPage'));
 const LoginPage = lazy(() => import('./pages/admin/LoginPage'));
+const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
 const UsersPage = lazy(() => import('./pages/admin/users/UsersPage'));
 const SettingsPage = lazy(() => import('./pages/admin/settings/SettingsPage'));
 const FaqPage = lazy(() => import('./pages/public/faq'));
@@ -108,6 +109,14 @@ function App() {
                 element={
                   <ProtectedRoute requiredRole="super_admin">
                     <UsersPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/analytics"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <AnalyticsPage />
                   </ProtectedRoute>
                 }
               />
