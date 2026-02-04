@@ -7,10 +7,10 @@ const FilterNavigation = ({ onFilterChange, onSearchChange }) => {
 
   const categories = [
     { key: 'all', label: 'All' },
-    { key: 'training', label: 'Training' },
     { key: 'projects', label: 'Projects' },
-    { key: 'events', label: 'Events' },
-    { key: 'impact', label: 'Impact' }
+    { key: 'training', label: 'Training' },
+    { key: 'community', label: 'Community' },
+    { key: 'events', label: 'Events' }
   ];
 
   const handleFilterClick = (filterKey) => {
@@ -39,7 +39,7 @@ const FilterNavigation = ({ onFilterChange, onSearchChange }) => {
               <button
                 key={category.key}
                 onClick={() => handleFilterClick(category.key)}
-                className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                className={`px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 ${
                   activeFilter === category.key
                     ? 'bg-[#004fa2] text-white shadow-md'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
@@ -52,13 +52,13 @@ const FilterNavigation = ({ onFilterChange, onSearchChange }) => {
 
           {/* Search Bar */}
           <div className="relative w-full lg:w-80">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Search gallery"
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#004fa2] focus:ring-1 focus:ring-[#004fa2] bg-white"
+              className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-xl focus:outline-none focus:border-[#004fa2] focus:ring-1 focus:ring-[#004fa2] bg-white"
             />
           </div>
 
