@@ -4,14 +4,45 @@
  */
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../services/api';
+
+const MOCK_USERS = [
+  {
+    id: 'u-1001',
+    name: 'Mihael Afedi',
+    email: 'superadmin@zyratech.com',
+    role: 'super_admin',
+    status: 'active'
+  },
+  {
+    id: 'u-1002',
+    name: 'Admin User',
+    email: 'admin@zyratech.com',
+    role: 'admin',
+    status: 'active'
+  },
+  {
+    id: 'u-1003',
+    name: 'Editor User',
+    email: 'editor@zyratech.com',
+    role: 'editor',
+    status: 'inactive'
+  }
+];
 
 export const fetchUsers = createAsyncThunk(
   'users/fetchUsers',
   async (params, { rejectWithValue }) => {
     try {
-      const response = await api.get('/admin/users', { params });
-      return response.data.data;
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      return {
+        data: MOCK_USERS,
+        pagination: {
+          page: params?.page || 1,
+          limit: params?.limit || 20,
+          total: MOCK_USERS.length,
+          totalPages: 1
+        }
+      };
     } catch (error) {
       return rejectWithValue(error.response?.data?.error?.message);
     }
@@ -22,8 +53,8 @@ export const createUser = createAsyncThunk(
   'users/createUser',
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await api.post('/admin/users', userData);
-      return response.data.data;
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      return { id: `u-${Date.now()}`, ...userData };
     } catch (error) {
       return rejectWithValue(error.response?.data?.error?.message);
     }
@@ -34,8 +65,8 @@ export const updateUser = createAsyncThunk(
   'users/updateUser',
   async ({ id, data }, { rejectWithValue }) => {
     try {
-      const response = await api.put(`/admin/users/${id}`, data);
-      return response.data.data;
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      return { id, ...data };
     } catch (error) {
       return rejectWithValue(error.response?.data?.error?.message);
     }
@@ -46,8 +77,8 @@ export const changeUserRole = createAsyncThunk(
   'users/changeUserRole',
   async ({ id, role }, { rejectWithValue }) => {
     try {
-      const response = await api.patch(`/admin/users/${id}/role`, { role });
-      return response.data.data;
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      return { id, role };
     } catch (error) {
       return rejectWithValue(error.response?.data?.error?.message);
     }
@@ -58,7 +89,7 @@ export const deleteUser = createAsyncThunk(
   'users/deleteUser',
   async (id, { rejectWithValue }) => {
     try {
-      await api.delete(`/admin/users/${id}`);
+      await new Promise((resolve) => setTimeout(resolve, 200));
       return id;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error?.message);

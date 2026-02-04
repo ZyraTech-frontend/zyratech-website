@@ -4,14 +4,22 @@
  */
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../services/api';
+
+const MOCK_SETTINGS = {
+  siteName: 'ZyraTech',
+  supportEmail: 'support@zyratech.com',
+  primaryColor: '#5b4b8a',
+  secondaryColor: '#6b5b9a',
+  maintenanceMode: false,
+  timezone: 'Africa/Accra'
+};
 
 export const fetchSettings = createAsyncThunk(
   'settings/fetchSettings',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get('/settings');
-      return response.data.data;
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      return MOCK_SETTINGS;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error?.message);
     }
@@ -22,8 +30,8 @@ export const updateSetting = createAsyncThunk(
   'settings/updateSetting',
   async ({ key, value }, { rejectWithValue }) => {
     try {
-      const response = await api.patch(`/admin/settings/${key}`, { value });
-      return response.data.data;
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      return { key, value };
     } catch (error) {
       return rejectWithValue(error.response?.data?.error?.message);
     }
