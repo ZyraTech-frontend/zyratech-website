@@ -74,24 +74,6 @@ const TrainingBenefits = () => {
           </p>
         </motion.div>
 
-        {/* Stats Bar */}
-        <motion.div 
-          className="bg-gradient-to-r from-[#004fa2] to-[#2A2D7C] rounded-2xl p-4 sm:p-6 md:p-8 mb-8 sm:mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 text-center text-white">
-            {stats.map((stat, index) => (
-              <div key={index}>
-                <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">{stat.number}</div>
-                <div className="text-white/90 text-xs sm:text-xs md:text-sm">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
         {/* Benefits Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 md:gap-8">
           {benefits.map((benefit, index) => {

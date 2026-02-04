@@ -48,8 +48,7 @@ const Navbar = () => {
     ],
     insights: [
       { name: 'Blog', path: '/blog' },
-      { name: 'Media Gallery', path: '/gallery' },
-      { name: 'Newsletter', path: '/newsletter' }
+      { name: 'Media Gallery', path: '/gallery' }
     ]
   };
 

@@ -5,6 +5,7 @@ import TrainingAbout from '../../../components/pages/training/TrainingAbout';
 import TrainingHero from '../../../components/pages/training/TrainingHero';
 import TrainingBenefits from '../../../components/pages/training/TrainingBenefits';
 import TrainingProcess from '../../../components/pages/training/TrainingProcess';
+import TrainingTestimonial from '../../../components/pages/training/TrainingTestimonial';
 import HrContactSection from '../../../components/common/HrContactSection.jsx';
 import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
 import useSEO from '../../../hooks/useSEO';
@@ -31,6 +32,8 @@ const TrainingPage = () => {
     <TrainingLayout>
       <TrainingHero />
       <TrainingAbout />
+      <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" />
+      <TrainingTestimonial />
       <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" />
       <TrainingBenefits />
       <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" />

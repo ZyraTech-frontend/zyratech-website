@@ -8,8 +8,16 @@ import { Search } from 'lucide-react';
 import NewProjectsHero from '../../../components/pages/projects/NewProjectsHero';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
+import useSEO from '../../../hooks/useSEO';
 
 const BlogPage = () => {
+  useSEO({
+    title: 'Blog',
+    description: 'Read success stories, tech insights, and educational articles from Zyra Tech Hub. Discover how we\'re transforming lives through technology in Ghana.',
+    url: '/blog',
+    keywords: 'tech blog Ghana, student success stories, Ghana technology education, digital skills blog'
+  });
+
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);

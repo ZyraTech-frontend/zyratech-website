@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 import FilterNavigation from '../../../components/pages/gallery/FilterNavigation';
 import MediaGrid from '../../../components/pages/gallery/MediaGrid';
+import useSEO from '../../../hooks/useSEO';
 
 const GalleryPage = () => {
+  useSEO({
+    title: 'Gallery',
+    description: 'Explore photos and videos from Zyra Tech Hub\'s training programs, events, and student achievements in Koforidua, Ghana.',
+    url: '/gallery',
+    keywords: 'Zyra Tech gallery, Ghana tech training photos, student success photos, tech events Ghana'
+  });
+
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 

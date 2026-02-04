@@ -120,7 +120,7 @@ const ContactHero = () => {
               <div className="pt-3">
                 <button
                   type="submit"
-                  className="w-full bg-white hover:from-[#000000] hover:to-[#000000] text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="w-full bg-[#004fa2] hover:bg-[#003a7a] text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                   Send Message
                 </button>

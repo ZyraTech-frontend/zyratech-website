@@ -7,13 +7,18 @@ import ServicesShowcase from '../../../components/pages/home/ServicesShowcase';
 import BenefitsShowcase from '../../../components/pages/home/BenefitsShowcase';
 import TestimonialsSection from '../../../components/pages/home/TestimonialsSection';
 import ParallaxDivider from '../../../components/common/ParallaxDivider';
-
+import useSEO from '../../../hooks/useSEO';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
 
-
-
 const HomePage = () => {
+  useSEO({
+    title: 'Home',
+    description: 'Zyra Tech Hub in Koforidua, Ghana empowers students, schools, and businesses through hands-on digital training, internships, and professional IT services.',
+    url: '/',
+    keywords: 'tech training Ghana, IT courses Ghana, digital skills training, internships Ghana, Koforidua tech hub, software development Ghana'
+  });
+
   return (
     <div>
       <Hero />
