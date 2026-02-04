@@ -6,11 +6,22 @@ import { articlesData, getArticleBySlug } from '../../../data/articlesData';
 import BlogCard from '../../../components/pages/blog/BlogCard';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
+import useSEO from '../../../hooks/useSEO';
 
 const BlogDetailPage = () => {
   const { slug } = useParams();
   const shouldReduceMotion = useReducedMotion();
   const article = getArticleBySlug(slug);
+
+  // Dynamic SEO based on article
+  useSEO({
+    title: article?.title || 'Article',
+    description: article?.excerpt || 'Read this article from Zyra Tech Hub',
+    url: `/blog/${slug}`,
+    image: article?.image,
+    type: 'article',
+    keywords: `${article?.category}, Ghana tech blog, ${article?.author.name}, student stories Ghana`
+  });
 
   // Get related articles (same category, excluding current)
   const relatedArticles = articlesData

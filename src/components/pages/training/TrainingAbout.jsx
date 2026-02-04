@@ -263,34 +263,6 @@ const TrainingAbout = () => {
           className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
         />
 
-        {/* Testimonial Section - ZyraTech Style */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-gradient-to-br from-[#004fa2] to-[#2A2D7C] text-white rounded-xl p-6 sm:p-8 mb-12 sm:mb-16"
-        >
-          <div className="flex flex-col md:flex-row gap-4 sm:gap-8 items-center">
-            <div className="flex-shrink-0">
-              <div className="w-14 h-14 sm:w-20 sm:h-20 bg-[#004fa2] rounded-full flex items-center justify-center">
-                <Users className="text-white" size={24} />
-              </div>
-            </div>
-            <div className="flex-1">
-              <blockquote className="text-sm sm:text-base md:text-lg text-white/90 italic mb-3 sm:mb-4">
-                "My journey at ZyraTech transformed my career completely. In just six months, I developed 
-                my skills in software development and was offered a position as a Full Stack Developer. 
-                The training and mentorship I received was exceptional."
-              </blockquote>
-              <footer className="text-white">
-                <div className="font-semibold">— Kwame Asante</div>
-                <div className="text-sm text-white/80">Full Stack Development Programme</div>
-              </footer>
-            </div>
-          </div>
-        </motion.div>
-
         {/* Our Training Team - ZyraTech Style */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -299,7 +271,7 @@ const TrainingAbout = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mb-12 sm:mb-16"
         >
-          <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8">Our Training Team</h3>
+          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6 sm:mb-8">Our Training Team</h3>
           <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
             {/* Left Column - Content */}
             <div>
@@ -329,35 +301,6 @@ const TrainingAbout = () => {
           </div>
         </motion.div>
 
-        {/* Stats Section - ZyraTech Style */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="bg-gradient-to-br from-[#004fa2] to-[#2A2D7C] text-white rounded-xl p-8 mb-16"
-        >
-          <h4 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Our Impact</h4>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2">500+</div>
-              <div className="text-white/90 text-xs sm:text-sm">Professionals Trained</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2">95%</div>
-              <div className="text-white/90 text-xs sm:text-sm">Success Rate</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2">50+</div>
-              <div className="text-white/90 text-xs sm:text-sm">Training Programs</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2">15+</div>
-              <div className="text-white/90 text-xs sm:text-sm">Expert Trainers</div>
-            </div>
-          </div>
-        </motion.div>
-
         {/* CTA Section - ZyraTech Style */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -366,7 +309,7 @@ const TrainingAbout = () => {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="text-center"
         >
-          <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-3 sm:mb-4">
             Ready to take the next step in your tech career?
           </h3>
           <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto">

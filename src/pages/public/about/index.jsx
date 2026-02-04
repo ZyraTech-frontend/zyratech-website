@@ -9,8 +9,16 @@ import Timeline from '../../../components/pages/about/Timeline';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
 import HrContactSection from '../../../components/common/HrContactSection.jsx';
+import useSEO from '../../../hooks/useSEO';
 
  const AboutPage = () => {
+  useSEO({
+    title: 'About Us',
+    description: 'Learn about Zyra Tech Hub\'s mission to empower Ghana through technology education, digital skills training, and community development in Koforidua.',
+    url: '/about',
+    keywords: 'about Zyra Tech, Ghana tech education, digital empowerment Ghana, Koforidua technology center'
+  });
+
   return (
     <div>
       <AboutHero />

@@ -27,12 +27,12 @@ const HrContactSection = ({
             </a>
           </div>
 
-          <div className="relative ml-8 md:ml-12">
+          <div className="relative w-full md:w-auto flex justify-center md:justify-start md:ml-12">
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
               <img 
                 src={imageUrl} 
                 alt={name}
-                className="w-[380px] md:w-[420px] h-full object-cover"
+                className="w-full max-w-[340px] h-[420px] sm:max-w-[380px] sm:h-[480px] md:w-[580px] md:h-[600px] object-cover"
               />
             </div>
           </div>
