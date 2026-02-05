@@ -23,6 +23,21 @@ const LoginPage = lazy(() => import('./pages/admin/LoginPage'));
 const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
 const UsersPage = lazy(() => import('./pages/admin/users/UsersPage'));
 const SettingsPage = lazy(() => import('./pages/admin/settings/SettingsPage'));
+const TrainingCoursesPage = lazy(() => import('./pages/admin/training/TrainingCoursesPage'));
+const JobsManagementPage = lazy(() => import('./pages/admin/jobs/JobsManagementPage'));
+const GalleryManagementPage = lazy(() => import('./pages/admin/gallery/GalleryManagementPage'));
+const ProjectsManagementPage = lazy(() => import('./pages/admin/projects/ProjectsManagementPage'));
+const FaqManagementPage = lazy(() => import('./pages/admin/faq/FaqManagementPage'));
+const TestimonialsManagementPage = lazy(() => import('./pages/admin/testimonials/TestimonialsManagementPage'));
+const PaymentsManagementPage = lazy(() => import('./pages/admin/payments/PaymentsManagementPage'));
+const EnrollmentsManagementPage = lazy(() => import('./pages/admin/enrollments/EnrollmentsManagementPage'));
+const MessagesManagementPage = lazy(() => import('./pages/admin/messages/MessagesManagementPage'));
+const PartnershipsManagementPage = lazy(() => import('./pages/admin/partnerships/PartnershipsManagementPage'));
+const ContactInquiriesPage = lazy(() => import('./pages/admin/contact-inquiries/ContactInquiriesPage'));
+const ImpactManagementPage = lazy(() => import('./pages/admin/impact/ImpactManagementPage'));
+const ActivityLogsPage = lazy(() => import('./pages/admin/activity-logs/ActivityLogsPage'));
+const ReportsPage = lazy(() => import('./pages/admin/reports/ReportsPage'));
+const AdminProfilePage = lazy(() => import('./pages/admin/profile/AdminProfilePage'));
 const FaqPage = lazy(() => import('./pages/public/faq'));
 const ImpactPage = lazy(() => import('./pages/public/impact'));
 const PartnershipPage = lazy(() => import('./pages/public/partnership'));
@@ -60,18 +75,18 @@ const PageLoader = () => (
 
 function App() {
   const location = useLocation();
-  
+
   // Check if current route is an admin route
   const isAdminRoute = location.pathname.startsWith('/admin');
-  
+
   // Check if current route is a service page or projects page
   const isProjectsPage = location.pathname.startsWith('/projects');
   const isTrainingPage = location.pathname.startsWith('/training');
   const isJobApplicationPage = location.pathname.includes('/jobs/') && location.pathname.includes('/apply');
-  
+
   // Check if on contact page with service context
   const isContactWithService = location.pathname === '/contact' && location.state?.from;
-  
+
   const hideMainNavbar = isProjectsPage || isContactWithService || isTrainingPage || isJobApplicationPage || isAdminRoute;
   const hideMainFooter = isProjectsPage || isContactWithService || isJobApplicationPage || isAdminRoute;
 
@@ -80,10 +95,10 @@ function App() {
       <div className="flex flex-col min-h-screen">
         {/* Scroll to top on route change */}
         <ScrollToTop />
-        
+
         {/* Only show main Navbar if NOT on software or projects pages or admin pages */}
         {!hideMainNavbar && <Navbar />}
-        
+
         <main className="flex-grow">
           <Suspense fallback={<PageLoader />}>
             <Routes>
@@ -92,7 +107,7 @@ function App() {
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/projects/request" element={<ProjectRequestPage />} />
               <Route path="/contact" element={<ContactPage />} />
-              
+
               {/* Admin Routes */}
               <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
               <Route path="/admin/login" element={<LoginPage />} />
@@ -128,7 +143,127 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-            
+              <Route
+                path="/admin/training"
+                element={
+                  <ProtectedRoute>
+                    <TrainingCoursesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/jobs"
+                element={
+                  <ProtectedRoute>
+                    <JobsManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/gallery"
+                element={
+                  <ProtectedRoute>
+                    <GalleryManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/projects"
+                element={
+                  <ProtectedRoute>
+                    <ProjectsManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/faq"
+                element={
+                  <ProtectedRoute>
+                    <FaqManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/testimonials"
+                element={
+                  <ProtectedRoute>
+                    <TestimonialsManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/payments"
+                element={
+                  <ProtectedRoute>
+                    <PaymentsManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/enrollments"
+                element={
+                  <ProtectedRoute>
+                    <EnrollmentsManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/messages"
+                element={
+                  <ProtectedRoute>
+                    <MessagesManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/partnerships"
+                element={
+                  <ProtectedRoute>
+                    <PartnershipsManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/contact-inquiries"
+                element={
+                  <ProtectedRoute>
+                    <ContactInquiriesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/impact"
+                element={
+                  <ProtectedRoute>
+                    <ImpactManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/activity-logs"
+                element={
+                  <ProtectedRoute>
+                    <ActivityLogsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/reports"
+                element={
+                  <ProtectedRoute>
+                    <ReportsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/profile"
+                element={
+                  <ProtectedRoute>
+                    <AdminProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+
               {/* Service Pages */}
               {/* Education routes redirect to training */}
               <Route path="/services/education" element={<Navigate to="/training" replace />} />
@@ -143,11 +278,11 @@ function App() {
               <Route path="/services/open-labs" element={<Navigate to="/contact" replace />} />
               <Route path="/services/open-labs/*" element={<Navigate to="/contact" replace />} />
               <Route path="/services/projectShowcase" element={<Navigate to="/projects" replace />} />
-              
+
               {/* Donate routes redirect to contact */}
               <Route path="/donate" element={<Navigate to="/contact" replace />} />
               <Route path="/donate/*" element={<Navigate to="/contact" replace />} />
-              
+
               {/* Other Pages */}
               <Route path="/faq" element={<FaqPage />} />
               <Route path="/impact" element={<ImpactPage />} />
@@ -176,7 +311,7 @@ function App() {
               <Route path="/jobs" element={<JobsPage />} />
               <Route path="/jobs/:id" element={<JobDetailPage />} />
               <Route path="/jobs/:id/apply" element={<JobApplicationPage />} />
-              
+
               {/* Redirects for old/broken links */}
               <Route path="/labs" element={<Navigate to="/contact" replace />} />
               <Route path="/enroll" element={<Navigate to="/training" replace />} />
@@ -187,7 +322,7 @@ function App() {
           </Suspense>
         </main>
         {!hideMainFooter && <Footer />}
-        
+
         {/* Global Confirm Dialog */}
         <ConfirmDialog />
       </div>
