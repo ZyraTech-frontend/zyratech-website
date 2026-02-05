@@ -69,11 +69,10 @@ const Sidebar = () => {
           <div>
             <Link
               to="/admin/dashboard"
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-                isActive('/admin/dashboard')
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/dashboard')
                   ? 'bg-white/15 text-white'
                   : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
+                }`}
             >
               <LayoutDashboard size={20} />
               <span className="font-medium">Dashboard</span>
@@ -84,11 +83,10 @@ const Sidebar = () => {
           {isSuperAdmin && (
             <Link
               to="/admin/analytics"
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-                isActive('/admin/analytics')
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/analytics')
                   ? 'bg-white/15 text-white'
                   : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
+                }`}
             >
               <BarChart3 size={20} />
               <span className="font-medium">Analytics</span>
@@ -104,11 +102,10 @@ const Sidebar = () => {
 
           <Link
             to="/admin/training"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/training')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/training')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <GraduationCap size={20} />
             <span className="font-medium">Training Courses</span>
@@ -116,11 +113,10 @@ const Sidebar = () => {
 
           <Link
             to="/admin/blog"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/blog')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/blog')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <BookOpen size={20} />
             <span className="font-medium">Blog Articles</span>
@@ -128,11 +124,10 @@ const Sidebar = () => {
 
           <Link
             to="/admin/jobs"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/jobs')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/jobs')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <Briefcase size={20} />
             <span className="font-medium">Job Listings</span>
@@ -140,11 +135,10 @@ const Sidebar = () => {
 
           <Link
             to="/admin/gallery"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/gallery')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/gallery')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <Image size={20} />
             <span className="font-medium">Gallery</span>
@@ -152,11 +146,10 @@ const Sidebar = () => {
 
           <Link
             to="/admin/projects"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/projects')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/projects')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <FolderKanban size={20} />
             <span className="font-medium">Projects</span>
@@ -164,11 +157,10 @@ const Sidebar = () => {
 
           <Link
             to="/admin/faq"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/faq')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/faq')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <HelpCircle size={20} />
             <span className="font-medium">FAQ</span>
@@ -176,11 +168,10 @@ const Sidebar = () => {
 
           <Link
             to="/admin/testimonials"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/testimonials')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/testimonials')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <MessageCircle size={20} />
             <span className="font-medium">Testimonials</span>
@@ -188,11 +179,10 @@ const Sidebar = () => {
 
           <Link
             to="/admin/team"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/team')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/team')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <UsersRound size={20} />
             <span className="font-medium">Team Members</span>
@@ -207,11 +197,10 @@ const Sidebar = () => {
 
           <Link
             to="/admin/payments"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/payments')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/payments')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <CreditCard size={20} />
             <span className="font-medium">Payments</span>
@@ -219,11 +208,10 @@ const Sidebar = () => {
 
           <Link
             to="/admin/enrollments"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/enrollments')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/enrollments')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <FileText size={20} />
             <span className="font-medium">Enrollments</span>
@@ -231,11 +219,10 @@ const Sidebar = () => {
 
           <Link
             to="/admin/messages"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/messages')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/messages')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <MessageSquare size={20} />
             <span className="font-medium">Messages</span>
@@ -243,17 +230,16 @@ const Sidebar = () => {
 
           <Link
             to="/admin/partnerships"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/partnerships')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/partnerships')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <Handshake size={20} />
             <span className="font-medium">Partnerships</span>
           </Link>
 
-          <Link
+          {/*           <Link
             to="/admin/contact-inquiries"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
               isActive('/admin/contact-inquiries')
@@ -263,15 +249,14 @@ const Sidebar = () => {
           >
             <Mail size={20} />
             <span className="font-medium">Contact Inquiries</span>
-          </Link>
+          </Link> */}
 
           <Link
             to="/admin/impact"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/impact')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/impact')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <TrendingUp size={20} />
             <span className="font-medium">Impact Stories</span>
@@ -279,11 +264,10 @@ const Sidebar = () => {
 
           <Link
             to="/admin/newsletter"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/newsletter')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/newsletter')
                 ? 'bg-white/15 text-white'
                 : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <Mail size={20} />
             <span className="font-medium">Newsletter</span>
@@ -300,11 +284,10 @@ const Sidebar = () => {
 
               <Link
                 to="/admin/users"
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-                  isActive('/admin/users')
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/users')
                     ? 'bg-white/15 text-white'
                     : 'text-blue-200 hover:bg-white/5 hover:text-white'
-                }`}
+                  }`}
               >
                 <Users size={20} />
                 <span className="font-medium">User Management</span>
@@ -312,11 +295,10 @@ const Sidebar = () => {
 
               <Link
                 to="/admin/settings"
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-                  isActive('/admin/settings')
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/settings')
                     ? 'bg-white/15 text-white'
                     : 'text-blue-200 hover:bg-white/5 hover:text-white'
-                }`}
+                  }`}
               >
                 <Settings size={20} />
                 <span className="font-medium">Settings</span>
@@ -324,11 +306,10 @@ const Sidebar = () => {
 
               <Link
                 to="/admin/activity-logs"
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-                  isActive('/admin/activity-logs')
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/activity-logs')
                     ? 'bg-white/15 text-white'
                     : 'text-blue-200 hover:bg-white/5 hover:text-white'
-                }`}
+                  }`}
               >
                 <ClipboardList size={20} />
                 <span className="font-medium">Activity Logs</span>
@@ -336,11 +317,10 @@ const Sidebar = () => {
 
               <Link
                 to="/admin/reports"
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-                  isActive('/admin/reports')
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/reports')
                     ? 'bg-white/15 text-white'
                     : 'text-blue-200 hover:bg-white/5 hover:text-white'
-                }`}
+                  }`}
               >
                 <FileBarChart size={20} />
                 <span className="font-medium">Reports</span>
