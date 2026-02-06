@@ -38,7 +38,7 @@ const WhyGhana = () => {
           className="mb-12"
         >
           <p className="text-lg text-gray-700 leading-relaxed">
-            We develop programs tailored to local market demands, partner with businesses to co-design training curricula, and empower startups through strategic mentorship and seed funding initiatives.
+            We develop programs tailored to local market demands, partner with businesses to co-design training curricula, and empower startups through strategic mentorship, drawing on our founder's experience as a Tech Educator and former Teaching Assistant at Koforidua Technical University.
           </p>
         </motion.div>
       </div>

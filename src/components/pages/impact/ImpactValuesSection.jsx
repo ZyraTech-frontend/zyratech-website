@@ -45,9 +45,8 @@ const ImpactValuesSection = ({
             return (
               <motion.div
                 key={item.title}
-                className={`group relative overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-[#004fa2]/25 cursor-pointer ${
-                  isFeatured ? 'md:col-span-2 lg:col-span-2' : ''
-                }`}
+                className={`group relative overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-[#004fa2]/25 cursor-pointer ${isFeatured ? 'md:col-span-2 lg:col-span-2' : ''
+                  }`}
                 initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.25 }}
@@ -61,7 +60,6 @@ const ImpactValuesSection = ({
                       </div>
                       <div>
                         <h3 className="text-lg sm:text-xl font-bold text-gray-900 leading-snug">{item.title}</h3>
-                        <div className="mt-2 h-1 w-10 rounded-full bg-[#004fa2]/80" />
                       </div>
                     </div>
 

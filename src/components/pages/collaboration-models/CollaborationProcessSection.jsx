@@ -27,10 +27,12 @@ const CollaborationProcessSection = ({ title = 'Our engagement process', steps =
               viewport={{ once: true, amount: 0.25 }}
               transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : idx * 0.08 }}
             >
-              <div className="w-10 h-10 rounded-full bg-[#004fa2] text-white flex items-center justify-center font-bold mb-4">
-                {s.step}
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-full bg-[#004fa2] text-white flex items-center justify-center font-bold flex-shrink-0">
+                  {s.step}
+                </div>
+                <h4 className="text-lg font-semibold text-gray-900">{s.title}</h4>
               </div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">{s.title}</h4>
               <p className="text-gray-600">{s.description}</p>
             </motion.div>
           ))}

@@ -14,10 +14,9 @@ export const collaborationModels = [
     tab: 'General Team Expansion',
     title: 'General Team Expansion',
     bullets: [
-      "ZyraTech's General Team Expansion is crafted to ensure that our skilled talent collaborates closely with the client's business unit, delivering the precise technical competencies needed for project success.",
+      "Access specialized tech talent to boost your internal productivity and accelerate project timelines without the overhead of traditional hiring.",
       'This model offers unmatched flexibility and adaptability, empowering clients to scale their teams efficiently to meet evolving demands.',
       "Our team members become essential contributors, working side by side with the client's workforce to boost productivity and drive innovation.",
-      "With a profound understanding of the client's project goals, this model allows businesses to harness specialized skills without the commitment of traditional hiring, optimizing resources and accelerating project timelines.",
       'Dive into our offerings to see how we can partner with you in driving success and unlocking new opportunities.'
     ],
     image: '/images/image1.png',
@@ -28,23 +27,22 @@ export const collaborationModels = [
     tab: 'Interdisciplinary Development Teams',
     title: 'Interdisciplinary Development Teams',
     bullets: [
-      "ZyraTech's interdisciplinary development teams offer a robust engagement model designed to deliver comprehensive end-to-end solutions.",
+      "End-to-end project delivery managed by ZyraTech, utilizing Agile methodologies to ensure high-quality, custom-built solutions.",
       'Our full delivery team is dedicated to managing every aspect of the development process, ensuring seamless integration and execution.',
-      "Central to this approach is close collaboration between ZyraTech and the client's stakeholders. This partnership focuses on refining requirements and aligning them with strategic goals, enabling the delivery of high-quality, tailored solutions.",
-      'By bringing together diverse expertise and agile methodologies, this model ensures projects not only meet but exceed client expectations, driving innovation and success in dynamic business environments.',
+      "By bringing together diverse expertise and agile methodologies, this model ensures projects not only meet but exceed client expectations, driving innovation and success in dynamic business environments.",
       'Dive into our offerings to see how we can partner with you in driving success and unlocking new opportunities.'
     ],
     image: '/images/image2.png',
     imageFallback: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200'
   },
   {
-    id: 'blended-development-teams',
-    tab: 'Blended Development Teams With German Partner',
-    title: 'Blended Development Teams With German Partner',
+    id: 'strategic-partnership-model',
+    tab: 'Strategic Partnership Model',
+    title: 'Strategic Partnership Model',
     bullets: [
-      "ZyraTech offers a unique approach to end-to-end solution development, integrating the strengths of three distinct parties: ZyraTech, the client, and a German-speaking partner.",
-      'This model is designed to harness the collective expertise of an interdisciplinary delivery team, ensuring a comprehensive and seamless development process. The inclusion of a German partner brings senior expertise and consulting capacity.',
-      'By leveraging diverse skills and perspectives, this model stands out as a prime choice for businesses with limited outsourcing experiences and new resources, seeking to optimize their operational effectiveness and achieve sustainable success.',
+      "A unique collaborative approach integrating ZyraTech's technical expertise with strategic media and industry partners like Royal Klast Group to maximize brand impact.",
+      'This model is designed to harness the collective expertise of an interdisciplinary delivery team, ensuring a comprehensive and seamless development process.',
+      'By leveraging diverse skills and perspectives, this model stands out as a prime choice for businesses seeking to optimize their operational effectiveness and achieve sustainable success.',
       'Dive into our offerings to see how we can partner with you in driving success and unlocking new opportunities.'
     ],
     image: '/images/image3.png',

@@ -19,12 +19,12 @@ const ImpactPage = () => {
     {
       title: 'Collaboration',
       description:
-        "We work hand-in-hand with learners, schools, partners, and communities. We value each person’s strengths and combine them to deliver solutions with real impact."
+        "We work hand-in-hand with learners and media partners, like Royal Klast Group, to deliver solutions with real impact."
     },
     {
       title: 'Excellence',
       description:
-        'We strive for high quality in our training, products, and partnerships—aiming to exceed expectations through professionalism, discipline, and continuous improvement.'
+        'We strive for high quality in our code, cloud deployments, and research frameworks—aiming to exceed expectations through professional discipline.'
     },
     {
       title: 'Integrity',
