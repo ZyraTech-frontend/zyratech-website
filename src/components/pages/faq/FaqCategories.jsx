@@ -40,6 +40,14 @@ const FaqCategories = () => {
       color: "#004fa2",
       faqs: [
         {
+          question: "What specific IT training do you offer?",
+          answer: "We provide hands-on training in web/mobile development, networking, and cybersecurity, often featured in our ZyraTech Training programs."
+        },
+        {
+          question: "Does ZyraTech Hub support academic projects?",
+          answer: "Yes, we provide Academic Research Support, including frameworks for cutting-edge topics like Generative AI bias mitigation."
+        },
+        {
           question: "What IT and digital services do you offer?",
           answer: "We provide Education Technology (EdTech), IT & Networking, Web & Software Development, and Consulting & Support services for schools and businesses."
         },
@@ -117,7 +125,7 @@ const FaqCategories = () => {
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* FAQ Categories */}
         <div className="space-y-6">
           {faqCategories.map((category, categoryIndex) => (
@@ -129,7 +137,7 @@ const FaqCategories = () => {
               transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
               className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
             >
-              
+
               {/* Category Header */}
               <button
                 type="button"
@@ -139,7 +147,7 @@ const FaqCategories = () => {
                 className="w-full px-6 sm:px-8 py-4 sm:py-6 flex items-center justify-between text-left hover:bg-gray-50 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004fa2] focus-visible:ring-offset-2"
               >
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <div 
+                  <div
                     className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-200"
                     style={{ color: category.color }}
                   >
@@ -168,7 +176,7 @@ const FaqCategories = () => {
                     const key = `${categoryIndex}-${faqIndex}`;
                     const isOpen = openFAQ[key];
                     const questionText = faq.question.replace(/^Q\d+:\s*/i, '');
-                    
+
                     return (
                       <div key={faqIndex} className="border-b border-gray-100 last:border-b-0">
                         <button
@@ -191,7 +199,7 @@ const FaqCategories = () => {
                             </div>
                           </div>
                         </button>
-                        
+
                         {isOpen && (
                           <motion.div
                             initial={{ height: 0, opacity: 0 }}

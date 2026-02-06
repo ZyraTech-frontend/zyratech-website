@@ -3,9 +3,9 @@ import { Users, MapPin, TrendingUp } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 const timelineData = [
-  { year: '2024', title: 'Established', desc: 'Zyra Tech Hub was formally established in Koforidua, Ghana.', icon: Users },
-  { year: '2025', title: 'Expansion', desc: 'Expanded training cohorts and strengthened operations to serve more learners and clients.', icon: MapPin },
-  { year: '2026', title: 'Growth', desc: 'Scaling with partners and clients to expand our training programs and services.', icon: TrendingUp },
+  { year: '2024', title: 'Established', desc: 'Formally established in Koforidua, Ghana.', icon: Users },
+  { year: '2025', title: 'Foundation Launch', desc: 'Launched Tech Talk 2025 and established the IT Education Foundation to provide digital skills training.', icon: MapPin },
+  { year: '2026', title: 'The Vision', desc: 'Executing our 4-quarter strategic plan, including new seminars, a technology competition, and expanding Academic Research Support.', icon: TrendingUp },
 ];
 
 const Timeline = () => {
