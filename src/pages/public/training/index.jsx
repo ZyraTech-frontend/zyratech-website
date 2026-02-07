@@ -32,11 +32,11 @@ const TrainingPage = () => {
     <TrainingLayout>
       <TrainingHero />
       <TrainingAbout />
-      <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" />
+      <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" imageUrl="/images/parallax3.png" />
       <TrainingTestimonial />
-      <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" />
+      <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" imageUrl="/images/parallax4.png" />
       <TrainingBenefits />
-      <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" />
+      <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" imageUrl="/images/parallax5.png" />
       <TrainingProcess />
       <HrContactSection
         name="Magdalene"

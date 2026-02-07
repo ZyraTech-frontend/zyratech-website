@@ -16,17 +16,17 @@ const OurServices = () => {
       {/* Services Grid */}
       <ServicesGridSection />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax10.png" />
 
       {/* + Why choose us */}
       <WhyPartnersChooseUsSection />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax1.jpeg" />
 
       {/* HR Contact */}
       <HrContactSection />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax2.png" />
 
       {/* Newsletter */}
       <NewsletterHero />

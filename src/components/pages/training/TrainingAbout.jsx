@@ -12,9 +12,9 @@ const TrainingAbout = () => {
   return (
     <section id="training-about" className="py-20 bg-gradient-to-br from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Section Header - ZyraTech Style */}
-        <motion.div 
+        <motion.div
           ref={titleAnimation.ref}
           initial={titleAnimation.initial}
           animate={titleAnimation.animate}
@@ -26,15 +26,16 @@ const TrainingAbout = () => {
             About ZyraTech Training
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-            At ZyraTech, we're committed to transforming the tech landscape in Ghana and beyond. 
-            Our training programs offer modern learning environments tailored to tech enthusiasts and professionals 
-            eager to make their mark in the tech industry. Whether you're just starting out or looking to enhance 
+            At ZyraTech, we're committed to transforming the tech landscape in Ghana and beyond.
+            Our training programs offer modern learning environments tailored to tech enthusiasts and professionals
+            eager to make their mark in the tech industry. Whether you're just starting out or looking to enhance
             your existing skills, our academy is designed to take you to the next level.
           </p>
         </motion.div>
 
         <ParallaxDivider
           heightClassName="h-56 sm:h-64 md:h-72"
+          imageUrl="/images/parallax6.png"
           className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
         />
 
@@ -111,11 +112,11 @@ const TrainingAbout = () => {
 
               {/* Mobile Image */}
               <div className="relative">
-                <img 
-                  src="/images/image3.png"
+                <img
+                  src="/images/training1.jpeg"
                   alt="ZyraTech Training"
                   loading="lazy"
-                  className="w-full h-40 rounded-xl shadow-lg object-cover"
+                  className="w-full h-40 rounded-xl shadow-lg object-cover object-top"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-xl"></div>
               </div>
@@ -135,8 +136,8 @@ const TrainingAbout = () => {
                     <div>
                       <h4 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">Industry-Relevant Curriculum</h4>
                       <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                        Our training programs are designed in close collaboration with industry experts to ensure 
-                        you're learning skills that matter most in today's tech world. We focus on real-world 
+                        Our training programs are designed in close collaboration with industry experts to ensure
+                        you're learning skills that matter most in today's tech world. We focus on real-world
                         applications, giving you practical experience needed to excel in your career.
                       </p>
                     </div>
@@ -150,8 +151,8 @@ const TrainingAbout = () => {
                     <div>
                       <h4 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">Hands-On Learning</h4>
                       <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                        Our programs are packed with projects, labs, and exercises that allow you to apply 
-                        what you've learned practically. Upon completion of any of our programs, you'll have 
+                        Our programs are packed with projects, labs, and exercises that allow you to apply
+                        what you've learned practically. Upon completion of any of our programs, you'll have
                         a robust portfolio to highlight your professionalism.
                       </p>
                     </div>
@@ -165,21 +166,21 @@ const TrainingAbout = () => {
                     <div>
                       <h4 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">Career Support</h4>
                       <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                        Beyond technical training, we provide career development support. Many of our 
+                        Beyond technical training, we provide career development support. Many of our
                         training programs come with job offers upon completion.
                       </p>
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Right Column - Image */}
                 <div className="order-first lg:order-last">
                   <div className="relative">
-                    <img 
-                      src="/images/image3.png"
+                    <img
+                      src="/images/training1.jpeg"
                       alt="ZyraTech Training Benefits"
                       loading="lazy"
-                      className="w-full h-auto rounded-xl shadow-lg object-cover"
+                      className="w-full h-96 rounded-xl shadow-lg object-cover object-top"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
                   </div>
@@ -188,6 +189,7 @@ const TrainingAbout = () => {
 
               <ParallaxDivider
                 heightClassName="h-56 sm:h-64 md:h-72"
+                imageUrl="/images/parallax7.png"
                 className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
               />
 
@@ -203,8 +205,8 @@ const TrainingAbout = () => {
                     <div>
                       <h4 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">Experienced Mentors</h4>
                       <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                        At ZyraTech, you'll learn from the best. Our instructors are not just teachers; 
-                        they are industry practitioners who bring years of experience and a passion for 
+                        At ZyraTech, you'll learn from the best. Our instructors are not just teachers;
+                        they are industry practitioners who bring years of experience and a passion for
                         mentoring the next generation of tech professionals.
                       </p>
                     </div>
@@ -218,8 +220,8 @@ const TrainingAbout = () => {
                     <div>
                       <h4 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">Inclusive Learning Environment</h4>
                       <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                        We are committed to creating an inclusive learning environment where everyone can thrive. 
-                        Whether you're a beginner or looking to advance your skills, our supportive community 
+                        We are committed to creating an inclusive learning environment where everyone can thrive.
+                        Whether you're a beginner or looking to advance your skills, our supportive community
                         ensures you'll receive the encouragement and resources you need to succeed.
                       </p>
                     </div>
@@ -233,22 +235,22 @@ const TrainingAbout = () => {
                     <div>
                       <h4 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">Committed to Social Impact</h4>
                       <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                        When you choose ZyraTech, you're also contributing to a larger mission. We are 
-                        dedicated to making a positive impact by providing quality tech education and 
+                        When you choose ZyraTech, you're also contributing to a larger mission. We are
+                        dedicated to making a positive impact by providing quality tech education and
                         creating employment opportunities in underserved communities.
                       </p>
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Right Column - Image */}
                 <div className="order-first lg:order-last">
                   <div className="relative">
-                    <img 
-                      src="/images/image2.png"
-                      alt="ZyraTech Training Impact"
+                    <img
+                      src="/images/kal.jpeg"
+                      alt="ZyraTech Backend Developer"
                       loading="lazy"
-                      className="w-full h-auto rounded-xl shadow-lg object-cover"
+                      className="w-full h-[480px] rounded-xl shadow-lg object-cover object-center"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
                   </div>
@@ -260,6 +262,7 @@ const TrainingAbout = () => {
 
         <ParallaxDivider
           heightClassName="h-56 sm:h-64 md:h-72"
+          imageUrl="/images/parallax8.png"
           className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
         />
 
@@ -276,20 +279,20 @@ const TrainingAbout = () => {
             {/* Left Column - Content */}
             <div>
               <p className="text-base sm:text-lg text-gray-600 leading-relaxed mb-4 sm:mb-6">
-                Our team comprises seasoned professionals who bring a wealth of knowledge and real-world 
-                experience to every session. With a deep understanding of the industry's demands, our 
+                Our team comprises seasoned professionals who bring a wealth of knowledge and real-world
+                experience to every session. With a deep understanding of the industry's demands, our
                 trainers go beyond the basics, offering insights that you won't find in any textbook.
               </p>
               <p className="text-lg text-gray-600 leading-relaxed">
-                At ZyraTech, you're not just learning from experts—you're learning from people who 
+                At ZyraTech, you're not just learning from experts—you're learning from people who
                 are shaping the future of tech.
               </p>
             </div>
-            
+
             {/* Right Column - Image */}
             <div className="order-first lg:order-last">
               <div className="relative">
-                <img 
+                <img
                   src="/images/image2.png"
                   alt="ZyraTech Training Team"
                   loading="lazy"
@@ -313,11 +316,11 @@ const TrainingAbout = () => {
             Ready to take the next step in your tech career?
           </h3>
           <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto">
-            Explore our diverse range of training programs, tailored to meet the needs of aspiring developers, 
-            cloud engineers, and digital professionals. From internship programs to specialized programs in 
+            Explore our diverse range of training programs, tailored to meet the needs of aspiring developers,
+            cloud engineers, and digital professionals. From internship programs to specialized programs in
             software engineering and beyond, we have something for everyone.
           </p>
-          <Link 
+          <Link
             to="/training/programs"
             className="inline-flex items-center gap-2 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
           >

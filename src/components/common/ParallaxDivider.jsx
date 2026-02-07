@@ -5,10 +5,11 @@ const ParallaxDivider = ({
   imageUrl = '/images/image3.png',
   className = '',
   overlayClassName = 'bg-black/60',
+  bgPosition = 'bg-center',
   children
 }) => (
   <section
-    className={`hidden md:block relative ${heightClassName} bg-scroll md:bg-fixed motion-reduce:bg-scroll motion-reduce:md:bg-scroll bg-center bg-cover ${className}`}
+    className={`hidden md:block relative ${heightClassName} bg-scroll md:bg-fixed motion-reduce:bg-scroll motion-reduce:md:bg-scroll ${bgPosition} bg-cover ${className}`}
     style={{ backgroundImage: `url('${imageUrl}')` }}
   >
     <div className={`absolute inset-0 ${overlayClassName}`} />
