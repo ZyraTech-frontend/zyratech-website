@@ -11,7 +11,7 @@ import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
 import HrContactSection from '../../../components/common/HrContactSection.jsx';
 import useSEO from '../../../hooks/useSEO';
 
- const AboutPage = () => {
+const AboutPage = () => {
   useSEO({
     title: 'About Us',
     description: 'Learn about Zyra Tech Hub\'s mission to empower Ghana through technology education, digital skills training, and community development in Koforidua.',
@@ -25,28 +25,28 @@ import useSEO from '../../../hooks/useSEO';
 
       <OurMission />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax1.jpeg" />
 
       <WhyGhana />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax9.png" />
 
       <Milestones />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax3.png" />
 
       <SplitTestimonial />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax8.png" bgPosition="bg-top" />
 
       <ImpactCTA />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax7.png" bgPosition="bg-top" />
 
       <Timeline />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
-      <HrContactSection/>
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax10.png" bgPosition="bg-top" />
+      <HrContactSection />
 
       <NewsletterHero />
     </div>

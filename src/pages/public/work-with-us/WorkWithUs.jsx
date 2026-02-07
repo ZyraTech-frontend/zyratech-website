@@ -15,28 +15,28 @@ const WorkWithUs = () => {
 
       <HowWeAreSetUpSection />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax3.png" />
 
       <ProjectSetupSection />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax4.png" />
 
       <InterculturalCollaborationSection />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax5.png" />
 
       {/* <OpportunitiesSection /> */}
 
       <HowWeHireSection />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
-    
-      <HrContactSection/>
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax6.png" />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" />
+      <HrContactSection />
 
-    
-      <NewsletterHero/>
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax7.png" />
+
+
+      <NewsletterHero />
     </div>
   );
 };

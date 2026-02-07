@@ -93,15 +93,15 @@ const ImpactPage = () => {
 
       <ImpactCommunitySection />
 
-      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/image3.png" overlayClassName="bg-black/50" />
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax2.png" overlayClassName="bg-black/50" />
 
       <ImpactValuesSection items={values} />
 
-      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/image1.png" overlayClassName="bg-black/50" />
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax3.png" overlayClassName="bg-black/50" />
 
       <ImpactPeopleHighlightsSection people={highlights} />
 
-      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png" overlayClassName="bg-black/50" />
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax4.png" overlayClassName="bg-black/50" />
 
       <section className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -146,7 +146,7 @@ const ImpactPage = () => {
         </div>
       </section>
 
-      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/image2.png" overlayClassName="bg-black/50" />
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax5.png" overlayClassName="bg-black/50" />
 
       <NewsletterHero />
     </div>

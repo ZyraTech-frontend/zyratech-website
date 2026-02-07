@@ -23,19 +23,19 @@ const HomePage = () => {
     <div>
       <Hero />
       <AboutQuote />
-      
-      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" />
-      
+
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax1.jpeg" />
+
       <PartnersShowcase />
       <AboutShowcase />
-      
-      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" />
-      
+
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax2.png" />
+
       <ServicesShowcase />
       <BenefitsShowcase />
-      
-      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" />
-      
+
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax3.png" />
+
       <TestimonialsSection />
       <HrContactSection />
       <NewsletterHero />
