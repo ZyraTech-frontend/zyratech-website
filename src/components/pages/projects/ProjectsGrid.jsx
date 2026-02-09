@@ -1,65 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { projectsData } from '../../../data/projectsData';
 
 const ProjectsGrid = () => {
-  const projects = [
-    {
-      title: 'SafeDrive',
-      category: 'Transportation',
-      description: 'An intelligent road safety innovation that detects driver fatigue, alcohol influence, and risky driving behaviors. It provides real-time alerts to prevent accidents, protect lives, and promote safer transportation systems across Africa.',
-      status: 'Active',
-      image: '/images/safedrive/safedrive.jpg',
-      link: '/projects/safedrive'
-    },
-    {
-      title: 'IoT & Data Platforms',
-      category: 'Software',
-      description: 'Connecting devices and powering decisions with scalable IoT dashboards.',
-      status: 'Active',
-      image: '/images/Homepage/PXL_20240913_102510357.MP.jpg',
-      link: '/services/software/iot'
-    },
-    {
-      title: 'Household Solutions',
-      category: 'Software',
-      description: 'Smart software for every home - budgeting, management, and family coordination.',
-      status: 'Active',
-      image: '/images/Homepage/WhatsApp Image 2025-07-10 at 5.30.30 PM.jpeg',
-      link: '/services/software/household'
-    },
-    {
-      title: 'EcoWatch',
-      category: 'Environment',
-      description: 'A real-time air quality monitoring system that tracks pollution levels across multiple locations and provides actionable insights for communities.',
-      status: 'Active',
-      image: '/images/Homepage/ECOWatch1.png',
-      link: '/projects/ecowatch'
-    },
-    {
-      title: 'AgrizPlanter',
-      category: 'Agriculture',
-      description: 'An automated rice planting device designed to eliminate the stress of manual transplanting, increase planting speed and accuracy, and improve farmers\' efficiency and productivity.',
-      status: 'In Progress',
-      image: '/images/agrizplanter/agrizplanter.jpg',
-      link: '/projects/agrizplanter'
-    },
-    {
-      title: 'ERA Technologies',
-      category: 'Business Solutions',
-      description: 'Digital tools for African businesses and startups. Streamline operations with ERA KPI, ERA Attendance, and ERA Bulk Email & SMS.',
-      status: 'Active',
-      image: '/images/era-technologies/era-kpi2.jpg',
-      link: '/projects/era-technologies'
-    },
-    {
-      title: 'EduConnect Platform',
-      category: 'Education',
-      description: 'Digital learning platform connecting students with mentors and resources.',
-      status: 'Completed',
-      image: '/images/Homepage/PXL_20250612_144423482.MP.jpg',
-      link: '#'
-    }
-  ];
+  // Map projectsData to match display format
+  const projects = projectsData.map(project => ({
+    title: project.title,
+    category: project.category,
+    description: project.description,
+    status: project.status,
+    image: project.image,
+    link: project.link
+  }));
 
   return (
     <section className="py-8 sm:py-10 md:py-12 bg-white">

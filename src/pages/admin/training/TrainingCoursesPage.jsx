@@ -198,8 +198,6 @@ const TrainingCoursesPage = () => {
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [selectedLevel, setSelectedLevel] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
-    const [showModal, setShowModal] = useState(false);
-    const [editingCourse, setEditingCourse] = useState(null);
     const [viewingCourse, setViewingCourse] = useState(null);
     const [showDropdown, setShowDropdown] = useState(null);
 
@@ -323,13 +321,11 @@ const TrainingCoursesPage = () => {
     };
 
     const handleEdit = (course) => {
-        setEditingCourse(course);
-        setShowModal(true);
+        navigate(`/admin/training/edit/${course.id}`);
     };
 
     const handleAddNew = () => {
-        setEditingCourse(null);
-        setShowModal(true);
+        navigate('/admin/training/new');
     };
 
     const resetFilters = () => {
@@ -1151,60 +1147,6 @@ const TrainingCoursesPage = () => {
                                     View Public Page
                                 </a>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Add/Edit Course Modal */}
-            {showModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                    {editingCourse ? <Edit className="text-white" size={20} /> : <Plus className="text-white" size={20} />}
-                                </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-gray-900">
-                                        {editingCourse ? 'Edit Course' : 'Add New Course'}
-                                    </h2>
-                                    <p className="text-gray-500 text-xs">
-                                        {editingCourse ? 'Update course information' : 'Create a new training course'}
-                                    </p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => { setShowModal(false); setEditingCourse(null); }}
-                                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-                            <div className="text-center py-12">
-                                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <AlertCircle className="text-amber-500" size={32} />
-                                </div>
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Coming Soon</h3>
-                                <p className="text-sm text-gray-500 max-w-md mx-auto">
-                                    The course editor form will be available once the backend API is ready.
-                                    Currently, courses are managed via the <code className="px-1.5 py-0.5 bg-gray-100 rounded text-xs">trainingCourses.js</code> data file.
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-end gap-3 bg-gray-50">
-                            <button
-                                onClick={() => { setShowModal(false); setEditingCourse(null); }}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
-                            >
-                                Close
-                            </button>
                         </div>
                     </div>
                 </div>

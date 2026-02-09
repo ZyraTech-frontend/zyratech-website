@@ -25,10 +25,21 @@ const UsersPage = lazy(() => import('./pages/admin/users/UsersPage'));
 const SettingsPage = lazy(() => import('./pages/admin/settings/SettingsPage'));
 const TrainingCoursesPage = lazy(() => import('./pages/admin/training/TrainingCoursesPage'));
 const ApplicationDetailsPage = lazy(() => import('./pages/admin/training/ApplicationDetailsPage'));
+const CourseFormPage = lazy(() => import('./pages/admin/training/CourseFormPage'));
 const JobsManagementPage = lazy(() => import('./pages/admin/jobs/JobsManagementPage'));
+const JobFormPage = lazy(() => import('./pages/admin/jobs/JobFormPage'));
+const JobDetailsPage = lazy(() => import('./pages/admin/jobs/JobDetailsPage'));
+const JobApplicationDetailsPage = lazy(() => import('./pages/admin/jobs/JobApplicationDetailsPage'));
+const BlogManagementPage = lazy(() => import('./pages/admin/blog/BlogManagementPage'));
+const BlogDetailsPage = lazy(() => import('./pages/admin/blog/BlogDetailsPage'));
+const BlogFormPage = lazy(() => import('./pages/admin/blog/BlogFormPage'));
 const GalleryManagementPage = lazy(() => import('./pages/admin/gallery/GalleryManagementPage'));
+const AlbumFormPage = lazy(() => import('./pages/admin/gallery/AlbumFormPage'));
 const ProjectsManagementPage = lazy(() => import('./pages/admin/projects/ProjectsManagementPage'));
+const ProjectFormPage = lazy(() => import('./pages/admin/projects/ProjectFormPage'));
+const ProjectDetailsPage = lazy(() => import('./pages/admin/projects/ProjectDetailsPage'));
 const FaqManagementPage = lazy(() => import('./pages/admin/faq/FaqManagementPage'));
+const FaqFormPage = lazy(() => import('./pages/admin/faq/FaqFormPage'));
 const TestimonialsManagementPage = lazy(() => import('./pages/admin/testimonials/TestimonialsManagementPage'));
 const PaymentsManagementPage = lazy(() => import('./pages/admin/payments/PaymentsManagementPage'));
 const EnrollmentsManagementPage = lazy(() => import('./pages/admin/enrollments/EnrollmentsManagementPage'));
@@ -161,10 +172,90 @@ function App() {
                 }
               />
               <Route
+                path="/admin/training/new"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <CourseFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/training/edit/:id"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <CourseFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/jobs"
                 element={
                   <ProtectedRoute>
                     <JobsManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/jobs/new"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <JobFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/jobs/edit/:id"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <JobFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/jobs/:id"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <JobDetailsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/jobs/applications/:id"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <JobApplicationDetailsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/blog"
+                element={
+                  <ProtectedRoute>
+                    <BlogManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/blog/new"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <BlogFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/blog/edit/:id"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <BlogFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/blog/:id"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <BlogDetailsPage />
                   </ProtectedRoute>
                 }
               />
@@ -177,6 +268,22 @@ function App() {
                 }
               />
               <Route
+                path="/admin/gallery/new"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <AlbumFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/gallery/edit/:id"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <AlbumFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/projects"
                 element={
                   <ProtectedRoute>
@@ -185,10 +292,50 @@ function App() {
                 }
               />
               <Route
+                path="/admin/projects/new"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <ProjectFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/projects/edit/:id"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <ProjectFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/projects/:id"
+                element={
+                  <ProtectedRoute>
+                    <ProjectDetailsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/faq"
                 element={
                   <ProtectedRoute>
                     <FaqManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/faq/new"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <FaqFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/faq/edit/:id"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <FaqFormPage />
                   </ProtectedRoute>
                 }
               />
