@@ -41,6 +41,7 @@ const ProjectDetailsPage = lazy(() => import('./pages/admin/projects/ProjectDeta
 const FaqManagementPage = lazy(() => import('./pages/admin/faq/FaqManagementPage'));
 const FaqFormPage = lazy(() => import('./pages/admin/faq/FaqFormPage'));
 const TestimonialsManagementPage = lazy(() => import('./pages/admin/testimonials/TestimonialsManagementPage'));
+const TestimonialsFormPage = lazy(() => import('./pages/admin/testimonials/TestimonialsFormPage'));
 const PaymentsManagementPage = lazy(() => import('./pages/admin/payments/PaymentsManagementPage'));
 const EnrollmentsManagementPage = lazy(() => import('./pages/admin/enrollments/EnrollmentsManagementPage'));
 const MessagesManagementPage = lazy(() => import('./pages/admin/messages/MessagesManagementPage'));
@@ -344,6 +345,22 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <TestimonialsManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/testimonials/new"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <TestimonialsFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/testimonials/edit/:id"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <TestimonialsFormPage />
                   </ProtectedRoute>
                 }
               />

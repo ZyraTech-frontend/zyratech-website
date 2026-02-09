@@ -5,6 +5,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
@@ -299,6 +300,7 @@ const AvatarDisplay = ({ name, avatar, size = 'md' }) => {
 
 const TestimonialsManagementPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { isSuperAdmin } = usePermissions();
 
     // State management
@@ -381,13 +383,11 @@ const TestimonialsManagementPage = () => {
     };
 
     const handleEdit = (testimonial) => {
-        setEditingTestimonial(testimonial);
-        setShowModal(true);
+        navigate(`/admin/testimonials/edit/${testimonial.id}`);
     };
 
     const handleAddNew = () => {
-        setEditingTestimonial(null);
-        setShowModal(true);
+        navigate('/admin/testimonials/new');
     };
 
     const handleToggleFeatured = (testimonial) => {
@@ -428,90 +428,90 @@ const TestimonialsManagementPage = () => {
                 </div>
 
                 {/* Statistics Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4">
+                    {/* Total */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-blue-500 hover:shadow-md transition-all duration-200 cursor-pointer"
                         onClick={() => { setSelectedStatus('all'); setCurrentPage(1); }}
                     >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                                <MessageCircle className="text-blue-600" size={18} />
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
+                                <MessageCircle className="text-blue-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">All</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Total Reviews</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
+                        <p className="text-xs text-gray-600 mt-1">Total Reviews</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                    {/* Published */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-green-500 hover:shadow-md transition-all duration-200 cursor-pointer"
                         onClick={() => { setSelectedStatus('published'); setCurrentPage(1); }}
                     >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center group-hover:bg-green-100 transition-colors">
-                                <CheckCircle className="text-green-600" size={18} />
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-green-100 rounded flex items-center justify-center">
+                                <CheckCircle className="text-green-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Live</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.published}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Published</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.published}</p>
+                        <p className="text-xs text-gray-600 mt-1">Published</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                    {/* Pending */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-amber-500 hover:shadow-md transition-all duration-200 cursor-pointer"
                         onClick={() => { setSelectedStatus('pending'); setCurrentPage(1); }}
                     >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center group-hover:bg-amber-100 transition-colors">
-                                <Clock className="text-amber-600" size={18} />
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">
+                                <Clock className="text-amber-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Review</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.pending}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Pending</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.pending}</p>
+                        <p className="text-xs text-gray-600 mt-1">Pending Review</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                    {/* Drafts */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-gray-400 hover:shadow-md transition-all duration-200 cursor-pointer"
                         onClick={() => { setSelectedStatus('draft'); setCurrentPage(1); }}
                     >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-gray-50 rounded-lg flex items-center justify-center group-hover:bg-gray-100 transition-colors">
-                                <AlertCircle className="text-gray-600" size={18} />
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center">
+                                <AlertCircle className="text-gray-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-gray-600 bg-gray-50 px-2 py-0.5 rounded-full">Draft</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.drafts}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Drafts</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.drafts}</p>
+                        <p className="text-xs text-gray-600 mt-1">Drafts</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
-                                <Sparkles className="text-purple-600" size={18} />
+                    {/* Featured */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-purple-500 hover:shadow-md transition-all duration-200">
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-purple-100 rounded flex items-center justify-center">
+                                <Sparkles className="text-purple-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">★</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.featured}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Featured</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.featured}</p>
+                        <p className="text-xs text-gray-600 mt-1">Featured</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center group-hover:bg-amber-100 transition-colors">
-                                <Star className="text-amber-500 fill-amber-500" size={18} />
+                    {/* Avg Rating */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-amber-500 hover:shadow-md transition-all duration-200">
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">
+                                <Star className="text-amber-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Avg</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.avgRating}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Avg Rating</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.avgRating}</p>
+                        <p className="text-xs text-gray-600 mt-1">Avg Rating</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
-                                <ThumbsUp className="text-white" size={18} />
+                    {/* Total Likes */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-pink-500 hover:shadow-md transition-all duration-200">
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-pink-100 rounded flex items-center justify-center">
+                                <ThumbsUp className="text-pink-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-white/90 bg-white/20 px-2 py-0.5 rounded-full">Likes</span>
                         </div>
-                        <p className="text-2xl font-bold text-white">{stats.totalLikes}</p>
-                        <p className="text-xs text-blue-100 mt-0.5">Total Likes</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.totalLikes}</p>
+                        <p className="text-xs text-gray-600 mt-1">Total Likes</p>
                     </div>
                 </div>
 
