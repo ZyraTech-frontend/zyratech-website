@@ -4,10 +4,12 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
+import { projectsData, getProjectsByStatus, getCategories, getStatuses } from '../../../data/projectsData';
 import {
     FolderKanban,
     Plus,
@@ -66,107 +68,7 @@ const STATUS_CONFIG = {
     'Archived': { label: 'Archived', color: 'bg-gray-400 text-white', icon: Archive }
 };
 
-// Mock projects data (enhanced from ProjectsGrid)
-const mockProjects = [
-    {
-        id: 1,
-        title: 'SafeDrive',
-        category: 'Transportation',
-        description: 'An intelligent road safety innovation that detects driver fatigue, alcohol influence, and risky driving behaviors. It provides real-time alerts to prevent accidents, protect lives, and promote safer transportation systems across Africa.',
-        status: 'Active',
-        image: '/images/safedrive/safedrive.jpg',
-        link: '/projects/safedrive',
-        featured: true,
-        technologies: ['IoT', 'Machine Learning', 'Raspberry Pi', 'Python'],
-        team: 5,
-        startDate: '2024-01-15',
-        progress: 85
-    },
-    {
-        id: 2,
-        title: 'IoT & Data Platforms',
-        category: 'Software',
-        description: 'Connecting devices and powering decisions with scalable IoT dashboards.',
-        status: 'Active',
-        image: '/images/Homepage/PXL_20240913_102510357.MP.jpg',
-        link: '/services/software/iot',
-        featured: false,
-        technologies: ['React', 'Node.js', 'MQTT', 'MongoDB'],
-        team: 3,
-        startDate: '2024-03-01',
-        progress: 70
-    },
-    {
-        id: 3,
-        title: 'Household Solutions',
-        category: 'Software',
-        description: 'Smart software for every home - budgeting, management, and family coordination.',
-        status: 'Active',
-        image: '/images/Homepage/WhatsApp Image 2025-07-10 at 5.30.30 PM.jpeg',
-        link: '/services/software/household',
-        featured: false,
-        technologies: ['React Native', 'Firebase', 'TypeScript'],
-        team: 4,
-        startDate: '2024-02-20',
-        progress: 60
-    },
-    {
-        id: 4,
-        title: 'EcoWatch',
-        category: 'Environment',
-        description: 'A real-time air quality monitoring system that tracks pollution levels across multiple locations and provides actionable insights for communities.',
-        status: 'Active',
-        image: '/images/Homepage/ECOWatch1.png',
-        link: '/projects/ecowatch',
-        featured: true,
-        technologies: ['IoT Sensors', 'AWS', 'React', 'Python'],
-        team: 4,
-        startDate: '2024-04-10',
-        progress: 90
-    },
-    {
-        id: 5,
-        title: 'AgrizPlanter',
-        category: 'Agriculture',
-        description: 'An automated rice planting device designed to eliminate the stress of manual transplanting, increase planting speed and accuracy, and improve farmers\' efficiency and productivity.',
-        status: 'In Progress',
-        image: '/images/agrizplanter/agrizplanter.jpg',
-        link: '/projects/agrizplanter',
-        featured: true,
-        technologies: ['Arduino', 'Mechanical Design', 'Solar Power'],
-        team: 6,
-        startDate: '2024-05-01',
-        progress: 45
-    },
-    {
-        id: 6,
-        title: 'ERA Technologies',
-        category: 'Business Solutions',
-        description: 'Digital tools for African businesses and startups. Streamline operations with ERA KPI, ERA Attendance, and ERA Bulk Email & SMS.',
-        status: 'Active',
-        image: '/images/era-technologies/era-kpi2.jpg',
-        link: '/projects/era-technologies',
-        featured: false,
-        technologies: ['Vue.js', 'Laravel', 'MySQL', 'REST API'],
-        team: 5,
-        startDate: '2023-11-15',
-        progress: 95
-    },
-    {
-        id: 7,
-        title: 'EduConnect Platform',
-        category: 'Education',
-        description: 'Digital learning platform connecting students with mentors and resources.',
-        status: 'Completed',
-        image: '/images/Homepage/PXL_20250612_144423482.MP.jpg',
-        link: '#',
-        featured: false,
-        technologies: ['Next.js', 'PostgreSQL', 'WebRTC', 'Stripe'],
-        team: 4,
-        startDate: '2023-08-01',
-        progress: 100
-    }
-];
+
 
 // Status badge component
 const StatusBadge = ({ status }) => {
@@ -201,6 +103,7 @@ const ProgressBar = ({ progress }) => {
 
 const ProjectsManagementPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { isSuperAdmin } = usePermissions();
 
     // State management
@@ -209,15 +112,12 @@ const ProjectsManagementPage = () => {
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [viewMode, setViewMode] = useState('grid');
-    const [showModal, setShowModal] = useState(false);
-    const [editingProject, setEditingProject] = useState(null);
-    const [viewingProject, setViewingProject] = useState(null);
 
     const itemsPerPage = 6;
 
     // Filter and search projects
     const filteredProjects = useMemo(() => {
-        let result = [...mockProjects];
+        let result = [...projectsData];
 
         // Search filter
         if (searchQuery) {
@@ -251,23 +151,23 @@ const ProjectsManagementPage = () => {
 
     // Statistics
     const stats = useMemo(() => ({
-        total: mockProjects.length,
-        active: mockProjects.filter(p => p.status === 'Active').length,
-        inProgress: mockProjects.filter(p => p.status === 'In Progress').length,
-        completed: mockProjects.filter(p => p.status === 'Completed').length,
-        featured: mockProjects.filter(p => p.featured).length,
-        totalTeam: mockProjects.reduce((acc, p) => acc + (p.team || 0), 0),
-        avgProgress: Math.round(mockProjects.reduce((acc, p) => acc + (p.progress || 0), 0) / mockProjects.length)
+        total: projectsData.length,
+        active: projectsData.filter(p => p.status === 'Active').length,
+        inProgress: projectsData.filter(p => p.status === 'In Progress').length,
+        completed: projectsData.filter(p => p.status === 'Completed').length,
+        featured: projectsData.filter(p => p.featured).length,
+        totalTeam: projectsData.reduce((acc, p) => acc + (p.team || 0), 0),
+        avgProgress: Math.round(projectsData.reduce((acc, p) => acc + (p.progress || 0), 0) / projectsData.length)
     }), []);
 
     // Get unique categories
     const uniqueCategories = useMemo(() => {
-        return [...new Set(mockProjects.map(p => p.category))];
+        return getCategories();
     }, []);
 
     // Get unique statuses
     const uniqueStatuses = useMemo(() => {
-        return [...new Set(mockProjects.map(p => p.status))];
+        return getStatuses();
     }, []);
 
     // Handlers
@@ -284,17 +184,15 @@ const ProjectsManagementPage = () => {
     };
 
     const handleView = (project) => {
-        setViewingProject(project);
+        navigate(`/admin/projects/${project.id}`);
     };
 
     const handleEdit = (project) => {
-        setEditingProject(project);
-        setShowModal(true);
+        navigate(`/admin/projects/edit/${project.id}`);
     };
 
     const handleAddNew = () => {
-        setEditingProject(null);
-        setShowModal(true);
+        navigate('/admin/projects/new');
     };
 
     const resetFilters = () => {
@@ -330,90 +228,90 @@ const ProjectsManagementPage = () => {
                 </div>
 
                 {/* Statistics Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4">
+                    {/* Total Projects */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-blue-500 hover:shadow-md transition-all duration-200 group cursor-pointer"
                         onClick={() => { setSelectedStatus('all'); setCurrentPage(1); }}
                     >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                                <FolderKanban className="text-blue-600" size={18} />
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
+                                <FolderKanban className="text-blue-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">All</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Total Projects</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
+                        <p className="text-xs text-gray-600 mt-1">Total</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                    {/* Active */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-green-500 hover:shadow-md transition-all duration-200 group cursor-pointer"
                         onClick={() => { setSelectedStatus('Active'); setCurrentPage(1); }}
                     >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center group-hover:bg-green-100 transition-colors">
-                                <Play className="text-green-600" size={18} />
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-green-100 rounded flex items-center justify-center">
+                                <Play className="text-green-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Live</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.active}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Active</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.active}</p>
+                        <p className="text-xs text-gray-600 mt-1">Active</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                    {/* In Progress */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-amber-500 hover:shadow-md transition-all duration-200 group cursor-pointer"
                         onClick={() => { setSelectedStatus('In Progress'); setCurrentPage(1); }}
                     >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center group-hover:bg-amber-100 transition-colors">
-                                <Clock className="text-amber-600" size={18} />
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">
+                                <Clock className="text-amber-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">WIP</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.inProgress}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">In Progress</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.inProgress}</p>
+                        <p className="text-xs text-gray-600 mt-1">In Progress</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                    {/* Completed */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-cyan-500 hover:shadow-md transition-all duration-200 group cursor-pointer"
                         onClick={() => { setSelectedStatus('Completed'); setCurrentPage(1); }}
                     >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-cyan-50 rounded-lg flex items-center justify-center group-hover:bg-cyan-100 transition-colors">
-                                <CheckCircle className="text-cyan-600" size={18} />
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-cyan-100 rounded flex items-center justify-center">
+                                <CheckCircle className="text-cyan-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-cyan-600 bg-cyan-50 px-2 py-0.5 rounded-full">Done</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.completed}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Completed</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.completed}</p>
+                        <p className="text-xs text-gray-600 mt-1">Completed</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
-                                <Rocket className="text-purple-600" size={18} />
+                    {/* Featured */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-purple-500 hover:shadow-md transition-all duration-200 group cursor-pointer">
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-purple-100 rounded flex items-center justify-center">
+                                <Rocket className="text-purple-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">★</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.featured}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Featured</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.featured}</p>
+                        <p className="text-xs text-gray-600 mt-1">Featured</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-pink-50 rounded-lg flex items-center justify-center group-hover:bg-pink-100 transition-colors">
-                                <Users className="text-pink-600" size={18} />
+                    {/* Team Members */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-pink-500 hover:shadow-md transition-all duration-200 group cursor-pointer">
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-pink-100 rounded flex items-center justify-center">
+                                <Users className="text-pink-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full">Team</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.totalTeam}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Team Members</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.totalTeam}</p>
+                        <p className="text-xs text-gray-600 mt-1">Team Members</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
-                                <TrendingUp className="text-white" size={18} />
+                    {/* Avg Progress */}
+                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-indigo-500 hover:shadow-md transition-all duration-200 group cursor-pointer">
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-indigo-100 rounded flex items-center justify-center">
+                                <TrendingUp className="text-indigo-600" size={16} />
                             </div>
-                            <span className="text-xs font-medium text-white/90 bg-white/20 px-2 py-0.5 rounded-full">Avg</span>
                         </div>
-                        <p className="text-2xl font-bold text-white">{stats.avgProgress}%</p>
-                        <p className="text-xs text-blue-100 mt-0.5">Avg Progress</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.avgProgress}%</p>
+                        <p className="text-xs text-gray-600 mt-1">Avg Progress</p>
                     </div>
                 </div>
 
@@ -803,188 +701,6 @@ const ProjectsManagementPage = () => {
                     </div>
                 )}
             </div>
-
-            {/* View Project Modal */}
-            {viewingProject && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
-                        {/* Modal Header with Image */}
-                        <div className="relative h-56 overflow-hidden">
-                            <img
-                                src={viewingProject.image}
-                                alt={viewingProject.title}
-                                className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                            <button
-                                onClick={() => setViewingProject(null)}
-                                className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg transition-colors text-white"
-                            >
-                                <X size={20} />
-                            </button>
-                            <div className="absolute bottom-4 left-6 right-6">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <span className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold border ${CATEGORY_CONFIG[viewingProject.category]?.color}`}>
-                                        {viewingProject.category}
-                                    </span>
-                                    <StatusBadge status={viewingProject.status} />
-                                    {viewingProject.featured && (
-                                        <span className="flex items-center gap-1 bg-amber-500 text-white px-2 py-1 rounded-full text-[10px] font-bold">
-                                            <Rocket size={10} />
-                                            Featured
-                                        </span>
-                                    )}
-                                </div>
-                                <h2 className="text-2xl font-bold text-white">{viewingProject.title}</h2>
-                            </div>
-                        </div>
-
-                        {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-280px)]">
-                            <div className="space-y-5">
-                                {/* Description */}
-                                <div>
-                                    <p className="text-xs font-medium text-gray-500 mb-2">Description</p>
-                                    <p className="text-gray-700">{viewingProject.description}</p>
-                                </div>
-
-                                {/* Progress */}
-                                <div>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <p className="text-xs font-medium text-gray-500">Project Progress</p>
-                                        <span className="text-sm font-bold text-gray-900">{viewingProject.progress}%</span>
-                                    </div>
-                                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                                        <div
-                                            className={`h-2.5 rounded-full transition-all duration-500 ${viewingProject.progress >= 90 ? 'bg-green-500' :
-                                                    viewingProject.progress >= 70 ? 'bg-blue-500' :
-                                                        viewingProject.progress >= 40 ? 'bg-amber-500' : 'bg-red-500'
-                                                }`}
-                                            style={{ width: `${viewingProject.progress}%` }}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Technologies */}
-                                <div>
-                                    <p className="text-xs font-medium text-gray-500 mb-2">Technologies</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {viewingProject.technologies?.map((tech, idx) => (
-                                            <span key={idx} className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
-                                                {tech}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Details Grid */}
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                        <Users className="mx-auto text-gray-400 mb-2" size={20} />
-                                        <p className="text-lg font-bold text-gray-900">{viewingProject.team}</p>
-                                        <p className="text-xs text-gray-500">Team Members</p>
-                                    </div>
-                                    <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                        <Calendar className="mx-auto text-gray-400 mb-2" size={20} />
-                                        <p className="text-lg font-bold text-gray-900">{viewingProject.startDate}</p>
-                                        <p className="text-xs text-gray-500">Start Date</p>
-                                    </div>
-                                    <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                        <Layers className="mx-auto text-gray-400 mb-2" size={20} />
-                                        <p className="text-lg font-bold text-gray-900">{viewingProject.technologies?.length || 0}</p>
-                                        <p className="text-xs text-gray-500">Technologies</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50">
-                            <button
-                                onClick={() => setViewingProject(null)}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
-                            >
-                                Close
-                            </button>
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => {
-                                        setViewingProject(null);
-                                        handleEdit(viewingProject);
-                                    }}
-                                    className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm flex items-center gap-1.5"
-                                >
-                                    <Edit size={14} />
-                                    Edit
-                                </button>
-                                <a
-                                    href={viewingProject.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-medium text-sm flex items-center gap-1.5"
-                                >
-                                    <ExternalLink size={14} />
-                                    View Live
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Add/Edit Project Modal */}
-            {showModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                    {editingProject ? <Edit className="text-white" size={20} /> : <Plus className="text-white" size={20} />}
-                                </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-gray-900">
-                                        {editingProject ? 'Edit Project' : 'Add New Project'}
-                                    </h2>
-                                    <p className="text-gray-500 text-xs">
-                                        {editingProject ? 'Update project information' : 'Create a new portfolio project'}
-                                    </p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => { setShowModal(false); setEditingProject(null); }}
-                                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-                            <div className="text-center py-12">
-                                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <AlertCircle className="text-amber-500" size={32} />
-                                </div>
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Coming Soon</h3>
-                                <p className="text-sm text-gray-500 max-w-md mx-auto">
-                                    The project editor form will be available once the backend API is ready.
-                                    Currently, projects are managed via the <code className="px-1.5 py-0.5 bg-gray-100 rounded text-xs">ProjectsGrid.jsx</code> data file.
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-end gap-3 bg-gray-50">
-                            <button
-                                onClick={() => { setShowModal(false); setEditingProject(null); }}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </AdminLayout>
     );
 };

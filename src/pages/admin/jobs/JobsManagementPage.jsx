@@ -3,7 +3,8 @@
  * Professional admin interface for managing job listings and applications
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
@@ -72,6 +73,7 @@ const StatusBadge = ({ status }) => {
 
 const JobsManagementPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { isSuperAdmin } = usePermissions();
 
     // State management
@@ -79,20 +81,26 @@ const JobsManagementPage = () => {
     const [selectedType, setSelectedType] = useState('all');
     const [selectedLocation, setSelectedLocation] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
-    const [showModal, setShowModal] = useState(false);
-    const [editingJob, setEditingJob] = useState(null);
-    const [viewingJob, setViewingJob] = useState(null);
     const [activeTab, setActiveTab] = useState('jobs'); // 'jobs' or 'applications'
+    const [showModal, setShowModal] = useState(false);
+
+    // Redirect to form when modal is opened
+    useEffect(() => {
+        if (showModal) {
+            navigate('/admin/jobs/new');
+            setShowModal(false);
+        }
+    }, [showModal, navigate]);
 
     const itemsPerPage = 6;
 
     // Mock applications data
     const mockApplications = useMemo(() => [
-        { id: 1, jobId: 1, name: 'Kwame Asante', email: 'kwame@email.com', status: 'pending', appliedAt: '2024-12-20', phone: '+233 24 123 4567' },
-        { id: 2, jobId: 1, name: 'Ama Serwaa', email: 'ama@email.com', status: 'reviewed', appliedAt: '2024-12-19', phone: '+233 20 234 5678' },
-        { id: 3, jobId: 2, name: 'Kofi Mensah', email: 'kofi@email.com', status: 'interviewed', appliedAt: '2024-12-18', phone: '+233 27 345 6789' },
-        { id: 4, jobId: 3, name: 'Akua Frimpong', email: 'akua@email.com', status: 'pending', appliedAt: '2024-12-17', phone: '+233 24 456 7890' },
-        { id: 5, jobId: 1, name: 'Yaw Boateng', email: 'yaw@email.com', status: 'rejected', appliedAt: '2024-12-16', phone: '+233 55 567 8901' },
+        { id: '1', jobId: 1, name: 'Kwame Asante', email: 'kwame@email.com', status: 'pending', appliedAt: '2026-02-05', phone: '+233 24 123 4567' },
+        { id: '2', jobId: 2, name: 'Ama Serwaa', email: 'ama@email.com', status: 'reviewed', appliedAt: '2026-02-03', phone: '+233 20 234 5678' },
+        { id: '3', jobId: 3, name: 'Kofi Mensah', email: 'kofi@email.com', status: 'interviewed', appliedAt: '2026-02-07', phone: '+233 27 345 6789' },
+        { id: '4', jobId: 1, name: 'Akua Frimpong', email: 'akua@email.com', status: 'rejected', appliedAt: '2026-02-01', phone: '+233 24 456 7890' },
+        { id: '5', jobId: 2, name: 'Yaw Boateng', email: 'yaw@email.com', status: 'pending', appliedAt: '2026-02-08', phone: '+233 55 567 8901' },
     ], []);
 
     // Filter and search jobs
@@ -167,17 +175,19 @@ const JobsManagementPage = () => {
     };
 
     const handleView = (job) => {
-        setViewingJob(job);
+        navigate(`/admin/jobs/${job.id}`);
+    };
+
+    const handleViewApplication = (applicationId) => {
+        navigate(`/admin/jobs/applications/${applicationId}`);
     };
 
     const handleEdit = (job) => {
-        setEditingJob(job);
-        setShowModal(true);
+        navigate(`/admin/jobs/edit/${job.id}`);
     };
 
     const handleAddNew = () => {
-        setEditingJob(null);
-        setShowModal(true);
+        navigate('/admin/jobs/new');
     };
 
     const resetFilters = () => {
@@ -624,6 +634,7 @@ const JobsManagementPage = () => {
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center justify-end gap-1">
                                                             <button
+                                                                onClick={() => handleViewApplication(application.id)}
                                                                 className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
                                                                 title="View Application"
                                                             >
@@ -654,144 +665,7 @@ const JobsManagementPage = () => {
                 )}
             </div>
 
-            {/* View Job Modal */}
-            {viewingJob && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-[#004fa2] to-[#0066cc]">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                                    <Briefcase className="text-white" size={22} />
-                                </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-white">Job Details</h2>
-                                    <p className="text-blue-100 text-xs">ID: {viewingJob.id}</p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => setViewingJob(null)}
-                                className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
-                            <div className="space-y-5">
-                                {/* Title and Type */}
-                                <div>
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${JOB_TYPE_CONFIG[viewingJob.type]?.color || 'bg-gray-100'}`}>
-                                            {viewingJob.type}
-                                        </span>
-                                        <StatusBadge status={viewingJob.status || 'active'} />
-                                    </div>
-                                    <h3 className="text-xl font-bold text-gray-900">{viewingJob.title}</h3>
-                                    <p className="text-sm text-gray-600 mt-2">{viewingJob.description}</p>
-                                </div>
-
-                                {/* Locations */}
-                                <div className="flex items-center gap-2 flex-wrap">
-                                    {viewingJob.locations?.map((loc, idx) => (
-                                        <span key={idx} className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-700">
-                                            <MapPin size={14} className="text-gray-500" />
-                                            {loc}
-                                        </span>
-                                    ))}
-                                </div>
-
-                                {/* Job Description */}
-                                {viewingJob.jobDescription && (
-                                    <div>
-                                        <p className="text-xs font-medium text-gray-500 mb-2">Job Description</p>
-                                        <p className="text-sm text-gray-700 bg-gray-50 rounded-lg p-4">{viewingJob.jobDescription}</p>
-                                    </div>
-                                )}
-
-                                {/* Responsibilities */}
-                                {viewingJob.responsibilities && (
-                                    <div>
-                                        <p className="text-xs font-medium text-gray-500 mb-2">Key Responsibilities</p>
-                                        <div className="space-y-2">
-                                            {viewingJob.responsibilities.map((resp, idx) => (
-                                                <div key={idx} className="flex items-start gap-2 p-2 bg-blue-50 rounded-lg">
-                                                    <CheckCircle className="text-blue-500 shrink-0 mt-0.5" size={14} />
-                                                    <p className="text-sm text-gray-700">{resp}</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Qualifications */}
-                                {viewingJob.qualifications && (
-                                    <div>
-                                        <p className="text-xs font-medium text-gray-500 mb-2">Qualifications</p>
-                                        <div className="space-y-2">
-                                            {viewingJob.qualifications.map((qual, idx) => (
-                                                <div key={idx} className="flex items-start gap-2 p-2 bg-green-50 rounded-lg">
-                                                    <Target className="text-green-500 shrink-0 mt-0.5" size={14} />
-                                                    <p className="text-sm text-gray-700">{qual}</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Perks */}
-                                {viewingJob.perks && (
-                                    <div>
-                                        <p className="text-xs font-medium text-gray-500 mb-2">Perks & Benefits</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {viewingJob.perks.map((perk, idx) => (
-                                                <span key={idx} className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 text-sm font-medium rounded-full">
-                                                    <Star size={12} className="fill-amber-400 text-amber-400" />
-                                                    {perk}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50">
-                            <button
-                                onClick={() => setViewingJob(null)}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
-                            >
-                                Close
-                            </button>
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => {
-                                        setViewingJob(null);
-                                        handleEdit(viewingJob);
-                                    }}
-                                    className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm flex items-center gap-1.5"
-                                >
-                                    <Edit size={14} />
-                                    Edit
-                                </button>
-                                <a
-                                    href={`/jobs/${viewingJob.id}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-medium text-sm flex items-center gap-1.5"
-                                >
-                                    <ExternalLink size={14} />
-                                    View Public Page
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Add/Edit Job Modal */}
+            {/* Add/Edit Job Modal - Now navigates to form page */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
@@ -799,19 +673,19 @@ const JobsManagementPage = () => {
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                    {editingJob ? <Edit className="text-white" size={20} /> : <Plus className="text-white" size={20} />}
+                                    <Plus className="text-white" size={20} />
                                 </div>
                                 <div>
                                     <h2 className="text-lg font-bold text-gray-900">
-                                        {editingJob ? 'Edit Job Listing' : 'Post New Job'}
+                                        Opening Job Editor
                                     </h2>
                                     <p className="text-gray-500 text-xs">
-                                        {editingJob ? 'Update job information' : 'Create a new job listing'}
+                                        Redirecting to form...
                                     </p>
                                 </div>
                             </div>
                             <button
-                                onClick={() => { setShowModal(false); setEditingJob(null); }}
+                                onClick={() => setShowModal(false)}
                                 className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                             >
                                 <X size={20} />
@@ -821,13 +695,12 @@ const JobsManagementPage = () => {
                         {/* Modal Body */}
                         <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
                             <div className="text-center py-12">
-                                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <AlertCircle className="text-amber-500" size={32} />
+                                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4">
+                                    <Briefcase className="text-blue-600 animate-pulse" size={32} />
                                 </div>
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Coming Soon</h3>
+                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Opening Job Form</h3>
                                 <p className="text-sm text-gray-500 max-w-md mx-auto">
-                                    The job editor form will be available once the backend API is ready.
-                                    Currently, jobs are managed via the <code className="px-1.5 py-0.5 bg-gray-100 rounded text-xs">jobsData.js</code> data file.
+                                    You will be redirected to the job form page.
                                 </p>
                             </div>
                         </div>
@@ -835,10 +708,10 @@ const JobsManagementPage = () => {
                         {/* Modal Footer */}
                         <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-end gap-3 bg-gray-50">
                             <button
-                                onClick={() => { setShowModal(false); setEditingJob(null); }}
+                                onClick={() => setShowModal(false)}
                                 className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
                             >
-                                Close
+                                Cancel
                             </button>
                         </div>
                     </div>

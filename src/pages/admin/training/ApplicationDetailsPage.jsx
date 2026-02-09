@@ -254,10 +254,10 @@ const ApplicationDetailsPage = () => {
                             <div className="flex items-start justify-between mb-6">
                                 <div className="flex items-center gap-4">
                                     <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-md">
-                                        {application.applicantName.charAt(0)}
+                                        {application.fullName.charAt(0)}
                                     </div>
                                     <div>
-                                        <h2 className="text-xl font-bold text-gray-900">{application.applicantName}</h2>
+                                        <h2 className="text-xl font-bold text-gray-900">{application.fullName}</h2>
                                         <p className="text-sm text-gray-500">{application.educationLevel}</p>
                                     </div>
                                 </div>
@@ -274,7 +274,7 @@ const ApplicationDetailsPage = () => {
                                     </div>
                                     <div>
                                         <p className="text-xs text-gray-500">Email Address</p>
-                                        <p className="text-sm font-semibold text-gray-900">{application.email}</p>
+                                        <p className="text-sm font-semibold text-gray-900">{application.emailAddress}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
@@ -283,7 +283,7 @@ const ApplicationDetailsPage = () => {
                                     </div>
                                     <div>
                                         <p className="text-xs text-gray-500">Phone Number</p>
-                                        <p className="text-sm font-semibold text-gray-900">{application.phone}</p>
+                                        <p className="text-sm font-semibold text-gray-900">{application.phoneNumber}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
@@ -292,7 +292,7 @@ const ApplicationDetailsPage = () => {
                                     </div>
                                     <div>
                                         <p className="text-xs text-gray-500">Location</p>
-                                        <p className="text-sm font-semibold text-gray-900">{application.location}, {application.country}</p>
+                                        <p className="text-sm font-semibold text-gray-900">{application.currentLocation}, {application.country}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
@@ -317,6 +317,19 @@ const ApplicationDetailsPage = () => {
                                 {application.motivationStatement}
                             </div>
                         </div>
+
+                        {/* Additional Message */}
+                        {application.message && (
+                            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                    <Mail size={20} className="text-[#004fa2]" />
+                                    Additional Message
+                                </h3>
+                                <div className="text-gray-600 bg-blue-50/50 p-6 rounded-xl border border-blue-100 italic">
+                                    "{application.message}"
+                                </div>
+                            </div>
+                        )}
 
                         {/* Rejection Reason (if applicable) */}
                         {application.status === 'rejected' && application.rejectionReason && (

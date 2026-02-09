@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
@@ -196,6 +197,7 @@ const StatusBadge = ({ status }) => {
 
 const GalleryManagementPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { isSuperAdmin } = usePermissions();
 
     // State management
@@ -276,13 +278,11 @@ const GalleryManagementPage = () => {
     };
 
     const handleEdit = (item) => {
-        setEditingItem(item);
-        setShowModal(true);
+        navigate(`/admin/gallery/edit/${item.id}`);
     };
 
     const handleAddNew = () => {
-        setEditingItem(null);
-        setShowModal(true);
+        navigate('/admin/gallery/new');
     };
 
     const resetFilters = () => {
@@ -327,81 +327,93 @@ const GalleryManagementPage = () => {
                 </div>
 
                 {/* Statistics Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+                    {/* Total Albums Card */}
+                    <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer group"
                         onClick={() => { setSelectedCategory('all'); setCurrentPage(1); }}
                     >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                                <FolderOpen className="text-blue-600" size={18} />
+                        <div className="flex items-start justify-between mb-3">
+                            <div className="bg-blue-50 rounded-lg p-2.5 group-hover:bg-blue-100 transition-colors">
+                                <FolderOpen size={20} className="text-blue-600" />
                             </div>
-                            <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">All</span>
+                            <span className="text-xs font-bold text-blue-500 uppercase">All</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Total Albums</p>
+                        <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Total Albums</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
+                        <p className="text-gray-500 text-xs mt-1">Gallery items</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                    {/* Total Images Card */}
+                    <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer group"
                         onClick={() => { setSelectedCategory('all'); setCurrentPage(1); }}
                     >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
-                                <FileImage className="text-purple-600" size={18} />
+                        <div className="flex items-start justify-between mb-3">
+                            <div className="bg-purple-50 rounded-lg p-2.5 group-hover:bg-purple-100 transition-colors">
+                                <FileImage size={20} className="text-purple-600" />
                             </div>
-                            <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">Images</span>
+                            <span className="text-xs font-bold text-purple-500 uppercase">Photos</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.totalImages}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Total Photos</p>
+                        <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Total Photos</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.totalImages}</p>
+                        <p className="text-gray-500 text-xs mt-1">All images</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                    {/* Projects Card */}
+                    <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer group"
                         onClick={() => { setSelectedCategory('projects'); setCurrentPage(1); }}
                     >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                                <Layers className="text-blue-600" size={18} />
+                        <div className="flex items-start justify-between mb-3">
+                            <div className="bg-cyan-50 rounded-lg p-2.5 group-hover:bg-cyan-100 transition-colors">
+                                <Layers size={20} className="text-cyan-600" />
                             </div>
-                            <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">Projects</span>
+                            <span className="text-xs font-bold text-cyan-500 uppercase">Projects</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.projects}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Project Albums</p>
+                        <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Project Albums</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.projects}</p>
+                        <p className="text-gray-500 text-xs mt-1">Category filter</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                    {/* Training Card */}
+                    <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer group"
                         onClick={() => { setSelectedCategory('training'); setCurrentPage(1); }}
                     >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center group-hover:bg-green-100 transition-colors">
-                                <Sparkles className="text-green-600" size={18} />
+                        <div className="flex items-start justify-between mb-3">
+                            <div className="bg-green-50 rounded-lg p-2.5 group-hover:bg-green-100 transition-colors">
+                                <Sparkles size={20} className="text-green-600" />
                             </div>
-                            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Training</span>
+                            <span className="text-xs font-bold text-green-500 uppercase">Training</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.training}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Training Albums</p>
+                        <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Training Albums</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.training}</p>
+                        <p className="text-gray-500 text-xs mt-1">Category filter</p>
                     </div>
 
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                    {/* Events Card */}
+                    <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer group"
                         onClick={() => { setSelectedCategory('events'); setCurrentPage(1); }}
                     >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
-                                <Calendar className="text-purple-600" size={18} />
+                        <div className="flex items-start justify-between mb-3">
+                            <div className="bg-pink-50 rounded-lg p-2.5 group-hover:bg-pink-100 transition-colors">
+                                <Calendar size={20} className="text-pink-600" />
                             </div>
-                            <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">Events</span>
+                            <span className="text-xs font-bold text-pink-500 uppercase">Events</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.events}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Event Albums</p>
+                        <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Event Albums</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.events}</p>
+                        <p className="text-gray-500 text-xs mt-1">Category filter</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
-                                <CheckCircle className="text-white" size={18} />
+                    {/* Published Card */}
+                    <div className="bg-white rounded-xl p-5 border border-green-200 shadow-sm hover:shadow-md transition-all duration-200">
+                        <div className="flex items-start justify-between mb-3">
+                            <div className="bg-green-50 rounded-lg p-2.5">
+                                <CheckCircle size={20} className="text-green-600" />
                             </div>
-                            <span className="text-xs font-medium text-white/90 bg-white/20 px-2 py-0.5 rounded-full">Live</span>
+                            <span className="text-xs font-bold text-green-500 uppercase">Live</span>
                         </div>
-                        <p className="text-2xl font-bold text-white">{stats.published}</p>
-                        <p className="text-xs text-blue-100 mt-0.5">Published</p>
+                        <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Published</p>
+                        <p className="text-3xl font-bold text-gray-900">{stats.published}</p>
+                        <p className="text-gray-500 text-xs mt-1">Active items</p>
                     </div>
                 </div>
 
