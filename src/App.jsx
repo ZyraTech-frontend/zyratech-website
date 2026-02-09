@@ -24,6 +24,7 @@ const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
 const UsersPage = lazy(() => import('./pages/admin/users/UsersPage'));
 const SettingsPage = lazy(() => import('./pages/admin/settings/SettingsPage'));
 const TrainingCoursesPage = lazy(() => import('./pages/admin/training/TrainingCoursesPage'));
+const ApplicationDetailsPage = lazy(() => import('./pages/admin/training/ApplicationDetailsPage'));
 const JobsManagementPage = lazy(() => import('./pages/admin/jobs/JobsManagementPage'));
 const GalleryManagementPage = lazy(() => import('./pages/admin/gallery/GalleryManagementPage'));
 const ProjectsManagementPage = lazy(() => import('./pages/admin/projects/ProjectsManagementPage'));
@@ -148,6 +149,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <TrainingCoursesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/training/applications/:id"
+                element={
+                  <ProtectedRoute>
+                    <ApplicationDetailsPage />
                   </ProtectedRoute>
                 }
               />
