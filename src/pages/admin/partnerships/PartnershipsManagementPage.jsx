@@ -1,13 +1,16 @@
 /**
  * Partnerships Management Page (Admin)
- * Professional admin interface for managing partner organizations and collaborations
+ * Premium professional admin interface for managing partner organizations and collaborations
+ * Features: Grid/Table view toggle, advanced filters, quick actions, detailed modals
  */
 
 import React, { useState, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+import { PARTNERSHIP_TYPES, PARTNERSHIP_STATUSES, getPartnershipTypes, getPartnershipStatuses } from '../../../data/partnershipsData';
+// import { usePermissions } from '../../../hooks/usePermissions'; // Will be used for permission-based feature visibility
 import {
     Handshake,
     Search,
@@ -41,75 +44,32 @@ import {
     Target,
     Zap,
     Send,
-    MoreVertical
+    MoreVertical,
+    Grid3x3,
+    List,
+    Check,
+    XCircle,
+    RefreshCw
 } from 'lucide-react';
 
-// Partnership status configuration
-const STATUS_CONFIG = {
-    'active': {
-        label: 'Active',
-        color: 'bg-gradient-to-r from-green-500 to-emerald-500 text-white',
-        icon: CheckCircle,
-        dotColor: 'bg-green-500'
-    },
-    'pending': {
-        label: 'Pending Review',
-        color: 'bg-gradient-to-r from-amber-500 to-orange-500 text-white',
-        icon: Clock,
-        dotColor: 'bg-amber-500'
-    },
-    'negotiating': {
-        label: 'Negotiating',
-        color: 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white',
-        icon: Target,
-        dotColor: 'bg-blue-500'
-    },
-    'expired': {
-        label: 'Expired',
-        color: 'bg-gradient-to-r from-red-500 to-rose-500 text-white',
-        icon: AlertCircle,
-        dotColor: 'bg-red-500'
-    },
-    'paused': {
-        label: 'Paused',
-        color: 'bg-gray-100 text-gray-600 border border-gray-200',
-        icon: Clock,
-        dotColor: 'bg-gray-400'
-    }
+
+// Type icon mapping for visual display
+const TYPE_ICONS = {
+    'corporate': Building2,
+    'academic': GraduationCap,
+    'training': Award,
+    'technology': Zap,
+    'ngo': Users,
+    'government': Building
 };
 
-// Partnership type configuration
-const TYPE_CONFIG = {
-    'corporate': {
-        label: 'Corporate',
-        color: 'bg-blue-100 text-blue-700 border-blue-200',
-        icon: Building2
-    },
-    'academic': {
-        label: 'Academic',
-        color: 'bg-purple-100 text-purple-700 border-purple-200',
-        icon: GraduationCap
-    },
-    'training': {
-        label: 'Training',
-        color: 'bg-green-100 text-green-700 border-green-200',
-        icon: Award
-    },
-    'technology': {
-        label: 'Technology',
-        color: 'bg-cyan-100 text-cyan-700 border-cyan-200',
-        icon: Zap
-    },
-    'ngo': {
-        label: 'NGO/Non-Profit',
-        color: 'bg-amber-100 text-amber-700 border-amber-200',
-        icon: Users
-    },
-    'government': {
-        label: 'Government',
-        color: 'bg-red-100 text-red-700 border-red-200',
-        icon: Building
-    }
+// Status icon mapping for visual display
+const STATUS_ICONS = {
+    'active': CheckCircle,
+    'pending': Clock,
+    'negotiating': Target,
+    'expired': AlertCircle,
+    'paused': Clock
 };
 
 // Mock partnerships data
@@ -379,11 +339,11 @@ const formatDate = (dateString) => {
 
 // Status badge component
 const StatusBadge = ({ status }) => {
-    const config = STATUS_CONFIG[status] || STATUS_CONFIG['pending'];
-    const Icon = config.icon;
+    const config = PARTNERSHIP_STATUSES[status] || PARTNERSHIP_STATUSES['pending'];
+    const Icon = STATUS_ICONS[status] || Clock;
 
     return (
-        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${config.color}`}>
+        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${config.colorClass}`}>
             <Icon size={10} />
             {config.label}
         </span>
@@ -392,22 +352,23 @@ const StatusBadge = ({ status }) => {
 
 const PartnershipsManagementPage = () => {
     const dispatch = useDispatch();
-    const { isSuperAdmin } = usePermissions();
+    const navigate = useNavigate();
+    // const { isSuperAdmin } = usePermissions(); // Will be used for permission-based feature visibility
 
     // State management
+    const [partnerships, setPartnerships] = useState(mockPartnerships);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [selectedType, setSelectedType] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [viewingPartnership, setViewingPartnership] = useState(null);
-    const [showModal, setShowModal] = useState(false);
-    const [editingPartnership, setEditingPartnership] = useState(null);
+    const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'table'
 
-    const itemsPerPage = 10;
+    const itemsPerPage = viewMode === 'table' ? 10 : 12;
 
     // Filter partnerships
     const filteredPartnerships = useMemo(() => {
-        let result = [...mockPartnerships];
+        let result = [...partnerships];
 
         // Search filter
         if (searchQuery) {
@@ -435,7 +396,7 @@ const PartnershipsManagementPage = () => {
         }
 
         return result;
-    }, [searchQuery, selectedStatus, selectedType]);
+    }, [partnerships, searchQuery, selectedStatus, selectedType]);
 
     // Pagination
     const totalPages = Math.ceil(filteredPartnerships.length / itemsPerPage);
@@ -446,20 +407,20 @@ const PartnershipsManagementPage = () => {
 
     // Statistics
     const stats = useMemo(() => {
-        const totalStudents = mockPartnerships.reduce((acc, p) => acc + p.studentsPlaced, 0);
-        const totalProjects = mockPartnerships.reduce((acc, p) => acc + p.projectsCompleted, 0);
+        const totalStudents = partnerships.reduce((acc, p) => acc + p.studentsPlaced, 0);
+        const totalProjects = partnerships.reduce((acc, p) => acc + p.projectsCompleted, 0);
 
         return {
-            total: mockPartnerships.length,
-            active: mockPartnerships.filter(p => p.status === 'active').length,
-            pending: mockPartnerships.filter(p => p.status === 'pending').length,
-            negotiating: mockPartnerships.filter(p => p.status === 'negotiating').length,
-            expired: mockPartnerships.filter(p => p.status === 'expired').length,
-            featured: mockPartnerships.filter(p => p.featured).length,
+            total: partnerships.length,
+            active: partnerships.filter(p => p.status === 'active').length,
+            pending: partnerships.filter(p => p.status === 'pending').length,
+            negotiating: partnerships.filter(p => p.status === 'negotiating').length,
+            expired: partnerships.filter(p => p.status === 'expired').length,
+            featured: partnerships.filter(p => p.featured).length,
             studentsPlaced: totalStudents,
             projectsCompleted: totalProjects
         };
-    }, []);
+    }, [partnerships]);
 
     // Handlers
     const handleView = (partnership) => {
@@ -467,8 +428,11 @@ const PartnershipsManagementPage = () => {
     };
 
     const handleEdit = (partnership) => {
-        setEditingPartnership(partnership);
-        setShowModal(true);
+        navigate(`/admin/partnerships/edit/${partnership.id}`);
+    };
+
+    const handleAddNew = () => {
+        navigate('/admin/partnerships/new');
     };
 
     const handleDelete = (partnership) => {
@@ -476,15 +440,47 @@ const PartnershipsManagementPage = () => {
             title: 'Delete Partnership',
             message: `Are you sure you want to delete the partnership with "${partnership.organization.name}"? This action cannot be undone.`,
             isDangerous: true,
+            confirmLabel: 'Delete Partnership',
             onConfirm: () => {
-                console.log('Deleting partnership:', partnership.id);
+                setPartnerships(prev => prev.filter(p => p.id !== partnership.id));
+                // console.log('Deleted partnership:', partnership.id);
             }
         }));
     };
 
     const handleToggleFeatured = (partnership) => {
-        console.log('Toggle featured:', partnership.id);
+        setPartnerships(prev => prev.map(p => p.id === partnership.id ? { ...p, featured: !p.featured } : p));
     };
+
+    // Commented out until backend integration is ready
+    // const handleApprove = (partnership) => {
+    //     dispatch(openConfirmDialog({
+    //         title: 'Approve Partnership',
+    //         message: `Approve partnership with "${partnership.organization.name}"?`,
+    //         confirmLabel: 'Approve',
+    //         confirmClass: 'bg-green-600 hover:bg-green-700',
+    //         onConfirm: () => {
+    //             console.log('Approving partnership:', partnership.id);
+    //             // API call would go here
+    //         }
+    //     }));
+    // };
+
+    // const handleActivate = (partnership) => {
+    //     console.log('Activating partnership:', partnership.id);
+    //     // API call would go here
+    // };
+
+    // const handleArchive = (partnership) => {
+    //     dispatch(openConfirmDialog({
+    //         title: 'Archive Partnership',
+    //         message: `Archive partnership with "${partnership.organization.name}"?`,
+    //         onConfirm: () => {
+    //             console.log('Archiving partnership:', partnership.id);
+    //             // API call would go here
+    //         }
+    //     }));
+    // };
 
     const handleExport = () => {
         console.log('Exporting partnerships...');
@@ -504,7 +500,7 @@ const PartnershipsManagementPage = () => {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
+                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center shadow-md">
                                 <Handshake className="text-white" size={22} />
                             </div>
                             Partnerships Management
@@ -514,19 +510,43 @@ const PartnershipsManagementPage = () => {
                         </p>
                     </div>
                     <div className="flex items-center gap-3">
+                        {/* View Toggle */}
+                        <div className="flex items-center bg-gray-100 rounded-xl p-1">
+                            <button
+                                onClick={() => { setViewMode('grid'); setCurrentPage(1); }}
+                                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${viewMode === 'grid'
+                                    ? 'bg-white text-[#004fa2] shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900'
+                                    }`}
+                            >
+                                <Grid3x3 size={16} />
+                                Grid
+                            </button>
+                            <button
+                                onClick={() => { setViewMode('table'); setCurrentPage(1); }}
+                                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${viewMode === 'table'
+                                    ? 'bg-white text-[#004fa2] shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900'
+                                    }`}
+                            >
+                                <List size={16} />
+                                Table
+                            </button>
+                        </div>
+
                         <button
                             onClick={handleExport}
                             className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm font-medium text-sm"
                         >
                             <Download size={16} />
-                            Export
+                            <span className="hidden sm:inline">Export</span>
                         </button>
                         <button
-                            onClick={() => { setEditingPartnership(null); setShowModal(true); }}
+                            onClick={handleAddNew}
                             className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md hover:shadow-lg font-medium text-sm"
                         >
                             <Plus size={18} />
-                            Add Partnership
+                            <span className="hidden sm:inline">Add Partnership</span>
                         </button>
                     </div>
                 </div>
@@ -667,8 +687,8 @@ const PartnershipsManagementPage = () => {
                             className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[150px]"
                         >
                             <option value="all">All Types</option>
-                            {Object.entries(TYPE_CONFIG).map(([key, val]) => (
-                                <option key={key} value={key}>{val.label}</option>
+                            {getPartnershipTypes().map((type) => (
+                                <option key={type.value} value={type.value}>{type.label}</option>
                             ))}
                         </select>
 
@@ -685,139 +705,276 @@ const PartnershipsManagementPage = () => {
                     </div>
                 </div>
 
-                {/* Partnerships Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    {paginatedPartnerships.map((partnership) => {
-                        const typeConfig = TYPE_CONFIG[partnership.type];
-                        const TypeIcon = typeConfig.icon;
+                {/* Partnerships Grid/Table */}
+                {viewMode === 'grid' ? (
+                    /* Grid View */
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        {paginatedPartnerships.map((partnership) => {
+                            const typeData = PARTNERSHIP_TYPES[partnership.type];
+                            const TypeIcon = TYPE_ICONS[partnership.type] || Building2;
 
-                        return (
-                            <div
-                                key={partnership.id}
-                                className={`bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-lg transition-all duration-300 group ${partnership.featured ? 'border-amber-200 ring-2 ring-amber-100' : 'border-gray-100'}`}
-                            >
-                                {/* Card Header */}
-                                <div className={`p-4 ${partnership.featured ? 'bg-gradient-to-r from-amber-50 to-orange-50' : 'bg-gray-50'}`}>
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-lg font-bold">
-                                                {partnership.organization.name.split(' ').slice(0, 2).map(n => n[0]).join('')}
+                            return (
+                                <div
+                                    key={partnership.id}
+                                    className={`bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-lg transition-all duration-300 group ${partnership.featured ? 'border-amber-200 ring-2 ring-amber-100' : 'border-gray-100'}`}
+                                >
+                                    {/* Card Header */}
+                                    <div className={`p-4 ${partnership.featured ? 'bg-gradient-to-r from-amber-50 to-orange-50' : 'bg-gray-50'}`}>
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-lg font-bold shadow-md">
+                                                    {partnership.organization.name.split(' ').slice(0, 2).map(n => n[0]).join('')}
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors line-clamp-1">
+                                                        {partnership.organization.name}
+                                                    </h3>
+                                                    <p className="text-xs text-gray-500">{partnership.organization.industry}</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h3 className="font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors line-clamp-1">
-                                                    {partnership.organization.name}
-                                                </h3>
-                                                <p className="text-xs text-gray-500">{partnership.organization.industry}</p>
-                                            </div>
-                                        </div>
-                                        <button
-                                            onClick={() => handleToggleFeatured(partnership)}
-                                            className="p-1.5 hover:bg-white/50 rounded-lg transition-colors"
-                                        >
-                                            <Star
-                                                size={18}
-                                                className={partnership.featured ? 'text-amber-500 fill-amber-500' : 'text-gray-300 hover:text-amber-400'}
-                                            />
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Card Body */}
-                                <div className="p-4 space-y-4">
-                                    <div className="flex items-center flex-wrap gap-2">
-                                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium border ${typeConfig.color}`}>
-                                            <TypeIcon size={10} />
-                                            {typeConfig.label}
-                                        </span>
-                                        <StatusBadge status={partnership.status} />
-                                    </div>
-
-                                    <p className="text-sm text-gray-600 line-clamp-2">
-                                        {partnership.description}
-                                    </p>
-
-                                    {/* Benefits */}
-                                    <div className="flex flex-wrap gap-1">
-                                        {partnership.benefits.slice(0, 3).map((benefit, idx) => (
-                                            <span key={idx} className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[10px]">
-                                                {benefit}
-                                            </span>
-                                        ))}
-                                        {partnership.benefits.length > 3 && (
-                                            <span className="px-2 py-0.5 bg-gray-100 text-gray-400 rounded text-[10px]">
-                                                +{partnership.benefits.length - 3} more
-                                            </span>
-                                        )}
-                                    </div>
-
-                                    {/* Stats Row */}
-                                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                                        <div className="flex items-center gap-4 text-xs">
-                                            <div className="flex items-center gap-1 text-gray-500">
-                                                <Users size={12} />
-                                                <span className="font-semibold text-gray-700">{partnership.studentsPlaced}</span> placed
-                                            </div>
-                                            <div className="flex items-center gap-1 text-gray-500">
-                                                <Briefcase size={12} />
-                                                <span className="font-semibold text-gray-700">{partnership.projectsCompleted}</span> projects
-                                            </div>
+                                            <button
+                                                onClick={() => handleToggleFeatured(partnership)}
+                                                className="p-1.5 hover:bg-white/50 rounded-lg transition-colors"
+                                            >
+                                                <Star
+                                                    size={18}
+                                                    className={partnership.featured ? 'text-amber-500 fill-amber-500' : 'text-gray-300 hover:text-amber-400'}
+                                                />
+                                            </button>
                                         </div>
                                     </div>
 
-                                    {/* Dates */}
-                                    <div className="flex items-center justify-between text-xs text-gray-400">
-                                        <span>{formatDate(partnership.startDate)} - {formatDate(partnership.endDate)}</span>
-                                        <span className="font-semibold text-gray-600">{partnership.value}</span>
-                                    </div>
-                                </div>
+                                    {/* Card Body */}
+                                    <div className="p-4 space-y-4">
+                                        <div className="flex items-center flex-wrap gap-2">
+                                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium border ${typeData.colorClass}`}>
+                                                <TypeIcon size={10} />
+                                                {typeData.label}
+                                            </span>
+                                            <StatusBadge status={partnership.status} />
+                                        </div>
 
-                                {/* Card Footer */}
-                                <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-                                    <button
-                                        onClick={() => handleView(partnership)}
-                                        className="text-sm text-[#004fa2] hover:text-[#003d7a] font-medium flex items-center gap-1"
-                                    >
-                                        <Eye size={14} />
-                                        View Details
-                                    </button>
-                                    <div className="flex items-center gap-1">
+                                        <p className="text-sm text-gray-600 line-clamp-2">
+                                            {partnership.description}
+                                        </p>
+
+                                        {/* Benefits */}
+                                        <div className="flex flex-wrap gap-1">
+                                            {partnership.benefits.slice(0, 3).map((benefit, idx) => (
+                                                <span key={idx} className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[10px]">
+                                                    {benefit}
+                                                </span>
+                                            ))}
+                                            {partnership.benefits.length > 3 && (
+                                                <span className="px-2 py-0.5 bg-gray-100 text-gray-400 rounded text-[10px]">
+                                                    +{partnership.benefits.length - 3} more
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {/* Stats Row */}
+                                        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                                            <div className="flex items-center gap-4 text-xs">
+                                                <div className="flex items-center gap-1 text-gray-500">
+                                                    <Users size={12} />
+                                                    <span className="font-semibold text-gray-700">{partnership.studentsPlaced}</span> placed
+                                                </div>
+                                                <div className="flex items-center gap-1 text-gray-500">
+                                                    <Briefcase size={12} />
+                                                    <span className="font-semibold text-gray-700">{partnership.projectsCompleted}</span> projects
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Dates */}
+                                        <div className="flex items-center justify-between text-xs text-gray-400">
+                                            <span>{formatDate(partnership.startDate)} - {formatDate(partnership.endDate)}</span>
+                                            <span className="font-semibold text-gray-600">{partnership.value}</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Card Footer */}
+                                    <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
                                         <button
-                                            onClick={() => handleEdit(partnership)}
-                                            className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
-                                            title="Edit"
+                                            onClick={() => handleView(partnership)}
+                                            className="text-sm text-[#004fa2] hover:text-[#003d7a] font-medium flex items-center gap-1 transition-colors"
                                         >
-                                            <Edit size={14} />
+                                            <Eye size={14} />
+                                            View Details
                                         </button>
-                                        <button
-                                            onClick={() => handleDelete(partnership)}
-                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                            title="Delete"
-                                        >
-                                            <Trash2 size={14} />
-                                        </button>
+                                        <div className="flex items-center gap-1">
+                                            <button
+                                                onClick={() => handleEdit(partnership)}
+                                                className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                                                title="Edit"
+                                            >
+                                                <Edit size={14} />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(partnership)}
+                                                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                title="Delete"
+                                            >
+                                                <Trash2 size={14} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        );
-                    })}
-                </div>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    /* Table View */
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead className="bg-gray-50 border-b border-gray-200">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Organization</th>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Contact</th>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Performance</th>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Duration</th>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Value</th>
+                                        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                    {paginatedPartnerships.map((partnership) => {
+                                        const typeData = PARTNERSHIP_TYPES[partnership.type];
+                                        const TypeIcon = TYPE_ICONS[partnership.type] || Building2;
+
+                                        return (
+                                            <tr key={partnership.id} className="hover:bg-gray-50 transition-colors">
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                                                            {partnership.organization.name.split(' ').slice(0, 2).map(n => n[0]).join('')}
+                                                        </div>
+                                                        <div>
+                                                            <div className="flex items-center gap-2">
+                                                                <p className="font-semibold text-gray-900">{partnership.organization.name}</p>
+                                                                {partnership.featured && (
+                                                                    <Star size={14} className="text-amber-500 fill-amber-500" />
+                                                                )}
+                                                            </div>
+                                                            <p className="text-xs text-gray-500">{partnership.organization.industry}</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium border ${typeConfig.color}`}>
+                                                        <TypeIcon size={12} />
+                                                        {typeConfig.label}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <StatusBadge status={partnership.status} />
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div>
+                                                        <p className="text-sm font-medium text-gray-900">{partnership.contact.name}</p>
+                                                        <p className="text-xs text-gray-500">{partnership.contact.role}</p>
+                                                        <a href={`mailto:${partnership.contact.email}`} className="text-xs text-[#004fa2] hover:underline">
+                                                            {partnership.contact.email}
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="space-y-1 text-xs">
+                                                        <div className="flex items-center gap-2 text-gray-600">
+                                                            <Users size={12} />
+                                                            <span className="font-semibold text-gray-900">{partnership.studentsPlaced}</span>
+                                                            <span>students</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2 text-gray-600">
+                                                            <Briefcase size={12} />
+                                                            <span className="font-semibold text-gray-900">{partnership.projectsCompleted}</span>
+                                                            <span>projects</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="text-xs">
+                                                        <p className="text-gray-600">{formatDate(partnership.startDate)}</p>
+                                                        <p className="text-gray-400">to {formatDate(partnership.endDate)}</p>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className="text-sm font-semibold text-gray-900">{partnership.value}</span>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center justify-end gap-1">
+                                                        <button
+                                                            onClick={() => handleView(partnership)}
+                                                            className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
+                                                            title="View Details"
+                                                        >
+                                                            <Eye size={16} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleToggleFeatured(partnership)}
+                                                            className="p-2 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-colors"
+                                                            title={partnership.featured ? "Remove from Featured" : "Add to Featured"}
+                                                        >
+                                                            <Star size={16} className={partnership.featured ? 'fill-amber-500 text-amber-500' : ''} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleEdit(partnership)}
+                                                            className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                                                            title="Edit"
+                                                        >
+                                                            <Edit size={16} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(partnership)}
+                                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                            title="Delete"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
 
                 {/* Empty State */}
                 {filteredPartnerships.length === 0 && (
                     <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100">
-                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Handshake className="text-gray-400" size={28} />
+                        <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <Handshake className="text-gray-400" size={36} />
                         </div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">No partnerships found</h3>
-                        <p className="text-sm text-gray-500 mb-4">
-                            Try adjusting your search or filter criteria
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">No partnerships found</h3>
+                        <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                            {searchQuery || selectedStatus !== 'all' || selectedType !== 'all'
+                                ? "No partnerships match your current filters. Try adjusting your search criteria."
+                                : "Start building relationships by adding your first partnership."}
                         </p>
-                        <button
-                            onClick={resetFilters}
-                            className="px-4 py-2 text-sm text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors font-medium"
-                        >
-                            Reset Filters
-                        </button>
+                        <div className="flex items-center justify-center gap-3">
+                            {(searchQuery || selectedStatus !== 'all' || selectedType !== 'all') && (
+                                <button
+                                    onClick={resetFilters}
+                                    className="px-5 py-2.5 text-sm text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 rounded-xl transition-colors font-medium flex items-center gap-2"
+                                >
+                                    <X size={16} />
+                                    Clear Filters
+                                </button>
+                            )}
+                            <button
+                                onClick={handleAddNew}
+                                className="px-5 py-2.5 text-sm bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white hover:from-[#003d7a] hover:to-[#004fa2] rounded-xl transition-all font-medium flex items-center gap-2"
+                            >
+                                <Plus size={16} />
+                                Add First Partnership
+                            </button>
+                        </div>
                     </div>
                 )}
 
@@ -899,9 +1056,9 @@ const PartnershipsManagementPage = () => {
                             <div className="space-y-5">
                                 {/* Status & Type */}
                                 <div className="flex items-center flex-wrap gap-2">
-                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium border ${TYPE_CONFIG[viewingPartnership.type].color}`}>
-                                        {React.createElement(TYPE_CONFIG[viewingPartnership.type].icon, { size: 12 })}
-                                        {TYPE_CONFIG[viewingPartnership.type].label}
+                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium border ${PARTNERSHIP_TYPES[viewingPartnership.type].colorClass}`}>
+                                        {React.createElement(TYPE_ICONS[viewingPartnership.type] || Building2, { size: 12 })}
+                                        {PARTNERSHIP_TYPES[viewingPartnership.type].label}
                                     </span>
                                     <StatusBadge status={viewingPartnership.status} />
                                     {viewingPartnership.featured && (
@@ -1046,58 +1203,7 @@ const PartnershipsManagementPage = () => {
             )}
 
             {/* Add/Edit Partnership Modal */}
-            {showModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                    {editingPartnership ? <Edit className="text-white" size={20} /> : <Plus className="text-white" size={20} />}
-                                </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-gray-900">
-                                        {editingPartnership ? 'Edit Partnership' : 'Add New Partnership'}
-                                    </h2>
-                                    <p className="text-gray-500 text-xs">
-                                        {editingPartnership ? 'Update partnership details' : 'Create a new partner record'}
-                                    </p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => { setShowModal(false); setEditingPartnership(null); }}
-                                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-                            <div className="text-center py-12">
-                                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <AlertCircle className="text-amber-500" size={32} />
-                                </div>
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Coming Soon</h3>
-                                <p className="text-sm text-gray-500 max-w-md mx-auto">
-                                    The partnership editor form will be available once the backend API is ready.
-                                    Currently, partnerships are managed through direct database operations.
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-end gap-3 bg-gray-50">
-                            <button
-                                onClick={() => { setShowModal(false); setEditingPartnership(null); }}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            {/* Modal removed - now using dedicated form page at /admin/partnerships/new and /admin/partnerships/edit/:id */}
         </AdminLayout>
     );
 };

@@ -22,6 +22,7 @@ const AdminPage = lazy(() => import('./pages/admin/DashboardPage'));
 const LoginPage = lazy(() => import('./pages/admin/LoginPage'));
 const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
 const UsersPage = lazy(() => import('./pages/admin/users/UsersPage'));
+const AdministratorFormPage = lazy(() => import('./pages/admin/users/AdministratorFormPage'));
 const SettingsPage = lazy(() => import('./pages/admin/settings/SettingsPage'));
 const TrainingCoursesPage = lazy(() => import('./pages/admin/training/TrainingCoursesPage'));
 const ApplicationDetailsPage = lazy(() => import('./pages/admin/training/ApplicationDetailsPage'));
@@ -46,6 +47,7 @@ const PaymentsManagementPage = lazy(() => import('./pages/admin/payments/Payment
 const EnrollmentsManagementPage = lazy(() => import('./pages/admin/enrollments/EnrollmentsManagementPage'));
 const MessagesManagementPage = lazy(() => import('./pages/admin/messages/MessagesManagementPage'));
 const PartnershipsManagementPage = lazy(() => import('./pages/admin/partnerships/PartnershipsManagementPage'));
+const PartnershipFormPage = lazy(() => import('./pages/admin/partnerships/PartnershipFormPage'));
 const ContactInquiriesPage = lazy(() => import('./pages/admin/contact-inquiries/ContactInquiriesPage'));
 const ImpactManagementPage = lazy(() => import('./pages/admin/impact/ImpactManagementPage'));
 const ActivityLogsPage = lazy(() => import('./pages/admin/activity-logs/ActivityLogsPage'));
@@ -137,6 +139,22 @@ function App() {
                 element={
                   <ProtectedRoute requiredRole="super_admin">
                     <UsersPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/users/new"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <AdministratorFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/users/edit/:id"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <AdministratorFormPage />
                   </ProtectedRoute>
                 }
               />
@@ -393,6 +411,22 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <PartnershipsManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/partnerships/new"
+                element={
+                  <ProtectedRoute>
+                    <PartnershipFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/partnerships/edit/:id"
+                element={
+                  <ProtectedRoute>
+                    <PartnershipFormPage />
                   </ProtectedRoute>
                 }
               />

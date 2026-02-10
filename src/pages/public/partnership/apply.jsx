@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building2, Mail, Phone, User, Globe, MessageSquare, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { PUBLIC_PARTNERSHIP_TYPES, PARTNERSHIP_INTERESTS } from '../../../data/partnershipsData';
 
 const PartnershipApplicationPage = () => {
   const navigate = useNavigate();
@@ -35,26 +36,6 @@ const PartnershipApplicationPage = () => {
     { title: 'Contact Details', icon: User },
     { title: 'Partnership Goals', icon: MessageSquare },
     { title: 'Review & Submit', icon: CheckCircle2 }
-  ];
-
-  const partnershipTypes = [
-    'Corporate Partner',
-    'Sponsor Partner',
-    'Educational Partner',
-    'Technology Partner',
-    'Community Partner',
-    'NGO Partner'
-  ];
-
-  const interestOptions = [
-    'Student Training & Development',
-    'Internship Programs',
-    'Equipment Donations',
-    'Funding & Sponsorship',
-    'Technology Collaboration',
-    'Research & Development',
-    'Community Impact Projects',
-    'CSR Initiatives'
   ];
 
   const handleInputChange = (e) => {
@@ -341,7 +322,7 @@ const PartnershipApplicationPage = () => {
                   className={inputClasses}
                 >
                   <option value="">Select partnership type</option>
-                  {partnershipTypes.map(type => (
+                  {PUBLIC_PARTNERSHIP_TYPES.map(type => (
                     <option key={type} value={type}>{type}</option>
                   ))}
                 </select>
@@ -354,7 +335,7 @@ const PartnershipApplicationPage = () => {
                 </label>
                 <p className="text-sm text-gray-500 mb-3">Select all that apply</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {interestOptions.map(interest => (
+                  {PARTNERSHIP_INTERESTS.map(interest => (
                     <label
                       key={interest}
                       className="flex items-start gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"

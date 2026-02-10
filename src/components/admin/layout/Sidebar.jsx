@@ -290,7 +290,7 @@ const Sidebar = () => {
                   }`}
               >
                 <Users size={20} />
-                <span className="font-medium">User Management</span>
+                <span className="font-medium">Administrators</span>
               </Link>
 
               <Link
