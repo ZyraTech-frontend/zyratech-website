@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
@@ -22,23 +23,16 @@ import {
     CheckCircle,
     XCircle,
     Clock,
-    AlertCircle,
-    Calendar,
     User,
     BookOpen,
     Mail,
     Phone,
-    MapPin,
-    FileText,
     Plus,
     UserCheck,
     UserX,
     Users,
     TrendingUp,
     Award,
-    Building,
-    Send,
-    MoreVertical,
     RefreshCcw,
     Check,
     MessageSquare
@@ -378,6 +372,7 @@ const ProgressBar = ({ progress }) => {
 
 const EnrollmentsManagementPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { isSuperAdmin } = usePermissions();
 
     // State management
@@ -385,9 +380,6 @@ const EnrollmentsManagementPage = () => {
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
-    const [viewingEnrollment, setViewingEnrollment] = useState(null);
-    const [showModal, setShowModal] = useState(false);
-    const [editingEnrollment, setEditingEnrollment] = useState(null);
 
     const itemsPerPage = 10;
 
@@ -443,14 +435,8 @@ const EnrollmentsManagementPage = () => {
         };
     }, []);
 
-    // Handlers
-    const handleView = (enrollment) => {
-        setViewingEnrollment(enrollment);
-    };
-
     const handleEdit = (enrollment) => {
-        setEditingEnrollment(enrollment);
-        setShowModal(true);
+        navigate(`/admin/enrollments/edit/${enrollment.id}`);
     };
 
     const handleApprove = (enrollment) => {
@@ -521,13 +507,13 @@ const EnrollmentsManagementPage = () => {
                             <Download size={16} />
                             Export
                         </button>
-                        <button
-                            onClick={() => { setEditingEnrollment(null); setShowModal(true); }}
+                        <Link
+                            to="/admin/enrollments/new"
                             className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md hover:shadow-lg font-medium text-sm"
                         >
                             <Plus size={18} />
                             Add Enrollment
-                        </button>
+                        </Link>
                     </div>
                 </div>
 
@@ -736,13 +722,13 @@ const EnrollmentsManagementPage = () => {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center justify-end gap-1">
-                                                    <button
-                                                        onClick={() => handleView(enrollment)}
+                                                    <Link
+                                                        to={`/admin/enrollments/${enrollment.id}`}
                                                         className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
                                                         title="View Details"
                                                     >
                                                         <Eye size={16} />
-                                                    </button>
+                                                    </Link>
                                                     {enrollment.status === 'pending' && (
                                                         <>
                                                             <button
@@ -845,208 +831,6 @@ const EnrollmentsManagementPage = () => {
                     </div>
                 )}
             </div>
-
-            {/* View Enrollment Modal */}
-            {viewingEnrollment && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 bg-gradient-to-r from-[#004fa2] to-[#0066cc] flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                                    <GraduationCap className="text-white" size={22} />
-                                </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-white">Enrollment Details</h2>
-                                    <p className="text-blue-100 text-xs font-mono">{viewingEnrollment.id}</p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => setViewingEnrollment(null)}
-                                className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-                            <div className="space-y-5">
-                                {/* Status Banner */}
-                                <div className="flex items-center justify-center">
-                                    <StatusBadge status={viewingEnrollment.status} />
-                                </div>
-
-                                {/* Student Info */}
-                                <div className="bg-gray-50 rounded-xl p-5">
-                                    <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center gap-2">
-                                        <User size={14} />
-                                        Student Information
-                                    </h3>
-                                    <div className="flex items-center gap-4 mb-4">
-                                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-lg font-bold">
-                                            {viewingEnrollment.student.name.split(' ').map(n => n[0]).join('')}
-                                        </div>
-                                        <div>
-                                            <p className="text-lg font-bold text-gray-900">{viewingEnrollment.student.name}</p>
-                                            <p className="text-sm text-gray-500">{viewingEnrollment.student.city}</p>
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <div className="flex items-center gap-2 text-sm">
-                                            <Mail className="text-gray-400" size={14} />
-                                            <span className="text-gray-600">{viewingEnrollment.student.email}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-sm">
-                                            <Phone className="text-gray-400" size={14} />
-                                            <span className="text-gray-600">{viewingEnrollment.student.phone}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Course Info */}
-                                <div className="bg-gray-50 rounded-xl p-5">
-                                    <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center gap-2">
-                                        <BookOpen size={14} />
-                                        Course Information
-                                    </h3>
-                                    <p className="text-lg font-bold text-gray-900 mb-2">{viewingEnrollment.course.title}</p>
-                                    <div className="grid grid-cols-3 gap-3 text-sm">
-                                        <div>
-                                            <p className="text-gray-400">Category</p>
-                                            <span className={`inline-block mt-1 px-2 py-0.5 rounded text-xs font-medium ${COURSE_CATEGORIES[viewingEnrollment.course.category]?.color}`}>
-                                                {COURSE_CATEGORIES[viewingEnrollment.course.category]?.label}
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <p className="text-gray-400">Duration</p>
-                                            <p className="font-semibold text-gray-900">{viewingEnrollment.course.duration}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-gray-400">Price</p>
-                                            <p className="font-semibold text-gray-900">{viewingEnrollment.course.price}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Progress */}
-                                <div className="bg-gray-50 rounded-xl p-5">
-                                    <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center gap-2">
-                                        <TrendingUp size={14} />
-                                        Progress
-                                    </h3>
-                                    <ProgressBar progress={viewingEnrollment.progress} />
-                                </div>
-
-                                {/* Dates & Payment */}
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-gray-50 rounded-xl p-4">
-                                        <p className="text-xs font-medium text-gray-500 mb-1">Enrolled Date</p>
-                                        <p className="font-semibold text-gray-900">{formatDate(viewingEnrollment.enrolledDate)}</p>
-                                    </div>
-                                    <div className="bg-gray-50 rounded-xl p-4">
-                                        <p className="text-xs font-medium text-gray-500 mb-1">Start Date</p>
-                                        <p className="font-semibold text-gray-900">{formatDate(viewingEnrollment.startDate)}</p>
-                                    </div>
-                                </div>
-
-                                {/* Notes */}
-                                {viewingEnrollment.notes && (
-                                    <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
-                                        <p className="text-xs font-medium text-amber-700 mb-1 flex items-center gap-1">
-                                            <MessageSquare size={12} />
-                                            Notes
-                                        </p>
-                                        <p className="text-sm text-amber-800">{viewingEnrollment.notes}</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50">
-                            <button
-                                onClick={() => setViewingEnrollment(null)}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
-                            >
-                                Close
-                            </button>
-                            <div className="flex items-center gap-2">
-                                <button
-                                    className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm flex items-center gap-1.5"
-                                >
-                                    <Mail size={14} />
-                                    Send Email
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setViewingEnrollment(null);
-                                        handleEdit(viewingEnrollment);
-                                    }}
-                                    className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-medium text-sm flex items-center gap-1.5"
-                                >
-                                    <Edit size={14} />
-                                    Edit Enrollment
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Add/Edit Enrollment Modal */}
-            {showModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                    {editingEnrollment ? <Edit className="text-white" size={20} /> : <Plus className="text-white" size={20} />}
-                                </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-gray-900">
-                                        {editingEnrollment ? 'Edit Enrollment' : 'Add New Enrollment'}
-                                    </h2>
-                                    <p className="text-gray-500 text-xs">
-                                        {editingEnrollment ? 'Update enrollment details' : 'Manually add a student enrollment'}
-                                    </p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => { setShowModal(false); setEditingEnrollment(null); }}
-                                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-                            <div className="text-center py-12">
-                                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <AlertCircle className="text-amber-500" size={32} />
-                                </div>
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Coming Soon</h3>
-                                <p className="text-sm text-gray-500 max-w-md mx-auto">
-                                    The enrollment editor form will be available once the backend API is ready.
-                                    Currently, enrollments are processed through the public training application flow.
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-end gap-3 bg-gray-50">
-                            <button
-                                onClick={() => { setShowModal(false); setEditingEnrollment(null); }}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </AdminLayout>
     );
 };

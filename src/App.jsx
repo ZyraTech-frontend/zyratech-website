@@ -45,11 +45,16 @@ const TestimonialsManagementPage = lazy(() => import('./pages/admin/testimonials
 const TestimonialsFormPage = lazy(() => import('./pages/admin/testimonials/TestimonialsFormPage'));
 const PaymentsManagementPage = lazy(() => import('./pages/admin/payments/PaymentsManagementPage'));
 const EnrollmentsManagementPage = lazy(() => import('./pages/admin/enrollments/EnrollmentsManagementPage'));
+const EnrollmentFormPage = lazy(() => import('./pages/admin/enrollments/EnrollmentFormPage'));
+const EnrollmentDetailsPage = lazy(() => import('./pages/admin/enrollments/EnrollmentDetailsPage'));
 const MessagesManagementPage = lazy(() => import('./pages/admin/messages/MessagesManagementPage'));
 const PartnershipsManagementPage = lazy(() => import('./pages/admin/partnerships/PartnershipsManagementPage'));
 const PartnershipFormPage = lazy(() => import('./pages/admin/partnerships/PartnershipFormPage'));
 const ContactInquiriesPage = lazy(() => import('./pages/admin/contact-inquiries/ContactInquiriesPage'));
+const NewsletterManagementPage = lazy(() => import('./pages/admin/newsletter/NewsletterManagementPage'));
 const ImpactManagementPage = lazy(() => import('./pages/admin/impact/ImpactManagementPage'));
+const ImpactMetricFormPage = lazy(() => import('./pages/admin/impact/ImpactMetricFormPage'));
+const ImpactStoryFormPage = lazy(() => import('./pages/admin/impact/ImpactStoryFormPage'));
 const ActivityLogsPage = lazy(() => import('./pages/admin/activity-logs/ActivityLogsPage'));
 const ReportsPage = lazy(() => import('./pages/admin/reports/ReportsPage'));
 const AdminProfilePage = lazy(() => import('./pages/admin/profile/AdminProfilePage'));
@@ -399,6 +404,30 @@ function App() {
                 }
               />
               <Route
+                path="/admin/enrollments/new"
+                element={
+                  <ProtectedRoute>
+                    <EnrollmentFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/enrollments/edit/:id"
+                element={
+                  <ProtectedRoute>
+                    <EnrollmentFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/enrollments/:id"
+                element={
+                  <ProtectedRoute>
+                    <EnrollmentDetailsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/messages"
                 element={
                   <ProtectedRoute>
@@ -439,10 +468,50 @@ function App() {
                 }
               />
               <Route
+                path="/admin/newsletter"
+                element={
+                  <ProtectedRoute>
+                    <NewsletterManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/impact"
                 element={
                   <ProtectedRoute>
                     <ImpactManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/impact/metrics/new"
+                element={
+                  <ProtectedRoute>
+                    <ImpactMetricFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/impact/metrics/:id"
+                element={
+                  <ProtectedRoute>
+                    <ImpactMetricFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/impact/stories/new"
+                element={
+                  <ProtectedRoute>
+                    <ImpactStoryFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/impact/stories/:id"
+                element={
+                  <ProtectedRoute>
+                    <ImpactStoryFormPage />
                   </ProtectedRoute>
                 }
               />

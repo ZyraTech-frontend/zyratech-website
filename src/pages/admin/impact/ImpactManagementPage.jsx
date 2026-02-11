@@ -5,6 +5,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
@@ -360,6 +361,7 @@ const getPercentChange = (current, previous) => {
 
 const ImpactManagementPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { isSuperAdmin } = usePermissions();
 
     // State management
@@ -367,8 +369,6 @@ const ImpactManagementPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
-    const [showModal, setShowModal] = useState(false);
-    const [editingItem, setEditingItem] = useState(null);
     const [viewingStory, setViewingStory] = useState(null);
 
     const itemsPerPage = 10;
@@ -446,9 +446,12 @@ const ImpactManagementPage = () => {
     }, []);
 
     // Handlers
-    const handleEdit = (item) => {
-        setEditingItem(item);
-        setShowModal(true);
+    const handleEditMetric = (metric) => {
+        navigate(`/admin/impact/metrics/${metric.id}`);
+    };
+
+    const handleEditStory = (story) => {
+        navigate(`/admin/impact/stories/${story.id}`);
     };
 
     const handleDelete = (item, type) => {
@@ -516,7 +519,7 @@ const ImpactManagementPage = () => {
                             Export
                         </button>
                         <button
-                            onClick={() => { setEditingItem(null); setShowModal(true); }}
+                            onClick={() => navigate(activeTab === 'metrics' ? '/admin/impact/metrics/new' : '/admin/impact/stories/new')}
                             className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md hover:shadow-lg font-medium text-sm"
                         >
                             <Plus size={18} />
@@ -722,7 +725,7 @@ const ImpactManagementPage = () => {
                                                 <td className="px-4 py-4">
                                                     <div className="flex items-center justify-end gap-1">
                                                         <button
-                                                            onClick={() => handleEdit(metric)}
+                                                            onClick={() => handleEditMetric(metric)}
                                                             className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
                                                             title="Edit"
                                                         >
@@ -828,7 +831,7 @@ const ImpactManagementPage = () => {
                                     </button>
                                     <div className="flex items-center gap-1">
                                         <button
-                                            onClick={() => handleEdit(story)}
+                                            onClick={() => handleEditStory(story)}
                                             className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
                                             title="Edit"
                                         >
@@ -1003,65 +1006,12 @@ const ImpactManagementPage = () => {
                             <button
                                 onClick={() => {
                                     setViewingStory(null);
-                                    handleEdit(viewingStory);
+                                    handleEditStory(viewingStory);
                                 }}
                                 className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-medium text-sm flex items-center gap-1.5"
                             >
                                 <Edit size={14} />
                                 Edit Story
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Add/Edit Modal */}
-            {showModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                    {editingItem ? <Edit className="text-white" size={20} /> : <Plus className="text-white" size={20} />}
-                                </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-gray-900">
-                                        {editingItem ? `Edit ${activeTab === 'metrics' ? 'Metric' : 'Story'}` : `Add ${activeTab === 'metrics' ? 'Metric' : 'Story'}`}
-                                    </h2>
-                                    <p className="text-gray-500 text-xs">
-                                        {editingItem ? 'Update the details' : 'Create a new entry'}
-                                    </p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => { setShowModal(false); setEditingItem(null); }}
-                                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-                            <div className="text-center py-12">
-                                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <AlertCircle className="text-amber-500" size={32} />
-                                </div>
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Coming Soon</h3>
-                                <p className="text-sm text-gray-500 max-w-md mx-auto">
-                                    The {activeTab === 'metrics' ? 'metric' : 'success story'} editor form will be available once the backend API is ready.
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-end gap-3 bg-gray-50">
-                            <button
-                                onClick={() => { setShowModal(false); setEditingItem(null); }}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
-                            >
-                                Close
                             </button>
                         </div>
                     </div>
