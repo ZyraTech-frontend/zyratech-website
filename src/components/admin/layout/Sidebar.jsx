@@ -22,16 +22,16 @@ import {
   Mail,
   HelpCircle,
   MessageCircle,
-  UsersRound,
   TrendingUp,
   ClipboardList,
   FileBarChart,
-  LogOut
+  LogOut,
+  X
 } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
 import { usePermissions } from '../../../hooks/usePermissions';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose, isMobile }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -48,17 +48,35 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="h-screen w-72 bg-gradient-to-b from-[#004fa2] to-[#003d7a] text-white flex flex-col shadow-2xl shrink-0">
+    <div className={`
+      ${isMobile ? 'fixed inset-y-0 left-0 z-50' : 'relative'}
+      h-screen w-72 bg-gradient-to-b from-[#004fa2] to-[#003d7a] text-white flex flex-col shadow-2xl shrink-0
+      transform transition-all duration-300 ease-in-out
+      ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+      ${!isOpen && !isMobile ? 'w-0 overflow-hidden' : ''}
+    `}>
       {/* Logo/Brand */}
       <div className="px-6 py-6 border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
-            <LayoutDashboard size={24} className="text-white" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+              <LayoutDashboard size={24} className="text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold">Account Manager</h1>
+              <p className="text-blue-200 text-xs">ZyraTech Hub</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-xl font-bold">Account Manager</h1>
-            <p className="text-blue-200 text-xs">ZyraTech Hub</p>
-          </div>
+          {/* Close button - visible on mobile only */}
+          {isMobile && (
+            <button
+              onClick={onClose}
+              className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              aria-label="Close menu"
+            >
+              <X size={20} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -175,17 +193,6 @@ const Sidebar = () => {
           >
             <MessageCircle size={20} />
             <span className="font-medium">Testimonials</span>
-          </Link>
-
-          <Link
-            to="/admin/team"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/team')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
-          >
-            <UsersRound size={20} />
-            <span className="font-medium">Team Members</span>
           </Link>
 
           {/* Business Operations Section */}

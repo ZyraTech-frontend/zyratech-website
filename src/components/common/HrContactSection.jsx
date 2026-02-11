@@ -1,11 +1,20 @@
 import { Mail } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 const HrContactSection = ({
-  name = 'Magdalene',
-  title = 'Human Resources Team Lead',
+  name,
+  title,
   imageUrl = '/images/Dalene.png',
-  email = 'magdalene@zyratech.com'
+  email
 }) => {
+  // Get settings from Redux store
+  const settings = useSelector((state) => state.settings.values);
+  
+  // Use props if provided, otherwise fall back to settings, then defaults
+  const hrName = name || settings.hrName || 'Magdalene';
+  const hrTitle = title || settings.hrTitle || 'Human Resources Team Lead';
+  const hrEmail = email || settings.hrEmail || 'magdalene@zyratech.com';
+
   return (
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -15,11 +24,11 @@ const HrContactSection = ({
               Do you have any questions?
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed mb-8">
-              Please feel free to contact {name}, our {title} in Ghana. We're here to help you with any questions about our training programs and enrollment process.
+              Please feel free to contact {hrName}, our {hrTitle} in Ghana. We're here to help you with any questions about our training programs and enrollment process.
             </p>
 
             <a
-              href={`mailto:${email}`}
+              href={`mailto:${hrEmail}`}
               className="inline-flex items-center gap-3 bg-[#004fa2] hover:bg-[#2A2D7C] text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
             >
               <Mail size={20} />
@@ -31,7 +40,7 @@ const HrContactSection = ({
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
               <img 
                 src={imageUrl} 
-                alt={name}
+                alt={hrName}
                 className="w-full max-w-[340px] h-[420px] sm:max-w-[380px] sm:h-[480px] md:w-[580px] md:h-[600px] object-cover"
               />
             </div>
