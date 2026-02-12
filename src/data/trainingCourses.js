@@ -36,43 +36,43 @@ const defaultContactPerson = {
 export const trainingCourses = [
   {
     id: 1,
-    iconKey: 'cloud',
+    iconKey: 'code',
     category: 'intermediate',
-    title: 'DevOps Engineering',
+    title: 'Python Programming & Data Analysis',
     duration: '8 weeks',
     level: 'Intermediate',
     participants: '15-20',
-    rating: 4.9,
-    reviews: 127,
-    price: 'GHS 3,500',
-    originalPrice: 'GHS 4,500',
+    rating: 4.8,
+    reviews: 112,
+    price: 'GHS 2,800',
+    originalPrice: 'GHS 3,500',
     badge: 'Popular',
-    instructor: 'Michael Afedi',
+    instructor: 'Data Science Team',
     schedule: 'Weekdays 6PM-8PM',
     format: 'Online + Onsite',
-    certificate: 'Professional DevOps Certificate',
-    deadline: '31st January, 2026',
-    description: 'Master CI/CD pipelines, containerization, cloud deployment, and infrastructure automation.',
-    longDescription: 'Build modern delivery pipelines and infrastructure automation skills through practical labs and real-world workflows.',
-    programOverview: 'An 8-week intensive program that prepares learners for DevOps and cloud delivery roles with hands-on projects and mentorship.',
-    heroInfoText: 'Learn modern DevOps technologies and best practices.',
-    topics: ['Docker', 'Kubernetes', 'AWS/Azure', 'Jenkins', 'Terraform', 'Monitoring'],
+    certificate: 'Python Data Analysis Certificate',
+    deadline: 'Rolling Admission',
+    description: 'Core logic, data visualization, and statistical insights for research. Master Python for real-world data problems.',
+    longDescription: 'This course bridges the gap between basic programming and data science. You will master Python syntax, work with powerful libraries like Pandas, NumPy, and Matplotlib, and learn how to extract meaningful insights from complex datasets.',
+    programOverview: 'An 8-week program designed to turn beginners into confident Python programmers capable of handling data analysis tasks.',
+    heroInfoText: 'Master Python and unlock the power of data.',
+    topics: ['Python Fundamentals', 'Data Structures', 'Pandas & NumPy', 'Data Visualization', 'Statistical Analysis', 'Project Work'],
     programmeObjectives: [
       {
-        title: 'Understand modern DevOps workflows',
-        description: 'Learn how teams deliver software reliably through collaboration, automation, and measurable practices.'
+        title: 'Master Python syntax',
+        description: 'Write clean, efficient, and Pythonic code for various applications.'
       },
       {
-        title: 'Automate delivery with CI/CD',
-        description: 'Build pipelines that test, package, and deploy applications consistently and safely.'
+        title: 'Analyze large datasets',
+        description: 'Use Pandas to clean, manipulate, and explore real-world data.'
       },
       {
-        title: 'Work with containers and orchestration',
-        description: 'Use Docker and Kubernetes concepts to package and run applications at scale.'
+        title: 'Visualize data effectively',
+        description: 'Create compelling charts and graphs to communicate findings clearly.'
       },
       {
-        title: 'Deploy and monitor cloud infrastructure',
-        description: 'Apply cloud best practices to improve reliability, performance, and security.'
+        title: 'Apply statistical methods',
+        description: 'Understand the math behind the data to validate your insights.'
       }
     ],
     applicationProcess: defaultApplicationProcess,
@@ -80,42 +80,42 @@ export const trainingCourses = [
   },
   {
     id: 2,
-    iconKey: 'cloud',
+    iconKey: 'target',
     category: 'basic',
-    title: 'Cloud Computing (AWS/Azure)',
-    duration: '12 weeks',
-    level: 'Beginner to Advanced',
-    participants: '20-25',
+    title: 'Digital Literacy & Office Mastery',
+    duration: '4 weeks',
+    level: 'Beginner',
+    participants: '20-30',
     rating: 4.8,
     reviews: 98,
-    price: 'GHS 4,200',
+    price: 'GHS 800',
     badge: 'Bestseller',
-    instructor: 'Sarah Johnson',
-    schedule: 'Weekends 9AM-1PM',
-    format: 'Online',
-    certificate: 'Cloud Computing Certificate',
-    deadline: '15th February, 2026',
-    description: 'Comprehensive cloud training with AWS/Azure certification preparation.',
-    longDescription: 'Learn cloud fundamentals and hands-on services across AWS and Azure, including compute, storage, networking, security, and certification readiness.',
-    programOverview: 'A 12-week cloud computing program designed to build practical cloud skills and prepare learners for entry-level cloud roles and certifications.',
-    heroInfoText: 'Build cloud fundamentals and prepare for certification.',
-    topics: ['Cloud Foundations', 'Compute Services', 'Storage', 'Networking', 'Security', 'Certification Prep'],
+    instructor: 'ZyraTech Training Team',
+    schedule: 'Weekdays 9AM-12PM',
+    format: 'Onsite',
+    certificate: 'Digital Literacy Certificate',
+    deadline: 'Rolling Admission',
+    description: 'Perfect for absolute beginners needing essential workplace skills. Master the Microsoft Office Suite and core computer skills in just 1 month.',
+    longDescription: 'This foundational course is designed for absolute beginners who want to become confident with computers and essential workplace tools. You will learn to navigate operating systems, manage files, and master the Microsoft Office Suite — including Word for professional documents, Excel for data and calculations, and PowerPoint for impactful presentations.',
+    programOverview: 'A 4-week intensive program that equips absolute beginners with the digital skills needed to thrive in any modern workplace.',
+    heroInfoText: 'Master essential computer and office skills in 4 weeks.',
+    topics: ['Computer Basics', 'Microsoft Word', 'Microsoft Excel', 'Microsoft PowerPoint', 'File Management', 'Internet & Email'],
     programmeObjectives: [
       {
-        title: 'Understand cloud foundations',
-        description: 'Learn core concepts such as regions, availability, shared responsibility, and cloud economics.'
+        title: 'Navigate computers confidently',
+        description: 'Understand operating systems, file management, and basic troubleshooting for everyday use.'
       },
       {
-        title: 'Work with essential services',
-        description: 'Practice compute, storage, networking, and identity services across AWS and Azure.'
+        title: 'Create professional documents in Word',
+        description: 'Format letters, reports, and professional documents with proper styling and layout.'
       },
       {
-        title: 'Build secure cloud solutions',
-        description: 'Apply security best practices including IAM, encryption, and network security controls.'
+        title: 'Work with data in Excel',
+        description: 'Build spreadsheets, use formulas, and create charts for data analysis and reporting.'
       },
       {
-        title: 'Prepare for certification',
-        description: 'Use guided preparation, mock questions, and labs aligned with common cloud certification tracks.'
+        title: 'Design effective presentations in PowerPoint',
+        description: 'Create clear, visually engaging presentations for academic and professional settings.'
       }
     ],
     applicationProcess: defaultApplicationProcess,
@@ -125,40 +125,40 @@ export const trainingCourses = [
     id: 3,
     iconKey: 'code',
     category: 'basic',
-    title: 'Full Stack Web Development',
-    duration: '16 weeks',
+    title: 'Intro to Logic & Problem Solving',
+    duration: '4 weeks',
     level: 'Beginner',
-    participants: '18-22',
+    participants: '15-25',
     rating: 4.7,
     reviews: 156,
-    price: 'GHS 3,800',
-    instructor: 'David Mensah',
-    schedule: 'Weekdays 5PM-7PM',
+    price: 'GHS 1,200',
+    instructor: 'ZyraTech Training Team',
+    schedule: 'Weekdays 2PM-5PM',
     format: 'Hybrid',
-    certificate: 'Full Stack Developer Certificate',
-    deadline: '31st January, 2026',
+    certificate: 'Computational Thinking Certificate',
+    deadline: 'Rolling Admission',
     heroImage: '/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png',
-    description: 'Learn modern web development from frontend to backend with real projects.',
-    longDescription: 'Start from the basics and progress to building full stack applications with modern frontend, backend APIs, databases, and deployment practices.',
-    programOverview: 'A 16-week beginner-friendly program focused on building real web apps and a portfolio to help learners transition into junior developer roles.',
-    heroInfoText: 'Learn modern web development technologies and best practices.',
-    topics: ['HTML/CSS/JS', 'React', 'Node.js', 'Databases', 'APIs', 'Deployment'],
+    description: 'Ideal for students preparing for coding who need to understand computational logic. Build strong problem-solving foundations before diving into programming.',
+    longDescription: 'This course is designed for students who want to build a strong foundation in computational thinking before learning a programming language. You will learn how to break down problems, think algorithmically, use flowcharts and pseudocode, and develop the logical reasoning skills that underpin all software development.',
+    programOverview: 'A 4-week preparatory course that builds the logical thinking and problem-solving skills essential for success in any programming language.',
+    heroInfoText: 'Build the logical foundations you need before learning to code.',
+    topics: ['Computational Thinking', 'Flowcharts & Pseudocode', 'Algorithms', 'Pattern Recognition', 'Logical Reasoning', 'Problem Decomposition'],
     programmeObjectives: [
       {
-        title: 'Build responsive, modern websites',
-        description: 'Create clean layouts that look great on mobile, tablet, and desktop using modern HTML and CSS.'
+        title: 'Think like a programmer',
+        description: 'Develop computational thinking skills — breaking down problems into logical, solvable steps.'
       },
       {
-        title: 'Write real JavaScript for the web',
-        description: 'Work with the DOM, events, APIs, and modern ES6+ patterns to build interactive user experiences.'
+        title: 'Design solutions with flowcharts',
+        description: 'Use flowcharts and pseudocode to plan and visualize solutions before writing any code.'
       },
       {
-        title: 'Develop full stack applications',
-        description: 'Build backend APIs, integrate databases, and connect everything into complete products.'
+        title: 'Understand algorithms and patterns',
+        description: 'Learn common algorithmic approaches and recognize patterns in problems.'
       },
       {
-        title: 'Ship portfolio-ready projects',
-        description: 'Build and deploy complete projects you can show employers or clients with confidence.'
+        title: 'Solve problems systematically',
+        description: 'Practice structured problem-solving with real-world exercises and logic puzzles.'
       }
     ],
     applicationProcess: defaultApplicationProcess,
@@ -168,40 +168,39 @@ export const trainingCourses = [
     id: 4,
     iconKey: 'target',
     category: 'basic',
-    title: 'Corporate Digital Transformation',
-    duration: 'Custom',
-    level: 'All Levels',
-    participants: 'Custom',
+    title: 'Cyber Awareness & Digital Research',
+    duration: '4 weeks',
+    level: 'Beginner',
+    participants: '20-30',
     rating: 5.0,
     reviews: 45,
-    price: 'Custom Quote',
-    badge: 'Premium',
-    instructor: 'Team of Experts',
-    schedule: 'Flexible',
-    format: 'Onsite/Online',
-    certificate: 'Certificate of Participation',
-    deadline: 'Flexible',
-    description: 'Tailored training programs for corporate digital transformation initiatives.',
-    longDescription: 'A customized engagement for organizations to align strategy, processes, and teams for digital transformation—delivered through workshops and practical implementation support.',
-    programOverview: 'A flexible corporate program designed to upskill teams, improve digital workflows, and accelerate transformation outcomes across departments.',
-    heroInfoText: 'Upskill teams and accelerate transformation outcomes.',
-    topics: ['Digital Strategy', 'Process Automation', 'Team Training', 'Change Management'],
+    price: 'GHS 600',
+    instructor: 'ZyraTech Training Team',
+    schedule: 'Weekdays 10AM-1PM',
+    format: 'Onsite',
+    certificate: 'Cyber Awareness Certificate',
+    deadline: 'Rolling Admission',
+    description: 'Perfect for anyone looking to browse safely and conduct professional academic research. Learn essential online safety and digital research skills.',
+    longDescription: 'This course teaches you how to stay safe online and conduct effective digital research. You will learn to identify phishing attempts, protect your personal data, use strong passwords, browse securely, and apply professional research techniques for academic and workplace purposes.',
+    programOverview: 'A 4-week program that equips learners with essential cyber awareness skills and professional digital research techniques.',
+    heroInfoText: 'Stay safe online and master digital research skills.',
+    topics: ['Online Safety', 'Phishing & Scam Awareness', 'Password Security', 'Safe Browsing', 'Academic Research Methods', 'Digital Research Tools'],
     programmeObjectives: [
       {
-        title: 'Build a transformation roadmap',
-        description: 'Identify opportunities, define priorities, and establish measurable milestones.'
+        title: 'Recognize online threats',
+        description: 'Identify phishing emails, fake websites, social engineering attacks, and common online scams.'
       },
       {
-        title: 'Improve processes with technology',
-        description: 'Learn how to evaluate and apply tools for automation and productivity improvements.'
+        title: 'Protect your digital identity',
+        description: 'Use strong passwords, two-factor authentication, and privacy settings to safeguard personal information.'
       },
       {
-        title: 'Strengthen digital culture',
-        description: 'Develop change management approaches to support adoption and long-term success.'
+        title: 'Browse and communicate safely',
+        description: 'Understand secure browsing practices, safe downloads, and responsible social media use.'
       },
       {
-        title: 'Align teams and stakeholders',
-        description: 'Create shared understanding of goals, responsibilities, and delivery expectations.'
+        title: 'Conduct professional digital research',
+        description: 'Use search engines, academic databases, and citation tools effectively for school and work.'
       }
     ],
     applicationProcess: defaultApplicationProcess,
@@ -209,43 +208,43 @@ export const trainingCourses = [
   },
   {
     id: 5,
-    iconKey: 'barChart',
+    iconKey: 'code',
     category: 'intermediate',
-    title: 'Data Science & Analytics',
-    duration: '10 weeks',
+    title: 'Frontend Web Development',
+    duration: '8 weeks',
     level: 'Intermediate',
-    participants: '12-15',
-    rating: 4.6,
-    reviews: 73,
-    price: 'GHS 4,000',
-    originalPrice: 'GHS 5,800',
-    badge: 'Advanced',
-    instructor: 'Data Science Team',
-    schedule: 'Saturdays 10AM-2PM',
-    format: 'Onsite',
-    certificate: 'Data Science Certificate',
-    deadline: '15th February, 2026',
-    description: 'Transform data into insights with machine learning, statistics, and data visualization.',
-    longDescription: 'Learn how to clean, analyze, and model data—then communicate insights through strong visual storytelling and applied machine learning workflows.',
-    programOverview: 'A 10-week program for professionals looking to build analytics confidence and apply data science tools to real business problems.',
-    heroInfoText: 'Turn data into decisions with modern analytics.',
-    topics: ['Python for Data Science', 'Machine Learning', 'Data Visualization', 'Statistical Analysis', 'Big Data Tools'],
+    participants: '15-20',
+    rating: 4.8,
+    reviews: 145,
+    price: 'GHS 2,500',
+    originalPrice: 'GHS 3,200',
+    badge: 'Highly Rated',
+    instructor: 'Web Development Team',
+    schedule: 'Weekdays 6PM-8PM',
+    format: 'Onsite + Online',
+    certificate: 'Frontend Developer Certificate',
+    deadline: 'Rolling Admission',
+    description: 'Responsive design, HTML5, CSS3, and JavaScript frameworks. Build stunning, interactive user interfaces.',
+    longDescription: 'Master the art of building beautiful, responsive websites. This course covers everything from the building blocks of the web (HTML5, CSS3) to modern JavaScript frameworks like React, enabling you to create professional-grade user interfaces.',
+    programOverview: 'An 8-week hands-on deep dive into modern frontend development technologies and best practices.',
+    heroInfoText: 'Build modern, responsive, and interactive websites.',
+    topics: ['HTML5 & Semantic Web', 'CSS3 & Flexbox/Grid', 'JavaScript (ES6+)', 'React.js Basics', 'Responsive Design', 'Git & Version Control'],
     programmeObjectives: [
       {
-        title: 'Analyze and visualize data',
-        description: 'Work with real datasets and create clear visual insights that drive decisions.'
+        title: 'Build semantic HTML structures',
+        description: 'Create accessible and well-structured web pages using modern HTML5 standards.'
       },
       {
-        title: 'Build machine learning models',
-        description: 'Train, evaluate, and iterate on models for common predictive tasks.'
+        title: 'Master modern CSS layout',
+        description: 'Use Flexbox, Grid, and media queries to build responsive layouts that look great on any device.'
       },
       {
-        title: 'Apply statistics confidently',
-        description: 'Use statistical thinking to validate assumptions and interpret results correctly.'
+        title: 'Write interactive JavaScript',
+        description: 'Add dynamic behavior to your sites using modern JavaScript and DOM manipulation.'
       },
       {
-        title: 'Communicate findings',
-        description: 'Tell a compelling story with data and present results for technical and non-technical audiences.'
+        title: 'Work with frameworks',
+        description: 'Get introduced to component-based development with libraries like React.'
       }
     ],
     applicationProcess: defaultApplicationProcess,
@@ -253,43 +252,43 @@ export const trainingCourses = [
   },
   {
     id: 6,
-    iconKey: 'globe',
+    iconKey: 'code',
     category: 'advanced',
-    title: 'Cloud Architecture',
-    duration: '8 weeks',
+    title: 'Full-Stack Web Development',
+    duration: '16 Weeks',
     level: 'Advanced',
-    participants: '10-15',
-    rating: 4.8,
-    reviews: 95,
-    price: 'GHS 4,200',
-    originalPrice: 'GHS 5,200',
-    badge: 'Premium',
-    instructor: 'Cloud Architects',
+    participants: '15-20',
+    rating: 4.9,
+    reviews: 156,
+    price: 'GHS 3,800',
+    originalPrice: 'GHS 4,500',
+    badge: 'Best Value',
+    instructor: 'Senior Engineering Team',
     schedule: 'Weekdays 6PM-8PM',
-    format: 'Online',
-    certificate: 'Cloud Architect Certificate',
-    deadline: '31st January, 2026',
-    description: 'Design and implement scalable cloud solutions on AWS, Azure, and Google Cloud.',
-    longDescription: 'Learn modern architecture patterns, reliability practices, cloud migration strategy, and cost optimization for scalable systems.',
-    programOverview: 'An advanced 8-week program for experienced practitioners to design cloud-native architectures and lead solution delivery.',
-    heroInfoText: 'Architect scalable, secure, and cost-effective cloud systems.',
-    topics: ['Cloud Design Patterns', 'Microservices', 'Serverless Architecture', 'Cloud Migration', 'Cost Optimization'],
+    format: 'Onsite + Online',
+    certificate: 'Full Stack Engineer Certificate',
+    deadline: 'Rolling Admission',
+    description: 'End-to-end engineering using modern frameworks. Build scalable, production-ready applications from scratch.',
+    longDescription: 'Become a complete software engineer. This intensive course covers the entire development lifecycle—from designing databases and building robust APIs on the backend to creating dynamic, responsive user interfaces on the frontend using the MERN stack (MongoDB, Express, React, Node.js).',
+    programOverview: 'A 16-week comprehensive bootcamp that transforms you into a job-ready full-stack developer.',
+    heroInfoText: 'Master the full stack and build complete web applications.',
+    topics: ['React.js & Redux', 'Node.js & Express', 'MongoDB & SQL', 'Authentication (JWT)', 'DevOps Basics', 'System Design'],
     programmeObjectives: [
       {
-        title: 'Design cloud-native architectures',
-        description: 'Apply design patterns for scalability, resilience, and maintainability.'
+        title: 'Build complete applications',
+        description: 'Design and develop full-stack applications with separated frontend and backend services.'
       },
       {
-        title: 'Plan migrations and modernization',
-        description: 'Evaluate workloads and choose strategies for moving systems to the cloud.'
+        title: 'Master state management',
+        description: 'Handle complex application state using tools like Redux or Context API.'
       },
       {
-        title: 'Improve reliability and security',
-        description: 'Build architectures that prioritize observability, threat modeling, and safe operations.'
+        title: 'Secure your applications',
+        description: 'Implement industry-standard security practices for data protection and user access.'
       },
       {
-        title: 'Optimize costs',
-        description: 'Use practical frameworks to estimate, track, and reduce cloud spend.'
+        title: 'Deploy to production',
+        description: 'Learn CI/CD pipelines and deployment strategies for cloud platforms.'
       }
     ],
     applicationProcess: defaultApplicationProcess,
@@ -299,41 +298,41 @@ export const trainingCourses = [
     id: 7,
     iconKey: 'cpu',
     category: 'advanced',
-    title: 'AI & Machine Learning',
-    duration: '12 weeks',
+    title: 'Mobile App Development',
+    duration: '12 Weeks',
     level: 'Advanced',
-    participants: '10-12',
-    rating: 4.9,
+    participants: '10-15',
+    rating: 4.8,
     reviews: 142,
-    price: 'GHS 5,500',
-    originalPrice: 'GHS 6,500',
+    price: 'GHS 4,000',
+    originalPrice: 'GHS 4,800',
     badge: 'Premium',
-    instructor: 'AI Research Team',
-    schedule: 'Saturdays 9AM-1PM',
-    format: 'Hybrid',
-    certificate: 'AI Engineer Certificate',
-    deadline: '15th February, 2026',
-    description: 'Deep dive into artificial intelligence, neural networks, and cutting-edge ML techniques.',
-    longDescription: 'Explore practical model development workflows, deep learning fundamentals, and how to ship ML models responsibly into real products.',
-    programOverview: 'A 12-week advanced program covering modern machine learning, model evaluation, deployment foundations, and ethical AI practices.',
-    heroInfoText: 'Build and deploy modern machine learning solutions.',
-    topics: ['Deep Learning', 'Neural Networks', 'NLP & Computer Vision', 'ML Operations', 'AI Ethics'],
+    instructor: 'Mobile Development Team',
+    schedule: 'Saturdays 9AM-2PM',
+    format: 'Onsite + Online',
+    certificate: 'Mobile App Developer Certificate',
+    deadline: 'Rolling Admission',
+    description: 'Cross-platform development for iOS and Android using Flutter or React Native. Build native-quality apps efficiently.',
+    longDescription: 'Learn how to build beautiful, performant mobile applications for both iOS and Android from a single codebase. This course focuses on modern cross-platform frameworks like Flutter (or React Native), covering UI design implementation, native device features (camera, location), and publishing to app stores.',
+    programOverview: 'A 12-week specialized track for building production-ready mobile apps that run on billions of devices.',
+    heroInfoText: 'Build apps for iOS and Android with a single codebase.',
+    topics: ['Flutter/Dart or React Native', 'Cross-Platform Architecture', 'State Management', 'Native APIs (Camera, GPS)', 'App Store Deployment', 'UI/UX for Mobile'],
     programmeObjectives: [
       {
-        title: 'Understand ML foundations',
-        description: 'Learn core concepts in supervised/unsupervised learning and model evaluation.'
+        title: 'Master cross-platform framework',
+        description: 'Build apps that feel native on both iOS and Android using a single language and codebase.'
       },
       {
-        title: 'Work with neural networks',
-        description: 'Build deep learning models and understand training workflows and pitfalls.'
+        title: 'Access native device features',
+        description: 'Integrate camera, location, sensors, and local storage into your applications.'
       },
       {
-        title: 'Apply ML to real domains',
-        description: 'Use techniques for NLP, computer vision, and structured data problems.'
+        title: 'Manage complex app state',
+        description: 'Handle data flow and user interactions efficiently in mobile environments.'
       },
       {
-        title: 'Practice responsible AI',
-        description: 'Consider bias, fairness, privacy, and ethical deployment concerns.'
+        title: 'Publish to App Stores',
+        description: 'Understand the submission process, guidelines, and optimization for Google Play and Apple App Store.'
       }
     ],
     applicationProcess: defaultApplicationProcess,
@@ -590,6 +589,94 @@ export const trainingCourses = [
       {
         title: 'Build practical portfolio work',
         description: 'Document your work and results to showcase skills for future opportunities.'
+      }
+    ],
+    applicationProcess: defaultApplicationProcess,
+    contactPerson: defaultContactPerson
+  },
+  {
+    id: 14,
+    iconKey: 'database',
+    category: 'intermediate',
+    title: 'Backend Web Development',
+    duration: '8 weeks',
+    level: 'Intermediate',
+    participants: '15-20',
+    rating: 4.8,
+    reviews: 132,
+    price: 'GHS 2,500',
+    originalPrice: 'GHS 3,200',
+    badge: 'Highly Rated',
+    instructor: 'Web Development Team',
+    schedule: 'Weekdays 6PM-8PM',
+    format: 'Onsite + Online',
+    certificate: 'Backend Developer Certificate',
+    deadline: 'Rolling Admission',
+    description: 'Server-side logic, API development, and Database Management. Power robust and scalable web applications.',
+    longDescription: 'Learn how to build the "brain" of web applications. This course covers server-side programming with Node.js/Express (or Python/Django), database management with SQL/NoSQL, and how to build secure, scalable APIs that power modern apps.',
+    programOverview: 'An 8-week intensive program focused on building robust backends, APIs, and managing data at scale.',
+    heroInfoText: 'Build and secure the logic behind web applications.',
+    topics: ['Node.js & Express', 'Databases (SQL vs NoSQL)', 'RESTful APIs', 'Authentication & Authorization', 'Server Deployment', 'Data Modeling'],
+    programmeObjectives: [
+      {
+        title: 'Build RESTful APIs',
+        description: 'Design and implement APIs that follow industry standards for communication.'
+      },
+      {
+        title: 'Manage databases',
+        description: 'Design schemas, write queries, and integrate databases like MongoDB or PostgreSQL.'
+      },
+      {
+        title: 'Implement authentication',
+        description: 'Secure your applications using JWT, OAuth, and proper password hashing techniques.'
+      },
+      {
+        title: 'Deploy to the cloud',
+        description: 'Learn how to host your backend services on platforms like Heroku, render, or AWS.'
+      }
+    ],
+    applicationProcess: defaultApplicationProcess,
+    contactPerson: defaultContactPerson
+  },
+  {
+    id: 15,
+    iconKey: 'target',
+    category: 'advanced',
+    title: 'UI/UX Design & Strategy',
+    duration: '12 Weeks',
+    level: 'Advanced',
+    participants: '15-20',
+    rating: 4.8,
+    reviews: 124,
+    price: 'GHS 3,500',
+    originalPrice: 'GHS 4,200',
+    badge: 'Trending',
+    instructor: 'Design Team',
+    schedule: 'Weekdays 5PM-7PM',
+    format: 'Onsite',
+    certificate: 'UI/UX Design Certificate',
+    deadline: 'Rolling Admission',
+    description: 'Advanced user research, high-fidelity prototyping, and design systems. Create products users love.',
+    longDescription: 'Go beyond basic design principles. Master the entire product design process from user research and information architecture to high-fidelity prototyping and design systems using industry-standard tools like Figma.',
+    programOverview: 'A 12-week immersive program for designers who want to build strategic, user-centered digital products.',
+    heroInfoText: 'Design intuitive, beautiful, and strategic user experiences.',
+    topics: ['User Research', 'Information Architecture', 'Wireframing & Prototyping', 'Figma Mastery', 'Design Systems', 'Usability Testing'],
+    programmeObjectives: [
+      {
+        title: 'Conduct user research',
+        description: 'Understand user needs through interviews, surveys, and persona development.'
+      },
+      {
+        title: 'Build high-fidelity prototypes',
+        description: 'Create interactive prototypes in Figma that look and feel like the final product.'
+      },
+      {
+        title: 'Create scalable design systems',
+        description: 'Develop reusable components and style guides for consistent product design.'
+      },
+      {
+        title: 'Validate designs with testing',
+        description: 'Run usability tests to gather feedback and iterate on your solutions.'
       }
     ],
     applicationProcess: defaultApplicationProcess,

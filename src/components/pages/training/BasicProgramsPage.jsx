@@ -35,7 +35,7 @@ const BasicProgramsPage = () => {
       <section className="relative isolate overflow-hidden">
         <div className="max-w-none px-0">
           {/* Full-bleed hero container */}
-          <div 
+          <div
             className="relative overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed min-h-[70vh] sm:min-h-[80vh] lg:min-h-screen flex items-center"
             style={{
               backgroundImage: 'url(/images/image3.png)'
@@ -43,16 +43,16 @@ const BasicProgramsPage = () => {
           >
             <div className="absolute inset-0 bg-black/40"></div>
             <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-32 min-h-[500px] md:min-h-[580px] lg:min-h-[680px] flex items-center">
-              
+
               {/* Hero Content */}
-              <motion.div 
+              <motion.div
                 className="max-w-3xl pt-8 sm:pt-12 md:pt-16 lg:pt-20"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
               >
                 {/* Main Heading */}
-                <motion.h1 
+                <motion.h1
                   className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -63,7 +63,7 @@ const BasicProgramsPage = () => {
                 </motion.h1>
 
                 {/* Subtitle */}
-                <motion.p 
+                <motion.p
                   className="text-base sm:text-lg md:text-xl font-bold text-white mb-10 sm:mb-12 md:mb-14 leading-relaxed"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -73,20 +73,20 @@ const BasicProgramsPage = () => {
                 </motion.p>
 
                 {/* CTA Button */}
-                <motion.div 
+                <motion.div
                   className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                  <a 
+                  <a
                     href="#programs"
                     className="cta-btn px-6 py-3 rounded-xl text-base sm:text-lg w-full sm:w-auto"
                   >
                     Explore Basic Programs
                     <ChevronRight size={18} className="ml-2" />
                   </a>
-                  <Link 
+                  <Link
                     to="/training/programs"
                     className="cta-ghost px-6 py-3 rounded-xl text-base sm:text-lg w-full sm:w-auto"
                   >
@@ -132,7 +132,7 @@ const BasicProgramsPage = () => {
               const IconComponent = iconMap[program.iconKey] || Target;
               const placeholderImages = ['/images/image1.png', '/images/image2.png', '/images/image3.png'];
               const imageUrl = placeholderImages[index % placeholderImages.length];
-              
+
               return (
                 <motion.div
                   key={program.id}
@@ -144,13 +144,13 @@ const BasicProgramsPage = () => {
                 >
                   {/* Image Header */}
                   <div className="relative h-60 overflow-hidden">
-                    <img 
-                      src={imageUrl} 
+                    <img
+                      src={imageUrl}
                       alt={program.title}
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-black/40"></div>
-                    
+
                     {/* Content on Image */}
                     <div className="absolute inset-0 p-5 flex flex-col justify-end">
                       {/* Icon + Title */}
@@ -160,7 +160,7 @@ const BasicProgramsPage = () => {
                         </div>
                         <h3 className="text-xl font-bold text-white leading-tight">{program.title}</h3>
                       </div>
-                      
+
                       {/* Duration */}
                       <div className="flex items-center gap-2 text-white/90 text-sm">
                         <Clock size={14} />
@@ -173,7 +173,7 @@ const BasicProgramsPage = () => {
                   <div className="p-5">
                     {/* Description */}
                     <p className="text-gray-600 text-sm leading-relaxed mb-5 line-clamp-3">{program.description}</p>
-                    
+
                     {/* Feature Grid 2x2 */}
                     <div className="grid grid-cols-2 gap-3 mb-5">
                       <div className="flex items-center gap-2 text-sm text-gray-700">
@@ -193,17 +193,17 @@ const BasicProgramsPage = () => {
                         <span>Certificate</span>
                       </div>
                     </div>
-                    
+
                     {/* Divider */}
                     <div className="border-t border-gray-200 my-4"></div>
-                    
+
                     {/* Footer */}
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-xs text-gray-500 mb-0.5">Course Fee</div>
                         <div className="text-xl font-bold text-[#004fa2]">{program.price}</div>
                       </div>
-                      <button 
+                      <button
                         onClick={() => navigate(`/training/course/${program.id}`)}
                         className="cta-btn-sm cta-btn px-5 py-2.5 text-sm"
                       >
@@ -221,7 +221,7 @@ const BasicProgramsPage = () => {
       {/* Key Benefits Section */}
       <section className="py-10 sm:py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -250,7 +250,7 @@ const BasicProgramsPage = () => {
                 <Target size={28} className="text-white hidden sm:block" />
               </div>
               <h3 className="text-xs sm:text-base md:text-xl font-bold text-gray-900 mb-1 sm:mb-2">No Experience Required</h3>
-              <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-tight">Start from scratch with our beginner-friendly approach</p>
+              <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-tight">We start from the absolute zero, ensuring no student is left behind as we build your digital confidence.</p>
             </motion.div>
 
             <motion.div
@@ -265,7 +265,7 @@ const BasicProgramsPage = () => {
                 <Users size={28} className="text-white hidden sm:block" />
               </div>
               <h3 className="text-xs sm:text-base md:text-xl font-bold text-gray-900 mb-1 sm:mb-2">Expert Instructors</h3>
-              <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-tight">Learn from industry professionals with real-world experience</p>
+              <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-tight">Learn from industry practitioners who bring years of real-world experience to every session.</p>
             </motion.div>
 
             <motion.div
@@ -280,7 +280,7 @@ const BasicProgramsPage = () => {
                 <Star size={28} className="text-white hidden sm:block" />
               </div>
               <h3 className="text-xs sm:text-base md:text-xl font-bold text-gray-900 mb-1 sm:mb-2">Job-Ready Skills</h3>
-              <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-tight">Gain practical skills that employers are looking for</p>
+              <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-tight">Gain the practical, foundational skills that employers in Ghana and beyond are looking for today.</p>
             </motion.div>
           </div>
         </div>

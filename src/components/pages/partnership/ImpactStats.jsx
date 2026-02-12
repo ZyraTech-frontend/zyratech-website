@@ -22,17 +22,17 @@ const CountUp = ({ end, suffix = '', duration = 2000 }) => {
 
   useEffect(() => {
     if (!isVisible) return;
-    
+
     const startTime = Date.now();
     const endValue = parseInt(end.replace(/[^0-9]/g, ''));
-    
+
     const timer = setInterval(() => {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const current = Math.floor(endValue * progress);
-      
+
       setCount(current);
-      
+
       if (progress === 1) clearInterval(timer);
     }, 16);
 
@@ -48,21 +48,20 @@ const CountUp = ({ end, suffix = '', duration = 2000 }) => {
 
 const ImpactStats = () => {
   const stats = [
-    { number: '50', suffix: '+', label: 'Active Partners' },
-    { number: '100', suffix: 'K+', label: 'Students Trained' },
-    { number: '100', suffix: '+', label: 'Projects Completed' },
-    { number: '500', suffix: '+', label: 'Lives Impacted' }
+    { number: '1', suffix: '', label: 'Active Partners' },
+    { number: '50', suffix: '+', label: 'Students Trained' },
+    { number: '50', suffix: '+', label: 'Projects Completed' }
   ];
 
   return (
     <section className="py-12 sm:py-16 bg-gray-50">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-4 gap-4 sm:gap-8 lg:gap-10">
+        <div className="grid grid-cols-3 gap-4 sm:gap-8 lg:gap-10">
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
               <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#004fa2] mb-1 sm:mb-2 lg:mb-3">
-                <CountUp 
-                  end={stat.number} 
+                <CountUp
+                  end={stat.number}
                   suffix={stat.suffix}
                   duration={2000 + index * 200}
                 />
