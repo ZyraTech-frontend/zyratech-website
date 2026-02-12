@@ -7,6 +7,8 @@ import React, { useState } from 'react';
 import { Bell, Settings, Search, ChevronDown, User, LogOut, Menu, PanelLeftClose, PanelLeft } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { logoutUser } from '../../../store/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 const Header = ({ onMenuClick, sidebarOpen }) => {
   const { user } = useAuth();
@@ -31,10 +33,12 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
       .toUpperCase() || 'U';
   };
 
+  const dispatch = useDispatch();
+
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/admin/login');
+    dispatch(logoutUser()).then(() => {
+      navigate('/admin/login');
+    });
   };
 
   return (
@@ -43,7 +47,8 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
         {/* Top Row: Search, Avatar, Notifications */}
         <div className="flex items-center justify-between mb-3">
           {/* Left: Hamburger + Search Bar */}
-          <div className="flex items-center gap-3 flex-1 max-w-xl">
+          {/* Left: Hamburger + Search Bar */}
+          <div className="flex items-center gap-3 flex-1 lg:max-w-xl">
             {/* Hamburger/Toggle Menu Button - always visible */}
             <button
               onClick={onMenuClick}
@@ -54,8 +59,8 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
               {sidebarOpen ? <PanelLeftClose size={22} /> : <PanelLeft size={22} />}
             </button>
 
-            {/* Search Bar */}
-            <div className="flex-1">
+            {/* Search Bar - Hidden on mobile, visible on desktop */}
+            <div className="hidden md:block flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                 <input
@@ -67,18 +72,23 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
                 />
               </div>
             </div>
+
+            {/* Mobile Search Icon */}
+            <button className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+              <Search size={22} />
+            </button>
           </div>
 
           {/* Right Side: Avatar, Notifications, Settings */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded"
+              className="flex items-center gap-2 px-1 sm:px-3 py-2 hover:bg-gray-100 rounded transition-colors"
             >
-              <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
                 {getInitials(user?.name || user?.email)}
               </div>
-              <span className="text-sm font-medium text-gray-900">{user?.name || user?.email}</span>
+              <span className="hidden sm:block text-sm font-medium text-gray-900 truncate max-w-[100px] sm:max-w-none">{user?.name || user?.email}</span>
               <ChevronDown size={16} className="text-gray-600" />
             </button>
 

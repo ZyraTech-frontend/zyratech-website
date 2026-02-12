@@ -510,8 +510,8 @@ const PartnershipsManagementPage = () => {
                         </p>
                     </div>
                     <div className="flex items-center gap-3">
-                        {/* View Toggle */}
-                        <div className="flex items-center bg-gray-100 rounded-xl p-1">
+                        {/* View Toggle - Hidden on mobile to force Grid view */}
+                        <div className="hidden md:flex items-center bg-gray-100 rounded-xl p-1">
                             <button
                                 onClick={() => { setViewMode('grid'); setCurrentPage(1); }}
                                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${viewMode === 'grid'

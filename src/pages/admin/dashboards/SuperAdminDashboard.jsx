@@ -217,7 +217,7 @@ const SuperAdminDashboard = ({ user }) => {
             )}
 
             {/* Summary Statistics Row - Enhanced & Interactive */}
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 md:gap-4">
                 {[
                     { label: 'Courses', value: metrics.totalCourses, icon: GraduationCap, iconColor: 'text-blue-600', link: '/admin/training' },
                     { label: 'Jobs', value: metrics.activeJobs, icon: Briefcase, iconColor: 'text-orange-600', link: '/admin/jobs' },
@@ -231,21 +231,21 @@ const SuperAdminDashboard = ({ user }) => {
                     <Link
                         key={i}
                         to={stat.link}
-                        className="group bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-xl hover:scale-105 hover:border-[#004fa2] transition-all duration-300 relative overflow-hidden cursor-pointer"
+                        className="group bg-white rounded-xl p-3 md:p-4 border border-gray-200 shadow-sm hover:shadow-xl hover:scale-105 hover:border-[#004fa2] transition-all duration-300 relative overflow-hidden cursor-pointer flex flex-col justify-between"
                     >
                         {/* Horizontal layout: Icon and Number side by side */}
-                        <div className="flex items-center gap-2 mb-3">
+                        <div className="flex items-center gap-2 mb-2 md:mb-3">
                             {/* Icon - No background */}
-                            <stat.icon className={`${stat.iconColor} group-hover:scale-110 transition-transform duration-300 flex-shrink-0`} size={20} />
+                            <stat.icon className={`${stat.iconColor} group-hover:scale-110 transition-transform duration-300 flex-shrink-0 w-5 h-5 md:w-6 md:h-6`} />
 
                             {/* Value */}
-                            <p className="text-2xl font-extrabold text-gray-900 transition-all duration-300">
+                            <p className="text-xl md:text-2xl font-extrabold text-gray-900 transition-all duration-300 truncate">
                                 {stat.value.toLocaleString()}
                             </p>
                         </div>
 
                         {/* Label */}
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide group-hover:text-[#004fa2] transition-colors duration-300">
+                        <p className="text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wide group-hover:text-[#004fa2] transition-colors duration-300 truncate">
                             {stat.label}
                         </p>
                     </Link>
