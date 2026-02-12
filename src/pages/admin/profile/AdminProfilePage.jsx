@@ -119,7 +119,7 @@ const AdminProfilePage = () => {
         <AdminLayout>
             <div className="max-w-5xl mx-auto space-y-6 pb-8">
                 {/* Page Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
                             <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
@@ -225,8 +225,8 @@ const AdminProfilePage = () => {
                                 <button
                                     onClick={() => setActiveTab('profile')}
                                     className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'profile'
-                                            ? 'bg-blue-50 text-[#004fa2]'
-                                            : 'text-gray-600 hover:bg-gray-50'
+                                        ? 'bg-blue-50 text-[#004fa2]'
+                                        : 'text-gray-600 hover:bg-gray-50'
                                         }`}
                                 >
                                     <User size={18} />
@@ -235,8 +235,8 @@ const AdminProfilePage = () => {
                                 <button
                                     onClick={() => setActiveTab('security')}
                                     className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'security'
-                                            ? 'bg-blue-50 text-[#004fa2]'
-                                            : 'text-gray-600 hover:bg-gray-50'
+                                        ? 'bg-blue-50 text-[#004fa2]'
+                                        : 'text-gray-600 hover:bg-gray-50'
                                         }`}
                                 >
                                     <Shield size={18} />
@@ -245,8 +245,8 @@ const AdminProfilePage = () => {
                                 <button
                                     onClick={() => setActiveTab('notifications')}
                                     className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'notifications'
-                                            ? 'bg-blue-50 text-[#004fa2]'
-                                            : 'text-gray-600 hover:bg-gray-50'
+                                        ? 'bg-blue-50 text-[#004fa2]'
+                                        : 'text-gray-600 hover:bg-gray-50'
                                         }`}
                                 >
                                     <Bell size={18} />
@@ -255,8 +255,8 @@ const AdminProfilePage = () => {
                                 <button
                                     onClick={() => setActiveTab('activity')}
                                     className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'activity'
-                                            ? 'bg-blue-50 text-[#004fa2]'
-                                            : 'text-gray-600 hover:bg-gray-50'
+                                        ? 'bg-blue-50 text-[#004fa2]'
+                                        : 'text-gray-600 hover:bg-gray-50'
                                         }`}
                                 >
                                     <Activity size={18} />

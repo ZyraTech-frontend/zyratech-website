@@ -25,12 +25,12 @@ const HowWeHireSection = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">How we hire</h3>
         <p className="text-white/90 mb-8 text-base sm:text-lg">A concise, respectful process that focuses on skills and potential.</p>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {hiringSteps.map((step, index) => {
             const IconComponent = step.icon;
             return (
-              <div 
+              <div
                 key={step.title}
                 className="group bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all duration-300 cursor-pointer hover:-translate-y-1"
               >
@@ -40,7 +40,7 @@ const HowWeHireSection = () => {
                   </div>
                   <span className="text-sm font-semibold text-white/60 group-hover:text-white/80 transition-colors">{index + 1}</span>
                 </div>
-                
+
                 <h4 className="text-lg font-bold text-white mb-2">{step.title}</h4>
                 <p className="text-white/80 text-sm leading-relaxed">{step.description}</p>
               </div>

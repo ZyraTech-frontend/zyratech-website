@@ -65,8 +65,8 @@ const AdminLayout = ({ children }) => {
           isMobile
             ? ''
             : sidebarOpen
-            ? 'w-72 transition-all duration-300'
-            : 'w-0 transition-all duration-300 overflow-hidden'
+              ? 'w-72 transition-all duration-300'
+              : 'w-0 transition-all duration-300 overflow-hidden'
         }
       >
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} isMobile={isMobile} />
@@ -79,7 +79,7 @@ const AdminLayout = ({ children }) => {
 
         {/* Page Content */}
         <main className="flex-1 overflow-auto">
-          <div className="p-6">
+          <div className="p-4 md:p-6">
             {children}
           </div>
         </main>
@@ -90,15 +90,14 @@ const AdminLayout = ({ children }) => {
         {notifications.map((notification) => (
           <div
             key={notification.id}
-            className={`px-4 py-3 rounded shadow-lg text-white max-w-xs ${
-              notification.type === 'success'
-                ? 'bg-green-600'
-                : notification.type === 'error'
+            className={`px-4 py-3 rounded shadow-lg text-white max-w-xs ${notification.type === 'success'
+              ? 'bg-green-600'
+              : notification.type === 'error'
                 ? 'bg-red-600'
                 : notification.type === 'warning'
-                ? 'bg-yellow-600'
-                : 'bg-blue-600'
-            }`}
+                  ? 'bg-yellow-600'
+                  : 'bg-blue-600'
+              }`}
           >
             {notification.message}
           </div>

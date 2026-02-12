@@ -704,8 +704,8 @@ const ContactInquiriesPage = () => {
                     </div>
                 </div>
 
-                {/* Inquiries Table */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                {/* Desktop Table View */}
+                <div className="hidden md:block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead className="bg-gray-50 border-b border-gray-100">
@@ -926,8 +926,8 @@ const ContactInquiriesPage = () => {
                                     </span>
                                     <StatusBadge status={viewingInquiry.status} />
                                     <span className={`px-2 py-0.5 rounded text-xs font-bold ${viewingInquiry.priority === 'high' ? 'bg-red-100 text-red-700' :
-                                            viewingInquiry.priority === 'medium' ? 'bg-amber-100 text-amber-700' :
-                                                'bg-green-100 text-green-700'
+                                        viewingInquiry.priority === 'medium' ? 'bg-amber-100 text-amber-700' :
+                                            'bg-green-100 text-green-700'
                                         }`}>
                                         {viewingInquiry.priority.toUpperCase()} Priority
                                     </span>
@@ -1033,8 +1033,8 @@ const ContactInquiriesPage = () => {
                                                 key={key}
                                                 onClick={() => handleUpdateStatus(viewingInquiry, key)}
                                                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${viewingInquiry.status === key
-                                                        ? config.color
-                                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                                    ? config.color
+                                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                                     }`}
                                             >
                                                 {config.label}

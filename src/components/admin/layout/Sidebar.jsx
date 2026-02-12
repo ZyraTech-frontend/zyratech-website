@@ -30,6 +30,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
 import { usePermissions } from '../../../hooks/usePermissions';
+import { logoutUser } from '../../../store/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 const Sidebar = ({ isOpen, onClose, isMobile }) => {
   const location = useLocation();
@@ -41,10 +43,12 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
     return location.pathname === path;
   };
 
+  const dispatch = useDispatch();
+
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/admin/login');
+    dispatch(logoutUser()).then(() => {
+      navigate('/admin/login');
+    });
   };
 
   return (
@@ -59,8 +63,12 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
       <div className="px-6 py-6 border-b border-white/10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
-              <LayoutDashboard size={24} className="text-white" />
+            <div className="w-16 h-16 bg-transparent rounded-lg flex items-center justify-center p-1 overflow-hidden">
+              <img
+                src="/zyratecpng.png"
+                alt="ZyraTech Logo"
+                className="w-full h-full object-contain brightness-0 invert"
+              />
             </div>
             <div>
               <h1 className="text-xl font-bold">Account Manager</h1>
@@ -88,8 +96,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
             <Link
               to="/admin/dashboard"
               className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/dashboard')
-                  ? 'bg-white/15 text-white'
-                  : 'text-blue-200 hover:bg-white/5 hover:text-white'
+                ? 'bg-white/15 text-white'
+                : 'text-blue-200 hover:bg-white/5 hover:text-white'
                 }`}
             >
               <LayoutDashboard size={20} />
@@ -102,8 +110,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
             <Link
               to="/admin/analytics"
               className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/analytics')
-                  ? 'bg-white/15 text-white'
-                  : 'text-blue-200 hover:bg-white/5 hover:text-white'
+                ? 'bg-white/15 text-white'
+                : 'text-blue-200 hover:bg-white/5 hover:text-white'
                 }`}
             >
               <BarChart3 size={20} />
@@ -121,8 +129,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <Link
             to="/admin/training"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/training')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <GraduationCap size={20} />
@@ -132,8 +140,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <Link
             to="/admin/blog"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/blog')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <BookOpen size={20} />
@@ -143,8 +151,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <Link
             to="/admin/jobs"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/jobs')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <Briefcase size={20} />
@@ -154,8 +162,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <Link
             to="/admin/gallery"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/gallery')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <Image size={20} />
@@ -165,8 +173,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <Link
             to="/admin/projects"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/projects')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <FolderKanban size={20} />
@@ -176,8 +184,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <Link
             to="/admin/faq"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/faq')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <HelpCircle size={20} />
@@ -187,8 +195,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <Link
             to="/admin/testimonials"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/testimonials')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <MessageCircle size={20} />
@@ -205,8 +213,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <Link
             to="/admin/payments"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/payments')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <CreditCard size={20} />
@@ -216,8 +224,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <Link
             to="/admin/enrollments"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/enrollments')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <FileText size={20} />
@@ -227,8 +235,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <Link
             to="/admin/messages"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/messages')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <MessageSquare size={20} />
@@ -238,8 +246,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <Link
             to="/admin/partnerships"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/partnerships')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <Handshake size={20} />
@@ -261,8 +269,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <Link
             to="/admin/impact"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/impact')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <TrendingUp size={20} />
@@ -272,8 +280,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <Link
             to="/admin/newsletter"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/newsletter')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <Mail size={20} />
@@ -292,8 +300,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
               <Link
                 to="/admin/users"
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/users')
-                    ? 'bg-white/15 text-white'
-                    : 'text-blue-200 hover:bg-white/5 hover:text-white'
+                  ? 'bg-white/15 text-white'
+                  : 'text-blue-200 hover:bg-white/5 hover:text-white'
                   }`}
               >
                 <Users size={20} />
@@ -303,8 +311,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
               <Link
                 to="/admin/settings"
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/settings')
-                    ? 'bg-white/15 text-white'
-                    : 'text-blue-200 hover:bg-white/5 hover:text-white'
+                  ? 'bg-white/15 text-white'
+                  : 'text-blue-200 hover:bg-white/5 hover:text-white'
                   }`}
               >
                 <Settings size={20} />
@@ -314,8 +322,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
               <Link
                 to="/admin/activity-logs"
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/activity-logs')
-                    ? 'bg-white/15 text-white'
-                    : 'text-blue-200 hover:bg-white/5 hover:text-white'
+                  ? 'bg-white/15 text-white'
+                  : 'text-blue-200 hover:bg-white/5 hover:text-white'
                   }`}
               >
                 <ClipboardList size={20} />
@@ -325,8 +333,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
               <Link
                 to="/admin/reports"
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/reports')
-                    ? 'bg-white/15 text-white'
-                    : 'text-blue-200 hover:bg-white/5 hover:text-white'
+                  ? 'bg-white/15 text-white'
+                  : 'text-blue-200 hover:bg-white/5 hover:text-white'
                   }`}
               >
                 <FileBarChart size={20} />

@@ -9,7 +9,7 @@ const HrContactSection = ({
 }) => {
   // Get settings from Redux store
   const settings = useSelector((state) => state.settings.values);
-  
+
   // Use props if provided, otherwise fall back to settings, then defaults
   const hrName = name || settings.hrName || 'Magdalene';
   const hrTitle = title || settings.hrTitle || 'Human Resources Team Lead';
@@ -38,10 +38,10 @@ const HrContactSection = ({
 
           <div className="relative w-full md:w-auto flex justify-center md:justify-start md:ml-12">
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <img 
-                src={imageUrl} 
+              <img
+                src={imageUrl}
                 alt={hrName}
-                className="w-full max-w-[340px] h-[420px] sm:max-w-[380px] sm:h-[480px] md:w-[580px] md:h-[600px] object-cover"
+                className="w-full max-w-md md:max-w-none md:w-[580px] h-auto aspect-[3/4] md:aspect-auto md:h-[600px] object-cover"
               />
             </div>
           </div>

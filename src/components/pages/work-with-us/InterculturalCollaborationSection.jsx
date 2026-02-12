@@ -33,10 +33,10 @@ const InterculturalCollaborationSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="order-2 md:order-1">
-            <img 
+            <img
               src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800"
               alt="Team collaboration"
-              className="w-full h-[400px] object-cover rounded-2xl shadow-lg"
+              className="w-full h-64 md:h-[400px] object-cover rounded-2xl shadow-lg"
             />
           </div>
 
@@ -44,7 +44,7 @@ const InterculturalCollaborationSection = () => {
             {collaborationPoints.map((point) => {
               const IconComponent = point.icon;
               return (
-                <div 
+                <div
                   key={point.number}
                   className="group bg-gray-50 rounded-xl p-6 border border-gray-200 hover:border-[#004fa2]/40 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                 >
