@@ -23,7 +23,7 @@ const AboutQuote = () => {
           >
             ABOUT ZYRATECH
           </motion.h2>
-          
+
           <motion.div
             ref={quoteAnimation.ref}
             initial={quoteAnimation.initial}
@@ -34,17 +34,17 @@ const AboutQuote = () => {
           >
             <Quote className="hidden sm:block absolute -top-4 -left-4 w-8 sm:w-12 h-8 sm:h-12 text-[#004fa2] opacity-50" />
             <blockquote className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-6 sm:mb-8 px-2 sm:px-0">
-              Our mission is to lead Ghana’s technological transformation through world-class Software Engineering, robust Infrastructure & Cloud services, and impactful IT Education. 
+              Our mission is to lead Ghana’s technological transformation through world-class Software Engineering, robust Infrastructure & Cloud services, and impactful IT Education.
               We are building an ecosystem where innovation meets academic excellence
             </blockquote>
           </motion.div>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 sm:gap-8 mb-8 sm:mb-12">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border border-gray-100 shrink-0">
               <img
-                src="/images/founder.jpg"
+                src="/images/tex1.png"
                 alt="ZyraTech Founder"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-top scale-[3.0] origin-top -translate-y-4"
                 onError={(e) => {
                   e.target.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face';
                 }}
@@ -65,16 +65,16 @@ const AboutQuote = () => {
             className="grid grid-cols-3 gap-4 sm:gap-8 mb-8 sm:mb-12"
           >
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">2019</div>
+              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">2024</div>
               <div className="text-xs sm:text-base text-gray-600">Founded</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">200+</div>
+              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">50+</div>
               <div className="text-xs sm:text-base text-gray-600">Trainees</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">3+</div>
-              <div className="text-xs sm:text-base text-gray-600">Locations</div>
+              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">1</div>
+              <div className="text-xs sm:text-base text-gray-600">Location</div>
             </div>
           </motion.div>
 

@@ -12,59 +12,24 @@ const partners = [
 const PartnersShowcase = () => {
   return (
     <>
-      <style jsx>{`
-        @keyframes scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        .animate-scroll {
-          animation: scroll 15s linear infinite;
-        }
-      `}</style>
       <section className="py-12 sm:py-16 bg-[#004fa2] text-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-xs sm:text-sm font-semibold tracking-wider uppercase mb-6 sm:mb-8">OUR PARTNERS</h2>
-        
-        <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-8 sm:mb-16 max-w-4xl mx-auto leading-tight px-2 sm:px-0">
-          At ZyraTech, our partnerships are the cornerstone of our mission to connect IT talent with global markets.
-        </h3>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-xs sm:text-sm font-semibold tracking-wider uppercase mb-6 sm:mb-8">OUR PARTNERS</h2>
 
-        <div className="bg-white rounded-lg py-6 sm:py-8 md:py-12 px-2 sm:px-4 md:px-8 overflow-hidden">
-          <div className="flex animate-scroll">
-            {/* First set of logos */}
-            {partners.map((partner, index) => (
-              <div key={index} className="flex items-center justify-center h-12 sm:h-16 w-24 sm:w-32 mx-4 sm:mx-8 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300">
-                <img
-                  src={partner.logo}
-                  alt={partner.name}
-                  className="max-h-8 sm:max-h-12 max-w-full object-contain filter brightness-0"
-                  onError={(e) => {
-                    e.target.src = `https://via.placeholder.com/120x60/333/fff?text=${partner.name.split(' ')[0]}`;
-                  }}
-                />
-              </div>
-            ))}
-            {/* Duplicate set for seamless loop */}
-            {partners.map((partner, index) => (
-              <div key={`duplicate-${index}`} className="flex items-center justify-center h-12 sm:h-16 w-24 sm:w-32 mx-4 sm:mx-8 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300">
-                <img
-                  src={partner.logo}
-                  alt={partner.name}
-                  className="max-h-8 sm:max-h-12 max-w-full object-contain filter brightness-0"
-                  onError={(e) => {
-                    e.target.src = `https://via.placeholder.com/120x60/333/fff?text=${partner.name.split(' ')[0]}`;
-                  }}
-                />
-              </div>
-            ))}
+          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-8 sm:mb-16 max-w-4xl mx-auto leading-tight px-2 sm:px-0">
+            At ZyraTech, our partnerships are the cornerstone of our mission to connect IT talent with global markets.
+          </h3>
+
+          <div className="bg-white rounded-lg py-6 sm:py-8 md:py-12 px-2 sm:px-4 md:px-8 flex flex-col justify-center items-center overflow-hidden">
+            <img
+              src="/images/partnershiplogo.jpeg"
+              alt="Royal Klast"
+              className="max-w-full h-auto object-contain max-h-32 sm:max-h-48 md:max-h-64 filter hover:grayscale-0 transition-all duration-300 mb-6"
+            />
+            <p className="text-xl sm:text-2xl font-bold text-gray-800">Royal Klast</p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
     </>
   );
 };

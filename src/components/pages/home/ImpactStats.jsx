@@ -12,30 +12,23 @@ const ImpactStats = () => {
   const stats = [
     {
       icon: Users,
-      number: 500,
+      number: 50,
       suffix: '+',
       label: 'Students trained',
       color: '#004fa2'
     },
     {
       icon: Recycle,
-      number: 10,
-      suffix: '+',
-      label: 'Partner schools',
+      number: 1,
+      suffix: '',
+      label: 'Active Partners',
       color: '#004fa2'
     },
     {
-      icon: Lightbulb,
-      number: 350,
-      suffix: 'GHS',
-      label: 'Affordable internship fee',
-      color: '#000000'
-    },
-    {
       icon: Globe,
-      number: 20,
+      number: 50,
       suffix: '+',
-      label: 'Professional projects',
+      label: 'Projects Completed',
       color: '#004fa2'
     }
   ];
@@ -74,7 +67,7 @@ const ImpactStats = () => {
             start = end;
             clearInterval(timer);
           }
-          
+
           setAnimatedNumbers(prev => ({
             ...prev,
             [index]: Math.floor(start)
@@ -85,13 +78,13 @@ const ImpactStats = () => {
   };
 
   return (
-    <section 
+    <section
       ref={sectionRef}
       className="py-12 bg-white from-gray-100 to-white"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
-        <motion.div 
+        <motion.div
           ref={titleAnimation.ref}
           initial={titleAnimation.initial}
           animate={titleAnimation.animate}
@@ -107,8 +100,8 @@ const ImpactStats = () => {
           </p>
         </motion.div>
 
-        <motion.div 
-          className="grid grid-cols-2 lg:grid-cols-4 gap-3"
+        <motion.div
+          className="grid grid-cols-2 lg:grid-cols-3 gap-3"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
@@ -123,7 +116,7 @@ const ImpactStats = () => {
           {stats.map((stat, index) => {
             const IconComponent = stat.icon;
             return (
-              <motion.div 
+              <motion.div
                 key={index}
                 variants={{
                   hidden: { opacity: 0, y: 20 },
@@ -133,32 +126,32 @@ const ImpactStats = () => {
                 className="group relative bg-white p-3 sm:p-4 rounded-xl border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden"
               >
                 {/* Gradient background on hover */}
-                <div 
+                <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300"
                   style={{ background: `linear-gradient(135deg, ${stat.color}20, ${stat.color}10)` }}
                 ></div>
-                
+
                 {/* Content */}
                 <div className="flex items-center space-x-2 sm:space-x-3 relative z-10">
-                  <div 
+                  <div
                     className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-300 bg-gray-50 group-hover:bg-gray-100 flex-shrink-0"
                   >
-                    <IconComponent 
-                      size={20} 
+                    <IconComponent
+                      size={20}
                       className="sm:w-6 sm:h-6"
                       style={{ color: stat.color }}
                     />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline space-x-1">
-                      <span 
+                      <span
                         className="text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight"
                         style={{ color: stat.color }}
                       >
                         {stat.placeholder ? stat.placeholder : (isVisible ? (animatedNumbers[index] || 0) : 0)}
                       </span>
                       {!stat.placeholder && (
-                        <span 
+                        <span
                           className="text-base sm:text-lg md:text-xl font-bold"
                           style={{ color: stat.color }}
                         >
@@ -178,7 +171,7 @@ const ImpactStats = () => {
 
         {/* Partner CTA */}
         <div className="flex justify-center mt-8">
-          <a 
+          <a
             href="/partner"
             className="bg-gradient-to-r from-[#004fa2] to-[#003a7a] hover:from-[#003a7a] hover:to-[#002855] text-white font-bold text-base px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 inline-flex items-center gap-2"
           >

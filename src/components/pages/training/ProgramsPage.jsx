@@ -20,7 +20,7 @@ const ProgramsPage = () => {
     {
       id: 'basic',
       title: 'Basic Programs',
-      description: 'Perfect for beginners and those new to technology. Start your tech journey with our foundational programs.',
+      description: 'Foundational Digital Literacy — Perfect for absolute beginners. Master the Microsoft Office Suite and core computer skills in just 1 month.',
       icon: BookOpen,
       link: '/training/programs/basic',
       color: 'bg-blue-500'
@@ -28,7 +28,7 @@ const ProgramsPage = () => {
     {
       id: 'intermediate',
       title: 'Intermediate Programs',
-      description: 'For those with some experience looking to advance their skills. Take your career to the next level.',
+      description: 'Design & Logic Foundations — Advance your skills in Graphic Design, Python Programming, or Web Design over a 2-month period.',
       icon: Award,
       link: '/training/programs/intermediate',
       color: 'bg-green-500'
@@ -36,7 +36,7 @@ const ProgramsPage = () => {
     {
       id: 'advanced',
       title: 'Advanced Programs',
-      description: 'For experienced professionals ready to master cutting-edge technologies. Lead innovation with expert-level training.',
+      description: 'Professional Specialization — For those ready for mastery. Intensive 2-3 month tracks in Full-Stack Development, Mobile Apps, or UI/UX Design.',
       icon: Rocket,
       link: '/training/programs/advanced',
       color: 'bg-purple-500'
@@ -44,7 +44,7 @@ const ProgramsPage = () => {
     {
       id: 'internship',
       title: 'Immersive Internship Programme',
-      description: 'Gain real-world experience through hands-on projects. Build your portfolio and launch your tech career.',
+      description: 'Portfolio & Industry Ready — Work on real-world projects and build a portfolio that stands out to global employers.',
       icon: Briefcase,
       link: '/training/programs/internship',
       color: 'bg-[#5c3a21]'
@@ -52,7 +52,7 @@ const ProgramsPage = () => {
     {
       id: 'matured',
       title: 'Matured Programme',
-      description: 'Designed specifically for mature professionals and career changers. Learn at your pace with flexible schedules.',
+      description: 'Strategic Career Pivot — Designed for working professionals and career changers with flexible, hybrid scheduling.',
       icon: Users,
       link: '/training/programs/matured',
       color: 'bg-indigo-500'
@@ -61,12 +61,12 @@ const ProgramsPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      
+
       {/* Hero Section */}
       <section className="relative isolate overflow-hidden">
         <div className="max-w-none px-0">
           {/* Full-bleed hero container */}
-          <div 
+          <div
             className="relative overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed min-h-[70vh] sm:min-h-[80vh] lg:min-h-screen flex items-center"
             style={{
               backgroundImage: 'url(/images/image3.png)'
@@ -74,16 +74,16 @@ const ProgramsPage = () => {
           >
             <div className="absolute inset-0 bg-black/40"></div>
             <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-32 min-h-[500px] md:min-h-[580px] lg:min-h-[680px] flex items-center">
-              
+
               {/* Left Content */}
-              <motion.div 
+              <motion.div
                 className="max-w-3xl pt-8 sm:pt-12 md:pt-16 lg:pt-20"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
               >
                 {/* Main Heading */}
-                <motion.h1 
+                <motion.h1
                   className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -94,7 +94,7 @@ const ProgramsPage = () => {
                 </motion.h1>
 
                 {/* Subtitle */}
-                <motion.p 
+                <motion.p
                   className="text-base sm:text-lg md:text-xl font-bold text-white mb-10 sm:mb-12 md:mb-14 leading-relaxed"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -104,13 +104,13 @@ const ProgramsPage = () => {
                 </motion.p>
 
                 {/* CTA Button */}
-                <motion.div 
+                <motion.div
                   className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.3 }}
                 >
-                  <a 
+                  <a
                     href="#program-categories"
                     className="cta-btn px-6 py-3 rounded-xl text-base sm:text-lg w-full sm:w-auto"
                   >
@@ -127,7 +127,7 @@ const ProgramsPage = () => {
       {/* Section Header - White Background */}
       <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             ref={titleAnimation.ref}
             initial={titleAnimation.initial}
             animate={titleAnimation.animate}
@@ -139,7 +139,7 @@ const ProgramsPage = () => {
               Explore Our Programmes In Ghana
             </h2>
             <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
-              Unlock your potential with our diverse range of programmes in Ghana, designed to empower you with the skills and experience needed to excel in the technology industry. Discover more about our programmes today and take the first step towards a rewarding career in tech.
+              Unlock your potential with industry-aligned programs designed to bridge the gap between academic theory and practical technology. At ZyraTech, we provide the skills, mentorship, and real-world experience needed to excel in the global digital economy.
             </p>
           </motion.div>
 
@@ -241,13 +241,13 @@ const ProgramsPage = () => {
       {/* Program Categories - Brand Background */}
       <section id="program-categories" className="py-10 sm:py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           {/* Mobile Layout - Compact horizontal cards */}
           <div className="sm:hidden space-y-3">
             {programCategories.map((category, index) => {
               const IconComponent = category.icon;
               const programCount = getTrainingCoursesByCategory(category.id).length;
-              
+
               return (
                 <motion.div
                   key={category.id}
@@ -264,13 +264,13 @@ const ProgramsPage = () => {
                     <div className={`w-10 h-10 ${category.color} rounded-lg flex items-center justify-center flex-shrink-0`}>
                       <IconComponent size={20} className="text-white" />
                     </div>
-                    
+
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <h3 className="text-sm font-bold text-gray-900 truncate">{category.title}</h3>
                       <p className="text-xs text-gray-500">{programCount} programme{programCount === 1 ? '' : 's'}</p>
                     </div>
-                    
+
                     {/* Arrow */}
                     <ChevronRight size={18} className="text-[#004fa2] flex-shrink-0 group-hover:translate-x-1 transition-transform" />
                   </Link>
@@ -286,7 +286,7 @@ const ProgramsPage = () => {
               {programCategories.slice(0, 3).map((category, index) => {
                 const IconComponent = category.icon;
                 const programCount = getTrainingCoursesByCategory(category.id).length;
-                
+
                 return (
                   <motion.div
                     key={category.id}
@@ -302,7 +302,7 @@ const ProgramsPage = () => {
                         <IconComponent size={24} className="text-white" />
                       </div>
                     </div>
-                    
+
                     {/* Title */}
                     <h3 className="text-xl font-bold text-gray-900 mb-6 pr-16">{category.title}</h3>
 
@@ -313,7 +313,7 @@ const ProgramsPage = () => {
                     <div className="text-xs font-semibold text-gray-500 mb-5">
                       {programCount} programme{programCount === 1 ? '' : 's'}
                     </div>
-                    
+
                     {/* Button */}
                     <Link
                       to={category.link}
@@ -326,13 +326,13 @@ const ProgramsPage = () => {
                 );
               })}
             </div>
-            
+
             {/* Bottom Row - 2 Programs (Centered) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
               {programCategories.slice(3, 5).map((category, index) => {
                 const IconComponent = category.icon;
                 const programCount = getTrainingCoursesByCategory(category.id).length;
-                
+
                 return (
                   <motion.div
                     key={category.id}
@@ -348,7 +348,7 @@ const ProgramsPage = () => {
                         <IconComponent size={24} className="text-white" />
                       </div>
                     </div>
-                    
+
                     {/* Title */}
                     <h3 className="text-xl font-bold text-gray-900 mb-6 pr-16">{category.title}</h3>
 
@@ -359,7 +359,7 @@ const ProgramsPage = () => {
                     <div className="text-xs font-semibold text-gray-500 mb-5">
                       {programCount} programme{programCount === 1 ? '' : 's'}
                     </div>
-                    
+
                     {/* Button */}
                     <Link
                       to={category.link}
@@ -386,7 +386,7 @@ const ProgramsPage = () => {
       {/* Newsletter Subscription Section */}
       <section className="py-12 sm:py-16 bg-gradient-to-br from-[#004fa2] to-[#2A2D7C]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -399,7 +399,7 @@ const ProgramsPage = () => {
             <p className="text-base sm:text-lg text-white/90 mb-6 sm:mb-8 max-w-3xl mx-auto">
               Stay updated with our latest training programs, industry insights, and exclusive offers. Join our community of tech professionals in Ghana.
             </p>
-            
+
             <div className="max-w-md mx-auto">
               <form className="flex flex-col sm:flex-row gap-4">
                 <input
@@ -415,7 +415,7 @@ const ProgramsPage = () => {
                   Subscribe
                 </button>
               </form>
-              
+
               <p className="text-sm text-white/80 mt-4">
                 By subscribing, you agree to our privacy policy. You can unsubscribe at any time.
               </p>
