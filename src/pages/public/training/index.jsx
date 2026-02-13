@@ -4,11 +4,11 @@ import TrainingLayout from '../../../components/TrainingLayout';
 import TrainingAbout from '../../../components/pages/training/TrainingAbout';
 import TrainingHero from '../../../components/pages/training/TrainingHero';
 import TrainingBenefits from '../../../components/pages/training/TrainingBenefits';
-import TrainingProcess from '../../../components/pages/training/TrainingProcess';
 import TrainingTestimonial from '../../../components/pages/training/TrainingTestimonial';
 import HrContactSection from '../../../components/common/HrContactSection.jsx';
 import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
 import useSEO from '../../../hooks/useSEO';
+import NewsletterHero from '../../../components/pages/home/NewsletterHero.jsx';
 
 const TrainingPage = () => {
   const location = useLocation();
@@ -34,16 +34,14 @@ const TrainingPage = () => {
       <TrainingAbout />
       <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" imageUrl="/images/parallax3.png" />
       <TrainingTestimonial />
-      <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" imageUrl="/images/parallax4.png" />
       <TrainingBenefits />
-      <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" imageUrl="/images/parallax5.png" />
-      <TrainingProcess />
-      <HrContactSection
-        name="Magdalene"
-        title="HR Team Lead"
-        imageUrl="/images/Dalene.png"
-        email="magdalene@zyratech.com"
-      />
+
+      <HrContactSection />
+      <NewsletterHero />
+
+
+
+
     </TrainingLayout>
   );
 };

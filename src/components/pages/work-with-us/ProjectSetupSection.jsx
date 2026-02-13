@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const projectSteps = [
   {
@@ -27,17 +27,16 @@ const ProjectSetupSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {projectSteps.map((step, index) => (
-            <div 
+            <div
               key={index}
               className="group bg-white rounded-xl p-6 border border-gray-200 hover:border-[#004fa2]/40 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-[#004fa2] text-white flex items-center justify-center font-bold text-lg">
+                <div className="w-10 h-10 rounded-lg bg-[#004fa2] text-white flex items-center justify-center font-bold text-lg shrink-0">
                   {index + 1}
                 </div>
-                <CheckCircle className="text-[#004fa2] group-hover:scale-110 transition-transform" size={20} />
+                <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors">{step.title}</h3>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-[#004fa2] transition-colors">{step.title}</h3>
               <p className="text-gray-600 leading-relaxed text-sm mb-4">{step.description}</p>
               <ArrowRight className="text-[#004fa2] opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all" size={20} />
             </div>
@@ -47,5 +46,6 @@ const ProjectSetupSection = () => {
     </section>
   );
 };
+
 
 export default ProjectSetupSection;

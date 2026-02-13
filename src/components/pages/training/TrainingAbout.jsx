@@ -39,6 +39,8 @@ const TrainingAbout = () => {
           className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
         />
 
+
+
         {/* Why Choose ZyraTech */}
         <div className="mb-16">
           <motion.div

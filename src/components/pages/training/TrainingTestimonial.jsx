@@ -30,6 +30,7 @@ const TrainingTestimonial = () => {
             <img
               src="/images/student-success.jpg"
               alt="Kwame Asante - Full Stack Developer"
+              loading="lazy"
               className="w-full h-full object-cover object-center"
               style={{ objectPosition: 'center 30%' }}
               onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1200'; }}
@@ -51,8 +52,8 @@ const TrainingTestimonial = () => {
               <h3 className="text-2xl md:text-3xl font-extrabold mb-3">Transforming Careers Through Training</h3>
 
               <p className="text-white/90 text-base leading-relaxed mb-5">
-                "My journey at ZyraTech transformed my career completely. In just six months, I developed my skills in 
-                software development and was offered a position as a Full Stack Developer. The training and mentorship 
+                "My journey at ZyraTech transformed my career completely. In just six months, I developed my skills in
+                software development and was offered a position as a Full Stack Developer. The training and mentorship
                 I received was exceptional."
               </p>
 

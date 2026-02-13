@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 const TrainingNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,19 +22,19 @@ const TrainingNavbar = () => {
   return (
     <nav className="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 sm:h-20 lg:h-24">
-          
+        <div className="flex justify-between items-center h-16 lg:h-28">
+
           {/* Logo/Brand */}
           <div className="flex items-center">
             <NavLink to="/training" className="flex items-center hover:opacity-80 transition-opacity">
-              <img 
-                src="/zyratecpng.png" 
-                alt="Zyra Tech Hub Logo" 
-                className="h-18 sm:h-22 lg:h-20 w-auto object-contain"
+              <img
+                src="/zyratecpng.png"
+                alt="Zyra Tech Hub Logo"
+                className="h-16 md:h-20 lg:h-28 w-auto object-contain"
               />
             </NavLink>
           </div>
-          
+
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
             {trainingLinks.map((link) => (
@@ -42,8 +43,7 @@ const TrainingNavbar = () => {
                 to={link.path}
                 end={link.path === '/training'}
                 className={({ isActive }) =>
-                  `text-gray-700 hover:text-[#004fa2] px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap rounded-lg ${
-                    isActive ? 'bg-[#004fa2]/10 text-[#004fa2] font-semibold' : ''
+                  `text-gray-700 hover:text-[#004fa2] px-3 py-2 text-base font-medium transition-colors whitespace-nowrap rounded-lg ${isActive ? 'bg-[#004fa2]/10 text-[#004fa2] font-semibold' : ''
                   }`
                 }
               >
@@ -55,7 +55,7 @@ const TrainingNavbar = () => {
               <button
                 type="button"
                 aria-haspopup="true"
-                className="text-gray-700 hover:text-[#004fa2] px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap rounded-lg"
+                className="text-gray-700 hover:text-[#004fa2] px-3 py-2 text-base font-medium transition-colors whitespace-nowrap rounded-lg"
               >
                 Program Categories
               </button>
@@ -66,10 +66,9 @@ const TrainingNavbar = () => {
                       key={link.name}
                       to={link.path}
                       className={({ isActive }) =>
-                        `block px-4 py-3 text-sm transition-colors ${
-                          isActive
-                            ? 'bg-[#004fa2]/10 text-[#004fa2] font-semibold'
-                            : 'text-gray-700 hover:bg-gray-50 hover:text-[#004fa2]'
+                        `block px-4 py-3 text-sm transition-colors ${isActive
+                          ? 'bg-[#004fa2]/10 text-[#004fa2] font-semibold'
+                          : 'text-gray-700 hover:bg-gray-50 hover:text-[#004fa2]'
                         }`
                       }
                     >
@@ -83,20 +82,20 @@ const TrainingNavbar = () => {
             <NavLink
               to="/training/contact"
               className={({ isActive }) =>
-                `text-gray-700 hover:text-[#004fa2] px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap rounded-lg ${
-                  isActive ? 'bg-[#004fa2]/10 text-[#004fa2] font-semibold' : ''
+                `text-gray-700 hover:text-[#004fa2] px-3 py-2 text-base font-medium transition-colors whitespace-nowrap rounded-lg ${isActive ? 'bg-[#004fa2]/10 text-[#004fa2] font-semibold' : ''
                 }`
               }
             >
               Contact
             </NavLink>
-            
+
             {/* Back to Main Site */}
             <NavLink
               to="/"
-              className="ml-4 cta-ghost cta-btn-sm"
+              className="ml-4 cta-btn cta-btn-sm flex items-center gap-2"
             >
-              Main Site
+              <ArrowLeft size={16} />
+              Return to Main Website
             </NavLink>
           </div>
 
@@ -133,10 +132,9 @@ const TrainingNavbar = () => {
                 end={link.path === '/training'}
                 onClick={() => setIsOpen(false)}
                 className={({ isActive }) =>
-                  `block px-3 py-2 text-base font-medium transition-colors rounded-lg ${
-                    isActive
-                      ? 'text-[#004fa2] bg-purple-50 font-semibold'
-                      : 'text-gray-700 hover:text-[#004fa2] hover:bg-gray-50'
+                  `block px-3 py-2 text-base font-medium transition-colors rounded-lg ${isActive
+                    ? 'text-[#004fa2] bg-purple-50 font-semibold'
+                    : 'text-gray-700 hover:text-[#004fa2] hover:bg-gray-50'
                   }`
                 }
               >
@@ -153,10 +151,10 @@ const TrainingNavbar = () => {
                 className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 hover:text-[#004fa2] hover:bg-gray-50 transition-colors rounded-lg"
               >
                 <span>Program Categories</span>
-                <svg 
+                <svg
                   className={`w-4 h-4 transition-transform duration-200 ${mobileDropdown ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  viewBox="0 0 24 24" 
+                  fill="none"
+                  viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -173,10 +171,9 @@ const TrainingNavbar = () => {
                         setMobileDropdown(false);
                       }}
                       className={({ isActive }) =>
-                        `block px-3 py-2 text-sm font-medium transition-colors rounded-lg ${
-                          isActive
-                            ? 'text-[#004fa2] bg-white font-semibold'
-                            : 'text-gray-600 hover:text-[#004fa2] hover:bg-white'
+                        `block px-3 py-2 text-sm font-medium transition-colors rounded-lg ${isActive
+                          ? 'text-[#004fa2] bg-white font-semibold'
+                          : 'text-gray-600 hover:text-[#004fa2] hover:bg-white'
                         }`
                       }
                     >
@@ -191,25 +188,24 @@ const TrainingNavbar = () => {
               to="/training/contact"
               onClick={() => setIsOpen(false)}
               className={({ isActive }) =>
-                `block px-3 py-2 text-base font-medium transition-colors rounded-lg ${
-                  isActive
-                    ? 'text-[#004fa2] bg-purple-50 font-semibold'
-                    : 'text-gray-700 hover:text-[#004fa2] hover:bg-gray-50'
+                `block px-3 py-2 text-base font-medium transition-colors rounded-lg ${isActive
+                  ? 'text-[#004fa2] bg-purple-50 font-semibold'
+                  : 'text-gray-700 hover:text-[#004fa2] hover:bg-gray-50'
                 }`
               }
             >
               Contact
             </NavLink>
-            
+
             {/* Back to Main Site - Mobile */}
-            <a
-              href="/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block px-3 py-2 text-base font-medium cta-ghost mt-4 text-center"
+            <NavLink
+              to="/"
+              onClick={() => setIsOpen(false)}
+              className="block px-3 py-2 text-base font-medium cta-btn mt-4 text-center flex items-center justify-center gap-2"
             >
-              Main Site
-            </a>
+              <ArrowLeft size={16} />
+              Return to Main Website
+            </NavLink>
           </div>
         </div>
       )}

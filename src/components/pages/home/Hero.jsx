@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -76,7 +77,6 @@ const Hero = () => {
             objectPosition: slides[currentSlide].bgPosition || 'center center',
             filter: 'brightness(1.1) contrast(1.05)'
           }}
-          loading="lazy"
         />
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40"></div>
@@ -129,24 +129,24 @@ const Hero = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <a
-                href={slides[currentSlide].cta1.link}
+              <Link
+                to={slides[currentSlide].cta1.link}
                 className="cta-btn px-8 py-4 rounded-xl text-lg transform hover:-translate-y-1"
               >
                 {slides[currentSlide].cta1.text}
                 <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
-              </a>
-              <a
-                href={slides[currentSlide].cta2.link}
+              </Link>
+              <Link
+                to={slides[currentSlide].cta2.link}
                 className="cta-ghost px-8 py-4 rounded-xl text-lg transform hover:-translate-y-1"
               >
                 {slides[currentSlide].cta2.text}
                 <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
-              </a>
+              </Link>
             </motion.div>
           </motion.div>
         </AnimatePresence>

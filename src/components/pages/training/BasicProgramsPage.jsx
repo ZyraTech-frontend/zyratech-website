@@ -36,13 +36,13 @@ const BasicProgramsPage = () => {
         <div className="max-w-none px-0">
           {/* Full-bleed hero container */}
           <div
-            className="relative overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed min-h-[70vh] sm:min-h-[80vh] lg:min-h-screen flex items-center"
+            className="relative overflow-hidden h-[70vh] min-h-[520px] max-h-[780px] bg-cover bg-center bg-scroll md:bg-fixed flex items-center"
             style={{
               backgroundImage: 'url(/images/image3.png)'
             }}
           >
             <div className="absolute inset-0 bg-black/40"></div>
-            <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-32 min-h-[500px] md:min-h-[580px] lg:min-h-[680px] flex items-center">
+            <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-28 h-full flex items-center">
 
               {/* Hero Content */}
               <motion.div

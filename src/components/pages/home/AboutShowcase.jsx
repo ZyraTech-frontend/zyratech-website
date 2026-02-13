@@ -10,12 +10,12 @@ const AboutShowcase = () => {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4 sm:mb-6 leading-tight">
               We Are Not A Classic Technology Provider
             </h2>
-            
+
             <div className="space-y-3 sm:space-y-4 text-base sm:text-lg text-gray-700 leading-relaxed mb-6 sm:mb-8">
               <p>
                 Unlike classic technology providers, we follow an integrated approach. Our clients work very closely with their ZyraTech teams on a day-to-day basis – as one team!
               </p>
-              
+
               <p>
                 Our goal is to establish long-term strategic partnerships adjusted to our client's individual needs, whether it's specific technical expertise, scaling opportunities or agile enablement. By adapting our training to the in-demand skills of our client base, we are able to provide sustainable and individual solutions for our clients to drive forward their digital agenda.
               </p>
@@ -34,6 +34,7 @@ const AboutShowcase = () => {
             <img
               src="/images/team-collaboration.jpg"
               alt="ZyraTech team member working"
+              loading="lazy"
               className="relative w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg shadow-lg"
               onError={(e) => {
                 e.target.src = 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=400&fit=crop';

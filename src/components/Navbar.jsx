@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 
 const Navbar = () => {
-    // Helper to close dropdowns
-    const closeMenus = () => {
-      setOpenDropdown(null);
-      setMobileDropdown(null);
-    };
+  // Helper to close dropdowns
+  const closeMenus = () => {
+    setOpenDropdown(null);
+    setMobileDropdown(null);
+  };
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [persistDropdown, setPersistDropdown] = useState(null);
@@ -88,19 +88,19 @@ const Navbar = () => {
         <div className="flex items-center h-16 lg:h-28 justify-between">
           <div className="flex items-center mr-4 lg:mr-12">
             <NavLink to="/" className="flex items-center hover:opacity-80 transition-opacity">
-              <img 
-                src="/zyratecpng.png" 
-                alt="Zyra Tech Hub Logo" 
+              <img
+                src="/zyratecpng.png"
+                alt="Zyra Tech Hub Logo"
                 className="h-16 md:h-20 lg:h-28 w-auto object-contain"
               />
             </NavLink>
           </div>
-          
+
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-4 ml-auto relative">
             {navItems.map((item) => (
               item.dropdown ? (
-                <div 
+                <div
                   key={item.name}
                   className={`${item.isMegaMenu ? 'inline-block' : 'relative inline-block'}`}
                   onMouseEnter={() => setOpenDropdown(item.dropdown)}
@@ -119,16 +119,15 @@ const Navbar = () => {
                     }}
                     aria-haspopup="true"
                     aria-expanded={openDropdown === item.dropdown}
-                    className={`px-3 py-2 text-base font-medium transition-colors whitespace-nowrap flex items-center gap-1 ${
-                      openDropdown === item.dropdown ? 'text-[#004fa2]' : 'text-gray-700 hover:text-[#004fa2]'
-                    }`}
+                    className={`px-3 py-2 text-base font-medium transition-colors whitespace-nowrap flex items-center gap-1 ${openDropdown === item.dropdown ? 'text-[#004fa2]' : 'text-gray-700 hover:text-[#004fa2]'
+                      }`}
                   >
                     {item.name}
                     <svg className={`w-4 h-4 transition-transform ${openDropdown === item.dropdown ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
-                  
+
                   {/* Services Mega Menu */}
                   {openDropdown === 'services' && item.isMegaMenu && (
                     <div
@@ -140,58 +139,59 @@ const Navbar = () => {
                       role="menu"
                     >
                       <div className="bg-white shadow-2xl rounded-xl border border-gray-100 p-6 flex gap-6 min-w-[1100px]">
-                          {/* Left - Image */}
-                          <div className="w-64 flex-shrink-0 rounded-lg overflow-hidden">
-                            <img
-                              src={servicesMenu.image}
-                              alt={servicesMenu.header}
-                              className="w-full h-44 object-cover rounded-md"
-                              onError={(e) => {
-                                e.target.src = 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop';
-                              }}
-                            />
-                          </div>
+                        {/* Left - Image */}
+                        <div className="w-64 flex-shrink-0 rounded-lg overflow-hidden">
+                          <img
+                            src={servicesMenu.image}
+                            alt={servicesMenu.header}
+                            loading="lazy"
+                            className="w-full h-44 object-cover rounded-md"
+                            onError={(e) => {
+                              e.target.src = 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop';
+                            }}
+                          />
+                        </div>
 
-                          {/* Center - Header + Vertical Links */}
-                          <div className="flex-1 flex items-center">
-                            <div>
-                              <div className="text-2xl font-bold text-[#004fa2] mb-4">{servicesMenu.header}</div>
-                              <ul className="space-y-4">
-                                {centerLinks.map((link) => (
-                                  <li key={link.label}>
-                                    <NavLink
-                                      to={link.to}
-                                      onClick={closeMenus}
-                                      className="text-gray-800 hover:text-[#004fa2] text-lg font-medium"
-                                    >
-                                      {link.label}
-                                    </NavLink>
+                        {/* Center - Header + Vertical Links */}
+                        <div className="flex-1 flex items-center">
+                          <div>
+                            <div className="text-2xl font-bold text-[#004fa2] mb-4">{servicesMenu.header}</div>
+                            <ul className="space-y-4">
+                              {centerLinks.map((link) => (
+                                <li key={link.label}>
+                                  <NavLink
+                                    to={link.to}
+                                    onClick={closeMenus}
+                                    className="text-gray-800 hover:text-[#004fa2] text-lg font-medium"
+                                  >
+                                    {link.label}
+                                  </NavLink>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+
+                        {/* Right - Our Value Proposition (markets) */}
+                        <div className="w-64 flex flex-col justify-center">
+                          {valueItem && (
+                            <>
+                              <div className="text-gray-800 font-semibold mb-3">{valueItem.label || 'Our Value Proposition'}</div>
+                              <ul className="space-y-3">
+                                {valueItem.subLinks.map((s) => (
+                                  <li key={s.label} className="flex items-center gap-3 text-gray-700">
+                                    <span className="text-[#004fa2]">—</span>
+                                    <NavLink to={s.to} onClick={closeMenus} className="hover:text-[#004fa2]">{s.label}</NavLink>
                                   </li>
                                 ))}
                               </ul>
-                            </div>
-                          </div>
-
-                          {/* Right - Our Value Proposition (markets) */}
-                          <div className="w-64 flex flex-col justify-center">
-                            {valueItem && (
-                              <>
-                                <div className="text-gray-800 font-semibold mb-3">{valueItem.label || 'Our Value Proposition'}</div>
-                                <ul className="space-y-3">
-                                  {valueItem.subLinks.map((s) => (
-                                    <li key={s.label} className="flex items-center gap-3 text-gray-700">
-                                      <span className="text-[#004fa2]">—</span>
-                                      <NavLink to={s.to} onClick={closeMenus} className="hover:text-[#004fa2]">{s.label}</NavLink>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </>
-                            )}
-                          </div>
+                            </>
+                          )}
                         </div>
+                      </div>
                     </div>
                   )}
-                  
+
                   {/* Regular Dropdown */}
                   {openDropdown === item.dropdown && !item.isMegaMenu && (
                     <div
@@ -230,8 +230,7 @@ const Navbar = () => {
                   key={item.name}
                   to={item.path}
                   className={({ isActive }) =>
-                    `text-gray-700 hover:text-[#004fa2] px-3 py-2 text-base font-medium transition-colors whitespace-nowrap ${
-                      isActive ? 'text-[#004fa2] font-semibold' : ''
+                    `text-gray-700 hover:text-[#004fa2] px-3 py-2 text-base font-medium transition-colors whitespace-nowrap ${isActive ? 'text-[#004fa2] font-semibold' : ''
                     }`
                   }
                 >
@@ -246,6 +245,7 @@ const Navbar = () => {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+              aria-label="Toggle mobile menu"
             >
               {isOpen ? (
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -273,16 +273,16 @@ const Navbar = () => {
                     className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 hover:text-[#004fa2] hover:bg-gray-50 transition-colors"
                   >
                     <span>{item.name}</span>
-                    <svg 
+                    <svg
                       className={`w-4 h-4 transition-transform ${mobileDropdown === item.dropdown ? 'rotate-180' : ''}`}
-                      fill="none" 
-                      viewBox="0 0 24 24" 
+                      fill="none"
+                      viewBox="0 0 24 24"
                       stroke="currentColor"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
-                  
+
                   {/* Mobile Services Menu */}
                   {mobileDropdown === 'services' && item.isMegaMenu && (
                     <div className="py-2 mx-2 bg-gray-50 rounded-lg">
@@ -324,7 +324,7 @@ const Navbar = () => {
                       )}
                     </div>
                   )}
-                  
+
                   {/* Regular Mobile Dropdown */}
                   {mobileDropdown === item.dropdown && !item.isMegaMenu && (
                     <div className="pl-4 space-y-1 py-2 bg-gray-50 rounded-lg mx-2">
@@ -337,10 +337,9 @@ const Navbar = () => {
                             setMobileDropdown(null);
                           }}
                           className={({ isActive }) =>
-                            `block px-3 py-2 transition-colors rounded ${
-                              isActive
-                                ? 'text-[#004fa2] bg-blue-50 font-semibold'
-                                : 'text-gray-600 hover:text-[#004fa2] hover:bg-blue-50'
+                            `block px-3 py-2 transition-colors rounded ${isActive
+                              ? 'text-[#004fa2] bg-blue-50 font-semibold'
+                              : 'text-gray-600 hover:text-[#004fa2] hover:bg-blue-50'
                             }`
                           }
                         >
@@ -365,10 +364,9 @@ const Navbar = () => {
                   to={item.path}
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) =>
-                    `block px-3 py-2 text-base font-medium transition-colors ${
-                      isActive
-                        ? 'text-[#004fa2] bg-blue-50 font-semibold'
-                        : 'text-gray-700 hover:text-[#004fa2] hover:bg-gray-50'
+                    `block px-3 py-2 text-base font-medium transition-colors ${isActive
+                      ? 'text-[#004fa2] bg-blue-50 font-semibold'
+                      : 'text-gray-700 hover:text-[#004fa2] hover:bg-gray-50'
                     }`
                   }
                 >
