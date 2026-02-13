@@ -6,7 +6,7 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
 import {
@@ -201,6 +201,7 @@ const GalleryManagementPage = () => {
     const { isSuperAdmin } = usePermissions();
 
     // State management
+    const [galleryItems, setGalleryItems] = useState(mockGalleryItems);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [selectedStatus, setSelectedStatus] = useState('all');
@@ -216,7 +217,7 @@ const GalleryManagementPage = () => {
 
     // Filter and search gallery items
     const filteredItems = useMemo(() => {
-        let result = [...mockGalleryItems];
+        let result = [...galleryItems];
 
         // Search filter
         if (searchQuery) {
@@ -238,7 +239,7 @@ const GalleryManagementPage = () => {
         }
 
         return result;
-    }, [searchQuery, selectedCategory, selectedStatus]);
+    }, [galleryItems, searchQuery, selectedCategory, selectedStatus]);
 
     // Pagination
     const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
@@ -249,15 +250,15 @@ const GalleryManagementPage = () => {
 
     // Statistics
     const stats = useMemo(() => ({
-        total: mockGalleryItems.length,
-        totalImages: mockGalleryItems.reduce((acc, item) => acc + (item.images?.length || 0), 0),
-        projects: mockGalleryItems.filter(i => i.category === 'projects').length,
-        training: mockGalleryItems.filter(i => i.category === 'training').length,
-        events: mockGalleryItems.filter(i => i.category === 'events').length,
-        community: mockGalleryItems.filter(i => i.category === 'community').length,
-        published: mockGalleryItems.filter(i => i.status === 'published').length,
-        drafts: mockGalleryItems.filter(i => i.status === 'draft').length
-    }), []);
+        total: galleryItems.length,
+        totalImages: galleryItems.reduce((acc, item) => acc + (item.images?.length || 0), 0),
+        projects: galleryItems.filter(i => i.category === 'projects').length,
+        training: galleryItems.filter(i => i.category === 'training').length,
+        events: galleryItems.filter(i => i.category === 'events').length,
+        community: galleryItems.filter(i => i.category === 'community').length,
+        published: galleryItems.filter(i => i.status === 'published').length,
+        drafts: galleryItems.filter(i => i.status === 'draft').length
+    }), [galleryItems]);
 
     // Handlers
     const handleDelete = (item) => {
@@ -266,8 +267,11 @@ const GalleryManagementPage = () => {
             message: `Are you sure you want to delete "${item.title}"? This will also delete all ${item.images?.length || 0} associated images. This action cannot be undone.`,
             isDangerous: true,
             onConfirm: () => {
-                // TODO: Implement actual delete via API
-                console.log('Deleting gallery item:', item.id);
+                setGalleryItems(prev => prev.filter(i => i.id !== item.id));
+                dispatch(addNotification({
+                    type: 'success',
+                    message: `Gallery item "${item.title}" deleted successfully`
+                }));
             }
         }));
     };

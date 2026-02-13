@@ -1,8 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Heart, Users, Rocket, Handshake } from 'lucide-react';
 import { motion } from 'framer-motion';
+import contentService from '../../../services/contentService';
 
 const WhyPartner = () => {
+  const [data, setData] = useState({
+    title: 'Why Partner With ZyraTech?',
+    content: 'Join a network of forward-thinking organizations committed to driving technological innovation and sustainable development across Africa.'
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data: resData } = await contentService.getWhyPartner();
+        if (resData) setData(resData);
+      } catch (error) {
+        console.error('Error fetching why partner data:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const reasons = [
     {
       icon: <Heart className="w-5 h-5" />,
@@ -34,9 +52,9 @@ const WhyPartner = () => {
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23004fa2' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }} />
       </div>
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -44,16 +62,16 @@ const WhyPartner = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6">
-            Why Partner With ZyraTech?
+            {data.title}
           </h2>
           <p className="text-gray-600 max-w-4xl mx-auto">
-            Join a network of forward-thinking organizations committed to driving technological innovation and sustainable development across Africa.
+            {data.content}
           </p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {reasons.map((reason, index) => (
-            <motion.div 
+            <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -80,16 +98,16 @@ const WhyPartner = () => {
             </motion.div>
           ))}
         </div>
-        
+
         {/* Bottom CTA */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
           className="text-center mt-16"
         >
-          
+
         </motion.div>
       </div>
     </section>

@@ -1,15 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
-const services = [
-  'SOFTWARE ENGINEERING',
-  'INFRASTRUCTURE & CLOUD SERVICES', 
-  'ACADEMIC RESEARCH SUPPORT',
-  'IT EDUCATION & TRAINING',
-  'MANAGED SERVICES'
-];
+import contentService from '../../../services/contentService';
 
 const ServicesShowcase = () => {
+  const [services, setServices] = useState([
+    'SOFTWARE ENGINEERING',
+    'INFRASTRUCTURE & CLOUD SERVICES',
+    'ACADEMIC RESEARCH SUPPORT',
+    'IT EDUCATION & TRAINING',
+    'MANAGED SERVICES'
+  ]);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const { data } = await contentService.getAllServices();
+        if (data && data.length > 0) {
+          setServices(data.map(s => s.title));
+        }
+      } catch (error) {
+        console.error('Failed to fetch services:', error);
+      }
+    };
+    fetchServices();
+  }, []);
+
   return (
     <section className="py-16 bg-[#004fa2] text-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -17,7 +32,7 @@ const ServicesShowcase = () => {
         <p className="text-lg sm:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-12">
           Comprehensive technology solutions tailored to drive your digital transformation
         </p>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {services.slice(0, 3).map((service, index) => (
             <div key={index} className="bg-white rounded-xl p-8 h-32 flex items-center justify-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group">

@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
-const WorkWithUsHeroSection = () => {
+const WorkWithUsHeroSection = ({ title, subtitle, description, image }) => {
   return (
     <section className="relative text-white overflow-hidden">
       <div className="absolute inset-0">
         <img
-          src="/images/work-with-us-hero.jpg"
+          src={image || "/images/work-with-us-hero.jpg"}
           alt="Work with us"
           className="h-full w-full object-cover"
           onError={(e) => {
@@ -27,8 +27,19 @@ const WorkWithUsHeroSection = () => {
             transition={{ duration: 0.5 }}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight"
           >
-            Work With Us
+            {title || "Work With Us"}
           </motion.h1>
+
+          {subtitle && (
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.03 }}
+              className="text-xl sm:text-2xl font-medium text-blue-200 mt-2"
+            >
+              {subtitle}
+            </motion.p>
+          )}
 
           <motion.p
             initial={{ opacity: 0, y: 12 }}
@@ -36,7 +47,7 @@ const WorkWithUsHeroSection = () => {
             transition={{ duration: 0.5, delay: 0.06 }}
             className="mt-4 sm:mt-5 text-sm sm:text-base md:text-lg text-white/90 max-w-2xl leading-relaxed"
           >
-            Join a team building impactful technology solutions across African, European and US markets.
+            {description || "Join a team building impactful technology solutions across African, European and US markets."}
           </motion.p>
 
           <motion.div

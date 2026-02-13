@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { getPartnershipTypes, getPartnershipStatuses, PARTNERSHIP_INTERESTS } from '../../../data/partnershipsData';
+import partnersService from '../../../services/partnersService';
 import {
     ChevronLeft,
     ChevronRight,
@@ -23,7 +24,8 @@ import {
     AlertCircle,
     Star,
     FileText,
-    Check
+    Check,
+    Image as ImageIcon
 } from 'lucide-react';
 
 // Step definitions
@@ -59,6 +61,7 @@ const PartnershipFormPage = () => {
         timeline: '',
         message: '',
         value: '',
+        logo: null,
         // Admin-only fields (Step 3)
         status: 'pending',
         startDate: '',
@@ -70,6 +73,50 @@ const PartnershipFormPage = () => {
 
     const [errors, setErrors] = useState({});
     const [isSaving, setIsSaving] = useState(false);
+
+    useEffect(() => {
+        if (id) {
+            const fetchPartnership = async () => {
+                try {
+                    const { data } = await partnersService.getPartnershipById(id);
+                    setFormData({
+                        // Determine step 1 fields
+                        organizationName: data.organization?.name || '',
+                        organizationType: data.organization?.type || '',
+                        industry: data.organization?.industry || '',
+                        website: data.organization?.website || '',
+                        country: data.organization?.country || '',
+                        logo: data.organization?.logo || null,
+
+                        // Determine step 2 fields
+                        contactName: data.contact?.name || '',
+                        position: data.contact?.role || '',
+                        email: data.contact?.email || '',
+                        phone: data.contact?.phone || '',
+
+                        // Determine step 3 fields
+                        type: data.type || '',
+                        interests: data.interests || [],
+                        timeline: data.timeline || '',
+                        message: data.message || '',
+                        value: data.value || '',
+
+                        // Admin fields
+                        status: data.status || 'pending',
+                        startDate: data.startDate || '',
+                        endDate: data.endDate || '',
+                        description: data.description || '',
+                        benefits: Array.isArray(data.benefits) ? data.benefits.join(', ') : (data.benefits || ''),
+                        featured: data.featured || false
+                    });
+                } catch (error) {
+                    console.error("Error fetching partnership", error);
+                    // Could dispatch error notification here
+                }
+            };
+            fetchPartnership();
+        }
+    }, [id]);
 
     const validateStep = (stepIdx) => {
         const stepKey = STEPS[stepIdx].key;
@@ -117,6 +164,19 @@ const PartnershipFormPage = () => {
         }));
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            // In a real app, you'd upload the file to storage/S3 here
+            // For now, we'll simulate it by storing the filename
+            // This allows the UI to show "Selected: filename.png"
+            setFormData(prev => ({
+                ...prev,
+                logo: file.name
+            }));
+        }
+    };
+
     const handleNext = () => {
         if (validateStep(currentStep)) {
             setCurrentStep(prev => Math.min(prev + 1, STEPS.length - 1));
@@ -142,45 +202,60 @@ const PartnershipFormPage = () => {
 
         setIsSaving(true);
 
-        // Prepare the partnership data
-        const partnershipData = {
-            organizationName: formData.organizationName,
-            organizationType: formData.organizationType,
-            industry: formData.industry,
-            website: formData.website,
-            country: formData.country,
-            contactName: formData.contactName,
-            email: formData.email,
-            phone: formData.phone,
-            position: formData.position,
-            type: formData.type,
-            status: formData.status,
-            startDate: formData.startDate,
-            endDate: formData.endDate,
-            value: formData.value,
-            description: formData.description,
-            interests: formData.interests,
-            timeline: formData.timeline,
-            featured: formData.featured
-        };
+        try {
+            // Prepare the partnership data structure for service
+            const partnershipData = {
+                organization: {
+                    name: formData.organizationName,
+                    type: formData.organizationType,
+                    industry: formData.industry,
+                    website: formData.website,
+                    country: formData.country,
+                    logo: formData.logo
+                },
+                contact: {
+                    name: formData.contactName,
+                    role: formData.position,
+                    email: formData.email,
+                    phone: formData.phone
+                },
+                type: formData.type,
+                status: formData.status,
+                startDate: formData.startDate,
+                endDate: formData.endDate,
+                value: formData.value,
+                description: formData.description,
+                interests: formData.interests,
+                timeline: formData.timeline,
+                message: formData.message,
+                featured: formData.featured,
+                benefits: formData.benefits.split(',').map(b => b.trim()).filter(b => b),
+                studentsPlaced: 0, // Default for now
+                projectsCompleted: 0 // Default for now
+            };
 
-        console.log('Saving partnership:', partnershipData);
+            if (isEditing) {
+                await partnersService.updatePartnership(id, partnershipData);
+            } else {
+                await partnersService.createPartnership(partnershipData);
+            }
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        setIsSaving(false);
-
-        // Show success and navigate back
-        dispatch(openConfirmDialog({
-            title: isEditing ? 'Partnership Updated' : 'Partnership Created',
-            message: isEditing
-                ? `"${formData.organizationName}" partnership has been updated successfully.`
-                : `"${formData.organizationName}" partnership has been created successfully.`,
-            confirmText: 'OK',
-            hideCancelButton: true,
-            onConfirm: () => navigate('/admin/partnerships')
-        }));
+            // Show success and navigate back
+            dispatch(openConfirmDialog({
+                title: isEditing ? 'Partnership Updated' : 'Partnership Created',
+                message: isEditing
+                    ? `"${formData.organizationName}" partnership has been updated successfully.`
+                    : `"${formData.organizationName}" partnership has been created successfully.`,
+                confirmText: 'OK',
+                hideCancelButton: true,
+                onConfirm: () => navigate('/admin/partnerships')
+            }));
+        } catch (error) {
+            console.error('Error saving partnership:', error);
+            // Can add error message handling here
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const handleCancel = () => {
@@ -223,27 +298,24 @@ const PartnershipFormPage = () => {
                                     <div key={step.key} className="flex flex-col items-center flex-1">
                                         <div className="flex items-center w-full">
                                             <div
-                                                className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
-                                                    isActive
-                                                        ? 'bg-blue-600 text-white shadow-lg'
-                                                        : isCompleted
+                                                className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${isActive
+                                                    ? 'bg-blue-600 text-white shadow-lg'
+                                                    : isCompleted
                                                         ? 'bg-green-500 text-white'
                                                         : 'bg-gray-200 text-gray-600'
-                                                }`}
+                                                    }`}
                                             >
                                                 {isCompleted ? <Check size={20} /> : <StepIcon size={20} />}
                                             </div>
                                             {idx < STEPS.length - 1 && (
                                                 <div
-                                                    className={`flex-1 h-1 mx-2 transition-all ${
-                                                        isCompleted ? 'bg-green-500' : 'bg-gray-200'
-                                                    }`}
+                                                    className={`flex-1 h-1 mx-2 transition-all ${isCompleted ? 'bg-green-500' : 'bg-gray-200'
+                                                        }`}
                                                 />
                                             )}
                                         </div>
-                                        <p className={`text-xs mt-2 text-center font-medium transition-all ${
-                                            isActive ? 'text-blue-600' : isCompleted ? 'text-green-600' : 'text-gray-500'
-                                        }`}>
+                                        <p className={`text-xs mt-2 text-center font-medium transition-all ${isActive ? 'text-blue-600' : isCompleted ? 'text-green-600' : 'text-gray-500'
+                                            }`}>
                                             {step.title}
                                         </p>
                                     </div>
@@ -273,9 +345,8 @@ const PartnershipFormPage = () => {
                                             value={formData.organizationName}
                                             onChange={handleChange}
                                             placeholder="e.g. TechVision Ltd"
-                                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${
-                                                errors.organizationName ? 'border-red-500' : 'border-gray-300'
-                                            }`}
+                                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${errors.organizationName ? 'border-red-500' : 'border-gray-300'
+                                                }`}
                                         />
                                         {errors.organizationName && (
                                             <p className="text-red-600 text-xs mt-1 flex items-center gap-1">
@@ -294,9 +365,8 @@ const PartnershipFormPage = () => {
                                                 name="organizationType"
                                                 value={formData.organizationType}
                                                 onChange={handleChange}
-                                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all appearance-none ${
-                                                    errors.organizationType ? 'border-red-500' : 'border-gray-300'
-                                                }`}
+                                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all appearance-none ${errors.organizationType ? 'border-red-500' : 'border-gray-300'
+                                                    }`}
                                             >
                                                 <option value="">Select type</option>
                                                 <option value="corporate">Corporate/Business</option>
@@ -357,9 +427,8 @@ const PartnershipFormPage = () => {
                                                 value={formData.country}
                                                 onChange={handleChange}
                                                 placeholder="e.g. Ghana"
-                                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${
-                                                    errors.country ? 'border-red-500' : 'border-gray-300'
-                                                }`}
+                                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${errors.country ? 'border-red-500' : 'border-gray-300'
+                                                    }`}
                                             />
                                             {errors.country && (
                                                 <p className="text-red-600 text-xs mt-1 flex items-center gap-1">
@@ -367,6 +436,36 @@ const PartnershipFormPage = () => {
                                                     {errors.country}
                                                 </p>
                                             )}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            Organization Logo
+                                        </label>
+                                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group relative">
+                                            <input
+                                                type="file"
+                                                onChange={handleImageChange}
+                                                accept="image/*"
+                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                            />
+                                            <div className="flex flex-col items-center gap-3">
+                                                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                                                    <ImageIcon className="text-gray-400 group-hover:text-blue-600" size={24} />
+                                                </div>
+                                                <div>
+                                                    <span className="text-sm font-medium text-blue-600 hover:text-blue-500">Click to upload</span>
+                                                    <span className="text-sm text-gray-500"> or drag and drop</span>
+                                                </div>
+                                                <p className="text-xs text-gray-400">SVG, PNG, JPG (max. 800x400px)</p>
+                                                {formData.logo && (
+                                                    <div className="mt-2 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium flex items-center gap-1">
+                                                        <Check size={12} />
+                                                        Selected: {formData.logo}
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -390,9 +489,8 @@ const PartnershipFormPage = () => {
                                             value={formData.contactName}
                                             onChange={handleChange}
                                             placeholder="e.g. Kwame Asante"
-                                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${
-                                                errors.contactName ? 'border-red-500' : 'border-gray-300'
-                                            }`}
+                                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${errors.contactName ? 'border-red-500' : 'border-gray-300'
+                                                }`}
                                         />
                                         {errors.contactName && (
                                             <p className="text-red-600 text-xs mt-1 flex items-center gap-1">
@@ -412,9 +510,8 @@ const PartnershipFormPage = () => {
                                             value={formData.position}
                                             onChange={handleChange}
                                             placeholder="e.g. HR Director"
-                                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${
-                                                errors.position ? 'border-red-500' : 'border-gray-300'
-                                            }`}
+                                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${errors.position ? 'border-red-500' : 'border-gray-300'
+                                                }`}
                                         />
                                         {errors.position && (
                                             <p className="text-red-600 text-xs mt-1 flex items-center gap-1">
@@ -436,9 +533,8 @@ const PartnershipFormPage = () => {
                                                 value={formData.email}
                                                 onChange={handleChange}
                                                 placeholder="email@example.com"
-                                                className={`w-full pl-12 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${
-                                                    errors.email ? 'border-red-500' : 'border-gray-300'
-                                                }`}
+                                                className={`w-full pl-12 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${errors.email ? 'border-red-500' : 'border-gray-300'
+                                                    }`}
                                             />
                                         </div>
                                         {errors.email && (
@@ -461,9 +557,8 @@ const PartnershipFormPage = () => {
                                                 value={formData.phone}
                                                 onChange={handleChange}
                                                 placeholder="+233 XX XXX XXXX"
-                                                className={`w-full pl-12 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${
-                                                    errors.phone ? 'border-red-500' : 'border-gray-300'
-                                                }`}
+                                                className={`w-full pl-12 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${errors.phone ? 'border-red-500' : 'border-gray-300'
+                                                    }`}
                                             />
                                         </div>
                                         {errors.phone && (
@@ -492,9 +587,8 @@ const PartnershipFormPage = () => {
                                             name="type"
                                             value={formData.type}
                                             onChange={handleChange}
-                                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all appearance-none ${
-                                                errors.type ? 'border-red-500' : 'border-gray-300'
-                                            }`}
+                                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all appearance-none ${errors.type ? 'border-red-500' : 'border-gray-300'
+                                                }`}
                                         >
                                             <option value="">Select partnership type</option>
                                             {getPartnershipTypes().map(opt => (
@@ -547,9 +641,8 @@ const PartnershipFormPage = () => {
                                                 value={formData.timeline}
                                                 onChange={handleChange}
                                                 placeholder="e.g. 6 months, 1 year, ongoing"
-                                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${
-                                                    errors.timeline ? 'border-red-500' : 'border-gray-300'
-                                                }`}
+                                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${errors.timeline ? 'border-red-500' : 'border-gray-300'
+                                                    }`}
                                             />
                                             {errors.timeline && (
                                                 <p className="text-red-600 text-xs mt-1 flex items-center gap-1">

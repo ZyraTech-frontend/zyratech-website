@@ -1,15 +1,30 @@
-import React from 'react';
-
-const partners = [
-  { name: 'AWS', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg' },
-  { name: 'Microsoft', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg' },
-  { name: 'Google Cloud', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg' },
-  { name: 'IBM', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg' },
-  { name: 'Oracle', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/50/Oracle_logo.svg' },
-  { name: 'Salesforce', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg' },
-];
+import React, { useState, useEffect } from 'react';
+import partnersService from '../../../services/partnersService';
 
 const PartnersShowcase = () => {
+  const [partner, setPartner] = useState(null);
+
+  useEffect(() => {
+    const fetchPartner = async () => {
+      try {
+        const { data } = await partnersService.getAllPartnerships();
+        const featured = data.filter(p => p.featured && p.status === 'active');
+
+        if (featured.length > 0) {
+          // Select a random featured partner to showcase
+          const random = featured[Math.floor(Math.random() * featured.length)];
+          setPartner({
+            name: random.organization.name,
+            logo: random.organization.logo
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch spotlight partner:', error);
+      }
+    };
+    fetchPartner();
+  }, []);
+
   return (
     <>
       <section className="py-12 sm:py-16 bg-[#004fa2] text-white">
@@ -22,11 +37,15 @@ const PartnersShowcase = () => {
 
           <div className="bg-white rounded-lg py-6 sm:py-8 md:py-12 px-2 sm:px-4 md:px-8 flex flex-col justify-center items-center overflow-hidden">
             <img
-              src="/images/partnershiplogo.jpeg"
-              alt="Royal Klast"
+              src={partner?.logo || "/images/partnershiplogo.jpeg"}
+              alt={partner?.name || "Featured Partner"}
               className="max-w-full h-auto object-contain max-h-32 sm:max-h-48 md:max-h-64 filter hover:grayscale-0 transition-all duration-300 mb-6"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/images/partnershiplogo.jpeg";
+              }}
             />
-            <p className="text-xl sm:text-2xl font-bold text-gray-800">Royal Klast</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-800">{partner?.name || "Royal Klast"}</p>
           </div>
         </div>
       </section>

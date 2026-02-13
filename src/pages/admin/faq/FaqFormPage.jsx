@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
+import faqService, { FAQ_CATEGORIES } from '../../../services/faqService';
 import {
     Save,
     X,
@@ -20,115 +21,9 @@ import {
     GripVertical
 } from 'lucide-react';
 
-// Category configuration (same as FaqManagementPage)
-const CATEGORY_CONFIG = {
-    'Internship Program': {
-        label: 'Internship Program',
-        color: 'bg-blue-100 text-blue-700 border-blue-200',
-        icon: Users,
-        bgGradient: 'from-blue-500 to-indigo-600'
-    },
-    'Services & Support': {
-        label: 'Services & Support',
-        color: 'bg-green-100 text-green-700 border-green-200',
-        icon: Settings,
-        bgGradient: 'from-green-500 to-emerald-600'
-    },
-    'Partnerships': {
-        label: 'Partnerships',
-        color: 'bg-purple-100 text-purple-700 border-purple-200',
-        icon: MessageCircle,
-        bgGradient: 'from-purple-500 to-violet-600'
-    },
-    'Donations & Support': {
-        label: 'Donations & Support',
-        color: 'bg-amber-100 text-amber-700 border-amber-200',
-        icon: Mail,
-        bgGradient: 'from-amber-500 to-orange-600'
-    },
-    'Training': {
-        label: 'Training',
-        color: 'bg-cyan-100 text-cyan-700 border-cyan-200',
-        icon: Sparkles,
-        bgGradient: 'from-cyan-500 to-blue-600'
-    },
-    'General': {
-        label: 'General',
-        color: 'bg-gray-100 text-gray-700 border-gray-200',
-        icon: HelpCircle,
-        bgGradient: 'from-gray-500 to-slate-600'
-    }
-};
-
-// Mock FAQ data for editing
-const mockFaqData = [
-    {
-        id: 1,
-        category: 'Internship Program',
-        question: 'Who can apply for Zyra Tech Hub\'s internship program?',
-        answer: 'University students, graduates, and anyone eager to gain real-world tech experience.',
-        status: 'published',
-        order: 1,
-        views: 245,
-        helpful: 89,
-        createdAt: '2024-12-01'
-    },
-    {
-        id: 2,
-        category: 'Internship Program',
-        question: 'How much does the internship cost?',
-        answer: 'GHS 350, covering mentorship, training, and certification.',
-        status: 'published',
-        order: 2,
-        views: 312,
-        helpful: 156,
-        createdAt: '2024-12-01'
-    },
-    {
-        id: 3,
-        category: 'Internship Program',
-        question: 'Do you partner with schools outside Koforidua?',
-        answer: 'Currently we focus on Koforidua but will expand regionally and internationally.',
-        status: 'published',
-        order: 3,
-        views: 178,
-        helpful: 67,
-        createdAt: '2024-12-02'
-    },
-    {
-        id: 4,
-        category: 'Internship Program',
-        question: 'Can institutions request IT or web services?',
-        answer: 'Yes, we provide professional IT, web, and networking services for schools and organizations.',
-        status: 'published',
-        order: 4,
-        views: 134,
-        helpful: 45,
-        createdAt: '2024-12-02'
-    },
-    {
-        id: 5,
-        category: 'Services & Support',
-        question: 'What web development services do you offer?',
-        answer: 'We offer full-stack web development, UI/UX design, mobile app development, and quality assurance services.',
-        status: 'published',
-        order: 1,
-        views: 456,
-        helpful: 234,
-        createdAt: '2024-12-03'
-    },
-    {
-        id: 6,
-        category: 'Services & Support',
-        question: 'Do you provide IT training for companies?',
-        answer: 'Yes, we conduct customized IT training for corporate teams on various technologies and best practices.',
-        status: 'published',
-        order: 2,
-        views: 289,
-        helpful: 145,
-        createdAt: '2024-12-03'
-    }
-];
+// Using FAQ_CATEGORIES from service would be cleaner, but keeping local config mapping for Icons is fine
+// We can use the service keys for the select options
+const CATEGORY_KEYS = Object.keys(FAQ_CATEGORIES);
 
 export default function FaqFormPage() {
     const { id } = useParams();
@@ -146,18 +41,29 @@ export default function FaqFormPage() {
 
     // Load FAQ data if editing
     useEffect(() => {
-        if (id) {
-            const faq = mockFaqData.find(f => f.id === parseInt(id));
-            if (faq) {
-                setFormData({
-                    category: faq.category,
-                    question: faq.question,
-                    answer: faq.answer,
-                    status: faq.status,
-                    order: faq.order
-                });
+        const loadFaq = async () => {
+            if (id) {
+                setLoading(true);
+                try {
+                    const response = await faqService.getFaqById(id);
+                    if (response.data) {
+                        setFormData({
+                            category: response.data.category,
+                            question: response.data.question,
+                            answer: response.data.answer,
+                            status: response.data.status,
+                            order: response.data.order || 1
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error loading FAQ:", error);
+                    setErrors({ submit: "Failed to load FAQ." });
+                } finally {
+                    setLoading(false);
+                }
             }
-        }
+        };
+        loadFaq();
     }, [id]);
 
     // Check permissions
@@ -233,15 +139,11 @@ export default function FaqFormPage() {
 
         setLoading(true);
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // Here you would typically make an API call to save the FAQ
-            console.log('Saving FAQ:', {
-                id: id ? parseInt(id) : Date.now(),
-                ...formData,
-                createdAt: id ? undefined : new Date().toISOString().split('T')[0]
-            });
+            if (id) {
+                await faqService.updateFaq(id, formData);
+            } else {
+                await faqService.createFaq(formData);
+            }
 
             // Navigate back to FAQ management
             navigate('/admin/faq');
@@ -257,7 +159,7 @@ export default function FaqFormPage() {
         navigate('/admin/faq');
     };
 
-    const categories = Object.keys(CATEGORY_CONFIG);
+    const categories = CATEGORY_KEYS;
 
     return (
         <AdminLayout>
@@ -298,9 +200,8 @@ export default function FaqFormPage() {
                                 name="category"
                                 value={formData.category}
                                 onChange={handleChange}
-                                className={`w-full px-4 py-2.5 rounded-lg border ${
-                                    errors.category ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
-                                } text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                                className={`w-full px-4 py-2.5 rounded-lg border ${errors.category ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
+                                    } text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                             >
                                 {categories.map(cat => (
                                     <option key={cat} value={cat}>
@@ -328,9 +229,8 @@ export default function FaqFormPage() {
                                 value={formData.question}
                                 onChange={handleChange}
                                 placeholder="Enter the FAQ question"
-                                className={`w-full px-4 py-2.5 rounded-lg border ${
-                                    errors.question ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
-                                } text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                                className={`w-full px-4 py-2.5 rounded-lg border ${errors.question ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
+                                    } text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                             />
                             <div className="flex justify-between mt-2">
                                 {errors.question && (
@@ -357,9 +257,8 @@ export default function FaqFormPage() {
                                 onChange={handleChange}
                                 placeholder="Enter the detailed answer"
                                 rows={6}
-                                className={`w-full px-4 py-2.5 rounded-lg border ${
-                                    errors.answer ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
-                                } text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none`}
+                                className={`w-full px-4 py-2.5 rounded-lg border ${errors.answer ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
+                                    } text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none`}
                             />
                             <div className="mt-2">
                                 {errors.answer && (
@@ -385,13 +284,12 @@ export default function FaqFormPage() {
                                         key={status}
                                         type="button"
                                         onClick={() => handleStatusChange(status)}
-                                        className={`flex-1 px-4 py-2.5 rounded-lg border-2 font-medium transition-all duration-200 ${
-                                            formData.status === status
-                                                ? status === 'published'
-                                                    ? 'border-green-500 bg-green-50 text-green-700'
-                                                    : 'border-amber-500 bg-amber-50 text-amber-700'
-                                                : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-                                        }`}
+                                        className={`flex-1 px-4 py-2.5 rounded-lg border-2 font-medium transition-all duration-200 ${formData.status === status
+                                            ? status === 'published'
+                                                ? 'border-green-500 bg-green-50 text-green-700'
+                                                : 'border-amber-500 bg-amber-50 text-amber-700'
+                                            : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                                            }`}
                                     >
                                         {status.charAt(0).toUpperCase() + status.slice(1)}
                                     </button>
@@ -413,9 +311,8 @@ export default function FaqFormPage() {
                                     value={formData.order}
                                     onChange={handleChange}
                                     min="1"
-                                    className={`w-32 px-4 py-2.5 rounded-lg border ${
-                                        errors.order ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
-                                    } text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                                    className={`w-32 px-4 py-2.5 rounded-lg border ${errors.order ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
+                                        } text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                                 />
                             </div>
                             {errors.order && (

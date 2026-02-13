@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Briefcase,
     GraduationCap,
@@ -70,9 +71,9 @@ const RegularAdminDashboard = ({ user }) => {
                     </div>
                     <h3 className="text-lg font-bold text-gray-900">Job Listings</h3>
                     <p className="text-sm text-gray-500 mt-1 mb-4">Manage open positions and applications.</p>
-                    <button className="text-sm text-[#004fa2] font-semibold hover:underline flex items-center gap-1">
+                    <Link to="/admin/jobs" className="text-sm text-[#004fa2] font-semibold hover:underline flex items-center gap-1">
                         Manage Jobs <ArrowRight size={14} />
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Course Management */}
@@ -85,9 +86,9 @@ const RegularAdminDashboard = ({ user }) => {
                     </div>
                     <h3 className="text-lg font-bold text-gray-900">Training Courses</h3>
                     <p className="text-sm text-gray-500 mt-1 mb-4">Update curriculum and schedules.</p>
-                    <button className="text-sm text-[#004fa2] font-semibold hover:underline flex items-center gap-1">
+                    <Link to="/admin/training" className="text-sm text-[#004fa2] font-semibold hover:underline flex items-center gap-1">
                         View Courses <ArrowRight size={14} />
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Inbox / Inquiries */}
@@ -102,9 +103,9 @@ const RegularAdminDashboard = ({ user }) => {
                     </div>
                     <h3 className="text-lg font-bold text-gray-900">Inquiries</h3>
                     <p className="text-sm text-gray-500 mt-1 mb-4">Respond to messages and questions.</p>
-                    <button className="text-sm text-[#004fa2] font-semibold hover:underline flex items-center gap-1">
+                    <Link to="/admin/contact-inquiries" className="text-sm text-[#004fa2] font-semibold hover:underline flex items-center gap-1">
                         Go to Inbox <ArrowRight size={14} />
-                    </button>
+                    </Link>
                 </div>
             </div>
 
@@ -135,15 +136,15 @@ const RegularAdminDashboard = ({ user }) => {
                 <div className="bg-gray-50 rounded-xl border border-gray-200 p-6">
                     <h3 className="font-bold text-gray-900 mb-4">Quick Tools</h3>
                     <div className="space-y-3">
-                        <button className="w-full bg-white p-3 rounded-lg border border-gray-200 text-left text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-blue-600 transition flex items-center gap-3">
+                        <Link to="/admin/gallery" className="w-full bg-white p-3 rounded-lg border border-gray-200 text-left text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-blue-600 transition flex items-center gap-3">
                             <Image size={18} className="text-gray-400" /> Upload Image to Gallery
-                        </button>
-                        <button className="w-full bg-white p-3 rounded-lg border border-gray-200 text-left text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-blue-600 transition flex items-center gap-3">
+                        </Link>
+                        <Link to="/admin/training" className="w-full bg-white p-3 rounded-lg border border-gray-200 text-left text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-blue-600 transition flex items-center gap-3">
                             <Calendar size={18} className="text-gray-400" /> Schedule Event
-                        </button>
-                        <button className="w-full bg-white p-3 rounded-lg border border-gray-200 text-left text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-blue-600 transition flex items-center gap-3">
+                        </Link>
+                        <Link to="/admin/content/hero" className="w-full bg-white p-3 rounded-lg border border-gray-200 text-left text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-blue-600 transition flex items-center gap-3">
                             <Layout size={18} className="text-gray-400" /> Edit Homepage
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>

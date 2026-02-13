@@ -20,8 +20,10 @@ import {
     Briefcase,
     Heart,
     Users,
-    Image
+    Image,
+    Loader
 } from 'lucide-react';
+import testimonialsService from '../../../services/testimonialsService';
 
 // Type configuration
 const TYPE_CONFIG = {
@@ -85,40 +87,6 @@ const PAGES_CONFIG = {
     }
 };
 
-// Mock testimonials data for editing
-const mockTestimonials = [
-    {
-        id: 1,
-        name: 'Ama Mensah',
-        role: 'Junior STEM Basics',
-        type: 'student',
-        quote: "I built my first circuit with recycled parts and it actually worked! The hands-on approach at Zyra Tech Hub made learning fun and practical.",
-        rating: 5,
-        avatar: '/images/testimonials/ama.jpg',
-        status: 'published',
-        program: 'STEM Basics',
-        date: '2024-12-15',
-        likes: 45,
-        verified: true,
-        pages: ['home', 'about', 'training']
-    },
-    {
-        id: 2,
-        name: 'Kofi Asante',
-        role: 'Maker: Hardware & Repair',
-        type: 'student',
-        quote: "The mentors here push you to think outside the box. I went from knowing nothing about electronics to building IoT projects!",
-        rating: 5,
-        avatar: '/images/testimonials/kofi.jpg',
-        status: 'published',
-        program: 'Hardware & Repair',
-        date: '2024-12-10',
-        likes: 32,
-        verified: true,
-        pages: ['home', 'impact']
-    }
-];
-
 export default function TestimonialsFormPage() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -140,20 +108,30 @@ export default function TestimonialsFormPage() {
     // Load testimonial data if editing
     useEffect(() => {
         if (id) {
-            const testimonial = mockTestimonials.find(t => t.id === parseInt(id));
-            if (testimonial) {
-                setFormData({
-                    name: testimonial.name,
-                    role: testimonial.role,
-                    type: testimonial.type,
-                    quote: testimonial.quote,
-                    rating: testimonial.rating,
-                    program: testimonial.program,
-                    status: testimonial.status,
-                    avatar: testimonial.avatar,
-                    pages: testimonial.pages || []
-                });
-            }
+            const fetchTestimonial = async () => {
+                try {
+                    setLoading(true);
+                    const response = await testimonialsService.getTestimonialById(id);
+                    const testimonial = response.data;
+                    setFormData({
+                        name: testimonial.name,
+                        role: testimonial.role,
+                        type: testimonial.type,
+                        quote: testimonial.quote,
+                        rating: testimonial.rating || 5,
+                        program: testimonial.program || '',
+                        status: testimonial.status || 'draft',
+                        avatar: testimonial.avatar || '',
+                        pages: testimonial.pages || []
+                    });
+                } catch (error) {
+                    console.error('Error fetching testimonial:', error);
+                    setErrors({ submit: 'Failed to load testimonial. Please try again.' });
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchTestimonial();
         }
     }, [id]);
 
@@ -245,17 +223,11 @@ export default function TestimonialsFormPage() {
 
         setLoading(true);
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // Here you would typically make an API call to save the testimonial
-            console.log('Saving testimonial:', {
-                id: id ? parseInt(id) : Date.now(),
-                ...formData,
-                date: id ? undefined : new Date().toISOString().split('T')[0],
-                likes: 0,
-                verified: false
-            });
+            if (id) {
+                await testimonialsService.updateTestimonial(id, formData);
+            } else {
+                await testimonialsService.createTestimonial(formData);
+            }
 
             // Navigate back to testimonials management
             navigate('/admin/testimonials');
@@ -316,9 +288,8 @@ export default function TestimonialsFormPage() {
                                     value={formData.name}
                                     onChange={handleChange}
                                     placeholder="Full name"
-                                    className={`w-full px-4 py-2.5 rounded-lg border ${
-                                        errors.name ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
-                                    } text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                                    className={`w-full px-4 py-2.5 rounded-lg border ${errors.name ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
+                                        } text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                                 />
                                 {errors.name && (
                                     <p className="text-red-600 text-sm mt-2 flex items-center gap-1">
@@ -340,9 +311,8 @@ export default function TestimonialsFormPage() {
                                     value={formData.role}
                                     onChange={handleChange}
                                     placeholder="e.g., STEM Basics Student"
-                                    className={`w-full px-4 py-2.5 rounded-lg border ${
-                                        errors.role ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
-                                    } text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                                    className={`w-full px-4 py-2.5 rounded-lg border ${errors.role ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
+                                        } text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                                 />
                                 {errors.role && (
                                     <p className="text-red-600 text-sm mt-2 flex items-center gap-1">
@@ -362,9 +332,8 @@ export default function TestimonialsFormPage() {
                                     name="type"
                                     value={formData.type}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-2.5 rounded-lg border ${
-                                        errors.type ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
-                                    } text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                                    className={`w-full px-4 py-2.5 rounded-lg border ${errors.type ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
+                                        } text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                                 >
                                     {types.map(type => (
                                         <option key={type} value={type}>
@@ -407,9 +376,8 @@ export default function TestimonialsFormPage() {
                                         name="rating"
                                         value={formData.rating}
                                         onChange={handleChange}
-                                        className={`flex-1 px-4 py-2.5 rounded-lg border ${
-                                            errors.rating ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
-                                        } text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                                        className={`flex-1 px-4 py-2.5 rounded-lg border ${errors.rating ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
+                                            } text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                                     >
                                         {[1, 2, 3, 4, 5].map(num => (
                                             <option key={num} value={num}>{num} Stars</option>
@@ -472,9 +440,8 @@ export default function TestimonialsFormPage() {
                                 onChange={handleChange}
                                 placeholder="Write the testimonial quote"
                                 rows={5}
-                                className={`w-full px-4 py-2.5 rounded-lg border ${
-                                    errors.quote ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
-                                } text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none`}
+                                className={`w-full px-4 py-2.5 rounded-lg border ${errors.quote ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
+                                    } text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none`}
                             />
                             <div className="flex justify-between mt-2">
                                 {errors.quote && (
@@ -502,15 +469,14 @@ export default function TestimonialsFormPage() {
                                             key={status}
                                             type="button"
                                             onClick={() => setFormData(prev => ({ ...prev, status }))}
-                                            className={`flex-1 px-4 py-2.5 rounded-lg border-2 font-medium transition-all duration-200 ${
-                                                formData.status === status
-                                                    ? status === 'published'
-                                                        ? 'border-green-500 bg-green-50 text-green-700'
-                                                        : status === 'pending'
+                                            className={`flex-1 px-4 py-2.5 rounded-lg border-2 font-medium transition-all duration-200 ${formData.status === status
+                                                ? status === 'published'
+                                                    ? 'border-green-500 bg-green-50 text-green-700'
+                                                    : status === 'pending'
                                                         ? 'border-amber-500 bg-amber-50 text-amber-700'
                                                         : 'border-blue-500 bg-blue-50 text-blue-700'
-                                                    : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-                                            }`}
+                                                : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                                                }`}
                                         >
                                             {status.charAt(0).toUpperCase() + status.slice(1)}
                                         </button>
@@ -530,11 +496,10 @@ export default function TestimonialsFormPage() {
                                             key={pageKey}
                                             type="button"
                                             onClick={() => togglePage(pageKey)}
-                                            className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
-                                                formData.pages.includes(pageKey)
-                                                    ? 'border-blue-500 bg-blue-50'
-                                                    : 'border-gray-200 bg-white hover:border-gray-300'
-                                            }`}
+                                            className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${formData.pages.includes(pageKey)
+                                                ? 'border-blue-500 bg-blue-50'
+                                                : 'border-gray-200 bg-white hover:border-gray-300'
+                                                }`}
                                         >
                                             <div className="flex items-start gap-3">
                                                 <input

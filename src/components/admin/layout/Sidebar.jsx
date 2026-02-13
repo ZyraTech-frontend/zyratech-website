@@ -26,7 +26,14 @@ import {
   ClipboardList,
   FileBarChart,
   LogOut,
-  X
+  X,
+  CheckCircle,
+  Quote,
+  Layout,
+
+  Inbox,
+  UserPlus,
+  ShieldCheck
 } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
 import { usePermissions } from '../../../hooks/usePermissions';
@@ -125,6 +132,94 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
               Content
             </p>
           </div>
+
+          <Link
+            to="/admin/content/hero"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/hero')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <Image size={20} />
+            <span className="font-medium">Hero Slides</span>
+          </Link>
+
+          <Link
+            to="/admin/content/services"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/services')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <Briefcase size={20} />
+            <span className="font-medium">Services</span>
+          </Link>
+
+          <Link
+            to="/admin/content/benefits"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/benefits')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <CheckCircle size={20} />
+            <span className="font-medium">Why Choose Us</span>
+          </Link>
+
+          <Link
+            to="/admin/content/about"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/about')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <Quote size={20} />
+            <span className="font-medium">About Section</span>
+          </Link>
+
+          <Link
+            to="/admin/content/about-page"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/about-page')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <Layout size={20} />
+            <span className="font-medium">About Page</span>
+          </Link>
+
+          <Link
+            to="/admin/content/work-with-us"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/work-with-us')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <UserPlus size={20} />
+            <span className="font-medium">Work With Us</span>
+          </Link>
+
+          <Link
+            to="/admin/content/quality-assurance"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/quality-assurance')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <ShieldCheck size={20} />
+            <span className="font-medium">Quality Assurance</span>
+          </Link>
+
+          <Link
+            to="/admin/content/partnership"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/partnership')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <Handshake size={20} />
+            <span className="font-medium">Partnership Content</span>
+          </Link>
 
           <Link
             to="/admin/training"
@@ -251,20 +346,19 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
               }`}
           >
             <Handshake size={20} />
-            <span className="font-medium">Partnerships</span>
+            <span className="font-medium">Partnership Requests</span>
           </Link>
 
-          {/*           <Link
+          <Link
             to="/admin/contact-inquiries"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-              isActive('/admin/contact-inquiries')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
-            }`}
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/contact-inquiries')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
           >
-            <Mail size={20} />
+            <Inbox size={20} />
             <span className="font-medium">Contact Inquiries</span>
-          </Link> */}
+          </Link>
 
           <Link
             to="/admin/impact"

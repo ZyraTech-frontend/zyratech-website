@@ -1,45 +1,72 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Cog, TrendingUp, DollarSign, Users, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
+import contentService from '../../../services/contentService';
 
-const benefits = [
-  {
-    icon: ShieldCheck,
-    title: 'Low Risk',
-    description: 'Commit-as-you-go model, coupled with globally recognized standards'
-  },
-  {
-    icon: Cog,
-    title: 'Client-Individual Set Up',
-    description: 'Tailored competencies and cooperation models, adapted to your needs'
-  },
-  {
-    icon: TrendingUp,
-    title: 'Scalable',
-    description: 'Build and grow teams: on-demand and adaptable'
-  },
-  {
-    icon: DollarSign,
-    title: 'Cost Efficiency',
-    description: 'Commercial models more attractive than traditional off-shore options'
-  },
-  {
-    icon: Users,
-    title: 'Seamless Collaboration',
-    description: 'Minimal time difference to entire teams with English as their native language'
-  },
-  {
-    icon: Globe,
-    title: 'Social Impact',
-    description: 'Projects help fund initiatives closing the gender IT gap, coding for kids and our IT training academy'
-  }
-];
+const ICON_MAP = {
+  ShieldCheck,
+  Cog,
+  TrendingUp,
+  DollarSign,
+  Users,
+  Globe
+};
 
 const BenefitsShowcase = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
   const cardsAnimation = useScrollAnimation({ type: 'fadeIn', delay: 0.2 });
+
+  const [benefitsList, setBenefitsList] = useState([
+    {
+      icon: ShieldCheck,
+      title: 'Low Risk',
+      description: 'Commit-as-you-go model, coupled with globally recognized standards'
+    },
+    {
+      icon: Cog,
+      title: 'Client-Individual Set Up',
+      description: 'Tailored competencies and cooperation models, adapted to your needs'
+    },
+    {
+      icon: TrendingUp,
+      title: 'Scalable',
+      description: 'Build and grow teams: on-demand and adaptable'
+    },
+    {
+      icon: DollarSign,
+      title: 'Cost Efficiency',
+      description: 'Commercial models more attractive than traditional off-shore options'
+    },
+    {
+      icon: Users,
+      title: 'Seamless Collaboration',
+      description: 'Minimal time difference to entire teams with English as their native language'
+    },
+    {
+      icon: Globe,
+      title: 'Social Impact',
+      description: 'Projects help fund initiatives closing the gender IT gap, coding for kids and our IT training academy'
+    }
+  ]);
+
+  useEffect(() => {
+    const fetchBenefits = async () => {
+      try {
+        const { data } = await contentService.getAllBenefits();
+        if (data && data.length > 0) {
+          setBenefitsList(data.map(benefit => ({
+            ...benefit,
+            icon: ICON_MAP[benefit.icon] || ShieldCheck
+          })));
+        }
+      } catch (error) {
+        console.error('Error fetching benefits:', error);
+      }
+    };
+    fetchBenefits();
+  }, []);
 
   return (
     <section className="py-20 bg-white">
@@ -71,7 +98,7 @@ const BenefitsShowcase = () => {
           transition={cardsAnimation.transition}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
         >
-          {benefits.map((benefit, index) => {
+          {benefitsList.map((benefit, index) => {
             const IconComponent = benefit.icon;
             return (
               <div key={index} className="group bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-100">

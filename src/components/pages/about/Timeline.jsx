@@ -1,15 +1,35 @@
-import React from 'react';
-import { Users, MapPin, TrendingUp } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Users, MapPin, TrendingUp, Globe, Target, Flag } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
+import contentService from '../../../services/contentService';
 
-const timelineData = [
-  { year: '2024', title: 'Established', desc: 'Formally established in Koforidua, Ghana.', icon: Users },
-  { year: '2025', title: 'Foundation Launch', desc: 'Launched Tech Talk 2025 and established the IT Education Foundation to provide digital skills training.', icon: MapPin },
-  { year: '2026', title: 'The Vision', desc: 'Executing our 4-quarter strategic plan, including new seminars, a technology competition, and expanding Academic Research Support.', icon: TrendingUp },
-];
+const ICON_MAP = { Users, MapPin, TrendingUp, Globe, Target, Flag };
 
 const Timeline = () => {
   const shouldReduceMotion = useReducedMotion();
+
+  const [timelineData, setTimelineData] = useState([
+    { year: '2024', title: 'Established', desc: 'Formally established in Koforidua, Ghana.', icon: Users },
+    { year: '2025', title: 'Foundation Launch', desc: 'Launched Tech Talk 2025 and established the IT Education Foundation to provide digital skills training.', icon: MapPin },
+    { year: '2026', title: 'The Vision', desc: 'Executing our 4-quarter strategic plan, including new seminars, a technology competition, and expanding Academic Research Support.', icon: TrendingUp },
+  ]);
+
+  useEffect(() => {
+    const fetchTimeline = async () => {
+      try {
+        const { data } = await contentService.getTimeline();
+        if (data && data.length > 0) {
+          setTimelineData(data.map(item => ({
+            ...item,
+            icon: ICON_MAP[item.icon] || Users
+          })));
+        }
+      } catch (error) {
+        console.error('Error fetching timeline:', error);
+      }
+    };
+    fetchTimeline();
+  }, []);
 
   return (
     <section className="py-16 sm:py-20 bg-white">

@@ -1,61 +1,35 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import heroService from '../../../services/heroService';
 
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [slides, setSlides] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const slides = [
-    {
-      title: "EDUCATION & INTERNSHIP",
-      description: "Practical training in coding, robotics, AI, and IT systems. Bridge the gap between classroom learning and real-world experience with our 3-6 month internship program. Join 500+ students transforming their futures.",
-      pillar: "Education & Internship",
-      icon: "🎓",
-      backgroundImage: "/images/hero2.jpeg",
-      cta1: { text: "Apply for Internship", link: "/training/programs/internship" },
-      cta2: { text: "Read Success Stories", link: "/#impact-stories" }
-    },
-    {
-      title: "TRANSFORMING LIVES THROUGH TECH",
-      description: "Meet Naomi, Isaac, and student teams who built educational apps, installed school networks, and created SME solutions. Real stories of innovation and impact from our internship program.",
-      pillar: "Impact Stories",
-      icon: "🌟",
-      backgroundImage: "/images/hero4.png",
-      bgPosition: "center top",
-      cta1: { text: "Explore Stories", link: "/#impact-stories" },
-      cta2: { text: "Join Our Program", link: "/training" }
-    },
-    {
-      title: "INNOVATION & COMMUNITY",
-      description: "A passionate team driven by innovation and education. From AWS-certified leadership to dedicated coordinators, we're empowering Ghana's next generation of tech talent.",
-      pillar: "About & Team",
-      icon: "👥",
-      backgroundImage: "/images/hero1.jpeg",
-      cta1: { text: "Meet Our Team", link: "/about#team" },
-      cta2: { text: "Partner With Us", link: "/partner" }
-    },
-    {
-      title: "IT & NETWORKING SOLUTIONS",
-      description: "LAN/WAN installation, WiFi setup, server deployment, and digital infrastructure solutions. Build robust networks that power your organization with professional support.",
-      pillar: "IT & Networking",
-      icon: "🌐",
-      backgroundImage: "/images/hero3.jpeg",
-      cta1: { text: "Learn More", link: "/services/software" },
-      cta2: { text: "Get Started", link: "/contact" }
-    },
-    {
-      title: "WEB & SOFTWARE SOLUTIONS",
-      description: "Custom websites, management systems, and cloud-based tools for schools and businesses. We deliver professional, reliable, and affordable IT solutions tailored to your needs.",
-      pillar: "Web & Software",
-      icon: "💻",
-      backgroundImage: "/images/hero5.jpeg",
-      cta1: { text: "Our Services", link: "/services/software" },
-      cta2: { text: "Request a Quote", link: "/contact" }
-    }
-  ];
+  useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const response = await heroService.getAllSlides();
+        // Filter only visible slides
+        const visibleSlides = response.data.filter(s => s.isVisible);
+        setSlides(visibleSlides);
+      } catch (error) {
+        console.error('Failed to fetch hero slides:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSlides();
+  }, []);
 
   // Auto-rotate slides
   useEffect(() => {
+    if (slides.length <= 1) return;
+
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000); // Change slide every 5 seconds
@@ -63,21 +37,44 @@ const Hero = () => {
     return () => clearInterval(timer);
   }, [slides.length]);
 
+  if (loading) {
+    // Show a loading skeleton or a simple placeholder
+    return (
+      <section className="relative w-full h-[calc(100vh-88px)] bg-gray-900 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </section>
+    );
+  }
+
+  // Fallback if no slides are returned
+  if (slides.length === 0) {
+    return null;
+  }
+
+  const slide = slides[currentSlide];
 
   return (
     <section className="relative w-full text-white overflow-hidden" style={{ height: 'calc(100vh - 88px)' }}>
       {/* Background Image */}
       <div className="absolute inset-0 overflow-hidden">
-        <img
-          key={currentSlide}
-          src={slides[currentSlide].backgroundImage}
-          alt={slides[currentSlide].pillar}
-          className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out"
-          style={{
-            objectPosition: slides[currentSlide].bgPosition || 'center center',
-            filter: 'brightness(1.1) contrast(1.05)'
-          }}
-        />
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={currentSlide}
+            src={slide.backgroundImage}
+            alt={slide.pillar}
+            initial={{ opacity: 0.8 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0.8 }}
+            transition={{ duration: 1 }}
+            className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out"
+            style={{
+              objectPosition: slide.bgPosition || 'center center',
+              filter: 'brightness(1.1) contrast(1.05)'
+            }}
+            onError={(e) => { e.target.src = '/images/hero2.jpeg' }} // Fallback image
+          />
+        </AnimatePresence>
+
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="absolute inset-0 bg-black/30"></div>
@@ -96,7 +93,7 @@ const Hero = () => {
           >
             {/* Main Headline */}
             <motion.h1
-              className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-relaxed mb-8 tracking-tight text-white"
+              className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-relaxed mb-8 tracking-tight text-white uppercase"
               style={{
                 textShadow: '3px 3px 12px rgba(0,0,0,0.7)',
                 lineHeight: '1.2'
@@ -105,7 +102,7 @@ const Hero = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0 }}
             >
-              {slides[currentSlide].title}
+              {slide.title}
             </motion.h1>
 
             {/* Description */}
@@ -119,7 +116,7 @@ const Hero = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              {slides[currentSlide].description}
+              {slide.description}
             </motion.p>
 
             {/* CTA Buttons */}
@@ -129,24 +126,29 @@ const Hero = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <Link
-                to={slides[currentSlide].cta1.link}
-                className="cta-btn px-8 py-4 rounded-xl text-lg transform hover:-translate-y-1"
-              >
-                {slides[currentSlide].cta1.text}
-                <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
-              <Link
-                to={slides[currentSlide].cta2.link}
-                className="cta-ghost px-8 py-4 rounded-xl text-lg transform hover:-translate-y-1"
-              >
-                {slides[currentSlide].cta2.text}
-                <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
+              {slide.cta1Text && slide.cta1Link && (
+                <Link
+                  to={slide.cta1Link}
+                  className="cta-btn px-8 py-4 rounded-xl text-lg transform hover:-translate-y-1 flex items-center justify-center gap-2"
+                >
+                  {slide.cta1Text}
+                  <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </Link>
+              )}
+
+              {slide.cta2Text && slide.cta2Link && (
+                <Link
+                  to={slide.cta2Link}
+                  className="cta-ghost px-8 py-4 rounded-xl text-lg transform hover:-translate-y-1 flex items-center justify-center gap-2"
+                >
+                  {slide.cta2Text}
+                  <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </Link>
+              )}
             </motion.div>
           </motion.div>
         </AnimatePresence>
@@ -166,23 +168,6 @@ const Hero = () => {
           />
         ))}
       </div>
-
-      {/* CSS for animations */}
-      <style>{`
-        @keyframes fade-in-up {
-          from { 
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to { 
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.8s ease-out forwards;
-        }
-      `}</style>
     </section>
   );
 };

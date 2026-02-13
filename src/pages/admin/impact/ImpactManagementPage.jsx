@@ -109,255 +109,17 @@ const METRIC_TYPE_CONFIG = {
     'rating': { label: 'Rating', icon: Star }
 };
 
-// Mock impact metrics data
-const mockMetrics = [
-    {
-        id: 'MET-001',
-        title: 'Total Students Trained',
-        value: 2500,
-        previousValue: 2100,
-        type: 'number',
-        category: 'students',
-        description: 'Total number of students who have completed training programs',
-        suffix: '+',
-        featured: true,
-        active: true,
-        displayOrder: 1,
-        lastUpdated: '2024-12-19T10:00:00Z',
-        trend: 'up'
-    },
-    {
-        id: 'MET-002',
-        title: 'Employment Rate',
-        value: 87,
-        previousValue: 82,
-        type: 'percentage',
-        category: 'employment',
-        description: 'Percentage of graduates employed within 6 months of completion',
-        suffix: '%',
-        featured: true,
-        active: true,
-        displayOrder: 2,
-        lastUpdated: '2024-12-18T14:30:00Z',
-        trend: 'up'
-    },
-    {
-        id: 'MET-003',
-        title: 'Partner Companies',
-        value: 45,
-        previousValue: 38,
-        type: 'number',
-        category: 'partnerships',
-        description: 'Number of corporate and institutional partners',
-        suffix: '+',
-        featured: true,
-        active: true,
-        displayOrder: 3,
-        lastUpdated: '2024-12-17T09:15:00Z',
-        trend: 'up'
-    },
-    {
-        id: 'MET-004',
-        title: 'Courses Offered',
-        value: 25,
-        previousValue: 20,
-        type: 'number',
-        category: 'courses',
-        description: 'Total number of training courses and programs available',
-        suffix: '',
-        featured: false,
-        active: true,
-        displayOrder: 4,
-        lastUpdated: '2024-12-16T11:45:00Z',
-        trend: 'up'
-    },
-    {
-        id: 'MET-005',
-        title: 'Student Satisfaction',
-        value: 4.8,
-        previousValue: 4.6,
-        type: 'rating',
-        category: 'students',
-        description: 'Average student satisfaction rating out of 5.0',
-        suffix: '/5.0',
-        featured: true,
-        active: true,
-        displayOrder: 5,
-        lastUpdated: '2024-12-19T08:00:00Z',
-        trend: 'up'
-    },
-    {
-        id: 'MET-006',
-        title: 'Community Events',
-        value: 120,
-        previousValue: 95,
-        type: 'number',
-        category: 'community',
-        description: 'Number of community events and workshops hosted',
-        suffix: '+',
-        featured: false,
-        active: true,
-        displayOrder: 6,
-        lastUpdated: '2024-12-15T16:20:00Z',
-        trend: 'up'
-    },
-    {
-        id: 'MET-007',
-        title: 'Industry Awards',
-        value: 12,
-        previousValue: 10,
-        type: 'number',
-        category: 'awards',
-        description: 'Number of industry awards and recognitions received',
-        suffix: '',
-        featured: false,
-        active: true,
-        displayOrder: 7,
-        lastUpdated: '2024-12-10T13:00:00Z',
-        trend: 'up'
-    },
-    {
-        id: 'MET-008',
-        title: 'Scholarships Awarded',
-        value: 350000,
-        previousValue: 280000,
-        type: 'currency',
-        category: 'financial',
-        description: 'Total value of scholarships awarded to students (GHS)',
-        suffix: '',
-        prefix: 'GHS ',
-        featured: true,
-        active: true,
-        displayOrder: 8,
-        lastUpdated: '2024-12-18T10:30:00Z',
-        trend: 'up'
-    },
-    {
-        id: 'MET-009',
-        title: 'Countries Represented',
-        value: 8,
-        previousValue: 6,
-        type: 'number',
-        category: 'community',
-        description: 'Number of countries our students come from',
-        suffix: '',
-        featured: false,
-        active: true,
-        displayOrder: 9,
-        lastUpdated: '2024-12-14T09:00:00Z',
-        trend: 'up'
-    },
-    {
-        id: 'MET-010',
-        title: 'Career Transitions',
-        value: 65,
-        previousValue: 70,
-        type: 'percentage',
-        category: 'employment',
-        description: 'Percentage of students who successfully changed careers',
-        suffix: '%',
-        featured: false,
-        active: false,
-        displayOrder: 10,
-        lastUpdated: '2024-12-12T15:45:00Z',
-        trend: 'down'
-    }
-];
+import contentService from '../../../services/contentService';
+import Loader from '../../../components/admin/shared/Loader';
 
-// Mock success stories data
-const mockSuccessStories = [
-    {
-        id: 'STORY-001',
-        name: 'Kwame Asante',
-        title: 'From Unemployed to Lead Developer',
-        role: 'Senior Software Developer',
-        company: 'TechVision Ltd',
-        course: 'Full Stack Web Development',
-        image: null,
-        quote: 'Zyra Tech Hub transformed my career completely. Within 6 months of completing the program, I landed my dream job.',
-        featured: true,
-        active: true,
-        datePublished: '2024-11-15',
-        graduationYear: 2024
-    },
-    {
-        id: 'STORY-002',
-        name: 'Ama Mensah',
-        title: 'Becoming Ghana\'s First Female Cloud Architect',
-        role: 'Cloud Solutions Architect',
-        company: 'AWS Ghana',
-        course: 'Cloud Computing & DevOps',
-        image: null,
-        quote: 'The AWS certification training prepared me for a role I never thought possible. I am now leading cloud migrations for major companies.',
-        featured: true,
-        active: true,
-        datePublished: '2024-10-20',
-        graduationYear: 2023
-    },
-    {
-        id: 'STORY-003',
-        name: 'Kofi Boateng',
-        title: 'Building AI Solutions for African Healthcare',
-        role: 'AI/ML Engineer',
-        company: 'HealthTech Africa',
-        course: 'Data Science & AI',
-        image: null,
-        quote: 'The data science program gave me the skills to build AI solutions that are now helping diagnose diseases in rural Ghana.',
-        featured: true,
-        active: true,
-        datePublished: '2024-09-05',
-        graduationYear: 2023
-    },
-    {
-        id: 'STORY-004',
-        name: 'Grace Addo',
-        title: 'From Accountant to Data Analyst',
-        role: 'Senior Data Analyst',
-        company: 'Finance Corp',
-        course: 'Data Analytics',
-        image: null,
-        quote: 'I made a complete career switch at 35. Zyra Tech Hub\'s flexible schedule made it possible to study while working.',
-        featured: false,
-        active: true,
-        datePublished: '2024-08-12',
-        graduationYear: 2024
-    },
-    {
-        id: 'STORY-005',
-        name: 'Emmanuel Osei',
-        title: 'Launching a Successful Tech Startup',
-        role: 'CEO & Founder',
-        company: 'StartupXYZ',
-        course: 'Full Stack + Business',
-        image: null,
-        quote: 'The entrepreneurship modules combined with technical training helped me launch my own company with 10 employees.',
-        featured: false,
-        active: false,
-        datePublished: '2024-07-01',
-        graduationYear: 2022
-    }
-];
+// ... (keep conversions and icons configs)
 
 // Format number with commas
 const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
-// Format date
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
-};
-
-// Calculate percentage change
-const getPercentChange = (current, previous) => {
-    if (!previous) return 0;
-    return ((current - previous) / previous * 100).toFixed(1);
-};
+// ... (keep other utility functions)
 
 const ImpactManagementPage = () => {
     const dispatch = useDispatch();
@@ -366,16 +128,42 @@ const ImpactManagementPage = () => {
 
     // State management
     const [activeTab, setActiveTab] = useState('metrics');
+    const [metrics, setMetrics] = useState([]);
+    const [successStories, setSuccessStories] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
-    const [viewingStory, setViewingStory] = useState(null);
 
     const itemsPerPage = 10;
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [metricsRes, storiesRes] = await Promise.all([
+                    contentService.getImpactMetrics(),
+                    contentService.getImpactStories()
+                ]);
+                setMetrics(metricsRes.data);
+                setSuccessStories(storiesRes.data);
+            } catch (error) {
+                console.error("Failed to fetch impact data:", error);
+                dispatch(openConfirmDialog({
+                    title: "Error",
+                    message: "Failed to load impact data.",
+                    hideCancelButton: true
+                }));
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [dispatch]);
+
     // Filter metrics
     const filteredMetrics = useMemo(() => {
-        let result = [...mockMetrics];
+        let result = [...metrics];
 
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
@@ -398,11 +186,11 @@ const ImpactManagementPage = () => {
         }
 
         return result.sort((a, b) => a.displayOrder - b.displayOrder);
-    }, [searchQuery, selectedCategory]);
+    }, [metrics, searchQuery, selectedCategory]);
 
     // Filter success stories
     const filteredStories = useMemo(() => {
-        let result = [...mockSuccessStories];
+        let result = [...successStories];
 
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
@@ -423,7 +211,7 @@ const ImpactManagementPage = () => {
         }
 
         return result;
-    }, [searchQuery, selectedCategory]);
+    }, [successStories, searchQuery, selectedCategory]);
 
     // Pagination
     const currentItems = activeTab === 'metrics' ? filteredMetrics : filteredStories;
@@ -436,14 +224,14 @@ const ImpactManagementPage = () => {
     // Statistics
     const stats = useMemo(() => {
         return {
-            totalMetrics: mockMetrics.length,
-            activeMetrics: mockMetrics.filter(m => m.active).length,
-            featuredMetrics: mockMetrics.filter(m => m.featured).length,
-            totalStories: mockSuccessStories.length,
-            activeStories: mockSuccessStories.filter(s => s.active).length,
-            featuredStories: mockSuccessStories.filter(s => s.featured).length
+            totalMetrics: metrics.length,
+            activeMetrics: metrics.filter(m => m.active).length,
+            featuredMetrics: metrics.filter(m => m.featured).length,
+            totalStories: successStories.length,
+            activeStories: successStories.filter(s => s.active).length,
+            featuredStories: successStories.filter(s => s.featured).length
         };
-    }, []);
+    }, [metrics, successStories]);
 
     // Handlers
     const handleEditMetric = (metric) => {
@@ -530,7 +318,7 @@ const ImpactManagementPage = () => {
 
                 {/* Key Impact Highlights */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    {mockMetrics.filter(m => m.featured && m.active).slice(0, 6).map((metric, idx) => {
+                    {metrics.filter(m => m.featured && m.active).slice(0, 6).map((metric, idx) => {
                         const categoryConfig = CATEGORY_CONFIG[metric.category];
                         const CategoryIcon = categoryConfig.icon;
                         const percentChange = getPercentChange(metric.value, metric.previousValue);
@@ -564,8 +352,8 @@ const ImpactManagementPage = () => {
                     <button
                         onClick={() => { setActiveTab('metrics'); setCurrentPage(1); resetFilters(); }}
                         className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${activeTab === 'metrics'
-                                ? 'bg-[#004fa2] text-white shadow-md'
-                                : 'text-gray-600 hover:bg-gray-100'
+                            ? 'bg-[#004fa2] text-white shadow-md'
+                            : 'text-gray-600 hover:bg-gray-100'
                             }`}
                     >
                         <BarChart3 size={16} />
@@ -578,8 +366,8 @@ const ImpactManagementPage = () => {
                     <button
                         onClick={() => { setActiveTab('stories'); setCurrentPage(1); resetFilters(); }}
                         className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${activeTab === 'stories'
-                                ? 'bg-[#004fa2] text-white shadow-md'
-                                : 'text-gray-600 hover:bg-gray-100'
+                            ? 'bg-[#004fa2] text-white shadow-md'
+                            : 'text-gray-600 hover:bg-gray-100'
                             }`}
                     >
                         <Quote size={16} />
@@ -714,8 +502,8 @@ const ImpactManagementPage = () => {
                                                     <button
                                                         onClick={() => handleToggleActive(metric)}
                                                         className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold ${metric.active
-                                                                ? 'bg-green-100 text-green-700'
-                                                                : 'bg-gray-100 text-gray-500'
+                                                            ? 'bg-green-100 text-green-700'
+                                                            : 'bg-gray-100 text-gray-500'
                                                             }`}
                                                     >
                                                         {metric.active ? <CheckCircle size={10} /> : <AlertCircle size={10} />}
@@ -811,8 +599,8 @@ const ImpactManagementPage = () => {
                                         <button
                                             onClick={() => handleToggleActive(story)}
                                             className={`px-2 py-0.5 rounded text-[10px] font-bold ${story.active
-                                                    ? 'bg-green-100 text-green-700'
-                                                    : 'bg-gray-100 text-gray-500'
+                                                ? 'bg-green-100 text-green-700'
+                                                : 'bg-gray-100 text-gray-500'
                                                 }`}
                                         >
                                             {story.active ? 'Active' : 'Inactive'}

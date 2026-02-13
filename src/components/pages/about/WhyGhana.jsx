@@ -1,12 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import { Link } from 'react-router-dom';
+import contentService from '../../../services/contentService';
 
 const WhyGhana = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
   const contentAnimation = useScrollAnimation({ type: 'slideUp', delay: 0.1 });
-  const statsAnimation = useScrollAnimation({ type: 'slideUp', delay: 0.2 });
+
+  const [whyData, setWhyData] = useState({
+    title: 'Why We Chose Ghana',
+    content1: "Ghana's accelerating urbanization is converging populations with enhanced infrastructure, expanding digital connectivity, and improved educational access—creating an ideal environment for skills development and technology-driven economic transformation.",
+    linkText: 'Learn More About Our Impact',
+    linkUrl: '/impact',
+    content2: "We develop programs tailored to local market demands, partner with businesses to co-design training curricula, and empower startups through strategic mentorship, drawing on our founder's experience as a Tech Educator and former Teaching Assistant at Koforidua Technical University."
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await contentService.getWhyGhana();
+        if (data) setWhyData(data);
+      } catch (error) {
+        console.error('Error fetching Why Ghana data:', error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <section className="py-16 bg-gray-50">
@@ -19,10 +39,10 @@ const WhyGhana = () => {
           transition={titleAnimation.transition}
           className="mb-8"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-6">Why We Chose Ghana</h2>
-          <p className="text-gray-700 mb-4">Ghana's accelerating urbanization is converging populations with enhanced infrastructure, expanding digital connectivity, and improved educational access—creating an ideal environment for skills development and technology-driven economic transformation.</p>
-          <Link to="/impact" className="inline-flex items-center text-[#004fa2] hover:text-[#004fa2] font-semibold transition-colors">
-            Learn More About Our Impact
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-6">{whyData.title}</h2>
+          <p className="text-gray-700 mb-4">{whyData.content1}</p>
+          <Link to={whyData.linkUrl || '/impact'} className="inline-flex items-center text-[#004fa2] hover:text-[#004fa2] font-semibold transition-colors">
+            {whyData.linkText}
             <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
@@ -38,7 +58,7 @@ const WhyGhana = () => {
           className="mb-12"
         >
           <p className="text-lg text-gray-700 leading-relaxed">
-            We develop programs tailored to local market demands, partner with businesses to co-design training curricula, and empower startups through strategic mentorship, drawing on our founder's experience as a Tech Educator and former Teaching Assistant at Koforidua Technical University.
+            {whyData.content2}
           </p>
         </motion.div>
       </div>

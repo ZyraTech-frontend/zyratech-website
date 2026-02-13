@@ -184,10 +184,10 @@ const SuperAdminDashboard = ({ user }) => {
                                 <RefreshCw size={18} className={isRefreshing ? 'animate-spin' : ''} />
                                 Refresh
                             </button>
-                            <button className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2">
+                            <Link to="/admin/reports" className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2">
                                 <Download size={18} />
                                 Export Reports
-                            </button>
+                            </Link>
                             <Link
                                 to="/admin/analytics"
                                 className="bg-white hover:bg-gray-100 text-[#004fa2] px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg flex items-center gap-2"
@@ -210,9 +210,9 @@ const SuperAdminDashboard = ({ user }) => {
                         <h4 className="font-bold text-red-800">Security Alert</h4>
                         <p className="text-red-600 text-sm">{alerts[0].message}</p>
                     </div>
-                    <button className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition">
+                    <Link to="/admin/activity-logs" className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition">
                         View Details
-                    </button>
+                    </Link>
                 </div>
             )}
 

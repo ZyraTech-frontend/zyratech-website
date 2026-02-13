@@ -1,113 +1,71 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronDown, ChevronUp, HelpCircle, MessageCircle, Phone, Mail } from 'lucide-react';
+import {
+  ChevronDown, ChevronUp, HelpCircle, MessageCircle, Phone, Mail,
+  Users, Settings, Sparkles
+} from 'lucide-react';
+import faqService, { FAQ_CATEGORIES } from '../../../services/faqService';
 
 const FaqCategories = () => {
   const [openCategory, setOpenCategory] = useState(null);
   const [openFAQ, setOpenFAQ] = useState({});
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const faqCategories = [
-    {
-      title: "Internship Program",
-      icon: HelpCircle,
-      color: "#004fa2",
-      faqs: [
-        {
-          question: "Q1: Who can apply for Zyra Tech Hub's internship program?",
-          answer: "University students, graduates, and anyone eager to gain real-world tech experience."
-        },
-        {
-          question: "Q2: How much does the internship cost?",
-          answer: "GHS 350, covering mentorship, training, and certification."
-        },
-        {
-          question: "Q3: Do you partner with schools outside Koforidua?",
-          answer: "Currently we focus on Koforidua but will expand regionally and internationally."
-        },
-        {
-          question: "Q4: Can institutions request IT or web services?",
-          answer: "Yes, we provide professional IT, web, and networking services for schools and organizations."
-        },
-        {
-          question: "Q5: How can individuals or companies support your programs?",
-          answer: "Through sponsorships, partnerships, or donations of funds and equipment."
-        }
-      ]
-    },
-    {
-      title: "Services & Support",
-      icon: Phone,
-      color: "#004fa2",
-      faqs: [
-        {
-          question: "What specific IT training do you offer?",
-          answer: "We provide hands-on training in web/mobile development, networking, and cybersecurity, often featured in our ZyraTech Training programs."
-        },
-        {
-          question: "Does ZyraTech Hub support academic projects?",
-          answer: "Yes, we provide Academic Research Support, including frameworks for cutting-edge topics like Generative AI bias mitigation."
-        },
-        {
-          question: "What IT and digital services do you offer?",
-          answer: "We provide Education Technology (EdTech), IT & Networking, Web & Software Development, and Consulting & Support services for schools and businesses."
-        },
-        {
-          question: "What specific IT services are available?",
-          answer: "LAN/WAN installation, WiFi setup, server deployment, school websites, management systems, and IT consulting."
-        },
-        {
-          question: "Do you offer long-term support contracts?",
-          answer: "Yes, we provide long-term maintenance contracts and ongoing system support for schools and businesses."
-        },
-        {
-          question: "How can I request a quote for services?",
-          answer: "Contact us directly through our website or email info@zyratechhub.com with your project details."
-        }
-      ]
-    },
-    {
-      title: "Partnerships",
-      icon: MessageCircle,
-      color: "#004fa2",
-      faqs: [
-        {
-          question: "What types of partnerships do you offer?",
-          answer: "Educational partnerships (introduce digital learning programs), Corporate partnerships (sponsor or host interns), NGO & Government partnerships (support youth capacity-building), and Technology partnerships (co-develop tools and solutions)."
-        },
-        {
-          question: "How can our organization partner with Zyra Tech Hub?",
-          answer: "Contact us through our partnership page or email info@zyratechhub.com to discuss collaboration opportunities."
-        },
-        {
-          question: "Can my company sponsor a student?",
-          answer: "Yes, we welcome corporate sponsorships to help students access our tech programs and create meaningful impact."
-        },
-        {
-          question: "What are the benefits of partnership?",
-          answer: "Partners gain access to skilled interns, enhanced CSR impact, technology solutions, and opportunities to shape the next generation of tech talent."
-        }
-      ]
-    },
-    {
-      title: "Donations & Support",
-      icon: Mail,
-      color: "#004fa2",
-      faqs: [
-        {
-          question: "How can I support Zyra Tech Hub?",
-          answer: "You can fund students to access tech programs, donate equipment (laptops, kits, accessories), or sponsor school-based technology programs."
-        },
-        {
-          question: "What equipment donations do you accept?",
-          answer: "We accept laptops, robotics kits, networking equipment, and other technology resources for training programs."
-        },
-        {
-          question: "Do you provide donation receipts?",
-          answer: "Yes, we provide official receipts for all donations for tax and record-keeping purposes."
-        }
-      ]
-    }
-  ];
+  // Icon mapping
+  const iconMap = {
+    'Users': Users,
+    'Settings': Settings,
+    'MessageCircle': MessageCircle,
+    'Mail': Mail,
+    'Sparkles': Sparkles,
+    'HelpCircle': HelpCircle,
+    'Phone': Phone
+  };
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const response = await faqService.getPublishedFaqs();
+        const faqs = response.data;
+
+        // Group FAQs by category
+        const grouped = faqs.reduce((acc, faq) => {
+          if (!acc[faq.category]) {
+            acc[faq.category] = [];
+          }
+          acc[faq.category].push(faq);
+          return acc;
+        }, {});
+
+        // Transform into array based on config keys to maintain order or based on available data
+        // utilizing FAQ_CATEGORIES for metadata
+        const transformedCategories = Object.keys(grouped).map(catKey => {
+          const config = FAQ_CATEGORIES[catKey] || FAQ_CATEGORIES['General'];
+          return {
+            title: catKey,
+            icon: iconMap[config.iconName] || HelpCircle,
+            color: config.color.split(' ')[1].replace('text-', ''), // Extracting color roughly or just use hardcoded hex matches
+            // Ideally we should use the classes from config, but the original code used inline styles for color
+            // Let's use the first hex code found or a default blue
+            hexColor: "#004fa2", // Default
+            faqs: grouped[catKey]
+          };
+        });
+
+        // Optional: Sort categories if needed, or rely on Object.keys order (unreliable)
+        // For now, we trust the order they appear or perhaps sort by a priority list if we had one.
+
+        setCategories(transformedCategories);
+      } catch (error) {
+        console.error('Failed to fetch FAQs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFaqs();
+  }, []);
 
   const toggleCategory = (index) => {
     setOpenCategory(openCategory === index ? null : index);
@@ -122,13 +80,21 @@ const FaqCategories = () => {
     }));
   };
 
+  if (loading) {
+    return <div className="py-20 text-center text-gray-500">Loading FAQs...</div>;
+  }
+
+  if (categories.length === 0) {
+    return <div className="py-20 text-center text-gray-500">No FAQs available at the moment.</div>;
+  }
+
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* FAQ Categories */}
         <div className="space-y-6">
-          {faqCategories.map((category, categoryIndex) => (
+          {categories.map((category, categoryIndex) => (
             <motion.div
               key={categoryIndex}
               initial={{ opacity: 0, y: 20 }}
@@ -148,8 +114,7 @@ const FaqCategories = () => {
               >
                 <div className="flex items-center gap-3 sm:gap-4">
                   <div
-                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-200"
-                    style={{ color: category.color }}
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-200 text-[#004fa2]"
                   >
                     <category.icon size={20} className="sm:w-6 sm:h-6" />
                   </div>
@@ -175,10 +140,11 @@ const FaqCategories = () => {
                   {category.faqs.map((faq, faqIndex) => {
                     const key = `${categoryIndex}-${faqIndex}`;
                     const isOpen = openFAQ[key];
+                    // Remove "Q1: ", "Q2: " prefix if present in the data, or just show question
                     const questionText = faq.question.replace(/^Q\d+:\s*/i, '');
 
                     return (
-                      <div key={faqIndex} className="border-b border-gray-100 last:border-b-0">
+                      <div key={faq.id || faqIndex} className="border-b border-gray-100 last:border-b-0">
                         <button
                           type="button"
                           onClick={() => toggleFAQ(categoryIndex, faqIndex)}

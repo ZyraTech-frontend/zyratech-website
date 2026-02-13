@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
@@ -5,10 +6,33 @@ import ImpactHeroSection from '../../../components/pages/impact/ImpactHeroSectio
 import ImpactCommunitySection from '../../../components/pages/impact/ImpactCommunitySection';
 import ImpactValuesSection from '../../../components/pages/impact/ImpactValuesSection';
 import ImpactPeopleHighlightsSection from '../../../components/pages/impact/ImpactPeopleHighlightsSection';
+import ImpactMetricsSection from '../../../components/pages/impact/ImpactMetricsSection';
 import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
+import contentService from '../../../services/contentService'; // Import content service
 
 const ImpactPage = () => {
   const shouldReduceMotion = useReducedMotion();
+  const [metrics, setMetrics] = useState([]);
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [metricsRes, storiesRes] = await Promise.all([
+          contentService.getImpactMetrics(),
+          contentService.getImpactStories()
+        ]);
+        setMetrics(metricsRes.data || []);
+        setStories(storiesRes.data || []);
+      } catch (error) {
+        console.error("Failed to fetch impact data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const values = [
     {
@@ -38,33 +62,20 @@ const ImpactPage = () => {
     }
   ];
 
-  const highlights = [
-    {
-      name: 'Magdalene',
-      role: 'Human Resources Team Lead',
-      organization: 'ZyraTech',
-      location: 'Koforidua, Ghana',
-      image: '/images/Dalene.png',
-      quote:
-        'ZyraTech’s integrity and teamwork create real opportunities for learners. When we stay consistent, people grow and teams deliver.'
-    },
-    {
-      name: 'Ama',
-      role: 'Junior STEM Basics',
-      organization: 'ZyraTech',
-      location: 'Koforidua, Ghana',
-      image: '/images/image2.png',
-      quote: 'The hands-on lessons helped me build my first circuit—and it worked.'
-    },
-    {
-      name: 'Kofi',
-      role: 'Maker: Hardware & Repair',
-      organization: 'ZyraTech',
-      location: 'Koforidua, Ghana',
-      image: '/images/image3.png',
-      quote: 'The mentorship is practical and supportive. I’m now repairing devices in my community.'
-    }
-  ];
+  // Map stories to the format expected by ImpactPeopleHighlightsSection
+  const highlights = stories
+    .filter(s => s.active && s.featured)
+    .map(s => ({
+      name: s.name,
+      role: s.role,
+      organization: s.company,
+      location: s.course, // Using course as the badge text
+      image: s.image,
+      quote: s.quote
+    }));
+
+  // If no stories loaded yet (or fetch failed), fall back to hardcoded for checking? No, better to show nothing or loading.
+  // Actually let's use the hardcoded ones as initial state if we wanted, but explicit fetch is better.
 
   const livingOurValues = [
     {
@@ -87,9 +98,20 @@ const ImpactPage = () => {
     }
   ];
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#004fa2]"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white">
       <ImpactHeroSection />
+
+      {/* New Metrics Section */}
+      <ImpactMetricsSection metrics={metrics} />
 
       <ImpactCommunitySection />
 
@@ -99,7 +121,8 @@ const ImpactPage = () => {
 
       <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax3.png" overlayClassName="bg-black/50" />
 
-      <ImpactPeopleHighlightsSection people={highlights} />
+      {/* Dynamic Highlights from Stories */}
+      {highlights.length > 0 && <ImpactPeopleHighlightsSection people={highlights} />}
 
       <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax4.png" overlayClassName="bg-black/50" />
 
