@@ -5,18 +5,16 @@ import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 
 const testimonials = [
   {
-    name: 'Kwame Asante',
+    name: 'Agyare Boas Tieku',
     role: 'Software Developer',
-    company: 'Tech Solutions Ghana',
     image: '/images/tes1.png',
     quote: 'ZyraTech transformed my career. Their hands-on approach and real-world projects gave me the skills I needed to land my dream job in tech.',
     rating: 5,
     imageClassName: 'object-top scale-[2.0] origin-top'
   },
   {
-    name: 'Ama Osei',
-    role: 'Data Analyst',
-    company: 'Ghana National Bank',
+    name: 'Chemogoh Rhydal Maanou',
+    role: 'Digital Marketer',
     image: '/images/tes2.png',
     quote: 'The training quality is exceptional. ZyraTech doesn\'t just teach theory - they prepare you for the actual challenges you\'ll face in the industry.',
     rating: 5,
@@ -25,7 +23,6 @@ const testimonials = [
   {
     name: 'Joseph Mensah',
     role: 'IT Manager',
-    company: 'Accra Digital Hub',
     image: '/images/testimonial-3.jpg',
     quote: 'Working with ZyraTech has been a game-changer for our team. Their collaborative approach and expertise helped us scale our operations efficiently.',
     rating: 5,
@@ -86,7 +83,6 @@ const TestimonialsSection = () => {
                 <div>
                   <h4 className="font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors duration-300">{testimonial.name}</h4>
                   <p className="text-sm text-gray-600 group-hover:text-gray-700 transition-colors duration-300">{testimonial.role}</p>
-                  <p className="text-sm text-[#004fa2] group-hover:font-medium transition-all duration-300">{testimonial.company}</p>
                 </div>
               </div>
             </div>

@@ -29,19 +29,21 @@ const HowWeAreSetUpSection = () => {
             A strategic structure designed for seamless collaboration and sustainable impact.
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {setupPoints.map((point, index) => {
             const IconComponent = point.icon;
             return (
-              <div 
+              <div
                 key={index}
                 className="bg-gray-50 rounded-xl p-6 border border-gray-200 hover:border-[#004fa2]/40 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="w-14 h-14 rounded-xl bg-[#004fa2] flex items-center justify-center mb-4">
-                  <IconComponent className="text-white" size={24} />
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-[#004fa2] flex items-center justify-center shrink-0">
+                    <IconComponent className="text-white" size={20} />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">{point.title}</h3>
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3">{point.title}</h3>
                 <p className="text-gray-600 leading-relaxed text-sm">{point.description}</p>
               </div>
             );
