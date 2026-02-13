@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const Footer = () => {
   // Get settings from Redux store
   const settings = useSelector((state) => state.settings.values);
-  
+
   // Fallback values if settings not loaded
   const contactEmail = settings.contactEmail || 'info@zyratechhub.com';
   const contactPhone = settings.contactPhone || '+233 50 958 2497';
@@ -13,7 +13,7 @@ const Footer = () => {
   const contactAddress = settings.contactAddress || 'Koforidua, Eastern Region, Ghana';
   const tagline = settings.tagline || 'Empowering Ghana\'s Future Through Technology and Innovation.';
   const siteName = settings.siteName || 'Zyra Tech Hub';
-  
+
   // Social links
   const socialLinkedIn = settings.socialLinkedIn || 'https://www.linkedin.com/company/zyra-tech-hub';
   const socialTwitter = settings.socialTwitter || 'https://x.com/zyratechhub';
@@ -28,9 +28,10 @@ const Footer = () => {
           {/* Zyra Tech Hub Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="mb-4">
-              <img 
-                src="/zyratecpng.png" 
+              <img
+                src="/zyratecpng.png"
                 alt={`${siteName} Logo`}
+                loading="lazy"
                 className="h-32 w-auto object-contain filter brightness-0 invert"
               />
             </div>
@@ -38,7 +39,7 @@ const Footer = () => {
               {tagline}
             </p>
           </div>
-          
+
           {/* About & Programs */}
           <div>
             <h4 className="text-sm font-semibold text-white mb-3">About</h4>
@@ -47,7 +48,7 @@ const Footer = () => {
               <li><Link to="/impact" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Mission & Vision</Link></li>
               <li><Link to="/about#team" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Team</Link></li>
             </ul>
-            
+
             <h4 className="text-sm font-semibold text-white mb-3">Programs</h4>
             <ul className="space-y-1.5">
               <li><Link to="/training" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Training</Link></li>
@@ -55,7 +56,7 @@ const Footer = () => {
               <li><Link to="/impact" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Impact</Link></li>
             </ul>
           </div>
-          
+
           {/* Get Involved & Resources */}
           <div>
             <h4 className="text-sm font-semibold text-white mb-3">Get Involved</h4>
@@ -63,7 +64,7 @@ const Footer = () => {
               <li><Link to="/partner" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Partner</Link></li>
               <li><Link to="/contact" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Join Us</Link></li>
             </ul>
-            
+
             <h4 className="text-sm font-semibold text-white mb-3">Resources</h4>
             <ul className="space-y-1.5">
               <li><Link to="/blog" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">Blog</Link></li>
@@ -71,7 +72,7 @@ const Footer = () => {
               <li><Link to="/faq" className="text-sm text-gray-300 hover:text-[#004fa2] transition-colors">FAQ</Link></li>
             </ul>
           </div>
-          
+
           {/* Contact Us & Newsletter */}
           <div className="col-span-2 md:col-span-1">
             <h4 className="text-sm font-semibold text-white mb-3">Contact Us</h4>
@@ -86,7 +87,7 @@ const Footer = () => {
                 <span className="font-semibold text-white">Phone:</span> <a href={`tel:${contactPhone.replace(/\s/g, '')}`} className="hover:text-[#004fa2] transition-colors">{contactPhone}</a>
               </p>
             </div>
-            
+
             {/* Social Media */}
             <div className="flex items-center space-x-3 mb-4">
               {socialLinkedIn && (
@@ -117,7 +118,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Copyright */}
         <div className="pt-6 border-t border-gray-800">
           <div className="text-center">

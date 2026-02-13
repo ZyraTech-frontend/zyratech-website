@@ -41,6 +41,7 @@ const HrContactSection = ({
               <img
                 src={imageUrl}
                 alt={hrName}
+                loading="lazy"
                 className="w-full max-w-md md:max-w-none md:w-[580px] h-auto aspect-[3/4] md:aspect-auto md:h-[600px] object-cover"
               />
             </div>
