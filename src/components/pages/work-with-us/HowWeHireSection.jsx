@@ -1,21 +1,8 @@
 import React from 'react';
 
-const hiringSteps = [
-  {
-    title: 'Apply',
-    description: 'Submit CV and a short note about your fit.'
-  },
-  {
-    title: 'Interview',
-    description: 'Short technical and cultural conversations.'
-  },
-  {
-    title: 'Onboard',
-    description: 'Fast, clear onboarding and initial goals.'
-  }
-];
+const HowWeHireSection = ({ steps = [] }) => {
+  if (!steps || steps.length === 0) return null;
 
-const HowWeHireSection = () => {
   return (
     <section className="bg-[#004fa2] py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,7 +10,7 @@ const HowWeHireSection = () => {
         <p className="text-white/90 mb-8 text-base sm:text-lg">A concise, respectful process that focuses on skills and potential.</p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {hiringSteps.map((step, index) => {
+          {steps.map((step, index) => {
             return (
               <div
                 key={step.title}

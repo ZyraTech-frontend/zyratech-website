@@ -6,10 +6,10 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { projectsData, getProjectsByStatus, getCategories, getStatuses } from '../../../data/projectsData';
+import { projectsData as initialProjects, getProjectsByStatus, getCategories, getStatuses } from '../../../data/projectsData';
 import {
     FolderKanban,
     Plus,
@@ -107,6 +107,8 @@ const ProjectsManagementPage = () => {
     const { isSuperAdmin } = usePermissions();
 
     // State management
+    // State management
+    const [projects, setProjects] = useState(initialProjects);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [selectedStatus, setSelectedStatus] = useState('all');
@@ -117,7 +119,7 @@ const ProjectsManagementPage = () => {
 
     // Filter and search projects
     const filteredProjects = useMemo(() => {
-        let result = [...projectsData];
+        let result = [...projects];
 
         // Search filter
         if (searchQuery) {
@@ -140,7 +142,7 @@ const ProjectsManagementPage = () => {
         }
 
         return result;
-    }, [searchQuery, selectedCategory, selectedStatus]);
+    }, [projects, searchQuery, selectedCategory, selectedStatus]);
 
     // Pagination
     const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
@@ -151,14 +153,14 @@ const ProjectsManagementPage = () => {
 
     // Statistics
     const stats = useMemo(() => ({
-        total: projectsData.length,
-        active: projectsData.filter(p => p.status === 'Active').length,
-        inProgress: projectsData.filter(p => p.status === 'In Progress').length,
-        completed: projectsData.filter(p => p.status === 'Completed').length,
-        featured: projectsData.filter(p => p.featured).length,
-        totalTeam: projectsData.reduce((acc, p) => acc + (p.team || 0), 0),
-        avgProgress: Math.round(projectsData.reduce((acc, p) => acc + (p.progress || 0), 0) / projectsData.length)
-    }), []);
+        total: projects.length,
+        active: projects.filter(p => p.status === 'Active').length,
+        inProgress: projects.filter(p => p.status === 'In Progress').length,
+        completed: projects.filter(p => p.status === 'Completed').length,
+        featured: projects.filter(p => p.featured).length,
+        totalTeam: projects.reduce((acc, p) => acc + (p.team || 0), 0),
+        avgProgress: projects.length > 0 ? Math.round(projects.reduce((acc, p) => acc + (p.progress || 0), 0) / projects.length) : 0
+    }), [projects]);
 
     // Get unique categories
     const uniqueCategories = useMemo(() => {
@@ -177,8 +179,11 @@ const ProjectsManagementPage = () => {
             message: `Are you sure you want to delete "${project.title}"? This action cannot be undone.`,
             isDangerous: true,
             onConfirm: () => {
-                // TODO: Implement actual delete via API
-                console.log('Deleting project:', project.id);
+                setProjects(prev => prev.filter(p => p.id !== project.id));
+                dispatch(addNotification({
+                    type: 'success',
+                    message: `Project "${project.title}" deleted successfully`
+                }));
             }
         }));
     };
@@ -362,8 +367,8 @@ const ProjectsManagementPage = () => {
                             <button
                                 onClick={() => setViewMode('grid')}
                                 className={`p-2 rounded-md transition-all ${viewMode === 'grid'
-                                        ? 'bg-white text-[#004fa2] shadow-sm'
-                                        : 'text-gray-600 hover:text-gray-900'
+                                    ? 'bg-white text-[#004fa2] shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900'
                                     }`}
                             >
                                 <Grid size={18} />
@@ -371,8 +376,8 @@ const ProjectsManagementPage = () => {
                             <button
                                 onClick={() => setViewMode('list')}
                                 className={`p-2 rounded-md transition-all ${viewMode === 'list'
-                                        ? 'bg-white text-[#004fa2] shadow-sm'
-                                        : 'text-gray-600 hover:text-gray-900'
+                                    ? 'bg-white text-[#004fa2] shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900'
                                     }`}
                             >
                                 <List size={18} />

@@ -1,14 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import contentService from '../../../services/contentService';
 
 const AboutHero = ({
-  title = 'Building the next generation of',
-  highlight = 'tech talent',
-  description =
-    'We bridge the gap between education and industry through comprehensive training, professional internships, and real-world projects—empowering individuals and organizations with job-ready digital skills.',
-  backgroundImage = '/images/image1.png'
+  title: initialTitle,
+  highlight: initialHighlight,
+  description: initialDescription,
+  backgroundImage: initialBackgroundImage
 }) => {
   const shouldReduceMotion = useReducedMotion();
+
+  const [heroData, setHeroData] = useState({
+    title: initialTitle || 'Building the next generation of',
+    highlight: initialHighlight || 'tech talent',
+    description: initialDescription || 'We bridge the gap between education and industry through comprehensive training, professional internships, and real-world projects—empowering individuals and organizations with job-ready digital skills.',
+    backgroundImage: initialBackgroundImage || '/images/image1.png'
+  });
+
+  useEffect(() => {
+    const fetchHeroData = async () => {
+      try {
+        const { data } = await contentService.getAboutHero();
+        if (data) {
+          setHeroData({
+            title: data.title || heroData.title,
+            highlight: data.highlight || heroData.highlight,
+            description: data.description || heroData.description,
+            backgroundImage: data.backgroundImage || heroData.backgroundImage
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching About Hero data:', error);
+      }
+    };
+    fetchHeroData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <section className="relative isolate overflow-hidden">
@@ -16,7 +43,7 @@ const AboutHero = ({
         <div
           className="relative overflow-hidden h-[70vh] min-h-[520px] max-h-[780px] bg-cover bg-center bg-scroll md:bg-fixed"
           style={{
-            backgroundImage: `url(${backgroundImage})`
+            backgroundImage: `url(${heroData.backgroundImage})`
           }}
         >
           <div className="absolute inset-0 bg-black/45" />
@@ -29,12 +56,12 @@ const AboutHero = ({
               transition={{ duration: shouldReduceMotion ? 0 : 0.8 }}
             >
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-0 leading-tight">
-                {title}
-                <span className="text-[#004fa2] block"> {highlight}</span>
+                {heroData.title}
+                <span className="text-[#004fa2] block"> {heroData.highlight}</span>
               </h1>
 
               <p className="mt-6 text-base sm:text-lg md:text-xl font-semibold text-white/90 leading-relaxed max-w-3xl">
-                {description}
+                {heroData.description}
               </p>
             </motion.div>
           </div>

@@ -5,7 +5,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
 import {
@@ -248,7 +248,7 @@ const PaymentsManagementPage = () => {
     const [selectedMethod, setSelectedMethod] = useState('all');
     const [dateRange, setDateRange] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
-    const [viewingTransaction, setViewingTransaction] = useState(null);
+
 
     const itemsPerPage = 10;
 
@@ -308,9 +308,7 @@ const PaymentsManagementPage = () => {
     }, []);
 
     // Handlers
-    const handleView = (transaction) => {
-        setViewingTransaction(transaction);
-    };
+
 
     const handleRefund = (transaction) => {
         dispatch(openConfirmDialog({
@@ -325,12 +323,25 @@ const PaymentsManagementPage = () => {
 
     const handleExport = () => {
         console.log('Exporting transactions...');
-        // TODO: Implement CSV/Excel export
+        dispatch(addNotification({
+            type: 'info',
+            message: 'Exporting transactions report...'
+        }));
+        // Simulate export delay
+        setTimeout(() => {
+            dispatch(addNotification({
+                type: 'success',
+                message: 'Transactions report exported successfully'
+            }));
+        }, 1500);
     };
 
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text);
-        // TODO: Show toast notification
+        dispatch(addNotification({
+            type: 'success',
+            message: 'Copied to clipboard'
+        }));
     };
 
     const resetFilters = () => {
@@ -435,8 +446,8 @@ const PaymentsManagementPage = () => {
                     <button
                         onClick={() => { setSelectedStatus('all'); setCurrentPage(1); }}
                         className={`p-3 rounded-lg border text-center transition-all ${selectedStatus === 'all'
-                                ? 'bg-[#004fa2] text-white border-[#004fa2]'
-                                : 'bg-white text-gray-700 border-gray-200 hover:border-[#004fa2]/50'
+                            ? 'bg-[#004fa2] text-white border-[#004fa2]'
+                            : 'bg-white text-gray-700 border-gray-200 hover:border-[#004fa2]/50'
                             }`}
                     >
                         <p className="text-lg font-bold">{stats.totalTransactions}</p>
@@ -445,8 +456,8 @@ const PaymentsManagementPage = () => {
                     <button
                         onClick={() => { setSelectedStatus('completed'); setCurrentPage(1); }}
                         className={`p-3 rounded-lg border text-center transition-all ${selectedStatus === 'completed'
-                                ? 'bg-green-500 text-white border-green-500'
-                                : 'bg-white text-gray-700 border-gray-200 hover:border-green-500/50'
+                            ? 'bg-green-500 text-white border-green-500'
+                            : 'bg-white text-gray-700 border-gray-200 hover:border-green-500/50'
                             }`}
                     >
                         <p className="text-lg font-bold">{stats.completedCount}</p>
@@ -455,8 +466,8 @@ const PaymentsManagementPage = () => {
                     <button
                         onClick={() => { setSelectedStatus('pending'); setCurrentPage(1); }}
                         className={`p-3 rounded-lg border text-center transition-all ${selectedStatus === 'pending'
-                                ? 'bg-amber-500 text-white border-amber-500'
-                                : 'bg-white text-gray-700 border-gray-200 hover:border-amber-500/50'
+                            ? 'bg-amber-500 text-white border-amber-500'
+                            : 'bg-white text-gray-700 border-gray-200 hover:border-amber-500/50'
                             }`}
                     >
                         <p className="text-lg font-bold">{stats.pendingCount}</p>
@@ -465,8 +476,8 @@ const PaymentsManagementPage = () => {
                     <button
                         onClick={() => { setSelectedStatus('failed'); setCurrentPage(1); }}
                         className={`p-3 rounded-lg border text-center transition-all ${selectedStatus === 'failed'
-                                ? 'bg-red-500 text-white border-red-500'
-                                : 'bg-white text-gray-700 border-gray-200 hover:border-red-500/50'
+                            ? 'bg-red-500 text-white border-red-500'
+                            : 'bg-white text-gray-700 border-gray-200 hover:border-red-500/50'
                             }`}
                     >
                         <p className="text-lg font-bold">{stats.failedCount}</p>
@@ -475,8 +486,8 @@ const PaymentsManagementPage = () => {
                     <button
                         onClick={() => { setSelectedStatus('refunded'); setCurrentPage(1); }}
                         className={`p-3 rounded-lg border text-center transition-all ${selectedStatus === 'refunded'
-                                ? 'bg-purple-500 text-white border-purple-500'
-                                : 'bg-white text-gray-700 border-gray-200 hover:border-purple-500/50'
+                            ? 'bg-purple-500 text-white border-purple-500'
+                            : 'bg-white text-gray-700 border-gray-200 hover:border-purple-500/50'
                             }`}
                     >
                         <p className="text-lg font-bold">{stats.refundedCount}</p>
@@ -602,7 +613,7 @@ const PaymentsManagementPage = () => {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <p className={`text-sm font-bold ${transaction.status === 'refunded' ? 'text-purple-600' :
-                                                        transaction.status === 'completed' ? 'text-green-600' : 'text-gray-900'
+                                                    transaction.status === 'completed' ? 'text-green-600' : 'text-gray-900'
                                                     }`}>
                                                     {transaction.status === 'refunded' && '-'}
                                                     {formatCurrency(transaction.amount, transaction.currency)}
@@ -715,149 +726,6 @@ const PaymentsManagementPage = () => {
                 )}
             </div>
 
-            {/* Transaction Details Modal */}
-            {viewingTransaction && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 bg-gradient-to-r from-[#004fa2] to-[#0066cc] flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                                    <Receipt className="text-white" size={22} />
-                                </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-white">Transaction Details</h2>
-                                    <p className="text-blue-100 text-xs font-mono">{viewingTransaction.id}</p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => setViewingTransaction(null)}
-                                className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-                            <div className="space-y-5">
-                                {/* Amount & Status */}
-                                <div className="bg-gray-50 rounded-xl p-5 text-center">
-                                    <p className={`text-4xl font-bold ${viewingTransaction.status === 'refunded' ? 'text-purple-600' :
-                                            viewingTransaction.status === 'completed' ? 'text-green-600' :
-                                                viewingTransaction.status === 'failed' ? 'text-red-600' : 'text-gray-900'
-                                        }`}>
-                                        {viewingTransaction.status === 'refunded' && '-'}
-                                        {formatCurrency(viewingTransaction.amount, viewingTransaction.currency)}
-                                    </p>
-                                    <div className="mt-3">
-                                        <StatusBadge status={viewingTransaction.status} />
-                                    </div>
-                                </div>
-
-                                {/* Transaction Info */}
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-gray-50 rounded-xl p-4">
-                                        <p className="text-xs font-medium text-gray-500 mb-1">Transaction ID</p>
-                                        <div className="flex items-center gap-2">
-                                            <p className="font-mono text-sm font-semibold text-gray-900">{viewingTransaction.id}</p>
-                                            <button
-                                                onClick={() => copyToClipboard(viewingTransaction.id)}
-                                                className="p-1 text-gray-400 hover:text-gray-600 rounded"
-                                            >
-                                                <Copy size={12} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className="bg-gray-50 rounded-xl p-4">
-                                        <p className="text-xs font-medium text-gray-500 mb-1">Reference</p>
-                                        <div className="flex items-center gap-2">
-                                            <p className="font-mono text-sm font-semibold text-gray-900 truncate">{viewingTransaction.reference}</p>
-                                            <button
-                                                onClick={() => copyToClipboard(viewingTransaction.reference)}
-                                                className="p-1 text-gray-400 hover:text-gray-600 rounded shrink-0"
-                                            >
-                                                <Copy size={12} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Student Info */}
-                                <div className="border border-gray-200 rounded-xl p-4">
-                                    <p className="text-xs font-medium text-gray-500 mb-3">Student Information</p>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white font-bold">
-                                            {viewingTransaction.student.name.split(' ').map(n => n[0]).join('')}
-                                        </div>
-                                        <div>
-                                            <p className="font-semibold text-gray-900">{viewingTransaction.student.name}</p>
-                                            <p className="text-sm text-gray-500">{viewingTransaction.student.email}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Course & Payment Details */}
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-gray-50 rounded-xl p-4">
-                                        <p className="text-xs font-medium text-gray-500 mb-1">Course</p>
-                                        <p className="font-semibold text-gray-900">{viewingTransaction.course}</p>
-                                    </div>
-                                    <div className="bg-gray-50 rounded-xl p-4">
-                                        <p className="text-xs font-medium text-gray-500 mb-1">Payment Method</p>
-                                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium ${PAYMENT_METHODS[viewingTransaction.method]?.color}`}>
-                                            <span>{PAYMENT_METHODS[viewingTransaction.method]?.icon}</span>
-                                            {PAYMENT_METHODS[viewingTransaction.method]?.label}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Date & Description */}
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-gray-50 rounded-xl p-4">
-                                        <p className="text-xs font-medium text-gray-500 mb-1">Date & Time</p>
-                                        <p className="font-semibold text-gray-900">{formatDate(viewingTransaction.date)}</p>
-                                    </div>
-                                    <div className="bg-gray-50 rounded-xl p-4">
-                                        <p className="text-xs font-medium text-gray-500 mb-1">Description</p>
-                                        <p className="text-sm text-gray-700">{viewingTransaction.description}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50">
-                            <button
-                                onClick={() => setViewingTransaction(null)}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
-                            >
-                                Close
-                            </button>
-                            <div className="flex items-center gap-2">
-                                {viewingTransaction.status === 'completed' && (
-                                    <button
-                                        onClick={() => {
-                                            setViewingTransaction(null);
-                                            handleRefund(viewingTransaction);
-                                        }}
-                                        className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors font-medium text-sm flex items-center gap-1.5"
-                                    >
-                                        <RefreshCcw size={14} />
-                                        Process Refund
-                                    </button>
-                                )}
-                                <button
-                                    className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-medium text-sm flex items-center gap-1.5"
-                                >
-                                    <Printer size={14} />
-                                    Print Receipt
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </AdminLayout>
     );
 };

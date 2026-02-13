@@ -6,10 +6,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { jobsData } from '../../../data/jobsData';
+import { jobsData as initialJobs } from '../../../data/jobsData';
 import {
     Briefcase,
     Plus,
@@ -77,6 +77,8 @@ const JobsManagementPage = () => {
     const { isSuperAdmin } = usePermissions();
 
     // State management
+    // State management
+    const [jobs, setJobs] = useState(initialJobs);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedType, setSelectedType] = useState('all');
     const [selectedLocation, setSelectedLocation] = useState('all');
@@ -105,7 +107,7 @@ const JobsManagementPage = () => {
 
     // Filter and search jobs
     const filteredJobs = useMemo(() => {
-        let result = [...jobsData];
+        let result = [...jobs];
 
         // Search filter
         if (searchQuery) {
@@ -128,7 +130,7 @@ const JobsManagementPage = () => {
         }
 
         return result;
-    }, [searchQuery, selectedType, selectedLocation]);
+    }, [jobs, searchQuery, selectedType, selectedLocation]);
 
     // Pagination
     const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
@@ -139,27 +141,27 @@ const JobsManagementPage = () => {
 
     // Statistics
     const stats = useMemo(() => ({
-        total: jobsData.length,
-        fullTime: jobsData.filter(j => j.type === 'Full-time').length,
-        internship: jobsData.filter(j => j.type === 'Internship').length,
-        nationalService: jobsData.filter(j => j.type === 'National Service').length,
+        total: jobs.length,
+        fullTime: jobs.filter(j => j.type === 'Full-time').length,
+        internship: jobs.filter(j => j.type === 'Internship').length,
+        nationalService: jobs.filter(j => j.type === 'National Service').length,
         totalApplications: mockApplications.length,
         pendingApplications: mockApplications.filter(a => a.status === 'pending').length
-    }), [mockApplications]);
+    }), [jobs, mockApplications]);
 
     // Unique locations for filter
     const uniqueLocations = useMemo(() => {
         const locations = new Set();
-        jobsData.forEach(job => {
+        jobs.forEach(job => {
             job.locations?.forEach(loc => locations.add(loc));
         });
         return Array.from(locations);
-    }, []);
+    }, [jobs]);
 
     // Unique job types
     const uniqueTypes = useMemo(() => {
-        return [...new Set(jobsData.map(j => j.type))];
-    }, []);
+        return [...new Set(jobs.map(j => j.type))];
+    }, [jobs]);
 
     // Handlers
     const handleDelete = (job) => {
@@ -168,8 +170,11 @@ const JobsManagementPage = () => {
             message: `Are you sure you want to delete "${job.title}"? This will also delete all associated applications. This action cannot be undone.`,
             isDangerous: true,
             onConfirm: () => {
-                // TODO: Implement actual delete via API
-                console.log('Deleting job:', job.id);
+                setJobs(prev => prev.filter(j => j.id !== job.id));
+                dispatch(addNotification({
+                    type: 'success',
+                    message: `Job "${job.title}" and associated applications deleted`
+                }));
             }
         }));
     };
@@ -238,8 +243,8 @@ const JobsManagementPage = () => {
                     <button
                         onClick={() => setActiveTab('jobs')}
                         className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${activeTab === 'jobs'
-                                ? 'bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white shadow-md'
-                                : 'text-gray-600 hover:bg-gray-100'
+                            ? 'bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white shadow-md'
+                            : 'text-gray-600 hover:bg-gray-100'
                             }`}
                     >
                         <Briefcase size={16} />
@@ -252,8 +257,8 @@ const JobsManagementPage = () => {
                     <button
                         onClick={() => setActiveTab('applications')}
                         className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${activeTab === 'applications'
-                                ? 'bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white shadow-md'
-                                : 'text-gray-600 hover:bg-gray-100'
+                            ? 'bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white shadow-md'
+                            : 'text-gray-600 hover:bg-gray-100'
                             }`}
                     >
                         <FileText size={16} />
@@ -600,7 +605,7 @@ const JobsManagementPage = () => {
                                     </thead>
                                     <tbody className="divide-y divide-gray-100">
                                         {mockApplications.map((application) => {
-                                            const job = jobsData.find(j => j.id === application.jobId);
+                                            const job = jobs.find(j => j.id === application.jobId);
                                             return (
                                                 <tr key={application.id} className="hover:bg-gray-50 transition-colors">
                                                     <td className="px-6 py-4">

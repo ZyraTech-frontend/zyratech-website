@@ -13,15 +13,21 @@ const tools = [
   { name: 'Selenium', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg', color: 'border-green-500' },
 ];
 
-const ToolsOrbit = () => {
+const ToolsOrbit = ({ tools = [] }) => {
+  // If no tools provided, don't break, maybe render empty or null?
+  // Or better, let parent handle data.
+  const displayTools = tools && tools.length > 0 ? tools : [];
+
+  if (displayTools.length === 0) return null;
+
   return (
     <section className="relative w-full min-h-[600px] md:min-h-[900px] flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden py-20 md:py-40">
-      
+
       {/* Central Hub */}
       <div className="relative z-10 w-40 h-40 md:w-64 md:h-64 rounded-full bg-white border-4 border-[#004fa2] flex items-center justify-center shadow-[0_0_50px_rgba(0,79,162,0.5)]">
-        <img 
-          src="/zyratecpng.png" 
-          alt="ZyraTech Logo" 
+        <img
+          src="/zyratecpng.png"
+          alt="ZyraTech Logo"
           className="w-28 h-28 md:w-48 md:h-48 object-contain"
         />
       </div>
@@ -29,18 +35,18 @@ const ToolsOrbit = () => {
       {/* The Orbiting Ring */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[600px] md:h-[600px] border border-gray-300/30 rounded-full pointer-events-auto">
-          {tools.map((tool, index) => {
-            const angle = (index / tools.length) * 360;
+          {displayTools.map((tool, index) => {
+            const angle = (index / displayTools.length) * 360;
             return (
               <div
-                key={tool.name}
+                key={tool.name || index}
                 style={{
                   transform: `rotate(${angle}deg) translate(${window.innerWidth < 768 ? 140 : 250}px) rotate(-${angle}deg)`,
                 }}
-                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-28 md:h-28 bg-white border-2 ${tool.color} rounded-2xl flex flex-col items-center justify-center shadow-lg hover:scale-125 transition-transform duration-300 cursor-help group`}
+                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-28 md:h-28 bg-white border-2 ${tool.color || 'border-gray-200'} rounded-2xl flex flex-col items-center justify-center shadow-lg hover:scale-125 transition-transform duration-300 cursor-help group`}
               >
-                <img 
-                  src={tool.logo} 
+                <img
+                  src={tool.logo}
                   alt={tool.name}
                   className="w-8 h-8 md:w-16 md:h-16 object-contain mb-1"
                   onError={(e) => e.target.style.display = 'none'}

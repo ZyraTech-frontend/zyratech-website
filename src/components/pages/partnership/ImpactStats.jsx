@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import contentService from '../../../services/contentService';
 
 const CountUp = ({ end, suffix = '', duration = 2000 }) => {
   const [count, setCount] = useState(0);
@@ -47,11 +48,23 @@ const CountUp = ({ end, suffix = '', duration = 2000 }) => {
 };
 
 const ImpactStats = () => {
-  const stats = [
+  const [stats, setStats] = useState([
     { number: '1', suffix: '', label: 'Active Partners' },
     { number: '50', suffix: '+', label: 'Students Trained' },
     { number: '50', suffix: '+', label: 'Projects Completed' }
-  ];
+  ]);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const { data } = await contentService.getImpactStats();
+        if (data) setStats(data);
+      } catch (error) {
+        console.error('Error fetching impact stats:', error);
+      }
+    };
+    fetchStats();
+  }, []);
 
   return (
     <section className="py-12 sm:py-16 bg-gray-50">

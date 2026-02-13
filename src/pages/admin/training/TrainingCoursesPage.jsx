@@ -6,10 +6,10 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { trainingCourses } from '../../../data/trainingCourses';
+import { trainingCourses as initialMockCourses } from '../../../data/trainingCourses';
 import {
     GraduationCap,
     Plus,
@@ -194,6 +194,7 @@ const TrainingCoursesPage = () => {
     const [activeTab, setActiveTab] = useState('courses'); // 'courses' or 'applications'
 
     // Courses state
+    const [courses, setCourses] = useState(initialMockCourses);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [selectedLevel, setSelectedLevel] = useState('all');
@@ -202,6 +203,7 @@ const TrainingCoursesPage = () => {
     const [showDropdown, setShowDropdown] = useState(null);
 
     // Applications state
+    const [applications, setApplications] = useState(MOCK_APPLICATIONS);
     const [applicationsSearch, setApplicationsSearch] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [selectedCourse, setSelectedCourse] = useState('all');
@@ -211,7 +213,7 @@ const TrainingCoursesPage = () => {
 
     // Filter and search courses
     const filteredCourses = useMemo(() => {
-        let result = [...trainingCourses];
+        let result = [...courses];
 
         // Search filter
         if (searchQuery) {
@@ -244,20 +246,21 @@ const TrainingCoursesPage = () => {
     );
 
     // Statistics
+    // Statistics
     const stats = useMemo(() => ({
-        total: trainingCourses.length,
-        basic: trainingCourses.filter(c => c.category === 'basic').length,
-        intermediate: trainingCourses.filter(c => c.category === 'intermediate').length,
-        advanced: trainingCourses.filter(c => c.category === 'advanced').length,
-        matured: trainingCourses.filter(c => c.category === 'matured').length,
-        internship: trainingCourses.filter(c => c.category === 'internship').length,
-        avgRating: (trainingCourses.reduce((acc, c) => acc + c.rating, 0) / trainingCourses.length).toFixed(1),
-        totalReviews: trainingCourses.reduce((acc, c) => acc + c.reviews, 0)
-    }), []);
+        total: courses.length,
+        basic: courses.filter(c => c.category === 'basic').length,
+        intermediate: courses.filter(c => c.category === 'intermediate').length,
+        advanced: courses.filter(c => c.category === 'advanced').length,
+        matured: courses.filter(c => c.category === 'matured').length,
+        internship: courses.filter(c => c.category === 'internship').length,
+        avgRating: (courses.reduce((acc, c) => acc + c.rating, 0) / Math.max(1, courses.length)).toFixed(1),
+        totalReviews: courses.reduce((acc, c) => acc + c.reviews, 0)
+    }), [courses]);
 
     // Applications filtering and stats
     const filteredApplications = useMemo(() => {
-        let result = [...MOCK_APPLICATIONS];
+        let result = [...applications];
 
         // Search filter
         if (applicationsSearch) {
@@ -284,11 +287,11 @@ const TrainingCoursesPage = () => {
     }, [applicationsSearch, selectedStatus, selectedCourse]);
 
     const applicationsStats = useMemo(() => ({
-        total: MOCK_APPLICATIONS.length,
-        pending: MOCK_APPLICATIONS.filter(a => a.status === 'pending').length,
-        approved: MOCK_APPLICATIONS.filter(a => a.status === 'approved').length,
-        rejected: MOCK_APPLICATIONS.filter(a => a.status === 'rejected').length
-    }), []);
+        total: applications.length,
+        pending: applications.filter(a => a.status === 'pending').length,
+        approved: applications.filter(a => a.status === 'approved').length,
+        rejected: applications.filter(a => a.status === 'rejected').length
+    }), [applications]);
 
     // Applications pagination
     const totalApplicationsPages = Math.ceil(filteredApplications.length / itemsPerPage);
@@ -299,7 +302,7 @@ const TrainingCoursesPage = () => {
 
     // Unique levels for filter
     const uniqueLevels = useMemo(() => {
-        const levels = new Set(trainingCourses.map(c => c.level));
+        const levels = new Set(courses.map(c => c.level));
         return Array.from(levels);
     }, []);
 
@@ -310,8 +313,11 @@ const TrainingCoursesPage = () => {
             message: `Are you sure you want to delete "${course.title}"? This action cannot be undone.`,
             isDangerous: true,
             onConfirm: () => {
-                // TODO: Implement actual delete via API
-                console.log('Deleting course:', course.id);
+                setCourses(prev => prev.filter(c => c.id !== course.id));
+                dispatch(addNotification({
+                    type: 'success',
+                    message: `Course "${course.title}" deleted successfully`
+                }));
             }
         }));
     };
@@ -345,13 +351,13 @@ const TrainingCoursesPage = () => {
             title: 'Approve Application',
             message: `Approve ${application.applicantName}'s application for ${application.courseTitle}?`,
             onConfirm: () => {
-                // TODO: Implement actual approve via API
-                console.log('Approving application:', application.id);
-                // Update local state (in real app, this would be handled by API response)
-                const index = MOCK_APPLICATIONS.findIndex(a => a.id === application.id);
-                if (index !== -1) {
-                    MOCK_APPLICATIONS[index].status = 'approved';
-                }
+                setApplications(prev => prev.map(app =>
+                    app.id === application.id ? { ...app, status: 'approved' } : app
+                ));
+                dispatch(addNotification({
+                    type: 'success',
+                    message: `Application for ${application.applicantName} approved`
+                }));
             }
         }));
     };
@@ -362,19 +368,35 @@ const TrainingCoursesPage = () => {
             message: `Are you sure you want to reject ${application.applicantName}'s application?`,
             isDangerous: true,
             onConfirm: () => {
-                // TODO: Implement actual reject via API
-                console.log('Rejecting application:', application.id);
-                const index = MOCK_APPLICATIONS.findIndex(a => a.id === application.id);
-                if (index !== -1) {
-                    MOCK_APPLICATIONS[index].status = 'rejected';
-                }
+                setApplications(prev => prev.map(app =>
+                    app.id === application.id ? { ...app, status: 'rejected' } : app
+                ));
+                dispatch(addNotification({
+                    type: 'info',
+                    message: `Application for ${application.applicantName} rejected`
+                }));
             }
         }));
     };
 
     const handleDownloadCV = (application) => {
-        // TODO: Implement actual CV download
-        console.log('Downloading CV for:', application.applicantName);
+        dispatch(addNotification({
+            type: 'info',
+            message: `Downloading CV for ${application.applicantName}...`
+        }));
+        // Simulate download
+        setTimeout(() => {
+            const element = document.createElement("a");
+            const file = new Blob(["Simulated CV content"], { type: 'text/plain' });
+            element.href = URL.createObjectURL(file);
+            element.download = application.cvFileName;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+            dispatch(addNotification({
+                type: 'success',
+                message: 'Download started'
+            }));
+        }, 1000);
     };
 
     return (

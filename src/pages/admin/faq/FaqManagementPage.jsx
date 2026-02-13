@@ -3,12 +3,13 @@
  * Professional admin interface for managing frequently asked questions
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
+import faqService from '../../../services/faqService';
 import {
     HelpCircle,
     Plus,
@@ -43,6 +44,7 @@ import {
     Settings,
     Briefcase
 } from 'lucide-react';
+import LoadingSpinner from '../../../components/admin/shared/LoadingSpinner';
 
 // Category configuration
 const CATEGORY_CONFIG = {
@@ -84,186 +86,6 @@ const CATEGORY_CONFIG = {
     }
 };
 
-// Mock FAQ data (based on FaqCategories structure)
-const mockFaqData = [
-    {
-        id: 1,
-        category: 'Internship Program',
-        question: 'Who can apply for Zyra Tech Hub\'s internship program?',
-        answer: 'University students, graduates, and anyone eager to gain real-world tech experience.',
-        status: 'published',
-        order: 1,
-        views: 245,
-        helpful: 89,
-        createdAt: '2024-12-01'
-    },
-    {
-        id: 2,
-        category: 'Internship Program',
-        question: 'How much does the internship cost?',
-        answer: 'GHS 350, covering mentorship, training, and certification.',
-        status: 'published',
-        order: 2,
-        views: 312,
-        helpful: 156,
-        createdAt: '2024-12-01'
-    },
-    {
-        id: 3,
-        category: 'Internship Program',
-        question: 'Do you partner with schools outside Koforidua?',
-        answer: 'Currently we focus on Koforidua but will expand regionally and internationally.',
-        status: 'published',
-        order: 3,
-        views: 178,
-        helpful: 67,
-        createdAt: '2024-12-02'
-    },
-    {
-        id: 4,
-        category: 'Internship Program',
-        question: 'Can institutions request IT or web services?',
-        answer: 'Yes, we provide professional IT, web, and networking services for schools and organizations.',
-        status: 'published',
-        order: 4,
-        views: 134,
-        helpful: 45,
-        createdAt: '2024-12-02'
-    },
-    {
-        id: 5,
-        category: 'Internship Program',
-        question: 'How can individuals or companies support your programs?',
-        answer: 'Through sponsorships, partnerships, or donations of funds and equipment.',
-        status: 'published',
-        order: 5,
-        views: 98,
-        helpful: 34,
-        createdAt: '2024-12-03'
-    },
-    {
-        id: 6,
-        category: 'Services & Support',
-        question: 'What IT and digital services do you offer?',
-        answer: 'We provide Education Technology (EdTech), IT & Networking, Web & Software Development, and Consulting & Support services for schools and businesses.',
-        status: 'published',
-        order: 1,
-        views: 267,
-        helpful: 112,
-        createdAt: '2024-12-05'
-    },
-    {
-        id: 7,
-        category: 'Services & Support',
-        question: 'What specific IT services are available?',
-        answer: 'LAN/WAN installation, WiFi setup, server deployment, school websites, management systems, and IT consulting.',
-        status: 'published',
-        order: 2,
-        views: 189,
-        helpful: 78,
-        createdAt: '2024-12-05'
-    },
-    {
-        id: 8,
-        category: 'Services & Support',
-        question: 'Do you offer long-term support contracts?',
-        answer: 'Yes, we provide long-term maintenance contracts and ongoing system support for schools and businesses.',
-        status: 'published',
-        order: 3,
-        views: 145,
-        helpful: 56,
-        createdAt: '2024-12-06'
-    },
-    {
-        id: 9,
-        category: 'Services & Support',
-        question: 'How can I request a quote for services?',
-        answer: 'Contact us directly through our website or email info@zyratechhub.com with your project details.',
-        status: 'published',
-        order: 4,
-        views: 203,
-        helpful: 89,
-        createdAt: '2024-12-06'
-    },
-    {
-        id: 10,
-        category: 'Partnerships',
-        question: 'What types of partnerships do you offer?',
-        answer: 'Educational partnerships (introduce digital learning programs), Corporate partnerships (sponsor or host interns), NGO & Government partnerships (support youth capacity-building), and Technology partnerships (co-develop tools and solutions).',
-        status: 'published',
-        order: 1,
-        views: 156,
-        helpful: 67,
-        createdAt: '2024-12-08'
-    },
-    {
-        id: 11,
-        category: 'Partnerships',
-        question: 'How can our organization partner with Zyra Tech Hub?',
-        answer: 'Contact us through our partnership page or email info@zyratechhub.com to discuss collaboration opportunities.',
-        status: 'published',
-        order: 2,
-        views: 134,
-        helpful: 45,
-        createdAt: '2024-12-08'
-    },
-    {
-        id: 12,
-        category: 'Partnerships',
-        question: 'Can my company sponsor a student?',
-        answer: 'Yes, we welcome corporate sponsorships to help students access our tech programs and create meaningful impact.',
-        status: 'published',
-        order: 3,
-        views: 112,
-        helpful: 38,
-        createdAt: '2024-12-09'
-    },
-    {
-        id: 13,
-        category: 'Partnerships',
-        question: 'What are the benefits of partnership?',
-        answer: 'Partners gain access to skilled interns, enhanced CSR impact, technology solutions, and opportunities to shape the next generation of tech talent.',
-        status: 'draft',
-        order: 4,
-        views: 89,
-        helpful: 23,
-        createdAt: '2024-12-09'
-    },
-    {
-        id: 14,
-        category: 'Donations & Support',
-        question: 'How can I support Zyra Tech Hub?',
-        answer: 'You can fund students to access tech programs, donate equipment (laptops, kits, accessories), or sponsor school-based technology programs.',
-        status: 'published',
-        order: 1,
-        views: 178,
-        helpful: 67,
-        createdAt: '2024-12-10'
-    },
-    {
-        id: 15,
-        category: 'Donations & Support',
-        question: 'What equipment donations do you accept?',
-        answer: 'We accept laptops, robotics kits, networking equipment, and other technology resources for training programs.',
-        status: 'published',
-        order: 2,
-        views: 145,
-        helpful: 56,
-        createdAt: '2024-12-10'
-    },
-    {
-        id: 16,
-        category: 'Donations & Support',
-        question: 'Do you provide donation receipts?',
-        answer: 'Yes, we provide official receipts for all donations for tax and record-keeping purposes.',
-        status: 'published',
-        order: 3,
-        views: 98,
-        helpful: 34,
-        createdAt: '2024-12-11'
-    }
-];
-
 // Status badge component
 const StatusBadge = ({ status }) => {
     const statusStyles = {
@@ -285,27 +107,42 @@ const FaqManagementPage = () => {
     const { isSuperAdmin } = usePermissions();
 
     // State management
+    const [faqs, setFaqs] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [viewMode, setViewMode] = useState('category'); // category, list
-    const [showModal, setShowModal] = useState(false);
-    const [editingFaq, setEditingFaq] = useState(null);
-    const [viewingFaq, setViewingFaq] = useState(null);
     const [expandedCategories, setExpandedCategories] = useState({});
     const [expandedFaqs, setExpandedFaqs] = useState({});
 
     const itemsPerPage = 10;
 
+    useEffect(() => {
+        fetchFaqs();
+    }, []);
+
+    const fetchFaqs = async () => {
+        try {
+            setLoading(true);
+            const response = await faqService.getAllFaqs();
+            setFaqs(response.data);
+        } catch (error) {
+            console.error('Error fetching FAQs:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Get unique categories
     const uniqueCategories = useMemo(() => {
-        return [...new Set(mockFaqData.map(f => f.category))];
-    }, []);
+        return [...new Set(faqs.map(f => f.category))];
+    }, [faqs]);
 
     // Filter and search FAQs
     const filteredFaqs = useMemo(() => {
-        let result = [...mockFaqData];
+        let result = [...faqs];
 
         // Search filter
         if (searchQuery) {
@@ -327,7 +164,7 @@ const FaqManagementPage = () => {
         }
 
         return result;
-    }, [searchQuery, selectedCategory, selectedStatus]);
+    }, [faqs, searchQuery, selectedCategory, selectedStatus]);
 
     // Group FAQs by category
     const groupedFaqs = useMemo(() => {
@@ -354,23 +191,22 @@ const FaqManagementPage = () => {
 
     // Statistics
     const stats = useMemo(() => ({
-        total: mockFaqData.length,
+        total: faqs.length,
         categories: uniqueCategories.length,
-        published: mockFaqData.filter(f => f.status === 'published').length,
-        drafts: mockFaqData.filter(f => f.status === 'draft').length,
-        totalViews: mockFaqData.reduce((acc, f) => acc + (f.views || 0), 0),
-        totalHelpful: mockFaqData.reduce((acc, f) => acc + (f.helpful || 0), 0)
-    }), [uniqueCategories]);
+        published: faqs.filter(f => f.status === 'published').length,
+        drafts: faqs.filter(f => f.status === 'draft').length,
+        totalViews: faqs.reduce((acc, f) => acc + (f.views || 0), 0),
+        totalHelpful: faqs.reduce((acc, f) => acc + (f.helpful || 0), 0)
+    }), [faqs, uniqueCategories]);
 
-    // Toggle category expansion
+    // Handlers
     const toggleCategory = (category) => {
         setExpandedCategories(prev => ({
             ...prev,
-            [category]: !prev[category]
+            [category]: prev[category] === undefined ? false : !prev[category]
         }));
     };
 
-    // Toggle FAQ expansion
     const toggleFaq = (faqId) => {
         setExpandedFaqs(prev => ({
             ...prev,
@@ -378,38 +214,46 @@ const FaqManagementPage = () => {
         }));
     };
 
-    // Handlers
-    const handleDelete = (faq) => {
-        dispatch(openConfirmDialog({
-            title: 'Delete FAQ',
-            message: `Are you sure you want to delete this FAQ? This action cannot be undone.`,
-            isDangerous: true,
-            onConfirm: () => {
-                console.log('Deleting FAQ:', faq.id);
-            }
-        }));
-    };
-
-    const handleView = (faq) => {
-        setViewingFaq(faq);
+    const handleAddNew = () => {
+        navigate('/admin/faq/new');
     };
 
     const handleEdit = (faq) => {
         navigate(`/admin/faq/edit/${faq.id}`);
     };
 
-    const handleAddNew = () => {
-        navigate('/admin/faq/new');
+    const handleDelete = (faq) => {
+        dispatch(openConfirmDialog({
+            title: 'Delete FAQ',
+            message: `Are you sure you want to delete "${faq.question}"? This action cannot be undone.`,
+            confirmLabel: 'Delete',
+            isDestructive: true,
+            onConfirm: async () => {
+                try {
+                    await faqService.deleteFaq(faq.id);
+                    setFaqs(prev => prev.filter(f => f.id !== faq.id));
+                } catch (error) {
+                    console.error('Error deleting FAQ:', error);
+                }
+            }
+        }));
     };
 
-    const handleDuplicate = (faq) => {
-        setEditingFaq({
-            ...faq,
-            id: null,
-            question: `${faq.question} (Copy)`,
-            status: 'draft'
-        });
-        setShowModal(true);
+    const handleDuplicate = async (faq) => {
+        try {
+            const { id, createdAt, ...faqData } = faq;
+            const newFaqData = {
+                ...faqData,
+                question: `${faq.question} (Copy)`,
+                status: 'draft',
+                views: 0,
+                helpful: 0
+            };
+            const response = await faqService.createFaq(newFaqData);
+            setFaqs(prev => [...prev, response.data]);
+        } catch (error) {
+            console.error('Error duplicating FAQ:', error);
+        }
     };
 
     const resetFilters = () => {
@@ -418,6 +262,10 @@ const FaqManagementPage = () => {
         setSelectedStatus('all');
         setCurrentPage(1);
     };
+
+    if (loading) {
+        return <LoadingSpinner />;
+    }
 
     return (
         <AdminLayout>
@@ -565,8 +413,8 @@ const FaqManagementPage = () => {
                             <button
                                 onClick={() => setViewMode('category')}
                                 className={`p-2 rounded-md transition-all flex items-center gap-1.5 px-3 ${viewMode === 'category'
-                                        ? 'bg-white text-[#004fa2] shadow-sm'
-                                        : 'text-gray-600 hover:text-gray-900'
+                                    ? 'bg-white text-[#004fa2] shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900'
                                     }`}
                             >
                                 <Layers size={16} />
@@ -575,8 +423,8 @@ const FaqManagementPage = () => {
                             <button
                                 onClick={() => setViewMode('list')}
                                 className={`p-2 rounded-md transition-all flex items-center gap-1.5 px-3 ${viewMode === 'list'
-                                        ? 'bg-white text-[#004fa2] shadow-sm'
-                                        : 'text-gray-600 hover:text-gray-900'
+                                    ? 'bg-white text-[#004fa2] shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900'
                                     }`}
                             >
                                 <List size={16} />
@@ -756,13 +604,7 @@ const FaqManagementPage = () => {
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center justify-end gap-1">
-                                                <button
-                                                    onClick={() => handleView(faq)}
-                                                    className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
-                                                    title="View"
-                                                >
-                                                    <Eye size={16} />
-                                                </button>
+
                                                 <button
                                                     onClick={() => handleEdit(faq)}
                                                     className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
@@ -847,157 +689,6 @@ const FaqManagementPage = () => {
                 )}
             </div>
 
-            {/* View FAQ Modal */}
-            {viewingFaq && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 bg-gradient-to-r from-[#004fa2] to-[#0066cc] flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                                    <HelpCircle className="text-white" size={22} />
-                                </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-white">FAQ Details</h2>
-                                    <p className="text-blue-100 text-xs">{viewingFaq.category}</p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => setViewingFaq(null)}
-                                className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-                            <div className="space-y-5">
-                                {/* Question */}
-                                <div>
-                                    <p className="text-xs font-medium text-gray-500 mb-2">Question</p>
-                                    <p className="text-lg font-semibold text-gray-900">{viewingFaq.question}</p>
-                                </div>
-
-                                {/* Answer */}
-                                <div>
-                                    <p className="text-xs font-medium text-gray-500 mb-2">Answer</p>
-                                    <p className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl">{viewingFaq.answer}</p>
-                                </div>
-
-                                {/* Stats Grid */}
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                    <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                        <Eye className="mx-auto text-gray-400 mb-2" size={20} />
-                                        <p className="text-lg font-bold text-gray-900">{viewingFaq.views}</p>
-                                        <p className="text-xs text-gray-500">Views</p>
-                                    </div>
-                                    <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                        <Sparkles className="mx-auto text-gray-400 mb-2" size={20} />
-                                        <p className="text-lg font-bold text-gray-900">{viewingFaq.helpful}</p>
-                                        <p className="text-xs text-gray-500">Helpful</p>
-                                    </div>
-                                    <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                        <Layers className="mx-auto text-gray-400 mb-2" size={20} />
-                                        <p className="text-lg font-bold text-gray-900">#{viewingFaq.order}</p>
-                                        <p className="text-xs text-gray-500">Order</p>
-                                    </div>
-                                    <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                        <CheckCircle className="mx-auto text-gray-400 mb-2" size={20} />
-                                        <StatusBadge status={viewingFaq.status} />
-                                        <p className="text-xs text-gray-500 mt-1">Status</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50">
-                            <button
-                                onClick={() => setViewingFaq(null)}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
-                            >
-                                Close
-                            </button>
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => {
-                                        setViewingFaq(null);
-                                        handleEdit(viewingFaq);
-                                    }}
-                                    className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm flex items-center gap-1.5"
-                                >
-                                    <Edit size={14} />
-                                    Edit FAQ
-                                </button>
-                                <a
-                                    href="/faq"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-medium text-sm flex items-center gap-1.5"
-                                >
-                                    <ExternalLink size={14} />
-                                    View Public FAQ
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Add/Edit FAQ Modal */}
-            {showModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                    {editingFaq?.id ? <Edit className="text-white" size={20} /> : <Plus className="text-white" size={20} />}
-                                </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-gray-900">
-                                        {editingFaq?.id ? 'Edit FAQ' : 'Add New FAQ'}
-                                    </h2>
-                                    <p className="text-gray-500 text-xs">
-                                        {editingFaq?.id ? 'Update FAQ information' : 'Create a new frequently asked question'}
-                                    </p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => { setShowModal(false); setEditingFaq(null); }}
-                                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-                            <div className="text-center py-12">
-                                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <AlertCircle className="text-amber-500" size={32} />
-                                </div>
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Coming Soon</h3>
-                                <p className="text-sm text-gray-500 max-w-md mx-auto">
-                                    The FAQ editor form will be available once the backend API is ready.
-                                    Currently, FAQs are managed via the <code className="px-1.5 py-0.5 bg-gray-100 rounded text-xs">FaqCategories.jsx</code> data file.
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-end gap-3 bg-gray-50">
-                            <button
-                                onClick={() => { setShowModal(false); setEditingFaq(null); }}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </AdminLayout>
     );
 };

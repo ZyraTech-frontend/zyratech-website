@@ -1,22 +1,9 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 
-const projectSteps = [
-  {
-    title: 'Requirements & Planning',
-    description: 'Agree on project-specific requirements, including tech stacks, team roles, and seniority levels.'
-  },
-  {
-    title: 'Team Introduction',
-    description: 'Introduction and collaboration set-up with clients.'
-  },
-  {
-    title: 'Continuous Feedback',
-    description: 'Team Leads provide regular feedback on individual performance.'
-  }
-];
+const ProjectSetupSection = ({ steps = [] }) => {
+  if (steps.length === 0) return null;
 
-const ProjectSetupSection = () => {
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,7 +13,7 @@ const ProjectSetupSection = () => {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {projectSteps.map((step, index) => (
+          {steps.map((step, index) => (
             <div
               key={index}
               className="group bg-white rounded-xl p-6 border border-gray-200 hover:border-[#004fa2]/40 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer"

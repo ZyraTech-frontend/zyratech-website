@@ -1,14 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import contentService from '../../../services/contentService';
 
 const PartnershipHero = () => {
+  const [heroData, setHeroData] = useState({
+    title: "Build Africa's Future Together",
+    subtitle: "Partner with ZyraTech to transform communities through technology, innovation, and sustainable impact across Africa.",
+    backgroundImage: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png"
+  });
+
+  useEffect(() => {
+    const fetchHero = async () => {
+      try {
+        const { data } = await contentService.getPartnershipHero();
+        if (data && data.title) setHeroData(data);
+      } catch (error) {
+        console.error("Error fetching partnership hero:", error);
+      }
+    };
+    fetchHero();
+  }, []);
+
   return (
     <section className="relative text-white overflow-hidden">
       <div className="absolute inset-0">
         <img
-          src="/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png"
+          src={heroData.backgroundImage}
           alt="Partnership banner"
           className="h-full w-full object-cover object-center brightness-110"
           onError={(e) => {
@@ -27,7 +46,7 @@ const PartnershipHero = () => {
             transition={{ duration: 0.5 }}
             className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight whitespace-nowrap"
           >
-            Build Africa's Future Together
+            {heroData.title}
           </motion.h1>
 
           <motion.p
@@ -36,7 +55,7 @@ const PartnershipHero = () => {
             transition={{ duration: 0.5, delay: 0.06 }}
             className="mt-4 sm:mt-5 text-sm sm:text-base md:text-lg text-white/95 max-w-2xl leading-relaxed"
           >
-            Partner with ZyraTech to transform communities through technology, innovation, and sustainable impact across Africa.
+            {heroData.subtitle}
           </motion.p>
 
           <motion.div

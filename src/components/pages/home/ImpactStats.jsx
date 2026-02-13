@@ -1,37 +1,57 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Users, Recycle, Lightbulb, Globe } from 'lucide-react';
+import { Users, Recycle, Lightbulb, Globe, DollarSign, BookOpen, Briefcase, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
+import impactService from '../../../services/impactService';
 
 const ImpactStats = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [animatedNumbers, setAnimatedNumbers] = useState({});
+  const [stats, setStats] = useState([]);
+  const [loading, setLoading] = useState(true);
   const sectionRef = useRef();
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
 
-  const stats = [
-    {
-      icon: Users,
-      number: 50,
-      suffix: '+',
-      label: 'Students trained',
-      color: '#004fa2'
-    },
-    {
-      icon: Recycle,
-      number: 1,
-      suffix: '',
-      label: 'Active Partners',
-      color: '#004fa2'
-    },
-    {
-      icon: Globe,
-      number: 50,
-      suffix: '+',
-      label: 'Projects Completed',
-      color: '#004fa2'
-    }
-  ];
+  // Icon mapping helper
+  const getIconForCategory = (category, title) => {
+    const lowerTitle = title?.toLowerCase() || '';
+
+    if (category === 'students' || lowerTitle.includes('student')) return Users;
+    if (category === 'partnerships' || lowerTitle.includes('partner')) return Recycle; // Using Recycle as in original or Handshake
+    if (category === 'projects' || lowerTitle.includes('project')) return Globe;
+    if (category === 'financial' || lowerTitle.includes('fee')) return DollarSign;
+    if (category === 'courses') return BookOpen;
+    if (category === 'employment') return Briefcase;
+    if (category === 'awards') return Award;
+    return Lightbulb; // Default
+  };
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const metrics = await impactService.fetchMetricsByLocation('home');
+
+        const formattedStats = metrics.map(m => ({
+          icon: getIconForCategory(m.category, m.title),
+          number: typeof m.value === 'number' ? m.value : parseFloat(m.value) || 0,
+          displayValue: m.value, // Keep original value for text types
+          isNumeric: typeof m.value === 'number',
+          suffix: m.suffix || '',
+          prefix: m.prefix || '',
+          label: m.title,
+          color: '#004fa2' // Default color
+        }));
+
+        setStats(formattedStats);
+      } catch (error) {
+        console.error('Failed to fetch impact stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   // Intersection Observer for scroll-triggered animation
   useEffect(() => {
@@ -50,12 +70,12 @@ const ImpactStats = () => {
     }
 
     return () => observer.disconnect();
-  }, [isVisible]);
+  }, [isVisible, stats]); // Add stats dependnecy
 
   // Animated number counting
   const startCountingAnimation = () => {
     stats.forEach((stat, index) => {
-      if (stat.number > 0) {
+      if (stat.isNumeric && stat.number > 0) {
         let start = 0;
         const end = stat.number;
         const duration = 2000;
@@ -76,6 +96,8 @@ const ImpactStats = () => {
       }
     });
   };
+
+  if (loading) return null; // Or a skeleton loader
 
   return (
     <section
@@ -101,7 +123,7 @@ const ImpactStats = () => {
         </motion.div>
 
         <motion.div
-          className="grid grid-cols-2 lg:grid-cols-3 gap-3"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-3"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
@@ -145,12 +167,13 @@ const ImpactStats = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline space-x-1">
                       <span
-                        className="text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight"
+                        className="text-xl sm:text-xl md:text-2xl font-extrabold leading-tight truncate"
                         style={{ color: stat.color }}
                       >
-                        {stat.placeholder ? stat.placeholder : (isVisible ? (animatedNumbers[index] || 0) : 0)}
+                        {stat.prefix}
+                        {stat.isNumeric ? (isVisible ? (animatedNumbers[index] || 0) : 0) : stat.displayValue}
                       </span>
-                      {!stat.placeholder && (
+                      {stat.isNumeric && stat.suffix && (
                         <span
                           className="text-base sm:text-lg md:text-xl font-bold"
                           style={{ color: stat.color }}
@@ -159,7 +182,7 @@ const ImpactStats = () => {
                         </span>
                       )}
                     </div>
-                    <div className="text-xs sm:text-sm md:text-base font-semibold text-black mt-0.5 sm:mt-1 leading-tight">
+                    <div className="text-xs sm:text-sm md:text-sm font-semibold text-black mt-0.5 sm:mt-1 leading-tight line-clamp-2">
                       {stat.label}
                     </div>
                   </div>

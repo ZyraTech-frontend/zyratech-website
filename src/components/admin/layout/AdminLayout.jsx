@@ -7,12 +7,13 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import NotificationSystem from '../shared/NotificationSystem';
 import { useAuth } from '../../../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 
 const AdminLayout = ({ children }) => {
   const { isAuthenticated } = useAuth();
-  const notifications = useSelector((state) => state.ui.notifications);
+  // const notifications = useSelector((state) => state.ui.notifications); // Internalized in NotificationSystem
   const [sidebarOpen, setSidebarOpen] = useState(true); // Default open on desktop
   const [isMobile, setIsMobile] = useState(false);
 
@@ -85,24 +86,8 @@ const AdminLayout = ({ children }) => {
         </main>
       </div>
 
-      {/* Notifications */}
-      <div className="fixed bottom-4 right-4 space-y-2 z-50">
-        {notifications.map((notification) => (
-          <div
-            key={notification.id}
-            className={`px-4 py-3 rounded shadow-lg text-white max-w-xs ${notification.type === 'success'
-              ? 'bg-green-600'
-              : notification.type === 'error'
-                ? 'bg-red-600'
-                : notification.type === 'warning'
-                  ? 'bg-yellow-600'
-                  : 'bg-blue-600'
-              }`}
-          >
-            {notification.message}
-          </div>
-        ))}
-      </div>
+      {/* Notification System */}
+      <NotificationSystem />
     </div>
   );
 };

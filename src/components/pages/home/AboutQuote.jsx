@@ -1,13 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
+import contentService from '../../../services/contentService';
 
 const AboutQuote = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
   const quoteAnimation = useScrollAnimation({ type: 'fadeIn', delay: 0.2 });
   const statsAnimation = useScrollAnimation({ type: 'slideUp', delay: 0.4 });
+
+  const [content, setContent] = useState({
+    quote: "Our mission is to lead Ghana’s technological transformation through world-class Software Engineering, robust Infrastructure & Cloud services, and impactful IT Education. We are building an ecosystem where innovation meets academic excellence",
+    authorName: "ZyraTech Leadership",
+    authorTitle: "Empowering Ghana's Tech Future",
+    authorImage: "/images/tex1.png",
+    stat1Value: "2024",
+    stat1Label: "Founded",
+    stat2Value: "50+",
+    stat2Label: "Trainees",
+    stat3Value: "1",
+    stat3Label: "Location"
+  });
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const { data } = await contentService.getAboutQuote();
+        if (data) {
+          setContent(data);
+        }
+      } catch (error) {
+        console.error('Error fetching about content:', error);
+      }
+    };
+    fetchContent();
+  }, []);
 
   return (
     <section className="py-12 sm:py-16 bg-white text-gray-900">
@@ -34,16 +62,15 @@ const AboutQuote = () => {
           >
             <Quote className="hidden sm:block absolute -top-4 -left-4 w-8 sm:w-12 h-8 sm:h-12 text-[#004fa2] opacity-50" />
             <blockquote className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-6 sm:mb-8 px-2 sm:px-0">
-              Our mission is to lead Ghana’s technological transformation through world-class Software Engineering, robust Infrastructure & Cloud services, and impactful IT Education.
-              We are building an ecosystem where innovation meets academic excellence
+              {content.quote}
             </blockquote>
           </motion.div>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 sm:gap-8 mb-8 sm:mb-12">
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border border-gray-100 shrink-0">
               <img
-                src="/images/tex1.png"
-                alt="ZyraTech Founder"
+                src={content.authorImage || 'https://via.placeholder.com/150'}
+                alt={content.authorName}
                 className="w-full h-full object-cover object-top scale-[3.0] origin-top -translate-y-4"
                 onError={(e) => {
                   e.target.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face';
@@ -51,8 +78,8 @@ const AboutQuote = () => {
               />
             </div>
             <div className="text-center md:text-left">
-              <div className="text-base sm:text-lg font-semibold text-gray-900">ZyraTech Leadership</div>
-              <div className="text-sm sm:text-base text-gray-600">Empowering Ghana's Tech Future</div>
+              <div className="text-base sm:text-lg font-semibold text-gray-900">{content.authorName}</div>
+              <div className="text-sm sm:text-base text-gray-600">{content.authorTitle}</div>
             </div>
           </div>
 
@@ -65,16 +92,16 @@ const AboutQuote = () => {
             className="grid grid-cols-3 gap-4 sm:gap-8 mb-8 sm:mb-12"
           >
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">2024</div>
-              <div className="text-xs sm:text-base text-gray-600">Founded</div>
+              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">{content.stat1Value}</div>
+              <div className="text-xs sm:text-base text-gray-600">{content.stat1Label}</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">50+</div>
-              <div className="text-xs sm:text-base text-gray-600">Trainees</div>
+              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">{content.stat2Value}</div>
+              <div className="text-xs sm:text-base text-gray-600">{content.stat2Label}</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">1</div>
-              <div className="text-xs sm:text-base text-gray-600">Location</div>
+              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">{content.stat3Value}</div>
+              <div className="text-xs sm:text-base text-gray-600">{content.stat3Label}</div>
             </div>
           </motion.div>
 

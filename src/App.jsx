@@ -58,6 +58,14 @@ const ImpactStoryFormPage = lazy(() => import('./pages/admin/impact/ImpactStoryF
 const ActivityLogsPage = lazy(() => import('./pages/admin/activity-logs/ActivityLogsPage'));
 const ReportsPage = lazy(() => import('./pages/admin/reports/ReportsPage'));
 const AdminProfilePage = lazy(() => import('./pages/admin/profile/AdminProfilePage'));
+const HeroSlidesManagementPage = lazy(() => import('./pages/admin/content/HeroSlidesManagementPage'));
+const ServicesManagementPage = lazy(() => import('./pages/admin/content/ServicesManagementPage'));
+const BenefitsManagementPage = lazy(() => import('./pages/admin/content/BenefitsManagementPage'));
+const AboutQuoteManagementPage = lazy(() => import('./pages/admin/content/AboutQuoteManagementPage'));
+const AboutPageManagementPage = lazy(() => import('./pages/admin/content/AboutPageManagementPage'));
+const PartnershipContentManagementPage = lazy(() => import('./pages/admin/content/PartnershipContentManagementPage'));
+const WorkWithUsManagementPage = lazy(() => import('./pages/admin/content/WorkWithUsManagementPage'));
+const QAManagementPage = lazy(() => import('./pages/admin/content/QAManagementPage'));
 const FaqPage = lazy(() => import('./pages/public/faq'));
 const ImpactPage = lazy(() => import('./pages/public/impact'));
 const PartnershipPage = lazy(() => import('./pages/public/partnership'));
@@ -180,6 +188,70 @@ function App() {
                 }
               />
               <Route
+                path="/admin/content/hero"
+                element={
+                  <ProtectedRoute>
+                    <HeroSlidesManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/content/services"
+                element={
+                  <ProtectedRoute>
+                    <ServicesManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/content/benefits"
+                element={
+                  <ProtectedRoute>
+                    <BenefitsManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/content/about"
+                element={
+                  <ProtectedRoute>
+                    <AboutQuoteManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/content/about-page"
+                element={
+                  <ProtectedRoute>
+                    <AboutPageManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/content/partnership"
+                element={
+                  <ProtectedRoute>
+                    <PartnershipContentManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/content/work-with-us"
+                element={
+                  <ProtectedRoute>
+                    <WorkWithUsManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/content/quality-assurance"
+                element={
+                  <ProtectedRoute>
+                    <QAManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/training"
                 element={
                   <ProtectedRoute>
@@ -198,7 +270,7 @@ function App() {
               <Route
                 path="/admin/training/new"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <CourseFormPage />
                   </ProtectedRoute>
                 }
@@ -206,7 +278,7 @@ function App() {
               <Route
                 path="/admin/training/edit/:id"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <CourseFormPage />
                   </ProtectedRoute>
                 }
@@ -222,7 +294,7 @@ function App() {
               <Route
                 path="/admin/jobs/new"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <JobFormPage />
                   </ProtectedRoute>
                 }
@@ -230,7 +302,7 @@ function App() {
               <Route
                 path="/admin/jobs/edit/:id"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <JobFormPage />
                   </ProtectedRoute>
                 }
@@ -238,7 +310,7 @@ function App() {
               <Route
                 path="/admin/jobs/:id"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <JobDetailsPage />
                   </ProtectedRoute>
                 }
@@ -246,7 +318,7 @@ function App() {
               <Route
                 path="/admin/jobs/applications/:id"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <JobApplicationDetailsPage />
                   </ProtectedRoute>
                 }
@@ -262,7 +334,7 @@ function App() {
               <Route
                 path="/admin/blog/new"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <BlogFormPage />
                   </ProtectedRoute>
                 }
@@ -270,7 +342,7 @@ function App() {
               <Route
                 path="/admin/blog/edit/:id"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <BlogFormPage />
                   </ProtectedRoute>
                 }
@@ -278,7 +350,7 @@ function App() {
               <Route
                 path="/admin/blog/:id"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <BlogDetailsPage />
                   </ProtectedRoute>
                 }
@@ -294,7 +366,7 @@ function App() {
               <Route
                 path="/admin/gallery/new"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <AlbumFormPage />
                   </ProtectedRoute>
                 }
@@ -302,7 +374,7 @@ function App() {
               <Route
                 path="/admin/gallery/edit/:id"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <AlbumFormPage />
                   </ProtectedRoute>
                 }
@@ -318,7 +390,7 @@ function App() {
               <Route
                 path="/admin/projects/new"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <ProjectFormPage />
                   </ProtectedRoute>
                 }
@@ -326,7 +398,7 @@ function App() {
               <Route
                 path="/admin/projects/edit/:id"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <ProjectFormPage />
                   </ProtectedRoute>
                 }
@@ -350,7 +422,7 @@ function App() {
               <Route
                 path="/admin/faq/new"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <FaqFormPage />
                   </ProtectedRoute>
                 }
@@ -358,7 +430,7 @@ function App() {
               <Route
                 path="/admin/faq/edit/:id"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <FaqFormPage />
                   </ProtectedRoute>
                 }
@@ -374,7 +446,7 @@ function App() {
               <Route
                 path="/admin/testimonials/new"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <TestimonialsFormPage />
                   </ProtectedRoute>
                 }
@@ -382,7 +454,7 @@ function App() {
               <Route
                 path="/admin/testimonials/edit/:id"
                 element={
-                  <ProtectedRoute requiredRole="super_admin">
+                  <ProtectedRoute>
                     <TestimonialsFormPage />
                   </ProtectedRoute>
                 }

@@ -1,25 +1,16 @@
 import React from 'react';
-import { Building2, Globe2, TrendingUp } from 'lucide-react';
+import { Building2, Globe2, TrendingUp, CheckCircle } from 'lucide-react';
 
-const setupPoints = [
-  {
-    icon: Building2,
-    title: 'Strategic Location & Partnership',
-    description: 'ZyraTech Hub, headquartered in Koforidua, Ghana, serves as the primary contracting partner for local and international clients. We eliminate legal complexities and mitigate security risks while ensuring seamless collaboration between our Ghanaian teams and global partners.'
-  },
-  {
-    icon: Globe2,
-    title: 'Operational Excellence',
-    description: 'Our Ghana-based operations provide the infrastructure and expertise to rapidly deploy specialized tech teams tailored to client requirements. We manage all processes internally, ensuring efficiency, transparency, and accountability throughout project lifecycles.'
-  },
-  {
-    icon: TrendingUp,
-    title: 'Social Impact Mission',
-    description: 'As a social enterprise, we reinvest surplus revenue into expanding our training programs and launching community impact initiatives. Our business model creates sustainable value for clients while advancing technology education and economic opportunity across Ghana.'
-  }
-];
+const ICON_MAP = {
+  Building2,
+  Globe2,
+  TrendingUp,
+  CheckCircle
+};
 
-const HowWeAreSetUpSection = () => {
+const HowWeAreSetUpSection = ({ items = [] }) => {
+  if (!items || items.length === 0) return null;
+
   return (
     <section className="py-16 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -31,8 +22,8 @@ const HowWeAreSetUpSection = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {setupPoints.map((point, index) => {
-            const IconComponent = point.icon;
+          {items.map((point, index) => {
+            const IconComponent = ICON_MAP[point.icon] || Building2;
             return (
               <div
                 key={index}

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
+import contentService from '../../../services/contentService';
 
 const PartnershipStories = () => {
-  const stories = [
+  const [stories, setStories] = useState([
     {
       title: 'Tech Innovation Hub',
       category: 'Corporate Partner',
@@ -12,7 +13,21 @@ const PartnershipStories = () => {
       image: '/images/partnership-tech-hub.jpg',
       fallbackImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200'
     }
-  ];
+  ]);
+
+  useEffect(() => {
+    const fetchStories = async () => {
+      try {
+        const { data } = await contentService.getPartnershipStories();
+        if (data && data.length > 0) {
+          setStories(data);
+        }
+      } catch (error) {
+        console.error('Error fetching partnership stories:', error);
+      }
+    };
+    fetchStories();
+  }, []);
 
   return (
     <section className="bg-white mb-8 md:mb-12">
@@ -27,7 +42,7 @@ const PartnershipStories = () => {
             const anim = useScrollAnimation({ type: 'fadeIn', delay: 0 });
             const imageAnim = useScrollAnimation({ type: 'slideLeft', delay: 0.1 });
             const contentAnim = useScrollAnimation({ type: 'slideRight', delay: 0.15 });
-            
+
             return (
               <motion.div
                 key={index}

@@ -1,62 +1,99 @@
-/**
- * Settings Service
- * Manage site-wide configuration
- */
 
-import api from './api';
+let mockSettings = {
+  // Branding
+  siteName: 'ZyraTech Hub',
+  siteDescription: 'Empowering Youth Through Technology',
+  tagline: 'Empowering Ghana\'s Future Through Technology and Innovation',
+  primaryColor: '#004fa2',
+  secondaryColor: '#ff6b35',
+  logoLight: null,
+  logoDark: null,
+  favicon: null,
 
-export const settingsService = {
-  // Get all settings (public)
-  getAllSettings: async () => {
-    const response = await api.get('/settings');
-    return response.data.data;
-  },
+  // Contact Information
+  contactEmail: 'info@zyratechhub.com',
+  contactPhone: '+233 50 958 2497',
+  contactWhatsApp: '233509582497',
+  contactAddress: 'Koforidua, Eastern Region, Ghana',
 
-  // Get settings by category (public)
-  getSettingsByCategory: async (category) => {
-    const response = await api.get(`/settings/category/${category}`);
-    return response.data.data;
-  },
+  // HR Contact
+  hrName: 'Magdalene',
+  hrEmail: 'magdalene@zyratech.com',
+  hrTitle: 'HR Coordinator',
 
-  // Get all settings with metadata (admin)
-  getAllSettingsAdmin: async () => {
-    const response = await api.get('/admin/settings');
-    return response.data.data;
-  },
+  // Social Media Links
+  socialLinkedIn: 'https://www.linkedin.com/company/zyra-tech-hub',
+  socialTwitter: 'https://x.com/zyratechhub',
+  socialInstagram: 'https://www.instagram.com/zyratechhub',
+  socialFacebook: 'https://www.facebook.com/zyratechhub',
+  socialYouTube: '',
 
-  // Update single setting (admin)
-  updateSetting: async (key, value) => {
-    const response = await api.patch(`/admin/settings/${key}`, { value });
-    return response.data.data;
-  },
+  // Payment Settings
+  paystackPublicKey: '',
+  paystackSecretKey: '',
+  stripePublicKey: '',
+  stripeSecretKey: '',
+  currency: 'GHS',
 
-  // Bulk update settings (admin)
-  updateSettingsBulk: async (settings) => {
-    const response = await api.patch('/admin/settings/bulk', { settings });
-    return response.data.data;
-  },
+  // Email/SMTP Settings
+  smtpHost: '',
+  smtpPort: '587',
+  smtpUser: '',
+  smtpPassword: '',
+  fromEmail: 'noreply@zyratechhub.com',
+  fromName: 'ZyraTech Hub',
+  supportEmail: 'support@zyratechhub.com',
 
-  // Upload asset (admin)
-  uploadAsset: async (settingKey, file) => {
-    const formData = new FormData();
-    formData.append('file', file);
+  // SEO Settings
+  seoTitle: 'ZyraTech Hub | Empowering Youth Through Technology',
+  seoDescription: 'Ghana\'s premier technology education and innovation center providing digital skills training, internships, IT services, and community development programs.',
+  seoKeywords: 'tech training Ghana, digital skills, software development, Koforidua, tech hub',
+  siteUrl: 'https://zyratechhub.com',
 
-    const response = await api.post(
-      `/admin/settings/upload-asset/${settingKey}`,
-      formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      }
-    );
-    return response.data.data;
-  },
+  // Analytics Settings
+  googleAnalyticsId: '',
+  metaPixelId: '',
+  enableVisitorTracking: true,
 
-  // Get audit logs (admin)
-  getAuditLogs: async (filters = {}) => {
-    const response = await api.get('/admin/settings/audit-logs', {
-      params: filters
+  // General Settings
+  maintenanceMode: false,
+  allowRegistration: true,
+  timezone: 'Africa/Accra',
+
+  // Business Hours
+  businessHoursWeekday: '8:00 AM - 5:00 PM',
+  businessHoursWeekend: 'Closed',
+
+  // Copyright
+  copyrightYear: new Date().getFullYear(),
+  copyrightText: '© {year} Zyra Tech Hub. All rights reserved.'
+};
+
+const settingsService = {
+  getSettings: async () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({ ...mockSettings });
+      }, 300);
     });
-    return response.data.data;
+  },
+
+  updateSetting: async (key, value) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        mockSettings[key] = value;
+        resolve({ key, value });
+      }, 200);
+    });
+  },
+
+  updateSettingsBulk: async (settings) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        mockSettings = { ...mockSettings, ...settings };
+        resolve({ ...mockSettings });
+      }, 500);
+    });
   }
 };
 

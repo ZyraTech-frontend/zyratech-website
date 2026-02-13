@@ -1,11 +1,58 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import {
+  BadgeCheck, Globe, Layers, Code2, ServerCog, Shield, Users, BookOpen, GraduationCap,
+  Smartphone, Database, Layout, Cpu, Briefcase
+} from 'lucide-react';
 
-import { services } from '../servicesData';
+import contentService from '../../../../services/contentService';
 import { containerVariants, itemVariants } from '../motionVariants';
 
+// Icon mapping
+const ICON_MAP = {
+  'Code2': Code2,
+  'ServerCog': ServerCog,
+  'BookOpen': BookOpen,
+  'GraduationCap': GraduationCap,
+  'Shield': Shield,
+  'Briefcase': Briefcase,
+  'Globe': Globe,
+  'Smartphone': Smartphone,
+  'Database': Database,
+  'Layout': Layout,
+  'Cpu': Cpu,
+  'Users': Users,
+  'Layers': Layers,
+  'BadgeCheck': BadgeCheck
+};
+
 const ServicesGridSection = () => {
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await contentService.getAllServices();
+        setServices(response.data);
+      } catch (error) {
+        console.error("Failed to fetch services:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchServices();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="py-20 flex justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#004fa2]"></div>
+      </div>
+    );
+  }
+
   const topServices = services.slice(0, 6);
   const bottomServices = services.slice(6);
 
@@ -28,25 +75,34 @@ const ServicesGridSection = () => {
           viewport={{ once: true, margin: '-80px' }}
           className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6"
         >
-          {topServices.map((s, idx) => {
+          {topServices.map((s) => {
+            // Resolve Icon
+            const IconComponent = ICON_MAP[s.icon] || Code2;
+
             return (
               <motion.article
-                key={s.title}
+                key={s.id || s.title}
                 variants={itemVariants}
                 whileHover={{ y: -2 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
                 className="group relative overflow-hidden rounded-xl border border-[#004fa2]/30 bg-[#004fa2] p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-white/40 hover:shadow-md cursor-pointer h-full"
               >
                 <div className="h-full flex flex-col">
+                  <div className="mb-4 w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center text-white group-hover:bg-white/20 transition-colors">
+                    <IconComponent size={24} />
+                  </div>
+
                   <h3 className="text-lg sm:text-xl font-bold text-white mb-4 uppercase tracking-wide">{s.title}</h3>
-                  <p className="text-sm sm:text-base text-blue-100/90 leading-relaxed mb-5 text-left">{s.desc}</p>
+                  <p className="text-sm sm:text-base text-blue-100/90 leading-relaxed mb-5 text-left">
+                    {s.description || s.desc}
+                  </p>
 
                   {Array.isArray(s.highlights) && s.highlights.length > 0 && (
                     <div className="w-full mb-6">
                       <div className="text-sm sm:text-base font-semibold text-white mb-2 text-left">Includes:</div>
                       <ul className="space-y-1.5 text-sm text-blue-50/90 leading-relaxed text-left">
-                        {s.highlights.map((h) => (
-                          <li key={h} className="flex items-start gap-3 text-left">
+                        {s.highlights.map((h, i) => (
+                          <li key={i} className="flex items-start gap-3 text-left">
                             <span className="mt-2 h-1.5 w-1.5 rounded-full bg-white/90 flex-shrink-0" />
                             <span>{h}</span>
                           </li>
@@ -79,29 +135,34 @@ const ServicesGridSection = () => {
             className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto"
           >
             {bottomServices.map((s, idx) => {
-              const globalIndex = topServices.length + idx;
               const isSingle = bottomServices.length === 1;
+              const IconComponent = ICON_MAP[s.icon] || Code2;
 
               return (
                 <motion.article
-                  key={s.title}
+                  key={s.id || s.title}
                   variants={itemVariants}
                   whileHover={{ y: -2 }}
                   transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-                  className={`group relative overflow-hidden rounded-xl border border-[#004fa2]/30 bg-[#004fa2] p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-white/40 hover:shadow-md cursor-pointer h-full ${
-                    isSingle ? 'md:col-span-2 md:max-w-[560px] md:mx-auto' : ''
-                  }`}
+                  className={`group relative overflow-hidden rounded-xl border border-[#004fa2]/30 bg-[#004fa2] p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-white/40 hover:shadow-md cursor-pointer h-full ${isSingle ? 'md:col-span-2 md:max-w-[560px] md:mx-auto' : ''
+                    }`}
                 >
                   <div className="h-full flex flex-col">
+                    <div className="mb-4 w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center text-white group-hover:bg-white/20 transition-colors">
+                      <IconComponent size={24} />
+                    </div>
+
                     <h3 className="text-lg sm:text-xl font-bold text-white mb-4 uppercase tracking-wide">{s.title}</h3>
-                    <p className="text-sm sm:text-base text-blue-100/90 leading-relaxed mb-5 text-left">{s.desc}</p>
+                    <p className="text-sm sm:text-base text-blue-100/90 leading-relaxed mb-5 text-left">
+                      {s.description || s.desc}
+                    </p>
 
                     {Array.isArray(s.highlights) && s.highlights.length > 0 && (
                       <div className="w-full mb-6">
                         <div className="text-sm sm:text-base font-semibold text-white mb-2 text-left">Includes:</div>
                         <ul className="space-y-1.5 text-sm text-blue-50/90 leading-relaxed text-left">
-                          {s.highlights.map((h) => (
-                            <li key={h} className="flex items-start gap-3 text-left">
+                          {s.highlights.map((h, i) => (
+                            <li key={i} className="flex items-start gap-3 text-left">
                               <span className="mt-2 h-1.5 w-1.5 rounded-full bg-white/90 flex-shrink-0" />
                               <span>{h}</span>
                             </li>
