@@ -34,10 +34,7 @@ const Navbar = () => {
         label: 'Work With Us',
         to: '/work-with-us',
       },
-      {
-        label: 'Request Custom Project',
-        to: '/projects/request',
-      },
+
     ],
   };
   const dropdownMenus = {
@@ -135,7 +132,7 @@ const Navbar = () => {
                       onMouseLeave={() => {
                         if (persistDropdown !== 'services') setOpenDropdown(null);
                       }}
-                      className="absolute top-full left-0 right-0 mt-2 z-50 flex justify-center"
+                      className="absolute top-full left-0 right-0 mt-0 pt-2 z-50 flex justify-center animate-fadeIn"
                       role="menu"
                     >
                       <div className="bg-white shadow-2xl rounded-xl border border-gray-100 p-6 flex gap-6 min-w-[1100px]">

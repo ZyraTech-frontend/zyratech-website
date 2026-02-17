@@ -6,7 +6,7 @@ import ImpactHeroSection from '../../../components/pages/impact/ImpactHeroSectio
 import ImpactCommunitySection from '../../../components/pages/impact/ImpactCommunitySection';
 import ImpactValuesSection from '../../../components/pages/impact/ImpactValuesSection';
 import ImpactPeopleHighlightsSection from '../../../components/pages/impact/ImpactPeopleHighlightsSection';
-import ImpactMetricsSection from '../../../components/pages/impact/ImpactMetricsSection';
+
 import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
 import contentService from '../../../services/contentService'; // Import content service
 
@@ -110,8 +110,7 @@ const ImpactPage = () => {
     <div className="min-h-screen bg-white">
       <ImpactHeroSection />
 
-      {/* New Metrics Section */}
-      <ImpactMetricsSection metrics={metrics} />
+
 
       <ImpactCommunitySection />
 

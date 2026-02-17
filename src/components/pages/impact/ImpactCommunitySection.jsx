@@ -5,7 +5,7 @@ import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 const ImpactCommunitySection = ({
   title = 'The ZyraTech Community',
   description =
-    'The ZyraTech community is a vibrant and diverse network of learners, mentors, educators, and partners dedicated to building practical skills and technology solutions that matter. United by a common goal, we collaborate across different backgrounds and perspectives—working together to create opportunity, strengthen local innovation, and build a more connected future through technology.'
+  'The ZyraTech community is a vibrant and diverse network of learners, mentors, educators, and partners dedicated to building practical skills and technology solutions that matter. United by a common goal, we collaborate across different backgrounds and perspectives—working together to create opportunity, strengthen local innovation, and build a more connected future through technology.'
 }) => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
   const contentAnimation = useScrollAnimation({ type: 'slideUp', delay: 0.1 });
