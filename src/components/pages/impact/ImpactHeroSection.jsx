@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 const ImpactHeroSection = ({
   title = 'Our Values',
   description =
-    'Our values shape how we teach, how we partner, and how we build technology that serves real needs.',
+  'Our values shape how we teach, how we partner, and how we build technology that serves real needs.',
   backgroundImage = '/images/image1.png'
 }) => {
   const shouldReduceMotion = useReducedMotion();

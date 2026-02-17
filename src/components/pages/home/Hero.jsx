@@ -9,6 +9,15 @@ const Hero = () => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const preloadImage = (src) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = resolve;
+      img.onerror = reject;
+    });
+  };
+
   useEffect(() => {
     const fetchSlides = async () => {
       try {
@@ -16,6 +25,11 @@ const Hero = () => {
         // Filter only visible slides
         const visibleSlides = response.data.filter(s => s.isVisible);
         setSlides(visibleSlides);
+
+        // Preload first image immediately
+        if (visibleSlides.length > 0) {
+          preloadImage(visibleSlides[0].backgroundImage);
+        }
       } catch (error) {
         console.error('Failed to fetch hero slides:', error);
       } finally {
@@ -30,12 +44,16 @@ const Hero = () => {
   useEffect(() => {
     if (slides.length <= 1) return;
 
+    // Preload next image
+    const nextIndex = (currentSlide + 1) % slides.length;
+    preloadImage(slides[nextIndex].backgroundImage);
+
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000); // Change slide every 5 seconds
 
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, [slides.length, currentSlide]);
 
   if (loading) {
     // Show a loading skeleton or a simple placeholder

@@ -91,28 +91,28 @@ const Footer = () => {
             {/* Social Media */}
             <div className="flex items-center space-x-3 mb-4">
               {socialLinkedIn && (
-                <a href={socialLinkedIn} target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-[#004fa2] rounded flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-colors" aria-label="LinkedIn">
-                  <i className="fa-brands fa-linkedin text-white"></i>
+                <a href={socialLinkedIn} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="LinkedIn">
+                  <i className="fa-brands fa-linkedin-in text-lg"></i>
                 </a>
               )}
               {socialTwitter && (
-                <a href={socialTwitter} target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-[#004fa2] rounded flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-colors" aria-label="X (formerly Twitter)">
-                  <i className="fa-brands fa-x-twitter text-white"></i>
+                <a href={socialTwitter} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="X (formerly Twitter)">
+                  <i className="fa-brands fa-x-twitter text-lg"></i>
                 </a>
               )}
               {socialInstagram && (
-                <a href={socialInstagram} target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-[#004fa2] rounded flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-colors" aria-label="Instagram">
-                  <i className="fa-brands fa-square-instagram text-white"></i>
+                <a href={socialInstagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Instagram">
+                  <i className="fa-brands fa-instagram text-xl"></i>
                 </a>
               )}
               {socialFacebook && (
-                <a href={socialFacebook} target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-[#004fa2] rounded flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-colors" aria-label="Facebook">
-                  <i className="fa-brands fa-facebook text-white"></i>
+                <a href={socialFacebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Facebook">
+                  <i className="fa-brands fa-facebook-f text-lg"></i>
                 </a>
               )}
               {contactWhatsApp && (
-                <a href={`https://wa.me/${contactWhatsApp}`} target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-[#004fa2] rounded flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-colors" aria-label="WhatsApp">
-                  <i className="fa-brands fa-square-whatsapp text-white"></i>
+                <a href={`https://wa.me/${contactWhatsApp}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="WhatsApp">
+                  <i className="fa-brands fa-whatsapp text-xl"></i>
                 </a>
               )}
             </div>

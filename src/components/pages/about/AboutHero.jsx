@@ -56,8 +56,7 @@ const AboutHero = ({
               transition={{ duration: shouldReduceMotion ? 0 : 0.8 }}
             >
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-0 leading-tight">
-                {heroData.title}
-                <span className="text-[#004fa2] block"> {heroData.highlight}</span>
+                Building the Next Generation <span className="text-[#004fa2] block">of Tech Talent</span>
               </h1>
 
               <p className="mt-6 text-base sm:text-lg md:text-xl font-semibold text-white/90 leading-relaxed max-w-3xl">

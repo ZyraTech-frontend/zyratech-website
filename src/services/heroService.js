@@ -47,7 +47,7 @@ let mockSlides = [
         title: "IT & NETWORKING",
         description: "Providing comprehensive IT support, network installation, and system administration. We ensure your digital infrastructure is secure, reliable, and optimized for performance.",
         pillar: "IT Services",
-        backgroundImage: "/images/hero4.jpeg",
+        backgroundImage: "/images/hero4.png",
         cta1Text: "Get IT Support",
         cta1Link: "/contact",
         cta2Text: "Our Capabilities",
@@ -77,23 +77,15 @@ const heroService = {
     // Get all slides
     getAllSlides: async () => {
         // return api.get('/hero-slides');
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({ data: [...mockSlides].sort((a, b) => a.order - b.order) });
-            }, 500);
-        });
+        return Promise.resolve({ data: [...mockSlides].sort((a, b) => a.order - b.order) });
     },
 
     // Get single slide
     getSlideById: async (id) => {
         // return api.get(`/hero-slides/${id}`);
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                const slide = mockSlides.find(s => s.id === parseInt(id));
-                if (slide) resolve({ data: slide });
-                else reject(new Error('Slide not found'));
-            }, 300);
-        });
+        const slide = mockSlides.find(s => s.id === parseInt(id));
+        if (slide) return Promise.resolve({ data: slide });
+        else return Promise.reject(new Error('Slide not found'));
     },
 
     // Create new slide

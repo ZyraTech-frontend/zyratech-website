@@ -2,28 +2,11 @@ import React, { useState, useEffect } from 'react';
 import partnersService from '../../../services/partnersService';
 
 const PartnersShowcase = () => {
-  const [partner, setPartner] = useState(null);
-
-  useEffect(() => {
-    const fetchPartner = async () => {
-      try {
-        const { data } = await partnersService.getAllPartnerships();
-        const featured = data.filter(p => p.featured && p.status === 'active');
-
-        if (featured.length > 0) {
-          // Select a random featured partner to showcase
-          const random = featured[Math.floor(Math.random() * featured.length)];
-          setPartner({
-            name: random.organization.name,
-            logo: random.organization.logo
-          });
-        }
-      } catch (error) {
-        console.error('Failed to fetch spotlight partner:', error);
-      }
-    };
-    fetchPartner();
-  }, []);
+  // Hardcoded partner as per user request to only show Royal Klast
+  const partner = {
+    name: "Royal Klast",
+    logo: "/images/partnershiplogo.jpeg"
+  };
 
   return (
     <>
@@ -37,15 +20,11 @@ const PartnersShowcase = () => {
 
           <div className="bg-white rounded-lg py-6 sm:py-8 md:py-12 px-2 sm:px-4 md:px-8 flex flex-col justify-center items-center overflow-hidden">
             <img
-              src={partner?.logo || "/images/partnershiplogo.jpeg"}
-              alt={partner?.name || "Featured Partner"}
+              src={partner.logo}
+              alt={partner.name}
               className="max-w-full h-auto object-contain max-h-32 sm:max-h-48 md:max-h-64 filter hover:grayscale-0 transition-all duration-300 mb-6"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = "/images/partnershiplogo.jpeg";
-              }}
             />
-            <p className="text-xl sm:text-2xl font-bold text-gray-800">{partner?.name || "Royal Klast"}</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-800">{partner.name}</p>
           </div>
         </div>
       </section>
