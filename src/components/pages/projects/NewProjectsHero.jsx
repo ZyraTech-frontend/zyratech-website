@@ -23,16 +23,14 @@ const NewProjectsHero = () => {
     <section className="relative text-white overflow-visible">
       {/* Background Image with Overlays */}
       <div className="absolute inset-0">
-        <img 
-          src="/images/image1.png" 
+        <img
+          src="/images/parallax1.jpeg"
           alt="ZyraTech Projects"
           className="h-full w-full object-cover"
-          onError={(e) => {
-            e.target.src = '/images/image2.png';
-          }}
+          style={{ objectPosition: 'center 20%' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/30" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#004fa2]/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/15" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#004fa2]/25 to-transparent" />
       </div>
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 md:px-10 lg:px-14 py-20 sm:py-24 md:py-28 pb-32 sm:pb-40 min-h-[520px] flex items-center">
