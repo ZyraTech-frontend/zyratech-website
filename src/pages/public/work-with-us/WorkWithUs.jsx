@@ -8,7 +8,7 @@ import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
 import ParallaxDivider from '../../../components/common/ParallaxDivider';
 import contentService from '../../../services/contentService';
-import Loader from '../../../components/admin/shared/Loader';
+import Loader from '../../../components/admin/shared/LoadingSpinner';
 
 const WorkWithUs = () => {
   const [data, setData] = useState(null);

@@ -12,6 +12,7 @@
  */
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import activityLogService from '../../services/activityLogService';
 
 // Mock users for testing — synced with usersSlice mock data
 // In production, this would be validated server-side
@@ -91,11 +92,27 @@ export const loginUser = createAsyncThunk(
       const user = MOCK_USERS[email?.toLowerCase()];
 
       if (!user || user.password !== password) {
+        // Log failed login attempt
+        activityLogService.logAction({
+          user: { id: 'UNKNOWN', name: email || 'Unknown', email: email || '', role: 'Unknown' },
+          type: 'login_failed',
+          severity: 'warning',
+          description: `Failed login attempt for ${email} — Invalid credentials`,
+          details: { reason: 'Invalid password', attemptedEmail: email }
+        });
         return rejectWithValue('Invalid email or password. Please check your credentials and try again.');
       }
 
       // Check if account is deactivated
       if (user.accountStatus === 'deactivated') {
+        // Log failed login attempt (deactivated)
+        activityLogService.logAction({
+          user: { id: 'UNKNOWN', name: email, email, role: 'Unknown' },
+          type: 'login_failed',
+          severity: 'warning',
+          description: `Login attempt by deactivated account: ${email}`,
+          details: { reason: 'Account deactivated', attemptedEmail: email }
+        });
         return rejectWithValue('This account has been deactivated. Please contact the Super Admin for assistance.');
       }
 
@@ -116,6 +133,15 @@ export const loginUser = createAsyncThunk(
 
       localStorage.setItem('adminToken', token);
       localStorage.setItem('user', JSON.stringify(userData));
+
+      // Log the login action
+      activityLogService.logAction({
+        user: userData,
+        type: 'login',
+        severity: 'success',
+        description: `${userData.name} logged in to the admin panel`,
+        details: { loginMethod: 'email' }
+      });
 
       return { token, user: userData };
     } catch (error) {
@@ -155,6 +181,15 @@ export const changePassword = createAsyncThunk(
       };
       localStorage.setItem('user', JSON.stringify(updatedUser));
 
+      // Log password change
+      activityLogService.logAction({
+        user: updatedUser,
+        type: 'settings_changed',
+        severity: 'info',
+        description: `${updatedUser.name} changed their password`,
+        details: { settingCategory: 'Password', changedFields: ['password'] }
+      });
+
       return { user: updatedUser };
     } catch (error) {
       return rejectWithValue('Failed to change password. Please try again.');
@@ -182,6 +217,15 @@ export const submitKyc = createAsyncThunk(
       };
       localStorage.setItem('user', JSON.stringify(updatedUser));
 
+      // Log KYC submission
+      activityLogService.logAction({
+        user: updatedUser,
+        type: 'user_updated',
+        severity: 'info',
+        description: `${updatedUser.name} submitted KYC documents for verification`,
+        details: { kycStatus: 'pending' }
+      });
+
       return { user: updatedUser };
     } catch (error) {
       return rejectWithValue('Failed to submit KYC documents. Please try again.');
@@ -192,8 +236,18 @@ export const submitKyc = createAsyncThunk(
 // ─── Logout ──────────────────────────────────────────────────
 export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
-  async (_, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     try {
+      const { auth } = getState();
+      // Log logout before clearing data
+      if (auth.user) {
+        activityLogService.logAction({
+          user: auth.user,
+          type: 'logout',
+          severity: 'info',
+          description: `${auth.user.name} logged out of the admin panel`
+        });
+      }
       localStorage.removeItem('adminToken');
       localStorage.removeItem('user');
       return null;

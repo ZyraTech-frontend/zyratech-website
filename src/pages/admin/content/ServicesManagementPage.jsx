@@ -19,9 +19,11 @@ import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 const ServicesManagementPage = () => {
     const dispatch = useDispatch();
+    const { logAction } = useActivityLogger();
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -99,9 +101,21 @@ const ServicesManagementPage = () => {
             if (currentService) {
                 // Update existing
                 await contentService.updateService(currentService.id, apiData);
+                logAction({
+                    type: 'content_updated',
+                    severity: 'info',
+                    description: `Updated service: "${apiData.title}"`,
+                    details: { contentType: 'Service', contentId: currentService.id }
+                });
             } else {
                 // Create new
                 await contentService.createService(apiData);
+                logAction({
+                    type: 'content_created',
+                    severity: 'success',
+                    description: `Created new service: "${apiData.title}"`,
+                    details: { contentType: 'Service' }
+                });
             }
             await fetchServices(); // Refresh list
             handleCloseModal();
@@ -121,6 +135,12 @@ const ServicesManagementPage = () => {
             onConfirm: async () => {
                 try {
                     await contentService.deleteService(service.id);
+                    logAction({
+                        type: 'content_deleted',
+                        severity: 'warning',
+                        description: `Deleted service: "${service.title}"`,
+                        details: { contentType: 'Service', contentId: service.id }
+                    });
                     setServices(services.filter(s => s.id !== service.id));
                 } catch (error) {
                     console.error('Error deleting service:', error);
