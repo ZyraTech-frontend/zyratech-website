@@ -7,7 +7,7 @@ import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
 import ToolsOrbit from '../../../components/pages/quality-assurance/ToolsOrbit';
 import contentService from '../../../services/contentService';
-import Loader from '../../../components/admin/shared/Loader';
+import Loader from '../../../components/admin/shared/LoadingSpinner';
 
 const QualityAssurance = () => {
   const [data, setData] = useState(null);

@@ -3,7 +3,7 @@
  * Professional admin interface for managing impact metrics, success stories, and achievements
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
@@ -110,7 +110,7 @@ const METRIC_TYPE_CONFIG = {
 };
 
 import contentService from '../../../services/contentService';
-import Loader from '../../../components/admin/shared/Loader';
+import Loader from '../../../components/admin/shared/LoadingSpinner';
 
 // ... (keep conversions and icons configs)
 
@@ -274,6 +274,14 @@ const ImpactManagementPage = () => {
         setSelectedCategory('all');
         setCurrentPage(1);
     };
+
+    if (loading) {
+        return (
+            <AdminLayout>
+                <Loader text="Loading impact data..." />
+            </AdminLayout>
+        );
+    }
 
     return (
         <AdminLayout>

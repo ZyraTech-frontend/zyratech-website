@@ -25,6 +25,7 @@ import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 const REC_ICONS = {
     'ShieldCheck': ShieldCheck,
@@ -40,6 +41,7 @@ const ICON_OPTIONS = Object.keys(REC_ICONS);
 
 const BenefitsManagementPage = () => {
     const dispatch = useDispatch();
+    const { logAction } = useActivityLogger();
     const [benefits, setBenefits] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -108,8 +110,10 @@ const BenefitsManagementPage = () => {
             setSaving(true);
             if (currentBenefit) {
                 await contentService.updateBenefit(currentBenefit.id, formData);
+                logAction({ type: 'content_updated', description: `Updated benefit: "${formData.title}"`, details: { contentType: 'Benefit', contentId: currentBenefit.id } });
             } else {
                 await contentService.createBenefit(formData);
+                logAction({ type: 'content_created', severity: 'success', description: `Created new benefit: "${formData.title}"`, details: { contentType: 'Benefit' } });
             }
             await fetchBenefits();
             handleCloseModal();
@@ -129,6 +133,7 @@ const BenefitsManagementPage = () => {
             onConfirm: async () => {
                 try {
                     await contentService.deleteBenefit(benefit.id);
+                    logAction({ type: 'content_deleted', severity: 'warning', description: `Deleted benefit: "${benefit.title}"`, details: { contentType: 'Benefit', contentId: benefit.id } });
                     setBenefits(benefits.filter(b => b.id !== benefit.id));
                 } catch (error) {
                     console.error('Error deleting benefit:', error);

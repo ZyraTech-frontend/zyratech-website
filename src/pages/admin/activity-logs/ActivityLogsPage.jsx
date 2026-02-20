@@ -1,11 +1,13 @@
 /**
  * Activity Logs Page (Admin)
  * Professional admin interface for viewing system activity and audit logs
+ * Now reads REAL logs from activityLogService (localStorage-backed) merged with seed data.
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
+import activityLogService from '../../../services/activityLogService';
 import {
     Activity,
     Search,
@@ -505,12 +507,27 @@ const ActivityLogsPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [viewingLog, setViewingLog] = useState(null);
     const [expandedLogs, setExpandedLogs] = useState(new Set());
+    const [realLogs, setRealLogs] = useState([]);
+    const [refreshKey, setRefreshKey] = useState(0);
 
     const itemsPerPage = 15;
 
+    // Load real logs from the activity log service
+    useEffect(() => {
+        const logsFromService = activityLogService.getLogs();
+        setRealLogs(logsFromService);
+    }, [refreshKey]);
+
+    // Merge real logs with seed mock data (deduped by ID, real logs first)
+    const allLogs = useMemo(() => {
+        const realIds = new Set(realLogs.map(l => l.id));
+        const seedLogs = mockActivityLogs.filter(l => !realIds.has(l.id));
+        return [...realLogs, ...seedLogs].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    }, [realLogs]);
+
     // Filter logs
     const filteredLogs = useMemo(() => {
-        let result = [...mockActivityLogs];
+        let result = [...allLogs];
 
         // Search filter
         if (searchQuery) {
@@ -560,7 +577,7 @@ const ActivityLogsPage = () => {
         }
 
         return result;
-    }, [searchQuery, selectedCategory, selectedSeverity, dateRange]);
+    }, [searchQuery, selectedCategory, selectedSeverity, dateRange, allLogs]);
 
     // Pagination
     const totalPages = Math.ceil(filteredLogs.length / itemsPerPage);
@@ -575,14 +592,14 @@ const ActivityLogsPage = () => {
         today.setHours(0, 0, 0, 0);
 
         return {
-            total: mockActivityLogs.length,
-            today: mockActivityLogs.filter(log => new Date(log.timestamp) >= today).length,
-            warnings: mockActivityLogs.filter(log => log.severity === 'warning').length,
-            errors: mockActivityLogs.filter(log => log.severity === 'error').length,
-            logins: mockActivityLogs.filter(log => log.type === 'login').length,
-            failedLogins: mockActivityLogs.filter(log => log.type === 'login_failed').length
+            total: allLogs.length,
+            today: allLogs.filter(log => new Date(log.timestamp) >= today).length,
+            warnings: allLogs.filter(log => log.severity === 'warning').length,
+            errors: allLogs.filter(log => log.severity === 'error').length,
+            logins: allLogs.filter(log => log.type === 'login').length,
+            failedLogins: allLogs.filter(log => log.type === 'login_failed').length
         };
-    }, []);
+    }, [allLogs]);
 
     // Handlers
     const handleViewDetails = (log) => {
@@ -600,12 +617,12 @@ const ActivityLogsPage = () => {
     };
 
     const handleExport = () => {
-        console.log('Exporting activity logs...');
+        activityLogService.exportLogs();
     };
 
-    const handleRefresh = () => {
-        console.log('Refreshing logs...');
-    };
+    const handleRefresh = useCallback(() => {
+        setRefreshKey(k => k + 1);
+    }, []);
 
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text);
