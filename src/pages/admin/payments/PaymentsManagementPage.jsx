@@ -89,7 +89,7 @@ const mockTransactions = [
     {
         id: 'TXN-2024-001',
         reference: 'PSK_abc123xyz789',
-        student: { name: 'Kwame Asante', email: 'kwame@example.com', avatar: null },
+        student: { name: 'Samuel Dogbe', email: 'samuel@example.com', avatar: null },
         course: 'Web Development Bootcamp',
         amount: 850.00,
         currency: 'GHS',
@@ -101,7 +101,7 @@ const mockTransactions = [
     {
         id: 'TXN-2024-002',
         reference: 'PSK_def456uvw012',
-        student: { name: 'Ama Mensah', email: 'ama@example.com', avatar: null },
+        student: { name: 'Eunice Mensah', email: 'eunice@example.com', avatar: null },
         course: 'Data Science Fundamentals',
         amount: 650.00,
         currency: 'GHS',
@@ -125,7 +125,7 @@ const mockTransactions = [
     {
         id: 'TXN-2024-004',
         reference: 'PSK_jkl012mno678',
-        student: { name: 'Fatima Ibrahim', email: 'fatima@example.com', avatar: null },
+        student: { name: 'Daniel Antwi', email: 'daniel@example.com', avatar: null },
         course: 'UI/UX Design Masterclass',
         amount: 720.00,
         currency: 'GHS',

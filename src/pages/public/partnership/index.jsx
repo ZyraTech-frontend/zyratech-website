@@ -59,17 +59,17 @@ const PartnershipPage = () => {
 
       <PartnershipHero />
       <ImpactStats />
-    
+
       <WhyPartner />
+      <PartnershipStories />
       <PartnersRecognition />
-        <PartnershipStories />
-        
+
 
       <PartnershipCTA />
       <PartnershipFAQ />
-      
-      <HrContactSection/>
-      <NewsletterHero/>
+
+      <HrContactSection />
+      <NewsletterHero />
     </div>
   );
 };

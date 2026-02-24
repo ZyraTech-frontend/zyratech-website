@@ -117,7 +117,7 @@ const mockMessages = [
     {
         id: 'MSG-2024-001',
         sender: {
-            name: 'Kwame Asante',
+            name: 'Robert Kojo',
             email: 'kwame.asante@example.com',
             phone: '+233 24 123 4567',
             company: 'TechVision Ltd'
@@ -134,7 +134,7 @@ const mockMessages = [
     {
         id: 'MSG-2024-002',
         sender: {
-            name: 'Ama Mensah',
+            name: 'Sarah Owusu',
             email: 'ama.mensah@gmail.com',
             phone: '+233 20 987 6543',
             company: null

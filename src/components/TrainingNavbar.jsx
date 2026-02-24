@@ -36,7 +36,7 @@ const TrainingNavbar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-4 ml-auto">
             {trainingLinks.map((link) => (
               <NavLink
                 key={link.name}
@@ -92,9 +92,9 @@ const TrainingNavbar = () => {
             {/* Back to Main Site */}
             <NavLink
               to="/"
-              className="ml-4 cta-btn cta-btn-sm flex items-center gap-2"
+              className="bg-[#004fa2] text-white font-semibold px-5 py-2.5 rounded-lg hover:bg-[#003d7a] transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2 ml-4"
             >
-              <ArrowLeft size={16} />
+              <ArrowLeft size={18} />
               Return to Main Website
             </NavLink>
           </div>
@@ -133,7 +133,7 @@ const TrainingNavbar = () => {
                 onClick={() => setIsOpen(false)}
                 className={({ isActive }) =>
                   `block px-3 py-2 text-base font-medium transition-colors rounded-lg ${isActive
-                    ? 'text-[#004fa2] bg-purple-50 font-semibold'
+                    ? 'text-[#004fa2] bg-blue-50 font-semibold'
                     : 'text-gray-700 hover:text-[#004fa2] hover:bg-gray-50'
                   }`
                 }
@@ -189,7 +189,7 @@ const TrainingNavbar = () => {
               onClick={() => setIsOpen(false)}
               className={({ isActive }) =>
                 `block px-3 py-2 text-base font-medium transition-colors rounded-lg ${isActive
-                  ? 'text-[#004fa2] bg-purple-50 font-semibold'
+                  ? 'text-[#004fa2] bg-blue-50 font-semibold'
                   : 'text-gray-700 hover:text-[#004fa2] hover:bg-gray-50'
                 }`
               }
@@ -201,9 +201,9 @@ const TrainingNavbar = () => {
             <NavLink
               to="/"
               onClick={() => setIsOpen(false)}
-              className="block px-3 py-2 text-base font-medium cta-btn mt-4 text-center flex items-center justify-center gap-2"
+              className="block px-3 py-3 text-base font-bold bg-[#004fa2] text-white rounded-xl text-center mt-6 flex items-center justify-center gap-2 shadow-md"
             >
-              <ArrowLeft size={16} />
+              <ArrowLeft size={18} />
               Return to Main Website
             </NavLink>
           </div>

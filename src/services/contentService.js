@@ -147,11 +147,11 @@ let mockWhyPartner = {
 let mockPartnershipStories = [
     {
         id: 1,
-        title: 'Tech Innovation Hub',
-        category: 'Corporate Partner',
-        story: 'By partnering with ZyraTech, we expanded our reach to underserved communities and trained 500+ students in cutting-edge technologies.',
-        impact: '500+ students trained, 20+ internships created',
-        image: '/images/partnership-tech-hub.jpg',
+        title: 'Royal Klast Group',
+        category: 'Strategic Partner',
+        story: 'Through our collaboration with ZyraTech, we have successfully integrated cutting-edge technical expertise with our media reach, creating a unique platform for innovation and community impact across Africa.',
+        impact: 'Strategic Brand Integration, High-Impact Media Production',
+        image: '/images/partnershiplogo.jpeg',
         fallbackImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200'
     }
 ];
@@ -226,37 +226,8 @@ let mockImpactMetrics = [
     }
 ];
 
-// Mock Data for Success Stories
-let mockSuccessStories = [
-    {
-        id: 'STORY-001',
-        name: 'Kwame Asante',
-        title: 'From Unemployed to Lead Developer',
-        role: 'Senior Software Developer',
-        company: 'TechVision Ltd',
-        course: 'Full Stack Web Development',
-        image: null,
-        quote: 'Zyra Tech Hub transformed my career completely. Within 6 months of completing the program, I landed my dream job.',
-        featured: true,
-        active: true,
-        datePublished: '2024-11-15',
-        graduationYear: 2024
-    },
-    {
-        id: 'STORY-002',
-        name: 'Ama Mensah',
-        title: 'Becoming Ghana\'s First Female Cloud Architect',
-        role: 'Cloud Solutions Architect',
-        company: 'AWS Ghana',
-        course: 'Cloud Computing & DevOps',
-        image: null,
-        quote: 'The AWS certification training prepared me for a role I never thought possible. I am now leading cloud migrations for major companies.',
-        featured: true,
-        active: true,
-        datePublished: '2024-10-20',
-        graduationYear: 2023
-    }
-];
+// Mock Data for Success Stories - add real stories via admin panel
+let mockSuccessStories = [];
 
 // Mock Data for Work With Us
 let mockWorkWithUs = {

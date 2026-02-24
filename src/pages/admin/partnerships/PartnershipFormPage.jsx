@@ -344,7 +344,7 @@ const PartnershipFormPage = () => {
                                             name="organizationName"
                                             value={formData.organizationName}
                                             onChange={handleChange}
-                                            placeholder="e.g. TechVision Ltd"
+                                            placeholder="e.g. Royal Klast Group"
                                             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${errors.organizationName ? 'border-red-500' : 'border-gray-300'
                                                 }`}
                                         />
@@ -488,7 +488,7 @@ const PartnershipFormPage = () => {
                                             name="contactName"
                                             value={formData.contactName}
                                             onChange={handleChange}
-                                            placeholder="e.g. Kwame Asante"
+                                            placeholder="e.g. John Doe"
                                             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${errors.contactName ? 'border-red-500' : 'border-gray-300'
                                                 }`}
                                         />

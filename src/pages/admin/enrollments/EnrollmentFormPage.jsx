@@ -77,7 +77,7 @@ const mockEnrollments = [
     },
     {
         id: 'ENR-2024-002',
-        fullName: 'Ama Mensah',
+        fullName: 'Sarah Owusu',
         email: 'ama.mensah@example.com',
         phone: '+233 20 987 6543',
         country: 'Ghana',
@@ -188,7 +188,7 @@ const EnrollmentFormPage = () => {
         if (!formData.preferredCohort) errors.preferredCohort = 'Select a cohort';
         if (!formData.learningMode) errors.learningMode = 'Select learning mode';
         if (!formData.courseId) errors.courseId = 'Please select a course';
-        
+
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
     };

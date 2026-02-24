@@ -6,11 +6,11 @@ import contentService from '../../../services/contentService';
 const PartnershipStories = () => {
   const [stories, setStories] = useState([
     {
-      title: 'Tech Innovation Hub',
-      category: 'Corporate Partner',
-      story: 'By partnering with ZyraTech, we expanded our reach to underserved communities and trained 500+ students in cutting-edge technologies.',
-      impact: '500+ students trained, 20+ internships created',
-      image: '/images/partnership-tech-hub.jpg',
+      title: 'Royal Klast Group',
+      category: 'Strategic Partner',
+      story: 'Through our collaboration with ZyraTech, we have successfully integrated cutting-edge technical expertise with our media reach, creating a unique platform for innovation and community impact across Africa.',
+      impact: 'Strategic Brand Integration, High-Impact Media Production',
+      image: '/images/partnershiplogo.jpeg',
       fallbackImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200'
     }
   ]);

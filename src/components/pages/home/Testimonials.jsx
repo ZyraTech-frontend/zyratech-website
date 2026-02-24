@@ -5,35 +5,14 @@ import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 
 const Testimonials = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
-  
-  const testimonials = [
-    {
-      quote: "I built my first circuit with recycled parts and it actually worked!",
-      author: "Ama",
-      role: "Junior STEM Basics",
-      type: "student",
-      avatar: "A"
-    },
-    {
-      quote: "The mentors are patient and the tools are amazing. I'm now repairing devices in my community.",
-      author: "Kofi",
-      role: "Maker: Hardware & Repair",
-      type: "student",
-      avatar: "K"
-    },
-    {
-      quote: "I never thought I could code, but now I'm building apps to solve real problems.",
-      author: "Fatima",
-      role: "Coder: Software Foundations",
-      type: "student",
-      avatar: "F"
-    }
-  ];
+
+  // Testimonials data - add real testimonials via admin panel
+  const testimonials = [];
 
   return (
     <section className="py-9 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2 
+        <motion.h2
           ref={titleAnimation.ref}
           initial={titleAnimation.initial}
           animate={titleAnimation.animate}
@@ -43,8 +22,8 @@ const Testimonials = () => {
         >
           Testimonials
         </motion.h2>
-        
-        <motion.div 
+
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
           initial="hidden"
           whileInView="visible"
@@ -58,7 +37,7 @@ const Testimonials = () => {
           }}
         >
           {testimonials.map((testimonial, index) => (
-            <motion.div 
+            <motion.div
               key={index}
               variants={{
                 hidden: { opacity: 0, y: 20 },
@@ -69,17 +48,17 @@ const Testimonials = () => {
             >
               {/* Subtle glow effect */}
               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-              
+
               {/* Quote mark decoration */}
               <div className="absolute top-4 right-4 text-6xl text-[#004fa2]/10 font-serif leading-none">"</div>
-              
+
               {/* Content */}
               <div className="relative z-10">
                 {/* Quote */}
                 <blockquote className="text-base font-medium text-gray-800 leading-relaxed mb-8 relative">
                   "{testimonial.quote}"
                 </blockquote>
-                
+
                 {/* Author Info */}
                 <div className="flex items-center space-x-4">
                   {/* Avatar with Letter */}
@@ -90,7 +69,7 @@ const Testimonials = () => {
                     {/* Pulse ring */}
                     <div className="absolute inset-0 rounded-full bg-[#004fa2] opacity-0 group-hover:opacity-20 group-hover:scale-150 transition-all duration-500"></div>
                   </div>
-                  
+
                   {/* Name and Role */}
                   <div className="flex-1">
                     <div className="text-base font-bold text-black group-hover:text-[#004fa2] transition-colors duration-300">
@@ -102,7 +81,7 @@ const Testimonials = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Bottom accent line */}
               <div className="absolute bottom-0 left-0 right-0 h-1 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </motion.div>

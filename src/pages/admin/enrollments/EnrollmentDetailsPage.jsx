@@ -79,7 +79,7 @@ const MOCK_ENROLLMENTS = [
     },
     {
         id: 'ENR-2024-002',
-        fullName: 'Ama Mensah',
+        fullName: 'Sarah Owusu',
         email: 'ama.mensah@example.com',
         phone: '+233 20 987 6543',
         country: 'Ghana',
@@ -125,7 +125,7 @@ const MOCK_ENROLLMENTS = [
     },
     {
         id: 'ENR-2024-004',
-        fullName: 'Fatima Ibrahim',
+        fullName: 'Daniel Antwi',
         email: 'fatima.i@example.com',
         phone: '+233 27 888 9999',
         country: 'Ghana',
@@ -303,12 +303,11 @@ const ProgressBar = ({ progress }) => (
         </div>
         <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
             <div
-                className={`h-full rounded-full transition-all duration-500 ${
-                    progress === 100 ? 'bg-emerald-500' :
-                    progress >= 50 ? 'bg-blue-500' :
-                    progress > 0 ? 'bg-amber-500' :
-                    'bg-gray-300'
-                }`}
+                className={`h-full rounded-full transition-all duration-500 ${progress === 100 ? 'bg-emerald-500' :
+                        progress >= 50 ? 'bg-blue-500' :
+                            progress > 0 ? 'bg-amber-500' :
+                                'bg-gray-300'
+                    }`}
                 style={{ width: `${progress}%` }}
             />
         </div>

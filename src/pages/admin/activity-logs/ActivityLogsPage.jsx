@@ -250,7 +250,7 @@ const mockActivityLogs = [
             paymentId: 'PAY-2024-156',
             amount: 'GHS 2,500',
             method: 'Mobile Money',
-            student: 'Kwame Asante',
+            student: 'Robert Kojo',
             course: 'Full Stack Web Development'
         },
         timestamp: '2024-12-19T14:20:00Z',
@@ -297,10 +297,10 @@ const mockActivityLogs = [
         type: 'enrollment_created',
         severity: 'success',
         user: { id: 'SYSTEM', name: 'System', email: 'system@zyratech.com', role: 'System' },
-        description: 'New student enrollment: Ama Mensah enrolled in Data Science & AI',
+        description: 'New student enrollment: Sarah Owusu enrolled in Data Science & AI',
         details: {
             enrollmentId: 'ENR-2024-089',
-            studentName: 'Ama Mensah',
+            studentName: 'Sarah Owusu',
             studentEmail: 'ama.mensah@gmail.com',
             course: 'Data Science & AI',
             startDate: '2025-01-15'

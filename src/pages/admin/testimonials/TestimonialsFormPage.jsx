@@ -310,7 +310,7 @@ export default function TestimonialsFormPage() {
                                     name="role"
                                     value={formData.role}
                                     onChange={handleChange}
-                                    placeholder="e.g., STEM Basics Student"
+                                    placeholder="e.g., Software Engineering Trainee"
                                     className={`w-full px-4 py-2.5 rounded-lg border ${errors.role ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
                                         } text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                                 />
@@ -360,7 +360,7 @@ export default function TestimonialsFormPage() {
                                     name="program"
                                     value={formData.program}
                                     onChange={handleChange}
-                                    placeholder="e.g., STEM Basics, Internship Program"
+                                    placeholder="e.g., Web Development, Internship Program"
                                     className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                                 />
                             </div>

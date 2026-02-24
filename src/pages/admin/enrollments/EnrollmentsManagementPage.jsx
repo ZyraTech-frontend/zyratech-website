@@ -92,7 +92,7 @@ const mockEnrollments = [
     {
         id: 'ENR-2024-001',
         student: {
-            name: 'Kwame Asante',
+            name: 'Robert Kojo',
             email: 'kwame.asante@example.com',
             phone: '+233 24 123 4567',
             avatar: null,
@@ -115,7 +115,7 @@ const mockEnrollments = [
     {
         id: 'ENR-2024-002',
         student: {
-            name: 'Ama Mensah',
+            name: 'Sarah Owusu',
             email: 'ama.mensah@example.com',
             phone: '+233 20 987 6543',
             avatar: null,
@@ -161,7 +161,7 @@ const mockEnrollments = [
     {
         id: 'ENR-2024-004',
         student: {
-            name: 'Fatima Ibrahim',
+            name: 'Daniel Antwi',
             email: 'fatima.i@example.com',
             phone: '+233 27 888 9999',
             avatar: null,

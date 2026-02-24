@@ -66,7 +66,7 @@ const MOCK_APPLICATIONS = [
         id: 'APP003',
         courseId: 3,
         courseTitle: 'AI & Machine Learning',
-        fullName: 'Kofi Asante',
+        fullName: 'Ebenezer Lartey',
         emailAddress: 'kofi.asante@email.com',
         phoneNumber: '+233 20 555 8888',
         country: 'Ghana',
