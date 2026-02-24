@@ -27,7 +27,7 @@ const SplitTestimonial = () => {
             transition={imageAnim.transition}
             className="md:w-1/2 order-1 md:order-2 h-48 md:h-[360px] relative overflow-hidden"
           >
-            <img
+            <img decoding="async"
               src="/images/testimonial.jpg"
               alt="Smiling local shop owner"
               className="w-full h-full object-cover object-center"

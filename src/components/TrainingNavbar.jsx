@@ -27,10 +27,10 @@ const TrainingNavbar = () => {
           {/* Logo/Brand */}
           <div className="flex items-center">
             <NavLink to="/training" className="flex items-center hover:opacity-80 transition-opacity">
-              <img
-                src="/zyratecpng.png"
+              <img decoding="async"
+                src="/zyrateclogopng.webp"
                 alt="Zyra Tech Hub Logo"
-                className="h-16 md:h-20 lg:h-28 w-auto object-contain"
+                className="h-10 sm:h-12 w-auto"
               />
             </NavLink>
           </div>

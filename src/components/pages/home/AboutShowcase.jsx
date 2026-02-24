@@ -31,7 +31,7 @@ const AboutShowcase = () => {
 
           <div className="relative order-1 lg:order-2">
             <div className="absolute -right-2 sm:-right-4 -top-2 sm:-top-4 w-full h-full bg-[#004fa2] rounded-lg"></div>
-            <img
+            <img decoding="async"
               src="/images/team-collaboration.jpg"
               alt="ZyraTech team member working"
               loading="lazy"

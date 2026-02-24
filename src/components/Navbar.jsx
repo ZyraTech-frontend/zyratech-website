@@ -85,9 +85,11 @@ const Navbar = () => {
         <div className="flex items-center h-16 lg:h-28 justify-between">
           <div className="flex items-center mr-4 lg:mr-12">
             <NavLink to="/" className="flex items-center hover:opacity-80 transition-opacity">
-              <img
-                src="/zyratecpng.png"
+              <img decoding="async"
+                src="/zyrateclogopng.webp"
                 alt="Zyra Tech Hub Logo"
+                width="112"
+                height="112"
                 className="h-16 md:h-20 lg:h-28 w-auto object-contain"
               />
             </NavLink>
@@ -138,7 +140,7 @@ const Navbar = () => {
                       <div className="bg-white shadow-2xl rounded-xl border border-gray-100 p-6 flex gap-6 min-w-[1100px]">
                         {/* Left - Image */}
                         <div className="w-64 flex-shrink-0 rounded-lg overflow-hidden">
-                          <img
+                          <img decoding="async"
                             src={servicesMenu.image}
                             alt={servicesMenu.header}
                             loading="lazy"

@@ -21,7 +21,7 @@ const BlogCard = ({ article }) => {
     >
       {/* Image */}
       <div className="relative h-48 overflow-hidden">
-        <img
+        <img decoding="async"
           src={article.image}
           alt={article.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -57,7 +57,7 @@ const BlogCard = ({ article }) => {
           {/* Author */}
           <div className="flex items-center justify-between pt-3 border-t border-gray-100">
             <div className="flex items-center gap-2">
-              <img
+              <img decoding="async"
                 src={article.author.avatar}
                 alt={article.author.name}
                 className="w-7 h-7 rounded-full object-cover"

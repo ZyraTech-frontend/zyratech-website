@@ -426,7 +426,7 @@ const ProjectsManagementPage = () => {
                             >
                                 {/* Project Image */}
                                 <div className="relative h-48 overflow-hidden">
-                                    <img
+                                    <img decoding="async"
                                         src={project.image}
                                         alt={project.title}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -573,7 +573,7 @@ const ProjectsManagementPage = () => {
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-16 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                                                    <img
+                                                    <img decoding="async"
                                                         src={project.image}
                                                         alt={project.title}
                                                         className="w-full h-full object-cover"

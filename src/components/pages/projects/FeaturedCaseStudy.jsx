@@ -17,7 +17,7 @@ const FeaturedCaseStudy = () => {
           
           {/* Left - Image */}
           <div className="h-80 bg-gray-100">
-            <img 
+            <img decoding="async" 
               src="/images/workingspace.png"
               alt="Case Study"
               className="w-full h-full object-cover"

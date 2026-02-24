@@ -87,7 +87,7 @@ const ToolsBentoGrid = () => {
                   key={toolIndex}
                   className="flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white/50 hover:bg-white/90 border border-gray-200/60 hover:border-[#004fa2]/60 shadow-sm hover:shadow-lg transition-all duration-300 group/tool cursor-pointer transform hover:scale-105 backdrop-blur-sm w-full sm:w-auto"
                 >
-                  <img 
+                  <img decoding="async" 
                     src={tool.logo} 
                     alt={tool.name}
                     className={`${category.category === 'Cloud & Infrastructure' ? 'w-14 h-14 sm:w-18 sm:h-18 lg:w-20 lg:h-20' : 'w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16'} object-contain group-hover/tool:scale-110 transition-transform duration-300 drop-shadow-sm`}

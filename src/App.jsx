@@ -96,10 +96,26 @@ const JobApplicationPage = lazy(() => import('./pages/public/jobs/apply'));
 
 // Loading component
 const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#004fa2]"></div>
+  <div className="fixed inset-0 flex items-center justify-center bg-white z-[9999] animate-pulse">
+    <div className="flex flex-col items-center gap-4">
+      <img decoding="async" src="/zyrateclogopng.webp" alt="ZyraTech Logo" className="h-16 w-auto animate-bounce opacity-80" />
+      <div className="w-48 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+        <div className="h-full bg-[#004fa2] animate-[loading_1.5s_ease-in-out_infinite]"></div>
+      </div>
+    </div>
   </div>
 );
+
+// Add custom keyframe for the loader
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes loading {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+  }
+`;
+document.head.appendChild(style);
 
 function App() {
   const location = useLocation();

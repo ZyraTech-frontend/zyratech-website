@@ -59,7 +59,7 @@ const FeaturedMedia = () => {
               
               {/* Media Container */}
               <div className="relative rounded-lg sm:rounded-2xl overflow-hidden mb-3 sm:mb-4 w-full flex-shrink-0">
-                <img
+                <img decoding="async"
                   src={item.image}
                   alt={item.title}
                   className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-500"

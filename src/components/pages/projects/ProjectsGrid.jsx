@@ -33,7 +33,7 @@ const ProjectsGrid = () => {
             >
               {/* Project Image */}
               <div className="h-48 bg-gray-100">
-                <img 
+                <img decoding="async" 
                   src={project.image}
                   alt={project.title}
                   className="w-full h-full object-cover"

@@ -62,7 +62,7 @@ const PartnershipStories = () => {
                   transition={imageAnim.transition}
                   className={`md:w-1/2 ${index % 2 === 0 ? 'order-1 md:order-2' : 'order-1 md:order-1'} h-48 md:h-[360px] relative overflow-hidden`}
                 >
-                  <img
+                  <img decoding="async"
                     src={story.image}
                     alt={story.title}
                     className="w-full h-full object-cover object-center"

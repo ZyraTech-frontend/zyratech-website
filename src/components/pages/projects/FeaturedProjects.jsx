@@ -42,7 +42,7 @@ const FeaturedProjects = () => {
               
               {/* Project Image */}
               <div className="relative h-40 rounded-lg mb-4 overflow-hidden">
-                <img 
+                <img decoding="async" 
                   src={project.image}
                   alt={project.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

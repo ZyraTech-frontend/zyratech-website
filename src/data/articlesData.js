@@ -52,9 +52,9 @@ export const articlesData = [
     readingTime: "7 min read",
     author: {
       name: "ZyraTech Team",
-      avatar: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png"
+      avatar: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp"
     },
-    image: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+    image: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
     excerpt: "Exploring emerging trends in African tech and how local developers are shaping the global digital landscape.",
     slug: "future-web-development-africa"
   },
@@ -108,9 +108,9 @@ export const articlesData = [
     readingTime: "5 min read",
     author: {
       name: "Emmanuel Mensah",
-      avatar: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png"
+      avatar: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp"
     },
-    image: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+    image: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
     excerpt: "Practical cybersecurity tips every small and medium enterprise in Ghana should implement to protect their digital assets.",
     slug: "cybersecurity-essentials-smes"
   }

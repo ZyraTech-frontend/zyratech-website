@@ -42,7 +42,7 @@ const PartnersSay = () => {
             >
               <div className="flex items-start gap-4 mb-4">
                 <div className="w-12 h-12 rounded-full overflow-hidden shadow-lg flex-shrink-0">
-                  <img 
+                  <img decoding="async" 
                     src={testimonial.image}
                     alt={testimonial.author}
                     className="w-full h-full object-cover"

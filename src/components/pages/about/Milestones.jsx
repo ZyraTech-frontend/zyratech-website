@@ -108,7 +108,7 @@ const Milestones = () => {
 						<div className="relative w-full max-w-md">
 							<div className="absolute -right-6 top-8 w-6 bg-[#004fa2] h-48 hidden md:block" />
 							<div className="rounded-lg overflow-hidden shadow-lg border border-gray-100">
-								<img src="/images/aboutmilstone.png" alt="ZyraTech Milestone" className="w-full h-96 object-cover object-top" />
+								<img decoding="async" src="/images/aboutmilstone.png" alt="ZyraTech Milestone" className="w-full h-96 object-cover object-top" />
 							</div>
 						</div>
 					</motion.div>

@@ -68,7 +68,7 @@ const Projects = () => {
             >
               {/* Project Image */}
               <div className="relative aspect-video overflow-hidden">
-                <img 
+                <img decoding="async" 
                   src={project.image}
                   alt={project.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

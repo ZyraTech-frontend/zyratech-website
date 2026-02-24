@@ -10,7 +10,7 @@ export const galleryAlbums = [
             "/images/image1.png",
             "/images/image2.png",
             "/images/image3.png",
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png"
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp"
         ],
         keywords: ["iot", "safety", "smart", "development", "transportation"],
         status: "published",
@@ -25,7 +25,7 @@ export const galleryAlbums = [
         images: [
             "/images/image2.png",
             "/images/image3.png",
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
             "/images/image1.png"
         ],
         keywords: ["environment", "monitoring", "platform", "sensors", "data"],
@@ -41,7 +41,7 @@ export const galleryAlbums = [
         images: [
             "/images/image3.png",
             "/images/image1.png",
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
             "/images/image2.png"
         ],
         keywords: ["agriculture", "precision", "farming", "technology", "innovation"],
@@ -53,9 +53,9 @@ export const galleryAlbums = [
         title: "Software Development Training Workshop",
         category: "training",
         description: "Comprehensive training workshop featuring hands-on software development sessions and collaborative learning experiences.",
-        thumbnail: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+        thumbnail: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
         images: [
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
             "/images/image1.png",
             "/images/image2.png",
             "/images/image3.png"
@@ -72,7 +72,7 @@ export const galleryAlbums = [
         thumbnail: "/images/image1.png",
         images: [
             "/images/image1.png",
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
             "/images/image2.png",
             "/images/image3.png"
         ],
@@ -89,7 +89,7 @@ export const galleryAlbums = [
         images: [
             "/images/image2.png",
             "/images/image3.png",
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
             "/images/image1.png"
         ],
         keywords: ["web", "development", "certification", "fullstack", "javascript"],
@@ -120,7 +120,7 @@ export const galleryAlbums = [
         thumbnail: "/images/image1.png",
         images: [
             "/images/image1.png",
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
             "/images/image2.png",
             "/images/image3.png"
         ],

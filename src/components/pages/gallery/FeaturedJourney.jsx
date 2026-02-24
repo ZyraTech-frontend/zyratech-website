@@ -49,7 +49,7 @@ const FeaturedJourney = () => {
                 className="flex-shrink-0 w-64 sm:w-80 group cursor-pointer relative rounded-xl overflow-hidden"
               >
                 <div className="relative aspect-video overflow-hidden">
-                  <img
+                  <img decoding="async"
                     src={item.image}
                     alt={item.caption}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

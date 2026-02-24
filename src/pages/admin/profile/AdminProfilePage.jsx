@@ -189,7 +189,7 @@ const AdminProfilePage = () => {
                                 <div className="w-24 h-24 bg-white rounded-full p-1.5 absolute -top-12 border-4 border-white shadow-md">
                                     <div className="w-full h-full rounded-full bg-gray-100 flex items-center justify-center overflow-hidden relative group">
                                         {userData.avatar ? (
-                                            <img src={userData.avatar} alt="Profile" className="w-full h-full object-cover" />
+                                            <img decoding="async" src={userData.avatar} alt="Profile" className="w-full h-full object-cover" />
                                         ) : (
                                             <span className="text-2xl font-bold text-gray-400">
                                                 {userData.firstName[0]}{userData.lastName[0]}

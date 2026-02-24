@@ -42,7 +42,7 @@ const QualityAssurance = () => {
       {/* Hero section */}
       <section className="relative text-white overflow-hidden">
         <div className="absolute inset-0">
-          <img
+          <img decoding="async"
             src={data.hero?.image || "/images/quality-assurance-hero.jpg"}
             alt="Quality Assurance"
             className="h-full w-full object-cover"
@@ -177,7 +177,7 @@ const QualityAssurance = () => {
               transition={{ duration: 0.6, delay: 0.1 }}
             >
               <div className="relative">
-                <img
+                <img decoding="async"
                   src={feature.image}
                   alt={feature.title}
                   className="w-full h-64 sm:h-72 md:h-80 lg:h-[420px] object-cover"

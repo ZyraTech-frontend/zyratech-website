@@ -293,7 +293,7 @@ const ProjectFormPage = () => {
                             />
                             {errors.image && <p className="text-sm text-red-600 mt-1">{errors.image}</p>}
                             {formData.image && (
-                                <img src={formData.image} alt="Preview" className="mt-3 h-32 object-cover rounded-lg border border-gray-200" />
+                                <img decoding="async" src={formData.image} alt="Preview" className="mt-3 h-32 object-cover rounded-lg border border-gray-200" />
                             )}
                         </div>
 

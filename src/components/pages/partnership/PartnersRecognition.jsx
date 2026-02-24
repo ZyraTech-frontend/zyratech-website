@@ -68,7 +68,7 @@ const PartnersRecognition = () => {
                   className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col items-center justify-center h-40 hover:shadow-md transition-all duration-300 group"
                 >
                   {partner.organization.logo ? (
-                    <img
+                    <img decoding="async"
                       src={partner.organization.logo}
                       alt={partner.organization.name}
                       className="max-w-full max-h-24 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300 opacity-80 group-hover:opacity-100"
@@ -102,7 +102,7 @@ const PartnersRecognition = () => {
               className="flex justify-center items-center py-8"
             >
               <div className="bg-white rounded-xl shadow-lg p-4 sm:p-8 max-w-4xl w-full flex justify-center items-center">
-                <img
+                <img decoding="async"
                   src="/images/partnershiplogo.jpeg"
                   alt="Our Partners"
                   className="max-w-full h-auto object-contain max-h-[400px]"

@@ -80,7 +80,7 @@ const MediaCategories = () => {
                 
                 {/* Category Card */}
                 <div className="relative rounded-2xl overflow-hidden aspect-video mb-4">
-                  <img
+                  <img decoding="async"
                     src={category.image}
                     alt={category.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

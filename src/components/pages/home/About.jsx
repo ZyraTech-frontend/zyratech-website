@@ -48,7 +48,7 @@ const About = () => {
             transition={imageAnimation.transition}
             className="relative rounded-lg shadow-lg overflow-hidden order-2 lg:order-1 h-48 md:h-64"
           >
-            <img 
+            <img decoding="async" 
               src="/images/image1.png" 
               alt="Zyra Tech Hub" 
               className="w-full h-full object-cover"

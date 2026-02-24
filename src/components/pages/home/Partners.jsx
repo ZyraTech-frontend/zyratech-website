@@ -52,7 +52,7 @@ const Partners = () => {
               className="group"
             >
               <div className="bg-white rounded-xl border border-gray-200 p-8 h-40 flex items-center justify-center hover:shadow-lg hover:border-gray-300 transition-all duration-300 overflow-hidden">
-                <img
+                <img decoding="async"
                   src={partner.logo}
                   alt={partner.alt}
                   className="max-h-24 max-w-full w-auto object-contain group-hover:scale-110 transition-transform duration-300"

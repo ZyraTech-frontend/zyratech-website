@@ -21,7 +21,7 @@ const MediaGrid = ({ filters = {} }) => {
         "/images/image1.png",
         "/images/image2.png", 
         "/images/image3.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png"
+        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp"
       ],
       keywords: ["iot", "safety", "smart", "development", "transportation"]
     },
@@ -34,7 +34,7 @@ const MediaGrid = ({ filters = {} }) => {
       images: [
         "/images/image2.png",
         "/images/image3.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
         "/images/image1.png"
       ],
       keywords: ["environment", "monitoring", "platform", "sensors", "data"]
@@ -48,7 +48,7 @@ const MediaGrid = ({ filters = {} }) => {
       images: [
         "/images/image3.png",
         "/images/image1.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
         "/images/image2.png"
       ],
       keywords: ["agriculture", "precision", "farming", "technology", "innovation"]
@@ -57,10 +57,10 @@ const MediaGrid = ({ filters = {} }) => {
       id: 4,
       title: "Software Development Training Workshop",
       type: "package",
-      thumbnail: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+      thumbnail: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
       category: "training",
       images: [
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
         "/images/image1.png",
         "/images/image2.png",
         "/images/image3.png"
@@ -75,7 +75,7 @@ const MediaGrid = ({ filters = {} }) => {
       category: "training",
       images: [
         "/images/image1.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
         "/images/image2.png",
         "/images/image3.png"
       ],
@@ -90,7 +90,7 @@ const MediaGrid = ({ filters = {} }) => {
       images: [
         "/images/image2.png",
         "/images/image3.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
         "/images/image1.png"
       ],
       keywords: ["web", "development", "certification", "fullstack", "javascript"]
@@ -105,7 +105,7 @@ const MediaGrid = ({ filters = {} }) => {
         "/images/image3.png",
         "/images/image1.png",
         "/images/image2.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png"
+        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp"
       ],
       keywords: ["data", "science", "analytics", "machine", "learning"]
     },
@@ -113,10 +113,10 @@ const MediaGrid = ({ filters = {} }) => {
       id: 8,
       title: "IoT Solutions Implementation",
       type: "package",
-      thumbnail: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+      thumbnail: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
       category: "projects",
       images: [
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
         "/images/image2.png",
         "/images/image3.png",
         "/images/image1.png"
@@ -145,7 +145,7 @@ const MediaGrid = ({ filters = {} }) => {
       category: "events",
       images: [
         "/images/image1.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
         "/images/image2.png",
         "/images/image3.png"
       ],
@@ -281,7 +281,7 @@ const MediaGrid = ({ filters = {} }) => {
               <div className={`relative overflow-hidden rounded-xl ${
                 viewMode === 'list' ? 'w-full sm:w-48 h-40 sm:h-32 flex-shrink-0' : 'aspect-video'
               }`}>
-                <img
+                <img decoding="async"
                   src={item.thumbnail}
                   alt={item.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -432,7 +432,7 @@ const MediaGrid = ({ filters = {} }) => {
 
               {/* Main Image Area */}
               <div className="flex-1 flex items-center justify-center relative px-12 sm:px-16 py-16 sm:py-20">
-                <img
+                <img decoding="async"
                   src={selectedItem.images[currentImageIndex]}
                   alt={`${selectedItem.title} - Image ${currentImageIndex + 1}`}
                   className={`max-w-full max-h-full object-contain rounded-lg ${isFullscreen ? 'rounded-none' : ''}`}
@@ -480,7 +480,7 @@ const MediaGrid = ({ filters = {} }) => {
                             : 'opacity-50 hover:opacity-80'
                         }`}
                       >
-                        <img
+                        <img decoding="async"
                           src={image}
                           alt={`Thumbnail ${index + 1}`}
                           className="w-full h-full object-cover"

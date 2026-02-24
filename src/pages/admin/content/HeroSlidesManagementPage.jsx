@@ -204,7 +204,7 @@ const HeroSlidesManagementPage = () => {
                                 <div className="flex flex-col md:flex-row gap-6">
                                     {/* Slide Preview Image */}
                                     <div className="w-full md:w-64 h-40 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 relative group">
-                                        <img
+                                        <img decoding="async"
                                             src={slide.backgroundImage}
                                             alt={slide.title}
                                             className={`w-full h-full object-cover transition-opacity ${slide.isVisible ? '' : 'opacity-60 grayscale'}`}

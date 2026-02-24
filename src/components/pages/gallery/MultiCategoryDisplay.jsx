@@ -55,7 +55,7 @@ const MultiCategoryDisplay = () => {
                   >
                     {/* Image with Overlay */}
                     <div className="aspect-video relative overflow-hidden">
-                      <img
+                      <img decoding="async"
                         src={item.image}
                         alt={item.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

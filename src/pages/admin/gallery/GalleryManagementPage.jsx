@@ -60,7 +60,7 @@ const mockGalleryItems = [
             "/images/image1.png",
             "/images/image2.png",
             "/images/image3.png",
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png"
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp"
         ],
         keywords: ["iot", "safety", "smart", "development", "transportation"],
         status: "published",
@@ -75,7 +75,7 @@ const mockGalleryItems = [
         images: [
             "/images/image2.png",
             "/images/image3.png",
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
             "/images/image1.png"
         ],
         keywords: ["environment", "monitoring", "platform", "sensors", "data"],
@@ -91,7 +91,7 @@ const mockGalleryItems = [
         images: [
             "/images/image3.png",
             "/images/image1.png",
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
             "/images/image2.png"
         ],
         keywords: ["agriculture", "precision", "farming", "technology", "innovation"],
@@ -102,10 +102,10 @@ const mockGalleryItems = [
         id: 4,
         title: "Software Development Training Workshop",
         type: "package",
-        thumbnail: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+        thumbnail: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
         category: "training",
         images: [
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
             "/images/image1.png",
             "/images/image2.png",
             "/images/image3.png"
@@ -122,7 +122,7 @@ const mockGalleryItems = [
         category: "training",
         images: [
             "/images/image1.png",
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
             "/images/image2.png",
             "/images/image3.png"
         ],
@@ -139,7 +139,7 @@ const mockGalleryItems = [
         images: [
             "/images/image2.png",
             "/images/image3.png",
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
             "/images/image1.png"
         ],
         keywords: ["web", "development", "certification", "fullstack", "javascript"],
@@ -170,7 +170,7 @@ const mockGalleryItems = [
         category: "events",
         images: [
             "/images/image1.png",
-            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png",
+            "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
             "/images/image2.png",
             "/images/image3.png"
         ],
@@ -526,7 +526,7 @@ const GalleryManagementPage = () => {
                             >
                                 {/* Thumbnail */}
                                 <div className="relative aspect-video overflow-hidden">
-                                    <img
+                                    <img decoding="async"
                                         src={item.thumbnail}
                                         alt={item.title}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -657,7 +657,7 @@ const GalleryManagementPage = () => {
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-16 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                                                    <img
+                                                    <img decoding="async"
                                                         src={item.thumbnail}
                                                         alt={item.title}
                                                         className="w-full h-full object-cover"
@@ -817,7 +817,7 @@ const GalleryManagementPage = () => {
                         <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
                             {/* Main Image */}
                             <div className="relative aspect-video rounded-xl overflow-hidden bg-gray-100 mb-4">
-                                <img
+                                <img decoding="async"
                                     src={viewingItem.images?.[selectedImageIndex]}
                                     alt={`${viewingItem.title} - Image ${selectedImageIndex + 1}`}
                                     className="w-full h-full object-cover"
@@ -856,7 +856,7 @@ const GalleryManagementPage = () => {
                                                 : 'opacity-60 hover:opacity-100'
                                                 }`}
                                         >
-                                            <img src={img} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
+                                            <img decoding="async" src={img} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
                                         </button>
                                     ))}
                                 </div>

@@ -153,7 +153,7 @@ const ProjectDetailsPage = () => {
                     <div className="lg:col-span-2 space-y-6">
                         {/* Image */}
                         <div className="rounded-xl overflow-hidden border border-gray-200">
-                            <img
+                            <img decoding="async"
                                 src={project.image}
                                 alt={project.title}
                                 className="w-full h-96 object-cover"

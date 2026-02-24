@@ -25,7 +25,7 @@ const ProjectGallery = ({ items, galleryLink = '/projects/ecowatch/gallery' }) =
               key={index}
               className="rounded-xl overflow-hidden shadow-lg h-64 border border-gray-200 hover:shadow-xl transition-shadow duration-300"
             >
-              <img 
+              <img decoding="async" 
                 src={item.image}
                 alt={item.alt}
                 className="w-full h-full object-cover"

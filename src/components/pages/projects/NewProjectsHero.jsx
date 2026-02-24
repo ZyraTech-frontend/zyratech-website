@@ -23,7 +23,7 @@ const NewProjectsHero = () => {
     <section className="relative text-white overflow-visible">
       {/* Background Image with Overlays */}
       <div className="absolute inset-0">
-        <img
+        <img decoding="async"
           src="/images/parallax1.jpeg"
           alt="ZyraTech Projects"
           className="h-full w-full object-cover"

@@ -71,10 +71,10 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-16 h-16 bg-transparent rounded-lg flex items-center justify-center p-1 overflow-hidden">
-              <img
-                src="/zyratecpng.png"
-                alt="ZyraTech Logo"
-                className="w-full h-full object-contain brightness-0 invert"
+              <img decoding="async"
+                src="/zyrateclogopng.webp"
+                alt="ZyraTech"
+                className="w-10 h-10 object-contain brightness-0 invert"
               />
             </div>
             <div>

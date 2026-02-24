@@ -69,7 +69,7 @@ const MediaCollections = () => {
                 {/* Main Cover Image */}
                 <div className="lg:w-1/3">
                   <div className="relative rounded-xl overflow-hidden aspect-video">
-                    <img
+                    <img decoding="async"
                       src={collection.coverImage}
                       alt={collection.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -101,7 +101,7 @@ const MediaCollections = () => {
                     <div className="flex gap-2 mb-4">
                       {collection.previewImages.map((image, index) => (
                         <div key={index} className="w-16 h-16 rounded-lg overflow-hidden">
-                          <img
+                          <img decoding="async"
                             src={image}
                             alt={`Preview ${index + 1}`}
                             className="w-full h-full object-cover"

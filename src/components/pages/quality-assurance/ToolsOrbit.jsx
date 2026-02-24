@@ -25,10 +25,10 @@ const ToolsOrbit = ({ tools = [] }) => {
 
       {/* Central Hub */}
       <div className="relative z-10 w-40 h-40 md:w-64 md:h-64 rounded-full bg-white border-4 border-[#004fa2] flex items-center justify-center shadow-[0_0_50px_rgba(0,79,162,0.5)]">
-        <img
-          src="/zyratecpng.png"
-          alt="ZyraTech Logo"
-          className="w-28 h-28 md:w-48 md:h-48 object-contain"
+        <img decoding="async"
+          src="/zyrateclogopng.webp"
+          alt="ZyraTech"
+          className="w-16 h-16 object-contain filter drop-shadow-md"
         />
       </div>
 
@@ -45,7 +45,7 @@ const ToolsOrbit = ({ tools = [] }) => {
                 }}
                 className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-28 md:h-28 bg-white border-2 ${tool.color || 'border-gray-200'} rounded-2xl flex flex-col items-center justify-center shadow-lg hover:scale-125 transition-transform duration-300 cursor-help group`}
               >
-                <img
+                <img decoding="async"
                   src={tool.logo}
                   alt={tool.name}
                   className="w-8 h-8 md:w-16 md:h-16 object-contain mb-1"

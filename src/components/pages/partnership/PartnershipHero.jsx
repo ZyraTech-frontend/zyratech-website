@@ -8,7 +8,7 @@ const PartnershipHero = () => {
   const [heroData, setHeroData] = useState({
     title: "Build Africa's Future Together",
     subtitle: "Partner with ZyraTech to transform communities through technology, innovation, and sustainable impact across Africa.",
-    backgroundImage: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png"
+    backgroundImage: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp"
   });
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const PartnershipHero = () => {
   return (
     <section className="relative text-white overflow-hidden">
       <div className="absolute inset-0">
-        <img
+        <img decoding="async"
           src={heroData.backgroundImage}
           alt="Partnership banner"
           className="h-full w-full object-cover object-center brightness-110"

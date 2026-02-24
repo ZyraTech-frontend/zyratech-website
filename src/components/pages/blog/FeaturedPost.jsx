@@ -30,7 +30,7 @@ const FeaturedPost = ({ article }) => {
           <div className="grid md:grid-cols-2 gap-0">
             {/* Image */}
             <div className="relative h-64 md:h-auto overflow-hidden">
-              <img
+              <img decoding="async"
                 src={article.image}
                 alt={article.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -52,7 +52,7 @@ const FeaturedPost = ({ article }) => {
               {/* Meta */}
               <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-6">
                 <div className="flex items-center gap-2">
-                  <img
+                  <img decoding="async"
                     src={article.author.avatar}
                     alt={article.author.name}
                     className="w-8 h-8 rounded-full object-cover"

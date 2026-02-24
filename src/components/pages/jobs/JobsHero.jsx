@@ -7,8 +7,8 @@ const JobsHero = () => {
   return (
     <section className="relative text-white overflow-hidden">
       <div className="absolute inset-0">
-        <img
-          src="/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png"
+        <img decoding="async"
+          src="/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp"
           alt="Careers banner"
           className="h-full w-full object-cover"
           onError={(e) => {

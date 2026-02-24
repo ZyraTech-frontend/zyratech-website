@@ -22,7 +22,7 @@ const RelatedProjects = ({ projects }) => {
             >
               {/* Project Image */}
               <div className="h-48 bg-gray-100">
-                <img 
+                <img decoding="async" 
                   src={project.image || '/images/software.png'}
                   alt={project.title}
                   className="w-full h-full object-cover"

@@ -990,8 +990,8 @@ const LoginPage = () => {
 
       {/* Mobile Logo (Stacked) */}
       <div className="lg:hidden w-full flex justify-center mb-8 relative z-20">
-        <img
-          src="/zyratecpng.png"
+        <img decoding="async"
+          src="/zyrateclogopng.webp"
           alt="ZyraTech Hub"
           className="h-20 w-auto object-contain drop-shadow-lg brightness-0 invert"
         />
@@ -999,8 +999,8 @@ const LoginPage = () => {
 
       {/* Desktop Logo (Absolute Top-Left) */}
       <div className="hidden lg:flex absolute top-8 left-8 z-20 items-center gap-3 transition-all duration-500">
-        <img
-          src="/zyratecpng.png"
+        <img decoding="async"
+          src="/zyrateclogopng.webp"
           alt="ZyraTech Hub"
           className="h-44 w-auto object-contain drop-shadow-lg brightness-0 invert transition-all duration-500"
         />

@@ -51,7 +51,7 @@ const VideoSection = () => {
             >
               {/* Video Thumbnail */}
               <div className="relative aspect-video bg-gray-100">
-                <img
+                <img decoding="async"
                   src={video.thumbnail}
                   alt={video.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

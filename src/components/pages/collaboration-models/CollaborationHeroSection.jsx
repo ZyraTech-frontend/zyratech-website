@@ -7,7 +7,7 @@ const CollaborationHeroSection = ({ hero }) => {
   return (
     <section className="bg-white">
       <div className="w-full">
-        <img
+        <img decoding="async"
           src={hero?.bannerImage}
           alt="Collaboration"
           className="w-full h-56 sm:h-72 lg:h-96 object-cover"
