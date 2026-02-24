@@ -98,7 +98,7 @@ const BlogDetailsPage = () => {
 
                     {/* Featured Image */}
                     <div className="bg-white rounded-lg shadow overflow-hidden mb-8">
-                        <img
+                        <img decoding="async"
                             src={article.image}
                             alt={article.title}
                             className="w-full h-96 object-cover"
@@ -175,7 +175,7 @@ const BlogDetailsPage = () => {
                                 <h2 className="text-lg font-bold text-gray-900 mb-6">Author Information</h2>
                                 
                                 <div className="flex items-center gap-4">
-                                    <img
+                                    <img decoding="async"
                                         src={article.author.avatar}
                                         alt={article.author.name}
                                         className="w-20 h-20 rounded-full object-cover border-4 border-blue-100"

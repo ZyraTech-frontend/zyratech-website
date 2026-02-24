@@ -11,24 +11,31 @@ const TrainingHero = () => {
     <section className="relative isolate overflow-hidden min-h-screen">
       <div className="max-w-none px-0">
         {/* Full-bleed hero container */}
-        <div 
+        <div
           className="relative overflow-hidden min-h-screen bg-cover bg-center bg-scroll md:bg-fixed"
           style={{
             backgroundImage: 'url(/images/image2.png)'
           }}
         >
+          {/* LCP Optimization: Preload the background image */}
+          <img decoding="async"
+            src="/images/image2.png"
+            alt=""
+            className="hidden"
+            fetchpriority="high"
+          />
           <div className="absolute inset-0 bg-black/40"></div>
           <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-32 min-h-[500px] md:min-h-[580px] lg:min-h-[680px] flex items-center">
-            
+
             {/* Left Content */}
-            <motion.div 
+            <motion.div
               className="max-w-3xl pt-8 sm:pt-12 md:pt-16 lg:pt-20"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
               {/* Main Heading */}
-              <motion.h1 
+              <motion.h1
                 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -39,7 +46,7 @@ const TrainingHero = () => {
               </motion.h1>
 
               {/* Subtitle */}
-              <motion.p 
+              <motion.p
                 className="text-base sm:text-lg md:text-xl font-bold text-white mb-10 sm:mb-12 md:mb-14 leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -49,21 +56,21 @@ const TrainingHero = () => {
               </motion.p>
 
               {/* CTA Buttons */}
-              <motion.div 
+              <motion.div
                 className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-4"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                <Link 
+                <Link
                   to="/training/programs"
                   className="cta-btn px-8 py-4 rounded-xl text-lg w-full sm:w-auto"
                 >
                   Explore Programs
                   <ChevronRight size={20} className="ml-2" />
                 </Link>
-                
-                <Link 
+
+                <Link
                   to="/training/programs"
                   className="cta-ghost px-8 py-4 rounded-xl text-lg w-full sm:w-auto"
                 >

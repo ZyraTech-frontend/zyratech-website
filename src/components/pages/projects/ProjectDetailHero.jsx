@@ -47,7 +47,7 @@ const ProjectDetailHero = ({ project }) => {
 
           {/* Right - Image */}
           <div className="rounded-2xl overflow-hidden shadow-lg h-80">
-            <img 
+            <img decoding="async" 
               src={project.image || "/images/workingspace.png"}
               alt={project.title}
               className="w-full h-full object-cover"

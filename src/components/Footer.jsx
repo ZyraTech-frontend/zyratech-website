@@ -1,6 +1,13 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import {
+  FaLinkedinIn,
+  FaXTwitter,
+  FaInstagram,
+  FaFacebookF,
+  FaWhatsapp
+} from 'react-icons/fa6';
 
 const Footer = () => {
   // Get settings from Redux store
@@ -28,9 +35,11 @@ const Footer = () => {
           {/* Zyra Tech Hub Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="mb-4">
-              <img
-                src="/zyratecpng.png"
+              <img decoding="async"
+                src="/zyrateclogopng.webp"
                 alt={`${siteName} Logo`}
+                width="128"
+                height="128"
                 loading="lazy"
                 className="h-32 w-auto object-contain filter brightness-0 invert"
               />
@@ -91,28 +100,28 @@ const Footer = () => {
             {/* Social Media */}
             <div className="flex items-center space-x-3 mb-4">
               {socialLinkedIn && (
-                <a href={socialLinkedIn} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="LinkedIn">
-                  <i className="fa-brands fa-linkedin-in text-lg"></i>
+                <a href={socialLinkedIn} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Visit our LinkedIn page">
+                  <FaLinkedinIn className="text-lg" />
                 </a>
               )}
               {socialTwitter && (
-                <a href={socialTwitter} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="X (formerly Twitter)">
-                  <i className="fa-brands fa-x-twitter text-lg"></i>
+                <a href={socialTwitter} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Visit our X (Twitter) page">
+                  <FaXTwitter className="text-lg" />
                 </a>
               )}
               {socialInstagram && (
-                <a href={socialInstagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Instagram">
-                  <i className="fa-brands fa-instagram text-xl"></i>
+                <a href={socialInstagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Visit our Instagram page">
+                  <FaInstagram className="text-xl" />
                 </a>
               )}
               {socialFacebook && (
-                <a href={socialFacebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Facebook">
-                  <i className="fa-brands fa-facebook-f text-lg"></i>
+                <a href={socialFacebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Visit our Facebook page">
+                  <FaFacebookF className="text-lg" />
                 </a>
               )}
               {contactWhatsApp && (
-                <a href={`https://wa.me/${contactWhatsApp}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="WhatsApp">
-                  <i className="fa-brands fa-whatsapp text-xl"></i>
+                <a href={`https://wa.me/${contactWhatsApp}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Contact us on WhatsApp">
+                  <FaWhatsapp className="text-xl" />
                 </a>
               )}
             </div>

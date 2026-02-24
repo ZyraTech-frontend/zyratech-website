@@ -76,7 +76,7 @@ const ImpactPeopleHighlightsSection = ({
                       <div className="relative h-12 w-12 rounded-full bg-[#004fa2] text-white flex items-center justify-center font-bold overflow-hidden transition-transform duration-200 group-hover:scale-105">
                         <span className="relative z-10">{initials || 'ZT'}</span>
                         {person.image ? (
-                          <img
+                          <img decoding="async"
                             src={person.image}
                             alt={person.name}
                             className="absolute inset-0 w-full h-full object-cover"

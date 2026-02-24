@@ -302,7 +302,7 @@ const BlogManagementPage = () => {
                                             <tr key={article.id} className="hover:bg-gray-50 transition-colors">
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
-                                                        <img
+                                                        <img decoding="async"
                                                             src={article.image}
                                                             alt={article.title}
                                                             className="w-12 h-12 rounded object-cover"
@@ -320,7 +320,7 @@ const BlogManagementPage = () => {
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-2">
-                                                        <img
+                                                        <img decoding="async"
                                                             src={article.author.avatar}
                                                             alt={article.author.name}
                                                             className="w-8 h-8 rounded-full"

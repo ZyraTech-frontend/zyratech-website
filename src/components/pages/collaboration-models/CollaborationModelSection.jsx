@@ -50,7 +50,7 @@ const CollaborationModelSection = ({ model, reverse = false }) => {
           transition={{ duration: shouldReduceMotion ? 0 : 0.6, delay: shouldReduceMotion ? 0 : 0.1 }}
         >
           <div className="relative">
-            <img
+            <img decoding="async"
               src={model?.image}
               alt={model?.title}
               className="w-full h-72 sm:h-80 lg:h-[420px] object-cover"

@@ -79,7 +79,7 @@ const SimpleMediaGrid = () => {
                 
                 {/* Media Image */}
                 <div className="relative aspect-video">
-                  <img
+                  <img decoding="async"
                     src={item.image}
                     alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

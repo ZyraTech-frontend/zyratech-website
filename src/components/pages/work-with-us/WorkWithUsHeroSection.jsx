@@ -7,7 +7,7 @@ const WorkWithUsHeroSection = ({ title, subtitle, description, image }) => {
   return (
     <section className="relative text-white overflow-hidden">
       <div className="absolute inset-0">
-        <img
+        <img decoding="async"
           src={image || "/images/work-with-us-hero.jpg"}
           alt="Work with us"
           className="h-full w-full object-cover"

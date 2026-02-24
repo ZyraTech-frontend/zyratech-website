@@ -144,7 +144,7 @@ const BasicProgramsPage = () => {
                 >
                   {/* Image Header */}
                   <div className="relative h-60 overflow-hidden">
-                    <img
+                    <img decoding="async"
                       src={imageUrl}
                       alt={program.title}
                       className="w-full h-full object-cover"

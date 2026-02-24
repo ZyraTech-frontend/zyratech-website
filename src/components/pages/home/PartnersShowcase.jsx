@@ -19,10 +19,13 @@ const PartnersShowcase = () => {
           </h3>
 
           <div className="bg-white rounded-lg py-6 sm:py-8 md:py-12 px-2 sm:px-4 md:px-8 flex flex-col justify-center items-center overflow-hidden">
-            <img
+            <img decoding="async"
               src={partner.logo}
               alt={partner.name}
-              className="max-w-full h-auto object-contain max-h-32 sm:max-h-48 md:max-h-64 filter hover:grayscale-0 transition-all duration-300 mb-6"
+              width="256"
+              height="160"
+              loading="lazy"
+              className="max-w-full h-auto object-contain max-h-32 sm:max-h-48 md:max-h-64 filter hover:grayscale-0 transition-[transform,opacity,filter] duration-300 mb-6"
             />
             <p className="text-xl sm:text-2xl font-bold text-gray-800">{partner.name}</p>
           </div>

@@ -38,7 +38,7 @@ const HrContactSection = ({
 
           <div className="relative w-full md:w-auto flex justify-center md:justify-start md:ml-12">
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <img
+              <img decoding="async"
                 src={imageUrl}
                 alt={hrName}
                 loading="lazy"

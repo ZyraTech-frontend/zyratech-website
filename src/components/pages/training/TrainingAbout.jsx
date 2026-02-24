@@ -114,7 +114,7 @@ const TrainingAbout = () => {
 
               {/* Mobile Image */}
               <div className="relative">
-                <img
+                <img decoding="async"
                   src="/images/training1.jpeg"
                   alt="ZyraTech Training"
                   loading="lazy"
@@ -178,7 +178,7 @@ const TrainingAbout = () => {
                 {/* Right Column - Image */}
                 <div className="order-first lg:order-last">
                   <div className="relative">
-                    <img
+                    <img decoding="async"
                       src="/images/training1.jpeg"
                       alt="ZyraTech Training Benefits"
                       loading="lazy"
@@ -248,7 +248,7 @@ const TrainingAbout = () => {
                 {/* Right Column - Image */}
                 <div className="order-first lg:order-last">
                   <div className="relative">
-                    <img
+                    <img decoding="async"
                       src="/images/kal.jpeg"
                       alt="ZyraTech Backend Developer"
                       loading="lazy"
@@ -294,7 +294,7 @@ const TrainingAbout = () => {
             {/* Right Column - Image */}
             <div className="order-first lg:order-last">
               <div className="relative">
-                <img
+                <img decoding="async"
                   src="/images/masco.png"
                   alt="ZyraTech Senior Trainer"
                   loading="lazy"

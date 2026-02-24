@@ -82,7 +82,7 @@ const OrganizedContentGrid = ({ activeFilter, searchTerm }) => {
               >
                 {/* Image */}
                 <div className="relative aspect-square overflow-hidden bg-gray-100">
-                  <img
+                  <img decoding="async"
                     src={item.image}
                     alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -129,7 +129,7 @@ const OrganizedContentGrid = ({ activeFilter, searchTerm }) => {
 
           {/* Image */}
           <div className="flex-1 flex items-center justify-center overflow-hidden rounded-lg">
-            <img
+            <img decoding="async"
               src={selectedImage.image}
               alt={selectedImage.title}
               className="max-w-full max-h-full object-contain"

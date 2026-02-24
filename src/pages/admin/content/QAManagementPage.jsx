@@ -214,7 +214,7 @@ const QAManagementPage = () => {
                                     </button>
                                     <div className="flex items-center gap-3 mb-3">
                                         <div className="w-10 h-10 border rounded flex items-center justify-center bg-gray-50">
-                                            <img src={tool.logo} alt="" className="w-6 h-6 object-contain" />
+                                            <img decoding="async" src={tool.logo} alt="" className="w-6 h-6 object-contain" />
                                         </div>
                                         <Input label="Tool Name" value={tool.name} onChange={(e) => handleArrayChange('tools', index, 'name', e.target.value)} />
                                     </div>

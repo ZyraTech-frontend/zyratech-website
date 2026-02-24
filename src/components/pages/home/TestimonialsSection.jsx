@@ -71,7 +71,7 @@ const TestimonialsSection = () => {
             ))
           ) : (
             testimonials.map((testimonial, index) => (
-              <div key={testimonial.id || index} className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 hover:scale-105 cursor-pointer group flex flex-col h-full">
+              <div key={testimonial.id || index} className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-[transform,shadow,opacity] duration-300 hover:-translate-y-2 hover:scale-105 cursor-pointer group flex flex-col h-full">
                 <Quote className="w-8 h-8 text-[#004fa2] mb-4 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" />
 
                 <div className="flex-grow">
@@ -83,9 +83,12 @@ const TestimonialsSection = () => {
                 <div className="flex items-center mt-auto pt-4 border-t border-gray-100">
                   <div className="w-16 h-16 rounded-full overflow-hidden mr-4 shrink-0 border border-gray-100 bg-gray-200">
                     {testimonial.avatar ? (
-                      <img
+                      <img decoding="async"
                         src={testimonial.avatar}
                         alt={testimonial.name}
+                        width="64"
+                        height="64"
+                        loading="lazy"
                         className="w-full h-full object-cover transition-transform duration-300 scale-[3.0] origin-top -translate-y-2"
                         style={{ objectPosition: 'center 5%' }}
                         onError={(e) => {

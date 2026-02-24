@@ -128,7 +128,7 @@ const AvatarDisplay = ({ name, avatar, size = 'md' }) => {
 
     if (avatar) {
         return (
-            <img
+            <img decoding="async"
                 src={avatar}
                 alt={name}
                 className={`${sizeClasses[size]} rounded-full object-cover ring-2 ring-white shadow-md`}

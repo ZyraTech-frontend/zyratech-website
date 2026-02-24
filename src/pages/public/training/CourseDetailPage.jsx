@@ -230,7 +230,7 @@ const CourseDetailPage = () => {
             <div className="relative p-6 sm:p-8 lg:p-10">
               <div className="absolute left-0 top-8 sm:top-10 bottom-8 sm:bottom-10 w-2 sm:w-3 lg:w-4 bg-[#5c3a21] z-0 rounded-sm" />
               <div className="relative z-10">
-                <img
+                <img decoding="async"
                   src={heroImage}
                   alt="Trainee working"
                   loading="lazy"
@@ -275,7 +275,7 @@ const CourseDetailPage = () => {
             </div>
             {/* Illustration or Accent Image */}
             <div className="flex justify-center items-center">
-              <img src="/images/image2.png" alt="Application Process" loading="lazy" className="w-full max-w-lg h-[300px] sm:h-[340px] object-cover rounded-2xl shadow-xl border-4 border-[#004fa2]/10" />
+              <img decoding="async" src="/images/image2.png" alt="Application Process" loading="lazy" className="w-full max-w-lg h-[300px] sm:h-[340px] object-cover rounded-2xl shadow-xl border-4 border-[#004fa2]/10" />
             </div>
           </div>
         </div>
@@ -295,7 +295,7 @@ const CourseDetailPage = () => {
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Illustration or Accent Image */}
             <div className="flex justify-center items-center order-2 md:order-1">
-              <img src="/images/image1.png" alt="How the Program Works" loading="lazy" className="w-full max-w-lg h-[300px] sm:h-[340px] object-cover rounded-2xl shadow-xl border-4 border-[#004fa2]/10" />
+              <img decoding="async" src="/images/image1.png" alt="How the Program Works" loading="lazy" className="w-full max-w-lg h-[300px] sm:h-[340px] object-cover rounded-2xl shadow-xl border-4 border-[#004fa2]/10" />
             </div>
             {/* Steps List */}
             <div className="order-1 md:order-2">
@@ -385,7 +385,7 @@ const CourseDetailPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-10 items-stretch">
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <img
+              <img decoding="async"
                 src={course.contactPerson.imageUrl || '/images/Dalene.png'}
                 alt={course.contactPerson.name}
                 className="w-full h-[380px] md:h-[420px] object-cover"

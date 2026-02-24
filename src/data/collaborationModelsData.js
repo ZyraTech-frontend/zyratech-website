@@ -1,5 +1,5 @@
 export const collaborationHero = {
-  bannerImage: '/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png',
+  bannerImage: '/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp',
   bannerFallback: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1600',
   title: 'Our Engagement Models Seamlessly Integrate With Your Operations',
   description:

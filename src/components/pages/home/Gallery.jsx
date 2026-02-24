@@ -82,7 +82,7 @@ const Gallery = () => {
               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
               
               {item.type === 'image' ? (
-                <img 
+                <img decoding="async" 
                   src={item.src}
                   alt={item.alt}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 relative z-10"
@@ -90,7 +90,7 @@ const Gallery = () => {
                 />
               ) : (
                 <>
-                  <img 
+                  <img decoding="async" 
                     src={item.thumbnail}
                     alt={item.alt}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

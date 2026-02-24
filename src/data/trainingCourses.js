@@ -137,7 +137,7 @@ export const trainingCourses = [
     format: 'Hybrid',
     certificate: 'Computational Thinking Certificate',
     deadline: 'Rolling Admission',
-    heroImage: '/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.png',
+    heroImage: '/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp',
     description: 'Ideal for students preparing for coding who need to understand computational logic. Build strong problem-solving foundations before diving into programming.',
     longDescription: 'This course is designed for students who want to build a strong foundation in computational thinking before learning a programming language. You will learn how to break down problems, think algorithmically, use flowcharts and pseudocode, and develop the logical reasoning skills that underpin all software development.',
     programOverview: 'A 4-week preparatory course that builds the logical thinking and problem-solving skills essential for success in any programming language.',

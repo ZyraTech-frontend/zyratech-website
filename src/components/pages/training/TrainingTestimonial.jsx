@@ -21,7 +21,7 @@ const TrainingTestimonial = () => {
             className="relative order-1 lg:order-1"
           >
             <div className="absolute -right-4 -top-4 w-full h-full bg-white/10 rounded-lg border border-white/20"></div>
-            <img
+            <img decoding="async"
               src="/images/trainingtest.png"
               alt="ZyraTech Training Graduate"
               loading="lazy"

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 const BASE_TITLE = 'Zyra Tech Hub';
 const BASE_URL = 'https://zyratech-hub.netlify.app';
-const DEFAULT_IMAGE = '/zyratecpng.png';
+const DEFAULT_IMAGE = '/zyrateclogopng.webp';
 
 /**
  * Custom hook to set page title and meta tags for SEO.
@@ -14,9 +14,9 @@ const DEFAULT_IMAGE = '/zyratecpng.png';
  * @param {string} [options.type] - Open Graph type (default: 'website')
  * @param {string} [options.keywords] - SEO keywords
  */
-const useSEO = ({ 
-  title, 
-  description, 
+const useSEO = ({
+  title,
+  description,
   image = DEFAULT_IMAGE,
   url = '',
   type = 'website',

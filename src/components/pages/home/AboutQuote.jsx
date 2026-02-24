@@ -68,9 +68,12 @@ const AboutQuote = () => {
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 sm:gap-8 mb-8 sm:mb-12">
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border border-gray-100 shrink-0">
-              <img
+              <img decoding="async"
                 src={content.authorImage || 'https://via.placeholder.com/150'}
                 alt={content.authorName}
+                width="150"
+                height="150"
+                loading="lazy"
                 className="w-full h-full object-cover object-top scale-[3.0] origin-top -translate-y-4"
                 onError={(e) => {
                   e.target.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face';

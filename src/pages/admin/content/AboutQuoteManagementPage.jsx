@@ -167,7 +167,7 @@ const AboutQuoteManagementPage = () => {
                                     />
                                     {formData.authorImage && (
                                         <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200 bg-gray-50 flex-shrink-0">
-                                            <img
+                                            <img decoding="async"
                                                 src={formData.authorImage}
                                                 alt="Preview"
                                                 className="w-full h-full object-cover"

@@ -5,16 +5,32 @@ import { Link } from 'react-router-dom';
 import heroService from '../../../services/heroService';
 
 const Hero = () => {
+  // Default initial slides to show something immediately (LCP optimization)
+  const defaultSlides = [
+    {
+      id: 'initial',
+      title: 'Empowering Ghana\'s Future Through Technology',
+      description: 'Zyra Tech Hub provides world-class digital training, internships, and professional IT services to build the next generation of tech leaders.',
+      backgroundImage: '/images/hero1.jpeg',
+      pillar: 'Innovation',
+      cta1Text: 'Explore Programs',
+      cta1Link: '/training',
+      cta2Text: 'Partner With Us',
+      cta2Link: '/partner',
+      isVisible: true
+    }
+  ];
+
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [slides, setSlides] = useState([]);
+  const [slides, setSlides] = useState(defaultSlides);
   const [loading, setLoading] = useState(true);
 
   const preloadImage = (src) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const img = new Image();
       img.src = src;
       img.onload = resolve;
-      img.onerror = reject;
+      img.onerror = resolve; // Ignore errors for preloading
     });
   };
 
@@ -22,13 +38,9 @@ const Hero = () => {
     const fetchSlides = async () => {
       try {
         const response = await heroService.getAllSlides();
-        // Filter only visible slides
         const visibleSlides = response.data.filter(s => s.isVisible);
-        setSlides(visibleSlides);
-
-        // Preload first image immediately
         if (visibleSlides.length > 0) {
-          preloadImage(visibleSlides[0].backgroundImage);
+          setSlides(visibleSlides);
         }
       } catch (error) {
         console.error('Failed to fetch hero slides:', error);
@@ -55,14 +67,8 @@ const Hero = () => {
     return () => clearInterval(timer);
   }, [slides.length, currentSlide]);
 
-  if (loading) {
-    // Show a loading skeleton or a simple placeholder
-    return (
-      <section className="relative w-full h-[calc(100vh-88px)] bg-gray-900 flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-      </section>
-    );
-  }
+  // Remove loading spinner since we have default slides for LCP
+  // if (loading) { ... }
 
   // Fallback if no slides are returned
   if (slides.length === 0) {
@@ -80,11 +86,14 @@ const Hero = () => {
             key={currentSlide}
             src={slide.backgroundImage}
             alt={slide.pillar}
+            width="1920"
+            height="1080"
             initial={{ opacity: 0.8 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0.8 }}
             transition={{ duration: 1 }}
             className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out"
+            fetchpriority={currentSlide === 0 ? "high" : "auto"}
             style={{
               objectPosition: slide.bgPosition || 'center center',
               filter: 'brightness(1.1) contrast(1.05)'

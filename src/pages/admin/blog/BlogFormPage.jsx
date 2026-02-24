@@ -242,7 +242,7 @@ const BlogFormPage = () => {
                                         </label>
                                         <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer">
                                             {formData.image ? (
-                                                <img
+                                                <img decoding="async"
                                                     src={formData.image}
                                                     alt="Preview"
                                                     className="w-full h-48 object-cover rounded-lg mb-4"

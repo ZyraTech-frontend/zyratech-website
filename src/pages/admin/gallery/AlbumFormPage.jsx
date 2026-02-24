@@ -311,7 +311,7 @@ const AlbumFormPage = () => {
                                                         }`}
                                                     >
                                                         {/* Image Preview */}
-                                                        <img
+                                                        <img decoding="async"
                                                             src={image}
                                                             alt={`Album image ${index + 1}`}
                                                             className="w-16 h-16 rounded object-cover"

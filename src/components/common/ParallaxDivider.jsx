@@ -12,6 +12,8 @@ const ParallaxDivider = ({
     className={`hidden md:block relative ${heightClassName} bg-scroll md:bg-fixed motion-reduce:bg-scroll motion-reduce:md:bg-scroll ${bgPosition} bg-cover ${className}`}
     style={{ backgroundImage: `url('${imageUrl}')` }}
   >
+    {/* Lazy loading hint for background image */}
+    <img decoding="async" src={imageUrl} alt="" className="hidden" loading="lazy" />
     <div className={`absolute inset-0 ${overlayClassName}`} />
     {children ? (
       <div className="relative h-full flex items-center justify-center px-4">

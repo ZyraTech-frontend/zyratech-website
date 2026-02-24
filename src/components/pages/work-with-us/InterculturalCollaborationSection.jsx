@@ -20,7 +20,7 @@ const InterculturalCollaborationSection = ({ title, description, image, points =
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="order-2 md:order-1">
-            <img
+            <img decoding="async"
               src={image || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800"}
               alt="Team collaboration"
               className="w-full h-64 md:h-[400px] object-cover rounded-2xl shadow-lg"

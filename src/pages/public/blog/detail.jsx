@@ -99,7 +99,7 @@ const BlogDetailPage = () => {
                 {/* Meta */}
                 <div className="flex flex-wrap items-center gap-4 text-white/90 text-sm sm:text-base">
                   <div className="flex items-center gap-2">
-                    <img
+                    <img decoding="async"
                       src={article.author.avatar}
                       alt={article.author.name}
                       className="w-10 h-10 rounded-full object-cover ring-2 ring-white/20"
@@ -206,7 +206,7 @@ const BlogDetailPage = () => {
             {/* Author Bio */}
             <div className="mt-12 pt-8 border-t border-gray-200">
               <div className="flex items-start gap-4">
-                <img
+                <img decoding="async"
                   src={article.author.avatar}
                   alt={article.author.name}
                   className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover flex-shrink-0"
