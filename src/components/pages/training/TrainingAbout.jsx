@@ -295,10 +295,10 @@ const TrainingAbout = () => {
             <div className="order-first lg:order-last">
               <div className="relative">
                 <img
-                  src="/images/image2.png"
-                  alt="ZyraTech Training Team"
+                  src="/images/masco.png"
+                  alt="ZyraTech Senior Trainer"
                   loading="lazy"
-                  className="w-full h-auto rounded-xl shadow-lg object-cover"
+                  className="w-full h-[400px] md:h-[500px] rounded-xl shadow-lg object-cover object-top"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
               </div>

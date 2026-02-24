@@ -477,47 +477,8 @@ const mockMetrics = [
     }
 ];
 
-const mockStories = [
-    {
-        id: 'STORY-001',
-        name: 'Kwame Asante',
-        title: 'From Unemployed to Lead Developer',
-        role: 'Senior Software Developer',
-        organization: 'TechVision Ltd',
-        location: 'Accra, Ghana',
-        image: null,
-        quote: 'Zyra Tech Hub transformed my career completely. Within 6 months of completing the program, I landed my dream job.',
-        featured: true,
-        active: true,
-        datePublished: '2024-11-15'
-    },
-    {
-        id: 'STORY-002',
-        name: 'Ama Mensah',
-        title: 'Becoming Ghana\'s First Female Cloud Architect',
-        role: 'Cloud Solutions Architect',
-        organization: 'AWS Ghana',
-        location: 'Kumasi, Ghana',
-        image: null,
-        quote: 'The AWS certification training prepared me for a role I never thought possible. I am now leading cloud migrations for major companies.',
-        featured: true,
-        active: true,
-        datePublished: '2024-10-20'
-    },
-    {
-        id: 'STORY-003',
-        name: 'Kofi Boateng',
-        title: 'Building AI Solutions for African Healthcare',
-        role: 'AI/ML Engineer',
-        organization: 'HealthTech Africa',
-        location: 'Takoradi, Ghana',
-        image: null,
-        quote: 'The data science program gave me the skills to build AI solutions that are now helping diagnose diseases in rural Ghana.',
-        featured: true,
-        active: true,
-        datePublished: '2024-09-05'
-    }
-];
+// Success stories - add real stories via admin panel
+const mockStories = [];
 
 /**
  * IMPACT METRICS API METHODS
@@ -529,7 +490,7 @@ export const fetchImpactMetrics = async () => {
         // TODO: Replace with actual API call once backend is ready
         // const response = await api.get('/api/impact/metrics');
         // return response.data;
-        
+
         // For now, return mock data
         return mockMetrics;
     } catch (error) {
@@ -544,7 +505,7 @@ export const fetchMetricsByLocation = async (location) => {
         // TODO: Replace with actual API call
         // const response = await api.get(`/api/impact/metrics?location=${location}`);
         // return response.data;
-        
+
         // Filter metrics by location, only return active ones, sorted by displayOrder
         return mockMetrics
             .filter(m => m.active && m.displayLocations?.includes(location))
@@ -561,7 +522,7 @@ export const fetchImpactMetric = async (id) => {
         // TODO: Replace with actual API call
         // const response = await api.get(`/api/impact/metrics/${id}`);
         // return response.data;
-        
+
         return mockMetrics.find(m => m.id === id);
     } catch (error) {
         console.error(`Error fetching metric ${id}:`, error);
@@ -575,7 +536,7 @@ export const createImpactMetric = async (metricData) => {
         // TODO: Replace with actual API call
         // const response = await api.post('/api/impact/metrics', metricData);
         // return response.data;
-        
+
         const newMetric = {
             id: `MET-${Date.now()}`,
             ...metricData,
@@ -595,7 +556,7 @@ export const updateImpactMetric = async (id, metricData) => {
         // TODO: Replace with actual API call
         // const response = await api.put(`/api/impact/metrics/${id}`, metricData);
         // return response.data;
-        
+
         const index = mockMetrics.findIndex(m => m.id === id);
         if (index !== -1) {
             mockMetrics[index] = {
@@ -618,7 +579,7 @@ export const deleteImpactMetric = async (id) => {
         // TODO: Replace with actual API call
         // const response = await api.delete(`/api/impact/metrics/${id}`);
         // return response.data;
-        
+
         const index = mockMetrics.findIndex(m => m.id === id);
         if (index !== -1) {
             mockMetrics.splice(index, 1);
@@ -661,7 +622,7 @@ export const fetchSuccessStories = async () => {
         // TODO: Replace with actual API call
         // const response = await api.get('/api/impact/stories');
         // return response.data;
-        
+
         return mockStories;
     } catch (error) {
         console.error('Error fetching success stories:', error);
@@ -675,7 +636,7 @@ export const fetchSuccessStory = async (id) => {
         // TODO: Replace with actual API call
         // const response = await api.get(`/api/impact/stories/${id}`);
         // return response.data;
-        
+
         return mockStories.find(s => s.id === id);
     } catch (error) {
         console.error(`Error fetching story ${id}:`, error);
@@ -689,7 +650,7 @@ export const createSuccessStory = async (storyData) => {
         // TODO: Replace with actual API call
         // const response = await api.post('/api/impact/stories', storyData);
         // return response.data;
-        
+
         const newStory = {
             id: `STORY-${Date.now()}`,
             ...storyData,
@@ -709,7 +670,7 @@ export const updateSuccessStory = async (id, storyData) => {
         // TODO: Replace with actual API call
         // const response = await api.put(`/api/impact/stories/${id}`, storyData);
         // return response.data;
-        
+
         const index = mockStories.findIndex(s => s.id === id);
         if (index !== -1) {
             mockStories[index] = {
@@ -731,7 +692,7 @@ export const deleteSuccessStory = async (id) => {
         // TODO: Replace with actual API call
         // const response = await api.delete(`/api/impact/stories/${id}`);
         // return response.data;
-        
+
         const index = mockStories.findIndex(s => s.id === id);
         if (index !== -1) {
             mockStories.splice(index, 1);

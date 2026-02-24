@@ -191,10 +191,9 @@ const ImpactStoryFormPage = () => {
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
-                                placeholder="e.g., Kwame Asante"
-                                className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all text-sm ${
-                                    errors.name ? 'border-red-300' : 'border-gray-200'
-                                }`}
+                                placeholder="e.g., John Doe"
+                                className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all text-sm ${errors.name ? 'border-red-300' : 'border-gray-200'
+                                    }`}
                             />
                             {errors.name && <p className="text-xs text-red-600 mt-1">{errors.name}</p>}
                         </div>
@@ -210,9 +209,8 @@ const ImpactStoryFormPage = () => {
                                 value={formData.title}
                                 onChange={handleChange}
                                 placeholder="e.g., From Unemployed to Lead Developer"
-                                className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all text-sm ${
-                                    errors.title ? 'border-red-300' : 'border-gray-200'
-                                }`}
+                                className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all text-sm ${errors.title ? 'border-red-300' : 'border-gray-200'
+                                    }`}
                             />
                             {errors.title && <p className="text-xs text-red-600 mt-1">{errors.title}</p>}
                         </div>
@@ -230,9 +228,8 @@ const ImpactStoryFormPage = () => {
                                     value={formData.role}
                                     onChange={handleChange}
                                     placeholder="e.g., Senior Software Developer"
-                                    className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all text-sm ${
-                                        errors.role ? 'border-red-300' : 'border-gray-200'
-                                    }`}
+                                    className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all text-sm ${errors.role ? 'border-red-300' : 'border-gray-200'
+                                        }`}
                                 />
                                 {errors.role && <p className="text-xs text-red-600 mt-1">{errors.role}</p>}
                             </div>
@@ -247,10 +244,9 @@ const ImpactStoryFormPage = () => {
                                     name="organization"
                                     value={formData.organization}
                                     onChange={handleChange}
-                                    placeholder="e.g., TechVision Ltd"
-                                    className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all text-sm ${
-                                        errors.organization ? 'border-red-300' : 'border-gray-200'
-                                    }`}
+                                    placeholder="e.g., Royal Klast Group"
+                                    className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all text-sm ${errors.organization ? 'border-red-300' : 'border-gray-200'
+                                        }`}
                                 />
                                 {errors.organization && <p className="text-xs text-red-600 mt-1">{errors.organization}</p>}
                             </div>
@@ -267,9 +263,8 @@ const ImpactStoryFormPage = () => {
                                 value={formData.location}
                                 onChange={handleChange}
                                 placeholder="e.g., Accra, Ghana"
-                                className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all text-sm ${
-                                    errors.location ? 'border-red-300' : 'border-gray-200'
-                                }`}
+                                className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all text-sm ${errors.location ? 'border-red-300' : 'border-gray-200'
+                                    }`}
                             />
                             {errors.location && <p className="text-xs text-red-600 mt-1">{errors.location}</p>}
                         </div>
@@ -285,9 +280,8 @@ const ImpactStoryFormPage = () => {
                                 onChange={handleChange}
                                 placeholder="Share the graduate's experience and impact..."
                                 rows="4"
-                                className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all text-sm resize-none ${
-                                    errors.quote ? 'border-red-300' : 'border-gray-200'
-                                }`}
+                                className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all text-sm resize-none ${errors.quote ? 'border-red-300' : 'border-gray-200'
+                                    }`}
                             />
                             <div className="flex justify-between items-center mt-1">
                                 <p className="text-xs text-gray-500">Minimum 20 characters</p>

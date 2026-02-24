@@ -8,34 +8,27 @@ const TrainingTestimonial = () => {
   const contentAnim = useScrollAnimation({ type: 'slideLeft', delay: 0.15 });
 
   return (
-    <section className="bg-white mb-8 md:mb-12">
-      <div className="w-full">
-        <motion.div
-          ref={anim.ref}
-          initial={anim.initial}
-          animate={anim.animate}
-          variants={anim.variants}
-          transition={anim.transition}
-          className="w-screen -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden shadow-lg md:flex md:items-stretch"
-        >
-          {/* Image */}
+    <section className="py-16 bg-[#004fa2] overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Image with background accent */}
           <motion.div
             ref={imageAnim.ref}
             initial={imageAnim.initial}
             animate={imageAnim.animate}
             variants={imageAnim.variants}
             transition={imageAnim.transition}
-            className="md:w-1/2 h-48 md:h-[360px] relative overflow-hidden"
+            className="relative order-1 lg:order-1"
           >
+            <div className="absolute -right-4 -top-4 w-full h-full bg-white/10 rounded-lg border border-white/20"></div>
             <img
-              src="/images/student-success.jpg"
-              alt="Kwame Asante - Full Stack Developer"
+              src="/images/trainingtest.png"
+              alt="ZyraTech Training Graduate"
               loading="lazy"
-              className="w-full h-full object-cover object-center"
-              style={{ objectPosition: 'center 30%' }}
+              className="relative w-full h-80 md:h-[450px] object-cover rounded-lg shadow-2xl"
+              style={{ objectPosition: 'center 20%' }}
               onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1200'; }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#004fa2]/10 to-transparent" />
           </motion.div>
 
           {/* Content */}
@@ -45,28 +38,30 @@ const TrainingTestimonial = () => {
             animate={contentAnim.animate}
             variants={contentAnim.variants}
             transition={contentAnim.transition}
-            className="md:w-1/2 bg-[#004fa2] text-white px-6 sm:px-8 md:px-12 py-6 md:py-10 flex flex-col justify-center"
+            className="order-2 lg:order-2"
           >
-            <div className="max-w-xl mx-auto">
-              <div className="text-white/30 text-6xl leading-none font-extrabold mb-3">"</div>
-              <h3 className="text-2xl md:text-3xl font-extrabold mb-3">Transforming Careers Through Training</h3>
+            <div className="pl-0 lg:pl-8 text-white">
+              <div className="text-white text-6xl leading-none font-extrabold mb-4">"</div>
+              <h3 className="text-3xl md:text-4xl font-extrabold mb-6 leading-tight">
+                Transforming Careers Through Training
+              </h3>
 
-              <p className="text-white/90 text-base leading-relaxed mb-5">
+              <p className="text-white/90 text-lg leading-relaxed mb-8">
                 "My journey at ZyraTech transformed my career completely. In just six months, I developed my skills in
                 software development and was offered a position as a Full Stack Developer. The training and mentorship
                 I received was exceptional."
               </p>
 
-              <div className="flex items-center gap-3">
-                <span className="text-white/70 font-bold text-xl">—</span>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-1 bg-white"></div>
                 <div>
-                  <div className="font-semibold text-base">Kwame Asante</div>
-                  <div className="text-sm text-white/80">Full Stack Development Programme</div>
+                  <div className="font-bold text-xl">ZyraTech Graduate</div>
+                  <div className="text-white/80 font-medium">Full Stack Development Programme</div>
                 </div>
               </div>
             </div>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
