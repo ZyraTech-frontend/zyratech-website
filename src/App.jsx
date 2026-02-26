@@ -8,6 +8,8 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/admin/layout/ProtectedRoute';
 import ConfirmDialog from './components/admin/shared/ConfirmDialog';
+import FullPageSkeleton from './components/common/FullPageSkeleton';
+import RouteSkeleton from './components/common/RouteSkeleton';
 
 // Eagerly load critical pages
 import HomePage from './pages/public/home';
@@ -94,7 +96,7 @@ const JobsPage = lazy(() => import('./pages/public/jobs'));
 const JobDetailPage = lazy(() => import('./pages/public/jobs/detail'));
 const JobApplicationPage = lazy(() => import('./pages/public/jobs/apply'));
 
-// Loading component (Youtube/Spotify style top bar)
+// Legacy top-bar loader is retained but we use a full-page skeleton for Suspense fallback
 const PageLoader = () => (
   <div className="fixed top-0 left-0 w-full h-[3px] bg-transparent z-[9999] pointer-events-none overflow-hidden">
     <div className="h-full w-[50%] bg-[#004fa2] animate-[youtubeBar_1.5s_infinite_ease-in-out]"></div>
@@ -138,13 +140,13 @@ function App() {
         {!hideMainNavbar && <Navbar />}
 
         <main className="flex-grow">
-          <Suspense fallback={<PageLoader />}>
+          <Suspense fallback={<FullPageSkeleton />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/projects" element={<ProjectsPage />} />
-              <Route path="/projects/request" element={<ProjectRequestPage />} />
-              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/about" element={<Suspense fallback={<RouteSkeleton variant="about" />}><AboutPage /></Suspense>} />
+              <Route path="/projects" element={<Suspense fallback={<RouteSkeleton variant="projects" />}><ProjectsPage /></Suspense>} />
+              <Route path="/projects/request" element={<Suspense fallback={<RouteSkeleton variant="projects" />}><ProjectRequestPage /></Suspense>} />
+              <Route path="/contact" element={<Suspense fallback={<RouteSkeleton variant="default" />}><ContactPage /></Suspense>} />
 
               {/* Admin Routes */}
               <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
@@ -646,13 +648,13 @@ function App() {
               <Route path="/impact" element={<ImpactPage />} />
               <Route path="/partner" element={<PartnershipPage />} />
               <Route path="/partner/apply" element={<PartnershipApplicationPage />} />
-              <Route path="/training" element={<TrainingPage />} />
+              <Route path="/training" element={<Suspense fallback={<RouteSkeleton variant="training" />}><TrainingPage /></Suspense>} />
               <Route path="/collaboration-models" element={<CollaborationModelsPage />} />
               <Route path="/our-services" element={<OurServicesPage />} />
               <Route path="/work-with-us" element={<WorkWithUsPage />} />
               <Route path="/quality-assurance" element={<QualityAssurancePage />} />
               <Route path="/training/contact" element={<TrainingContactPage />} />
-              <Route path="/training/programs" element={<TrainingProgramsPage />} />
+              <Route path="/training/programs" element={<Suspense fallback={<RouteSkeleton variant="training" />}><TrainingProgramsPage /></Suspense>} />
               <Route path="/training/programs/basic" element={<BasicProgramsRoute />} />
               <Route path="/training/programs/intermediate" element={<IntermediateProgramsRoute />} />
               <Route path="/training/programs/advanced" element={<AdvancedProgramsRoute />} />
@@ -663,12 +665,12 @@ function App() {
               <Route path="/training/application-success" element={<ApplicationSuccessPage />} />
               <Route path="/training/payment/:courseId" element={<TrainingPaymentPage />} />
               <Route path="/training/payment-success" element={<TrainingPaymentSuccessPage />} />
-              <Route path="/gallery" element={<GalleryPage />} />
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/blog/:slug" element={<BlogDetailPage />} />
-              <Route path="/jobs" element={<JobsPage />} />
-              <Route path="/jobs/:id" element={<JobDetailPage />} />
-              <Route path="/jobs/:id/apply" element={<JobApplicationPage />} />
+              <Route path="/gallery" element={<Suspense fallback={<RouteSkeleton variant="default" />}><GalleryPage /></Suspense>} />
+              <Route path="/blog" element={<Suspense fallback={<RouteSkeleton variant="blog" />}><BlogPage /></Suspense>} />
+              <Route path="/blog/:slug" element={<Suspense fallback={<RouteSkeleton variant="blog" />}><BlogDetailPage /></Suspense>} />
+              <Route path="/jobs" element={<Suspense fallback={<RouteSkeleton variant="jobs" />}><JobsPage /></Suspense>} />
+              <Route path="/jobs/:id" element={<Suspense fallback={<RouteSkeleton variant="jobs" />}><JobDetailPage /></Suspense>} />
+              <Route path="/jobs/:id/apply" element={<Suspense fallback={<RouteSkeleton variant="jobs" />}><JobApplicationPage /></Suspense>} />
 
               {/* Redirects for old/broken links */}
               <Route path="/labs" element={<Navigate to="/contact" replace />} />

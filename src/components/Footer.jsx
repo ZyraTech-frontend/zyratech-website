@@ -38,10 +38,10 @@ const Footer = () => {
               <img decoding="async"
                 src="/zyrateclogopng.webp"
                 alt={`${siteName} Logo`}
-                width="128"
-                height="128"
+                width="160"
+                height="160"
                 loading="lazy"
-                className="h-32 w-auto object-contain filter brightness-0 invert"
+                className="h-28 md:h-32 w-auto object-contain"
               />
             </div>
             <p className="text-sm text-gray-300 leading-relaxed">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, MapPin, Mail, Phone, Send, User, MessageSquare } from 'lucide-react';
+import { FaLinkedinIn, FaXTwitter, FaInstagram, FaFacebookF, FaWhatsapp } from 'react-icons/fa6';
 
 const ContactHero = () => {
   const [formData, setFormData] = useState({
@@ -181,18 +182,21 @@ const ContactHero = () => {
             {/* Social Media */}
             <div className="bg-white border border-gray-200 px-5 py-6 rounded-xl shadow-sm">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Connect With Us</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                <a href="https://www.facebook.com/zyratechhub" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-[#004fa2] hover:bg-[#004fa2]/5 transition-all duration-300 group">
-                  <i className="fa-brands fa-facebook text-[#004fa2] group-hover:text-[#000000]"></i>
-                  <span className="text-sm font-medium text-gray-700 group-hover:text-[#004fa2]">Facebook</span>
+              <div className="flex items-center space-x-3 mb-0">
+                <a href="https://www.facebook.com/zyratechhub" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-[#003a7a] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Facebook">
+                  <FaFacebookF className="text-lg text-white" />
                 </a>
-                <a href="https://www.linkedin.com/company/zyratechhub" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-[#004fa2] hover:bg-[#004fa2]/5 transition-all duration-300 group">
-                  <i className="fa-brands fa-linkedin text-[#004fa2] group-hover:text-[#000000]"></i>
-                  <span className="text-sm font-medium text-gray-700 group-hover:text-[#004fa2]">LinkedIn</span>
+                <a href="https://x.com/zyratechhub" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-[#003a7a] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="X (Twitter)">
+                  <FaXTwitter className="text-lg text-white" />
                 </a>
-                <a href="https://www.instagram.com/zyratechhub" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-[#004fa2] hover:bg-[#004fa2]/5 transition-all duration-300 group">
-                  <i className="fa-brands fa-square-instagram text-[#004fa2] group-hover:text-[#000000]"></i>
-                  <span className="text-sm font-medium text-gray-700 group-hover:text-[#004fa2]">Instagram</span>
+                <a href="https://www.linkedin.com/company/zyratechhub" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-[#003a7a] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="LinkedIn">
+                  <FaLinkedinIn className="text-lg text-white" />
+                </a>
+                <a href="https://www.instagram.com/zyratechhub" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-[#003a7a] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Instagram">
+                  <FaInstagram className="text-lg text-white" />
+                </a>
+                <a href={`https://wa.me/${'233509582497'}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-[#003a7a] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="WhatsApp">
+                  <FaWhatsapp className="text-lg text-white" />
                 </a>
               </div>
             </div>

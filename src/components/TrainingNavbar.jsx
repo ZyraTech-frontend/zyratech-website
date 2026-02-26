@@ -32,7 +32,7 @@ const TrainingNavbar = () => {
                 alt="Zyra Tech Hub Logo"
                 width="112"
                 height="112"
-                className="h-16 md:h-20 lg:h-28 w-auto object-contain"
+                className="h-20 md:h-24 lg:h-28 w-auto object-contain"
               />
             </NavLink>
           </div>
