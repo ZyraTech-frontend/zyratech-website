@@ -74,7 +74,7 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
               <img decoding="async"
                 src="/zyrateclogopng.webp"
                 alt="ZyraTech"
-                className="w-10 h-10 object-contain brightness-0 invert"
+                className="w-12 h-12 object-contain"
               />
             </div>
             <div>
