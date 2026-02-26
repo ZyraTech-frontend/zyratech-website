@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ImageWithSkeleton from '../../common/ImageWithSkeleton';
 
 const NewProjectsHero = () => {
   const [projects, setProjects] = useState(0);
@@ -23,11 +24,12 @@ const NewProjectsHero = () => {
     <section className="relative text-white overflow-visible">
       {/* Background Image with Overlays */}
       <div className="absolute inset-0">
-        <img decoding="async"
+        <ImageWithSkeleton
           src="/images/parallax1.jpeg"
           alt="ZyraTech Projects"
-          className="h-full w-full object-cover"
-          style={{ objectPosition: 'center 20%' }}
+          className="h-full w-full"
+          skeletonClassName="bg-gray-800"
+          style={{ objectFit: 'cover', objectPosition: 'center 20%' }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/15" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#004fa2]/25 to-transparent" />

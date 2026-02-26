@@ -94,25 +94,19 @@ const JobsPage = lazy(() => import('./pages/public/jobs'));
 const JobDetailPage = lazy(() => import('./pages/public/jobs/detail'));
 const JobApplicationPage = lazy(() => import('./pages/public/jobs/apply'));
 
-// Loading component
+// Loading component (Youtube/Spotify style top bar)
 const PageLoader = () => (
-  <div className="fixed inset-0 flex items-center justify-center bg-white z-[9999] animate-pulse">
-    <div className="flex flex-col items-center gap-4">
-      <img decoding="async" src="/zyrateclogopng.webp" alt="ZyraTech Logo" className="h-16 w-auto animate-bounce opacity-80" />
-      <div className="w-48 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-        <div className="h-full bg-[#004fa2] animate-[loading_1.5s_ease-in-out_infinite]"></div>
-      </div>
-    </div>
+  <div className="fixed top-0 left-0 w-full h-[3px] bg-transparent z-[9999] pointer-events-none overflow-hidden">
+    <div className="h-full w-[50%] bg-[#004fa2] animate-[youtubeBar_1.5s_infinite_ease-in-out]"></div>
   </div>
 );
 
 // Add custom keyframe for the loader
 const style = document.createElement('style');
 style.textContent = `
-  @keyframes loading {
+  @keyframes youtubeBar {
     0% { transform: translateX(-100%); }
-    50% { transform: translateX(0); }
-    100% { transform: translateX(100%); }
+    100% { transform: translateX(200%); }
   }
 `;
 document.head.appendChild(style);
