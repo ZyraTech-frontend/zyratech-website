@@ -25,18 +25,20 @@ const TrainingNavbar = () => {
         <div className="flex justify-between items-center h-16 lg:h-28">
 
           {/* Logo/Brand */}
-          <div className="flex items-center">
+          <div className="flex items-center mr-4 lg:mr-12">
             <NavLink to="/training" className="flex items-center hover:opacity-80 transition-opacity">
               <img decoding="async"
                 src="/zyrateclogopng.webp"
                 alt="Zyra Tech Hub Logo"
-                className="h-10 sm:h-12 w-auto"
+                width="112"
+                height="112"
+                className="h-16 md:h-20 lg:h-28 w-auto object-contain"
               />
             </NavLink>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-4 ml-auto">
+          <div className="hidden lg:flex items-center gap-4 ml-auto relative">
             {trainingLinks.map((link) => (
               <NavLink
                 key={link.name}
