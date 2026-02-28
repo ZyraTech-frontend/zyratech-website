@@ -1,0 +1,35 @@
+# ============================================================
+# GitHub Actions: Trigger DigitalOcean Deployment
+# ============================================================
+# IMPORTANT NOTE ABOUT DIGITALOCEAN:
+# DigitalOcean App Platform natively supports GitHub. If you
+# connect your repo in their dashboard, they will automatically
+# build your Dockerfile every time you push to 'main', ZERO
+# GitHub Actions needed automatically!
+# 
+# However, if you explicitly want GitHub Actions to trigger it,
+# you can use this workflow.
+# ============================================================
+
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Wait for code to be ready
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Tell DigitalOcean to deploy the latest code
+      # Requires 2 Secrets in GitHub: DO_APP_NAME and DO_ACCESS_TOKEN
+      - name: Deploy to DigitalOcean App Platform
+        uses: digitalocean/app_action@v2
+        with:
+          app_name: ${{ secrets.DO_APP_NAME }}
+          token: ${{ secrets.DO_ACCESS_TOKEN }}

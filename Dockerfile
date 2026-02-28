@@ -62,10 +62,10 @@ COPY --from=build /app/dist /usr/share/nginx/html
 # This handles React Router (so /about, /contact etc. don't give 404 errors)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Tell Docker that this container listens on port 80
-# (This is documentation - the actual port mapping happens when you run the container)
+# Set default port to 80 for local development, Heroku will override this automatically
+ENV PORT=80
 EXPOSE 80
 
-# Start Nginx in the foreground
-# "daemon off" keeps the process running (Docker needs a foreground process)
-CMD ["nginx", "-g", "daemon off;"]
+# Replace the placeholder ${PORT} in nginx.conf with the actual environment variable,
+# then start Nginx in the foreground
+CMD sed -i -e "s/\${PORT}/$PORT/g" /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'
