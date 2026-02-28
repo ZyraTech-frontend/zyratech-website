@@ -1,0 +1,57 @@
+# ============================================================
+# .dockerignore - Files Docker should SKIP when building
+# ============================================================
+# Think of this like .gitignore but for Docker.
+# When Docker runs "COPY . .", it copies your project into the container.
+# This file tells it what NOT to copy, which:
+#   1. Makes your build FASTER (less files to copy)
+#   2. Makes your image SMALLER
+#   3. Prevents secrets (.env) from being baked into the image
+# ============================================================
+
+# Dependencies - Docker will run "npm ci" itself, so skip your local copy
+node_modules
+
+# Build output - Docker builds fresh, doesn't need your local build
+dist
+build
+
+# Git history - not needed in the container
+.git
+.gitattributes
+
+# Environment files - NEVER bake secrets into Docker images!
+# Use environment variables at runtime instead
+.env
+.env.local
+.env.development
+.env.production
+
+# Editor and IDE files
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Documentation - not needed to run the app
+*.md
+docs
+LICENSE
+
+# Testing files - not needed in production
+coverage
+.nyc_output
+vitest.config.js
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+.cache
+.temp
+.tmp
+*.log
