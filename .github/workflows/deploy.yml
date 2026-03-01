@@ -1,35 +1,68 @@
 # ============================================================
-# GitHub Actions: Trigger DigitalOcean Deployment
+# GitHub Actions: Build & Deploy ZyraTech Frontend to Azure
 # ============================================================
-# IMPORTANT NOTE ABOUT DIGITALOCEAN:
-# DigitalOcean App Platform natively supports GitHub. If you
-# connect your repo in their dashboard, they will automatically
-# build your Dockerfile every time you push to 'main', ZERO
-# GitHub Actions needed automatically!
-# 
-# However, if you explicitly want GitHub Actions to trigger it,
-# you can use this workflow.
+# This workflow runs ONLY when code is merged into the 'main' branch.
+#
+# What it does:
+#   1. Checks out your code
+#   2. Logs into Azure Container Registry (ACR)
+#   3. Builds the Docker image
+#   4. Pushes the image to ACR
+#   5. Tells Azure App Service to pull the new image
 # ============================================================
 
-name: Deploy to DigitalOcean
+name: Deploy Frontend to Azure
 
+# Only when code is pushed/merged into the 'main' branch
 on:
   push:
     branches:
       - main
+  # Allows you to trigger the deployment manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-deploy:
+    name: Build & Deploy
     runs-on: ubuntu-latest
+
     steps:
-      # Step 1: Wait for code to be ready
+      # Step 1: Get the code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Tell DigitalOcean to deploy the latest code
-      # Requires 2 Secrets in GitHub: DO_APP_NAME and DO_ACCESS_TOKEN
-      - name: Deploy to DigitalOcean App Platform
-        uses: digitalocean/app_action@v2
+      # Step 2: Log into Azure
+      - name: Login to Azure
+        uses: azure/login@v2
         with:
-          app_name: ${{ secrets.DO_APP_NAME }}
-          token: ${{ secrets.DO_ACCESS_TOKEN }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Step 3: Log into Azure Container Registry
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      # Step 4: Build the Docker image
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }} \
+            -t ${{ secrets.ACR_LOGIN_SERVER }}/zyratech-frontend:${{ github.sha }} \
+            -t ${{ secrets.ACR_LOGIN_SERVER }}/zyratech-frontend:latest \
+            .
+
+      # Step 5: Push the image to Azure Container Registry
+      - name: Push to ACR
+        run: |
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/zyratech-frontend:${{ github.sha }}
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/zyratech-frontend:latest
+
+      # Step 6: Deploy to Azure App Service
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          images: ${{ secrets.ACR_LOGIN_SERVER }}/zyratech-frontend:${{ github.sha }}
