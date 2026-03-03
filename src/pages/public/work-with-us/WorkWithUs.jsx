@@ -9,8 +9,16 @@ import HrContactSection from '../../../components/common/HrContactSection';
 import ParallaxDivider from '../../../components/common/ParallaxDivider';
 import contentService from '../../../services/contentService';
 import Loader from '../../../components/admin/shared/LoadingSpinner';
+import useSEO from '../../../hooks/useSEO';
 
 const WorkWithUs = () => {
+  useSEO({
+    title: 'Work With Us',
+    description: 'Learn how to work with Zyra Tech Hub — from organizational setup to project collaboration and intercultural partnerships. Join our growing team in Ghana.',
+    url: '/work-with-us',
+    keywords: 'work with Zyra Tech Hub, careers Ghana, tech jobs, intercultural collaboration, hiring Ghana'
+  });
+
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 

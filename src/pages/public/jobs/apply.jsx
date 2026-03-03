@@ -3,8 +3,16 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../../components/Navbar';
 import JobApplicationForm from '../../../components/pages/jobs/JobApplicationForm';
 import { jobsData } from '../../../data/jobsData';
+import useSEO from '../../../hooks/useSEO';
 
 const JobApplicationPage = () => {
+  useSEO({
+    title: 'Apply for Job',
+    description: 'Apply for a position at Zyra Tech Hub. Submit your application and join our team of innovators building Ghana\'s digital future.',
+    url: '/jobs',
+    keywords: 'job application, apply for job, Zyra Tech Hub careers, tech jobs Ghana'
+  });
+
   const { id } = useParams();
   const navigate = useNavigate();
   const job = jobsData.find(j => j.id === parseInt(id));

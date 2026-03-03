@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 const BASE_TITLE = 'Zyra Tech Hub';
-const BASE_URL = 'https://zyratech-hub.netlify.app';
+const BASE_URL = 'https://zyratechhub.com';
 const DEFAULT_IMAGE = '/zyrateclogopng.webp';
 
 /**
