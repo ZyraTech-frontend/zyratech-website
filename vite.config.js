@@ -20,10 +20,21 @@ export default defineConfig({
           'framer-motion': ['framer-motion'],
           'icons': ['lucide-react'],
         },
+        // Cache-bust strategy for images
+        entryFileNames: 'js/[name]-[hash].js',
+        chunkFileNames: 'js/[name]-[hash].js',
+        assetFileNames({ name }) {
+          if (/\.(gif|jpe?g|png|svg)$/.test(name ?? '')) {
+            return 'images/[name]-[hash][extname]';
+          }
+          return 'assets/[name]-[hash][extname]';
+        },
       },
     },
     // Set chunk size warning limit
     chunkSizeWarningLimit: 1000,
+    // Image optimization settings
+    assetsInlineLimit: 4096, // Inline images smaller than 4KB
   },
   // Optimize dependencies
   optimizeDeps: {
