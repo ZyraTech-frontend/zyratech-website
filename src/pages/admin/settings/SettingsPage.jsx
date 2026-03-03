@@ -290,7 +290,7 @@ const SettingsPage = () => {
                       value={formData.contactPhone || ''}
                       onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600"
-                      placeholder="+233 50 958 2497"
+                      placeholder="+233 55 955 4261"
                     />
                   </div>
                 </div>
@@ -305,9 +305,9 @@ const SettingsPage = () => {
                       value={formData.contactWhatsApp || ''}
                       onChange={(e) => setFormData({ ...formData, contactWhatsApp: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600"
-                      placeholder="233509582497"
+                      placeholder="233559554261"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Without + or spaces (e.g., 233509582497)</p>
+                    <p className="text-xs text-gray-500 mt-1">Without + or spaces (e.g., 233559554261)</p>
                   </div>
 
                   <div>
