@@ -8,8 +8,16 @@ import HrContactSection from '../../../components/common/HrContactSection';
 import ToolsOrbit from '../../../components/pages/quality-assurance/ToolsOrbit';
 import contentService from '../../../services/contentService';
 import Loader from '../../../components/admin/shared/LoadingSpinner';
+import useSEO from '../../../hooks/useSEO';
 
 const QualityAssurance = () => {
+  useSEO({
+    title: 'Quality Assurance Services',
+    description: 'Professional quality assurance and software testing services from Zyra Tech Hub. Ensure your software meets the highest standards with our QA expertise.',
+    url: '/quality-assurance',
+    keywords: 'quality assurance Ghana, software testing, QA services, test automation, Zyra Tech Hub QA'
+  });
+
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 

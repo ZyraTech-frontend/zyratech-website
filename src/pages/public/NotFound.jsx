@@ -1,7 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import useSEO from '../../hooks/useSEO';
 
 const NotFound = () => {
+  useSEO({
+    title: 'Page Not Found',
+    description: 'The page you are looking for does not exist. Return to Zyra Tech Hub homepage to explore training, services, and opportunities.',
+  });
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="max-w-md text-center">

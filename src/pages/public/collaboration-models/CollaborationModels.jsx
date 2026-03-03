@@ -13,8 +13,16 @@ import {
   collaborationProcessSteps,
   collaborationTestimonial,
 } from '../../../data/collaborationModelsData';
+import useSEO from '../../../hooks/useSEO';
 
 const CollaborationModels = () => {
+  useSEO({
+    title: 'Collaboration Models',
+    description: 'Discover Zyra Tech Hub\'s flexible collaboration models — from project-based partnerships to long-term strategic alliances for technology development.',
+    url: '/collaboration-models',
+    keywords: 'collaboration models, partnership models, tech collaboration Ghana, strategic partnerships, Zyra Tech Hub collaboration'
+  });
+
   return (
     <div className="bg-white">
       {/* Hero */}

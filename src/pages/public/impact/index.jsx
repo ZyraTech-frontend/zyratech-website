@@ -9,8 +9,16 @@ import ImpactPeopleHighlightsSection from '../../../components/pages/impact/Impa
 
 import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
 import contentService from '../../../services/contentService'; // Import content service
+import useSEO from '../../../hooks/useSEO';
 
 const ImpactPage = () => {
+  useSEO({
+    title: 'Our Impact',
+    description: 'See how Zyra Tech Hub is transforming lives in Ghana through digital skills training, community development, and technology empowerment initiatives.',
+    url: '/impact',
+    keywords: 'social impact Ghana, tech education impact, community development, digital empowerment, Zyra Tech Hub impact'
+  });
+
   const shouldReduceMotion = useReducedMotion();
   const [metrics, setMetrics] = useState([]);
   const [stories, setStories] = useState([]);
