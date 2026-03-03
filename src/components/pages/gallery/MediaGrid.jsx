@@ -1,163 +1,42 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { Play, Grid, List, X, ChevronLeft, ChevronRight, Maximize2, Minimize2 } from 'lucide-react';
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { Play, Grid, List, X, ChevronLeft, ChevronRight, Maximize2, Minimize2, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { galleryAlbums } from '../../../data/galleryAlbums';
 
 const MediaGrid = ({ filters = {} }) => {
-  const [viewMode, setViewMode] = useState('grid'); // grid, list
-  const [itemsPerPage, setItemsPerPage] = useState(12);
+  const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState('grid');
+  const [itemsPerPage, setItemsPerPage] = useState(6); // Reduced for better performance
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedItem, setSelectedItem] = useState(null); // for modal
-  const [currentImageIndex, setCurrentImageIndex] = useState(0); // for modal navigation
-  const [isFullscreen, setIsFullscreen] = useState(false); // fullscreen mode
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const touchStartX = useRef(null);
+  const touchEndX = useRef(null);
 
-  // Complete media packages
-  const allMediaItems = [
-    {
-      id: 1,
-      title: "SafeDrive IoT System Development",
+  // Optimize data transformation with useMemo
+  const allMediaItems = useMemo(() => 
+    galleryAlbums.map(album => ({
+      id: album.id,
+      title: album.title,
       type: "package",
-      thumbnail: "/images/image1.png",
-      category: "projects",
-      images: [
-        "/images/image1.png",
-        "/images/image2.png", 
-        "/images/image3.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp"
-      ],
-      keywords: ["iot", "safety", "smart", "development", "transportation"]
-    },
-    {
-      id: 2,
-      title: "EcoWatch Environmental Monitoring Platform",
-      type: "package",
-      thumbnail: "/images/image2.png",
-      category: "projects",
-      images: [
-        "/images/image2.png",
-        "/images/image3.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-        "/images/image1.png"
-      ],
-      keywords: ["environment", "monitoring", "platform", "sensors", "data"]
-    },
-    {
-      id: 3,
-      title: "AgriZ Planter Precision Farming Solution",
-      type: "package",
-      thumbnail: "/images/image3.png",
-      category: "projects",
-      images: [
-        "/images/image3.png",
-        "/images/image1.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-        "/images/image2.png"
-      ],
-      keywords: ["agriculture", "precision", "farming", "technology", "innovation"]
-    },
-    {
-      id: 4,
-      title: "Software Development Training Workshop",
-      type: "package",
-      thumbnail: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-      category: "training",
-      images: [
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-        "/images/image1.png",
-        "/images/image2.png",
-        "/images/image3.png"
-      ],
-      keywords: ["training", "software", "development", "workshop", "skills"]
-    },
-    {
-      id: 5,
-      title: "Mobile App Development Bootcamp",
-      type: "package",
-      thumbnail: "/images/image1.png",
-      category: "training",
-      images: [
-        "/images/image1.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-        "/images/image2.png",
-        "/images/image3.png"
-      ],
-      keywords: ["mobile", "app", "development", "bootcamp", "programming"]
-    },
-    {
-      id: 6,
-      title: "Web Development Certification Program",
-      type: "package",
-      thumbnail: "/images/image2.png",
-      category: "training",
-      images: [
-        "/images/image2.png",
-        "/images/image3.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-        "/images/image1.png"
-      ],
-      keywords: ["web", "development", "certification", "fullstack", "javascript"]
-    },
-    {
-      id: 7,
-      title: "Data Science and Analytics Training",
-      type: "package",
-      thumbnail: "/images/image3.png",
-      category: "training",
-      images: [
-        "/images/image3.png",
-        "/images/image1.png",
-        "/images/image2.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp"
-      ],
-      keywords: ["data", "science", "analytics", "machine", "learning"]
-    },
-    {
-      id: 8,
-      title: "IoT Solutions Implementation",
-      type: "package",
-      thumbnail: "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-      category: "projects",
-      images: [
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-        "/images/image2.png",
-        "/images/image3.png",
-        "/images/image1.png"
-      ],
-      keywords: ["iot", "solutions", "implementation", "smart", "devices"]
-    },
-    {
-      id: 9,
-      title: "Team Building and Collaboration Session",
-      type: "package",
-      thumbnail: "/images/Dalene.png",
-      category: "community",
-      images: [
-        "/images/Dalene.png",
-        "/images/image1.png",
-        "/images/image2.png",
-        "/images/image3.png"
-      ],
-      keywords: ["team", "building", "collaboration", "community", "engagement"]
-    },
-    {
-      id: 10,
-      title: "Innovation Showcase 2024",
-      type: "package",
-      thumbnail: "/images/image1.png",
-      category: "events",
-      images: [
-        "/images/image1.png",
-        "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-        "/images/image2.png",
-        "/images/image3.png"
-      ],
-      keywords: ["innovation", "showcase", "2024", "technology", "exhibition"]
-    }
-  ];
+      thumbnail: album.thumbnail,
+      category: album.category,
+      images: album.images, // Show all images
+      keywords: album.keywords
+    })), []
+  );
 
-  // Filter and search functionality
+  // Debug logging
+  useEffect(() => {
+    console.log('Gallery albums:', galleryAlbums);
+    console.log('All media items:', allMediaItems);
+  }, [allMediaItems]);
+
+  // Optimized filtering with useCallback
   const filteredItems = useMemo(() => {
     let filtered = allMediaItems;
 
-    // Apply search filter
     if (filters.searchTerm) {
       const searchLower = filters.searchTerm.toLowerCase();
       filtered = filtered.filter(item => 
@@ -166,20 +45,21 @@ const MediaGrid = ({ filters = {} }) => {
       );
     }
 
-    // Apply category filter
     if (filters.category && filters.category !== 'all') {
       filtered = filtered.filter(item => item.category === filters.category);
     }
 
     return filtered;
-  }, [filters]);
+  }, [allMediaItems, filters]);
 
   // Pagination
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedItems = filteredItems.slice(startIndex, startIndex + itemsPerPage);
 
-  // Keyboard navigation for modal
+
+
+  // Keyboard navigation
   useEffect(() => {
     if (!selectedItem) return;
 
@@ -272,8 +152,7 @@ const MediaGrid = ({ filters = {} }) => {
                   viewMode === 'list' ? 'flex flex-col sm:flex-row gap-3 sm:gap-4' : ''
                 }`}
                 onClick={() => {
-                  setSelectedItem(item);
-                  setCurrentImageIndex(0);
+                  navigate(`/gallery/album/${item.id}`);
                 }}
               >
               
@@ -281,10 +160,23 @@ const MediaGrid = ({ filters = {} }) => {
               <div className={`relative overflow-hidden rounded-xl ${
                 viewMode === 'list' ? 'w-full sm:w-48 h-40 sm:h-32 flex-shrink-0' : 'aspect-video'
               }`}>
-                <img decoding="async"
+                <img 
                   src={item.thumbnail}
                   alt={item.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                  onError={(e) => {
+                    console.error('❌ Failed to load image:', item.thumbnail);
+                    // Try fallback image
+                    e.target.src = '/images/image1.png';
+                    e.target.onerror = () => {
+                      e.target.style.backgroundColor = '#f3f4f6';
+                      e.target.style.display = 'flex';
+                      e.target.style.alignItems = 'center';
+                      e.target.style.justifyContent = 'center';
+                      e.target.innerHTML = '<div style="color: #6b7280; font-size: 12px; text-align: center;">Image not found</div>';
+                    };
+                  }}
                 />
                 
                 {/* Category Badge */}
@@ -381,11 +273,24 @@ const MediaGrid = ({ filters = {} }) => {
         {/* Enhanced Modal for viewing */}
         {selectedItem && (
           <div 
-            className="fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center z-50" 
+            className="fixed inset-0 bg-black/95 flex items-center justify-center z-50" 
             onClick={() => {
               setSelectedItem(null);
               setCurrentImageIndex(0);
               setIsFullscreen(false);
+            }}
+            onTouchStart={(e) => { touchStartX.current = e.changedTouches[0].clientX; }}
+            onTouchEnd={(e) => {
+              touchEndX.current = e.changedTouches[0].clientX;
+              const diff = touchStartX.current - touchEndX.current;
+              if (Math.abs(diff) > 50) {
+                e.stopPropagation();
+                if (diff > 0) {
+                  setCurrentImageIndex((prev) => prev < selectedItem.images.length - 1 ? prev + 1 : 0);
+                } else {
+                  setCurrentImageIndex((prev) => prev > 0 ? prev - 1 : selectedItem.images.length - 1);
+                }
+              }
             }}
           >
             {/* Modal Container */}
@@ -432,10 +337,11 @@ const MediaGrid = ({ filters = {} }) => {
 
               {/* Main Image Area */}
               <div className="flex-1 flex items-center justify-center relative px-12 sm:px-16 py-16 sm:py-20">
-                <img decoding="async"
+                <img 
                   src={selectedItem.images[currentImageIndex]}
                   alt={`${selectedItem.title} - Image ${currentImageIndex + 1}`}
                   className={`max-w-full max-h-full object-contain rounded-lg ${isFullscreen ? 'rounded-none' : ''}`}
+                  loading="lazy"
                 />
 
                 {/* Navigation Buttons */}
@@ -480,10 +386,11 @@ const MediaGrid = ({ filters = {} }) => {
                             : 'opacity-50 hover:opacity-80'
                         }`}
                       >
-                        <img decoding="async"
+                        <img 
                           src={image}
                           alt={`Thumbnail ${index + 1}`}
                           className="w-full h-full object-cover"
+                          loading="lazy"
                         />
                       </button>
                     ))}

@@ -5,7 +5,7 @@ import {
   FaLinkedinIn,
   FaXTwitter,
   FaInstagram,
-  FaFacebookF,
+  FaTiktok,
   FaWhatsapp
 } from 'react-icons/fa6';
 
@@ -15,17 +15,18 @@ const Footer = () => {
 
   // Fallback values if settings not loaded
   const contactEmail = settings.contactEmail || 'info@zyratechhub.com';
-  const contactPhone = settings.contactPhone || '+233 50 958 2497';
-  const contactWhatsApp = settings.contactWhatsApp || '233509582497';
+  const contactPhone = settings.contactPhone || '+233 55 955 4261';
+  const contactWhatsApp = settings.contactWhatsApp || '233559554261';
   const contactAddress = settings.contactAddress || 'Koforidua, Eastern Region, Ghana';
   const tagline = settings.tagline || 'Empowering Ghana\'s Future Through Technology and Innovation.';
   const siteName = settings.siteName || 'Zyra Tech Hub';
 
   // Social links
-  const socialLinkedIn = settings.socialLinkedIn || 'https://www.linkedin.com/company/zyra-tech-hub';
-  const socialTwitter = settings.socialTwitter || 'https://x.com/zyratechhub';
+  const socialLinkedIn = settings.socialLinkedIn || 'https://www.linkedin.com/company/zyratechhub/';
+  const socialTwitter = settings.socialTwitter || 'https://x.com/zyratech_hub?s=21&t=T51YWSqAK0Y2P8kRclEAhQ';
   const socialInstagram = settings.socialInstagram || 'https://www.instagram.com/zyratechhub';
-  const socialFacebook = settings.socialFacebook || 'https://www.facebook.com/zyratechhub';
+  const socialFacebook = settings.socialFacebook || 'https://www.tiktok.com/@zyratechhub?_r=1&_t=ZS-94KbnVr8kYj';
+  const socialWhatsApp = settings.socialWhatsApp || 'https://wa.me/message/JNPRU4YUGAU5K1';
 
   return (
     <footer className="bg-black text-white py-8">
@@ -115,12 +116,12 @@ const Footer = () => {
                 </a>
               )}
               {socialFacebook && (
-                <a href={socialFacebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Visit our Facebook page">
-                  <FaFacebookF className="text-lg" />
+                <a href={socialFacebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Visit our TikTok page">
+                  <FaTiktok className="text-lg" />
                 </a>
               )}
-              {contactWhatsApp && (
-                <a href={`https://wa.me/${contactWhatsApp}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Contact us on WhatsApp">
+              {socialWhatsApp && (
+                <a href={socialWhatsApp} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-white hover:text-[#004fa2] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Contact us on WhatsApp">
                   <FaWhatsapp className="text-xl" />
                 </a>
               )}

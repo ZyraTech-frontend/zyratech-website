@@ -172,7 +172,7 @@ const ContactHero = () => {
                   </div>
                   <div>
                     <div className="text-sm text-gray-500 mb-1">Phone Number</div>
-                    <span className="text-base text-gray-900 font-semibold">+233 50 958 2497</span>
+                    <span className="text-base text-gray-900 font-semibold">+233 55 955 4261</span>
                   </div>
                 </div>
               </div>
@@ -195,7 +195,7 @@ const ContactHero = () => {
                 <a href="https://www.instagram.com/zyratechhub" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-[#003a7a] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="Instagram">
                   <FaInstagram className="text-lg text-white" />
                 </a>
-                <a href={`https://wa.me/${'233509582497'}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-[#003a7a] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="WhatsApp">
+                <a href={`https://wa.me/${'233559554261'}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center hover:bg-[#003a7a] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg" aria-label="WhatsApp">
                   <FaWhatsapp className="text-lg text-white" />
                 </a>
               </div>

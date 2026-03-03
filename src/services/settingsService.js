@@ -12,8 +12,8 @@ let mockSettings = {
 
   // Contact Information
   contactEmail: 'info@zyratechhub.com',
-  contactPhone: '+233 50 958 2497',
-  contactWhatsApp: '233509582497',
+  contactPhone: '+233 55 955 4261',
+  contactWhatsApp: '233559554261',
   contactAddress: 'Koforidua, Eastern Region, Ghana',
 
   // HR Contact
