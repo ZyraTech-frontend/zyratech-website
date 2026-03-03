@@ -3,8 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../../../components/Navbar';
 import MultiStepForm from '../../../components/pages/projects/MultiStepForm';
 import Footer from '../../../components/Footer';
+import useSEO from '../../../hooks/useSEO';
 
 const ProjectRequestPage = () => {
+  useSEO({
+    title: 'Request a Project',
+    description: 'Submit your project idea to Zyra Tech Hub. Tell us what you need and let our team build an amazing software solution for you.',
+    url: '/projects/request',
+    keywords: 'request project, submit project idea, software development request, custom software Ghana'
+  });
+
   const navigate = useNavigate();
 
   const handleFormSubmit = () => {

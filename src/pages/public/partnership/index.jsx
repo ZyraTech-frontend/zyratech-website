@@ -10,8 +10,16 @@ import PartnersRecognition from '../../../components/pages/partnership/PartnersR
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
 import { CheckCircle, X } from 'lucide-react';
+import useSEO from '../../../hooks/useSEO';
 
 const PartnershipPage = () => {
+  useSEO({
+    title: 'Partner With Us',
+    description: 'Partner with Zyra Tech Hub to empower Ghana\'s future through technology. Explore partnership opportunities for schools, businesses, and organizations.',
+    url: '/partner',
+    keywords: 'partnership, partner with Zyra Tech Hub, corporate partnership Ghana, NGO partnership, education partnership'
+  });
+
   const location = useLocation();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 

@@ -90,7 +90,6 @@ const AdvancedProgramsRoute = lazy(() => import('./pages/public/training/program
 const MaturedProgramsRoute = lazy(() => import('./pages/public/training/programs/matured'));
 const InternshipProgramsRoute = lazy(() => import('./pages/public/training/programs/internship'));
 const GalleryPage = lazy(() => import('./pages/public/gallery'));
-const AlbumDetailPage = lazy(() => import('./pages/public/gallery/AlbumDetailPage'));
 const BlogPage = lazy(() => import('./pages/public/blog'));
 const BlogDetailPage = lazy(() => import('./pages/public/blog/detail'));
 const JobsPage = lazy(() => import('./pages/public/jobs'));
@@ -667,7 +666,6 @@ function App() {
               <Route path="/training/payment/:courseId" element={<TrainingPaymentPage />} />
               <Route path="/training/payment-success" element={<TrainingPaymentSuccessPage />} />
               <Route path="/gallery" element={<Suspense fallback={<RouteSkeleton variant="default" />}><GalleryPage /></Suspense>} />
-              <Route path="/gallery/album/:id" element={<Suspense fallback={<RouteSkeleton variant="default" />}><AlbumDetailPage /></Suspense>} />
               <Route path="/blog" element={<Suspense fallback={<RouteSkeleton variant="blog" />}><BlogPage /></Suspense>} />
               <Route path="/blog/:slug" element={<Suspense fallback={<RouteSkeleton variant="blog" />}><BlogDetailPage /></Suspense>} />
               <Route path="/jobs" element={<Suspense fallback={<RouteSkeleton variant="jobs" />}><JobsPage /></Suspense>} />

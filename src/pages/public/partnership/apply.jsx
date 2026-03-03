@@ -2,8 +2,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building2, Mail, Phone, User, Globe, MessageSquare, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
 import { PUBLIC_PARTNERSHIP_TYPES, PARTNERSHIP_INTERESTS } from '../../../data/partnershipsData';
+import useSEO from '../../../hooks/useSEO';
 
 const PartnershipApplicationPage = () => {
+  useSEO({
+    title: 'Apply for Partnership',
+    description: 'Submit your partnership application to Zyra Tech Hub. Join us in empowering communities through technology and digital skills training in Ghana.',
+    url: '/partner/apply',
+    keywords: 'partnership application, apply partner, Zyra Tech Hub partnership form'
+  });
+
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [errors, setErrors] = useState({});

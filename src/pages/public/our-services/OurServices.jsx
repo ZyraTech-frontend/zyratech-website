@@ -6,8 +6,16 @@ import WhyPartnersChooseUsSection from './components/WhyPartnersChooseUsSection'
 import HrContactSection from '../../../components/common/HrContactSection';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import ParallaxDivider from '../../../components/common/ParallaxDivider.jsx';
+import useSEO from '../../../hooks/useSEO';
 
 const OurServices = () => {
+  useSEO({
+    title: 'Our Services',
+    description: 'Explore Zyra Tech Hub\'s professional IT services including software development, quality assurance, digital training, and technology consulting in Ghana.',
+    url: '/our-services',
+    keywords: 'IT services Ghana, software development, quality assurance, digital training services, technology consulting Koforidua'
+  });
+
   return (
     <div className="bg-white">
       {/* Hero */}
