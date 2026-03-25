@@ -13,10 +13,10 @@ import HrContactSection from '../../../components/common/HrContactSection';
 
 const HomePage = () => {
   useSEO({
-    title: 'Home',
+    title: 'Welcome',
     description: 'Zyra Tech Hub in Koforidua, Ghana empowers students, schools, and businesses through hands-on digital training, internships, and professional IT services.',
     url: '/',
-    keywords: 'tech training Ghana, IT courses Ghana, digital skills training, internships Ghana, Koforidua tech hub, software development Ghana'
+    keywords: 'Zyra Tech Hub, Software Engineering Ghana, IT Training Koforidua, Coding Bootcamp Ghana, Web Development classes, Python training Koforidua, Mobile App Development Ghana, Tech Internships Koforidua, KTU tech hub'
   });
 
   return (
