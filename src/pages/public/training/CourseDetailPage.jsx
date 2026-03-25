@@ -6,6 +6,7 @@ import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import TrainingLayout from '../../../components/TrainingLayout';
 import TrainingBreadcrumb from '../../../components/pages/training/TrainingBreadcrumb';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
+import HrContactSection from '../../../components/common/HrContactSection';
 import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import useSEO from '../../../hooks/useSEO';
 
@@ -379,66 +380,7 @@ const CourseDetailPage = () => {
           </button>
         </div>
       </section>
-
-      {/* Contact Section */}
-      <section className="py-16 bg-white" id="training-contact">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-10 items-stretch">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <img decoding="async"
-                src={course.contactPerson.imageUrl || "/images/Dalene.webp"}
-                alt={course.contactPerson.name}
-                className="w-full h-[380px] md:h-[420px] object-cover"
-              />
-            </div>
-
-            <div className="bg-slate-50 rounded-2xl border border-gray-200 p-8">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Do you have any questions?</h2>
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                Please feel free to contact {course.contactPerson.name}, {course.contactPerson.title}. We’ll help you understand the program requirements, schedule, and how to apply.
-              </p>
-
-              <div className="space-y-4 mb-8">
-                <a
-                  href={`mailto:${course.contactPerson.email}`}
-                  className="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4 hover:border-[#004fa2]/40 transition-colors"
-                >
-                  <div>
-                    <div className="text-sm text-gray-500">Email</div>
-                    <div className="font-semibold text-gray-900">{course.contactPerson.email}</div>
-                  </div>
-                  <span className="text-[#004fa2] font-bold">→</span>
-                </a>
-                <a
-                  href={`tel:${course.contactPerson.phone}`}
-                  className="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4 hover:border-[#004fa2]/40 transition-colors"
-                >
-                  <div>
-                    <div className="text-sm text-gray-500">Phone</div>
-                    <div className="font-semibold text-gray-900">{course.contactPerson.phone}</div>
-                  </div>
-                  <span className="text-[#004fa2] font-bold">→</span>
-                </a>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button
-                  onClick={handleEnroll}
-                  className="cta-btn px-8 py-4 rounded-lg font-bold w-full sm:w-auto"
-                >
-                  Apply Now
-                </button>
-                <a
-                  href={`mailto:${course.contactPerson.email}`}
-                  className="cta-ghost px-8 py-4 rounded-lg font-bold w-full sm:w-auto inline-flex items-center justify-center"
-                >
-                  Contact Us
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HrContactSection />
 
       {/* Parallax Divider Section */}
       <section
@@ -454,4 +396,5 @@ const CourseDetailPage = () => {
 };
 
 export default CourseDetailPage;
+
 
