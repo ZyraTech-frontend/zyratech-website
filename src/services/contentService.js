@@ -83,7 +83,7 @@ let mockAboutQuote = {
     quote: "Our mission is to lead Ghana’s technological transformation through world-class Software Engineering, robust Infrastructure & Cloud services, and impactful IT Education. We are building an ecosystem where innovation meets academic excellence",
     authorName: "ZyraTech Leadership",
     authorTitle: "Empowering Ghana's Tech Future",
-    authorImage: "/images/tex1.png",
+    authorImage: "/images/tex1.webp",
     stat1Value: "2024",
     stat1Label: "Founded",
     stat2Value: "50+",
@@ -97,7 +97,7 @@ let mockAboutHero = {
     title: 'Building the next generation of',
     highlight: 'tech talent',
     description: 'We bridge the gap between education and industry through comprehensive training, professional internships, and real-world projects—empowering individuals and organizations with job-ready digital skills.',
-    backgroundImage: '/images/image1.png'
+    backgroundImage: "/images/image1.webp"
 };
 
 let mockMission = {
@@ -130,7 +130,7 @@ let mockTimeline = [
 let mockPartnershipHero = {
     title: 'Partner with ZyraTech',
     subtitle: 'Together, we can bridge the digital divide.',
-    backgroundImage: '/images/partnership-hero.jpg'
+    backgroundImage: "/images/partnership-hero.webp"
 };
 
 let mockImpactStats = [
@@ -151,14 +151,14 @@ let mockPartnershipStories = [
         category: 'Strategic Partner',
         story: 'Through our collaboration with ZyraTech, we have successfully integrated cutting-edge technical expertise with our media reach, creating a unique platform for innovation and community impact across Africa.',
         impact: 'Strategic Brand Integration, High-Impact Media Production',
-        image: '/images/partnershiplogo.jpeg',
+        image: "/images/partnershiplogo.webp",
         fallbackImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200'
     }
 ];
 
 let mockRecognition = [
-    { id: 1, name: 'Partner 1', logo: '/images/partner1.png' },
-    { id: 2, name: 'Partner 2', logo: '/images/partner2.png' }
+    { id: 1, name: 'Partner 1', logo: "/images/partner1.webp" },
+    { id: 2, name: 'Partner 2', logo: "/images/partner2.webp" }
 ];
 
 // Mock Data for Impact Metrics
@@ -235,7 +235,7 @@ let mockWorkWithUs = {
         title: 'Join Our Team',
         subtitle: 'Build the future with us',
         description: 'We are looking for passionate individuals who want to make a difference through technology.',
-        image: '/images/work-with-us-hero.jpg'
+        image: "/images/work-with-us-hero.webp"
     },
     setup: [
         { id: 1, title: 'Strategic Location & Partnership', description: 'ZyraTech Hub, headquartered in Koforidua, Ghana, serves as the primary contracting partner for local and international clients.', icon: 'Building2' },
@@ -269,7 +269,7 @@ let mockQA = {
     hero: {
         title: 'Quality Assurance',
         description: 'Release with confidence. ZyraTech helps you build robust, secure and high-performing products through modern QA practices and automation.',
-        image: '/images/quality-assurance-hero.jpg'
+        image: "/images/quality-assurance-hero.webp"
     },
     intro: {
         howItWorks: {

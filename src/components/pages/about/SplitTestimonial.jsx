@@ -28,7 +28,7 @@ const SplitTestimonial = () => {
             className="md:w-1/2 order-1 md:order-2 h-48 md:h-[360px] relative overflow-hidden"
           >
             <img decoding="async"
-              src="/images/testimonial.jpg"
+              src="/images/testimonial.webp"
               alt="Smiling local shop owner"
               className="w-full h-full object-cover object-center"
               style={{ objectPosition: 'center 30%' }}

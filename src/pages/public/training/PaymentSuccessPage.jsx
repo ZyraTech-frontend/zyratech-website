@@ -51,7 +51,7 @@ const TrainingPaymentSuccessPage = () => {
     <TrainingLayout>
       {/* Success Hero */}
       <section className="relative bg-gradient-to-br from-green-600 via-green-700 to-green-800 py-16 sm:py-20">
-        <div className="absolute inset-0 bg-[url('/images/image3.png')] bg-cover bg-center opacity-10"></div>
+        <div className="absolute inset-0 bg-[url('/images/image3.webp')] bg-cover bg-center opacity-10"></div>
         
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">

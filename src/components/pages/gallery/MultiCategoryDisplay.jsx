@@ -8,7 +8,7 @@ const MultiCategoryDisplay = () => {
         {
           id: 1,
           title: "Laser Cutting Basics",
-          image: "/images/manufacturing.png",
+          image: "/images/manufacturing.webp",
           description: "Learn fundamental laser cutting techniques and safety"
         }
       ]
@@ -19,7 +19,7 @@ const MultiCategoryDisplay = () => {
         {
           id: 2,
           title: "STEM Class in Session",
-          image: "/images/software.png",
+          image: "/images/software.webp",
           description: "Interactive STEM learning for young innovators"
         }
       ]
@@ -30,7 +30,7 @@ const MultiCategoryDisplay = () => {
         {
           id: 3,
           title: "Community Innovation Day",
-          image: "/images/workingspace.png",
+          image: "/images/workingspace.webp",
           description: "Annual showcase of community-driven projects"
         }
       ]

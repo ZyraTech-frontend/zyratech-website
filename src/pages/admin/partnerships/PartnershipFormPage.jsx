@@ -169,7 +169,7 @@ const PartnershipFormPage = () => {
         if (file) {
             // In a real app, you'd upload the file to storage/S3 here
             // For now, we'll simulate it by storing the filename
-            // This allows the UI to show "Selected: filename.png"
+            // This allows the UI to show "Selected: filename.webp"
             setFormData(prev => ({
                 ...prev,
                 logo: file.name
@@ -863,3 +863,4 @@ const PartnershipFormPage = () => {
 };
 
 export default PartnershipFormPage;
+

@@ -103,7 +103,7 @@ const PartnersRecognition = () => {
             >
               <div className="bg-white rounded-xl shadow-lg p-4 sm:p-8 max-w-4xl w-full flex justify-center items-center">
                 <img decoding="async"
-                  src="/images/partnershiplogo.jpeg"
+                  src="/images/partnershiplogo.webp"
                   alt="Our Partners"
                   className="max-w-full h-auto object-contain max-h-[400px]"
                 />

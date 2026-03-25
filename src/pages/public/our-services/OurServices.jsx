@@ -24,17 +24,17 @@ const OurServices = () => {
       {/* Services Grid */}
       <ServicesGridSection />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax10.png" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax10.webp" />
 
       {/* + Why choose us */}
       <WhyPartnersChooseUsSection />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax1.jpeg" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax1.webp" />
 
       {/* HR Contact */}
       <HrContactSection />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax2.png" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax2.webp" />
 
       {/* Newsletter */}
       <NewsletterHero />

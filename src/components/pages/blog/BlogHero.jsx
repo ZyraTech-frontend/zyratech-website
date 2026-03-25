@@ -10,7 +10,7 @@ const BlogHero = () => {
         <div
           className="relative overflow-hidden h-[70vh] min-h-[520px] max-h-[780px] bg-cover bg-center bg-scroll md:bg-fixed"
           style={{
-            backgroundImage: `url(/images/image1.png)`
+            backgroundImage: `url(/images/image1.webp`
           }}
         >
           {/* Dark overlay */}

@@ -14,7 +14,7 @@ const AboutHero = ({
     title: initialTitle || 'Building the next generation of',
     highlight: initialHighlight || 'tech talent',
     description: initialDescription || 'We bridge the gap between education and industry through comprehensive training, professional internships, and real-world projects—empowering individuals and organizations with job-ready digital skills.',
-    backgroundImage: initialBackgroundImage || '/images/image1.png'
+    backgroundImage: initialBackgroundImage || "/images/image1.webp"
   });
 
   useEffect(() => {

@@ -24,17 +24,17 @@ const HomePage = () => {
       <Hero />
       <AboutQuote />
 
-      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax1.jpeg" />
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax1.webp" />
 
       <PartnersShowcase />
       <AboutShowcase />
 
-      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax2.png" />
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax2.webp" />
 
       <ServicesShowcase />
       <BenefitsShowcase />
 
-      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax3.png" />
+      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax3.webp" />
 
       <TestimonialsSection />
       <HrContactSection />

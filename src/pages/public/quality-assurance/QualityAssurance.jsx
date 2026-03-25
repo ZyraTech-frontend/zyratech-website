@@ -51,7 +51,7 @@ const QualityAssurance = () => {
       <section className="relative text-white overflow-hidden">
         <div className="absolute inset-0">
           <img decoding="async"
-            src={data.hero?.image || "/images/quality-assurance-hero.jpg"}
+            src={data.hero?.image || "/images/quality-assurance-hero.webp"}
             alt="Quality Assurance"
             className="h-full w-full object-cover"
             onError={(e) => {

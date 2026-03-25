@@ -14,12 +14,12 @@ const TrainingHero = () => {
         <div
           className="relative overflow-hidden min-h-screen bg-cover bg-center bg-scroll md:bg-fixed"
           style={{
-            backgroundImage: 'url(/images/image2.png)'
+            backgroundImage: 'url(/images/image2.webp)'
           }}
         >
           {/* LCP Optimization: Preload the background image */}
           <img decoding="async"
-            src="/images/image2.png"
+            src="/images/image2.webp"
             alt=""
             className="hidden"
             fetchpriority="high"

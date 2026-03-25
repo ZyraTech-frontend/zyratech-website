@@ -34,7 +34,7 @@ const BlogFormPage = () => {
         date: article?.date || '',
         readingTime: article?.readingTime || '',
         author: article?.author?.name || '',
-        authorAvatar: article?.author?.avatar || '/images/image1.png',
+        authorAvatar: article?.author?.avatar || "/images/image1.webp",
         featured: article?.featured || false,
         image: article?.image || '',
         slug: article?.slug || '',
@@ -314,7 +314,7 @@ const BlogFormPage = () => {
                                             name="authorAvatar"
                                             value={formData.authorAvatar}
                                             onChange={handleChange}
-                                            placeholder="e.g., /images/author1.png"
+                                            placeholder="e.g., /images/author1.webp"
                                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                                         />
                                         <p className="text-gray-600 text-xs mt-1">Image path from /public/images/</p>

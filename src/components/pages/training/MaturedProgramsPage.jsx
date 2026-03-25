@@ -128,7 +128,7 @@ const MaturedProgramsPage = () => {
           <div
             className="relative overflow-hidden h-[70vh] min-h-[520px] max-h-[780px] bg-cover bg-center bg-scroll md:bg-fixed flex items-center"
             style={{
-              backgroundImage: 'url(/images/image3.png)'
+              backgroundImage: 'url(/images/image3.webp)'
             }}
           >
             <div className="absolute inset-0 bg-black/40"></div>
@@ -220,7 +220,7 @@ const MaturedProgramsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {maturedPrograms.map((program, index) => {
               const IconComponent = iconMap[program.iconKey] || Users;
-              const placeholderImages = ['/images/image1.png', '/images/image2.png', '/images/image3.png'];
+              const placeholderImages = ["/images/image1.webp", "/images/image2.webp", "/images/image3.webp"];
               const imageUrl = placeholderImages[index % placeholderImages.length];
 
               return (
@@ -352,7 +352,7 @@ const MaturedProgramsPage = () => {
       <HrContactSection
         name="Magdalene"
         title="HR Team Lead"
-        imageUrl="/images/Dalene.png"
+        imageUrl="/images/Dalene.webp"
         email="magdalene@zyratech.com"
       />
     </div>

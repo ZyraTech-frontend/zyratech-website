@@ -11,19 +11,19 @@ const Projects = () => {
       name: 'EcoWatch',
       description: 'Real-time air quality monitoring across multiple locations.',
       link: '/projects/ecowatch',
-      image: '/images/image1.png'
+      image: "/images/image1.webp"
     },
     {
       name: 'SafeDrive',
       description: 'Intelligent road safety system detecting driver fatigue and risky behaviors.',
       link: '/projects/safedrive',
-      image: '/images/image2.png'
+      image: "/images/image2.webp"
     },
     {
       name: 'ERA Technologies',
       description: 'Digital tools for African businesses and startups. Streamline operations with ERA KPI, ERA Attendance, and ERA Bulk Email & SMS.',
       link: '/projects/era-technologies',
-      image: '/images/image3.png'
+      image: "/images/image3.webp"
     }
   ];
 

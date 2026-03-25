@@ -51,7 +51,7 @@ const BenefitsSplit = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-12">
           <div>
             <img decoding="async"
-              src="/images/benefits-team.jpg"
+              src="/images/benefits-team.webp"
               alt="Team collaboration benefits"
               className="w-full h-96 object-cover rounded-xl shadow-lg"
               onError={(e) => {

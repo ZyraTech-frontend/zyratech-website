@@ -7,21 +7,21 @@ const VideoSection = () => {
       id: 1,
       title: "Founder's Talk on Tech Inclusion",
       description: "Keynote on equitable access to technology.",
-      thumbnail: "/images/manufacturing.png",
+      thumbnail: "/images/manufacturing.webp",
       videoUrl: "#"
     },
     {
       id: 2,
       title: "Lab Tour in 2 Minutes",
       description: "A quick walkthrough of our open labs.",
-      thumbnail: "/images/software.png",
+      thumbnail: "/images/software.webp",
       videoUrl: "#"
     },
     {
       id: 3,
       title: "Building with Communities",
       description: "3 quick stories from the field.",
-      thumbnail: "/images/workingspace.png",
+      thumbnail: "/images/workingspace.webp",
       videoUrl: "#"
     }
   ];
