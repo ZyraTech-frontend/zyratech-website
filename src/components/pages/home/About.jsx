@@ -49,7 +49,7 @@ const About = () => {
             className="relative rounded-lg shadow-lg overflow-hidden order-2 lg:order-1 h-48 md:h-64"
           >
             <img decoding="async" 
-              src="/images/image1.png" 
+              src="/images/image1.webp" 
               alt="Zyra Tech Hub" 
               className="w-full h-full object-cover"
             />

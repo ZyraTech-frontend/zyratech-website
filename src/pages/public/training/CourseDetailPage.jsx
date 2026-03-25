@@ -18,11 +18,11 @@ const CourseDetailPage = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
 
   const course = getTrainingCourseById(courseId);
-  const heroImage = course?.heroImage || '/images/image1.png';
-  const parallaxImage1 = '/images/parallax9.png';
-  const parallaxImage2 = '/images/parallax10.png';
-  const parallaxImage3 = '/images/parallax1.jpeg';
-  const parallaxImage4 = '/images/parallax2.png';
+  const heroImage = course?.heroImage || "/images/image1.webp";
+  const parallaxImage1 = "/images/parallax9.webp";
+  const parallaxImage2 = "/images/parallax10.webp";
+  const parallaxImage3 = "/images/parallax1.webp";
+  const parallaxImage4 = "/images/parallax2.webp";
 
   useSEO({
     title: course ? course.title : 'Course Details',
@@ -275,7 +275,7 @@ const CourseDetailPage = () => {
             </div>
             {/* Illustration or Accent Image */}
             <div className="flex justify-center items-center">
-              <img decoding="async" src="/images/image2.png" alt="Application Process" loading="lazy" className="w-full max-w-lg h-[300px] sm:h-[340px] object-cover rounded-2xl shadow-xl border-4 border-[#004fa2]/10" />
+              <img decoding="async" src="/images/image2.webp" alt="Application Process" loading="lazy" className="w-full max-w-lg h-[300px] sm:h-[340px] object-cover rounded-2xl shadow-xl border-4 border-[#004fa2]/10" />
             </div>
           </div>
         </div>
@@ -295,7 +295,7 @@ const CourseDetailPage = () => {
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Illustration or Accent Image */}
             <div className="flex justify-center items-center order-2 md:order-1">
-              <img decoding="async" src="/images/image1.png" alt="How the Program Works" loading="lazy" className="w-full max-w-lg h-[300px] sm:h-[340px] object-cover rounded-2xl shadow-xl border-4 border-[#004fa2]/10" />
+              <img decoding="async" src="/images/image1.webp" alt="How the Program Works" loading="lazy" className="w-full max-w-lg h-[300px] sm:h-[340px] object-cover rounded-2xl shadow-xl border-4 border-[#004fa2]/10" />
             </div>
             {/* Steps List */}
             <div className="order-1 md:order-2">
@@ -386,7 +386,7 @@ const CourseDetailPage = () => {
           <div className="grid md:grid-cols-2 gap-10 items-stretch">
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
               <img decoding="async"
-                src={course.contactPerson.imageUrl || '/images/Dalene.png'}
+                src={course.contactPerson.imageUrl || "/images/Dalene.webp"}
                 alt={course.contactPerson.name}
                 className="w-full h-[380px] md:h-[420px] object-cover"
               />

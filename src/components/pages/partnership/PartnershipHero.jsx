@@ -31,7 +31,7 @@ const PartnershipHero = () => {
           alt="Partnership banner"
           className="h-full w-full object-cover object-center brightness-110"
           onError={(e) => {
-            e.target.src = '/images/image3.png';
+            e.target.src = "/images/image3.webp";
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/20" />

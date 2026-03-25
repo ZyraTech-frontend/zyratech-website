@@ -32,7 +32,7 @@ const TrainingPage = () => {
     <TrainingLayout>
       <TrainingHero />
       <TrainingAbout />
-      <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" imageUrl="/images/parallax3.png" />
+      <ParallaxDivider heightClassName="h-64 sm:h-72 md:h-80" imageUrl="/images/parallax3.webp" />
       <TrainingTestimonial />
       <TrainingBenefits />
 

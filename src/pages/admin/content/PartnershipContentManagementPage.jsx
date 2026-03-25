@@ -217,7 +217,7 @@ const RecognitionManager = ({ recognition, setRecognition, dispatch }) => {
                                 src={item.logo}
                                 alt={item.name}
                                 className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
-                                onError={(e) => { e.target.src = '/images/placeholder-logo.png'; }}
+                                onError={(e) => { e.target.src = "/images/placeholder-logo.webp"; }}
                             />
                             <button
                                 onClick={() => handleDelete(item)}
@@ -250,7 +250,7 @@ const RecognitionManager = ({ recognition, setRecognition, dispatch }) => {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Logo URL</label>
-                                <input type="text" name="logo" required className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20" placeholder="/images/logos/google.png" />
+                                <input type="text" name="logo" required className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20" placeholder="/images/logos/google.webp" />
                             </div>
                             <div className="flex justify-end gap-3 pt-4 border-t">
                                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>

@@ -10,11 +10,11 @@ const MediaCollections = () => {
       itemCount: 24,
       totalViews: "3.2K",
       duration: "March 15-22, 2024",
-      coverImage: "/images/manufacturing.png",
+      coverImage: "/images/manufacturing.webp",
       previewImages: [
-        "/images/software.png",
-        "/images/workingspace.png",
-        "/images/manufacturing.png"
+        "/images/software.webp",
+        "/images/workingspace.webp",
+        "/images/manufacturing.webp"
       ]
     },
     {
@@ -24,11 +24,11 @@ const MediaCollections = () => {
       itemCount: 18,
       totalViews: "2.8K",
       duration: "Ongoing Collection",
-      coverImage: "/images/software.png",
+      coverImage: "/images/software.webp",
       previewImages: [
-        "/images/workingspace.png", 
-        "/images/manufacturing.png",
-        "/images/software.png"
+        "/images/workingspace.webp", 
+        "/images/manufacturing.webp",
+        "/images/software.webp"
       ]
     },
     {
@@ -38,11 +38,11 @@ const MediaCollections = () => {
       itemCount: 32,
       totalViews: "4.1K",
       duration: "February 2024",
-      coverImage: "/images/workingspace.png",
+      coverImage: "/images/workingspace.webp",
       previewImages: [
-        "/images/manufacturing.png",
-        "/images/software.png",
-        "/images/workingspace.png"
+        "/images/manufacturing.webp",
+        "/images/software.webp",
+        "/images/workingspace.webp"
       ]
     }
   ];

@@ -12,7 +12,7 @@ const OurServicesHeroSection = () => {
           alt="Services banner"
           className="h-full w-full object-cover"
           onError={(e) => {
-            e.target.src = '/images/image3.png';
+            e.target.src = "/images/image3.webp";
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/30" />

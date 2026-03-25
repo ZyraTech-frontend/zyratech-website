@@ -7,7 +7,7 @@ let mockPartnerships = [
         id: 'PART-2024-001',
         organization: {
             name: 'Royal Klast Group',
-            logo: '/images/partnershiplogo.jpeg',
+            logo: "/images/partnershiplogo.webp",
             website: 'https://royalklast.com',
             industry: 'Media & Communications'
         },

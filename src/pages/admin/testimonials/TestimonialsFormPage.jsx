@@ -413,7 +413,7 @@ export default function TestimonialsFormPage() {
                                         name="avatar"
                                         value={formData.avatar}
                                         onChange={handleChange}
-                                        placeholder="/images/testimonials/avatar.jpg"
+                                        placeholder="/images/testimonials/avatar.webp"
                                         className="flex-1 px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                                     />
                                     {formData.avatar && (

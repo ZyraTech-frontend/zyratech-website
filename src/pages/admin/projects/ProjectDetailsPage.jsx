@@ -158,7 +158,7 @@ const ProjectDetailsPage = () => {
                                 alt={project.title}
                                 className="w-full h-96 object-cover"
                                 onError={(e) => {
-                                    e.target.src = '/images/placeholder.jpg';
+                                    e.target.src = "/images/placeholder.webp";
                                 }}
                             />
                         </div>

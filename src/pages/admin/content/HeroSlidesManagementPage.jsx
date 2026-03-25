@@ -208,7 +208,7 @@ const HeroSlidesManagementPage = () => {
                                             src={slide.backgroundImage}
                                             alt={slide.title}
                                             className={`w-full h-full object-cover transition-opacity ${slide.isVisible ? '' : 'opacity-60 grayscale'}`}
-                                            onError={(e) => { e.target.src = '/placeholder-image.jpg' }}
+                                            onError={(e) => { e.target.src = '/placeholder-image.webp' }}
                                         />
                                         {!slide.isVisible && (
                                             <div className="absolute inset-0 flex items-center justify-center bg-black/10">
@@ -342,7 +342,7 @@ const HeroSlidesManagementPage = () => {
                                                 onChange={calculateInputChange}
                                                 required
                                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]"
-                                                placeholder="/images/hero2.jpeg"
+                                                placeholder="/images/hero2.webp"
                                             />
                                             <button
                                                 type="button"
@@ -497,3 +497,4 @@ const HeroSlidesManagementPage = () => {
 };
 
 export default HeroSlidesManagementPage;
+

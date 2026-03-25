@@ -10,7 +10,7 @@ const PartnershipStories = () => {
       category: 'Strategic Partner',
       story: 'Through our collaboration with ZyraTech, we have successfully integrated cutting-edge technical expertise with our media reach, creating a unique platform for innovation and community impact across Africa.',
       impact: 'Strategic Brand Integration, High-Impact Media Production',
-      image: '/images/partnershiplogo.jpeg',
+      image: "/images/partnershiplogo.webp",
       fallbackImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200'
     }
   ]);

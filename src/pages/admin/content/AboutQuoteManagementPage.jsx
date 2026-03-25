@@ -163,7 +163,7 @@ const AboutQuoteManagementPage = () => {
                                         value={formData.authorImage}
                                         onChange={handleChange}
                                         className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]"
-                                        placeholder="/images/tex1.png"
+                                        placeholder="/images/tex1.webp"
                                     />
                                     {formData.authorImage && (
                                         <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200 bg-gray-50 flex-shrink-0">

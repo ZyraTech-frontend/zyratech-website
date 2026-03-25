@@ -15,7 +15,7 @@ const Navbar = () => {
 
   // Services mega-menu content
   const servicesMenu = {
-    image: '/images/servicenav.png',
+    image: "/images/servicenav.webp",
     header: 'ZyraTech Services',
     mainLinks: [
       {

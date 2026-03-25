@@ -69,7 +69,7 @@ const ProgramsPage = () => {
           <div
             className="relative overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed min-h-[70vh] sm:min-h-[80vh] lg:min-h-screen flex items-center"
             style={{
-              backgroundImage: 'url(/images/image3.png)'
+              backgroundImage: 'url(/images/image3.webp)'
             }}
           >
             <div className="absolute inset-0 bg-black/40"></div>
@@ -379,7 +379,7 @@ const ProgramsPage = () => {
       <HrContactSection
         name="Magdalene"
         title="HR Team Lead"
-        imageUrl="/images/Dalene.png"
+        imageUrl="/images/Dalene.webp"
         email="magdalene@zyratech.com"
       />
 

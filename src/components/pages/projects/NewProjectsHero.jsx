@@ -25,7 +25,7 @@ const NewProjectsHero = () => {
       {/* Background Image with Overlays */}
       <div className="absolute inset-0">
         <ImageWithSkeleton
-          src="/images/parallax1.jpeg"
+          src="/images/parallax1.webp"
           alt="ZyraTech Projects"
           className="h-full w-full"
           skeletonClassName="bg-gray-800"

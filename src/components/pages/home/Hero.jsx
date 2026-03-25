@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import heroService from '../../../services/heroService';
+import OptimizedImage from '../../common/OptimizedImage';
 
 const Hero = () => {
   // Default initial slides to show something immediately (LCP optimization)
@@ -11,7 +12,7 @@ const Hero = () => {
       id: 'initial',
       title: 'Empowering Ghana\'s Future Through Technology',
       description: 'Zyra Tech Hub provides world-class digital training, internships, and professional IT services to build the next generation of tech leaders.',
-      backgroundImage: '/images/hero1.jpeg',
+      backgroundImage: "/images/hero1.webp",
       pillar: 'Innovation',
       cta1Text: 'Explore Programs',
       cta1Link: '/training',
@@ -82,24 +83,32 @@ const Hero = () => {
       {/* Background Image */}
       <div className="absolute inset-0 overflow-hidden">
         <AnimatePresence mode="wait">
-          <motion.img
+          <motion.div
             key={currentSlide}
-            src={slide.backgroundImage}
-            alt={slide.pillar}
-            width="1920"
-            height="1080"
             initial={{ opacity: 0.8 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0.8 }}
             transition={{ duration: 1 }}
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out"
-            fetchpriority={currentSlide === 0 ? "high" : "auto"}
+            className="absolute inset-0 w-full h-full"
             style={{
-              objectPosition: slide.bgPosition || 'center center',
               filter: 'brightness(1.1) contrast(1.05)'
             }}
-            onError={(e) => { e.target.src = '/images/hero2.jpeg' }} // Fallback image
-          />
+          >
+            <OptimizedImage
+              src={slide.backgroundImage}
+              alt={slide.pillar}
+              width={1920}
+              height={1080}
+              priority={currentSlide === 0}
+              className="absolute inset-0 w-full h-full object-cover"
+              containerClassName="absolute inset-0 w-full h-full"
+              onError={(e) => {
+                if (e.target) {
+                  e.target.src = "/images/hero2.webp";
+                }
+              }}
+            />
+          </motion.div>
         </AnimatePresence>
 
         {/* Overlay */}

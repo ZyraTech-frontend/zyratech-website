@@ -5,7 +5,7 @@ const ImpactHeroSection = ({
   title = 'Our Values',
   description =
   'Our values shape how we teach, how we partner, and how we build technology that serves real needs.',
-  backgroundImage = '/images/image1.png'
+  backgroundImage = "/images/image1.webp"
 }) => {
   const shouldReduceMotion = useReducedMotion();
 

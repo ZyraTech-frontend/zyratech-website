@@ -35,7 +35,7 @@ const TrainingAbout = () => {
 
         <ParallaxDivider
           heightClassName="h-56 sm:h-64 md:h-72"
-          imageUrl="/images/parallax6.png"
+          imageUrl="/images/parallax6.webp"
           className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
         />
 
@@ -115,7 +115,7 @@ const TrainingAbout = () => {
               {/* Mobile Image */}
               <div className="relative">
                 <img decoding="async"
-                  src="/images/training1.jpeg"
+                  src="/images/training1.webp"
                   alt="ZyraTech Training"
                   loading="lazy"
                   className="w-full h-40 rounded-xl shadow-lg object-cover object-top"
@@ -179,7 +179,7 @@ const TrainingAbout = () => {
                 <div className="order-first lg:order-last">
                   <div className="relative">
                     <img decoding="async"
-                      src="/images/training1.jpeg"
+                      src="/images/training1.webp"
                       alt="ZyraTech Training Benefits"
                       loading="lazy"
                       className="w-full h-96 rounded-xl shadow-lg object-cover object-top"
@@ -191,7 +191,7 @@ const TrainingAbout = () => {
 
               <ParallaxDivider
                 heightClassName="h-56 sm:h-64 md:h-72"
-                imageUrl="/images/parallax7.png"
+                imageUrl="/images/parallax7.webp"
                 className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
               />
 
@@ -249,7 +249,7 @@ const TrainingAbout = () => {
                 <div className="order-first lg:order-last">
                   <div className="relative">
                     <img decoding="async"
-                      src="/images/kal.jpeg"
+                      src="/images/kal.webp"
                       alt="ZyraTech Backend Developer"
                       loading="lazy"
                       className="w-full h-[480px] rounded-xl shadow-lg object-cover object-center"
@@ -264,7 +264,7 @@ const TrainingAbout = () => {
 
         <ParallaxDivider
           heightClassName="h-56 sm:h-64 md:h-72"
-          imageUrl="/images/parallax8.png"
+          imageUrl="/images/parallax8.webp"
           className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
         />
 
@@ -295,7 +295,7 @@ const TrainingAbout = () => {
             <div className="order-first lg:order-last">
               <div className="relative">
                 <img decoding="async"
-                  src="/images/masco.png"
+                  src="/images/masco.webp"
                   alt="ZyraTech Senior Trainer"
                   loading="lazy"
                   className="w-full h-[400px] md:h-[500px] rounded-xl shadow-lg object-cover object-top"

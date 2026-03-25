@@ -35,84 +35,91 @@
 - [ ] Verify canonical URLs
 - [ ] Submit sitemap to Google Search Console
 
-## Netlify Deployment Steps
+## Docker & Render Deployment Steps
 
-### Option 1: Automatic Deployment (Recommended)
+### Prerequisites
+- Docker installed locally
+- Render account (https://render.com)
+- GitHub repository with code pushed
 
-1. **Connect Repository**
+### Option 1: Docker Deployment on Render (Recommended)
+
+1. **Build Docker Image Locally (Testing)**
    ```bash
-   # Push your code to GitHub
+   # Build with default Render API URL
+   docker build -t zyratech-frontend .
+
+   # Or build with custom API URL
+   docker build --build-arg VITE_API_BASE_URL=https://your-api.com/api -t zyratech-frontend .
+   ```
+
+2. **Test Locally**
+   ```bash
+   docker run -p 80:80 zyratech-frontend
+   # Visit http://localhost
+   ```
+
+3. **Push to Render**
+   - Log in to [Render Dashboard](https://dashboard.render.com)
+   - Click "New +" → "Web Service"
+   - Select "Docker" as the build method
+   - Connect your GitHub repository
+   - Configure:
+     * **Name:** zyratech-frontend
+     * **Docker Filename:** Dockerfile
+     * **Port:** 80
+   - Add Environment Variables:
+     ```
+     VITE_API_BASE_URL=https://zyratech-hub-api.onrender.com/api
+     VITE_APP_NAME=Zyra Tech Hub
+     VITE_CONTACT_EMAIL=info@zyratechhub.com
+     ```
+   - Click "Deploy"
+
+4. **Custom Domain (Optional)**
+   - Go to the web service settings
+   - Click "Add Custom Domain"
+   - Configure your domain's DNS settings with Render
+   - HTTPS is automatic
+
+### Option 2: Direct npm Build on Render
+
+1. **Push Code to GitHub**
+   ```bash
    git add .
    git commit -m "Ready for deployment"
    git push origin main
    ```
 
-2. **Link to Netlify**
-   - Go to [Netlify Dashboard](https://app.netlify.com)
-   - Click "New site from Git"
-   - Choose "GitHub" and authorize
-   - Select your repository
-   - Netlify auto-detects Vite settings:
-     * Build command: `npm run build`
-     * Publish directory: `dist`
-   - Click "Deploy site"
+2. **Create Web Service on Render**
+   - Log in to [Render Dashboard](https://dashboard.render.com)
+   - Click "New +" → "Web Service"
+   - Connect your GitHub repository
+   - Configure:
+     * **Build Command:** `npm run build && npm install -g serve && serve -s dist -l 80`
+     * **Start Command:** (leave empty, build command includes serve)
 
-3. **Configure Environment Variables**
-   - Go to Site Settings → Environment Variables
-   - Add all variables from `.env.example`:
-     ```
-     VITE_API_BASE_URL=https://api.zyratechhub.com
-     VITE_APP_NAME=Zyra Tech Hub
-     VITE_APP_URL=https://zyratech-hub.netlify.app
-     VITE_CONTACT_EMAIL=info@zyratechhub.com
-     VITE_CONTACT_PHONE=+233 XXX XXX XXX
-     ```
-
-4. **Custom Domain (Optional)**
-   - Go to Domain Settings
-   - Click "Add custom domain"
-   - Follow DNS configuration instructions
-   - Enable HTTPS (automatic with Netlify)
-
-### Option 2: Manual Deployment
-
-1. **Build the Project**
-   ```bash
-   npm run build
+3. **Add Environment Variables**
    ```
-
-2. **Install Netlify CLI**
-   ```bash
-   npm install -g netlify-cli
-   ```
-
-3. **Login to Netlify**
-   ```bash
-   netlify login
+   VITE_API_BASE_URL=https://zyratech-hub-api.onrender.com/api
+   VITE_APP_NAME=Zyra Tech Hub
+   VITE_CONTACT_EMAIL=info@zyratechhub.com
    ```
 
 4. **Deploy**
-   ```bash
-   # First deployment
-   netlify deploy --prod
+   - Click "Create Web Service"
+   - Render automatically deploys on each push to main
 
-   # Or link to existing site
-   netlify link
-   netlify deploy --prod
+### Option 3: Docker with Docker Compose (Local Testing)
+
+1. **Test with Docker Compose**
+   ```bash
+   docker compose up --build
    ```
 
-### Option 3: Drag and Drop
-
-1. Build the project:
-   ```bash
-   npm run build
-   ```
-
-2. Go to [Netlify Drop](https://app.netlify.com/drop)
-
-3. Drag the `dist` folder to the upload area
-
-4. Configure settings in the dashboard
+2. **Access the Application**
+   - Frontend: http://localhost
+   - Backend API: As configured in VITE_API_BASE_URL
 
 ## Post-Deployment Tasks
 
@@ -139,11 +146,11 @@
 - [ ] Set up Facebook Pixel (if implemented)
 - [ ] Test structured data with Google's Rich Results Test
 
-### 4. Monitoring
-- [ ] Set up Netlify notifications (Discord/Slack)
-- [ ] Configure deploy notifications
-- [ ] Set up error tracking (Sentry, etc.)
-- [ ] Monitor analytics for traffic patterns
+### 4. Monitoring on Render
+- [ ] Set up Render alerts for deployment failures
+- [ ] Monitor logs for errors via Render Dashboard
+- [ ] Monitor metrics: CPU, Memory, Network
+- [ ] Set up error tracking (optional: Sentry, etc.)
 
 ## Continuous Deployment Workflow
 
@@ -169,16 +176,17 @@ git push origin feature/new-feature
 # 6. Create Pull Request on GitHub
 
 # 7. After review, merge to main
-# Netlify automatically deploys!
+# Render automatically deploys on each push to main!
 ```
 
 ### Rollback Procedure
 If you need to rollback to a previous version:
 
-1. **Via Netlify Dashboard**
-   - Go to Deploys tab
+1. **Via Render Dashboard**
+   - Go to the web service
+   - Click "Deployments" tab
    - Find the working deployment
-   - Click "Publish deploy"
+   - Click the three dots menu and select "Redeploy"
 
 2. **Via Git**
    ```bash
@@ -189,6 +197,7 @@ If you need to rollback to a previous version:
    # Or reset to specific commit
    git reset --hard <commit-hash>
    git push --force origin main
+   # Render will redeploy automatically
    ```
 
 ## Environment-Specific Configurations
@@ -201,58 +210,67 @@ VITE_APP_URL=http://localhost:5173
 
 ### Staging (Optional)
 ```env
-VITE_API_BASE_URL=https://staging-api.zyratechhub.com
-VITE_APP_URL=https://staging.zyratech-hub.netlify.app
+VITE_API_BASE_URL=https://staging-api.onrender.com/api
+VITE_APP_URL=https://staging-zyratech-frontend.onrender.com
 ```
 
 ### Production
 ```env
-VITE_API_BASE_URL=https://api.zyratechhub.com
-VITE_APP_URL=https://zyratech-hub.netlify.app
+VITE_API_BASE_URL=https://zyratech-hub-api.onrender.com/api
+VITE_APP_URL=https://zyratech-hub.onrender.com
 ```
 
 ## Troubleshooting
 
-### Build Fails on Netlify
+### Docker Build Issues
 
-**Issue:** `npm ERR! peer dependency`
+**Issue:** `docker build` fails with npm errors
 ```bash
-# Solution: Update netlify.toml
-[build.environment]
-  NPM_FLAGS = "--legacy-peer-deps"
+# Solution: Clear npm cache and rebuild
+docker build --no-cache -t zyratech-frontend .
 ```
 
-**Issue:** Node version mismatch
+**Issue:** Docker image too large
 ```bash
-# Solution: Set Node version in netlify.toml
-[build.environment]
-  NODE_VERSION = "22.12"
+# This is expected - the multi-stage build keeps it optimized (~30MB)
+# The build stage is discarded, only the nginx image remains
 ```
+
+### Render Deployment Issues
+
+**Issue:** Deployment fails on Render
+- Check the Render logs for detailed error messages
+- Verify Docker build completes locally: `docker build -t zyratech-frontend .`
+- Check environment variables are set in Render Dashboard
+- Ensure Dockerfile exists in repository root
+
+**Issue:** Application crashes on Render
+- Check logs in Render Dashboard: go to Logs tab
+- Verify API URL is correct in environment variables
+- Check that Docker exposes port 80: `EXPOSE 80`
 
 ### Routes Not Working (404 errors)
 
 **Issue:** Direct URL access returns 404
-```toml
-# Solution: Add to netlify.toml (already configured)
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
 ```
+Solution: The nginx.conf file handles this with rewrites.
+Make sure nginx.conf is being copied in Dockerfile.
+```
+
+### Environment Variables Not Working
+
+**Issue:** API calls fail in production
+- Ensure variables are set in Render Dashboard environment variables
+- Verify variable names start with `VITE_`
+- Redeploy after adding/updating variables
+- Check `.env` is in `.gitignore` (don't commit it)
 
 ### Images Not Loading
 
 **Issue:** Images show 404 in production
 - Check image paths use `/images/` (not relative paths)
 - Verify images exist in `public/images/` folder
-- Clear Netlify cache and redeploy
-
-### Environment Variables Not Working
-
-**Issue:** API calls fail in production
-- Ensure variables start with `VITE_`
-- Add variables in Netlify Dashboard (not just .env)
-- Trigger new deployment after adding variables
+- Images are served by Nginx - ensure public folder is included
 
 ## Performance Optimization Tips
 
@@ -269,8 +287,9 @@ VITE_APP_URL=https://zyratech-hub.netlify.app
 - Consider splitting large components further
 
 ### 3. Caching Strategy
-- Static assets cached for 1 year (configured in netlify.toml)
+- Static assets cached via nginx.conf (long cache headers)
 - API responses should have appropriate cache headers
+- Docker layers are cached for faster rebuilds
 - Use SWR or React Query for data fetching (future enhancement)
 
 ### 4. Monitoring Performance
@@ -279,17 +298,21 @@ VITE_APP_URL=https://zyratech-hub.netlify.app
 npm run build
 # Check dist/ folder size
 # Review chunk sizes in build output
+# Docker image size visible in: docker images
 ```
 
 ## Security Checklist
 
-- [ ] All sensitive data in environment variables
+- [ ] All sensitive data in environment variables (not in code or .env file)
 - [ ] No API keys in client-side code
-- [ ] HTTPS enabled (automatic with Netlify)
-- [ ] Security headers configured (in netlify.toml)
-- [ ] Form submissions validated
+- [ ] HTTPS enabled (automatic with Render)
+- [ ] Security headers configured in nginx.conf
+- [ ] Form submissions validated on frontend and backend
 - [ ] XSS protection enabled
 - [ ] CORS configured properly for API
+- [ ] Docker image base from official sources (node:20-alpine, nginx:stable-alpine)
+- [ ] No build artifacts or secrets in Docker image (multi-stage build ensures this)
+- [ ] Environment variables NOT committed to git (.env in .gitignore)
 
 ## Maintenance Schedule
 

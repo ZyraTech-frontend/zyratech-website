@@ -57,11 +57,11 @@ const WorkWithUs = () => {
 
       <HowWeAreSetUpSection items={data.setup} />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax3.png" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax3.webp" />
 
       <ProjectSetupSection steps={data.projectSteps} />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax4.png" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax4.webp" />
 
       <InterculturalCollaborationSection
         title={data.collaboration?.title}
@@ -70,17 +70,17 @@ const WorkWithUs = () => {
         points={data.collaboration?.points}
       />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax5.png" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax5.webp" />
 
       {/* <OpportunitiesSection /> */}
 
       <HowWeHireSection steps={data.hiring} />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax6.png" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax6.webp" />
 
       <HrContactSection />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax7.png" />
+      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax7.webp" />
 
       <NewsletterHero />
     </div>

@@ -7,7 +7,7 @@ const SimpleMediaGrid = () => {
       id: 1,
       title: "AgriSplanter Field Testing",
       type: "video",
-      image: "/images/manufacturing.png",
+      image: "/images/manufacturing.webp",
       duration: "4:32",
       views: "1.2K",
       category: "Agriculture"
@@ -16,7 +16,7 @@ const SimpleMediaGrid = () => {
       id: 2,
       title: "EcoWatch Community Workshop",
       type: "image",
-      image: "/images/software.png",
+      image: "/images/software.webp",
       views: "856",
       category: "Environment"
     },
@@ -24,7 +24,7 @@ const SimpleMediaGrid = () => {
       id: 3,
       title: "RecySim Smart Implementation",
       type: "video",
-      image: "/images/workingspace.png",
+      image: "/images/workingspace.webp",
       duration: "6:15",
       views: "2.1K",
       category: "Sustainability"
@@ -33,7 +33,7 @@ const SimpleMediaGrid = () => {
       id: 4,
       title: "Health Wearables Prototype",
       type: "image",
-      image: "/images/manufacturing.png",
+      image: "/images/manufacturing.webp",
       views: "672",
       category: "Healthcare"
     },
@@ -41,7 +41,7 @@ const SimpleMediaGrid = () => {
       id: 5,
       title: "Student Innovation Showcase",
       type: "video",
-      image: "/images/software.png",
+      image: "/images/software.webp",
       duration: "8:45",
       views: "3.4K",
       category: "Community"
@@ -50,7 +50,7 @@ const SimpleMediaGrid = () => {
       id: 6,
       title: "Carbon Credit Platform Demo",
       type: "image",
-      image: "/images/workingspace.png",
+      image: "/images/workingspace.webp",
       views: "945",
       category: "FinTech"
     }

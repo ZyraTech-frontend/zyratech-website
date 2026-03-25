@@ -168,7 +168,7 @@ const MediaGrid = ({ filters = {} }) => {
                   onError={(e) => {
                     console.error('❌ Failed to load image:', item.thumbnail);
                     // Try fallback image
-                    e.target.src = '/images/image1.png';
+                    e.target.src = "/images/image1.webp";
                     e.target.onerror = () => {
                       e.target.style.backgroundColor = '#f3f4f6';
                       e.target.style.display = 'flex';
