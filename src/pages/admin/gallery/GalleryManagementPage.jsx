@@ -54,12 +54,12 @@ const mockGalleryItems = [
         id: 1,
         title: "SafeDrive IoT System Development",
         type: "package",
-        thumbnail: "/images/image1.png",
+        thumbnail: "/images/image1.webp",
         category: "projects",
         images: [
-            "/images/image1.png",
-            "/images/image2.png",
-            "/images/image3.png",
+            "/images/image1.webp",
+            "/images/image2.webp",
+            "/images/image3.webp",
             "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp"
         ],
         keywords: ["iot", "safety", "smart", "development", "transportation"],
@@ -70,13 +70,13 @@ const mockGalleryItems = [
         id: 2,
         title: "EcoWatch Environmental Monitoring Platform",
         type: "package",
-        thumbnail: "/images/image2.png",
+        thumbnail: "/images/image2.webp",
         category: "projects",
         images: [
-            "/images/image2.png",
-            "/images/image3.png",
+            "/images/image2.webp",
+            "/images/image3.webp",
             "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-            "/images/image1.png"
+            "/images/image1.webp"
         ],
         keywords: ["environment", "monitoring", "platform", "sensors", "data"],
         status: "published",
@@ -86,13 +86,13 @@ const mockGalleryItems = [
         id: 3,
         title: "AgriZ Planter Precision Farming Solution",
         type: "package",
-        thumbnail: "/images/image3.png",
+        thumbnail: "/images/image3.webp",
         category: "projects",
         images: [
-            "/images/image3.png",
-            "/images/image1.png",
+            "/images/image3.webp",
+            "/images/image1.webp",
             "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-            "/images/image2.png"
+            "/images/image2.webp"
         ],
         keywords: ["agriculture", "precision", "farming", "technology", "innovation"],
         status: "published",
@@ -106,9 +106,9 @@ const mockGalleryItems = [
         category: "training",
         images: [
             "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-            "/images/image1.png",
-            "/images/image2.png",
-            "/images/image3.png"
+            "/images/image1.webp",
+            "/images/image2.webp",
+            "/images/image3.webp"
         ],
         keywords: ["training", "software", "development", "workshop", "skills"],
         status: "published",
@@ -118,13 +118,13 @@ const mockGalleryItems = [
         id: 5,
         title: "Mobile App Development Bootcamp",
         type: "package",
-        thumbnail: "/images/image1.png",
+        thumbnail: "/images/image1.webp",
         category: "training",
         images: [
-            "/images/image1.png",
+            "/images/image1.webp",
             "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-            "/images/image2.png",
-            "/images/image3.png"
+            "/images/image2.webp",
+            "/images/image3.webp"
         ],
         keywords: ["mobile", "app", "development", "bootcamp", "programming"],
         status: "draft",
@@ -134,13 +134,13 @@ const mockGalleryItems = [
         id: 6,
         title: "Web Development Certification Program",
         type: "package",
-        thumbnail: "/images/image2.png",
+        thumbnail: "/images/image2.webp",
         category: "training",
         images: [
-            "/images/image2.png",
-            "/images/image3.png",
+            "/images/image2.webp",
+            "/images/image3.webp",
             "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-            "/images/image1.png"
+            "/images/image1.webp"
         ],
         keywords: ["web", "development", "certification", "fullstack", "javascript"],
         status: "published",
@@ -150,13 +150,13 @@ const mockGalleryItems = [
         id: 7,
         title: "Team Building and Collaboration Session",
         type: "package",
-        thumbnail: "/images/Dalene.png",
+        thumbnail: "/images/Dalene.webp",
         category: "community",
         images: [
-            "/images/Dalene.png",
-            "/images/image1.png",
-            "/images/image2.png",
-            "/images/image3.png"
+            "/images/Dalene.webp",
+            "/images/image1.webp",
+            "/images/image2.webp",
+            "/images/image3.webp"
         ],
         keywords: ["team", "building", "collaboration", "community", "engagement"],
         status: "published",
@@ -166,13 +166,13 @@ const mockGalleryItems = [
         id: 8,
         title: "Innovation Showcase 2024",
         type: "package",
-        thumbnail: "/images/image1.png",
+        thumbnail: "/images/image1.webp",
         category: "events",
         images: [
-            "/images/image1.png",
+            "/images/image1.webp",
             "/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp",
-            "/images/image2.png",
-            "/images/image3.png"
+            "/images/image2.webp",
+            "/images/image3.webp"
         ],
         keywords: ["innovation", "showcase", "2024", "technology", "exhibition"],
         status: "published",

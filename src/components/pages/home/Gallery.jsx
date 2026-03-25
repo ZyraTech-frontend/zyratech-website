@@ -9,27 +9,27 @@ const Gallery = () => {
   const mediaItems = [
     {
       type: 'image',
-      src: '/images/image1.png',
+      src: "/images/image1.webp",
       alt: 'Zyra Tech Hub community impact'
     },
     {
       type: 'image', 
-      src: '/images/image2.png',
+      src: "/images/image2.webp",
       alt: 'Zyra Tech Hub learning experience'
     },
     {
       type: 'image',
-      src: '/images/image3.png', 
+      src: "/images/image3.webp", 
       alt: 'Zyra Tech Hub innovation'
     },
     {
       type: 'image',
-      src: '/images/image1.png',
+      src: "/images/image1.webp",
       alt: 'Zyra Tech Hub collaboration'
     },
     {
       type: 'image',
-      src: '/images/image2.png',
+      src: "/images/image2.webp",
       alt: 'Zyra Tech Hub programs'
     }
   ];

@@ -22,7 +22,7 @@ const GalleryPage = () => {
         {/* Background Image with Overlays */}
         <div className="absolute inset-0">
           <ImageWithSkeleton
-            src="/images/FINAL/0B2A2001.jpg"
+            src="/images/FINAL/0B2A2001.webp"
             alt="ZyraTech Gallery"
             className="h-full w-full"
             skeletonClassName="bg-gray-800"

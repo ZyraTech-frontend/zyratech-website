@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import partnersService from '../../../services/partnersService';
+import OptimizedImage from '../../common/OptimizedImage';
 
 const PartnersShowcase = () => {
   // Hardcoded partner as per user request to only show Royal Klast
   const partner = {
     name: "Royal Klast",
-    logo: "/images/partnershiplogo.jpeg"
+    logo: "/images/partnershiplogo.webp"
   };
 
   return (
@@ -19,13 +19,13 @@ const PartnersShowcase = () => {
           </h3>
 
           <div className="bg-white rounded-lg py-6 sm:py-8 md:py-12 px-2 sm:px-4 md:px-8 flex flex-col justify-center items-center overflow-hidden">
-            <img decoding="async"
+            <OptimizedImage
               src={partner.logo}
               alt={partner.name}
-              width="256"
-              height="160"
-              loading="lazy"
+              width={256}
+              height={160}
               className="max-w-full h-auto object-contain max-h-32 sm:max-h-48 md:max-h-64 filter hover:grayscale-0 transition-[transform,opacity,filter] duration-300 mb-6"
+              containerClassName="flex justify-center mb-6"
             />
             <p className="text-xl sm:text-2xl font-bold text-gray-800">{partner.name}</p>
           </div>

@@ -28,7 +28,7 @@ const defaultApplicationProcess = [
 const defaultContactPerson = {
   name: 'Magdalene',
   title: 'Human Resources Team Lead',
-  imageUrl: '/images/Dalene.png',
+  imageUrl: "/images/Dalene.webp",
   email: 'hr@zyratech.com',
   phone: '+233 24 123 4567'
 };

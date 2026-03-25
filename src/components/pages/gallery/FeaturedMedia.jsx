@@ -7,35 +7,35 @@ const FeaturedMedia = () => {
       id: 1,
       title: "Community Impact",
       description: "Real stories from our programs transforming lives across West Africa.",
-      image: "/images/gallery/p18.jpeg",
+      image: "/images/gallery/p18.webp",
       type: "image"
     },
     {
       id: 2,
       title: "Learning Experience",
       description: "Students engaging in hands-on training and skill development.",
-      image: "/images/gallery/p43.jpg",
+      image: "/images/gallery/p43.webp",
       type: "image"
     },
     {
       id: 3,
       title: "Innovation in Action",
       description: "Cutting-edge solutions developed through Zyra Tech Hub programs.",
-      image: "/images/gallery/p56.jpeg",
+      image: "/images/gallery/p56.webp",
       type: "image"
     },
     {
       id: 4,
       title: "Collaboration & Growth",
       description: "Teams working together to create sustainable change.",
-      image: "/images/gallery/p61.jpg",
+      image: "/images/gallery/p61.webp",
       type: "image"
     },
     {
       id: 5,
       title: "Program Highlights",
       description: "Showcasing the best moments from our initiatives.",
-      image: "/images/gallery/p40.jpg",
+      image: "/images/gallery/p40.webp",
       type: "image"
     }
   ];

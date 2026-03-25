@@ -144,7 +144,7 @@ const TrainingPaymentPage = () => {
     <TrainingLayout>
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-[#004fa2] via-[#003d7a] to-[#002952] py-12 sm:py-16">
-        <div className="absolute inset-0 bg-[url('/images/image3.png')] bg-cover bg-center opacity-10"></div>
+        <div className="absolute inset-0 bg-[url('/images/image3.webp')] bg-cover bg-center opacity-10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <TrainingBreadcrumb items={breadcrumbItems} variant="light" />
           

@@ -9,9 +9,9 @@ export const articlesData = [
     readingTime: "5 min read",
     author: {
       name: "ZyraTech Team",
-      avatar: "/images/image1.png"
+      avatar: "/images/image1.webp"
     },
-    image: "/images/image1.png",
+    image: "/images/image1.webp",
     excerpt: "Discover how our comprehensive training programs are bridging the gap between education and industry, empowering the next generation of tech professionals in Ghana.",
     slug: "transforming-education-through-technology",
     featured: true
@@ -24,9 +24,9 @@ export const articlesData = [
     readingTime: "4 min read",
     author: {
       name: "Emmanuel Mensah",
-      avatar: "/images/image2.png"
+      avatar: "/images/image2.webp"
     },
-    image: "/images/image2.png",
+    image: "/images/image2.webp",
     excerpt: "Meet the team behind SafeDrive, an innovative IoT system that's making roads safer. Learn how our internship program helped bring this project to life.",
     slug: "safedrive-iot-success-story"
   },
@@ -38,9 +38,9 @@ export const articlesData = [
     readingTime: "6 min read",
     author: {
       name: "Grace Owusu",
-      avatar: "/images/image3.png"
+      avatar: "/images/image3.webp"
     },
-    image: "/images/image3.png",
+    image: "/images/image3.webp",
     excerpt: "How ZyraTech is partnering with rural schools to install networks and provide digital access, creating opportunities for thousands of students.",
     slug: "digital-infrastructure-rural-schools"
   },
@@ -66,9 +66,9 @@ export const articlesData = [
     readingTime: "5 min read",
     author: {
       name: "Naomi Asante",
-      avatar: "/images/image1.png"
+      avatar: "/images/image1.webp"
     },
-    image: "/images/image1.png",
+    image: "/images/image1.webp",
     excerpt: "A graduate's perspective on how ZyraTech's internship program launched her career in software development.",
     slug: "naomi-journey-classroom-to-career"
   },
@@ -80,9 +80,9 @@ export const articlesData = [
     readingTime: "8 min read",
     author: {
       name: "Isaac Osei",
-      avatar: "/images/image2.png"
+      avatar: "/images/image2.webp"
     },
-    image: "/images/image2.png",
+    image: "/images/image2.webp",
     excerpt: "Essential Python programming tips and best practices from our intensive coding bootcamp curriculum.",
     slug: "mastering-python-bootcamp-tips"
   },
@@ -94,9 +94,9 @@ export const articlesData = [
     readingTime: "6 min read",
     author: {
       name: "ZyraTech Team",
-      avatar: "/images/image3.png"
+      avatar: "/images/image3.webp"
     },
-    image: "/images/image3.png",
+    image: "/images/image3.webp",
     excerpt: "How technology is revolutionizing agriculture in Ghana through precision farming solutions developed by our students.",
     slug: "agriz-planter-precision-farming"
   },

@@ -4,27 +4,27 @@ const FeaturedJourney = () => {
   const journeyItems = [
     {
       id: 1,
-      image: "/images/manufacturing.png",
+      image: "/images/manufacturing.webp",
       caption: "Initial Concept"
     },
     {
       id: 2,
-      image: "/images/software.png",
+      image: "/images/software.webp",
       caption: "Design Phase"
     },
     {
       id: 3,
-      image: "/images/workingspace.png",
+      image: "/images/workingspace.webp",
       caption: "Prototyping"
     },
     {
       id: 4,
-      image: "/images/manufacturing.png",
+      image: "/images/manufacturing.webp",
       caption: "Testing"
     },
     {
       id: 5,
-      image: "/images/software.png",
+      image: "/images/software.webp",
       caption: "Launch Day"
     }
   ];

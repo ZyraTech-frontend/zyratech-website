@@ -6,13 +6,13 @@ const OrganizedContentGrid = ({ activeFilter, searchTerm }) => {
 
   // Gallery images list - dynamically loaded
   const galleryImageNames = [
-    "p1.jpg", "p2.jpg", "p3.jpg", "p4.jpg", "p10.jpeg", "p11.jpeg", "p12.jpeg", "p13.jpeg",
-    "p14.jpeg", "p15.jpeg", "p16.jpeg", "p17.jpeg", "p18.jpeg", "p19.jpeg", "p23.jpeg", "p24.jpg",
-    "p25.jpg", "p26.jpg", "p27.jpeg", "p28.jpeg", "p29.jpeg", "p30.jpeg", "p31.jpeg", "p32.jpeg",
-    "p33.jpeg", "p34.jpeg", "p35.jpg", "p36.jpg", "p37.jpg", "p38.jpg", "p39.jpg", "p40.jpg",
-    "p41.jpg", "p42.jpg", "p43.jpg", "p44.jpg", "p45.jpeg", "p46.jpeg", "p47.jpeg", "p48.jpeg",
+    "p1.webp", "p2.webp", "p3.webp", "p4.webp", "p10.jpeg", "p11.jpeg", "p12.jpeg", "p13.jpeg",
+    "p14.jpeg", "p15.jpeg", "p16.jpeg", "p17.jpeg", "p18.jpeg", "p19.jpeg", "p23.jpeg", "p24.webp",
+    "p25.webp", "p26.webp", "p27.jpeg", "p28.jpeg", "p29.jpeg", "p30.jpeg", "p31.jpeg", "p32.jpeg",
+    "p33.jpeg", "p34.jpeg", "p35.webp", "p36.webp", "p37.webp", "p38.webp", "p39.webp", "p40.webp",
+    "p41.webp", "p42.webp", "p43.webp", "p44.webp", "p45.jpeg", "p46.jpeg", "p47.jpeg", "p48.jpeg",
     "p49.jpeg", "p50.jpeg", "p51.jpeg", "p52.jpeg", "p53.jpeg", "p54.jpeg", "p55.jpeg", "p56.jpeg",
-    "17.jpeg", "p.jpg"
+    "17.jpeg", "p.webp"
   ];
 
   useEffect(() => {
@@ -168,5 +168,6 @@ const OrganizedContentGrid = ({ activeFilter, searchTerm }) => {
 };
 
 export default OrganizedContentGrid;
+
 
 

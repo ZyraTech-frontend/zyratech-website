@@ -8,7 +8,7 @@ const WorkWithUsHeroSection = ({ title, subtitle, description, image }) => {
     <section className="relative text-white overflow-hidden">
       <div className="absolute inset-0">
         <img decoding="async"
-          src={image || "/images/work-with-us-hero.jpg"}
+          src={image || "/images/work-with-us-hero.webp"}
           alt="Work with us"
           className="h-full w-full object-cover"
           onError={(e) => {

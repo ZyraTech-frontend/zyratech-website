@@ -9,7 +9,7 @@ const MediaCategories = () => {
       icon: Sprout,
       count: 45,
       description: 'Smart farming and agricultural innovation projects',
-      image: '/images/manufacturing.png',
+      image: "/images/manufacturing.webp",
       color: 'bg-green-500'
     },
     {
@@ -18,7 +18,7 @@ const MediaCategories = () => {
       icon: Leaf,
       count: 38,
       description: 'Environmental monitoring and conservation solutions',
-      image: '/images/software.png',
+      image: "/images/software.webp",
       color: 'bg-blue-500'
     },
     {
@@ -27,7 +27,7 @@ const MediaCategories = () => {
       icon: Recycle,
       count: 32,
       description: 'Waste management and circular economy projects',
-      image: '/images/workingspace.png',
+      image: "/images/workingspace.webp",
       color: 'bg-emerald-500'
     },
     {
@@ -36,7 +36,7 @@ const MediaCategories = () => {
       icon: Heart,
       count: 28,
       description: 'Medical devices and community health initiatives',
-      image: '/images/manufacturing.png',
+      image: "/images/manufacturing.webp",
       color: 'bg-red-500'
     },
     {
@@ -45,7 +45,7 @@ const MediaCategories = () => {
       icon: DollarSign,
       count: 22,
       description: 'Financial technology and economic empowerment',
-      image: '/images/software.png',
+      image: "/images/software.webp",
       color: 'bg-indigo-500'
     },
     {
@@ -54,7 +54,7 @@ const MediaCategories = () => {
       icon: Users,
       count: 56,
       description: 'Community engagement and social impact programs',
-      image: '/images/workingspace.png',
+      image: "/images/workingspace.webp",
       color: 'bg-purple-500'
     }
   ];

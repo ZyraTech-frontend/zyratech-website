@@ -500,7 +500,7 @@ const CourseFormPage = () => {
                                 name="heroImage"
                                 value={formData.heroImage}
                                 onChange={handleInputChange}
-                                placeholder="e.g., /images/course-hero.png"
+                                placeholder="e.g., /images/course-hero.webp"
                                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
                             />
                             <p className="text-xs text-gray-500 mt-2">Custom hero background image for the course detail page. Leave empty to use default.</p>

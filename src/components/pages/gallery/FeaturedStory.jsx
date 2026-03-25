@@ -12,7 +12,7 @@ const FeaturedStory = () => {
           {/* Featured Image */}
           <div className="relative h-screen bg-gray-100">
             <img decoding="async"
-              src="/images/gallery/p43.jpg"
+              src="/images/gallery/p43.webp"
               alt="Innovation Day 2024 - STEM Kids in Action"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />

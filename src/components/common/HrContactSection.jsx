@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 const HrContactSection = ({
   name,
   title,
-  imageUrl = '/images/Dalene.png',
+  imageUrl = "/images/Dalene.webp",
   email
 }) => {
   // Get settings from Redux store

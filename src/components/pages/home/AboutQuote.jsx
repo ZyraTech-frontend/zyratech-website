@@ -14,7 +14,7 @@ const AboutQuote = () => {
     quote: "Our mission is to lead Ghana’s technological transformation through world-class Software Engineering, robust Infrastructure & Cloud services, and impactful IT Education. We are building an ecosystem where innovation meets academic excellence",
     authorName: "ZyraTech Leadership",
     authorTitle: "Empowering Ghana's Tech Future",
-    authorImage: "/images/tex1.png",
+    authorImage: "/images/tex1.webp",
     stat1Value: "2024",
     stat1Label: "Founded",
     stat2Value: "50+",

@@ -22,7 +22,7 @@ const TrainingTestimonial = () => {
           >
             <div className="absolute -right-4 -top-4 w-full h-full bg-white/10 rounded-lg border border-white/20"></div>
             <img decoding="async"
-              src="/images/trainingtest.png"
+              src="/images/trainingtest.webp"
               alt="ZyraTech Training Graduate"
               loading="lazy"
               className="relative w-full h-80 md:h-[450px] object-cover rounded-lg shadow-2xl"

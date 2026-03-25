@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import OptimizedImage from '../../common/OptimizedImage';
 
 const AboutShowcase = () => {
   return (
@@ -31,13 +32,17 @@ const AboutShowcase = () => {
 
           <div className="relative order-1 lg:order-2">
             <div className="absolute -right-2 sm:-right-4 -top-2 sm:-top-4 w-full h-full bg-[#004fa2] rounded-lg"></div>
-            <img decoding="async"
-              src="/images/team-collaboration.jpg"
+            <OptimizedImage
+              src="/images/team-collaboration.webp"
               alt="ZyraTech team member working"
-              loading="lazy"
+              width={600}
+              height={480}
               className="relative w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg shadow-lg"
+              containerClassName="relative w-full rounded-lg"
               onError={(e) => {
-                e.target.src = 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=400&fit=crop';
+                if (e.target) {
+                  e.target.src = 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=400&fit=crop';
+                }
               }}
             />
           </div>
