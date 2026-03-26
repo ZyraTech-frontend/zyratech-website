@@ -10,7 +10,8 @@ const ApplicationSuccessPage = () => {
 
   useSEO({
     title: 'Application Submitted',
-    description: 'Your training application has been successfully submitted to Zyra Tech Hub. We will contact you with next steps.'
+    description: 'Your training application has been successfully submitted to Zyra Tech Hub. We will contact you with next steps.',
+    url: '/training/application-success'
   });
 
   const applicantName = location.state?.applicantName;

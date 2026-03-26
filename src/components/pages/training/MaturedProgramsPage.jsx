@@ -11,7 +11,8 @@ import useSEO from '../../../hooks/useSEO';
 const MaturedProgramsPage = () => {
   useSEO({
     title: 'Matured Learner Programs',
-    description: 'Specialized tech training for working professionals and adults. Flexible schedules and practical skills for career advancement at Zyra Tech Hub.'
+    description: 'Specialized tech training for working professionals and adults. Flexible schedules and practical skills for career advancement at Zyra Tech Hub.',
+    url: '/training/programs/matured'
   });
 
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
