@@ -10,7 +10,8 @@ import useSEO from '../../../hooks/useSEO';
 const ProgramsPage = () => {
   useSEO({
     title: 'All Training Programs',
-    description: 'Browse all training categories at Zyra Tech Hub - Basic, Intermediate, Advanced, Internship, and Matured programs for every skill level.'
+    description: 'Browse all training categories at Zyra Tech Hub - Basic, Intermediate, Advanced, Internship, and Matured programs for every skill level.',
+    url: '/training/programs'
   });
 
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });

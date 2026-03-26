@@ -15,7 +15,8 @@ const TrainingPage = () => {
 
   useSEO({
     title: 'Training Programs',
-    description: 'Explore hands-on tech training programs at Zyra Tech Hub. From beginner to advanced levels, gain practical skills in software development, data analytics, and more.'
+    description: 'Explore hands-on tech training programs at Zyra Tech Hub. From beginner to advanced levels, gain practical skills in software development, data analytics, and more.',
+    url: '/training'
   });
 
   useEffect(() => {

@@ -11,7 +11,8 @@ import useSEO from '../../../hooks/useSEO';
 const AdvancedProgramsPage = () => {
   useSEO({
     title: 'Advanced Training Programs',
-    description: 'Master cutting-edge technologies with advanced courses in AI, machine learning, and full-stack development at Zyra Tech Hub.'
+    description: 'Master cutting-edge technologies with advanced courses in AI, machine learning, and full-stack development at Zyra Tech Hub.',
+    url: '/training/programs/advanced'
   });
 
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });

@@ -14,7 +14,8 @@ const TrainingPaymentSuccessPage = () => {
 
   useSEO({
     title: 'Payment Successful',
-    description: 'Your training program payment has been processed successfully. Welcome to Zyra Tech Hub!'
+    description: 'Your training program payment has been processed successfully. Welcome to Zyra Tech Hub!',
+    url: '/training/payment-success'
   });
 
   const {

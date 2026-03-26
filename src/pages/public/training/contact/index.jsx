@@ -9,7 +9,8 @@ import useSEO from '../../../../hooks/useSEO';
 const TrainingContactPage = () => {
   useSEO({
     title: 'Contact Training Team',
-    description: 'Get in touch with Zyra Tech Hub training team. Ask questions about courses, schedules, or enrollment processes.'
+    description: 'Get in touch with Zyra Tech Hub training team. Ask questions about courses, schedules, or enrollment processes.',
+    url: '/training/contact'
   });
 
   return (

@@ -22,7 +22,8 @@ const TrainingPaymentPage = () => {
 
   useSEO({
     title: course ? `Payment - ${course.title}` : 'Complete Payment',
-    description: 'Complete your training program payment securely at Zyra Tech Hub.'
+    description: 'Complete your training program payment securely at Zyra Tech Hub.',
+    url: courseId ? `/training/${courseId}/payment` : '/training'
   });
 
   const [paymentMethod, setPaymentMethod] = useState('card');

@@ -11,7 +11,8 @@ import useSEO from '../../../hooks/useSEO';
 const IntermediateProgramsPage = () => {
   useSEO({
     title: 'Intermediate Training Programs',
-    description: 'Advance your skills with intermediate-level courses in cloud computing, data analytics, and web development at Zyra Tech Hub.'
+    description: 'Advance your skills with intermediate-level courses in cloud computing, data analytics, and web development at Zyra Tech Hub.',
+    url: '/training/programs/intermediate'
   });
 
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
