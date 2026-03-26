@@ -9,7 +9,7 @@ const JobApplicationPage = () => {
   useSEO({
     title: 'Apply for Job',
     description: 'Apply for a position at Zyra Tech Hub. Submit your application and join our team of innovators building Ghana\'s digital future.',
-    url: '/jobs',
+    url: job ? `/jobs/${job.id}/apply` : '/jobs',
     keywords: 'job application, apply for job, Zyra Tech Hub careers, tech jobs Ghana'
   });
 

@@ -11,7 +11,8 @@ import useSEO from '../../../hooks/useSEO';
 const InternshipProgramsPage = () => {
   useSEO({
     title: 'Immersive Internship Programmes',
-    description: 'Gain real-world experience with hands-on internship programs at Zyra Tech Hub. Build your portfolio while learning from industry professionals.'
+    description: 'Gain real-world experience with hands-on internship programs at Zyra Tech Hub. Build your portfolio while learning from industry professionals.',
+    url: '/training/programs/internship'
   });
 
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });

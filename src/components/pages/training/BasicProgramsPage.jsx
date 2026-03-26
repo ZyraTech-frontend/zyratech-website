@@ -11,7 +11,8 @@ import useSEO from '../../../hooks/useSEO';
 const BasicProgramsPage = () => {
   useSEO({
     title: 'Basic Training Programs',
-    description: 'Start your tech journey with foundational courses in computer basics, digital literacy, and introductory programming at Zyra Tech Hub.'
+    description: 'Start your tech journey with foundational courses in computer basics, digital literacy, and introductory programming at Zyra Tech Hub.',
+    url: '/training/programs/basic'
   });
 
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
