@@ -10,7 +10,6 @@ import ParallaxDivider from '../../../components/common/ParallaxDivider';
 import useSEO from '../../../hooks/useSEO';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
-import CookieConsent from '../../../components/common/CookieConsent';
 
 const HomePage = () => {
   useSEO({
@@ -40,7 +39,6 @@ const HomePage = () => {
       <TestimonialsSection />
       <HrContactSection />
       <NewsletterHero />
-      <CookieConsent />
     </div>
   );
 };
