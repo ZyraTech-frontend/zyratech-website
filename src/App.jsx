@@ -6,6 +6,7 @@ import store from './store';
 import ScrollToTop from './components/ScrollToTop';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import CookieConsentBanner from './components/CookieConsentBanner';
 import ProtectedRoute from './components/admin/layout/ProtectedRoute';
 import ConfirmDialog from './components/admin/shared/ConfirmDialog';
 import FullPageSkeleton from './components/common/FullPageSkeleton';
@@ -136,6 +137,9 @@ function App() {
       <div className="flex flex-col min-h-screen">
         {/* Scroll to top on route change */}
         <ScrollToTop />
+
+        {/* Cookie Consent Banner */}
+        <CookieConsentBanner />
 
         {/* Only show main Navbar if NOT on software or projects pages or admin pages */}
         {!hideMainNavbar && <Navbar />}
