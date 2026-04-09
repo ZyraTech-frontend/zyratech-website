@@ -30,7 +30,7 @@ const CourseDetailPage = () => {
     description: course
       ? `${course.title} - ${course.duration} training program at Zyra Tech Hub. ${course.tagline || 'Build practical skills for your tech career.'}`
       : 'Explore training course details at Zyra Tech Hub.',
-    url: `/training/${courseId}`
+    url: `/training/course/${courseId}`
   });
 
   if (!course) {

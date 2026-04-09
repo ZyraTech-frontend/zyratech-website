@@ -67,7 +67,7 @@ const CourseApplicationForm = () => {
   useSEO({
     title: resolvedCourseTitle ? `Apply - ${resolvedCourseTitle}` : 'Course Application',
     description: `Apply for ${resolvedCourseTitle || 'training'} at Zyra Tech Hub. Complete your application to start your tech education journey.`,
-    url: courseId ? `/training/${courseId}/apply` : '/training/apply'
+    url: courseId ? `/training/course/${courseId}/apply` : '/training/apply'
   });
 
   const initialState = useMemo(() => getInitialFormData(courseId), [courseId]);
