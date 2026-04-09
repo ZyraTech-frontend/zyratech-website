@@ -118,19 +118,153 @@ document.head.appendChild(style);
 function App() {
   const location = useLocation();
 
-  // Check if current route is an admin route
-  const isAdminRoute = location.pathname.startsWith('/admin');
+  // ============================================================
+  // SUBDOMAIN DETECTION
+  // ============================================================
+  // Checks the browser's current hostname to decide which "app"
+  // to render. On admin.zyratechhub.com (or admin.localhost for
+  // local testing) we show ONLY the admin portal. On every other
+  // hostname we show the public website with zero admin exposure.
+  // ============================================================
+  const currentHostname = window.location.hostname;
+  const isAdminDomain = currentHostname.startsWith('admin.');
 
-  // Check if current route is a service page or projects page
+  // ============================================================
+  // BRANCH 1 — ADMIN PORTAL  (admin.zyratechhub.com)
+  // ============================================================
+  // No public Navbar, Footer, or CookieConsentBanner.
+  // The root "/" redirects straight to the login screen.
+  // RBAC is enforced by <ProtectedRoute requiredRole="...">
+  // ============================================================
+  if (isAdminDomain) {
+    return (
+      <Provider store={store}>
+        <div className="flex flex-col min-h-screen">
+          <ScrollToTop />
+
+          <main className="flex-grow">
+            <Suspense fallback={<FullPageSkeleton />}>
+              <Routes>
+                {/* Entry points */}
+                <Route path="/" element={<Navigate to="/admin/login" replace />} />
+                <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+                <Route path="/admin/login" element={<LoginPage />} />
+
+                {/* Dashboard & Core */}
+                <Route path="/admin/dashboard" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
+                <Route path="/admin/profile" element={<ProtectedRoute><AdminProfilePage /></ProtectedRoute>} />
+
+                {/* Super-Admin Only: Users, Analytics, Settings */}
+                <Route path="/admin/users" element={<ProtectedRoute requiredRole="super_admin"><UsersPage /></ProtectedRoute>} />
+                <Route path="/admin/users/new" element={<ProtectedRoute requiredRole="super_admin"><AdministratorFormPage /></ProtectedRoute>} />
+                <Route path="/admin/users/edit/:id" element={<ProtectedRoute requiredRole="super_admin"><AdministratorFormPage /></ProtectedRoute>} />
+                <Route path="/admin/analytics" element={<ProtectedRoute requiredRole="super_admin"><AnalyticsPage /></ProtectedRoute>} />
+                <Route path="/admin/settings" element={<ProtectedRoute requiredRole="super_admin"><SettingsPage /></ProtectedRoute>} />
+
+                {/* CMS Content Management */}
+                <Route path="/admin/content/hero" element={<ProtectedRoute><HeroSlidesManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/content/services" element={<ProtectedRoute><ServicesManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/content/benefits" element={<ProtectedRoute><BenefitsManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/content/about" element={<ProtectedRoute><AboutQuoteManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/content/about-page" element={<ProtectedRoute><AboutPageManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/content/partnership" element={<ProtectedRoute><PartnershipContentManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/content/work-with-us" element={<ProtectedRoute><WorkWithUsManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/content/quality-assurance" element={<ProtectedRoute><QAManagementPage /></ProtectedRoute>} />
+
+                {/* Training Management */}
+                <Route path="/admin/training" element={<ProtectedRoute><TrainingCoursesPage /></ProtectedRoute>} />
+                <Route path="/admin/training/new" element={<ProtectedRoute><CourseFormPage /></ProtectedRoute>} />
+                <Route path="/admin/training/edit/:id" element={<ProtectedRoute><CourseFormPage /></ProtectedRoute>} />
+                <Route path="/admin/training/applications/:id" element={<ProtectedRoute><ApplicationDetailsPage /></ProtectedRoute>} />
+
+                {/* Jobs Management */}
+                <Route path="/admin/jobs" element={<ProtectedRoute><JobsManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/jobs/new" element={<ProtectedRoute><JobFormPage /></ProtectedRoute>} />
+                <Route path="/admin/jobs/edit/:id" element={<ProtectedRoute><JobFormPage /></ProtectedRoute>} />
+                <Route path="/admin/jobs/:id" element={<ProtectedRoute><JobDetailsPage /></ProtectedRoute>} />
+                <Route path="/admin/jobs/applications/:id" element={<ProtectedRoute><JobApplicationDetailsPage /></ProtectedRoute>} />
+
+                {/* Blog Management */}
+                <Route path="/admin/blog" element={<ProtectedRoute><BlogManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/blog/new" element={<ProtectedRoute><BlogFormPage /></ProtectedRoute>} />
+                <Route path="/admin/blog/edit/:id" element={<ProtectedRoute><BlogFormPage /></ProtectedRoute>} />
+                <Route path="/admin/blog/:id" element={<ProtectedRoute><BlogDetailsPage /></ProtectedRoute>} />
+
+                {/* Gallery Management */}
+                <Route path="/admin/gallery" element={<ProtectedRoute><GalleryManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/gallery/new" element={<ProtectedRoute><AlbumFormPage /></ProtectedRoute>} />
+                <Route path="/admin/gallery/edit/:id" element={<ProtectedRoute><AlbumFormPage /></ProtectedRoute>} />
+
+                {/* Projects Management */}
+                <Route path="/admin/projects" element={<ProtectedRoute><ProjectsManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/projects/new" element={<ProtectedRoute><ProjectFormPage /></ProtectedRoute>} />
+                <Route path="/admin/projects/edit/:id" element={<ProtectedRoute><ProjectFormPage /></ProtectedRoute>} />
+                <Route path="/admin/projects/:id" element={<ProtectedRoute><ProjectDetailsPage /></ProtectedRoute>} />
+
+                {/* FAQ Management */}
+                <Route path="/admin/faq" element={<ProtectedRoute><FaqManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/faq/new" element={<ProtectedRoute><FaqFormPage /></ProtectedRoute>} />
+                <Route path="/admin/faq/edit/:id" element={<ProtectedRoute><FaqFormPage /></ProtectedRoute>} />
+
+                {/* Testimonials Management */}
+                <Route path="/admin/testimonials" element={<ProtectedRoute><TestimonialsManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/testimonials/new" element={<ProtectedRoute><TestimonialsFormPage /></ProtectedRoute>} />
+                <Route path="/admin/testimonials/edit/:id" element={<ProtectedRoute><TestimonialsFormPage /></ProtectedRoute>} />
+
+                {/* Payments & Enrollments */}
+                <Route path="/admin/payments" element={<ProtectedRoute><PaymentsManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/enrollments" element={<ProtectedRoute><EnrollmentsManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/enrollments/new" element={<ProtectedRoute><EnrollmentFormPage /></ProtectedRoute>} />
+                <Route path="/admin/enrollments/edit/:id" element={<ProtectedRoute><EnrollmentFormPage /></ProtectedRoute>} />
+                <Route path="/admin/enrollments/:id" element={<ProtectedRoute><EnrollmentDetailsPage /></ProtectedRoute>} />
+
+                {/* Impact Management */}
+                <Route path="/admin/impact" element={<ProtectedRoute><ImpactManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/impact/metrics/new" element={<ProtectedRoute><ImpactMetricFormPage /></ProtectedRoute>} />
+                <Route path="/admin/impact/metrics/:id" element={<ProtectedRoute><ImpactMetricFormPage /></ProtectedRoute>} />
+                <Route path="/admin/impact/stories/new" element={<ProtectedRoute><ImpactStoryFormPage /></ProtectedRoute>} />
+                <Route path="/admin/impact/stories/:id" element={<ProtectedRoute><ImpactStoryFormPage /></ProtectedRoute>} />
+
+                {/* Inquiries & Communications */}
+                <Route path="/admin/messages" element={<ProtectedRoute><MessagesManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/partnerships" element={<ProtectedRoute><PartnershipsManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/partnerships/new" element={<ProtectedRoute><PartnershipFormPage /></ProtectedRoute>} />
+                <Route path="/admin/partnerships/edit/:id" element={<ProtectedRoute><PartnershipFormPage /></ProtectedRoute>} />
+                <Route path="/admin/contact-inquiries" element={<ProtectedRoute><ContactInquiriesPage /></ProtectedRoute>} />
+                <Route path="/admin/newsletter" element={<ProtectedRoute><NewsletterManagementPage /></ProtectedRoute>} />
+
+                {/* Activity & Reports */}
+                <Route path="/admin/activity-logs" element={<ProtectedRoute><ActivityLogsPage /></ProtectedRoute>} />
+                <Route path="/admin/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
+
+                {/* Catch-all: any unknown path on the admin subdomain goes to login */}
+                <Route path="*" element={<Navigate to="/admin/login" replace />} />
+              </Routes>
+            </Suspense>
+          </main>
+
+          {/* Global Confirm Dialog for admin actions */}
+          <ConfirmDialog />
+        </div>
+      </Provider>
+    );
+  }
+
+  // ============================================================
+  // BRANCH 2 — PUBLIC WEBSITE  (zyratechhub.com)
+  // ============================================================
+  // The public site has NO admin routes whatsoever. If a visitor
+  // tries zyratechhub.com/admin they will hit the 404 catch-all.
+  // ============================================================
+
+  // Determine which pages need the navbar / footer hidden
   const isProjectsPage = location.pathname.startsWith('/projects');
   const isTrainingPage = location.pathname.startsWith('/training');
   const isJobApplicationPage = location.pathname.includes('/jobs/') && location.pathname.includes('/apply');
-
-  // Check if on contact page with service context
   const isContactWithService = location.pathname === '/contact' && location.state?.from;
 
-  const hideMainNavbar = isProjectsPage || isContactWithService || isTrainingPage || isJobApplicationPage || isAdminRoute;
-  const hideMainFooter = isProjectsPage || isContactWithService || isJobApplicationPage || isAdminRoute;
+  const hideMainNavbar = isProjectsPage || isContactWithService || isTrainingPage || isJobApplicationPage;
+  const hideMainFooter = isProjectsPage || isContactWithService || isJobApplicationPage;
 
   return (
     <Provider store={store}>
@@ -141,7 +275,7 @@ function App() {
         {/* Cookie Consent Banner */}
         <CookieConsentBanner />
 
-        {/* Only show main Navbar if NOT on software or projects pages or admin pages */}
+        {/* Only show main Navbar if NOT on projects / training / job-apply pages */}
         {!hideMainNavbar && <Navbar />}
 
         <main className="flex-grow">
@@ -153,498 +287,16 @@ function App() {
               <Route path="/projects/request" element={<Suspense fallback={<RouteSkeleton variant="projects" />}><ProjectRequestPage /></Suspense>} />
               <Route path="/contact" element={<Suspense fallback={<RouteSkeleton variant="default" />}><ContactPage /></Suspense>} />
 
-              {/* Admin Routes */}
-              <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
-              <Route path="/admin/login" element={<LoginPage />} />
-              <Route
-                path="/admin/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <AdminPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/users"
-                element={
-                  <ProtectedRoute requiredRole="super_admin">
-                    <UsersPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/users/new"
-                element={
-                  <ProtectedRoute requiredRole="super_admin">
-                    <AdministratorFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/users/edit/:id"
-                element={
-                  <ProtectedRoute requiredRole="super_admin">
-                    <AdministratorFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/analytics"
-                element={
-                  <ProtectedRoute requiredRole="super_admin">
-                    <AnalyticsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/settings"
-                element={
-                  <ProtectedRoute requiredRole="super_admin">
-                    <SettingsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/content/hero"
-                element={
-                  <ProtectedRoute>
-                    <HeroSlidesManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/content/services"
-                element={
-                  <ProtectedRoute>
-                    <ServicesManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/content/benefits"
-                element={
-                  <ProtectedRoute>
-                    <BenefitsManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/content/about"
-                element={
-                  <ProtectedRoute>
-                    <AboutQuoteManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/content/about-page"
-                element={
-                  <ProtectedRoute>
-                    <AboutPageManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/content/partnership"
-                element={
-                  <ProtectedRoute>
-                    <PartnershipContentManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/content/work-with-us"
-                element={
-                  <ProtectedRoute>
-                    <WorkWithUsManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/content/quality-assurance"
-                element={
-                  <ProtectedRoute>
-                    <QAManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/training"
-                element={
-                  <ProtectedRoute>
-                    <TrainingCoursesPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/training/applications/:id"
-                element={
-                  <ProtectedRoute>
-                    <ApplicationDetailsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/training/new"
-                element={
-                  <ProtectedRoute>
-                    <CourseFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/training/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <CourseFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/jobs"
-                element={
-                  <ProtectedRoute>
-                    <JobsManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/jobs/new"
-                element={
-                  <ProtectedRoute>
-                    <JobFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/jobs/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <JobFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/jobs/:id"
-                element={
-                  <ProtectedRoute>
-                    <JobDetailsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/jobs/applications/:id"
-                element={
-                  <ProtectedRoute>
-                    <JobApplicationDetailsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/blog"
-                element={
-                  <ProtectedRoute>
-                    <BlogManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/blog/new"
-                element={
-                  <ProtectedRoute>
-                    <BlogFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/blog/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <BlogFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/blog/:id"
-                element={
-                  <ProtectedRoute>
-                    <BlogDetailsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/gallery"
-                element={
-                  <ProtectedRoute>
-                    <GalleryManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/gallery/new"
-                element={
-                  <ProtectedRoute>
-                    <AlbumFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/gallery/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <AlbumFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/projects"
-                element={
-                  <ProtectedRoute>
-                    <ProjectsManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/projects/new"
-                element={
-                  <ProtectedRoute>
-                    <ProjectFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/projects/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <ProjectFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/projects/:id"
-                element={
-                  <ProtectedRoute>
-                    <ProjectDetailsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/faq"
-                element={
-                  <ProtectedRoute>
-                    <FaqManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/faq/new"
-                element={
-                  <ProtectedRoute>
-                    <FaqFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/faq/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <FaqFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/testimonials"
-                element={
-                  <ProtectedRoute>
-                    <TestimonialsManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/testimonials/new"
-                element={
-                  <ProtectedRoute>
-                    <TestimonialsFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/testimonials/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <TestimonialsFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/payments"
-                element={
-                  <ProtectedRoute>
-                    <PaymentsManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/enrollments"
-                element={
-                  <ProtectedRoute>
-                    <EnrollmentsManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/enrollments/new"
-                element={
-                  <ProtectedRoute>
-                    <EnrollmentFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/enrollments/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <EnrollmentFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/enrollments/:id"
-                element={
-                  <ProtectedRoute>
-                    <EnrollmentDetailsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/messages"
-                element={
-                  <ProtectedRoute>
-                    <MessagesManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/partnerships"
-                element={
-                  <ProtectedRoute>
-                    <PartnershipsManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/partnerships/new"
-                element={
-                  <ProtectedRoute>
-                    <PartnershipFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/partnerships/edit/:id"
-                element={
-                  <ProtectedRoute>
-                    <PartnershipFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/contact-inquiries"
-                element={
-                  <ProtectedRoute>
-                    <ContactInquiriesPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/newsletter"
-                element={
-                  <ProtectedRoute>
-                    <NewsletterManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/impact"
-                element={
-                  <ProtectedRoute>
-                    <ImpactManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/impact/metrics/new"
-                element={
-                  <ProtectedRoute>
-                    <ImpactMetricFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/impact/metrics/:id"
-                element={
-                  <ProtectedRoute>
-                    <ImpactMetricFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/impact/stories/new"
-                element={
-                  <ProtectedRoute>
-                    <ImpactStoryFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/impact/stories/:id"
-                element={
-                  <ProtectedRoute>
-                    <ImpactStoryFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/activity-logs"
-                element={
-                  <ProtectedRoute>
-                    <ActivityLogsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/reports"
-                element={
-                  <ProtectedRoute>
-                    <ReportsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/profile"
-                element={
-                  <ProtectedRoute>
-                    <AdminProfilePage />
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* Service Pages */}
-              {/* Education routes redirect to training */}
+              {/* Service Pages – legacy redirects */}
               <Route path="/services/education" element={<Navigate to="/training" replace />} />
               <Route path="/services/education/*" element={<Navigate to="/training" replace />} />
-              {/* Manufacturing routes redirect to contact */}
               <Route path="/services/manufacturing" element={<Navigate to="/contact" replace />} />
               <Route path="/services/manufacturing/*" element={<Navigate to="/contact" replace />} />
-              {/* Software routes redirect to contact */}
               <Route path="/services/software" element={<Navigate to="/contact" replace />} />
               <Route path="/services/software/*" element={<Navigate to="/contact" replace />} />
-              {/* Open Labs routes redirect to contact */}
               <Route path="/services/open-labs" element={<Navigate to="/contact" replace />} />
               <Route path="/services/open-labs/*" element={<Navigate to="/contact" replace />} />
               <Route path="/services/projectShowcase" element={<Navigate to="/projects" replace />} />
-
-              {/* Donate routes redirect to contact */}
               <Route path="/donate" element={<Navigate to="/contact" replace />} />
               <Route path="/donate/*" element={<Navigate to="/contact" replace />} />
 
@@ -653,11 +305,13 @@ function App() {
               <Route path="/impact" element={<ImpactPage />} />
               <Route path="/partner" element={<PartnershipPage />} />
               <Route path="/partner/apply" element={<PartnershipApplicationPage />} />
-              <Route path="/training" element={<Suspense fallback={<RouteSkeleton variant="training" />}><TrainingPage /></Suspense>} />
               <Route path="/collaboration-models" element={<CollaborationModelsPage />} />
               <Route path="/our-services" element={<OurServicesPage />} />
               <Route path="/work-with-us" element={<WorkWithUsPage />} />
               <Route path="/quality-assurance" element={<QualityAssurancePage />} />
+
+              {/* Training */}
+              <Route path="/training" element={<Suspense fallback={<RouteSkeleton variant="training" />}><TrainingPage /></Suspense>} />
               <Route path="/training/contact" element={<TrainingContactPage />} />
               <Route path="/training/programs" element={<Suspense fallback={<RouteSkeleton variant="training" />}><TrainingProgramsPage /></Suspense>} />
               <Route path="/training/programs/basic" element={<BasicProgramsRoute />} />
@@ -670,10 +324,16 @@ function App() {
               <Route path="/training/application-success" element={<ApplicationSuccessPage />} />
               <Route path="/training/payment/:courseId" element={<TrainingPaymentPage />} />
               <Route path="/training/payment-success" element={<TrainingPaymentSuccessPage />} />
+
+              {/* Gallery */}
               <Route path="/gallery" element={<Suspense fallback={<RouteSkeleton variant="default" />}><GalleryPage /></Suspense>} />
               <Route path="/gallery/album/:id" element={<Suspense fallback={<RouteSkeleton variant="default" />}><AlbumDetailPage /></Suspense>} />
+
+              {/* Blog */}
               <Route path="/blog" element={<Suspense fallback={<RouteSkeleton variant="blog" />}><BlogPage /></Suspense>} />
               <Route path="/blog/:slug" element={<Suspense fallback={<RouteSkeleton variant="blog" />}><BlogDetailPage /></Suspense>} />
+
+              {/* Jobs */}
               <Route path="/jobs" element={<Suspense fallback={<RouteSkeleton variant="jobs" />}><JobsPage /></Suspense>} />
               <Route path="/jobs/:id" element={<Suspense fallback={<RouteSkeleton variant="jobs" />}><JobDetailPage /></Suspense>} />
               <Route path="/jobs/:id/apply" element={<Suspense fallback={<RouteSkeleton variant="jobs" />}><JobApplicationPage /></Suspense>} />
@@ -682,7 +342,8 @@ function App() {
               <Route path="/labs" element={<Navigate to="/contact" replace />} />
               <Route path="/enroll" element={<Navigate to="/training" replace />} />
               <Route path="/programs" element={<Navigate to="/training/programs" replace />} />
-              {/* 404 Catch-all */}
+
+              {/* 404 Catch-all — also catches /admin/* on the public domain */}
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>
@@ -697,4 +358,3 @@ function App() {
 }
 
 export default App;
-
