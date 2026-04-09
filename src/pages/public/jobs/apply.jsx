@@ -6,16 +6,16 @@ import { jobsData } from '../../../data/jobsData';
 import useSEO from '../../../hooks/useSEO';
 
 const JobApplicationPage = () => {
-  useSEO({
-    title: 'Apply for Job',
-    description: 'Apply for a position at Zyra Tech Hub. Submit your application and join our team of innovators building Ghana\'s digital future.',
-    url: job ? `/jobs/${job.id}/apply` : '/jobs',
-    keywords: 'job application, apply for job, Zyra Tech Hub careers, tech jobs Ghana'
-  });
-
   const { id } = useParams();
   const navigate = useNavigate();
   const job = jobsData.find(j => j.id === parseInt(id));
+
+  useSEO({
+    title: job ? `Apply - ${job.title}` : 'Apply for Job',
+    description: 'Apply for a position at Zyra Tech Hub. Submit your application and join our team of innovators building Ghana\'s digital future.',
+    url: id ? `/jobs/${id}/apply` : '/jobs',
+    keywords: 'job application, apply for job, Zyra Tech Hub careers, tech jobs Ghana'
+  });
 
   if (!job) {
     return (
