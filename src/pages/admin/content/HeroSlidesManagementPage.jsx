@@ -5,6 +5,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import {
     Plus,
     Search,
@@ -24,8 +25,10 @@ import {
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import heroService from '../../../services/heroService';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 
 const HeroSlidesManagementPage = () => {
+    const dispatch = useDispatch();
     const [slides, setSlides] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -121,15 +124,22 @@ const HeroSlidesManagementPage = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this slide?')) {
-            try {
-                await heroService.deleteSlide(id);
-                setSlides(slides.filter(s => s.id !== id));
-            } catch (error) {
-                console.error('Error deleting slide:', error);
+    const handleDelete = (id) => {
+        dispatch(openConfirmDialog({
+            title: 'Delete Hero Slide',
+            message: 'Are you sure you want to delete this slide? This action cannot be undone.',
+            isDangerous: true,
+            onConfirm: async () => {
+                try {
+                    await heroService.deleteSlide(id);
+                    setSlides(slides.filter(s => s.id !== id));
+                    dispatch(addNotification({ type: 'success', message: 'Slide deleted successfully.' }));
+                } catch (error) {
+                    console.error('Error deleting slide:', error);
+                    dispatch(addNotification({ type: 'error', message: 'Failed to delete slide.' }));
+                }
             }
-        }
+        }));
     };
 
     const handleToggleVisibility = async (slide) => {
@@ -282,8 +292,8 @@ const HeroSlidesManagementPage = () => {
 
                 {/* Edit/Create Modal */}
                 {isModalOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 overflow-y-auto">
-                        <div className="bg-white rounded-2xl w-full max-w-2xl shadow-xl transform transition-all my-8">
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                        <div className="bg-white rounded-2xl w-full max-w-2xl shadow-xl transform transition-all max-h-[85vh] flex flex-col">
                             <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-2xl">
                                 <h3 className="text-xl font-bold text-gray-900">
                                     {currentSlide ? 'Edit Hero Slide' : 'Create New Slide'}
@@ -296,7 +306,7 @@ const HeroSlidesManagementPage = () => {
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                            <form onSubmit={handleSubmit} className="p-6 space-y-6 overflow-y-auto">
 
                                 {/* Basic Info */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -447,7 +457,7 @@ const HeroSlidesManagementPage = () => {
                                     </div>
                                 </div>
 
-                                <div className="border-t border-gray-100 pt-4 flex justify-between items-center">
+                                <div className="border-t border-gray-100 pt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                                     <label className="flex items-center gap-2 cursor-pointer">
                                         <input
                                             type="checkbox"
