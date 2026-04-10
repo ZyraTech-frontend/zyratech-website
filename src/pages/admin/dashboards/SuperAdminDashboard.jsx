@@ -143,7 +143,7 @@ const SuperAdminDashboard = ({ user }) => {
     return (
         <div className="space-y-6 pb-8">
             {/* Premium Welcome Header */}
-            <div className="bg-[#004fa2] rounded-2xl p-8 text-white relative overflow-hidden shadow-xl">
+            <div className="bg-[#004fa2] rounded-2xl p-5 md:p-8 text-white relative overflow-hidden shadow-xl">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-24 -mt-24 pointer-events-none"></div>
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -ml-16 -mb-16 pointer-events-none"></div>
@@ -157,18 +157,18 @@ const SuperAdminDashboard = ({ user }) => {
                                 <span>Super Admin Dashboard</span>
                                 <span className="ml-2 px-2 py-0.5 bg-green-500/20 text-green-300 rounded-full text-xs">All Systems Operational</span>
                             </div>
-                            <h1 className="text-3xl md:text-4xl font-bold mb-2">
+                            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">
                                 Welcome back, {user?.name?.split(' ')[0] || 'Super'}
                             </h1>
                             <p className="text-blue-100 max-w-xl text-lg">
                                 {formattedDate} • <span className="text-white">{formattedTime}</span>
                             </p>
-                            <div className="mt-4 flex items-center gap-4 text-sm">
+                            <div className="mt-3 md:mt-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm">
                                 <span className="flex items-center gap-2 text-green-300">
                                     <TrendingUp size={16} />
                                     Revenue up <span className="font-bold">+{metrics.revenueGrowth}%</span> this month
                                 </span>
-                                <span className="text-blue-300">|</span>
+                                <span className="text-blue-300 hidden sm:inline">|</span>
                                 <span className="flex items-center gap-2 text-blue-200">
                                     <Activity size={16} />
                                     {metrics.activeSessions.toLocaleString()} active sessions
@@ -176,24 +176,24 @@ const SuperAdminDashboard = ({ user }) => {
                             </div>
                         </div>
 
-                        <div className="flex gap-3">
+                        <div className="flex gap-2 md:gap-3">
                             <button
                                 onClick={handleRefresh}
-                                className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
+                                className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-3 md:px-4 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
                             >
                                 <RefreshCw size={18} className={isRefreshing ? 'animate-spin' : ''} />
-                                Refresh
+                                <span className="hidden md:inline">Refresh</span>
                             </button>
-                            <Link to="/admin/reports" className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2">
+                            <Link to="/admin/reports" className="hidden md:flex bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all items-center gap-2">
                                 <Download size={18} />
                                 Export Reports
                             </Link>
                             <Link
                                 to="/admin/analytics"
-                                className="bg-white hover:bg-gray-100 text-[#004fa2] px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg flex items-center gap-2"
+                                className="bg-white hover:bg-gray-100 text-[#004fa2] px-3 md:px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg flex items-center gap-2"
                             >
                                 <BarChart3 size={18} />
-                                View Analytics
+                                <span className="hidden md:inline">View Analytics</span>
                             </Link>
                         </div>
                     </div>
@@ -217,7 +217,7 @@ const SuperAdminDashboard = ({ user }) => {
             )}
 
             {/* Summary Statistics Row - Enhanced & Interactive */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 md:gap-4">
                 {[
                     { label: 'Courses', value: metrics.totalCourses, icon: GraduationCap, iconColor: 'text-blue-600', link: '/admin/training' },
                     { label: 'Jobs', value: metrics.activeJobs, icon: Briefcase, iconColor: 'text-orange-600', link: '/admin/jobs' },
@@ -231,15 +231,15 @@ const SuperAdminDashboard = ({ user }) => {
                     <Link
                         key={i}
                         to={stat.link}
-                        className="group bg-white rounded-xl p-3 md:p-4 border border-gray-200 shadow-sm hover:shadow-xl hover:scale-105 hover:border-[#004fa2] transition-all duration-300 relative overflow-hidden cursor-pointer flex flex-col justify-between"
+                        className="group bg-white rounded-xl p-2.5 md:p-4 border border-gray-200 shadow-sm hover:shadow-xl hover:scale-105 hover:border-[#004fa2] transition-all duration-300 relative overflow-hidden cursor-pointer flex flex-col justify-between"
                     >
                         {/* Horizontal layout: Icon and Number side by side */}
                         <div className="flex items-center gap-2 mb-2 md:mb-3">
                             {/* Icon - No background */}
-                            <stat.icon className={`${stat.iconColor} group-hover:scale-110 transition-transform duration-300 flex-shrink-0 w-5 h-5 md:w-6 md:h-6`} />
+                            <stat.icon className={`${stat.iconColor} group-hover:scale-110 transition-transform duration-300 flex-shrink-0 w-4 h-4 md:w-6 md:h-6`} />
 
                             {/* Value */}
-                            <p className="text-xl md:text-2xl font-extrabold text-gray-900 transition-all duration-300 truncate">
+                            <p className="text-lg md:text-2xl font-extrabold text-gray-900 transition-all duration-300 truncate">
                                 {stat.value.toLocaleString()}
                             </p>
                         </div>
@@ -253,9 +253,9 @@ const SuperAdminDashboard = ({ user }) => {
             </div>
 
             {/* Main Metrics Cards - Modern Clean Design */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {/* Total Revenue Card - Company Blue */}
-                <div className="bg-[#004fa2] rounded-2xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300">
+                <div className="bg-[#004fa2] rounded-2xl p-4 md:p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300">
                     <div className="flex justify-between items-start mb-4">
                         <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm shadow-lg">
                             <DollarSign className="text-white" size={28} />
@@ -269,7 +269,7 @@ const SuperAdminDashboard = ({ user }) => {
                     </div>
 
                     <p className="text-blue-200 text-sm font-semibold uppercase tracking-wider mb-2">Total Revenue</p>
-                    <h3 className="text-4xl font-black mb-1 tracking-tight">GHS {metrics.totalRevenue.toLocaleString()}</h3>
+                    <h3 className="text-2xl md:text-4xl font-black mb-1 tracking-tight">GHS {metrics.totalRevenue.toLocaleString()}</h3>
 
                     <div className="mt-4 pt-4 border-t border-white/20">
                         <div className="flex items-center justify-between text-sm">
@@ -286,7 +286,7 @@ const SuperAdminDashboard = ({ user }) => {
                 </div>
 
                 {/* Enrollments Card - Clean White */}
-                <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-lg hover:shadow-2xl transition-all duration-300">
+                <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-200 shadow-lg hover:shadow-2xl transition-all duration-300">
                     <div className="flex justify-between items-start mb-4">
                         <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
                             <GraduationCap className="text-white" size={28} />
@@ -299,7 +299,7 @@ const SuperAdminDashboard = ({ user }) => {
                     </div>
 
                     <p className="text-gray-500 text-sm font-semibold uppercase tracking-wider mb-2">Total Enrollments</p>
-                    <h3 className="text-4xl font-black text-gray-900 mb-1">
+                    <h3 className="text-2xl md:text-4xl font-black text-gray-900 mb-1">
                         {(metrics.activeEnrollments + metrics.completedEnrollments).toLocaleString()}
                     </h3>
 
@@ -326,7 +326,7 @@ const SuperAdminDashboard = ({ user }) => {
                 </div>
 
                 {/* Projects Card - Clean White */}
-                <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-lg hover:shadow-2xl transition-all duration-300">
+                <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-200 shadow-lg hover:shadow-2xl transition-all duration-300">
                     <div className="flex justify-between items-start mb-4">
                         <div className="w-14 h-14 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg">
                             <FolderKanban className="text-white" size={28} />
@@ -339,7 +339,7 @@ const SuperAdminDashboard = ({ user }) => {
                     </div>
 
                     <p className="text-gray-500 text-sm font-semibold uppercase tracking-wider mb-2">Total Projects</p>
-                    <h3 className="text-4xl font-black text-gray-900 mb-1">
+                    <h3 className="text-2xl md:text-4xl font-black text-gray-900 mb-1">
                         {(metrics.activeProjects + metrics.completedProjects).toLocaleString()}
                     </h3>
 
@@ -369,7 +369,7 @@ const SuperAdminDashboard = ({ user }) => {
                 </div>
 
                 {/* System Health Card - Clean Dark */}
-                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300">
+                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 md:p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300">
                     <div className="flex justify-between items-start mb-4">
                         <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-lg">
                             <Server className="text-white" size={28} />
@@ -380,7 +380,7 @@ const SuperAdminDashboard = ({ user }) => {
                     </div>
 
                     <p className="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-2">Server Load</p>
-                    <h3 className="text-4xl font-black mb-1 tracking-tight">{metrics.serverLoad}%</h3>
+                    <h3 className="text-2xl md:text-4xl font-black mb-1 tracking-tight">{metrics.serverLoad}%</h3>
 
                     <div className="mt-4">
                         <div className="flex items-center justify-between mb-2">
@@ -424,7 +424,8 @@ const SuperAdminDashboard = ({ user }) => {
                         </select>
                     </div>
                     {/* Chart Visualization */}
-                    <div className="h-64 flex items-end gap-2 justify-between px-2">
+                    <div className="overflow-x-auto">
+                    <div className="h-64 flex items-end gap-2 justify-between px-2 min-w-[600px]">
                         {[
                             { month: 'Jan', value: 40 },
                             { month: 'Feb', value: 65 },
@@ -453,6 +454,7 @@ const SuperAdminDashboard = ({ user }) => {
                                 <span className="text-xs text-gray-500">{m.month}</span>
                             </div>
                         ))}
+                    </div>
                     </div>
                 </div>
 
