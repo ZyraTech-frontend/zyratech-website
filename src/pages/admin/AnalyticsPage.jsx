@@ -153,7 +153,7 @@ const AnalyticsPage = () => {
     <AdminLayout>
       <div className="space-y-6 pb-8">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Business Analytics</h1>
             <p className="text-sm text-gray-500 mt-1">Comprehensive insights across all operations</p>
@@ -213,8 +213,8 @@ const AnalyticsPage = () => {
         </div>
 
         {/* Key Business Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
             <div className="flex justify-between items-start mb-4">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                 <DollarSign className="text-white" size={20} />
@@ -224,10 +224,10 @@ const AnalyticsPage = () => {
               </span>
             </div>
             <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Total Revenue</p>
-            <h3 className="text-4xl font-black text-gray-900">GHS {metrics.revenue.total.toLocaleString()}</h3>
+            <h3 className="text-2xl md:text-4xl font-black text-gray-900">GHS {metrics.revenue.total.toLocaleString()}</h3>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
+          <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
             <div className="flex justify-between items-start mb-4">
               <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
                 <Users className="text-white" size={20} />
@@ -237,10 +237,10 @@ const AnalyticsPage = () => {
               </span>
             </div>
             <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Total Users</p>
-            <h3 className="text-4xl font-black text-gray-900">{users.total.toLocaleString()}</h3>
+            <h3 className="text-2xl md:text-4xl font-black text-gray-900">{users.total.toLocaleString()}</h3>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
+          <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
             <div className="flex justify-between items-start mb-4">
               <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                 <Target className="text-white" size={20} />
@@ -250,10 +250,10 @@ const AnalyticsPage = () => {
               </span>
             </div>
             <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Conversion Rate</p>
-            <h3 className="text-4xl font-black text-gray-900">{metrics.conversion.rate}%</h3>
+            <h3 className="text-2xl md:text-4xl font-black text-gray-900">{metrics.conversion.rate}%</h3>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
+          <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
             <div className="flex justify-between items-start mb-4">
               <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
                 <CreditCard className="text-white" size={20} />
@@ -263,7 +263,7 @@ const AnalyticsPage = () => {
               </span>
             </div>
             <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Payment Success</p>
-            <h3 className="text-4xl font-black text-gray-900">{payments.successfulPayments}</h3>
+            <h3 className="text-2xl md:text-4xl font-black text-gray-900">{payments.successfulPayments}</h3>
           </div>
         </div>
 
@@ -363,7 +363,8 @@ const AnalyticsPage = () => {
             </div>
           </div>
 
-          <div className="h-64 flex items-end gap-2">
+          <div className="overflow-x-auto">
+          <div className="h-64 flex items-end gap-2 min-w-[600px]">
             {revenueTrend.map((month, i) => {
               const total = month.training + month.projects + month.jobs;
               const maxTotal = Math.max(...revenueTrend.map(m => m.training + m.projects + m.jobs));
@@ -384,10 +385,11 @@ const AnalyticsPage = () => {
               );
             })}
           </div>
+          </div>
         </div>
 
         {/* Service Analytics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-all">
             <div className="flex justify-between items-start mb-4">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -399,7 +401,7 @@ const AnalyticsPage = () => {
             </div>
 
             <p className="text-gray-500 text-sm font-semibold uppercase tracking-wider mb-2">Training</p>
-            <h3 className="text-4xl font-black text-gray-900 mb-4">{training.enrollments}</h3>
+            <h3 className="text-2xl md:text-4xl font-black text-gray-900 mb-4">{training.enrollments}</h3>
 
             <div className="space-y-3 pt-4 border-t border-gray-100">
               <div className="flex items-center justify-between">
@@ -428,7 +430,7 @@ const AnalyticsPage = () => {
             </div>
 
             <p className="text-gray-500 text-sm font-semibold uppercase tracking-wider mb-2">Jobs</p>
-            <h3 className="text-4xl font-black text-gray-900 mb-4">{jobs.active}</h3>
+            <h3 className="text-2xl md:text-4xl font-black text-gray-900 mb-4">{jobs.active}</h3>
 
             <div className="space-y-3 pt-4 border-t border-gray-100">
               <div className="flex items-center justify-between">
@@ -457,7 +459,7 @@ const AnalyticsPage = () => {
             </div>
 
             <p className="text-gray-500 text-sm font-semibold uppercase tracking-wider mb-2">Projects</p>
-            <h3 className="text-4xl font-black text-gray-900 mb-4">{projects.total}</h3>
+            <h3 className="text-2xl md:text-4xl font-black text-gray-900 mb-4">{projects.total}</h3>
 
             <div className="space-y-3 pt-4 border-t border-gray-100">
               <div className="flex items-center justify-between">
@@ -486,7 +488,7 @@ const AnalyticsPage = () => {
             </div>
 
             <p className="text-gray-500 text-sm font-semibold uppercase tracking-wider mb-2">Partners</p>
-            <h3 className="text-4xl font-black text-gray-900 mb-4">{partnerships.total}</h3>
+            <h3 className="text-2xl md:text-4xl font-black text-gray-900 mb-4">{partnerships.total}</h3>
 
             <div className="space-y-3 pt-4 border-t border-gray-100">
               <div className="flex items-center justify-between">
@@ -600,7 +602,7 @@ const AnalyticsPage = () => {
           <h2 className="text-lg font-bold text-gray-900 mb-6">Top Performing Courses</h2>
 
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[600px]">
               <thead>
                 <tr className="border-b border-gray-200">
                   <th className="text-left text-xs font-semibold text-gray-600 pb-3 pr-4">Course</th>

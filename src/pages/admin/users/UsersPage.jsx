@@ -553,7 +553,7 @@ const UsersPage = () => {
       {/* ─── KYC REVIEW MODAL ────────────────────────────── */}
       {showKycModal && selectedAdmin && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowKycModal(false)}>
-          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full" onClick={e => e.stopPropagation()}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
@@ -569,7 +569,7 @@ const UsersPage = () => {
               </button>
             </div>
 
-            <div className="p-6 space-y-5">
+            <div className="p-6 space-y-5 overflow-y-auto">
               {/* Admin Info */}
               <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-4">
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white font-bold text-xl">
@@ -646,7 +646,7 @@ const UsersPage = () => {
 
         return (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowDetailModal(false)}>
-            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
               <div className={`px-6 py-5 ${isDeactivated ? 'bg-gradient-to-r from-red-50 to-red-100' : 'bg-gradient-to-r from-[#004fa2]/5 to-[#0066cc]/5'}`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -666,7 +666,7 @@ const UsersPage = () => {
                 </div>
               </div>
 
-              <div className="p-6 space-y-5">
+              <div className="p-6 space-y-5 overflow-y-auto">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-gray-50 rounded-xl p-4">
                     <p className="text-xs text-gray-500 mb-1">Role</p>

@@ -593,7 +593,7 @@ const JobsManagementPage = () => {
                                 <p className="text-sm text-gray-500">Review and manage job applications</p>
                             </div>
                             <div className="overflow-x-auto">
-                                <table className="w-full">
+                                <table className="w-full min-w-[800px]">
                                     <thead className="bg-gray-50 border-b border-gray-100">
                                         <tr>
                                             <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Applicant</th>
@@ -673,7 +673,7 @@ const JobsManagementPage = () => {
             {/* Add/Edit Job Modal - Now navigates to form page */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
                         {/* Modal Header */}
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                             <div className="flex items-center gap-3">
