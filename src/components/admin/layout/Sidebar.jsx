@@ -67,26 +67,26 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
       ${!isOpen && !isMobile ? 'w-0 overflow-hidden' : ''}
     `}>
       {/* Logo/Brand */}
-      <div className="px-6 py-6 border-b border-white/10">
+      <div className="px-4 py-5 md:px-6 md:py-6 border-b border-white/10">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-16 h-16 bg-transparent rounded-lg flex items-center justify-center p-1 overflow-hidden">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="bg-white rounded-lg flex items-center justify-center p-1 md:p-1.5 shrink-0 shadow-sm w-10 h-10 md:w-12 md:h-12 overflow-hidden">
               <img decoding="async"
                 src="/zyrateclogopng.webp"
                 alt="ZyraTech"
-                className="w-12 h-12 object-contain"
+                className="w-full h-full object-contain"
               />
             </div>
-            <div>
-              <h1 className="text-xl font-bold">Account Manager</h1>
-              <p className="text-blue-200 text-xs">ZyraTech Hub</p>
+            <div className="min-w-0">
+              <h1 className="text-base md:text-lg font-bold leading-tight truncate">Account Manager</h1>
+              <p className="text-blue-200 text-[10px] md:text-xs truncate mt-0.5">ZyraTech Hub</p>
             </div>
           </div>
           {/* Close button - visible on mobile only */}
           {isMobile && (
             <button
               onClick={onClose}
-              className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              className="p-1.5 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors shrink-0 ml-2"
               aria-label="Close menu"
             >
               <X size={20} />

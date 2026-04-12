@@ -486,167 +486,91 @@ const EnrollmentsManagementPage = () => {
     return (
         <AdminLayout>
             <div className="space-y-6 pb-8">
-                {/* Page Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                <GraduationCap className="text-white" size={22} />
-                            </div>
-                            Enrollments Management
-                        </h1>
-                        <p className="text-sm text-gray-500 mt-1 ml-[52px]">
-                            Track and manage student course enrollments
-                        </p>
-                    </div>
+                {/* Page Header & Actions */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
                     <div className="flex items-center gap-3">
+                        <div className="bg-blue-50 p-2 rounded-lg shrink-0">
+                            <GraduationCap size={18} className="text-blue-600" />
+                        </div>
+                        <div>
+                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Enrollments Management</h1>
+                            <p className="text-[10px] text-gray-500">Track and manage student course enrollments</p>
+                        </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 w-full md:w-auto">
                         <button
                             onClick={handleExport}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm font-medium text-sm"
+                            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 border border-gray-200 text-gray-700 bg-white rounded-lg hover:bg-gray-50 transition-all shadow-sm text-xs font-semibold"
                         >
-                            <Download size={16} />
-                            Export
+                            <Download size={14} /> Export
                         </button>
                         <Link
                             to="/admin/enrollments/new"
-                            className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md hover:shadow-lg font-medium text-sm"
+                            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-all shadow-sm text-xs font-semibold"
                         >
-                            <Plus size={18} />
-                            Add Enrollment
+                            <Plus size={14} /> Add Enrollment
                         </Link>
                     </div>
                 </div>
 
-                {/* Statistics Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('all'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                                <Users className="text-blue-600" size={18} />
-                            </div>
-                            <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">All</span>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.totalEnrollments}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Total Enrollments</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('pending'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center group-hover:bg-amber-100 transition-colors">
-                                <Clock className="text-amber-600" size={18} />
-                            </div>
-                            <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Review</span>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.pending}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Pending</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('approved'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center group-hover:bg-green-100 transition-colors">
-                                <UserCheck className="text-green-600" size={18} />
-                            </div>
-                            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Active</span>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.approved}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Approved</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('in_progress'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-cyan-50 rounded-lg flex items-center justify-center group-hover:bg-cyan-100 transition-colors">
-                                <RefreshCcw className="text-cyan-600" size={18} />
-                            </div>
-                            <span className="text-xs font-medium text-cyan-600 bg-cyan-50 px-2 py-0.5 rounded-full">Active</span>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.inProgress}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">In Progress</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('completed'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
-                                <Award className="text-purple-600" size={18} />
-                            </div>
-                            <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">Done</span>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.completed}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Completed</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('rejected'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-red-50 rounded-lg flex items-center justify-center group-hover:bg-red-100 transition-colors">
-                                <UserX className="text-red-600" size={18} />
-                            </div>
-                            <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded-full">Declined</span>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.rejected}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Rejected</p>
-                    </div>
-
-                    <div className="bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
-                                <TrendingUp className="text-white" size={18} />
-                            </div>
-                            <span className="text-xs font-medium text-white/90 bg-white/20 px-2 py-0.5 rounded-full">Avg</span>
-                        </div>
-                        <p className="text-2xl font-bold text-white">{stats.avgProgress}%</p>
-                        <p className="text-xs text-blue-100 mt-0.5">Avg Progress</p>
+                {/* Quick Status Bar */}
+                <div className="flex flex-wrap text-[11px] gap-2 mb-4">
+                    {[
+                        { label: 'All', id: 'all', count: stats.totalEnrollments, active: selectedStatus === 'all' },
+                        { label: 'Pending Review', id: 'pending', count: stats.pending, active: selectedStatus === 'pending' },
+                        { label: 'Active/Approved', id: 'approved', count: stats.approved, active: selectedStatus === 'approved' },
+                        { label: 'In Progress', id: 'in_progress', count: stats.inProgress, active: selectedStatus === 'in_progress' },
+                        { label: 'Completed', id: 'completed', count: stats.completed, active: selectedStatus === 'completed' },
+                        { label: 'Rejected', id: 'rejected', count: stats.rejected, active: selectedStatus === 'rejected' }
+                    ].map(st => (
+                        <button
+                            key={st.id}
+                            onClick={() => { setSelectedStatus(st.id); setCurrentPage(1); }}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-semibold transition-all ${st.active ? 'bg-[#004fa2] text-white border-[#004fa2]' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'}`}
+                        >
+                            {st.label} <span className={`px-1.5 py-0.5 rounded-md text-[9px] ${st.active ? 'bg-white/20' : 'bg-gray-100'}`}>{st.count}</span>
+                        </button>
+                    ))}
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-100 text-blue-800 font-bold ml-auto cursor-default">
+                         <TrendingUp size={12}/> Avg Progress: {stats.avgProgress}%
                     </div>
                 </div>
 
                 {/* Filters and Search */}
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                    <div className="flex flex-col lg:flex-row gap-4">
-                        {/* Search */}
-                        <div className="flex-1 relative">
-                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                            <input
-                                type="text"
-                                placeholder="Search by ID, student name, email, or course..."
-                                value={searchQuery}
-                                onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm transition-all"
-                            />
-                        </div>
+                <div className="grid grid-cols-2 md:grid-cols-12 gap-2 mb-4">
+                    <div className="col-span-2 md:col-span-6 relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+                        <input
+                            type="text"
+                            placeholder="Search by ID, student name, email, or course..."
+                            value={searchQuery}
+                            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                            className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all"
+                        />
+                    </div>
 
-                        {/* Status Filter */}
-                        <div className="flex items-center gap-2">
-                            <Filter className="text-gray-400" size={18} />
-                            <select
-                                value={selectedStatus}
-                                onChange={(e) => { setSelectedStatus(e.target.value); setCurrentPage(1); }}
-                                className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[140px]"
-                            >
-                                <option value="all">All Status</option>
-                                <option value="pending">Pending</option>
-                                <option value="approved">Approved</option>
-                                <option value="in_progress">In Progress</option>
-                                <option value="completed">Completed</option>
-                                <option value="rejected">Rejected</option>
-                                <option value="withdrawn">Withdrawn</option>
-                            </select>
-                        </div>
+                    <div className="col-span-1 md:col-span-3 relative">
+                        <select
+                            value={selectedStatus}
+                            onChange={(e) => { setSelectedStatus(e.target.value); setCurrentPage(1); }}
+                            className="w-full px-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
+                        >
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="withdrawn">Withdrawn</option>
+                        </select>
+                    </div>
 
-                        {/* Category Filter */}
+                    <div className="col-span-1 md:col-span-3 relative flex gap-2">
                         <select
                             value={selectedCategory}
                             onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
-                            className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[150px]"
+                            className="w-full px-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
                         >
                             <option value="all">All Categories</option>
                             {Object.entries(COURSE_CATEGORIES).map(([key, val]) => (
@@ -654,166 +578,110 @@ const EnrollmentsManagementPage = () => {
                             ))}
                         </select>
 
-                        {/* Reset Filters */}
                         {(searchQuery || selectedStatus !== 'all' || selectedCategory !== 'all') && (
-                            <button
-                                onClick={resetFilters}
-                                className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
-                            >
-                                <X size={16} />
-                                Reset
+                            <button onClick={resetFilters} className="bg-white border border-gray-100 hover:bg-gray-50 text-gray-600 h-[34px] px-3 rounded-xl transition-colors shadow-sm flex items-center justify-center shrink-0">
+                                <X size={14} />
                             </button>
                         )}
                     </div>
                 </div>
 
-                {/* Enrollments Table */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="bg-gray-50 border-b border-gray-100">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Student</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Course</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Progress</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Enrolled</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Start Date</th>
-                                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                                {paginatedEnrollments.map((enrollment) => {
-                                    const categoryConfig = COURSE_CATEGORIES[enrollment.course.category];
-                                    const statusConfig = STATUS_CONFIG[enrollment.status];
+                {/* Enrollments Grid */}
+                <div className="flex flex-col gap-2">
+                    {paginatedEnrollments.map((enrollment) => {
+                        const categoryConfig = COURSE_CATEGORIES[enrollment.course.category];
+                        const statusConfig = STATUS_CONFIG[enrollment.status];
 
-                                    return (
-                                        <tr key={enrollment.id} className="hover:bg-gray-50 transition-colors">
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-sm font-bold">
-                                                        {enrollment.student.name.split(' ').map(n => n[0]).join('')}
-                                                    </div>
-                                                    <div>
-                                                        <p className="font-semibold text-gray-900">{enrollment.student.name}</p>
-                                                        <p className="text-xs text-gray-400">{enrollment.student.email}</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div>
-                                                    <p className="font-medium text-gray-900 text-sm">{enrollment.course.title}</p>
-                                                    <span className={`inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-medium ${categoryConfig?.color}`}>
-                                                        {categoryConfig?.label}
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <StatusBadge status={enrollment.status} />
-                                            </td>
-                                            <td className="px-6 py-4 w-32">
-                                                <ProgressBar progress={enrollment.progress} />
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <p className="text-sm text-gray-600">{formatDate(enrollment.enrolledDate)}</p>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <p className="text-sm text-gray-600">{formatDate(enrollment.startDate)}</p>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center justify-end gap-1">
-                                                    <Link
-                                                        to={`/admin/enrollments/${enrollment.id}`}
-                                                        className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
-                                                        title="View Details"
-                                                    >
-                                                        <Eye size={16} />
-                                                    </Link>
-                                                    {enrollment.status === 'pending' && (
-                                                        <>
-                                                            <button
-                                                                onClick={() => handleApprove(enrollment)}
-                                                                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                                                                title="Approve"
-                                                            >
-                                                                <Check size={16} />
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleReject(enrollment)}
-                                                                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                                title="Reject"
-                                                            >
-                                                                <XCircle size={16} />
-                                                            </button>
-                                                        </>
-                                                    )}
-                                                    <button
-                                                        onClick={() => handleEdit(enrollment)}
-                                                        className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
-                                                        title="Edit"
-                                                    >
-                                                        <Edit size={16} />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(enrollment)}
-                                                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                        title="Delete"
-                                                    >
-                                                        <Trash2 size={16} />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
+                        return (
+                            <div key={enrollment.id} className={`bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col xl:flex-row xl:items-center p-3 gap-3 hover:border-[#004fa2] transition-colors group relative overflow-hidden`}>
+                                {/* Left Indicator */}
+                                <div className={`absolute left-0 top-0 bottom-0 w-1 ${statusConfig.dotColor}`}></div>
+                                
+                                {/* Student Info */}
+                                <div className="flex items-start gap-3 min-w-0 xl:w-2/6">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+                                        {enrollment.student.name.split(' ').map(n => n[0]).join('')}
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="font-semibold text-gray-900 text-xs truncate">{enrollment.student.name}</p>
+                                        <p className="text-[10px] text-gray-500 truncate">{enrollment.student.email}</p>
+                                        <div className="flex items-center gap-1.5 mt-0.5">
+                                            <p className="font-mono text-[9px] font-bold text-gray-400">{enrollment.id}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Course Details */}
+                                <div className="xl:w-2/6 py-1 xl:py-0 border-y xl:border-y-0 border-gray-50 flex flex-col justify-center">
+                                    <p className="text-[11px] font-bold text-gray-800 line-clamp-1">{enrollment.course.title}</p>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium ${categoryConfig?.color || 'bg-gray-100 text-gray-700'}`}>
+                                            {categoryConfig?.label || 'General'}
+                                        </span>
+                                        <span className="text-[9px] text-gray-500 font-mono tracking-wider">Starts: {formatDate(enrollment.startDate)}</span>
+                                    </div>
+                                </div>
 
-                    {/* Empty State */}
-                    {filteredEnrollments.length === 0 && (
-                        <div className="p-12 text-center">
-                            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <GraduationCap className="text-gray-400" size={28} />
+                                {/* Progress & Status */}
+                                <div className="xl:w-1/6 flex flex-col justify-center gap-1">
+                                    <ProgressBar progress={enrollment.progress} />
+                                    <div className="mt-1">
+                                        <StatusBadge status={enrollment.status} />
+                                    </div>
+                                </div>
+
+                                {/* Actions */}
+                                <div className="flex items-center justify-between xl:justify-end gap-2 xl:w-1/6 shrink-0 border-t xl:border-t-0 pt-2 xl:pt-0 border-gray-50">
+                                    <div className="flex items-center gap-0.5 ml-auto">
+                                        <Link to={`/admin/enrollments/${enrollment.id}`} className="p-1.5 hover:bg-blue-50 rounded-lg text-gray-400 hover:text-[#004fa2] transition-colors"><Eye size={14} /></Link>
+                                        {enrollment.status === 'pending' && (
+                                            <>
+                                                <button onClick={() => handleApprove(enrollment)} className="p-1.5 hover:bg-green-50 rounded-lg text-gray-400 hover:text-green-600 transition-colors"><Check size={14} /></button>
+                                                <button onClick={() => handleReject(enrollment)} className="p-1.5 hover:bg-red-50 rounded-lg text-gray-400 hover:text-red-600 transition-colors"><XCircle size={14} /></button>
+                                            </>
+                                        )}
+                                        <button onClick={() => handleEdit(enrollment)} className="p-1.5 hover:bg-amber-50 rounded-lg text-gray-400 hover:text-amber-600 transition-colors"><Edit size={14} /></button>
+                                        <button onClick={() => handleDelete(enrollment)} className="p-1.5 hover:bg-red-50 rounded-lg text-gray-400 hover:text-red-600 transition-colors"><Trash2 size={14} /></button>
+                                    </div>
+                                </div>
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">No enrollments found</h3>
-                            <p className="text-sm text-gray-500 mb-4">
-                                Try adjusting your search or filter criteria
-                            </p>
-                            <button
-                                onClick={resetFilters}
-                                className="px-4 py-2 text-sm text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors font-medium"
-                            >
-                                Reset Filters
-                            </button>
+                        );
+                    })}
+
+                    {filteredEnrollments.length === 0 && (
+                        <div className="bg-white rounded-xl p-8 text-center border border-gray-100 shadow-sm">
+                            <GraduationCap className="mx-auto text-gray-300 mb-2" size={24} />
+                            <h3 className="text-sm font-bold text-gray-900 mb-1">No enrollments found</h3>
+                            <button onClick={resetFilters} className="text-[11px] text-[#004fa2] hover:underline font-semibold mt-2">Clear filters</button>
                         </div>
                     )}
                 </div>
 
                 {/* Pagination */}
+                {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="flex items-center justify-between bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                        <p className="text-sm text-gray-500">
-                            Showing <span className="font-semibold text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
-                            <span className="font-semibold text-gray-900">{Math.min(currentPage * itemsPerPage, filteredEnrollments.length)}</span> of{' '}
-                            <span className="font-semibold text-gray-900">{filteredEnrollments.length}</span> enrollments
+                    <div className="flex flex-col sm:flex-row items-center justify-between bg-white rounded-xl p-3 shadow-sm border border-gray-100 gap-3 mt-4">
+                        <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
+                            Showing <span className="text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
+                            <span className="text-gray-900">{Math.min(currentPage * itemsPerPage, filteredEnrollments.length)}</span> of{' '}
+                            <span className="text-gray-900">{filteredEnrollments.length}</span>
                         </p>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                             <button
                                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1}
-                                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                className="p-1 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors disabled:opacity-40"
                             >
-                                <ChevronLeft size={18} />
+                                <ChevronLeft size={16} />
                             </button>
                             <div className="flex items-center gap-1">
                                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                                     <button
                                         key={page}
                                         onClick={() => setCurrentPage(page)}
-                                        className={`min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-all ${currentPage === page
-                                            ? 'bg-[#004fa2] text-white shadow-md'
-                                            : 'text-gray-600 hover:bg-gray-100'
+                                        className={`min-w-[24px] h-6 flex items-center justify-center rounded text-[10px] font-bold transition-all ${currentPage === page
+                                            ? 'bg-[#004fa2] text-white shadow-sm'
+                                            : 'text-gray-500 hover:bg-gray-100'
                                             }`}
                                     >
                                         {page}
@@ -823,9 +691,9 @@ const EnrollmentsManagementPage = () => {
                             <button
                                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages}
-                                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                className="p-1 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors disabled:opacity-40"
                             >
-                                <ChevronRight size={18} />
+                                <ChevronRight size={16} />
                             </button>
                         </div>
                     </div>

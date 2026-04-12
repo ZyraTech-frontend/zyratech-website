@@ -9,13 +9,34 @@ import { useAuth } from '../../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../../store/slices/authSlice';
 import { useDispatch } from 'react-redux';
+import { usePermissions } from '../../../hooks/usePermissions';
 
 const Header = ({ onMenuClick, sidebarOpen }) => {
   const { user } = useAuth();
+  const { isSuperAdmin } = usePermissions();
   const location = useLocation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(null);
+
+  // Listen for avatar changes from profile page
+  React.useEffect(() => {
+    const stored = localStorage.getItem('admin_avatar');
+    if (stored) setAvatarUrl(stored);
+
+    const handleStorageChange = () => {
+      const updated = localStorage.getItem('admin_avatar');
+      setAvatarUrl(updated);
+    };
+
+    window.addEventListener('avatar-updated', handleStorageChange);
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('avatar-updated', handleStorageChange);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const getBreadcrumb = () => {
     const path = location.pathname;
@@ -86,8 +107,12 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 className="flex items-center gap-2 px-1 sm:px-3 py-2 hover:bg-gray-100 rounded transition-colors"
               >
-                <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
-                  {getInitials(user?.name || user?.email)}
+                <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 overflow-hidden">
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    getInitials(user?.name || user?.email)
+                  )}
                 </div>
                 <span className="hidden sm:block text-sm font-medium text-gray-900 truncate max-w-[100px] sm:max-w-none">{user?.name || user?.email}</span>
                 <ChevronDown size={16} className="text-gray-600" />
@@ -101,13 +126,15 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
                     <p className="text-xs text-gray-600">{user?.email}</p>
                   </div>
 
-                  <Link
-                    to="/admin/settings"
-                    className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    <Settings size={16} />
-                    Settings
-                  </Link>
+                  {isSuperAdmin && (
+                    <Link
+                      to="/admin/settings"
+                      className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      <Settings size={16} />
+                      Settings
+                    </Link>
+                  )}
 
                   <Link
                     to="/admin/profile"

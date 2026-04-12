@@ -91,7 +91,7 @@ const BlogDetailsPage = () => {
                             <ArrowLeft size={24} className="text-gray-700" />
                         </button>
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">{article.title}</h1>
+                            <h1 className="text-xl md:text-3xl font-bold text-gray-900">{article.title}</h1>
                             <p className="text-gray-600 text-sm mt-1">Article Details & Management</p>
                         </div>
                     </div>

@@ -55,6 +55,14 @@ const AdminProfilePage = () => {
         lastLogin: '2024-12-19T14:30:00Z'
     });
 
+    // Load avatar from localStorage on mount
+    React.useEffect(() => {
+        const savedAvatar = localStorage.getItem('admin_avatar');
+        if (savedAvatar) {
+            setUserData(prev => ({ ...prev, avatar: savedAvatar }));
+        }
+    }, []);
+
     // Mock notification settings
     const [notifications, setNotifications] = useState({
         emailAlerts: true,
@@ -72,6 +80,37 @@ const AdminProfilePage = () => {
         sessionTimeout: '30m',
         loginAlerts: true
     });
+
+    // Handle avatar upload
+    const handleAvatarUpload = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('Please select an image file (JPG, PNG, etc.)');
+            return;
+        }
+
+        // Validate file size (max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Image must be less than 2MB');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const dataUrl = event.target.result;
+            setUserData(prev => ({
+                ...prev,
+                avatar: dataUrl
+            }));
+            // Persist to localStorage & notify header
+            localStorage.setItem('admin_avatar', dataUrl);
+            window.dispatchEvent(new Event('avatar-updated'));
+        };
+        reader.readAsDataURL(file);
+    };
 
     // Handle input change
     const handleInputChange = (e) => {
@@ -181,70 +220,86 @@ const AdminProfilePage = () => {
                     {/* Left Column: Profile Card & Menu */}
                     <div className="space-y-6">
                         {/* Profile Summary Card */}
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                            <div className="h-32 bg-gradient-to-r from-[#004fa2] to-[#0066cc] relative">
-                                <div className="absolute inset-0 bg-pattern opacity-10"></div>
-                            </div>
-                            <div className="px-6 relative">
-                                <div className="w-24 h-24 bg-white rounded-full p-1.5 absolute -top-12 border-4 border-white shadow-md">
-                                    <div className="w-full h-full rounded-full bg-gray-100 flex items-center justify-center overflow-hidden relative group">
-                                        {userData.avatar ? (
-                                            <img decoding="async" src={userData.avatar} alt="Profile" className="w-full h-full object-cover" />
-                                        ) : (
-                                            <span className="text-2xl font-bold text-gray-400">
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden p-4">
+                            <div className="flex items-center gap-4">
+                                {/* Avatar */}
+                                <div className="w-16 h-16 rounded-full border-2 border-gray-200 shadow-sm shrink-0 overflow-hidden relative group">
+                                    {userData.avatar ? (
+                                        <img decoding="async" src={userData.avatar} alt="Profile" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                                            <span className="text-lg font-bold text-gray-400">
                                                 {userData.firstName[0]}{userData.lastName[0]}
                                             </span>
-                                        )}
-                                        {isEditing && (
-                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                                                <Camera className="text-white" size={20} />
-                                            </div>
-                                        )}
-                                    </div>
+                                        </div>
+                                    )}
+                                    {isEditing && (
+                                        <div
+                                            className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                            onClick={() => document.getElementById('avatar-upload').click()}
+                                        >
+                                            <Camera className="text-white" size={16} />
+                                        </div>
+                                    )}
+                                    <input
+                                        id="avatar-upload"
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={handleAvatarUpload}
+                                    />
                                 </div>
-                                <div className="pt-14 pb-6 text-center">
-                                    <h2 className="text-xl font-bold text-gray-900">{userData.firstName} {userData.lastName}</h2>
-                                    <p className="text-sm text-gray-500">{userData.role}</p>
-                                    <div className="flex items-center justify-center gap-2 mt-3">
-                                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${userData.role === 'Super Admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
-                                            }`}>
+                                {/* Info */}
+                                <div className="flex-1 min-w-0">
+                                    <h2 className="text-base font-bold text-gray-900 truncate">{userData.firstName} {userData.lastName}</h2>
+                                    <p className="text-xs text-gray-500 mb-2">{userData.email}</p>
+                                    <div className="flex items-center flex-wrap gap-1.5">
+                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${userData.role === 'Super Admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
                                             {userData.role}
                                         </span>
-                                        <span className="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold flex items-center gap-1">
+                                        <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold flex items-center gap-1">
                                             <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
                                             Active
                                         </span>
                                     </div>
+                                    {isEditing && (
+                                        <button
+                                            onClick={() => document.getElementById('avatar-upload').click()}
+                                            className="mt-2 text-xs text-[#004fa2] hover:underline font-medium"
+                                        >
+                                            Change Photo
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>
 
                         {/* Navigation Menu */}
                         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                            <nav className="flex flex-col p-2">
+                            <nav className="flex lg:flex-col overflow-x-auto p-2 gap-1">
                                 <button
                                     onClick={() => setActiveTab('profile')}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'profile'
+                                    className={`flex items-center gap-2 px-3 lg:px-4 py-2.5 lg:py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${activeTab === 'profile'
                                         ? 'bg-blue-50 text-[#004fa2]'
                                         : 'text-gray-600 hover:bg-gray-50'
                                         }`}
                                 >
                                     <User size={18} />
-                                    Personal Information
+                                    <span className="hidden sm:inline">Personal</span> Info
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('security')}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'security'
+                                    className={`flex items-center gap-2 px-3 lg:px-4 py-2.5 lg:py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${activeTab === 'security'
                                         ? 'bg-blue-50 text-[#004fa2]'
                                         : 'text-gray-600 hover:bg-gray-50'
                                         }`}
                                 >
                                     <Shield size={18} />
-                                    Security & Password
+                                    Security
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('notifications')}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'notifications'
+                                    className={`flex items-center gap-2 px-3 lg:px-4 py-2.5 lg:py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${activeTab === 'notifications'
                                         ? 'bg-blue-50 text-[#004fa2]'
                                         : 'text-gray-600 hover:bg-gray-50'
                                         }`}
@@ -254,13 +309,13 @@ const AdminProfilePage = () => {
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('activity')}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'activity'
+                                    className={`flex items-center gap-2 px-3 lg:px-4 py-2.5 lg:py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${activeTab === 'activity'
                                         ? 'bg-blue-50 text-[#004fa2]'
                                         : 'text-gray-600 hover:bg-gray-50'
                                         }`}
                                 >
                                     <Activity size={18} />
-                                    Recent Activity
+                                    Activity
                                 </button>
                             </nav>
                         </div>
@@ -290,7 +345,7 @@ const AdminProfilePage = () => {
 
                         {/* PERSONAL INFORMATION TAB */}
                         {activeTab === 'profile' && (
-                            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
                                 <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
                                     <User size={20} className="text-[#004fa2]" />
                                     Personal Information
@@ -395,7 +450,7 @@ const AdminProfilePage = () => {
                         {activeTab === 'security' && (
                             <div className="space-y-6">
                                 {/* Password Change */}
-                                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
                                     <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
                                         <Lock size={20} className="text-[#004fa2]" />
                                         Change Password
@@ -454,17 +509,17 @@ const AdminProfilePage = () => {
                                     </h3>
                                     <p className="text-sm text-gray-500 mb-6">Adds an extra layer of security to your account.</p>
 
-                                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                                                <Smartphone size={24} />
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 shrink-0">
+                                                <Smartphone size={20} />
                                             </div>
                                             <div>
-                                                <h4 className="font-bold text-gray-900">Authenticator App</h4>
-                                                <p className="text-sm text-gray-500">Use an app like Google Authenticator or Authy</p>
+                                                <h4 className="font-bold text-gray-900 text-sm sm:text-base">Authenticator App</h4>
+                                                <p className="text-xs sm:text-sm text-gray-500">Use an app like Google Authenticator or Authy</p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3">
+                                        <div className="flex items-center gap-3 ml-13 sm:ml-0">
                                             <span className="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Enabled</span>
                                             <button
                                                 disabled={!isEditing}
@@ -484,29 +539,29 @@ const AdminProfilePage = () => {
                                     </h3>
 
                                     <div className="space-y-4">
-                                        <div className="flex items-center justify-between p-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors">
-                                            <div className="flex items-center gap-4">
-                                                <Monitor className="text-gray-400" size={24} />
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 md:p-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors">
+                                            <div className="flex items-center gap-3">
+                                                <Monitor className="text-gray-400 shrink-0" size={20} />
                                                 <div>
-                                                    <p className="font-semibold text-gray-900">Windows PC - Chrome</p>
-                                                    <p className="text-sm text-gray-500">Accra, Ghana • 192.168.1.100</p>
+                                                    <p className="font-semibold text-gray-900 text-sm">Windows PC - Chrome</p>
+                                                    <p className="text-xs text-gray-500">Accra, Ghana • 192.168.1.100</p>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-3">
+                                            <div className="flex items-center gap-3 ml-8 sm:ml-0">
                                                 <span className="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded">Current Session</span>
                                             </div>
                                         </div>
-                                        <div className="flex items-center justify-between p-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors">
-                                            <div className="flex items-center gap-4">
-                                                <Smartphone className="text-gray-400" size={24} />
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 md:p-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors">
+                                            <div className="flex items-center gap-3">
+                                                <Smartphone className="text-gray-400 shrink-0" size={20} />
                                                 <div>
-                                                    <p className="font-semibold text-gray-900">iPhone 13 - Safari</p>
-                                                    <p className="text-sm text-gray-500">Accra, Ghana • 41.215.160.50</p>
+                                                    <p className="font-semibold text-gray-900 text-sm">iPhone 13 - Safari</p>
+                                                    <p className="text-xs text-gray-500">Accra, Ghana • 41.215.160.50</p>
                                                 </div>
                                             </div>
-                                            <div className="text-right">
+                                            <div className="flex items-center gap-3 ml-8 sm:ml-0">
                                                 <p className="text-xs text-gray-400">Active 2 days ago</p>
-                                                <button className="text-xs text-red-600 font-medium hover:underline mt-1">Revoke</button>
+                                                <button className="text-xs text-red-600 font-medium hover:underline">Revoke</button>
                                             </div>
                                         </div>
                                     </div>
@@ -643,7 +698,7 @@ const AdminProfilePage = () => {
                                     Recent Activity
                                 </h3>
 
-                                <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                                <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
                                     {[
                                         { action: 'Updated Payment Settings', desc: 'Changed global currency settings to GHS', date: '2 hours ago', icon: Edit, color: 'text-blue-500' },
                                         { action: 'Approved New Course', desc: 'Released "Advanced Data Science" module', date: 'Yesterday', icon: CheckCircle, color: 'text-green-500' },
@@ -652,16 +707,16 @@ const AdminProfilePage = () => {
                                     ].map((item, idx) => {
                                         const Icon = item.icon;
                                         return (
-                                            <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                                                <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-50 group-[.is-active]:bg-white text-slate-500 group-[.is-active]:text-[#004fa2] shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                                            <div key={idx} className="relative flex items-start gap-3 ml-0 pl-0">
+                                                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-[#004fa2] shadow shrink-0 z-10 border border-gray-100">
                                                     <Icon size={16} />
                                                 </div>
-                                                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-                                                    <div className="flex items-center justify-between space-x-2 mb-1">
-                                                        <div className="font-bold text-slate-900">{item.action}</div>
-                                                        <time className="font-caveat font-medium text-indigo-500 text-xs">{item.date}</time>
+                                                <div className="flex-1 bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm">
+                                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-1">
+                                                        <div className="font-bold text-slate-900 text-sm">{item.action}</div>
+                                                        <time className="font-medium text-indigo-500 text-xs">{item.date}</time>
                                                     </div>
-                                                    <div className="text-slate-500 text-sm">{item.desc}</div>
+                                                    <div className="text-slate-500 text-xs sm:text-sm">{item.desc}</div>
                                                 </div>
                                             </div>
                                         );

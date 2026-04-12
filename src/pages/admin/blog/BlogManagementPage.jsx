@@ -39,15 +39,15 @@ import {
 const StatusBadge = ({ published = true }) => {
     if (published) {
         return (
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-green-500 to-emerald-500 text-white">
-                <CheckCircle size={14} />
+            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-green-200 text-[9px] font-bold uppercase bg-green-50 text-green-700">
+                <CheckCircle size={10} />
                 Published
             </span>
         );
     }
     return (
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">
-            <AlertCircle size={14} />
+        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-gray-200 text-[9px] font-bold uppercase bg-gray-50 text-gray-600">
+            <AlertCircle size={10} />
             Draft
         </span>
     );
@@ -73,7 +73,7 @@ const BlogManagementPage = () => {
         }
     }, [showModal, navigate]);
 
-    const itemsPerPage = 8;
+    const itemsPerPage = 5;
 
     // Get all unique categories
     const allCategories = useMemo(() => {
@@ -159,213 +159,181 @@ const BlogManagementPage = () => {
             <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
                     {/* Header Section */}
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                        <div>
-                            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                                <BookOpen size={32} className="text-blue-600" />
-                                Blog Management
-                            </h1>
-                            <p className="text-gray-600 mt-1">Manage and publish blog articles</p>
+                    <div className="flex justify-between items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm mb-4">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-blue-50 p-2 rounded-lg shrink-0">
+                                <BookOpen size={18} className="text-blue-600" />
+                            </div>
+                            <div>
+                                <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Blog Management</h1>
+                                <p className="text-[10px] text-gray-500">Manage blog articles</p>
+                            </div>
                         </div>
                         <button
                             onClick={() => navigate('/admin/blog/new')}
-                            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-2.5 px-6 rounded-lg flex items-center gap-2 transition-all shadow-lg hover:shadow-xl"
+                            className="bg-[#004fa2] hover:bg-blue-800 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg flex items-center gap-1.5 transition-all shadow-sm"
                         >
-                            <Plus size={20} />
-                            New Article
+                            <Plus size={16} />
+                            <span className="text-xs hidden sm:inline">New Article</span>
                         </button>
                     </div>
 
                     {/* Statistics Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
-                        {/* Total Articles Card */}
-                        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200">
-                            <div className="flex items-start justify-between mb-3">
-                                <div className="bg-blue-50 rounded-lg p-2.5">
-                                    <FileText size={20} className="text-blue-600" />
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                        {[
+                            { title: 'Total', count: stats.total, icon: FileText, cColor: 'text-blue-600', bg: 'bg-blue-50' },
+                            { title: 'Live', count: stats.published, icon: CheckCircle, cColor: 'text-green-600', bg: 'bg-green-50' },
+                            { title: 'Drafts', count: stats.draft, icon: AlertCircle, cColor: 'text-amber-600', bg: 'bg-amber-50' },
+                            { title: 'Types', count: stats.categories, icon: Tag, cColor: 'text-purple-600', bg: 'bg-purple-50' }
+                        ].map((stat, i) => (
+                            <div key={i} className="bg-white border border-gray-100 rounded-xl p-2.5 flex items-center justify-start gap-2.5 shadow-sm hover:border-[#004fa2] transition-colors cursor-pointer">
+                                <div className={`w-7 h-7 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
+                                    <stat.icon className={stat.cColor} size={14} />
                                 </div>
-                                <span className="text-xs font-bold text-blue-500 uppercase">Total</span>
-                            </div>
-                            <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Total Articles</p>
-                            <p className="text-3xl font-bold text-gray-900 mb-2">{stats.total}</p>
-                            <p className="text-gray-500 text-xs">All articles</p>
-                        </div>
-
-                        {/* Published Card */}
-                        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200">
-                            <div className="flex items-start justify-between mb-3">
-                                <div className="bg-green-50 rounded-lg p-2.5">
-                                    <CheckCircle size={20} className="text-green-600" />
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wide truncate">{stat.title}</p>
+                                    <p className="text-sm font-bold text-gray-900 leading-none">{stat.count}</p>
                                 </div>
-                                <span className="text-xs font-bold text-green-500 uppercase">Live</span>
                             </div>
-                            <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Published</p>
-                            <p className="text-3xl font-bold text-gray-900 mb-2">{stats.published}</p>
-                            <p className="text-gray-500 text-xs">Active articles</p>
-                        </div>
-
-                        {/* Drafts Card */}
-                        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200">
-                            <div className="flex items-start justify-between mb-3">
-                                <div className="bg-amber-50 rounded-lg p-2.5">
-                                    <AlertCircle size={20} className="text-amber-600" />
-                                </div>
-                                <span className="text-xs font-bold text-amber-500 uppercase">Draft</span>
-                            </div>
-                            <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Drafts</p>
-                            <p className="text-3xl font-bold text-gray-900 mb-2">{stats.draft}</p>
-                            <p className="text-gray-500 text-xs">In progress</p>
-                        </div>
-
-                        {/* Categories Card */}
-                        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200">
-                            <div className="flex items-start justify-between mb-3">
-                                <div className="bg-purple-50 rounded-lg p-2.5">
-                                    <Tag size={20} className="text-purple-600" />
-                                </div>
-                                <span className="text-xs font-bold text-purple-500 uppercase">Org</span>
-                            </div>
-                            <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Categories</p>
-                            <p className="text-3xl font-bold text-gray-900 mb-2">{stats.categories}</p>
-                            <p className="text-gray-500 text-xs">Content types</p>
-                        </div>
-
-                        {/* This Month Card */}
-                        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200">
-                            <div className="flex items-start justify-between mb-3">
-                                <div className="bg-pink-50 rounded-lg p-2.5">
-                                    <TrendingUp size={20} className="text-pink-600" />
-                                </div>
-                                <span className="text-xs font-bold text-pink-500 uppercase">Month</span>
-                            </div>
-                            <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">This Month</p>
-                            <p className="text-3xl font-bold text-gray-900 mb-2">{stats.thisMonth}</p>
-                            <p className="text-gray-500 text-xs">New in Feb</p>
-                        </div>
+                        ))}
                     </div>
 
                     {/* Search and Filter Section */}
-                    <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Search Input */}
-                            <div className="relative">
-                                <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                <input
-                                    type="text"
-                                    placeholder="Search articles by title, excerpt, author..."
-                                    value={searchQuery}
-                                    onChange={(e) => {
-                                        setSearchQuery(e.target.value);
-                                        setCurrentPage(1);
-                                    }}
-                                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                                />
-                            </div>
+                    <div className="grid grid-cols-2 gap-3 mb-4">
+                        {/* Search Input */}
+                        <div className="relative">
+                            <Search size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchQuery}
+                                onChange={(e) => {
+                                    setSearchQuery(e.target.value);
+                                    setCurrentPage(1);
+                                }}
+                                className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all"
+                            />
+                        </div>
 
-                            {/* Category Filter */}
-                            <div className="relative">
-                                <Filter size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                <select
-                                    value={selectedCategory}
-                                    onChange={(e) => {
-                                        setSelectedCategory(e.target.value);
-                                        setCurrentPage(1);
-                                    }}
-                                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none appearance-none"
-                                >
-                                    <option value="all">All Categories</option>
-                                    {allCategories.map(cat => (
-                                        <option key={cat} value={cat}>{cat}</option>
-                                    ))}
-                                </select>
-                            </div>
+                        {/* Category Filter */}
+                        <div className="relative">
+                            <Filter size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <select
+                                value={selectedCategory}
+                                onChange={(e) => {
+                                    setSelectedCategory(e.target.value);
+                                    setCurrentPage(1);
+                                }}
+                                className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
+                            >
+                                <option value="all">All Categories</option>
+                                {allCategories.map(cat => (
+                                    <option key={cat} value={cat}>{cat}</option>
+                                ))}
+                            </select>
                         </div>
                     </div>
 
-                    {/* Articles Table */}
-                    <div className="bg-white rounded-lg shadow overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-gray-50 border-b border-gray-200">
+                    {/* Articles Table / Mobile Cards */}
+                    <div className="bg-transparent md:bg-white md:rounded-xl md:shadow-sm md:border border-gray-100 overflow-hidden">
+                        <div className="overflow-x-visible md:overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead className="hidden md:table-header-group bg-gray-50 border-b border-gray-100">
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Title</th>
-                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Category</th>
-                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Author</th>
-                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
-                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                                        <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider w-[45%]">Title</th>
+                                        <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Category</th>
+                                        <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Author</th>
+                                        <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th className="px-4 py-3 text-right text-[10px] font-bold text-gray-500 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-200">
+                                <tbody className="flex flex-col md:table-row-group divide-y-0 md:divide-y divide-gray-100">
                                     {paginatedArticles.length > 0 ? (
                                         paginatedArticles.map((article) => (
-                                            <tr key={article.id} className="hover:bg-gray-50 transition-colors">
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-3">
+                                            <tr key={article.id} className="flex flex-wrap items-center md:table-row bg-white rounded-xl shadow-sm border border-gray-100 md:border-none md:shadow-none mb-3 md:mb-0 hover:bg-gray-50/80 transition-colors group p-3 md:p-0 gap-x-3 gap-y-1">
+                                                
+                                                {/* Title & Image - Full width on mobile */}
+                                                <td className="w-full md:w-auto md:table-cell md:px-4 md:py-3 mb-1 md:mb-0">
+                                                    <div className="flex items-start md:items-center gap-3">
                                                         <img decoding="async"
                                                             src={article.image}
-                                                            alt={article.title}
-                                                            className="w-12 h-12 rounded object-cover"
+                                                            alt=""
+                                                            aria-hidden="true"
+                                                            className="w-10 h-10 md:w-10 md:h-10 rounded shrink-0 object-cover border border-gray-200"
                                                         />
-                                                        <div>
-                                                            <p className="font-semibold text-gray-900 text-sm">{article.title}</p>
-                                                            <p className="text-gray-600 text-xs">{article.readingTime}</p>
+                                                        <div className="min-w-0 flex-1">
+                                                            <p className="font-bold text-gray-900 text-sm md:text-xs line-clamp-2 leading-snug group-hover:text-[#004fa2] transition-colors">{article.title}</p>
+                                                            <p className="text-gray-500 text-[10px] mt-0.5">{article.readingTime}</p>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">
+
+                                                {/* Category */}
+                                                <td className="w-auto md:table-cell md:px-4 md:py-3">
+                                                    <span className="inline-block bg-blue-50 text-blue-700 text-[9px] font-bold px-1.5 py-[1px] rounded border border-blue-200 uppercase whitespace-nowrap">
                                                         {article.category}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-2">
+
+                                                {/* Author */}
+                                                <td className="w-auto md:table-cell md:px-4 md:py-3">
+                                                    <div className="flex items-center gap-1.5 border-l border-gray-200 pl-3 md:border-l-0 md:pl-0">
                                                         <img decoding="async"
                                                             src={article.author.avatar}
-                                                            alt={article.author.name}
-                                                            className="w-8 h-8 rounded-full"
+                                                            alt=""
+                                                            aria-hidden="true"
+                                                            className="w-4 h-4 md:w-6 md:h-6 rounded-full shrink-0 border border-gray-200"
                                                         />
-                                                        <span className="text-sm text-gray-900 font-medium">{article.author.name}</span>
+                                                        <span className="text-[11px] text-gray-700 font-medium whitespace-nowrap">{article.author.name}</span>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                        <Calendar size={16} />
+
+                                                {/* Date */}
+                                                <td className="w-auto md:table-cell md:px-4 md:py-3">
+                                                    <div className="flex items-center gap-1 text-[10px] text-gray-500 whitespace-nowrap border-l border-gray-200 pl-3 md:border-l-0 md:pl-0">
+                                                        <Calendar size={10} className="text-gray-400" />
                                                         {article.date}
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <StatusBadge published={article.featured} />
+
+                                                {/* Status */}
+                                                <td className="w-auto md:table-cell md:px-4 md:py-3">
+                                                    <div className="border-l border-gray-200 pl-3 md:border-l-0 md:pl-0">
+                                                        <StatusBadge published={article.featured} />
+                                                    </div>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-2">
+
+                                                {/* Actions - Flow to bottom on mobile */}
+                                                <td className="w-full md:w-auto md:table-cell md:px-4 md:py-3 mt-2 md:mt-0 pt-2 border-t border-gray-100 md:border-none">
+                                                    <div className="flex justify-end gap-2 md:gap-1">
                                                         <button
                                                             onClick={() => handleViewArticle(article.id)}
                                                             title="View Details"
-                                                            className="p-2 hover:bg-blue-100 rounded-lg transition-colors text-blue-600"
+                                                            className="p-1 flex items-center justify-center hover:bg-gray-100 rounded transition-colors text-gray-500 hover:text-[#004fa2] shadow-none md:shadow-sm"
                                                         >
-                                                            <Eye size={18} />
+                                                            <Eye size={16} className="md:w-3.5 md:h-3.5" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleViewPublic(article.slug)}
                                                             title="View Public Page"
-                                                            className="p-2 hover:bg-green-100 rounded-lg transition-colors text-green-600"
+                                                            className="p-1 flex items-center justify-center hover:bg-gray-100 rounded transition-colors text-gray-500 hover:text-green-600 shadow-none md:shadow-sm"
                                                         >
-                                                            <ExternalLink size={18} />
+                                                            <ExternalLink size={16} className="md:w-3.5 md:h-3.5" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleEditArticle(article.id)}
                                                             title="Edit"
-                                                            className="p-2 hover:bg-amber-100 rounded-lg transition-colors text-amber-600"
+                                                            className="p-1 flex items-center justify-center hover:bg-gray-100 rounded transition-colors text-gray-500 hover:text-amber-600 shadow-none md:shadow-sm"
                                                         >
-                                                            <Edit size={18} />
+                                                            <Edit size={16} className="md:w-3.5 md:h-3.5" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleDeleteArticle(article.id)}
                                                             title="Delete"
-                                                            className="p-2 hover:bg-red-100 rounded-lg transition-colors text-red-600"
+                                                            className="p-1 flex items-center justify-center hover:bg-red-50 rounded transition-colors text-red-500 hover:text-red-700 shadow-none md:shadow-sm"
                                                         >
-                                                            <Trash2 size={18} />
+                                                            <Trash2 size={16} className="md:w-3.5 md:h-3.5" />
                                                         </button>
                                                     </div>
                                                 </td>
