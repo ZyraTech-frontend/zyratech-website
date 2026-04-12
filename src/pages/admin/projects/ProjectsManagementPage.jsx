@@ -211,343 +211,163 @@ const ProjectsManagementPage = () => {
         <AdminLayout>
             <div className="space-y-6 pb-8">
                 {/* Page Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                <FolderKanban className="text-white" size={22} />
-                            </div>
-                            Projects Management
-                        </h1>
-                        <p className="text-sm text-gray-500 mt-1 ml-[52px]">
-                            Manage portfolio projects and case studies
-                        </p>
+                {/* Page Header & Actions */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-blue-50 p-2 rounded-lg shrink-0">
+                            <FolderKanban size={18} className="text-blue-600" />
+                        </div>
+                        <div>
+                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Projects Management</h1>
+                            <p className="text-[10px] text-gray-500">Manage portfolio projects and case studies</p>
+                        </div>
                     </div>
+                    
                     <button
                         onClick={handleAddNew}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                        className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-all shadow-sm text-xs font-semibold"
                     >
-                        <Plus size={20} strokeWidth={2.5} />
-                        Add New Project
+                        <Plus size={14} /> Add Project
                     </button>
                 </div>
 
                 {/* Statistics Cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4">
-                    {/* Total Projects */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-blue-500 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('all'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
-                                <FolderKanban className="text-blue-600" size={16} />
+                {/* Statistics Cards */}
+                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 md:gap-3 mb-4">
+                    {[
+                        { title: 'Total', count: stats.total, icon: FolderKanban, color: 'text-blue-600', bg: 'bg-blue-50', onClick: () => { setSelectedStatus('all'); setCurrentPage(1); } },
+                        { title: 'Active', count: stats.active, icon: Play, color: 'text-green-600', bg: 'bg-green-50', onClick: () => { setSelectedStatus('Active'); setCurrentPage(1); } },
+                        { title: 'Progress', count: stats.inProgress, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50', onClick: () => { setSelectedStatus('In Progress'); setCurrentPage(1); } },
+                        { title: 'Done', count: stats.completed, icon: CheckCircle, color: 'text-cyan-600', bg: 'bg-cyan-50', onClick: () => { setSelectedStatus('Completed'); setCurrentPage(1); } },
+                        { title: 'Featured', count: stats.featured, icon: Rocket, color: 'text-purple-600', bg: 'bg-purple-50', onClick: () => {} },
+                        { title: 'Team', count: stats.totalTeam, icon: Users, color: 'text-pink-600', bg: 'bg-pink-50', onClick: () => {} },
+                        { title: 'Avg', count: `${stats.avgProgress}%`, icon: TrendingUp, color: 'text-indigo-600', bg: 'bg-indigo-50', onClick: () => {} }
+                    ].map((stat, i) => (
+                        <div key={i} onClick={stat.onClick} className="bg-white border border-gray-100 rounded-xl p-2 md:p-2.5 flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-1 md:gap-2 shadow-sm hover:border-[#004fa2] transition-colors cursor-pointer text-center md:text-left group">
+                            <div className={`w-6 h-6 md:w-7 md:h-7 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
+                                <stat.icon className={stat.color} size={14} />
+                            </div>
+                            <div className="min-w-0">
+                                <p className="text-[9px] md:text-[10px] text-gray-500 font-medium uppercase tracking-wide truncate group-hover:text-[#004fa2] transition-colors">{stat.title}</p>
+                                <p className="text-xs md:text-sm font-bold text-gray-900 leading-none mt-0.5 md:mt-0">{stat.count}</p>
                             </div>
                         </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
-                        <p className="text-xs text-gray-600 mt-1">Total</p>
-                    </div>
-
-                    {/* Active */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-green-500 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('Active'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-green-100 rounded flex items-center justify-center">
-                                <Play className="text-green-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.active}</p>
-                        <p className="text-xs text-gray-600 mt-1">Active</p>
-                    </div>
-
-                    {/* In Progress */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-amber-500 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('In Progress'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">
-                                <Clock className="text-amber-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.inProgress}</p>
-                        <p className="text-xs text-gray-600 mt-1">In Progress</p>
-                    </div>
-
-                    {/* Completed */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-cyan-500 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('Completed'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-cyan-100 rounded flex items-center justify-center">
-                                <CheckCircle className="text-cyan-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.completed}</p>
-                        <p className="text-xs text-gray-600 mt-1">Completed</p>
-                    </div>
-
-                    {/* Featured */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-purple-500 hover:shadow-md transition-all duration-200 group cursor-pointer">
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-purple-100 rounded flex items-center justify-center">
-                                <Rocket className="text-purple-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.featured}</p>
-                        <p className="text-xs text-gray-600 mt-1">Featured</p>
-                    </div>
-
-                    {/* Team Members */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-pink-500 hover:shadow-md transition-all duration-200 group cursor-pointer">
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-pink-100 rounded flex items-center justify-center">
-                                <Users className="text-pink-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.totalTeam}</p>
-                        <p className="text-xs text-gray-600 mt-1">Team Members</p>
-                    </div>
-
-                    {/* Avg Progress */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-indigo-500 hover:shadow-md transition-all duration-200 group cursor-pointer">
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-indigo-100 rounded flex items-center justify-center">
-                                <TrendingUp className="text-indigo-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.avgProgress}%</p>
-                        <p className="text-xs text-gray-600 mt-1">Avg Progress</p>
-                    </div>
+                    ))}
                 </div>
 
                 {/* Filters and Search */}
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                    <div className="flex flex-col lg:flex-row gap-4">
-                        {/* Search */}
-                        <div className="flex-1 relative">
-                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                            <input
-                                type="text"
-                                placeholder="Search projects by title, description, or technology..."
-                                value={searchQuery}
-                                onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm transition-all"
-                            />
-                        </div>
+                <div className="grid grid-cols-2 md:grid-cols-12 gap-2 mb-4">
+                    <div className="col-span-2 md:col-span-5 relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+                        <input
+                            type="text"
+                            placeholder="Search projects..."
+                            value={searchQuery}
+                            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                            className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all"
+                        />
+                    </div>
 
-                        {/* Category Filter */}
-                        <div className="flex items-center gap-2">
-                            <Filter className="text-gray-400" size={18} />
-                            <select
-                                value={selectedCategory}
-                                onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
-                                className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[160px]"
-                            >
-                                <option value="all">All Categories</option>
-                                {uniqueCategories.map(cat => (
-                                    <option key={cat} value={cat}>{cat}</option>
-                                ))}
-                            </select>
-                        </div>
+                    <div className="col-span-1 md:col-span-3 relative">
+                        <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <select
+                            value={selectedCategory}
+                            onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
+                            className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
+                        >
+                            <option value="all">All Categories</option>
+                            {uniqueCategories.map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                        </select>
+                    </div>
 
-                        {/* Status Filter */}
+                    <div className="col-span-1 md:col-span-3 relative">
                         <select
                             value={selectedStatus}
                             onChange={(e) => { setSelectedStatus(e.target.value); setCurrentPage(1); }}
-                            className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[140px]"
+                            className="w-full px-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
                         >
                             <option value="all">All Status</option>
                             {uniqueStatuses.map(status => (
                                 <option key={status} value={status}>{status}</option>
                             ))}
                         </select>
+                    </div>
 
-                        {/* View Mode Toggle */}
-                        <div className="flex bg-gray-100 rounded-lg p-1">
-                            <button
-                                onClick={() => setViewMode('grid')}
-                                className={`p-2 rounded-md transition-all ${viewMode === 'grid'
-                                    ? 'bg-white text-[#004fa2] shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
-                                    }`}
-                            >
-                                <Grid size={18} />
+                    <div className="col-span-2 md:col-span-1 flex items-center justify-end gap-1">
+                        <div className="flex bg-white border border-gray-100 rounded-xl p-0.5 shadow-sm h-[34px]">
+                            <button onClick={() => setViewMode('grid')} className={`p-1.5 rounded-lg transition-all flex items-center justify-center ${viewMode === 'grid' ? 'bg-[#004fa2] text-white' : 'text-gray-400 hover:text-gray-600'}`}>
+                                <Grid size={14} />
                             </button>
-                            <button
-                                onClick={() => setViewMode('list')}
-                                className={`p-2 rounded-md transition-all ${viewMode === 'list'
-                                    ? 'bg-white text-[#004fa2] shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
-                                    }`}
-                            >
-                                <List size={18} />
+                            <button onClick={() => setViewMode('list')} className={`p-1.5 rounded-lg transition-all flex items-center justify-center ${viewMode === 'list' ? 'bg-[#004fa2] text-white' : 'text-gray-400 hover:text-gray-600'}`}>
+                                <List size={14} />
                             </button>
                         </div>
-
-                        {/* Reset Filters */}
                         {(searchQuery || selectedCategory !== 'all' || selectedStatus !== 'all') && (
-                            <button
-                                onClick={resetFilters}
-                                className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
-                            >
-                                <X size={16} />
-                                Reset
+                            <button onClick={resetFilters} className="bg-white border border-gray-100 hover:bg-gray-50 text-gray-600 h-[34px] w-[34px] rounded-xl transition-colors shadow-sm flex items-center justify-center shrink-0">
+                                <X size={14} />
                             </button>
                         )}
                     </div>
-
-                    {/* Active filter badges */}
-                    {(selectedCategory !== 'all' || selectedStatus !== 'all') && (
-                        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-                            <span className="text-xs text-gray-500">Active filters:</span>
-                            {selectedCategory !== 'all' && (
-                                <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${CATEGORY_CONFIG[selectedCategory]?.color || 'bg-gray-100 text-gray-700'}`}>
-                                    {selectedCategory}
-                                    <button onClick={() => setSelectedCategory('all')} className="ml-1.5 hover:opacity-70">×</button>
-                                </span>
-                            )}
-                            {selectedStatus !== 'all' && (
-                                <span className="px-2.5 py-1 rounded-full text-xs font-medium border bg-gray-100 text-gray-700 border-gray-200">
-                                    {selectedStatus}
-                                    <button onClick={() => setSelectedStatus('all')} className="ml-1.5 hover:opacity-70">×</button>
-                                </span>
-                            )}
-                        </div>
-                    )}
                 </div>
 
                 {/* Projects Grid/List */}
                 {viewMode === 'grid' ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                         {paginatedProjects.map((project) => (
-                            <div
-                                key={project.id}
-                                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group"
-                            >
-                                {/* Project Image */}
-                                <div className="relative h-48 overflow-hidden">
-                                    <img decoding="async"
-                                        src={project.image}
-                                        alt={project.title}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                    />
-                                    {/* Overlay on hover */}
-                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2">
-                                        <button
-                                            onClick={() => handleView(project)}
-                                            className="p-2.5 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
-                                        >
-                                            <Eye className="text-white" size={18} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleEdit(project)}
-                                            className="p-2.5 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
-                                        >
-                                            <Edit className="text-white" size={18} />
-                                        </button>
-                                    </div>
-
-                                    {/* Category Badge */}
-                                    <div className="absolute top-3 left-3">
-                                        <span className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold border ${CATEGORY_CONFIG[project.category]?.color || 'bg-gray-100'}`}>
+                            <div key={project.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col hover:border-[#004fa2] transition-colors group p-2">
+                                <div className="relative w-full aspect-video bg-gray-100 rounded-lg overflow-hidden mb-2 shrink-0">
+                                    <img decoding="async" src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                    <div className="absolute top-1 left-1 flex flex-col gap-1 items-start">
+                                        <span className={`px-1.5 py-[1px] rounded text-[8px] font-bold uppercase backdrop-blur-sm shadow-sm ${CATEGORY_CONFIG[project.category]?.color || 'bg-white/90 text-gray-800'}`}>
                                             {project.category}
                                         </span>
-                                    </div>
-
-                                    {/* Featured Badge */}
-                                    {project.featured && (
-                                        <div className="absolute top-3 right-3">
-                                            <span className="flex items-center gap-1 bg-amber-500 text-white px-2 py-1 rounded-full text-[10px] font-bold">
-                                                <Rocket size={10} />
-                                                Featured
-                                            </span>
-                                        </div>
-                                    )}
-
-                                    {/* Status */}
-                                    <div className="absolute bottom-3 left-3">
-                                        <StatusBadge status={project.status} />
-                                    </div>
-                                </div>
-
-                                {/* Card Content */}
-                                <div className="p-4">
-                                    <h3 className="font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors line-clamp-1 text-lg">
-                                        {project.title}
-                                    </h3>
-
-                                    <p className="text-sm text-gray-500 mt-2 line-clamp-2 min-h-[40px]">
-                                        {project.description}
-                                    </p>
-
-                                    {/* Technologies */}
-                                    <div className="flex flex-wrap gap-1 mt-3">
-                                        {project.technologies?.slice(0, 3).map((tech, idx) => (
-                                            <span key={idx} className="text-[10px] text-gray-600 bg-gray-100 px-2 py-0.5 rounded">
-                                                {tech}
-                                            </span>
-                                        ))}
-                                        {project.technologies?.length > 3 && (
-                                            <span className="text-[10px] text-gray-400">
-                                                +{project.technologies.length - 3}
+                                        {project.featured && (
+                                            <span className="flex items-center gap-0.5 bg-amber-500/90 text-white w-fit px-1.5 py-[1px] rounded text-[8px] font-bold backdrop-blur-sm shadow-sm">
+                                                <Rocket size={8} /> Featured
                                             </span>
                                         )}
                                     </div>
+                                    <div className="absolute bottom-1 right-1">
+                                        <StatusBadge status={project.status} />
+                                    </div>
+                                </div>
+                                
+                                <div className="px-1 flex flex-col flex-1">
+                                    <h3 className="text-xs font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors line-clamp-1">{project.title}</h3>
+                                    <p className="text-[10px] text-gray-500 mt-1 line-clamp-2 h-[30px] leading-snug">{project.description}</p>
+                                    
+                                    <div className="flex flex-wrap gap-1 mt-2 h-[18px] overflow-hidden">
+                                        {project.technologies?.slice(0, 3).map((tech, idx) => (
+                                            <span key={idx} className="text-[8px] bg-gray-100 text-gray-600 px-1.5 py-[1px] rounded uppercase font-semibold">
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
 
-                                    {/* Progress & Team */}
-                                    <div className="mt-4 pt-3 border-t border-gray-100">
-                                        <div className="flex items-center justify-between mb-1.5">
-                                            <span className="text-xs text-gray-500">Progress</span>
-                                            <span className="text-xs font-semibold text-gray-900">{project.progress}%</span>
+                                    <div className="mt-3 pt-2 border-t border-gray-50 flex flex-col text-[9px] text-gray-500 gap-1.5 pb-1">
+                                        <div className="flex items-center justify-between font-semibold">
+                                            <span className="text-gray-400">Progress</span>
+                                            <span className={project.progress > 80 ? 'text-green-600' : 'text-blue-600'}>{project.progress}%</span>
                                         </div>
                                         <ProgressBar progress={project.progress} />
-
-                                        <div className="flex items-center justify-between mt-3">
-                                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                                                <Users size={12} />
-                                                <span>{project.team} members</span>
-                                            </div>
-                                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                                                <Calendar size={12} />
-                                                <span>{project.startDate}</span>
-                                            </div>
+                                        
+                                        <div className="flex items-center justify-between mt-1 pt-1">
+                                            <span className="flex items-center gap-0.5"><Users size={10}/> {project.team} members</span>
+                                            <span className="flex items-center gap-0.5"><Calendar size={10}/> {new Date(project.startDate).toLocaleDateString(undefined, {month:'short', year:'2-digit'})}</span>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Actions */}
-                                <div className="px-4 py-3 border-t border-gray-100 flex items-center justify-between">
+                                <div className="mt-auto flex items-center justify-between pt-2 border-t border-gray-50 px-1">
                                     <div className="flex items-center gap-1">
-                                        <button
-                                            onClick={() => handleView(project)}
-                                            className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
-                                            title="View Project"
-                                        >
-                                            <Eye size={16} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleEdit(project)}
-                                            className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                                            title="Edit Project"
-                                        >
-                                            <Edit size={16} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(project)}
-                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                            title="Delete Project"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
+                                        <button onClick={() => handleView(project)} className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-[#004fa2]"><Eye size={12}/></button>
+                                        <button onClick={() => handleEdit(project)} className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-green-600"><Edit size={12}/></button>
+                                        <button onClick={() => handleDelete(project)} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600"><Trash2 size={12}/></button>
                                     </div>
-                                    <a
-                                        href={project.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-1 text-xs text-[#004fa2] hover:underline font-medium"
-                                    >
-                                        Preview
-                                        <ExternalLink size={12} />
+                                    <a href={project.link || '#'} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-[9px] font-bold text-[#004fa2] hover:underline uppercase bg-blue-50 px-1.5 py-0.5 rounded">
+                                        Preview <ExternalLink size={10} />
                                     </a>
                                 </div>
                             </div>
@@ -556,7 +376,8 @@ const ProjectsManagementPage = () => {
                 ) : (
                     /* List View */
                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                        <table className="w-full">
+                        <div className="overflow-x-auto">
+                        <table className="w-full min-w-[800px]">
                             <thead className="bg-gray-50 border-b border-gray-100">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Project</th>
@@ -643,6 +464,7 @@ const ProjectsManagementPage = () => {
                                 ))}
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 )}
 

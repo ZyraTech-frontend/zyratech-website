@@ -122,7 +122,7 @@ const BlogFormPage = () => {
                             <ArrowLeft size={24} className="text-gray-700" />
                         </button>
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">
+                            <h1 className="text-xl md:text-3xl font-bold text-gray-900">
                                 {isEditing ? 'Edit Article' : 'Create New Article'}
                             </h1>
                             <p className="text-gray-600 text-sm mt-1">

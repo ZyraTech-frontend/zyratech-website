@@ -83,6 +83,7 @@ const JobsManagementPage = () => {
     const [selectedType, setSelectedType] = useState('all');
     const [selectedLocation, setSelectedLocation] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
+    const [appCurrentPage, setAppCurrentPage] = useState(1);
     const [activeTab, setActiveTab] = useState('jobs'); // 'jobs' or 'applications'
     const [showModal, setShowModal] = useState(false);
 
@@ -137,6 +138,14 @@ const JobsManagementPage = () => {
     const paginatedJobs = filteredJobs.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
+    );
+
+    // Application Pagination
+    const appsPerPage = 4;
+    const totalAppPages = Math.ceil(mockApplications.length / appsPerPage);
+    const paginatedApps = mockApplications.slice(
+        (appCurrentPage - 1) * appsPerPage,
+        appCurrentPage * appsPerPage
     );
 
     // Statistics
@@ -217,307 +226,169 @@ const JobsManagementPage = () => {
         <AdminLayout>
             <div className="space-y-6 pb-8">
                 {/* Page Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                <Briefcase className="text-white" size={22} />
-                            </div>
-                            Jobs Management
-                        </h1>
-                        <p className="text-sm text-gray-500 mt-1 ml-[52px]">
-                            Manage job listings and review applications
-                        </p>
+                {/* Page Header & Navigation */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-blue-50 p-2 rounded-lg shrink-0">
+                            <Briefcase size={18} className="text-blue-600" />
+                        </div>
+                        <div>
+                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Jobs Management</h1>
+                            <p className="text-[10px] text-gray-500">Manage listings and review applications</p>
+                        </div>
                     </div>
-                    <button
-                        onClick={handleAddNew}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md hover:shadow-lg font-medium"
-                    >
-                        <Plus size={20} strokeWidth={2.5} />
-                        Post New Job
-                    </button>
-                </div>
-
-                {/* Tab Navigation */}
-                <div className="bg-white rounded-xl p-1.5 shadow-sm border border-gray-100 inline-flex gap-1">
-                    <button
-                        onClick={() => setActiveTab('jobs')}
-                        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${activeTab === 'jobs'
-                            ? 'bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white shadow-md'
-                            : 'text-gray-600 hover:bg-gray-100'
-                            }`}
-                    >
-                        <Briefcase size={16} />
-                        Job Listings
-                        <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'jobs' ? 'bg-white/20' : 'bg-gray-200'
-                            }`}>
-                            {stats.total}
-                        </span>
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('applications')}
-                        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${activeTab === 'applications'
-                            ? 'bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white shadow-md'
-                            : 'text-gray-600 hover:bg-gray-100'
-                            }`}
-                    >
-                        <FileText size={16} />
-                        Applications
-                        <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'applications' ? 'bg-white/20' : 'bg-gray-200'
-                            }`}>
-                            {stats.totalApplications}
-                        </span>
-                        {stats.pendingApplications > 0 && (
-                            <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                        )}
-                    </button>
+                    
+                    <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+                        <div className="bg-gray-50 rounded-lg p-1 border border-gray-100 inline-flex flex-1 md:flex-none">
+                            <button
+                                onClick={() => setActiveTab('jobs')}
+                                className={`flex-1 md:flex-none px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-1.5 ${
+                                    activeTab === 'jobs' ? 'bg-white shadow-sm text-blue-700 font-bold' : 'text-gray-500 hover:text-gray-700'
+                                }`}
+                            >
+                                <Briefcase size={14} /> Jobs
+                                <span className={`ml-1 px-1.5 py-0.5 rounded text-[9px] ${activeTab === 'jobs' ? 'bg-blue-100 text-blue-700' : 'bg-gray-200'}`}>{stats.total}</span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('applications')}
+                                className={`flex-1 md:flex-none px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-1.5 ${
+                                    activeTab === 'applications' ? 'bg-white shadow-sm text-blue-700 font-bold' : 'text-gray-500 hover:text-gray-700'
+                                }`}
+                            >
+                                <FileText size={14} /> Applications
+                                <span className={`ml-1 px-1.5 py-0.5 rounded text-[9px] ${activeTab === 'applications' ? 'bg-blue-100 text-blue-700' : 'bg-gray-200'}`}>{stats.totalApplications}</span>
+                                {stats.pendingApplications > 0 && <span className="w-1.5 h-1.5 bg-red-500 rounded-full shrink-0"></span>}
+                            </button>
+                        </div>
+                        
+                        <button
+                            onClick={handleAddNew}
+                            className="bg-[#004fa2] hover:bg-blue-800 text-white font-semibold py-1.5 px-3 rounded-lg flex items-center justify-center gap-1 transition-all shadow-sm shrink-0"
+                        >
+                            <Plus size={16} />
+                            <span className="text-xs hidden sm:inline">Post Job</span>
+                        </button>
+                    </div>
                 </div>
 
                 {activeTab === 'jobs' ? (
                     <>
                         {/* Statistics Cards */}
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                                onClick={() => { setSelectedType('all'); setCurrentPage(1); }}
-                            >
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                                        <Briefcase className="text-blue-600" size={18} />
+                        {/* Statistics Cards */}
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
+                            {[
+                                { title: 'Total', count: stats.total, icon: Briefcase, color: 'text-blue-600', bg: 'bg-blue-50', onClick: () => { setSelectedType('all'); setCurrentPage(1); } },
+                                { title: 'Full Time', count: stats.fullTime, icon: Building2, color: 'text-emerald-600', bg: 'bg-emerald-50', onClick: () => { setSelectedType('Full-time'); setCurrentPage(1); } },
+                                { title: 'Interns', count: stats.internship, icon: UserPlus, color: 'text-amber-600', bg: 'bg-amber-50', onClick: () => { setSelectedType('Internship'); setCurrentPage(1); } },
+                                { title: 'NSS', count: stats.nationalService, icon: Award, color: 'text-cyan-600', bg: 'bg-cyan-50', onClick: () => { setSelectedType('National Service'); setCurrentPage(1); } },
+                                { title: 'Apps', count: stats.totalApplications, icon: FileText, color: 'text-purple-600', bg: 'bg-purple-50', onClick: () => setActiveTab('applications') },
+                                { title: 'Pending', count: stats.pendingApplications, icon: AlertCircle, color: 'text-pink-600', bg: 'bg-pink-50', onClick: () => setActiveTab('applications') }
+                            ].map((stat, i) => (
+                                <div key={i} onClick={stat.onClick} className="bg-white border border-gray-100 rounded-xl p-2.5 flex items-center justify-start gap-2.5 shadow-sm hover:border-[#004fa2] transition-colors cursor-pointer">
+                                    <div className={`w-7 h-7 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
+                                        <stat.icon className={stat.color} size={14} />
                                     </div>
-                                    <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">All</span>
-                                </div>
-                                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-                                <p className="text-xs text-gray-500 mt-0.5">Total Jobs</p>
-                            </div>
-
-                            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                                onClick={() => { setSelectedType('Full-time'); setCurrentPage(1); }}
-                            >
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="w-9 h-9 bg-emerald-50 rounded-lg flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
-                                        <Building2 className="text-emerald-600" size={18} />
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wide truncate">{stat.title}</p>
+                                        <p className="text-sm font-bold text-gray-900 leading-none">{stat.count}</p>
                                     </div>
-                                    <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Full-time</span>
                                 </div>
-                                <p className="text-2xl font-bold text-gray-900">{stats.fullTime}</p>
-                                <p className="text-xs text-gray-500 mt-0.5">Full-time</p>
-                            </div>
-
-                            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                                onClick={() => { setSelectedType('Internship'); setCurrentPage(1); }}
-                            >
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center group-hover:bg-amber-100 transition-colors">
-                                        <UserPlus className="text-amber-600" size={18} />
-                                    </div>
-                                    <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Internship</span>
-                                </div>
-                                <p className="text-2xl font-bold text-gray-900">{stats.internship}</p>
-                                <p className="text-xs text-gray-500 mt-0.5">Internships</p>
-                            </div>
-
-                            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                                onClick={() => { setSelectedType('National Service'); setCurrentPage(1); }}
-                            >
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="w-9 h-9 bg-cyan-50 rounded-lg flex items-center justify-center group-hover:bg-cyan-100 transition-colors">
-                                        <Award className="text-cyan-600" size={18} />
-                                    </div>
-                                    <span className="text-xs font-medium text-cyan-600 bg-cyan-50 px-2 py-0.5 rounded-full">NSS</span>
-                                </div>
-                                <p className="text-2xl font-bold text-gray-900">{stats.nationalService}</p>
-                                <p className="text-xs text-gray-500 mt-0.5">National Service</p>
-                            </div>
-
-                            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                                onClick={() => setActiveTab('applications')}
-                            >
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="w-9 h-9 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
-                                        <FileText className="text-purple-600" size={18} />
-                                    </div>
-                                    <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">Apps</span>
-                                </div>
-                                <p className="text-2xl font-bold text-gray-900">{stats.totalApplications}</p>
-                                <p className="text-xs text-gray-500 mt-0.5">Applications</p>
-                            </div>
-
-                            <div className="bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
-                                        <AlertCircle className="text-white" size={18} />
-                                    </div>
-                                    <span className="text-xs font-medium text-white/90 bg-white/20 px-2 py-0.5 rounded-full">Pending</span>
-                                </div>
-                                <p className="text-2xl font-bold text-white">{stats.pendingApplications}</p>
-                                <p className="text-xs text-blue-100 mt-0.5">Need Review</p>
-                            </div>
+                            ))}
                         </div>
 
                         {/* Filters and Search */}
-                        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                            <div className="flex flex-col lg:flex-row gap-4">
-                                {/* Search */}
-                                <div className="flex-1 relative">
-                                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                    <input
-                                        type="text"
-                                        placeholder="Search jobs by title, description, or location..."
-                                        value={searchQuery}
-                                        onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                        className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm transition-all"
-                                    />
-                                </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+                            <div className="col-span-2 relative">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+                                <input
+                                    type="text"
+                                    placeholder="Search jobs..."
+                                    value={searchQuery}
+                                    onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                                    className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all"
+                                />
+                            </div>
 
-                                {/* Type Filter */}
-                                <div className="flex items-center gap-2">
-                                    <Filter className="text-gray-400" size={18} />
-                                    <select
-                                        value={selectedType}
-                                        onChange={(e) => { setSelectedType(e.target.value); setCurrentPage(1); }}
-                                        className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[140px]"
-                                    >
-                                        <option value="all">All Types</option>
-                                        {uniqueTypes.map(type => (
-                                            <option key={type} value={type}>{type}</option>
-                                        ))}
-                                    </select>
-                                </div>
+                            <div className="relative">
+                                <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <select
+                                    value={selectedType}
+                                    onChange={(e) => { setSelectedType(e.target.value); setCurrentPage(1); }}
+                                    className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
+                                >
+                                    <option value="all">All Types</option>
+                                    {uniqueTypes.map(type => (
+                                        <option key={type} value={type}>{type}</option>
+                                    ))}
+                                </select>
+                            </div>
 
-                                {/* Location Filter */}
+                            <div className="relative flex gap-1">
+                                <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                                 <select
                                     value={selectedLocation}
                                     onChange={(e) => { setSelectedLocation(e.target.value); setCurrentPage(1); }}
-                                    className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[140px]"
+                                    className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
                                 >
                                     <option value="all">All Locations</option>
                                     {uniqueLocations.map(location => (
                                         <option key={location} value={location}>{location}</option>
                                     ))}
                                 </select>
-
-                                {/* Reset Filters */}
+                                
                                 {(searchQuery || selectedType !== 'all' || selectedLocation !== 'all') && (
-                                    <button
-                                        onClick={resetFilters}
-                                        className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
-                                    >
-                                        <X size={16} />
-                                        Reset
+                                    <button onClick={resetFilters} className="bg-white border border-gray-100 hover:bg-gray-50 text-gray-600 px-2.5 rounded-xl transition-colors shadow-sm flex items-center justify-center">
+                                        <X size={14} />
                                     </button>
                                 )}
                             </div>
-
-                            {/* Active filter badges */}
-                            {(selectedType !== 'all' || selectedLocation !== 'all') && (
-                                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-                                    <span className="text-xs text-gray-500">Active filters:</span>
-                                    {selectedType !== 'all' && (
-                                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${JOB_TYPE_CONFIG[selectedType]?.color || 'bg-gray-100 text-gray-700'}`}>
-                                            {selectedType}
-                                            <button onClick={() => setSelectedType('all')} className="ml-1.5 hover:opacity-70">×</button>
-                                        </span>
-                                    )}
-                                    {selectedLocation !== 'all' && (
-                                        <span className="px-2.5 py-1 rounded-full text-xs font-medium border bg-gray-100 text-gray-700 border-gray-200">
-                                            <MapPin size={10} className="inline mr-1" />
-                                            {selectedLocation}
-                                            <button onClick={() => setSelectedLocation('all')} className="ml-1.5 hover:opacity-70">×</button>
-                                        </span>
-                                    )}
-                                </div>
-                            )}
                         </div>
 
                         {/* Job Cards Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                             {paginatedJobs.map((job) => (
                                 <div
                                     key={job.id}
-                                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group"
+                                    className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col hover:border-[#004fa2] transition-colors group p-3"
                                 >
-                                    {/* Card Header */}
-                                    <div className="relative p-5 pb-3">
-                                        <div className="flex items-start justify-between mb-3">
-                                            <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${JOB_TYPE_CONFIG[job.type]?.color || 'bg-gray-100 text-gray-700'}`}>
-                                                {job.type}
-                                            </span>
-                                            <StatusBadge status={job.status || 'active'} />
-                                        </div>
-
-                                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors line-clamp-2 min-h-[56px]">
-                                            {job.title}
-                                        </h3>
-
-                                        <p className="text-sm text-gray-500 mt-2 line-clamp-2">
-                                            {job.description}
-                                        </p>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <span className={`px-1.5 py-[1px] rounded text-[9px] font-bold uppercase ${JOB_TYPE_CONFIG[job.type]?.color || 'bg-gray-100 text-gray-700'}`}>
+                                            {job.type}
+                                        </span>
+                                        <StatusBadge status={job.status || 'active'} />
                                     </div>
-
-                                    {/* Job Meta */}
-                                    <div className="px-5 py-4 bg-gray-50/50 border-t border-gray-100">
-                                        <div className="space-y-2">
-                                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                <MapPin size={14} className="text-gray-400" />
-                                                <span className="line-clamp-1">{job.locations?.join(', ')}</span>
+                                    
+                                    <h3 className="text-sm font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors line-clamp-1 mb-0.5">
+                                        {job.title}
+                                    </h3>
+                                    
+                                    <p className="text-[10px] text-gray-500 line-clamp-2 mb-2 min-h-[30px] leading-relaxed">
+                                        {job.description}
+                                    </p>
+                                    
+                                    <div className="mt-auto space-y-1.5 pt-2 border-t border-gray-50">
+                                        <div className="flex items-center justify-between text-[10px] text-gray-500">
+                                            <div className="flex items-center gap-1 min-w-0 pr-2">
+                                                <MapPin size={10} className="text-gray-400 shrink-0" />
+                                                <span className="truncate">{job.locations?.join(', ')}</span>
                                             </div>
-                                            <div className="flex items-center gap-4">
-                                                <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                                                    <FileText size={13} className="text-gray-400" />
-                                                    <span>{job.responsibilities?.length || 0} responsibilities</span>
-                                                </div>
-                                                <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                                                    <CheckCircle size={13} className="text-gray-400" />
-                                                    <span>{job.qualifications?.length || 0} qualifications</span>
-                                                </div>
+                                            <div className="flex items-center gap-2 shrink-0">
+                                                <span className="flex items-center gap-0.5"><FileText size={10} className="text-gray-400"/> {job.responsibilities?.length || 0}</span>
+                                                <span className="flex items-center gap-0.5"><CheckCircle size={10} className="text-gray-400"/> {job.qualifications?.length || 0}</span>
                                             </div>
                                         </div>
-
-                                        {/* Perks preview */}
-                                        {job.perks && job.perks.length > 0 && (
-                                            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-                                                <Zap size={12} className="text-amber-500" />
-                                                <span className="text-[11px] text-gray-500 line-clamp-1">
-                                                    {job.perks.slice(0, 2).join(' • ')}
-                                                </span>
+                                        
+                                        {/* Action Bar */}
+                                        <div className="flex items-center justify-between pt-2">
+                                            <div className="flex items-center gap-1">
+                                                <button onClick={() => handleView(job)} className="p-1.5 hover:bg-gray-100 rounded text-gray-400 hover:text-[#004fa2] transition-colors" title="View"><Eye size={12}/></button>
+                                                <button onClick={() => handleEdit(job)} className="p-1.5 hover:bg-gray-100 rounded text-gray-400 hover:text-green-600 transition-colors" title="Edit"><Edit size={12}/></button>
+                                                <button onClick={() => handleDelete(job)} className="p-1.5 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors" title="Delete"><Trash2 size={12}/></button>
                                             </div>
-                                        )}
-                                    </div>
-
-                                    {/* Actions */}
-                                    <div className="px-5 py-3 border-t border-gray-100 flex items-center justify-between">
-                                        <div className="flex items-center gap-1">
-                                            <button
-                                                onClick={() => handleView(job)}
-                                                className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
-                                                title="View Details"
-                                            >
-                                                <Eye size={16} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleEdit(job)}
-                                                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                                                title="Edit Job"
-                                            >
-                                                <Edit size={16} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(job)}
-                                                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                title="Delete Job"
-                                            >
-                                                <Trash2 size={16} />
-                                            </button>
+                                            <a href={`/jobs/${job.id}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-[9px] font-bold text-[#004fa2] hover:underline uppercase bg-blue-50 px-2 py-1 rounded">
+                                                Preview <ExternalLink size={10} />
+                                            </a>
                                         </div>
-                                        <a
-                                            href={`/jobs/${job.id}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center gap-1 text-xs text-[#004fa2] hover:underline font-medium"
-                                        >
-                                            Preview
-                                            <ExternalLink size={12} />
-                                        </a>
                                     </div>
                                 </div>
                             ))}
@@ -587,75 +458,86 @@ const JobsManagementPage = () => {
                     /* Applications Tab */
                     <div className="space-y-5">
                         {/* Applications Table */}
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                            <div className="px-6 py-4 border-b border-gray-100">
-                                <h3 className="text-lg font-semibold text-gray-900">Recent Applications</h3>
-                                <p className="text-sm text-gray-500">Review and manage job applications</p>
+                        {/* Applications Table */}
+                        <div className="bg-transparent md:bg-white md:rounded-xl md:shadow-sm md:border border-gray-100 overflow-hidden">
+                            <div className="hidden md:block px-6 py-4 border-b border-gray-100">
+                                <h3 className="text-sm font-semibold text-gray-900">Recent Applications</h3>
+                                <p className="text-[10px] text-gray-500">Review and manage job applications</p>
                             </div>
-                            <div className="overflow-x-auto">
-                                <table className="w-full min-w-[800px]">
-                                    <thead className="bg-gray-50 border-b border-gray-100">
+                            <div className="overflow-x-visible md:overflow-x-auto">
+                                <table className="w-full text-left border-collapse">
+                                    <thead className="hidden md:table-header-group bg-gray-50 border-b border-gray-100">
                                         <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Applicant</th>
-                                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Job Position</th>
-                                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Applied Date</th>
-                                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                                            <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                                            <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider w-[35%]">Applicant</th>
+                                            <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider w-[30%]">Job Position</th>
+                                            <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Applied Date</th>
+                                            <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th className="px-4 py-3 text-right text-[10px] font-bold text-gray-500 uppercase tracking-wider">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-gray-100">
-                                        {mockApplications.map((application) => {
+                                    <tbody className="flex flex-col md:table-row-group divide-y-0 md:divide-y divide-gray-100">
+                                        {paginatedApps.map((application) => {
                                             const job = jobs.find(j => j.id === application.jobId);
                                             return (
-                                                <tr key={application.id} className="hover:bg-gray-50 transition-colors">
-                                                    <td className="px-6 py-4">
-                                                        <div className="flex items-center gap-3">
-                                                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                                                <tr key={application.id} className="flex flex-wrap items-center md:table-row bg-white rounded-xl shadow-sm border border-gray-100 md:border-none md:shadow-none mb-3 md:mb-0 hover:bg-gray-50/80 transition-colors group p-3 md:p-0 gap-x-3 gap-y-1">
+                                                    
+                                                    {/* Applicant Info */}
+                                                    <td className="w-full md:w-auto md:table-cell md:px-4 md:py-3 mb-1 md:mb-0">
+                                                        <div className="flex items-center gap-2.5">
+                                                            <div className="w-8 h-8 md:w-7 md:h-7 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-full flex items-center justify-center text-white font-bold text-[10px] shrink-0">
                                                                 {application.name.split(' ').map(n => n[0]).join('')}
                                                             </div>
-                                                            <div>
-                                                                <p className="font-semibold text-gray-900">{application.name}</p>
-                                                                <p className="text-sm text-gray-500">{application.email}</p>
+                                                            <div className="min-w-0">
+                                                                <p className="font-bold text-sm md:text-sm text-gray-900 truncate leading-tight">{application.name}</p>
+                                                                <p className="text-[10px] text-gray-500 truncate">{application.email}</p>
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-4">
-                                                        <p className="font-medium text-gray-900">{job?.title || 'Unknown'}</p>
-                                                        <span className={`inline-block mt-1 px-2 py-0.5 rounded text-xs font-medium ${JOB_TYPE_CONFIG[job?.type]?.color || 'bg-gray-100'}`}>
+
+                                                    {/* Job Position */}
+                                                    <td className="w-full md:w-auto md:table-cell md:px-4 md:py-3 mt-1 md:mt-0">
+                                                        <p className="font-medium text-xs md:text-[11px] text-gray-900 line-clamp-1">{job?.title || 'Unknown'}</p>
+                                                        <span className={`inline-block mt-0.5 px-1.5 py-[1px] rounded text-[9px] font-bold uppercase ${JOB_TYPE_CONFIG[job?.type]?.color || 'bg-gray-100'}`}>
                                                             {job?.type}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-4">
-                                                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                            <Calendar size={14} className="text-gray-400" />
+
+                                                    {/* Date */}
+                                                    <td className="w-auto md:table-cell md:px-4 md:py-3">
+                                                        <div className="flex items-center gap-1.5 text-[10px] text-gray-500 whitespace-nowrap">
+                                                            <Calendar size={10} className="text-gray-400" />
                                                             {application.appliedAt}
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-4">
-                                                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border capitalize ${getApplicationStatusColor(application.status)}`}>
+
+                                                    {/* Status */}
+                                                    <td className="w-auto md:table-cell md:px-4 md:py-3 border-l border-gray-200 pl-3 md:border-l-0 md:pl-0">
+                                                        <span className={`px-2 py-[2px] rounded text-[9px] font-bold uppercase border ${getApplicationStatusColor(application.status)}`}>
                                                             {application.status}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-4">
+
+                                                    {/* Actions */}
+                                                    <td className="w-full md:w-auto md:table-cell md:px-4 md:py-3 mt-2 md:mt-0 pt-2 border-t border-gray-100 md:border-none">
                                                         <div className="flex items-center justify-end gap-1">
                                                             <button
                                                                 onClick={() => handleViewApplication(application.id)}
-                                                                className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
+                                                                className="p-1.5 flex items-center justify-center hover:bg-gray-100 rounded text-gray-500 hover:text-[#004fa2] md:shadow-sm md:border border-transparent md:hover:border-gray-200 transition-colors"
                                                                 title="View Application"
                                                             >
-                                                                <Eye size={16} />
+                                                                <Eye size={14} className="md:w-3.5 md:h-3.5" />
                                                             </button>
                                                             <button
-                                                                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                                className="p-1.5 flex items-center justify-center hover:bg-gray-100 rounded text-gray-500 hover:text-green-600 md:shadow-sm md:border border-transparent md:hover:border-gray-200 transition-colors"
                                                                 title="Send Email"
                                                             >
-                                                                <Mail size={16} />
+                                                                <Mail size={14} className="md:w-3.5 md:h-3.5" />
                                                             </button>
                                                             <button
-                                                                className="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                                                                className="p-1.5 flex items-center justify-center hover:bg-gray-100 rounded text-gray-500 hover:text-purple-600 md:shadow-sm md:border border-transparent md:hover:border-gray-200 transition-colors"
                                                                 title="Schedule Interview"
                                                             >
-                                                                <Calendar size={16} />
+                                                                <Calendar size={14} className="md:w-3.5 md:h-3.5" />
                                                             </button>
                                                         </div>
                                                     </td>
@@ -666,6 +548,47 @@ const JobsManagementPage = () => {
                                 </table>
                             </div>
                         </div>
+
+                        {/* Pagination for Applications */}
+                        {totalAppPages > 1 && (
+                            <div className="flex items-center justify-between bg-white rounded-xl p-4 shadow-sm border border-gray-100 mt-4">
+                                <p className="text-sm text-gray-500">
+                                    Showing <span className="font-semibold text-gray-900">{(appCurrentPage - 1) * appsPerPage + 1}</span> to{' '}
+                                    <span className="font-semibold text-gray-900">{Math.min(appCurrentPage * appsPerPage, mockApplications.length)}</span> of{' '}
+                                    <span className="font-semibold text-gray-900">{mockApplications.length}</span> apps
+                                </p>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => setAppCurrentPage(p => Math.max(1, p - 1))}
+                                        disabled={appCurrentPage === 1}
+                                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        <ChevronLeft size={18} />
+                                    </button>
+                                    <div className="flex items-center gap-1">
+                                        {Array.from({ length: totalAppPages }, (_, i) => i + 1).map(page => (
+                                            <button
+                                                key={page}
+                                                onClick={() => setAppCurrentPage(page)}
+                                                className={`min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-all ${appCurrentPage === page
+                                                    ? 'bg-[#004fa2] text-white shadow-md'
+                                                    : 'text-gray-600 hover:bg-gray-100'
+                                                    }`}
+                                            >
+                                                {page}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <button
+                                        onClick={() => setAppCurrentPage(p => Math.min(totalAppPages, p + 1))}
+                                        disabled={appCurrentPage === totalAppPages}
+                                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        <ChevronRight size={18} />
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

@@ -143,57 +143,58 @@ const SuperAdminDashboard = ({ user }) => {
     return (
         <div className="space-y-6 pb-8">
             {/* Premium Welcome Header */}
-            <div className="bg-[#004fa2] rounded-2xl p-5 md:p-8 text-white relative overflow-hidden shadow-xl">
+            <div className="bg-gradient-to-br from-[#004fa2] via-[#0058b5] to-[#0066cc] rounded-xl p-4 md:p-6 text-white relative overflow-hidden shadow-md">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-24 -mt-24 pointer-events-none"></div>
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -ml-16 -mb-16 pointer-events-none"></div>
                 <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
 
                 <div className="relative z-10">
-                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 md:gap-6">
                         <div>
-                            <div className="flex items-center gap-2 text-blue-200 text-sm font-medium mb-3 uppercase tracking-wider">
-                                <Star size={16} className="fill-yellow-300 text-yellow-300" />
-                                <span>Super Admin Dashboard</span>
-                                <span className="ml-2 px-2 py-0.5 bg-green-500/20 text-green-300 rounded-full text-xs">All Systems Operational</span>
+                            <div className="flex items-center gap-2 mb-2">
+                                <Star size={14} className="fill-yellow-300 text-yellow-300" />
+                                <span className="text-blue-200 text-[10px] sm:text-xs font-bold uppercase tracking-wider">Super Admin Dashboard</span>
+                                <span className="ml-2 px-1.5 py-0.5 bg-green-500/20 text-green-300 rounded-full text-[9px] sm:text-[10px] font-bold">ALL SYSTEMS OPERATIONAL</span>
                             </div>
-                            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">
+                            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-1 md:mb-2">
                                 Welcome back, {user?.name?.split(' ')[0] || 'Super'}
                             </h1>
-                            <p className="text-blue-100 max-w-xl text-lg">
-                                {formattedDate} • <span className="text-white">{formattedTime}</span>
+                            <p className="text-blue-200 text-xs md:text-sm">
+                                {formattedDate} • <span className="text-white font-semibold">{formattedTime}</span>
                             </p>
-                            <div className="mt-3 md:mt-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm">
-                                <span className="flex items-center gap-2 text-green-300">
-                                    <TrendingUp size={16} />
-                                    Revenue up <span className="font-bold">+{metrics.revenueGrowth}%</span> this month
+                            <div className="mt-3 flex items-center flex-wrap gap-x-3 gap-y-1 text-xs">
+                                <span className="flex items-center gap-1.5 text-green-300 font-medium">
+                                    <TrendingUp size={13} />
+                                    Revenue <span className="font-bold">+{metrics.revenueGrowth}%</span>
                                 </span>
-                                <span className="text-blue-300 hidden sm:inline">|</span>
-                                <span className="flex items-center gap-2 text-blue-200">
-                                    <Activity size={16} />
-                                    {metrics.activeSessions.toLocaleString()} active sessions
+                                <span className="text-blue-400/60 hidden sm:inline">•</span>
+                                <span className="flex items-center gap-1.5 text-blue-200">
+                                    <Activity size={13} />
+                                    <span className="font-bold text-white">{metrics.activeSessions.toLocaleString()}</span> active sessions
                                 </span>
                             </div>
                         </div>
 
-                        <div className="flex gap-2 md:gap-3">
+                        <div className="flex gap-2">
                             <button
                                 onClick={handleRefresh}
-                                className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-3 md:px-4 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
+                                className="bg-white/10 hover:bg-white/20 border border-white/15 text-white p-2 md:px-3 md:py-2 rounded-lg text-sm transition-all flex items-center gap-1.5"
+                                title="Refresh"
                             >
-                                <RefreshCw size={18} className={isRefreshing ? 'animate-spin' : ''} />
-                                <span className="hidden md:inline">Refresh</span>
+                                <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
+                                <span className="hidden md:inline font-bold text-xs">Refresh</span>
                             </button>
-                            <Link to="/admin/reports" className="hidden md:flex bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all items-center gap-2">
-                                <Download size={18} />
-                                Export Reports
+                            <Link to="/admin/reports" className="hidden md:flex bg-white/10 hover:bg-white/20 border border-white/15 text-white px-3 py-2 rounded-lg text-xs font-bold transition-all items-center gap-1.5">
+                                <Download size={16} />
+                                Export
                             </Link>
                             <Link
                                 to="/admin/analytics"
-                                className="bg-white hover:bg-gray-100 text-[#004fa2] px-3 md:px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg flex items-center gap-2"
+                                className="bg-white hover:bg-gray-100 text-[#004fa2] px-3 py-2 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
                             >
-                                <BarChart3 size={18} />
-                                <span className="hidden md:inline">View Analytics</span>
+                                <BarChart3 size={16} />
+                                <span className="hidden sm:inline">Analytics</span>
                             </Link>
                         </div>
                     </div>
@@ -231,21 +232,15 @@ const SuperAdminDashboard = ({ user }) => {
                     <Link
                         key={i}
                         to={stat.link}
-                        className="group bg-white rounded-xl p-2.5 md:p-4 border border-gray-200 shadow-sm hover:shadow-xl hover:scale-105 hover:border-[#004fa2] transition-all duration-300 relative overflow-hidden cursor-pointer flex flex-col justify-between"
+                        className="group bg-white rounded-xl p-2.5 sm:p-3 border border-gray-200 shadow-sm hover:shadow-md hover:border-[#004fa2] transition-all duration-300 relative overflow-hidden cursor-pointer flex flex-col justify-between"
                     >
-                        {/* Horizontal layout: Icon and Number side by side */}
-                        <div className="flex items-center gap-2 mb-2 md:mb-3">
-                            {/* Icon - No background */}
-                            <stat.icon className={`${stat.iconColor} group-hover:scale-110 transition-transform duration-300 flex-shrink-0 w-4 h-4 md:w-6 md:h-6`} />
-
-                            {/* Value */}
-                            <p className="text-lg md:text-2xl font-extrabold text-gray-900 transition-all duration-300 truncate">
+                        <div className="flex items-center gap-2 mb-1 sm:mb-2">
+                            <stat.icon className={`${stat.iconColor} group-hover:scale-110 transition-transform duration-300 flex-shrink-0 w-3.5 h-3.5 sm:w-5 sm:h-5`} />
+                            <p className="text-base sm:text-xl font-bold text-gray-900 truncate">
                                 {stat.value.toLocaleString()}
                             </p>
                         </div>
-
-                        {/* Label */}
-                        <p className="text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wide group-hover:text-[#004fa2] transition-colors duration-300 truncate">
+                        <p className="text-[9px] sm:text-[10px] font-semibold text-gray-500 uppercase tracking-wide truncate">
                             {stat.label}
                         </p>
                     </Link>
@@ -488,22 +483,24 @@ const SuperAdminDashboard = ({ user }) => {
             {/* Quick Actions & Platform Health */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Quick Actions */}
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-                    <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <Zap size={18} className="text-amber-500" />
+                <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 md:p-5">
+                    <h3 className="font-bold text-gray-900 mb-4 text-sm flex items-center gap-1.5">
+                        <Zap size={16} className="text-amber-500" />
                         Quick Actions
                     </h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                         {quickActions.map((action, i) => (
                             <Link
                                 key={i}
                                 to={action.path}
-                                className="group p-4 rounded-xl border border-gray-200 hover:border-transparent hover:shadow-lg transition-all bg-white hover:bg-gradient-to-br hover:from-gray-50 hover:to-white"
+                                className="group p-2.5 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all bg-gray-50/80 hover:bg-white flex items-center gap-2.5"
                             >
-                                <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${action.color} flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform`}>
-                                    <action.icon className="text-white" size={20} />
+                                <div className={`w-8 h-8 rounded-md bg-gradient-to-br ${action.color} flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform`}>
+                                    <action.icon className="text-white" size={14} />
                                 </div>
-                                <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">{action.label}</span>
+                                <div className="flex-1 min-w-0">
+                                    <span className="text-[11px] font-semibold text-gray-700 group-hover:text-gray-900 block truncate leading-tight">{action.label}</span>
+                                </div>
                             </Link>
                         ))}
                     </div>

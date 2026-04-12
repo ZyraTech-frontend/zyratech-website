@@ -252,7 +252,7 @@ const ServicesManagementPage = () => {
                 {/* Edit/Create Modal */}
                 {isModalOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 overflow-y-auto">
-                        <div className="bg-white rounded-2xl w-full max-w-2xl shadow-xl transform transition-all my-8 max-h-[90vh] overflow-y-auto">
+                        <div className="bg-white rounded-2xl w-full max-w-2xl shadow-xl transform transition-all max-h-[85vh] flex flex-col">
                             <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-2xl sticky top-0 z-10">
                                 <h3 className="text-xl font-bold text-gray-900">
                                     {currentService ? 'Edit Service' : 'Add New Service'}

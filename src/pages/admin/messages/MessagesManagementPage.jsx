@@ -448,158 +448,83 @@ const MessagesManagementPage = () => {
     return (
         <AdminLayout>
             <div className="space-y-6 pb-8">
-                {/* Page Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                <MessageSquare className="text-white" size={22} />
-                            </div>
-                            Messages & Inquiries
-                        </h1>
-                        <p className="text-sm text-gray-500 mt-1 ml-[52px]">
-                            Manage contact form submissions and customer inquiries
-                        </p>
+                {/* Page Header & Actions */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-blue-50 p-2 rounded-lg shrink-0">
+                            <MessageSquare size={18} className="text-blue-600" />
+                        </div>
+                        <div>
+                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Messages & Inquiries</h1>
+                            <p className="text-[10px] text-gray-500">Manage contact form submissions and customer inquiries</p>
+                        </div>
                     </div>
+                    
                     <button
                         onClick={handleExport}
-                        className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm font-medium text-sm"
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 border border-gray-200 text-gray-700 bg-white rounded-lg hover:bg-gray-50 transition-all shadow-sm text-xs font-semibold w-full md:w-auto"
                     >
-                        <Download size={16} />
-                        Export
+                        <Download size={14} /> Export
                     </button>
                 </div>
 
-                {/* Statistics Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('all'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                                <Inbox className="text-blue-600" size={18} />
-                            </div>
-                            <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">All</span>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Total Messages</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('unread'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-cyan-50 rounded-lg flex items-center justify-center group-hover:bg-cyan-100 transition-colors">
-                                <Mail className="text-cyan-600" size={18} />
-                            </div>
-                            {stats.unread > 0 && (
-                                <span className="text-xs font-bold text-white bg-red-500 px-2 py-0.5 rounded-full animate-pulse">
-                                    {stats.unread}
-                                </span>
-                            )}
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.unread}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Unread</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('read'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-gray-50 rounded-lg flex items-center justify-center group-hover:bg-gray-100 transition-colors">
-                                <MailOpen className="text-gray-600" size={18} />
-                            </div>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.read}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Read</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('replied'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center group-hover:bg-green-100 transition-colors">
-                                <Reply className="text-green-600" size={18} />
-                            </div>
-                            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Done</span>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.replied}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Replied</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('archived'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
-                                <Archive className="text-purple-600" size={18} />
-                            </div>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.archived}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Archived</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('starred'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center group-hover:bg-amber-100 transition-colors">
-                                <Star className="text-amber-500 fill-amber-500" size={18} />
-                            </div>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.starred}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Starred</p>
-                    </div>
-
-                    <div className="bg-gradient-to-br from-red-500 to-rose-500 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
-                                <AlertCircle className="text-white" size={18} />
-                            </div>
-                            <span className="text-xs font-medium text-white/90 bg-white/20 px-2 py-0.5 rounded-full">Urgent</span>
-                        </div>
-                        <p className="text-2xl font-bold text-white">{stats.highPriority}</p>
-                        <p className="text-xs text-red-100 mt-0.5">High Priority</p>
+                {/* Quick Status Bar */}
+                <div className="flex flex-wrap text-[11px] gap-2 mb-4">
+                    {[
+                        { label: 'All', id: 'all', count: stats.total, active: selectedStatus === 'all' },
+                        { label: 'Unread', id: 'unread', count: stats.unread, active: selectedStatus === 'unread' },
+                        { label: 'Read', id: 'read', count: stats.read, active: selectedStatus === 'read' },
+                        { label: 'Replied', id: 'replied', count: stats.replied, active: selectedStatus === 'replied' },
+                        { label: 'Archived', id: 'archived', count: stats.archived, active: selectedStatus === 'archived' },
+                        { label: 'Starred', id: 'starred', count: stats.starred, active: selectedStatus === 'starred', isStar: true }
+                    ].map(st => (
+                        <button
+                            key={st.id}
+                            onClick={() => { setSelectedStatus(st.id); setCurrentPage(1); }}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-semibold transition-all ${st.active ? 'bg-[#004fa2] text-white border-[#004fa2]' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'}`}
+                        >
+                            {st.isStar && <Star size={10} className={st.active ? "text-white" : "text-amber-500 fill-amber-500"} />}
+                            {st.label} <span className={`px-1.5 py-0.5 rounded-md text-[9px] ${st.active ? 'bg-white/20' : 'bg-gray-100'}`}>{st.count}</span>
+                        </button>
+                    ))}
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border bg-gradient-to-r from-red-50 to-rose-50 border-red-100 text-red-800 font-bold ml-auto cursor-default opacity-90">
+                         <AlertCircle size={12}/> Urgent: {stats.highPriority}
                     </div>
                 </div>
 
                 {/* Filters and Search */}
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                    <div className="flex flex-col lg:flex-row gap-4">
-                        {/* Search */}
-                        <div className="flex-1 relative">
-                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                            <input
-                                type="text"
-                                placeholder="Search by sender, subject, or message content..."
-                                value={searchQuery}
-                                onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm transition-all"
-                            />
-                        </div>
+                <div className="grid grid-cols-2 md:grid-cols-12 gap-2 mb-4">
+                    <div className="col-span-2 md:col-span-6 relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+                        <input
+                            type="text"
+                            placeholder="Search by sender, subject, or message content..."
+                            value={searchQuery}
+                            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                            className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all"
+                        />
+                    </div>
 
-                        {/* Status Filter */}
-                        <div className="flex items-center gap-2">
-                            <Filter className="text-gray-400" size={18} />
-                            <select
-                                value={selectedStatus}
-                                onChange={(e) => { setSelectedStatus(e.target.value); setCurrentPage(1); }}
-                                className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[130px]"
-                            >
-                                <option value="all">All Status</option>
-                                <option value="unread">Unread</option>
-                                <option value="read">Read</option>
-                                <option value="replied">Replied</option>
-                                <option value="archived">Archived</option>
-                                <option value="starred">⭐ Starred</option>
-                            </select>
-                        </div>
+                    <div className="col-span-1 md:col-span-3 relative">
+                        <select
+                            value={selectedStatus}
+                            onChange={(e) => { setSelectedStatus(e.target.value); setCurrentPage(1); }}
+                            className="w-full px-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
+                        >
+                            <option value="all">All Status</option>
+                            <option value="unread">Unread</option>
+                            <option value="read">Read</option>
+                            <option value="replied">Replied</option>
+                            <option value="archived">Archived</option>
+                            <option value="starred">⭐ Starred</option>
+                        </select>
+                    </div>
 
-                        {/* Category Filter */}
+                    <div className="col-span-1 md:col-span-3 relative flex gap-2">
                         <select
                             value={selectedCategory}
                             onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
-                            className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[160px]"
+                            className="w-full px-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
                         >
                             <option value="all">All Categories</option>
                             {Object.entries(CATEGORY_CONFIG).map(([key, val]) => (
@@ -607,162 +532,117 @@ const MessagesManagementPage = () => {
                             ))}
                         </select>
 
-                        {/* Reset Filters */}
                         {(searchQuery || selectedStatus !== 'all' || selectedCategory !== 'all') && (
-                            <button
-                                onClick={resetFilters}
-                                className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
-                            >
-                                <X size={16} />
-                                Reset
+                            <button onClick={resetFilters} className="bg-white border border-gray-100 hover:bg-gray-50 text-gray-600 h-[34px] px-3 rounded-xl transition-colors shadow-sm flex items-center justify-center shrink-0">
+                                <X size={14} />
                             </button>
                         )}
                     </div>
                 </div>
 
-                {/* Messages List */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="divide-y divide-gray-100">
-                        {paginatedMessages.map((message) => {
-                            const categoryConfig = CATEGORY_CONFIG[message.category];
-                            const CategoryIcon = categoryConfig.icon;
-                            const priorityConfig = PRIORITY_CONFIG[message.priority];
-                            const isUnread = message.status === 'unread';
+                {/* Messages List Grid */}
+                <div className="flex flex-col gap-2">
+                    {paginatedMessages.map((message) => {
+                        const categoryConfig = CATEGORY_CONFIG[message.category];
+                        const CategoryIcon = categoryConfig.icon;
+                        const priorityConfig = PRIORITY_CONFIG[message.priority];
+                        const isUnread = message.status === 'unread';
 
-                            return (
-                                <div
-                                    key={message.id}
-                                    className={`p-4 hover:bg-gray-50 transition-colors cursor-pointer ${isUnread ? 'bg-blue-50/30' : ''}`}
-                                    onClick={() => handleView(message)}
-                                >
-                                    <div className="flex items-start gap-4">
-                                        {/* Star & Avatar */}
-                                        <div className="flex items-center gap-3">
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleToggleStar(message); }}
-                                                className="p-1 hover:bg-gray-100 rounded transition-colors"
-                                            >
-                                                <Star
-                                                    size={18}
-                                                    className={message.starred ? 'text-amber-500 fill-amber-500' : 'text-gray-300 hover:text-amber-400'}
-                                                />
-                                            </button>
-                                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-sm font-bold shrink-0">
-                                                {message.sender.name.split(' ').map(n => n[0]).join('')}
-                                            </div>
+                        return (
+                            <div key={message.id} onClick={() => handleView(message)} className={`bg-white rounded-xl shadow-sm border ${isUnread ? 'border-blue-200 bg-blue-50/20' : 'border-gray-100'} flex flex-col xl:flex-row p-3 gap-3 hover:border-[#004fa2] transition-colors cursor-pointer group relative overflow-hidden`}>
+                                {/* Left Indicator */}
+                                <div className={`absolute left-0 top-0 bottom-0 w-1 ${STATUS_CONFIG[message.status]?.dotColor || 'bg-gray-300'}`}></div>
+
+                                {/* Sender & Subject Layout */}
+                                <div className="flex items-start gap-3 w-full xl:w-2/3">
+                                    <div className="flex flex-col items-center gap-1.5 shrink-0">
+                                        <button onClick={(e) => { e.stopPropagation(); handleToggleStar(message); }} className="hover:scale-110 transition-transform">
+                                            <Star size={14} className={message.starred ? 'text-amber-500 fill-amber-500' : 'text-gray-300'} />
+                                        </button>
+                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-[10px] font-bold shadow-sm">
+                                            {message.sender.name.split(' ').map(n => n[0]).join('').substring(0,2)}
                                         </div>
-
-                                        {/* Content */}
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center justify-between gap-4 mb-1">
-                                                <div className="flex items-center gap-2 min-w-0">
-                                                    <h3 className={`font-semibold text-gray-900 truncate ${isUnread ? 'font-bold' : ''}`}>
-                                                        {message.sender.name}
-                                                    </h3>
-                                                    {message.sender.company && (
-                                                        <span className="text-xs text-gray-400 hidden sm:inline">• {message.sender.company}</span>
-                                                    )}
-                                                </div>
-                                                <span className="text-xs text-gray-400 shrink-0">{formatDate(message.date)}</span>
+                                    </div>
+                                    
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-1 mb-0.5">
+                                            <div className="flex items-center gap-1.5 truncate">
+                                                <h3 className={`text-xs truncate ${isUnread ? 'font-black text-gray-900' : 'font-bold text-gray-800'}`}>
+                                                    {message.sender.name}
+                                                </h3>
+                                                {message.sender.company && <span className="text-[9px] text-gray-400 bg-gray-50 px-1.5 rounded md:inline hidden truncate max-w-[120px]">{message.sender.company}</span>}
                                             </div>
+                                            <span className="text-[9px] text-gray-400 font-mono tracking-wide shrink-0">
+                                                {formatDate(message.date)}
+                                            </span>
+                                        </div>
+                                        
+                                        <p className={`text-[11px] mb-1 truncate ${isUnread ? 'font-bold text-gray-900' : 'font-semibold text-gray-700'}`}>
+                                            {message.subject}
+                                        </p>
+                                        
+                                        <p className="text-[10px] text-gray-500 line-clamp-1 mb-1.5 pr-4">
+                                            {message.message.replace(/\n/g, ' ')}
+                                        </p>
 
-                                            <p className={`text-sm text-gray-800 truncate mb-2 ${isUnread ? 'font-medium' : ''}`}>
-                                                {message.subject}
-                                            </p>
-
-                                            <p className="text-xs text-gray-500 truncate mb-2">
-                                                {message.message.replace(/\n/g, ' ').slice(0, 100)}...
-                                            </p>
-
-                                            <div className="flex items-center flex-wrap gap-2">
-                                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium border ${categoryConfig.color}`}>
-                                                    <CategoryIcon size={10} />
-                                                    {categoryConfig.label}
+                                        <div className="flex items-center flex-wrap gap-1.5">
+                                            <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold border ${categoryConfig.color}`}>
+                                                <CategoryIcon size={8} /> {categoryConfig.label}
+                                            </span>
+                                            <StatusBadge status={message.status} />
+                                            {message.priority === 'high' && (
+                                                <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold ${priorityConfig.color} border border-red-100`}>
+                                                    🔴 Urgent
                                                 </span>
-                                                <StatusBadge status={message.status} />
-                                                {message.priority === 'high' && (
-                                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${priorityConfig.color}`}>
-                                                        🔴 {priorityConfig.label}
-                                                    </span>
-                                                )}
-                                                <span className="text-[10px] text-gray-400">via {message.source}</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Actions */}
-                                        <div className="flex items-center gap-1 shrink-0">
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleReply(message); }}
-                                                className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
-                                                title="Reply"
-                                            >
-                                                <Reply size={16} />
-                                            </button>
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleArchive(message); }}
-                                                className="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
-                                                title="Archive"
-                                            >
-                                                <Archive size={16} />
-                                            </button>
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleDelete(message); }}
-                                                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                title="Delete"
-                                            >
-                                                <Trash2 size={16} />
-                                            </button>
+                                            )}
+                                            <span className="text-[9px] text-gray-400 hidden sm:inline ml-1 font-mono">via {message.source}</span>
                                         </div>
                                     </div>
                                 </div>
-                            );
-                        })}
-                    </div>
 
-                    {/* Empty State */}
-                    {filteredMessages.length === 0 && (
-                        <div className="p-12 text-center">
-                            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <MessageSquare className="text-gray-400" size={28} />
+                                {/* Actions Container */}
+                                <div className="flex items-center justify-end gap-1 shrink-0 border-t xl:border-t-0 xl:border-l xl:pl-3 pt-2 xl:pt-0 border-gray-50 ml-auto xl:w-min">
+                                    <button onClick={(e) => { e.stopPropagation(); handleReply(message); }} className="p-1.5 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"><Reply size={14} /></button>
+                                    <button onClick={(e) => { e.stopPropagation(); handleArchive(message); }} className="p-1.5 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"><Archive size={14} /></button>
+                                    <button onClick={(e) => { e.stopPropagation(); handleDelete(message); }} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"><Trash2 size={14} /></button>
+                                </div>
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">No messages found</h3>
-                            <p className="text-sm text-gray-500 mb-4">
-                                Try adjusting your search or filter criteria
-                            </p>
-                            <button
-                                onClick={resetFilters}
-                                className="px-4 py-2 text-sm text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors font-medium"
-                            >
-                                Reset Filters
-                            </button>
+                        );
+                    })}
+
+                    {filteredMessages.length === 0 && (
+                        <div className="bg-white rounded-xl p-8 text-center border border-gray-100 shadow-sm">
+                            <MessageSquare className="mx-auto text-gray-300 mb-2" size={24} />
+                            <h3 className="text-sm font-bold text-gray-900 mb-1">No messages found</h3>
+                            <button onClick={resetFilters} className="text-[11px] text-[#004fa2] hover:underline font-semibold mt-2">Clear filters</button>
                         </div>
                     )}
                 </div>
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="flex items-center justify-between bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                        <p className="text-sm text-gray-500">
-                            Showing <span className="font-semibold text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
-                            <span className="font-semibold text-gray-900">{Math.min(currentPage * itemsPerPage, filteredMessages.length)}</span> of{' '}
-                            <span className="font-semibold text-gray-900">{filteredMessages.length}</span> messages
+                    <div className="flex flex-col sm:flex-row items-center justify-between bg-white rounded-xl p-3 shadow-sm border border-gray-100 gap-3 mt-4">
+                        <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
+                            Showing <span className="text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
+                            <span className="text-gray-900">{Math.min(currentPage * itemsPerPage, filteredMessages.length)}</span> of{' '}
+                            <span className="text-gray-900">{filteredMessages.length}</span>
                         </p>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                             <button
                                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1}
-                                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                className="p-1 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors disabled:opacity-40"
                             >
-                                <ChevronLeft size={18} />
+                                <ChevronLeft size={16} />
                             </button>
                             <div className="flex items-center gap-1">
                                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                                     <button
                                         key={page}
                                         onClick={() => setCurrentPage(page)}
-                                        className={`min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-all ${currentPage === page
-                                            ? 'bg-[#004fa2] text-white shadow-md'
-                                            : 'text-gray-600 hover:bg-gray-100'
+                                        className={`min-w-[24px] h-6 flex items-center justify-center rounded text-[10px] font-bold transition-all ${currentPage === page
+                                            ? 'bg-[#004fa2] text-white shadow-sm'
+                                            : 'text-gray-500 hover:bg-gray-100'
                                             }`}
                                     >
                                         {page}
@@ -772,9 +652,9 @@ const MessagesManagementPage = () => {
                             <button
                                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages}
-                                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                className="p-1 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors disabled:opacity-40"
                             >
-                                <ChevronRight size={18} />
+                                <ChevronRight size={16} />
                             </button>
                         </div>
                     </div>
@@ -783,49 +663,49 @@ const MessagesManagementPage = () => {
 
             {/* View Message Modal */}
             {viewingMessage && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] md:max-h-[85vh] flex flex-col overflow-hidden">
                         {/* Modal Header */}
-                        <div className="px-6 py-4 bg-gradient-to-r from-[#004fa2] to-[#0066cc] flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                                    <MessageSquare className="text-white" size={22} />
+                        <div className="px-4 py-3 bg-gradient-to-r from-[#004fa2] to-[#0066cc] flex items-center justify-between">
+                            <div className="flex items-center gap-2 md:gap-3 min-w-0">
+                                <div className="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
+                                    <MessageSquare className="text-white" size={18} />
                                 </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-white">Message Details</h2>
-                                    <p className="text-blue-100 text-xs">{viewingMessage.id}</p>
+                                <div className="min-w-0">
+                                    <h2 className="text-sm md:text-base font-bold text-white truncate">Message Details</h2>
+                                    <p className="text-blue-100 text-[10px] font-mono truncate">{viewingMessage.id}</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 md:gap-2 shrink-0">
                                 <button
                                     onClick={() => handleToggleStar(viewingMessage)}
-                                    className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                                    className="p-1.5 md:p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                                 >
-                                    <Star size={18} className={viewingMessage.starred ? 'fill-amber-400 text-amber-400' : ''} />
+                                    <Star size={16} className={viewingMessage.starred ? 'fill-amber-400 text-amber-400' : ''} />
                                 </button>
                                 <button
                                     onClick={() => setViewingMessage(null)}
-                                    className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                                    className="p-1.5 md:p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                                 >
-                                    <X size={20} />
+                                    <X size={18} />
                                 </button>
                             </div>
                         </div>
 
                         {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
-                            <div className="space-y-5">
+                        <div className="p-4 md:p-6 overflow-y-auto max-h-[calc(90vh-140px)] md:max-h-[calc(85vh-140px)] custom-scrollbar">
+                            <div className="space-y-4">
                                 {/* Subject */}
                                 <div>
-                                    <h3 className="text-xl font-bold text-gray-900">{viewingMessage.subject}</h3>
+                                    <h3 className="text-base md:text-lg font-bold text-gray-900 leading-snug">{viewingMessage.subject}</h3>
                                     <div className="flex items-center flex-wrap gap-2 mt-2">
-                                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium border ${CATEGORY_CONFIG[viewingMessage.category].color}`}>
-                                            {React.createElement(CATEGORY_CONFIG[viewingMessage.category].icon, { size: 12 })}
+                                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold border ${CATEGORY_CONFIG[viewingMessage.category].color}`}>
+                                            {React.createElement(CATEGORY_CONFIG[viewingMessage.category].icon, { size: 10 })}
                                             {CATEGORY_CONFIG[viewingMessage.category].label}
                                         </span>
                                         <StatusBadge status={viewingMessage.status} />
                                         {viewingMessage.priority === 'high' && (
-                                            <span className={`px-2 py-0.5 rounded text-xs font-bold ${PRIORITY_CONFIG[viewingMessage.priority].color}`}>
+                                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${PRIORITY_CONFIG[viewingMessage.priority].color} border border-red-100`}>
                                                 🔴 High Priority
                                             </span>
                                         )}
@@ -833,86 +713,83 @@ const MessagesManagementPage = () => {
                                 </div>
 
                                 {/* Sender Info */}
-                                <div className="bg-gray-50 rounded-xl p-4">
-                                    <div className="flex items-center gap-4 mb-3">
-                                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-lg font-bold">
-                                            {viewingMessage.sender.name.split(' ').map(n => n[0]).join('')}
+                                <div className="bg-gray-50 rounded-xl p-3 md:p-4 flex flex-col gap-3">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-sm md:text-base font-bold shrink-0">
+                                            {viewingMessage.sender.name.split(' ').map(n => n[0]).join('').substring(0,2)}
                                         </div>
-                                        <div>
-                                            <p className="font-bold text-gray-900">{viewingMessage.sender.name}</p>
+                                        <div className="min-w-0">
+                                            <p className="font-bold text-gray-900 text-sm md:text-base truncate">{viewingMessage.sender.name}</p>
                                             {viewingMessage.sender.company && (
-                                                <p className="text-sm text-gray-500 flex items-center gap-1">
-                                                    <Building size={12} />
+                                                <p className="text-[11px] text-gray-500 flex items-center gap-1 truncate">
+                                                    <Building size={10} className="shrink-0" />
                                                     {viewingMessage.sender.company}
                                                 </p>
                                             )}
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                        <div className="flex items-center gap-2">
-                                            <Mail className="text-gray-400" size={14} />
-                                            <a href={`mailto:${viewingMessage.sender.email}`} className="text-[#004fa2] hover:underline">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+                                        <div className="flex items-center gap-1.5 truncate">
+                                            <Mail className="text-gray-400 shrink-0" size={12} />
+                                            <a href={`mailto:${viewingMessage.sender.email}`} className="text-[#004fa2] hover:underline truncate">
                                                 {viewingMessage.sender.email}
                                             </a>
                                         </div>
                                         {viewingMessage.sender.phone && (
-                                            <div className="flex items-center gap-2">
-                                                <Phone className="text-gray-400" size={14} />
-                                                <span className="text-gray-600">{viewingMessage.sender.phone}</span>
+                                            <div className="flex items-center gap-1.5 truncate">
+                                                <Phone className="text-gray-400 shrink-0" size={12} />
+                                                <a href={`tel:${viewingMessage.sender.phone}`} className="text-gray-600 hover:text-gray-900 truncate">
+                                                    {viewingMessage.sender.phone}
+                                                </a>
                                             </div>
                                         )}
                                     </div>
                                 </div>
 
                                 {/* Message Content */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-5">
-                                    <div className="flex items-center justify-between mb-3 text-xs text-gray-400">
+                                <div className="bg-white border border-gray-200 rounded-xl p-3 md:p-5 flex flex-col">
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3 pb-2 border-b border-gray-50 text-[10px] text-gray-400 shrink-0">
                                         <span className="flex items-center gap-1">
-                                            <Calendar size={12} />
+                                            <Calendar size={10} />
                                             {formatFullDate(viewingMessage.date)}
                                         </span>
-                                        <span>via {viewingMessage.source}</span>
+                                        <span className="font-mono">via {viewingMessage.source}</span>
                                     </div>
-                                    <div className="prose prose-sm max-w-none">
-                                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-                                            {viewingMessage.message}
-                                        </p>
+                                    <div className="prose prose-sm max-w-none text-[11px] md:text-xs text-gray-700 whitespace-pre-wrap leading-relaxed">
+                                        {viewingMessage.message}
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50">
-                            <div className="flex items-center gap-2">
+                        <div className="px-4 py-3 border-t border-gray-100 flex flex-wrap-reverse sm:flex-nowrap items-center justify-between bg-gray-50 gap-2 shrink-0">
+                            <div className="flex items-center gap-2 w-full sm:w-auto">
                                 <button
                                     onClick={() => handleArchive(viewingMessage)}
-                                    className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm flex items-center gap-1.5"
+                                    className="flex-1 sm:flex-none px-3 py-2 text-gray-600 bg-white border border-gray-200 hover:bg-gray-100 rounded-lg transition-colors font-medium text-[11px] flex items-center justify-center gap-1.5 shadow-sm"
                                 >
-                                    <Archive size={14} />
-                                    Archive
+                                    <Archive size={12} /> Archive
                                 </button>
                                 <button
                                     onClick={() => handleDelete(viewingMessage)}
-                                    className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium text-sm flex items-center gap-1.5"
+                                    className="flex-1 sm:flex-none px-3 py-2 text-red-600 bg-white border border-red-100 hover:bg-red-50 rounded-lg transition-colors font-medium text-[11px] flex items-center justify-center gap-1.5 shadow-sm"
                                 >
-                                    <Trash2 size={14} />
-                                    Delete
+                                    <Trash2 size={12} /> Delete
                                 </button>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                                 <button
                                     onClick={() => setViewingMessage(null)}
-                                    className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
+                                    className="flex-1 sm:flex-none px-3 py-2 text-gray-600 bg-white border border-gray-200 hover:bg-gray-100 rounded-lg transition-colors font-medium text-[11px] shadow-sm justify-center flex"
                                 >
                                     Close
                                 </button>
                                 <button
                                     onClick={() => handleReply(viewingMessage)}
-                                    className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-medium text-sm flex items-center gap-1.5"
+                                    className="flex-1 sm:flex-none px-3 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-bold text-[11px] flex items-center justify-center gap-1.5 shadow-sm"
                                 >
-                                    <Reply size={14} />
-                                    Reply via Email
+                                    <Reply size={12} /> Reply
                                 </button>
                             </div>
                         </div>

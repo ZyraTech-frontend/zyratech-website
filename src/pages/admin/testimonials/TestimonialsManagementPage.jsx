@@ -284,188 +284,101 @@ const TestimonialsManagementPage = () => {
     return (
         <AdminLayout>
             <div className="space-y-6 pb-8">
-                {/* Page Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                <MessageCircle className="text-white" size={22} />
-                            </div>
-                            Testimonials Management
-                        </h1>
-                        <p className="text-sm text-gray-500 mt-1 ml-[52px]">
-                            Manage customer reviews and success stories
-                        </p>
+                {/* Page Header & Actions */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-blue-50 p-2 rounded-lg shrink-0">
+                            <MessageCircle size={18} className="text-blue-600" />
+                        </div>
+                        <div>
+                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Testimonials Management</h1>
+                            <p className="text-[10px] text-gray-500">Manage customer reviews and success stories</p>
+                        </div>
                     </div>
+                    
                     <button
                         onClick={handleAddNew}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                        className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-all shadow-sm text-xs font-semibold"
                     >
-                        <Plus size={20} strokeWidth={2.5} />
-                        Add Testimonial
+                        <Plus size={14} /> Add Testimonial
                     </button>
                 </div>
 
                 {/* Statistics Cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4">
-                    {/* Total */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-blue-500 hover:shadow-md transition-all duration-200 cursor-pointer"
-                        onClick={() => { setSelectedStatus('all'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
-                                <MessageCircle className="text-blue-600" size={16} />
+                <div className="grid grid-cols-3 md:grid-cols-7 gap-2 md:gap-3 mb-4">
+                    {[
+                        { title: 'Total', count: stats.total, icon: MessageCircle, color: 'text-blue-600', bg: 'bg-blue-50', onClick: () => { setSelectedStatus('all'); setCurrentPage(1); } },
+                        { title: 'Published', count: stats.published, icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-50', onClick: () => { setSelectedStatus('published'); setCurrentPage(1); } },
+                        { title: 'Pending', count: stats.pending, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50', onClick: () => { setSelectedStatus('pending'); setCurrentPage(1); } },
+                        { title: 'Drafts', count: stats.drafts, icon: AlertCircle, color: 'text-gray-600', bg: 'bg-gray-100', onClick: () => { setSelectedStatus('draft'); setCurrentPage(1); } },
+                        { title: 'Featured', count: stats.featured, icon: Sparkles, color: 'text-purple-600', bg: 'bg-purple-50', onClick: () => {} },
+                        { title: 'Avg Rating', count: stats.avgRating, icon: Star, color: 'text-amber-600', bg: 'bg-amber-50', onClick: () => {} },
+                        { title: 'Likes', count: stats.totalLikes, icon: ThumbsUp, color: 'text-pink-600', bg: 'bg-pink-50', onClick: () => {} }
+                    ].map((stat, i) => (
+                        <div key={i} onClick={stat.onClick} className={`bg-white border border-gray-100 rounded-xl p-2 md:p-2.5 flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-1 md:gap-2 shadow-sm hover:border-[#004fa2] transition-colors text-center md:text-left ${stat.onClick ? 'cursor-pointer' : ''} group`}>
+                            <div className={`w-6 h-6 md:w-7 md:h-7 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
+                                <stat.icon className={stat.color} size={14} />
+                            </div>
+                            <div className="min-w-0">
+                                <p className="text-[9px] md:text-[10px] text-gray-500 font-medium uppercase tracking-wide truncate group-hover:text-[#004fa2] transition-colors">{stat.title}</p>
+                                <p className="text-xs md:text-sm font-bold text-gray-900 leading-none mt-0.5 md:mt-0">{stat.count}</p>
                             </div>
                         </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
-                        <p className="text-xs text-gray-600 mt-1">Total Reviews</p>
-                    </div>
-
-                    {/* Published */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-green-500 hover:shadow-md transition-all duration-200 cursor-pointer"
-                        onClick={() => { setSelectedStatus('published'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-green-100 rounded flex items-center justify-center">
-                                <CheckCircle className="text-green-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.published}</p>
-                        <p className="text-xs text-gray-600 mt-1">Published</p>
-                    </div>
-
-                    {/* Pending */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-amber-500 hover:shadow-md transition-all duration-200 cursor-pointer"
-                        onClick={() => { setSelectedStatus('pending'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">
-                                <Clock className="text-amber-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.pending}</p>
-                        <p className="text-xs text-gray-600 mt-1">Pending Review</p>
-                    </div>
-
-                    {/* Drafts */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-gray-400 hover:shadow-md transition-all duration-200 cursor-pointer"
-                        onClick={() => { setSelectedStatus('draft'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center">
-                                <AlertCircle className="text-gray-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.drafts}</p>
-                        <p className="text-xs text-gray-600 mt-1">Drafts</p>
-                    </div>
-
-                    {/* Featured */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-purple-500 hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-purple-100 rounded flex items-center justify-center">
-                                <Sparkles className="text-purple-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.featured}</p>
-                        <p className="text-xs text-gray-600 mt-1">Featured</p>
-                    </div>
-
-                    {/* Avg Rating */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-amber-500 hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">
-                                <Star className="text-amber-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.avgRating}</p>
-                        <p className="text-xs text-gray-600 mt-1">Avg Rating</p>
-                    </div>
-
-                    {/* Total Likes */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-pink-500 hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-pink-100 rounded flex items-center justify-center">
-                                <ThumbsUp className="text-pink-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.totalLikes}</p>
-                        <p className="text-xs text-gray-600 mt-1">Total Likes</p>
-                    </div>
+                    ))}
                 </div>
 
                 {/* Filters and Search */}
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                    <div className="flex flex-col lg:flex-row gap-4">
-                        {/* Search */}
-                        <div className="flex-1 relative">
-                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                            <input
-                                type="text"
-                                placeholder="Search by name, quote, role, or program..."
-                                value={searchQuery}
-                                onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm transition-all"
-                            />
-                        </div>
+                <div className="grid grid-cols-2 md:grid-cols-12 gap-2 mb-4">
+                    <div className="col-span-2 md:col-span-4 relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+                        <input
+                            type="text"
+                            placeholder="Search by name, quote, role..."
+                            value={searchQuery}
+                            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                            className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all"
+                        />
+                    </div>
 
-                        {/* Type Filter */}
-                        <div className="flex items-center gap-2">
-                            <Filter className="text-gray-400" size={18} />
-                            <select
-                                value={selectedType}
-                                onChange={(e) => { setSelectedType(e.target.value); setCurrentPage(1); }}
-                                className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[140px]"
-                            >
-                                <option value="all">All Types</option>
-                                {uniqueTypes.map(type => (
-                                    <option key={type} value={type}>{TYPE_CONFIG[type]?.label || type}</option>
-                                ))}
-                            </select>
-                        </div>
+                    <div className="col-span-1 md:col-span-3 relative">
+                        <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <select
+                            value={selectedType}
+                            onChange={(e) => { setSelectedType(e.target.value); setCurrentPage(1); }}
+                            className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
+                        >
+                            <option value="all">All Types</option>
+                            {uniqueTypes.map((type, idx) => (
+                                <option key={`type-${type}-${idx}`} value={type}>{TYPE_CONFIG[type]?.label || type}</option>
+                            ))}
+                        </select>
+                    </div>
 
-                        {/* Status Filter */}
+                    <div className="col-span-1 md:col-span-3 relative">
                         <select
                             value={selectedStatus}
                             onChange={(e) => { setSelectedStatus(e.target.value); setCurrentPage(1); }}
-                            className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[130px]"
+                            className="w-full px-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
                         >
                             <option value="all">All Status</option>
                             <option value="published">Published</option>
                             <option value="pending">Pending</option>
                             <option value="draft">Draft</option>
                         </select>
+                    </div>
 
-                        {/* View Mode Toggle */}
-                        <div className="flex bg-gray-100 rounded-lg p-1">
-                            <button
-                                onClick={() => setViewMode('grid')}
-                                className={`p-2 rounded-md transition-all ${viewMode === 'grid'
-                                    ? 'bg-white text-[#004fa2] shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
-                                    }`}
-                            >
-                                <Grid size={18} />
+                    <div className="col-span-2 md:col-span-2 flex items-center justify-end gap-1">
+                        <div className="flex bg-white border border-gray-100 rounded-xl p-0.5 shadow-sm h-[34px]">
+                            <button onClick={() => setViewMode('grid')} className={`p-1.5 rounded-lg transition-all flex items-center justify-center ${viewMode === 'grid' ? 'bg-[#004fa2] text-white' : 'text-gray-400 hover:text-gray-600'}`}>
+                                <Grid size={14} />
                             </button>
-                            <button
-                                onClick={() => setViewMode('list')}
-                                className={`p-2 rounded-md transition-all ${viewMode === 'list'
-                                    ? 'bg-white text-[#004fa2] shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
-                                    }`}
-                            >
-                                <List size={18} />
+                            <button onClick={() => setViewMode('list')} className={`p-1.5 rounded-lg transition-all flex items-center justify-center ${viewMode === 'list' ? 'bg-[#004fa2] text-white' : 'text-gray-400 hover:text-gray-600'}`}>
+                                <List size={14} />
                             </button>
                         </div>
-
-                        {/* Reset Filters */}
                         {(searchQuery || selectedType !== 'all' || selectedStatus !== 'all') && (
-                            <button
-                                onClick={resetFilters}
-                                className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
-                            >
-                                <X size={16} />
-                                Reset
+                            <button onClick={resetFilters} className="bg-white border border-gray-100 hover:bg-gray-50 text-gray-600 h-[34px] w-[34px] rounded-xl transition-colors shadow-sm flex items-center justify-center shrink-0">
+                                <X size={14} />
                             </button>
                         )}
                     </div>
@@ -473,109 +386,46 @@ const TestimonialsManagementPage = () => {
 
                 {/* Testimonials Grid/List */}
                 {viewMode === 'grid' ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {paginatedTestimonials.map((testimonial) => {
                             const typeConfig = TYPE_CONFIG[testimonial.type] || TYPE_CONFIG['student'];
                             const TypeIcon = typeConfig.icon;
 
                             return (
-                                <div
-                                    key={testimonial.id}
-                                    className={`bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-lg transition-all duration-300 group ${testimonial.featured ? 'border-amber-200 ring-1 ring-amber-100' : 'border-gray-100'
-                                        }`}
-                                >
-                                    {/* Featured Badge */}
-                                    {testimonial.featured && (
-                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold uppercase tracking-wide px-3 py-1 text-center">
-                                            ⭐ Featured Testimonial
-                                        </div>
-                                    )}
-
-                                    {/* Card Content */}
-                                    <div className="p-5">
-                                        {/* Header: Avatar, Name, Type */}
-                                        <div className="flex items-start gap-3 mb-4">
-                                            <AvatarDisplay name={testimonial.name} avatar={testimonial.avatar} size="md" />
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex items-center gap-2">
-                                                    <h3 className="font-bold text-gray-900 truncate">{testimonial.name}</h3>
-                                                    {testimonial.verified && (
-                                                        <CheckCircle className="text-blue-500 shrink-0" size={14} />
-                                                    )}
+                                <div key={testimonial.id} className={`bg-white rounded-xl shadow-sm border flex flex-col overflow-hidden hover:border-[#004fa2] transition-colors group p-3 ${testimonial.featured ? 'border-amber-200 ring-1 ring-amber-100' : 'border-gray-100'}`}>
+                                    <div className="flex items-start justify-between gap-2 mb-3">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <AvatarDisplay name={testimonial.name} avatar={testimonial.avatar} size="sm" />
+                                            <div className="min-w-0">
+                                                <div className="flex items-center gap-1">
+                                                    <h3 className="text-[11px] font-bold text-gray-900 truncate">{testimonial.name}</h3>
+                                                    {testimonial.verified && <CheckCircle className="text-blue-500" size={10} />}
+                                                    {testimonial.featured && <Star className="text-amber-500 fill-amber-500" size={10} />}
                                                 </div>
-                                                <p className="text-xs text-gray-500 truncate">{testimonial.role}</p>
-                                                <div className="flex items-center gap-2 mt-1">
-                                                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium border ${typeConfig.color}`}>
-                                                        <TypeIcon size={10} />
-                                                        {typeConfig.label}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <StatusBadge status={testimonial.status} />
-                                        </div>
-
-                                        {/* Quote */}
-                                        <div className="relative mb-4">
-                                            <Quote className="absolute -top-1 -left-1 text-gray-200" size={24} />
-                                            <p className="text-sm text-gray-600 leading-relaxed pl-5 line-clamp-3">
-                                                {testimonial.quote}
-                                            </p>
-                                        </div>
-
-                                        {/* Rating & Stats */}
-                                        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                                            <StarRating rating={testimonial.rating} />
-                                            <div className="flex items-center gap-3 text-xs text-gray-400">
-                                                <span className="flex items-center gap-1">
-                                                    <ThumbsUp size={12} />
-                                                    {testimonial.likes}
-                                                </span>
-                                                <span className="flex items-center gap-1">
-                                                    <Calendar size={12} />
-                                                    {testimonial.date}
-                                                </span>
+                                                <p className="text-[9px] text-gray-500 truncate">{testimonial.role}</p>
                                             </div>
                                         </div>
+                                        <StatusBadge status={testimonial.status} />
                                     </div>
-
-                                    {/* Actions Footer */}
-                                    <div className="px-5 py-3 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
-                                        <div className="flex items-center gap-1">
-                                            <button
-                                                onClick={() => handleView(testimonial)}
-                                                className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
-                                                title="View"
-                                            >
-                                                <Eye size={16} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleEdit(testimonial)}
-                                                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                                                title="Edit"
-                                            >
-                                                <Edit size={16} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleToggleFeatured(testimonial)}
-                                                className={`p-2 rounded-lg transition-colors ${testimonial.featured
-                                                    ? 'text-amber-500 bg-amber-50 hover:bg-amber-100'
-                                                    : 'text-gray-400 hover:text-amber-500 hover:bg-amber-50'
-                                                    }`}
-                                                title={testimonial.featured ? 'Remove from Featured' : 'Add to Featured'}
-                                            >
-                                                <Star size={16} className={testimonial.featured ? 'fill-amber-500' : ''} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(testimonial)}
-                                                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                title="Delete"
-                                            >
-                                                <Trash2 size={16} />
-                                            </button>
+                                    
+                                    <div className="relative mb-3 flex-1">
+                                        <Quote className="absolute -top-1 -left-1 text-gray-100" size={20} />
+                                        <p className="text-[10px] text-gray-600 leading-relaxed pl-4 line-clamp-3 relative z-10">{testimonial.quote}</p>
+                                    </div>
+                                    
+                                    <div className="flex items-center justify-between pt-2 border-t border-gray-50">
+                                        <div className="flex items-center gap-2">
+                                            <StarRating rating={testimonial.rating} size={10} />
+                                            <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider border ${typeConfig.color}`}>
+                                                <TypeIcon size={8} /> {typeConfig.label}
+                                            </span>
                                         </div>
-                                        <span className="text-xs text-gray-400">
-                                            {testimonial.program}
-                                        </span>
+                                        <div className="flex items-center gap-0.5">
+                                            <button onClick={() => handleView(testimonial)} className="p-1 hover:bg-blue-50 rounded text-gray-400 hover:text-[#004fa2] transition-colors"><Eye size={12} /></button>
+                                            <button onClick={() => handleEdit(testimonial)} className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors"><Edit size={12} /></button>
+                                            <button onClick={() => handleToggleFeatured(testimonial)} className="p-1 rounded text-gray-400 hover:bg-amber-50 hover:text-amber-500 transition-colors"><Star size={12} className={testimonial.featured ? "fill-amber-500 text-amber-500" : ""} /></button>
+                                            <button onClick={() => handleDelete(testimonial)} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"><Trash2 size={12} /></button>
+                                        </div>
                                     </div>
                                 </div>
                             );
@@ -583,84 +433,36 @@ const TestimonialsManagementPage = () => {
                     </div>
                 ) : (
                     /* List View */
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                        <table className="w-full">
-                            <thead className="bg-gray-50 border-b border-gray-100">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Person</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Quote</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Rating</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                                {paginatedTestimonials.map((testimonial) => {
-                                    const typeConfig = TYPE_CONFIG[testimonial.type] || TYPE_CONFIG['student'];
-
-                                    return (
-                                        <tr key={testimonial.id} className="hover:bg-gray-50 transition-colors">
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-3">
-                                                    <AvatarDisplay name={testimonial.name} avatar={testimonial.avatar} size="sm" />
-                                                    <div>
-                                                        <div className="flex items-center gap-1.5">
-                                                            <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                                                            {testimonial.featured && (
-                                                                <Star className="text-amber-500 fill-amber-500" size={12} />
-                                                            )}
-                                                        </div>
-                                                        <p className="text-xs text-gray-500">{testimonial.role}</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <p className="text-sm text-gray-600 line-clamp-2 max-w-[250px]">
-                                                    "{testimonial.quote}"
-                                                </p>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span className={`px-2.5 py-1 rounded-lg text-xs font-medium border ${typeConfig.color}`}>
-                                                    {typeConfig.label}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <StarRating rating={testimonial.rating} size={12} />
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <StatusBadge status={testimonial.status} />
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center justify-end gap-1">
-                                                    <button
-                                                        onClick={() => handleView(testimonial)}
-                                                        className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
-                                                        title="View"
-                                                    >
-                                                        <Eye size={16} />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleEdit(testimonial)}
-                                                        className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                                                        title="Edit"
-                                                    >
-                                                        <Edit size={16} />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(testimonial)}
-                                                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                        title="Delete"
-                                                    >
-                                                        <Trash2 size={16} />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                    <div className="flex flex-col gap-2">
+                        {paginatedTestimonials.map((testimonial) => {
+                            const typeConfig = TYPE_CONFIG[testimonial.type] || TYPE_CONFIG['student'];
+                            return (
+                                <div key={testimonial.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center p-3 gap-3 hover:border-[#004fa2] transition-colors group">
+                                    <div className="flex items-center gap-3 md:w-1/4 shrink-0">
+                                        <AvatarDisplay name={testimonial.name} avatar={testimonial.avatar} size="sm" />
+                                        <div className="min-w-0">
+                                            <div className="flex items-center gap-1">
+                                                <h3 className="text-xs font-bold text-gray-900 truncate">{testimonial.name}</h3>
+                                                {testimonial.featured && <Star className="text-amber-500 fill-amber-500" size={10} />}
+                                            </div>
+                                            <p className="text-[10px] text-gray-500 truncate">{testimonial.role}</p>
+                                        </div>
+                                    </div>
+                                    <p className="text-[11px] text-gray-600 line-clamp-2 md:w-2/5 flex-1 italic relative">
+                                        "{testimonial.quote}"
+                                    </p>
+                                    <div className="flex items-center justify-between md:justify-end gap-3 md:w-1/3 shrink-0">
+                                        <StarRating rating={testimonial.rating} size={10} />
+                                        <StatusBadge status={testimonial.status} />
+                                        <div className="flex items-center gap-0.5 border-l border-gray-100 pl-2">
+                                            <button onClick={() => handleView(testimonial)} className="p-1.5 hover:bg-blue-50 rounded text-gray-400 hover:text-[#004fa2] transition-colors"><Eye size={14} /></button>
+                                            <button onClick={() => handleEdit(testimonial)} className="p-1.5 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors"><Edit size={14} /></button>
+                                            <button onClick={() => handleDelete(testimonial)} className="p-1.5 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"><Trash2 size={14} /></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 )}
 
@@ -685,28 +487,28 @@ const TestimonialsManagementPage = () => {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="flex items-center justify-between bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                        <p className="text-sm text-gray-500">
-                            Showing <span className="font-semibold text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
-                            <span className="font-semibold text-gray-900">{Math.min(currentPage * itemsPerPage, filteredTestimonials.length)}</span> of{' '}
-                            <span className="font-semibold text-gray-900">{filteredTestimonials.length}</span> testimonials
+                    <div className="flex flex-col sm:flex-row items-center justify-between bg-white rounded-xl p-3 shadow-sm border border-gray-100 gap-3">
+                        <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
+                            Showing <span className="text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
+                            <span className="text-gray-900">{Math.min(currentPage * itemsPerPage, filteredTestimonials.length)}</span> of{' '}
+                            <span className="text-gray-900">{filteredTestimonials.length}</span>
                         </p>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                             <button
                                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1}
-                                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                className="p-1 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors disabled:opacity-40"
                             >
-                                <ChevronLeft size={18} />
+                                <ChevronLeft size={16} />
                             </button>
                             <div className="flex items-center gap-1">
                                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                                     <button
                                         key={page}
                                         onClick={() => setCurrentPage(page)}
-                                        className={`min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-all ${currentPage === page
-                                            ? 'bg-[#004fa2] text-white shadow-md'
-                                            : 'text-gray-600 hover:bg-gray-100'
+                                        className={`min-w-[24px] h-6 flex items-center justify-center rounded text-[10px] font-bold transition-all ${currentPage === page
+                                            ? 'bg-[#004fa2] text-white shadow-sm'
+                                            : 'text-gray-500 hover:bg-gray-100'
                                             }`}
                                     >
                                         {page}
@@ -716,9 +518,9 @@ const TestimonialsManagementPage = () => {
                             <button
                                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages}
-                                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                className="p-1 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors disabled:opacity-40"
                             >
-                                <ChevronRight size={18} />
+                                <ChevronRight size={16} />
                             </button>
                         </div>
                     </div>
@@ -728,7 +530,7 @@ const TestimonialsManagementPage = () => {
             {/* View Testimonial Modal */}
             {viewingTestimonial && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
                         {/* Modal Header */}
                         <div className="px-6 py-4 bg-gradient-to-r from-[#004fa2] to-[#0066cc] flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -749,7 +551,7 @@ const TestimonialsManagementPage = () => {
                         </div>
 
                         {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+                        <div className="p-6 overflow-y-auto flex-1">
                             <div className="space-y-5">
                                 {/* Author Info */}
                                 <div className="flex items-center gap-4 pb-4 border-b border-gray-100">
@@ -844,7 +646,7 @@ const TestimonialsManagementPage = () => {
             {/* Add/Edit Testimonial Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
                         {/* Modal Header */}
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -869,7 +671,7 @@ const TestimonialsManagementPage = () => {
                         </div>
 
                         {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+                        <div className="p-6 overflow-y-auto flex-1">
                             <div className="text-center py-12">
                                 <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                     <AlertCircle className="text-amber-500" size={32} />
