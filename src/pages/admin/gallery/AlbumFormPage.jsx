@@ -135,10 +135,10 @@ const AlbumFormPage = () => {
 
     return (
         <AdminLayout>
-            <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+            <div className="min-h-screen bg-gray-50 py-4 md:py-8 px-3 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto">
                     {/* Header */}
-                    <div className="flex items-center gap-3 mb-8">
+                    <div className="flex items-center gap-3 mb-6 md:mb-8">
                         <button
                             onClick={() => navigate('/admin/gallery')}
                             className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
@@ -147,7 +147,7 @@ const AlbumFormPage = () => {
                             <ArrowLeft size={24} className="text-gray-700" />
                         </button>
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">
+                            <h1 className="text-xl md:text-3xl font-bold text-gray-900">
                                 {isEditing ? 'Edit Album' : 'Create New Album'}
                             </h1>
                             <p className="text-gray-600 text-sm mt-1">
@@ -158,11 +158,11 @@ const AlbumFormPage = () => {
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow">
-                        <div className="p-8 space-y-8">
+                        <div className="p-4 md:p-8 space-y-6 md:space-y-8">
                             {/* Basic Information Section */}
                             <div>
-                                <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                    <FileText size={24} className="text-blue-600" />
+                                <h2 className="text-base md:text-lg font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
+                                    <FileText size={20} className="text-blue-600" />
                                     Album Information
                                 </h2>
 
@@ -262,8 +262,8 @@ const AlbumFormPage = () => {
 
                             {/* Images Section */}
                             <div className="border-t border-gray-200 pt-8">
-                                <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                    <Images size={24} className="text-blue-600" />
+                                <h2 className="text-base md:text-lg font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
+                                    <Images size={20} className="text-blue-600" />
                                     Album Images
                                 </h2>
 
@@ -273,7 +273,7 @@ const AlbumFormPage = () => {
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">
                                             Add Image URL
                                         </label>
-                                        <div className="flex gap-3">
+                                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                                             <input
                                                 type="text"
                                                 value={newImageUrl}
@@ -304,7 +304,7 @@ const AlbumFormPage = () => {
                                                 {formData.images.map((image, index) => (
                                                     <div
                                                         key={index}
-                                                        className={`flex items-center gap-4 p-4 border rounded-lg transition-all ${
+                                                        className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 md:p-4 border rounded-lg transition-all ${
                                                             formData.thumbnail === image
                                                                 ? 'bg-blue-50 border-blue-300'
                                                                 : 'bg-gray-50 border-gray-200 hover:border-gray-300'
@@ -314,7 +314,7 @@ const AlbumFormPage = () => {
                                                         <img decoding="async"
                                                             src={image}
                                                             alt={`Album image ${index + 1}`}
-                                                            className="w-16 h-16 rounded object-cover"
+                                                            className="w-full sm:w-16 h-32 sm:h-16 rounded object-cover"
                                                         />
 
                                                         {/* Image Info */}
@@ -369,8 +369,8 @@ const AlbumFormPage = () => {
 
                             {/* Publication Details Section */}
                             <div className="border-t border-gray-200 pt-8">
-                                <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                    <Tag size={24} className="text-blue-600" />
+                                <h2 className="text-base md:text-lg font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
+                                    <Tag size={20} className="text-blue-600" />
                                     Publication Settings
                                 </h2>
 
@@ -413,7 +413,7 @@ const AlbumFormPage = () => {
                         </div>
 
                         {/* Form Actions */}
-                        <div className="bg-gray-50 px-8 py-6 flex gap-4 justify-end border-t border-gray-200 rounded-b-lg">
+                        <div className="bg-gray-50 px-4 md:px-8 py-4 md:py-6 flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 sm:justify-end border-t border-gray-200 rounded-b-lg">
                             <button
                                 type="button"
                                 onClick={() => navigate('/admin/gallery')}

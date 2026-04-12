@@ -270,176 +270,99 @@ const FaqManagementPage = () => {
     return (
         <AdminLayout>
             <div className="space-y-6 pb-8">
-                {/* Page Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                <HelpCircle className="text-white" size={22} />
-                            </div>
-                            FAQ Management
-                        </h1>
-                        <p className="text-sm text-gray-500 mt-1 ml-[52px]">
-                            Manage frequently asked questions by category
-                        </p>
+                {/* Page Header & Actions */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-blue-50 p-2 rounded-lg shrink-0">
+                            <HelpCircle size={18} className="text-blue-600" />
+                        </div>
+                        <div>
+                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">FAQ Management</h1>
+                            <p className="text-[10px] text-gray-500">Manage frequently asked questions by category</p>
+                        </div>
                     </div>
+                    
                     <button
                         onClick={handleAddNew}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                        className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-all shadow-sm text-xs font-semibold"
                     >
-                        <Plus size={20} strokeWidth={2.5} />
-                        Add New FAQ
+                        <Plus size={14} /> Add FAQ
                     </button>
                 </div>
 
                 {/* Statistics Cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                    {/* Total FAQs */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-blue-500 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('all'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
-                                <HelpCircle className="text-blue-600" size={16} />
+                <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3 mb-4">
+                    {[
+                        { title: 'Total', count: stats.total, icon: HelpCircle, color: 'text-blue-600', bg: 'bg-blue-50', onClick: () => { setSelectedStatus('all'); setCurrentPage(1); } },
+                        { title: 'Categories', count: stats.categories, icon: Layers, color: 'text-purple-600', bg: 'bg-purple-50', onClick: () => {} },
+                        { title: 'Published', count: stats.published, icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-50', onClick: () => { setSelectedStatus('published'); setCurrentPage(1); } },
+                        { title: 'Drafts', count: stats.drafts, icon: FileText, color: 'text-amber-600', bg: 'bg-amber-50', onClick: () => { setSelectedStatus('draft'); setCurrentPage(1); } },
+                        { title: 'Views', count: `${(stats.totalViews / 1000).toFixed(1)}k`, icon: Eye, color: 'text-cyan-600', bg: 'bg-cyan-50', onClick: () => {} },
+                        { title: 'Helpful', count: `${(stats.totalHelpful / 1000).toFixed(1)}k`, icon: Sparkles, color: 'text-pink-600', bg: 'bg-pink-50', onClick: () => {} }
+                    ].map((stat, i) => (
+                        <div key={i} onClick={stat.onClick} className={`bg-white border border-gray-100 rounded-xl p-2 md:p-2.5 flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-1 md:gap-2 shadow-sm hover:border-[#004fa2] transition-colors text-center md:text-left ${stat.onClick ? 'cursor-pointer' : ''} group`}>
+                            <div className={`w-6 h-6 md:w-7 md:h-7 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
+                                <stat.icon className={stat.color} size={14} />
+                            </div>
+                            <div className="min-w-0">
+                                <p className="text-[9px] md:text-[10px] text-gray-500 font-medium uppercase tracking-wide truncate group-hover:text-[#004fa2] transition-colors">{stat.title}</p>
+                                <p className="text-xs md:text-sm font-bold text-gray-900 leading-none mt-0.5 md:mt-0">{stat.count}</p>
                             </div>
                         </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
-                        <p className="text-xs text-gray-600 mt-1">Total FAQs</p>
-                    </div>
-
-                    {/* Categories */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-purple-500 hover:shadow-md transition-all duration-200 group cursor-pointer">
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-purple-100 rounded flex items-center justify-center">
-                                <Layers className="text-purple-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.categories}</p>
-                        <p className="text-xs text-gray-600 mt-1">Categories</p>
-                    </div>
-
-                    {/* Published */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-green-500 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('published'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-green-100 rounded flex items-center justify-center">
-                                <CheckCircle className="text-green-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.published}</p>
-                        <p className="text-xs text-gray-600 mt-1">Published</p>
-                    </div>
-
-                    {/* Drafts */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-amber-500 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                        onClick={() => { setSelectedStatus('draft'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">
-                                <FileText className="text-amber-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{stats.drafts}</p>
-                        <p className="text-xs text-gray-600 mt-1">Drafts</p>
-                    </div>
-
-                    {/* Total Views */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-cyan-500 hover:shadow-md transition-all duration-200 group cursor-pointer">
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-cyan-100 rounded flex items-center justify-center">
-                                <Eye className="text-cyan-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{(stats.totalViews / 1000).toFixed(1)}k</p>
-                        <p className="text-xs text-gray-600 mt-1">Total Views</p>
-                    </div>
-
-                    {/* Total Helpful */}
-                    <div className="bg-white rounded-lg p-5 shadow-sm border-l-4 border-l-pink-500 hover:shadow-md transition-all duration-200 group cursor-pointer">
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-pink-100 rounded flex items-center justify-center">
-                                <Sparkles className="text-pink-600" size={16} />
-                            </div>
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">{(stats.totalHelpful / 1000).toFixed(1)}k</p>
-                        <p className="text-xs text-gray-600 mt-1">Helpful Votes</p>
-                    </div>
+                    ))}
                 </div>
 
                 {/* Filters and Search */}
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                    <div className="flex flex-col lg:flex-row gap-4">
-                        {/* Search */}
-                        <div className="flex-1 relative">
-                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                            <input
-                                type="text"
-                                placeholder="Search FAQs by question or answer..."
-                                value={searchQuery}
-                                onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm transition-all"
-                            />
-                        </div>
+                <div className="grid grid-cols-2 md:grid-cols-12 gap-2 mb-4">
+                    <div className="col-span-2 md:col-span-4 relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+                        <input
+                            type="text"
+                            placeholder="Search FAQs..."
+                            value={searchQuery}
+                            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                            className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all"
+                        />
+                    </div>
 
-                        {/* Category Filter */}
-                        <div className="flex items-center gap-2">
-                            <Filter className="text-gray-400" size={18} />
-                            <select
-                                value={selectedCategory}
-                                onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
-                                className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[170px]"
-                            >
-                                <option value="all">All Categories</option>
-                                {uniqueCategories.map(cat => (
-                                    <option key={cat} value={cat}>{cat}</option>
-                                ))}
-                            </select>
-                        </div>
+                    <div className="col-span-1 md:col-span-3 relative">
+                        <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <select
+                            value={selectedCategory}
+                            onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
+                            className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
+                        >
+                            <option value="all">All Categories</option>
+                            {uniqueCategories.map((cat, idx) => (
+                                <option key={`cat-${cat}-${idx}`} value={cat}>{cat}</option>
+                            ))}
+                        </select>
+                    </div>
 
-                        {/* Status Filter */}
+                    <div className="col-span-1 md:col-span-3 relative">
                         <select
                             value={selectedStatus}
                             onChange={(e) => { setSelectedStatus(e.target.value); setCurrentPage(1); }}
-                            className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[130px]"
+                            className="w-full px-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
                         >
                             <option value="all">All Status</option>
                             <option value="published">Published</option>
                             <option value="draft">Draft</option>
                         </select>
+                    </div>
 
-                        {/* View Mode Toggle */}
-                        <div className="flex bg-gray-100 rounded-lg p-1">
-                            <button
-                                onClick={() => setViewMode('category')}
-                                className={`p-2 rounded-md transition-all flex items-center gap-1.5 px-3 ${viewMode === 'category'
-                                    ? 'bg-white text-[#004fa2] shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
-                                    }`}
-                            >
-                                <Layers size={16} />
-                                <span className="text-xs font-medium">Categories</span>
+                    <div className="col-span-2 md:col-span-2 flex items-center justify-end gap-1">
+                        <div className="flex bg-white border border-gray-100 rounded-xl p-0.5 shadow-sm h-[34px]">
+                            <button onClick={() => setViewMode('category')} className={`p-1.5 rounded-lg transition-all flex items-center justify-center ${viewMode === 'category' ? 'bg-[#004fa2] text-white' : 'text-gray-400 hover:text-gray-600'}`}>
+                                <Layers size={14} />
                             </button>
-                            <button
-                                onClick={() => setViewMode('list')}
-                                className={`p-2 rounded-md transition-all flex items-center gap-1.5 px-3 ${viewMode === 'list'
-                                    ? 'bg-white text-[#004fa2] shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
-                                    }`}
-                            >
-                                <List size={16} />
-                                <span className="text-xs font-medium">List</span>
+                            <button onClick={() => setViewMode('list')} className={`p-1.5 rounded-lg transition-all flex items-center justify-center ${viewMode === 'list' ? 'bg-[#004fa2] text-white' : 'text-gray-400 hover:text-gray-600'}`}>
+                                <List size={14} />
                             </button>
                         </div>
-
-                        {/* Reset Filters */}
                         {(searchQuery || selectedCategory !== 'all' || selectedStatus !== 'all') && (
-                            <button
-                                onClick={resetFilters}
-                                className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
-                            >
-                                <X size={16} />
-                                Reset
+                            <button onClick={resetFilters} className="bg-white border border-gray-100 hover:bg-gray-50 text-gray-600 h-[34px] w-[34px] rounded-xl transition-colors shadow-sm flex items-center justify-center shrink-0">
+                                <X size={14} />
                             </button>
                         )}
                     </div>
@@ -447,7 +370,7 @@ const FaqManagementPage = () => {
 
                 {/* Category View */}
                 {viewMode === 'category' ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                         {Object.entries(groupedFaqs).map(([category, faqs]) => {
                             const config = CATEGORY_CONFIG[category] || CATEGORY_CONFIG['General'];
                             const Icon = config.icon;
@@ -458,32 +381,32 @@ const FaqManagementPage = () => {
                                     {/* Category Header */}
                                     <button
                                         onClick={() => toggleCategory(category)}
-                                        className="w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                                        className="w-full px-3 py-2.5 flex items-center justify-between hover:bg-gray-50 transition-colors"
                                     >
-                                        <div className="flex items-center gap-3">
-                                            <div className={`w-10 h-10 bg-gradient-to-br ${config.bgGradient} rounded-lg flex items-center justify-center`}>
-                                                <Icon className="text-white" size={20} />
+                                        <div className="flex items-center gap-2.5">
+                                            <div className={`w-8 h-8 bg-gradient-to-br ${config.bgGradient} rounded flex items-center justify-center`}>
+                                                <Icon className="text-white" size={16} />
                                             </div>
                                             <div className="text-left">
-                                                <h3 className="font-bold text-gray-900">{category}</h3>
-                                                <p className="text-xs text-gray-500">{faqs.length} questions</p>
+                                                <h3 className="text-xs font-bold text-gray-900 leading-tight">{category}</h3>
+                                                <p className="text-[10px] text-gray-500">{faqs.length} questions</p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3">
+                                        <div className="flex items-center gap-2">
                                             <div
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     navigate('/admin/faq/new');
                                                 }}
-                                                className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                                                className="p-1.5 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded bg-white border border-gray-100 transition-colors cursor-pointer shadow-sm"
                                                 title="Add FAQ to this category"
                                             >
-                                                <Plus size={18} />
+                                                <Plus size={12} />
                                             </div>
                                             {isExpanded ? (
-                                                <ChevronUp className="text-gray-400" size={20} />
+                                                <ChevronUp className="text-gray-400" size={16} />
                                             ) : (
-                                                <ChevronDown className="text-gray-400" size={20} />
+                                                <ChevronDown className="text-gray-400" size={16} />
                                             )}
                                         </div>
                                     </button>
@@ -494,12 +417,12 @@ const FaqManagementPage = () => {
                                             {faqs.map((faq, index) => (
                                                 <div
                                                     key={faq.id}
-                                                    className={`border-b border-gray-50 last:border-b-0 ${faq.status === 'draft' ? 'bg-amber-50/30' : ''}`}
+                                                    className={`border-b border-gray-50 last:border-b-0 ${faq.status === 'draft' ? 'bg-amber-50/20' : ''}`}
                                                 >
                                                     {/* FAQ Question Row */}
-                                                    <div className="px-5 py-3 flex items-start justify-between gap-4">
-                                                        <div className="flex items-start gap-3 flex-1 min-w-0">
-                                                            <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center text-xs font-medium text-gray-500 shrink-0 mt-0.5">
+                                                    <div className="px-3 py-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                                        <div className="flex items-start gap-2 flex-1 min-w-0">
+                                                            <div className="w-5 h-5 bg-gray-100 rounded text-[9px] font-bold text-gray-500 flex items-center justify-center shrink-0 mt-0.5">
                                                                 {index + 1}
                                                             </div>
                                                             <div className="flex-1 min-w-0">
@@ -507,51 +430,41 @@ const FaqManagementPage = () => {
                                                                     onClick={() => toggleFaq(faq.id)}
                                                                     className="text-left w-full"
                                                                 >
-                                                                    <p className="font-medium text-gray-900 hover:text-[#004fa2] transition-colors">
+                                                                    <p className="text-xs font-bold text-gray-900 hover:text-[#004fa2] transition-colors leading-snug">
                                                                         {faq.question}
                                                                     </p>
                                                                 </button>
                                                                 {expandedFaqs[faq.id] && (
-                                                                    <p className="text-sm text-gray-600 mt-2 leading-relaxed bg-gray-50 p-3 rounded-lg">
+                                                                    <div className="text-[10px] text-gray-600 mt-1.5 leading-relaxed bg-gray-50 p-2 rounded border border-gray-100 pr-8 relative">
                                                                         {faq.answer}
-                                                                    </p>
+                                                                        <button onClick={() => toggleFaq(faq.id)} className="absolute top-1 right-1 p-1 text-gray-400 hover:text-gray-600">
+                                                                            <ChevronUp size={12} />
+                                                                        </button>
+                                                                    </div>
                                                                 )}
                                                             </div>
                                                         </div>
-                                                        <div className="flex items-center gap-2 shrink-0">
+                                                        <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto pt-1 sm:pt-0">
                                                             <StatusBadge status={faq.status} />
-                                                            <div className="flex items-center gap-0.5 text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">
-                                                                <Eye size={12} />
-                                                                <span>{faq.views}</span>
+                                                            <div className="flex items-center gap-0.5 text-[9px] font-bold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                                                                <Eye size={10} /> {faq.views}
                                                             </div>
-                                                            <div className="flex items-center gap-1 border-l border-gray-200 pl-2">
+                                                            <div className="flex items-center gap-0.5 border-l border-gray-200 pl-1.5 ml-1">
                                                                 <button
                                                                     onClick={() => toggleFaq(faq.id)}
-                                                                    className="p-1.5 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors"
+                                                                    className="p-1 hover:bg-gray-100 rounded text-gray-400 transition-colors"
                                                                     title={expandedFaqs[faq.id] ? "Collapse" : "Expand"}
                                                                 >
-                                                                    {expandedFaqs[faq.id] ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                                                                    {expandedFaqs[faq.id] ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
                                                                 </button>
-                                                                <button
-                                                                    onClick={() => handleEdit(faq)}
-                                                                    className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
-                                                                    title="Edit"
-                                                                >
-                                                                    <Edit size={14} />
+                                                                <button onClick={() => handleEdit(faq)} className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors">
+                                                                    <Edit size={12} />
                                                                 </button>
-                                                                <button
-                                                                    onClick={() => handleDuplicate(faq)}
-                                                                    className="p-1.5 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded transition-colors"
-                                                                    title="Duplicate"
-                                                                >
-                                                                    <Copy size={14} />
+                                                                <button onClick={() => handleDuplicate(faq)} className="p-1 hover:bg-purple-50 rounded text-gray-400 hover:text-purple-600 transition-colors">
+                                                                    <Copy size={12} />
                                                                 </button>
-                                                                <button
-                                                                    onClick={() => handleDelete(faq)}
-                                                                    className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                                                                    title="Delete"
-                                                                >
-                                                                    <Trash2 size={14} />
+                                                                <button onClick={() => handleDelete(faq)} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors">
+                                                                    <Trash2 size={12} />
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -566,65 +479,31 @@ const FaqManagementPage = () => {
                     </div>
                 ) : (
                     /* List View */
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                        <table className="w-full">
-                            <thead className="bg-gray-50 border-b border-gray-100">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-12">#</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Question</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Category</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Views</th>
-                                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                                {paginatedFaqs.map((faq, index) => (
-                                    <tr key={faq.id} className="hover:bg-gray-50 transition-colors">
-                                        <td className="px-6 py-4 text-sm text-gray-500 font-medium">
-                                            {(currentPage - 1) * itemsPerPage + index + 1}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <p className="font-medium text-gray-900 line-clamp-1">{faq.question}</p>
-                                            <p className="text-xs text-gray-500 line-clamp-1 mt-0.5">{faq.answer}</p>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className={`px-2.5 py-1 rounded-lg text-xs font-medium border ${CATEGORY_CONFIG[faq.category]?.color || 'bg-gray-100'}`}>
-                                                {faq.category}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <StatusBadge status={faq.status} />
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-1.5 text-sm text-gray-600">
-                                                <Eye size={14} className="text-gray-400" />
-                                                {faq.views}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center justify-end gap-1">
-
-                                                <button
-                                                    onClick={() => handleEdit(faq)}
-                                                    className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                                                    title="Edit"
-                                                >
-                                                    <Edit size={16} />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(faq)}
-                                                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                    title="Delete"
-                                                >
-                                                    <Trash2 size={16} />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {paginatedFaqs.map((faq, index) => (
+                            <div key={faq.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col hover:border-[#004fa2] transition-colors p-3 group">
+                                <div className="flex items-start justify-between gap-2 mb-2">
+                                    <span className={`px-1.5 py-[1px] rounded text-[8px] font-bold uppercase ${CATEGORY_CONFIG[faq.category]?.color || 'bg-gray-100 text-gray-700'}`}>
+                                        {faq.category}
+                                    </span>
+                                    <StatusBadge status={faq.status} />
+                                </div>
+                                <h3 className="text-xs font-bold text-gray-900 line-clamp-2 leading-snug group-hover:text-[#004fa2] transition-colors">{faq.question}</h3>
+                                <p className="text-[10px] text-gray-500 mt-1 line-clamp-2 leading-relaxed flex-1">{faq.answer}</p>
+                                
+                                <div className="mt-3 pt-2 border-t border-gray-50 flex items-center justify-between">
+                                    <div className="flex gap-2 text-[9px] font-bold text-gray-400">
+                                        <span className="flex items-center gap-0.5"><Eye size={10} /> {faq.views} views</span>
+                                        <span className="flex items-center gap-0.5"><Sparkles size={10} /> {faq.helpful} helpful</span>
+                                    </div>
+                                    <div className="flex items-center gap-0.5">
+                                        <button onClick={() => handleEdit(faq)} className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors"><Edit size={12} /></button>
+                                        <button onClick={() => handleDuplicate(faq)} className="p-1 hover:bg-purple-50 rounded text-gray-400 hover:text-purple-600 transition-colors"><Copy size={12} /></button>
+                                        <button onClick={() => handleDelete(faq)} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"><Trash2 size={12} /></button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
 
@@ -649,28 +528,28 @@ const FaqManagementPage = () => {
 
                 {/* Pagination (List View) */}
                 {viewMode === 'list' && totalPages > 1 && (
-                    <div className="flex items-center justify-between bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                        <p className="text-sm text-gray-500">
-                            Showing <span className="font-semibold text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
-                            <span className="font-semibold text-gray-900">{Math.min(currentPage * itemsPerPage, filteredFaqs.length)}</span> of{' '}
-                            <span className="font-semibold text-gray-900">{filteredFaqs.length}</span> FAQs
+                    <div className="flex flex-col sm:flex-row items-center justify-between bg-white rounded-xl p-3 shadow-sm border border-gray-100 gap-3">
+                        <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
+                            Showing <span className="text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
+                            <span className="text-gray-900">{Math.min(currentPage * itemsPerPage, filteredFaqs.length)}</span> of{' '}
+                            <span className="text-gray-900">{filteredFaqs.length}</span>
                         </p>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                             <button
                                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1}
-                                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                className="p-1 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors disabled:opacity-40"
                             >
-                                <ChevronLeft size={18} />
+                                <ChevronLeft size={16} />
                             </button>
                             <div className="flex items-center gap-1">
                                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                                     <button
                                         key={page}
                                         onClick={() => setCurrentPage(page)}
-                                        className={`min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-all ${currentPage === page
-                                            ? 'bg-[#004fa2] text-white shadow-md'
-                                            : 'text-gray-600 hover:bg-gray-100'
+                                        className={`min-w-[24px] h-6 flex items-center justify-center rounded text-[10px] font-bold transition-all ${currentPage === page
+                                            ? 'bg-[#004fa2] text-white shadow-sm'
+                                            : 'text-gray-500 hover:bg-gray-100'
                                             }`}
                                     >
                                         {page}
@@ -680,9 +559,9 @@ const FaqManagementPage = () => {
                             <button
                                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages}
-                                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                className="p-1 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors disabled:opacity-40"
                             >
-                                <ChevronRight size={18} />
+                                <ChevronRight size={16} />
                             </button>
                         </div>
                     </div>

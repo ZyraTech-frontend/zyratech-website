@@ -170,213 +170,144 @@ const NewsletterManagementPage = () => {
         <AdminLayout>
             <div className="space-y-6">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                            <Mail className="text-blue-600" size={28} />
-                            Newsletter Subscribers
-                        </h1>
-                        <p className="text-gray-600 mt-1">Manage your newsletter mailing list</p>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-gradient-to-br from-[#004fa2] to-[#0066cc] p-2 rounded-lg shrink-0 shadow-sm">
+                            <Mail size={18} className="text-white" />
+                        </div>
+                        <div>
+                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Newsletter Subscribers</h1>
+                            <p className="text-[10px] text-gray-500 mt-0.5">Manage your newsletter mailing list</p>
+                        </div>
                     </div>
                     <button
                         onClick={handleExport}
-                        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                        className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-all font-semibold text-[11px] shadow-sm"
                     >
-                        <Download size={18} />
-                        Export Active Subscribers
+                        <Download size={14} />
+                        Export Active
                     </button>
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                                <Users className="text-blue-600" size={20} />
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {[
+                        { title: 'Total Subscribers', count: stats.total, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
+                        { title: 'Active', count: stats.active, icon: MailCheck, color: 'text-green-600', bg: 'bg-green-50' },
+                        { title: 'This Week', count: stats.thisWeek, icon: UserPlus, color: 'text-purple-600', bg: 'bg-purple-50' },
+                        { title: 'Active Rate', count: `${stats.total > 0 ? Math.round((stats.active / stats.total) * 100) : 0}%`, icon: TrendingUp, color: 'text-orange-600', bg: 'bg-orange-50' }
+                    ].map((stat, i) => (
+                        <div key={i} className="bg-white border border-gray-100 rounded-xl p-2.5 flex items-start gap-2 shadow-sm transition-colors text-left group">
+                            <div className={`w-7 h-7 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
+                                <stat.icon className={stat.color} size={14} />
                             </div>
-                            <div>
-                                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-                                <p className="text-xs text-gray-500">Total Subscribers</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                                <MailCheck className="text-green-600" size={20} />
-                            </div>
-                            <div>
-                                <p className="text-2xl font-bold text-gray-900">{stats.active}</p>
-                                <p className="text-xs text-gray-500">Active</p>
+                            <div className="min-w-0">
+                                <p className="text-[9px] text-gray-500 font-medium uppercase tracking-wide truncate">{stat.title}</p>
+                                <p className="text-sm font-bold text-gray-900 leading-none mt-0.5">{stat.count}</p>
                             </div>
                         </div>
-                    </div>
-
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                                <UserPlus className="text-purple-600" size={20} />
-                            </div>
-                            <div>
-                                <p className="text-2xl font-bold text-gray-900">{stats.thisWeek}</p>
-                                <p className="text-xs text-gray-500">This Week</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
-                                <TrendingUp className="text-orange-600" size={20} />
-                            </div>
-                            <div>
-                                <p className="text-2xl font-bold text-gray-900">
-                                    {stats.total > 0 ? Math.round((stats.active / stats.total) * 100) : 0}%
-                                </p>
-                                <p className="text-xs text-gray-500">Active Rate</p>
-                            </div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                    <div className="flex flex-col sm:flex-row gap-4">
-                        {/* Search */}
-                        <div className="relative flex-1">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                            <input
-                                type="text"
-                                placeholder="Search by email or source..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                            />
-                        </div>
+                <div className="flex flex-col md:flex-row items-center justify-between gap-3 bg-white p-2 rounded-xl border border-gray-100 shadow-sm">
+                    <div className="relative w-full md:max-w-md">
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+                        <input
+                            type="text"
+                            placeholder="Search by email or source..."
+                            value={searchTerm}
+                            onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                            className="w-full pl-8 pr-3 py-1.5 text-[11px] bg-white border border-gray-100 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#004fa2] focus:border-[#004fa2] transition-colors"
+                        />
+                    </div>
 
-                        {/* Status Filter */}
-                        <div className="flex items-center gap-2">
-                            <Filter size={18} className="text-gray-400" />
-                            <select
-                                value={statusFilter}
-                                onChange={(e) => setStatusFilter(e.target.value)}
-                                className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                            >
-                                <option value="all">All Status</option>
-                                <option value="active">Active</option>
-                                <option value="unsubscribed">Unsubscribed</option>
-                                <option value="bounced">Bounced</option>
-                            </select>
-                        </div>
+                    <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 hide-scrollbar shrink-0">
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
+                            className="shrink-0 px-2.5 py-1.5 text-[11px] bg-white border border-gray-100 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#004fa2] transition-colors appearance-none min-w-[120px] cursor-pointer"
+                        >
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="unsubscribed">Unsubscribed</option>
+                            <option value="bounced">Bounced</option>
+                        </select>
                     </div>
                 </div>
 
-                {/* Subscribers Table */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="bg-gray-50 border-b border-gray-100">
-                                <tr>
-                                    <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Email
-                                    </th>
-                                    <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Source
-                                    </th>
-                                    <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Status
-                                    </th>
-                                    <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Subscribed
-                                    </th>
-                                    <th className="text-right px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                                {paginatedSubscribers.length === 0 ? (
-                                    <tr>
-                                        <td colSpan="5" className="px-6 py-12 text-center text-gray-500">
-                                            No subscribers found
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    paginatedSubscribers.map((subscriber) => {
-                                        const statusConfig = STATUS_CONFIG[subscriber.status];
-                                        const StatusIcon = statusConfig.icon;
-                                        
-                                        return (
-                                            <tr key={subscriber.id} className="hover:bg-gray-50 transition-colors">
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                                                            <Mail className="text-blue-600" size={14} />
-                                                        </div>
-                                                        <span className="font-medium text-gray-900">
-                                                            {subscriber.email}
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 text-gray-600">
-                                                    {subscriber.source}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${statusConfig.color}`}>
-                                                        <StatusIcon size={12} />
-                                                        {statusConfig.label}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-4 text-gray-600 text-sm">
-                                                    <div className="flex items-center gap-1.5">
-                                                        <Calendar size={14} className="text-gray-400" />
-                                                        {formatDate(subscriber.subscribedAt)}
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 text-right">
-                                                    <button
-                                                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                        title="Remove subscriber"
-                                                    >
-                                                        <Trash2 size={16} />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {/* Pagination */}
-                    {totalPages > 1 && (
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-                            <p className="text-sm text-gray-600">
-                                Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredSubscribers.length)} of {filteredSubscribers.length} subscribers
-                            </p>
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                                    disabled={currentPage === 1}
-                                    className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    <ChevronLeft size={18} />
-                                </button>
-                                <span className="px-3 py-1 text-sm font-medium">
-                                    {currentPage} / {totalPages}
-                                </span>
-                                <button
-                                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                                    disabled={currentPage === totalPages}
-                                    className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    <ChevronRight size={18} />
-                                </button>
-                            </div>
+                {/* Subscribers Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                    {paginatedSubscribers.length === 0 ? (
+                        <div className="col-span-full py-12 text-center text-gray-500 bg-white rounded-xl border border-gray-100">
+                            No subscribers found
                         </div>
+                    ) : (
+                        paginatedSubscribers.map((subscriber) => {
+                            const statusConfig = STATUS_CONFIG[subscriber.status];
+                            const StatusIcon = statusConfig.icon;
+                            
+                            return (
+                                <div key={subscriber.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 hover:border-[#004fa2] transition-colors group flex flex-col gap-3">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <div className="w-8 h-8 rounded-full bg-blue-50/50 flex items-center justify-center shrink-0">
+                                                <Mail size={14} className="text-blue-500" />
+                                            </div>
+                                            <div className="min-w-0">
+                                                <h3 className="font-bold text-[11px] text-gray-900 truncate" title={subscriber.email}>
+                                                    {subscriber.email}
+                                                </h3>
+                                                <p className="text-[9px] text-gray-500 truncate">{subscriber.source}</p>
+                                            </div>
+                                        </div>
+                                        <span className={`inline-flex items-center px-1.5 py-[1px] rounded text-[9px] font-bold shrink-0 ${statusConfig.color}`}>
+                                            {statusConfig.label}
+                                        </span>
+                                    </div>
+                                    
+                                    <div className="flex items-center justify-between pt-2 mt-auto border-t border-gray-50">
+                                        <div className="flex items-center gap-1.5 text-[9px] text-gray-400">
+                                            <Calendar size={10} />
+                                            {formatDate(subscriber.subscribedAt)}
+                                        </div>
+                                        <button
+                                            className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"
+                                            title="Remove subscriber"
+                                        >
+                                            <Trash2 size={12} />
+                                        </button>
+                                    </div>
+                                </div>
+                            );
+                        })
                     )}
+                </div>
+
+                {/* Pagination Footer */}
+                <div className="flex items-center justify-between bg-white px-4 py-3 rounded-xl border border-gray-100 shadow-sm mt-4">
+                    <p className="text-[11px] text-gray-500 font-medium">
+                        Showing {filteredSubscribers.length > 0 ? ((currentPage - 1) * itemsPerPage) + 1 : 0} to {Math.min(currentPage * itemsPerPage, filteredSubscribers.length)} of {filteredSubscribers.length} subscribers
+                    </p>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            className="p-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                            <ChevronLeft size={14} />
+                        </button>
+                        <span className="px-2 py-1 text-[11px] font-bold text-gray-700">
+                            {currentPage} / {Math.max(1, totalPages)}
+                        </span>
+                        <button
+                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                            disabled={currentPage === totalPages || totalPages === 0}
+                            className="p-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                            <ChevronRight size={14} />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Info Box */}

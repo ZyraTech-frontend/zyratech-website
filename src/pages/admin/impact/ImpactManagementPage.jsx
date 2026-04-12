@@ -119,7 +119,19 @@ const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
+const getPercentChange = (current, previous) => {
+    if (!previous) return 0;
+    return (((current - previous) / previous) * 100).toFixed(1);
+};
+
 // ... (keep other utility functions)
+
+const formatDate = (dateString) => {
+    if (!dateString) return '';
+    return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric'
+    });
+};
 
 const ImpactManagementPage = () => {
     const dispatch = useDispatch();
@@ -135,6 +147,7 @@ const ImpactManagementPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
+    const [viewingStory, setViewingStory] = useState(null);
 
     const itemsPerPage = 10;
 
@@ -287,45 +300,44 @@ const ImpactManagementPage = () => {
         <AdminLayout>
             <div className="space-y-6 pb-8">
                 {/* Page Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                <TrendingUp className="text-white" size={22} />
-                            </div>
-                            Impact Management
-                        </h1>
-                        <p className="text-sm text-gray-500 mt-1 ml-[52px]">
-                            Manage impact metrics and success stories
-                        </p>
-                    </div>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3">
                     <div className="flex items-center gap-3">
+                        <div className="bg-gradient-to-br from-[#004fa2] to-[#0066cc] p-2 rounded-lg shrink-0 shadow-sm">
+                            <TrendingUp size={18} className="text-white" />
+                        </div>
+                        <div>
+                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Impact Management</h1>
+                            <p className="text-[10px] text-gray-500 mt-0.5">Manage impact metrics and success stories</p>
+                        </div>
+                    </div>
+                    
+                    <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
                         <button
                             onClick={handleRefreshStats}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm font-medium text-sm"
+                            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-all font-semibold text-[11px] shadow-sm"
                         >
-                            <RefreshCw size={16} />
+                            <RefreshCw size={12} />
                             Refresh
                         </button>
                         <button
                             onClick={handleExport}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm font-medium text-sm"
+                            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-all font-semibold text-[11px] shadow-sm"
                         >
-                            <Download size={16} />
+                            <Download size={12} />
                             Export
                         </button>
                         <button
                             onClick={() => navigate(activeTab === 'metrics' ? '/admin/impact/metrics/new' : '/admin/impact/stories/new')}
-                            className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md hover:shadow-lg font-medium text-sm"
+                            className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-all font-semibold text-[11px] shadow-sm"
                         >
-                            <Plus size={18} />
+                            <Plus size={14} />
                             {activeTab === 'metrics' ? 'Add Metric' : 'Add Story'}
                         </button>
                     </div>
                 </div>
 
                 {/* Key Impact Highlights */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
                     {metrics.filter(m => m.featured && m.active).slice(0, 6).map((metric, idx) => {
                         const categoryConfig = CATEGORY_CONFIG[metric.category];
                         const CategoryIcon = categoryConfig.icon;
@@ -335,105 +347,100 @@ const ImpactManagementPage = () => {
                         return (
                             <div
                                 key={metric.id}
-                                className={`bg-gradient-to-br ${categoryConfig.gradient} rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 text-white`}
+                                className={`bg-gradient-to-br ${categoryConfig.gradient} rounded-xl p-2.5 md:p-3 shadow-sm transition-all duration-200 text-white flex flex-col justify-between`}
                             >
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
-                                        <CategoryIcon className="text-white" size={18} />
+                                <div className="flex items-start justify-between gap-1 mb-2">
+                                    <div className="w-6 h-6 md:w-7 md:h-7 bg-white/20 rounded-lg flex items-center justify-center shrink-0">
+                                        <CategoryIcon className="text-white" size={14} />
                                     </div>
-                                    <div className={`flex items-center gap-0.5 text-xs font-bold ${isPositive ? 'text-green-200' : 'text-red-200'}`}>
-                                        {isPositive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+                                    <div className={`flex items-center justify-center px-1.5 py-0.5 rounded text-[9px] font-bold shrink-0 bg-white/20 ${isPositive ? 'text-green-100' : 'text-red-100'}`}>
+                                        {isPositive ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
                                         {percentChange}%
                                     </div>
                                 </div>
-                                <p className="text-2xl font-bold">
-                                    {metric.prefix || ''}{formatNumber(metric.value)}{metric.suffix || ''}
-                                </p>
-                                <p className="text-xs text-white/80 mt-0.5 line-clamp-1">{metric.title}</p>
+                                <div className="min-w-0">
+                                    <p className="text-[10px] text-white/80 uppercase tracking-wider font-semibold truncate mb-0.5" title={metric.title}>
+                                        {metric.title}
+                                    </p>
+                                    <p className="text-sm md:text-base font-bold leading-none truncate">
+                                        {metric.prefix || ''}{formatNumber(metric.value)}{metric.suffix || ''}
+                                    </p>
+                                </div>
                             </div>
                         );
                     })}
                 </div>
 
-                {/* Tabs */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-1.5 inline-flex">
-                    <button
-                        onClick={() => { setActiveTab('metrics'); setCurrentPage(1); resetFilters(); }}
-                        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${activeTab === 'metrics'
-                            ? 'bg-[#004fa2] text-white shadow-md'
-                            : 'text-gray-600 hover:bg-gray-100'
-                            }`}
-                    >
-                        <BarChart3 size={16} />
-                        Impact Metrics
-                        <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'metrics' ? 'bg-white/20' : 'bg-gray-100'
-                            }`}>
-                            {stats.totalMetrics}
-                        </span>
-                    </button>
-                    <button
-                        onClick={() => { setActiveTab('stories'); setCurrentPage(1); resetFilters(); }}
-                        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${activeTab === 'stories'
-                            ? 'bg-[#004fa2] text-white shadow-md'
-                            : 'text-gray-600 hover:bg-gray-100'
-                            }`}
-                    >
-                        <Quote size={16} />
-                        Success Stories
-                        <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'stories' ? 'bg-white/20' : 'bg-gray-100'
-                            }`}>
-                            {stats.totalStories}
-                        </span>
-                    </button>
-                </div>
+                {/* Controls (Tabs + Search/Filter) */}
+                <div className="flex flex-col md:flex-row items-center justify-between gap-3 bg-white p-2 rounded-xl border border-gray-100 shadow-sm">
+                    {/* Tabs */}
+                    <div className="flex items-center w-full md:w-auto p-1 bg-gray-50 rounded-lg shrink-0">
+                        <button
+                            onClick={() => { setActiveTab('metrics'); setCurrentPage(1); resetFilters(); }}
+                            className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${activeTab === 'metrics'
+                                ? 'bg-white text-[#004fa2] shadow-sm ring-1 ring-black/5'
+                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                                }`}
+                        >
+                            <BarChart3 size={12} />
+                            Metrics
+                            <span className={`px-1.5 py-0.5 rounded text-[9px] ${activeTab === 'metrics' ? 'bg-blue-50 text-blue-600' : 'bg-gray-200 text-gray-500'}`}>
+                                {stats.totalMetrics}
+                            </span>
+                        </button>
+                        <button
+                            onClick={() => { setActiveTab('stories'); setCurrentPage(1); resetFilters(); }}
+                            className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${activeTab === 'stories'
+                                ? 'bg-white text-[#004fa2] shadow-sm ring-1 ring-black/5'
+                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                                }`}
+                        >
+                            <Quote size={12} />
+                            Stories
+                            <span className={`px-1.5 py-0.5 rounded text-[9px] ${activeTab === 'stories' ? 'bg-blue-50 text-blue-600' : 'bg-gray-200 text-gray-500'}`}>
+                                {stats.totalStories}
+                            </span>
+                        </button>
+                    </div>
 
-                {/* Filters and Search */}
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                    <div className="flex flex-col lg:flex-row gap-4">
-                        {/* Search */}
-                        <div className="flex-1 relative">
-                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    {/* Filters & Search */}
+                    <div className="flex items-center gap-2 w-full md:w-auto">
+                        <div className="relative flex-1 md:w-[220px]">
+                            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
                             <input
                                 type="text"
-                                placeholder={activeTab === 'metrics' ? 'Search metrics...' : 'Search success stories...'}
+                                placeholder={activeTab === 'metrics' ? 'Search metrics...' : 'Search stories...'}
                                 value={searchQuery}
                                 onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm transition-all"
+                                className="w-full pl-8 pr-3 py-1.5 text-[11px] bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#004fa2] focus:border-[#004fa2] transition-colors"
                             />
                         </div>
 
-                        {/* Category Filter */}
-                        <div className="flex items-center gap-2">
-                            <Filter className="text-gray-400" size={18} />
-                            <select
-                                value={selectedCategory}
-                                onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
-                                className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[160px]"
-                            >
-                                <option value="all">All Items</option>
-                                <option value="featured">⭐ Featured</option>
-                                <option value="active">✓ Active</option>
-                                <option value="inactive">✗ Inactive</option>
-                                {activeTab === 'metrics' && (
-                                    <>
-                                        <optgroup label="Categories">
-                                            {Object.entries(CATEGORY_CONFIG).map(([key, val]) => (
-                                                <option key={key} value={key}>{val.label}</option>
-                                            ))}
-                                        </optgroup>
-                                    </>
-                                )}
-                            </select>
-                        </div>
+                        <select
+                            value={selectedCategory}
+                            onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
+                            className="shrink-0 px-2.5 py-1.5 text-[11px] bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#004fa2] transition-colors appearance-none min-w-[120px] cursor-pointer"
+                        >
+                            <option value="all">All Items</option>
+                            <option value="featured">⭐ Featured</option>
+                            <option value="active">✓ Active</option>
+                            <option value="inactive">✗ Inactive</option>
+                            {activeTab === 'metrics' && (
+                                <optgroup label="Categories">
+                                    {Object.entries(CATEGORY_CONFIG).map(([key, val]) => (
+                                        <option key={key} value={key}>{val.label}</option>
+                                    ))}
+                                </optgroup>
+                            )}
+                        </select>
 
-                        {/* Reset Filters */}
                         {(searchQuery || selectedCategory !== 'all') && (
                             <button
                                 onClick={resetFilters}
-                                className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
+                                className="shrink-0 p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors border border-transparent"
+                                title="Reset Filters"
                             >
-                                <X size={16} />
-                                Reset
+                                <X size={14} />
                             </button>
                         )}
                     </div>
@@ -441,204 +448,187 @@ const ImpactManagementPage = () => {
 
                 {/* Metrics Tab Content */}
                 {activeTab === 'metrics' && (
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-gray-50 border-b border-gray-100">
-                                    <tr>
-                                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Metric</th>
-                                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Category</th>
-                                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Value</th>
-                                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Trend</th>
-                                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Featured</th>
-                                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-100">
-                                    {paginatedItems.map((metric) => {
-                                        const categoryConfig = CATEGORY_CONFIG[metric.category];
-                                        const CategoryIcon = categoryConfig.icon;
-                                        const TypeIcon = METRIC_TYPE_CONFIG[metric.type].icon;
-                                        const percentChange = getPercentChange(metric.value, metric.previousValue);
-                                        const isPositive = metric.trend === 'up';
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+                        {paginatedItems.map((metric) => {
+                            const categoryConfig = CATEGORY_CONFIG[metric.category];
+                            const CategoryIcon = categoryConfig.icon;
+                            const TypeIcon = METRIC_TYPE_CONFIG[metric.type].icon;
+                            const percentChange = getPercentChange(metric.value, metric.previousValue);
+                            const isPositive = metric.trend === 'up';
 
-                                        return (
-                                            <tr key={metric.id} className="hover:bg-gray-50 transition-colors">
-                                                <td className="px-4 py-4">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${categoryConfig.gradient} flex items-center justify-center text-white shrink-0`}>
-                                                            <CategoryIcon size={18} />
-                                                        </div>
-                                                        <div>
-                                                            <p className="font-semibold text-gray-900 text-sm">{metric.title}</p>
-                                                            <p className="text-xs text-gray-400 line-clamp-1 max-w-xs">{metric.description}</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-4">
-                                                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium border ${categoryConfig.color}`}>
-                                                        {categoryConfig.label}
-                                                    </span>
-                                                </td>
-                                                <td className="px-4 py-4">
-                                                    <div className="flex items-center gap-2">
-                                                        <TypeIcon size={14} className="text-gray-400" />
-                                                        <span className="font-bold text-gray-900">
-                                                            {metric.prefix || ''}{formatNumber(metric.value)}{metric.suffix || ''}
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-4">
-                                                    <div className={`flex items-center gap-1 text-xs font-bold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                                                        {isPositive ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-                                                        {percentChange}%
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-4 text-center">
-                                                    <button
-                                                        onClick={() => handleToggleFeatured(metric)}
-                                                        className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
-                                                    >
-                                                        <Star
-                                                            size={16}
-                                                            className={metric.featured ? 'text-amber-500 fill-amber-500' : 'text-gray-300'}
-                                                        />
-                                                    </button>
-                                                </td>
-                                                <td className="px-4 py-4 text-center">
-                                                    <button
-                                                        onClick={() => handleToggleActive(metric)}
-                                                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold ${metric.active
-                                                            ? 'bg-green-100 text-green-700'
-                                                            : 'bg-gray-100 text-gray-500'
-                                                            }`}
-                                                    >
-                                                        {metric.active ? <CheckCircle size={10} /> : <AlertCircle size={10} />}
-                                                        {metric.active ? 'Active' : 'Inactive'}
-                                                    </button>
-                                                </td>
-                                                <td className="px-4 py-4">
-                                                    <div className="flex items-center justify-end gap-1">
-                                                        <button
-                                                            onClick={() => handleEditMetric(metric)}
-                                                            className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
-                                                            title="Edit"
-                                                        >
-                                                            <Edit size={14} />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleDelete(metric, 'metric')}
-                                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                            title="Delete"
-                                                        >
-                                                            <Trash2 size={14} />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
+                            return (
+                                <div key={metric.id} className={`bg-white rounded-xl shadow-sm border p-3 hover:border-[#004fa2] transition-colors group flex flex-col gap-3 ${metric.featured ? 'border-amber-200 ring-1 ring-amber-100' : 'border-gray-100'}`}>
+                                    {/* Card Header */}
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${categoryConfig.gradient} flex items-center justify-center text-white shrink-0 shadow-sm`}>
+                                                <CategoryIcon size={14} />
+                                            </div>
+                                            <div className="min-w-0">
+                                                <div className="flex items-center gap-1">
+                                                    <h3 className="text-[11px] font-bold text-gray-900 truncate group-hover:text-[#004fa2] transition-colors">{metric.title}</h3>
+                                                    {metric.featured && <Star className="text-amber-500 fill-amber-500 shrink-0" size={10} />}
+                                                </div>
+                                                <span className={`inline-flex items-center mt-0.5 px-1.5 py-[1px] rounded text-[8px] font-bold uppercase tracking-wider border ${categoryConfig.color}`}>
+                                                    {categoryConfig.label}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => handleToggleActive(metric)}
+                                            className={`px-1.5 py-0.5 rounded text-[9px] font-bold shrink-0 transition-colors ${metric.active ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                                            title={metric.active ? "Set Inactive" : "Set Active"}
+                                        >
+                                            {metric.active ? 'Active' : 'Inactive'}
+                                        </button>
+                                    </div>
+
+                                    {/* Description */}
+                                    <p className="text-[10px] text-gray-500 line-clamp-2 leading-relaxed">
+                                        {metric.description}
+                                    </p>
+
+                                    {/* Value & Trend */}
+                                    <div className="flex items-center justify-between bg-gray-50 rounded-lg p-2 mt-auto border border-gray-100">
+                                        <div className="flex items-center gap-1.5 text-[#004fa2]">
+                                            <TypeIcon size={12} />
+                                            <span className="font-bold text-[13px] tracking-tight">
+                                                {metric.prefix || ''}{formatNumber(metric.value)}{metric.suffix || ''}
+                                            </span>
+                                        </div>
+                                        <div className={`flex items-center gap-0.5 text-[10px] font-bold ${isPositive ? 'text-green-600 bg-green-50 px-1.5 py-0.5 rounded' : 'text-red-600 bg-red-50 px-1.5 py-0.5 rounded'}`}>
+                                            {isPositive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+                                            {percentChange}%
+                                        </div>
+                                    </div>
+
+                                    {/* Footer / Actions */}
+                                    <div className="flex items-center justify-between pt-2 border-t border-gray-50">
+                                        <button
+                                            onClick={() => handleToggleFeatured(metric)}
+                                            className="p-1 hover:bg-amber-50 rounded text-gray-400 hover:text-amber-500 transition-colors"
+                                            title={metric.featured ? "Remove Featured" : "Set Featured"}
+                                        >
+                                            <Star size={12} className={metric.featured ? 'text-amber-500 fill-amber-500' : ''} />
+                                        </button>
+                                        <div className="flex items-center gap-0.5">
+                                            <button
+                                                onClick={() => handleEditMetric(metric)}
+                                                className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors"
+                                                title="Edit Metric"
+                                            >
+                                                <Edit size={12} />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(metric, 'metric')}
+                                                className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"
+                                                title="Delete Metric"
+                                            >
+                                                <Trash2 size={12} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 )}
 
                 {/* Success Stories Tab Content */}
                 {activeTab === 'stories' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
                         {paginatedItems.map((story) => (
                             <div
                                 key={story.id}
-                                className={`bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-lg transition-all duration-300 group ${story.featured ? 'border-amber-200 ring-2 ring-amber-100' : 'border-gray-100'
+                                className={`bg-white rounded-xl shadow-sm border overflow-hidden hover:border-[#004fa2] transition-colors group flex flex-col ${story.featured ? 'border-amber-200 ring-1 ring-amber-100' : 'border-gray-100'
                                     }`}
                             >
                                 {/* Story Header */}
-                                <div className={`p-4 ${story.featured ? 'bg-gradient-to-r from-amber-50 to-orange-50' : 'bg-gray-50'}`}>
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-lg font-bold shrink-0">
-                                                {story.name.split(' ').map(n => n[0]).join('')}
-                                            </div>
-                                            <div>
-                                                <h3 className="font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors">
+                                <div className={`p-3 border-b border-gray-50 flex items-start justify-between gap-2 ${story.featured ? 'bg-gradient-to-r from-amber-50 to-orange-50' : 'bg-gray-50'}`}>
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-[11px] font-bold shrink-0 shadow-sm">
+                                            {story.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <div className="flex items-center gap-1">
+                                                <h3 className="font-bold text-[11px] text-gray-900 group-hover:text-[#004fa2] transition-colors truncate">
                                                     {story.name}
                                                 </h3>
-                                                <p className="text-xs text-gray-500">{story.role}</p>
+                                                {story.featured && <Star className="text-amber-500 fill-amber-500 shrink-0" size={10} />}
                                             </div>
+                                            <p className="text-[9px] text-gray-500 truncate">{story.role}</p>
                                         </div>
-                                        <button
-                                            onClick={() => handleToggleFeatured(story)}
-                                            className="p-1.5 hover:bg-white/50 rounded-lg transition-colors"
-                                        >
-                                            <Star
-                                                size={16}
-                                                className={story.featured ? 'text-amber-500 fill-amber-500' : 'text-gray-300 hover:text-amber-400'}
-                                            />
-                                        </button>
                                     </div>
+                                    <button
+                                        onClick={() => handleToggleActive(story)}
+                                        className={`px-1.5 py-0.5 rounded text-[9px] font-bold shrink-0 transition-colors ${story.active ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                                        title={story.active ? "Set Inactive" : "Set Active"}
+                                    >
+                                        {story.active ? 'Active' : 'Inactive'}
+                                    </button>
                                 </div>
 
                                 {/* Story Body */}
-                                <div className="p-4 space-y-3">
-                                    <h4 className="font-semibold text-gray-800 text-sm line-clamp-2">
+                                <div className="p-3 flex flex-col gap-2 flex-1">
+                                    <h4 className="font-semibold text-gray-800 text-[11px] line-clamp-2 leading-snug">
                                         "{story.title}"
                                     </h4>
 
-                                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                                        <Building size={12} />
-                                        <span>{story.company}</span>
+                                    <div className="space-y-1.5">
+                                        <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
+                                            <Building size={11} className="shrink-0" />
+                                            <span className="truncate">{story.company}</span>
+                                        </div>
+
+                                        <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
+                                            <GraduationCap size={11} className="shrink-0" />
+                                            <span className="truncate">{story.course} ({story.graduationYear})</span>
+                                        </div>
                                     </div>
 
-                                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                                        <GraduationCap size={12} />
-                                        <span>{story.course} • Class of {story.graduationYear}</span>
+                                    <div className="relative mt-2 flex-1">
+                                        <Quote className="absolute -top-1 -left-1 text-gray-100" size={16} />
+                                        <p className="text-[10px] text-gray-600 italic line-clamp-3 leading-relaxed pl-3 relative z-10 border-l border-[#004fa2]/30">
+                                            {story.quote}
+                                        </p>
                                     </div>
-
-                                    <blockquote className="text-sm text-gray-600 italic line-clamp-3 border-l-2 border-[#004fa2] pl-3">
-                                        "{story.quote}"
-                                    </blockquote>
-
-                                    <div className="flex items-center justify-between pt-2">
-                                        <span className="text-[10px] text-gray-400">
-                                            Published: {formatDate(story.datePublished)}
-                                        </span>
-                                        <button
-                                            onClick={() => handleToggleActive(story)}
-                                            className={`px-2 py-0.5 rounded text-[10px] font-bold ${story.active
-                                                ? 'bg-green-100 text-green-700'
-                                                : 'bg-gray-100 text-gray-500'
-                                                }`}
-                                        >
-                                            {story.active ? 'Active' : 'Inactive'}
-                                        </button>
+                                    
+                                    {/* Date */}
+                                    <div className="text-[9px] text-gray-400 mt-2 text-right">
+                                        Published: {formatDate(story.datePublished)}
                                     </div>
                                 </div>
 
                                 {/* Story Footer */}
-                                <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+                                <div className="px-3 py-2 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
                                     <button
                                         onClick={() => setViewingStory(story)}
-                                        className="text-sm text-[#004fa2] hover:text-[#003d7a] font-medium flex items-center gap-1"
+                                        className="text-[10px] text-[#004fa2] hover:text-[#003d7a] font-bold flex items-center gap-1 transition-colors"
                                     >
-                                        <Eye size={14} />
-                                        View Full Story
+                                        <Eye size={12} />
+                                        View Details
                                     </button>
-                                    <div className="flex items-center gap-1">
+                                    <div className="flex items-center gap-0.5">
+                                        <button
+                                            onClick={() => handleToggleFeatured(story)}
+                                            className="p-1 hover:bg-amber-50 rounded text-gray-400 hover:text-amber-500 transition-colors"
+                                            title={story.featured ? "Remove Featured" : "Set Featured"}
+                                        >
+                                            <Star size={12} className={story.featured ? 'text-amber-500 fill-amber-500' : ''} />
+                                        </button>
                                         <button
                                             onClick={() => handleEditStory(story)}
-                                            className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                                            className="p-1 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
                                             title="Edit"
                                         >
-                                            <Edit size={14} />
+                                            <Edit size={12} />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(story, 'story')}
-                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                            className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                                             title="Delete"
                                         >
-                                            <Trash2 size={14} />
+                                            <Trash2 size={12} />
                                         </button>
                                     </div>
                                 </div>
@@ -713,7 +703,7 @@ const ImpactManagementPage = () => {
             {/* View Success Story Modal */}
             {viewingStory && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
                         {/* Modal Header */}
                         <div className="px-6 py-4 bg-gradient-to-r from-[#004fa2] to-[#0066cc] flex items-center justify-between">
                             <div className="flex items-center gap-3">

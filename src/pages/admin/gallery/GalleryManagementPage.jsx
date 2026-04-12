@@ -3,7 +3,7 @@
  * Professional admin interface for managing media gallery items
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
@@ -212,6 +212,38 @@ const GalleryManagementPage = () => {
     const [editingItem, setEditingItem] = useState(null);
     const [viewingItem, setViewingItem] = useState(null);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+    const [uploadQueue, setUploadQueue] = useState([]);
+
+    const fileInputRef = useRef(null);
+
+    const handleFileSelect = (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const newFiles = Array.from(e.target.files).map(f => ({
+                file: f,
+                name: f.name,
+                size: (f.size / (1024 * 1024)).toFixed(2) + ' MB'
+            }));
+            setUploadQueue(prev => [...prev, ...newFiles]);
+        }
+    };
+    
+    const triggerFileSelect = () => {
+        fileInputRef.current?.click();
+    };
+    
+    const removeQueuedFile = (idx) => {
+        setUploadQueue(prev => prev.filter((_, i) => i !== idx));
+    };
+
+    const handleMockUpload = () => {
+        if (uploadQueue.length === 0) return;
+        dispatch(addNotification({
+            type: 'success',
+            message: `Successfully uploaded ${uploadQueue.length} files.`
+        }));
+        setUploadQueue([]);
+        setShowUploadModal(false);
+    };
 
     const itemsPerPage = 8;
 
@@ -299,339 +331,150 @@ const GalleryManagementPage = () => {
     return (
         <AdminLayout>
             <div className="space-y-6 pb-8">
-                {/* Page Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                <Image className="text-white" size={22} />
-                            </div>
-                            Gallery Management
-                        </h1>
-                        <p className="text-sm text-gray-500 mt-1 ml-[52px]">
-                            Manage photos, media packages, and visual content
-                        </p>
-                    </div>
+                {/* Page Header & Actions */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
                     <div className="flex items-center gap-3">
+                        <div className="bg-blue-50 p-2 rounded-lg shrink-0">
+                            <Image size={18} className="text-blue-600" />
+                        </div>
+                        <div>
+                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Gallery Management</h1>
+                            <p className="text-[10px] text-gray-500">Manage photos and media packages</p>
+                        </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 w-full md:w-auto">
                         <button
                             onClick={() => setShowUploadModal(true)}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium shadow-sm"
+                            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-100 transition-all text-xs font-semibold"
                         >
-                            <Upload size={18} />
-                            Upload Images
+                            <Upload size={14} /> Images
                         </button>
                         <button
                             onClick={handleAddNew}
-                            className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-all shadow-sm text-xs font-semibold"
                         >
-                            <Plus size={20} strokeWidth={2.5} />
-                            Create Album
+                            <Plus size={14} /> Album
                         </button>
                     </div>
                 </div>
 
                 {/* Statistics Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
-                    {/* Total Albums Card */}
-                    <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer group"
-                        onClick={() => { setSelectedCategory('all'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-start justify-between mb-3">
-                            <div className="bg-blue-50 rounded-lg p-2.5 group-hover:bg-blue-100 transition-colors">
-                                <FolderOpen size={20} className="text-blue-600" />
+                <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 mb-4">
+                    {[
+                        { title: 'Albums', count: stats.total, icon: FolderOpen, color: 'text-blue-600', bg: 'bg-blue-50', onClick: () => { setSelectedCategory('all'); setCurrentPage(1); } },
+                        { title: 'Photos', count: stats.totalImages, icon: FileImage, color: 'text-purple-600', bg: 'bg-purple-50', onClick: () => { setSelectedCategory('all'); setCurrentPage(1); } },
+                        { title: 'Projects', count: stats.projects, icon: Layers, color: 'text-cyan-600', bg: 'bg-cyan-50', onClick: () => { setSelectedCategory('projects'); setCurrentPage(1); } },
+                        { title: 'Training', count: stats.training, icon: Sparkles, color: 'text-green-600', bg: 'bg-green-50', onClick: () => { setSelectedCategory('training'); setCurrentPage(1); } },
+                        { title: 'Events', count: stats.events, icon: Calendar, color: 'text-pink-600', bg: 'bg-pink-50', onClick: () => { setSelectedCategory('events'); setCurrentPage(1); } },
+                        { title: 'Live', count: stats.published, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50', onClick: () => { setSelectedCategory('all'); setSelectedStatus('published'); setCurrentPage(1); } }
+                    ].map((stat, i) => (
+                        <div key={i} onClick={stat.onClick} className="bg-white border border-gray-100 rounded-xl p-2.5 flex items-center justify-start gap-2.5 shadow-sm hover:border-[#004fa2] transition-colors cursor-pointer">
+                            <div className={`w-7 h-7 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
+                                <stat.icon className={stat.color} size={14} />
                             </div>
-                            <span className="text-xs font-bold text-blue-500 uppercase">All</span>
-                        </div>
-                        <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Total Albums</p>
-                        <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
-                        <p className="text-gray-500 text-xs mt-1">Gallery items</p>
-                    </div>
-
-                    {/* Total Images Card */}
-                    <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer group"
-                        onClick={() => { setSelectedCategory('all'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-start justify-between mb-3">
-                            <div className="bg-purple-50 rounded-lg p-2.5 group-hover:bg-purple-100 transition-colors">
-                                <FileImage size={20} className="text-purple-600" />
+                            <div className="flex-1 min-w-0">
+                                <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wide truncate">{stat.title}</p>
+                                <p className="text-sm font-bold text-gray-900 leading-none">{stat.count}</p>
                             </div>
-                            <span className="text-xs font-bold text-purple-500 uppercase">Photos</span>
                         </div>
-                        <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Total Photos</p>
-                        <p className="text-3xl font-bold text-gray-900">{stats.totalImages}</p>
-                        <p className="text-gray-500 text-xs mt-1">All images</p>
-                    </div>
-
-                    {/* Projects Card */}
-                    <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer group"
-                        onClick={() => { setSelectedCategory('projects'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-start justify-between mb-3">
-                            <div className="bg-cyan-50 rounded-lg p-2.5 group-hover:bg-cyan-100 transition-colors">
-                                <Layers size={20} className="text-cyan-600" />
-                            </div>
-                            <span className="text-xs font-bold text-cyan-500 uppercase">Projects</span>
-                        </div>
-                        <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Project Albums</p>
-                        <p className="text-3xl font-bold text-gray-900">{stats.projects}</p>
-                        <p className="text-gray-500 text-xs mt-1">Category filter</p>
-                    </div>
-
-                    {/* Training Card */}
-                    <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer group"
-                        onClick={() => { setSelectedCategory('training'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-start justify-between mb-3">
-                            <div className="bg-green-50 rounded-lg p-2.5 group-hover:bg-green-100 transition-colors">
-                                <Sparkles size={20} className="text-green-600" />
-                            </div>
-                            <span className="text-xs font-bold text-green-500 uppercase">Training</span>
-                        </div>
-                        <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Training Albums</p>
-                        <p className="text-3xl font-bold text-gray-900">{stats.training}</p>
-                        <p className="text-gray-500 text-xs mt-1">Category filter</p>
-                    </div>
-
-                    {/* Events Card */}
-                    <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer group"
-                        onClick={() => { setSelectedCategory('events'); setCurrentPage(1); }}
-                    >
-                        <div className="flex items-start justify-between mb-3">
-                            <div className="bg-pink-50 rounded-lg p-2.5 group-hover:bg-pink-100 transition-colors">
-                                <Calendar size={20} className="text-pink-600" />
-                            </div>
-                            <span className="text-xs font-bold text-pink-500 uppercase">Events</span>
-                        </div>
-                        <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Event Albums</p>
-                        <p className="text-3xl font-bold text-gray-900">{stats.events}</p>
-                        <p className="text-gray-500 text-xs mt-1">Category filter</p>
-                    </div>
-
-                    {/* Published Card */}
-                    <div className="bg-white rounded-xl p-5 border border-green-200 shadow-sm hover:shadow-md transition-all duration-200">
-                        <div className="flex items-start justify-between mb-3">
-                            <div className="bg-green-50 rounded-lg p-2.5">
-                                <CheckCircle size={20} className="text-green-600" />
-                            </div>
-                            <span className="text-xs font-bold text-green-500 uppercase">Live</span>
-                        </div>
-                        <p className="text-gray-600 text-xs font-semibold uppercase tracking-wide mb-1">Published</p>
-                        <p className="text-3xl font-bold text-gray-900">{stats.published}</p>
-                        <p className="text-gray-500 text-xs mt-1">Active items</p>
-                    </div>
+                    ))}
                 </div>
 
                 {/* Filters and Search */}
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                    <div className="flex flex-col lg:flex-row gap-4">
-                        {/* Search */}
-                        <div className="flex-1 relative">
-                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                            <input
-                                type="text"
-                                placeholder="Search albums by title or keywords..."
-                                value={searchQuery}
-                                onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm transition-all"
-                            />
-                        </div>
+                <div className="grid grid-cols-2 md:grid-cols-12 gap-2 mb-4">
+                    <div className="col-span-2 md:col-span-5 relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+                        <input
+                            type="text"
+                            placeholder="Search albums..."
+                            value={searchQuery}
+                            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                            className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all"
+                        />
+                    </div>
 
-                        {/* Category Filter */}
-                        <div className="flex items-center gap-2">
-                            <Filter className="text-gray-400" size={18} />
-                            <select
-                                value={selectedCategory}
-                                onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
-                                className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[140px]"
-                            >
-                                <option value="all">All Categories</option>
-                                {Object.entries(CATEGORY_CONFIG).map(([key, { label }]) => (
-                                    <option key={key} value={key}>{label}</option>
-                                ))}
-                            </select>
-                        </div>
+                    <div className="col-span-1 md:col-span-3 relative">
+                        <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <select
+                            value={selectedCategory}
+                            onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
+                            className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
+                        >
+                            <option value="all">All Categories</option>
+                            {Object.entries(CATEGORY_CONFIG).map(([key, { label }]) => (
+                                <option key={key} value={key}>{label}</option>
+                            ))}
+                        </select>
+                    </div>
 
-                        {/* Status Filter */}
+                    <div className="col-span-1 md:col-span-3 relative">
                         <select
                             value={selectedStatus}
                             onChange={(e) => { setSelectedStatus(e.target.value); setCurrentPage(1); }}
-                            className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[130px]"
+                            className="w-full px-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
                         >
                             <option value="all">All Status</option>
                             <option value="published">Published</option>
                             <option value="draft">Draft</option>
                         </select>
+                    </div>
 
-                        {/* View Mode Toggle */}
-                        <div className="flex bg-gray-100 rounded-lg p-1">
-                            <button
-                                onClick={() => setViewMode('grid')}
-                                className={`p-2 rounded-md transition-all ${viewMode === 'grid'
-                                    ? 'bg-white text-[#004fa2] shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
-                                    }`}
-                            >
-                                <Grid size={18} />
+                    <div className="col-span-2 md:col-span-1 flex items-center justify-end gap-1">
+                        <div className="flex bg-white border border-gray-100 rounded-xl p-0.5 shadow-sm h-[34px]">
+                            <button onClick={() => setViewMode('grid')} className={`p-1.5 rounded-lg transition-all flex items-center justify-center ${viewMode === 'grid' ? 'bg-[#004fa2] text-white' : 'text-gray-400 hover:text-gray-600'}`}>
+                                <Grid size={14} />
                             </button>
-                            <button
-                                onClick={() => setViewMode('list')}
-                                className={`p-2 rounded-md transition-all ${viewMode === 'list'
-                                    ? 'bg-white text-[#004fa2] shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
-                                    }`}
-                            >
-                                <List size={18} />
+                            <button onClick={() => setViewMode('list')} className={`p-1.5 rounded-lg transition-all flex items-center justify-center ${viewMode === 'list' ? 'bg-[#004fa2] text-white' : 'text-gray-400 hover:text-gray-600'}`}>
+                                <List size={14} />
                             </button>
                         </div>
-
-                        {/* Reset Filters */}
                         {(searchQuery || selectedCategory !== 'all' || selectedStatus !== 'all') && (
-                            <button
-                                onClick={resetFilters}
-                                className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
-                            >
-                                <X size={16} />
-                                Reset
+                            <button onClick={resetFilters} className="bg-white border border-gray-100 hover:bg-gray-50 text-gray-600 h-[34px] w-[34px] rounded-xl transition-colors shadow-sm flex items-center justify-center shrink-0">
+                                <X size={14} />
                             </button>
                         )}
                     </div>
-
-                    {/* Active filter badges */}
-                    {(selectedCategory !== 'all' || selectedStatus !== 'all') && (
-                        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-                            <span className="text-xs text-gray-500">Active filters:</span>
-                            {selectedCategory !== 'all' && (
-                                <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${CATEGORY_CONFIG[selectedCategory]?.color || 'bg-gray-100 text-gray-700'}`}>
-                                    {CATEGORY_CONFIG[selectedCategory]?.label}
-                                    <button onClick={() => setSelectedCategory('all')} className="ml-1.5 hover:opacity-70">×</button>
-                                </span>
-                            )}
-                            {selectedStatus !== 'all' && (
-                                <span className="px-2.5 py-1 rounded-full text-xs font-medium border bg-gray-100 text-gray-700 border-gray-200">
-                                    {selectedStatus}
-                                    <button onClick={() => setSelectedStatus('all')} className="ml-1.5 hover:opacity-70">×</button>
-                                </span>
-                            )}
-                        </div>
-                    )}
                 </div>
 
                 {/* Gallery Grid/List */}
                 {viewMode === 'grid' ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                         {paginatedItems.map((item) => (
-                            <div
-                                key={item.id}
-                                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group"
-                            >
-                                {/* Thumbnail */}
-                                <div className="relative aspect-video overflow-hidden">
-                                    <img decoding="async"
-                                        src={item.thumbnail}
-                                        alt={item.title}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                    />
-                                    {/* Overlay on hover */}
-                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2">
-                                        <button
-                                            onClick={() => handleView(item)}
-                                            className="p-2.5 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
-                                        >
-                                            <Eye className="text-white" size={18} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleEdit(item)}
-                                            className="p-2.5 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
-                                        >
-                                            <Edit className="text-white" size={18} />
-                                        </button>
+                            <div key={item.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col hover:border-[#004fa2] transition-colors group p-2">
+                                <div className="relative aspect-video rounded-lg overflow-hidden mb-2">
+                                    <img decoding="async" src={item.thumbnail} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                    <div className="absolute top-1 right-1 bg-black/60 text-white px-1.5 py-0.5 rounded flex items-center gap-1 text-[9px] font-bold backdrop-blur-sm">
+                                        <FileImage size={10} /> {item.images?.length || 0}
                                     </div>
-
-                                    {/* Category Badge */}
-                                    <div className="absolute top-2 left-2">
-                                        <span className={`px-2 py-1 rounded-lg text-[10px] font-semibold border ${CATEGORY_CONFIG[item.category]?.color || 'bg-gray-100'}`}>
+                                    <div className="absolute bottom-1 left-1 flex gap-1">
+                                        <span className={`px-1.5 py-[1px] rounded text-[9px] font-bold uppercase backdrop-blur-sm ${CATEGORY_CONFIG[item.category]?.color || 'bg-white/90 text-gray-800'}`}>
                                             {CATEGORY_CONFIG[item.category]?.label}
                                         </span>
                                     </div>
-
-                                    {/* Image Count */}
-                                    <div className="absolute top-2 right-2">
-                                        <span className="flex items-center gap-1 bg-white/90 backdrop-blur-sm text-gray-800 px-2 py-1 rounded-full text-xs font-medium">
-                                            <FileImage size={12} />
-                                            {item.images?.length || 0}
-                                        </span>
-                                    </div>
-
-                                    {/* Status */}
-                                    <div className="absolute bottom-2 left-2">
-                                        <StatusBadge status={item.status} />
-                                    </div>
                                 </div>
-
-                                {/* Card Content */}
-                                <div className="p-4">
-                                    <h3 className="font-semibold text-gray-900 group-hover:text-[#004fa2] transition-colors line-clamp-2 min-h-[44px]">
-                                        {item.title}
-                                    </h3>
-
-                                    {/* Keywords */}
-                                    <div className="flex flex-wrap gap-1 mt-2">
-                                        {item.keywords?.slice(0, 3).map((keyword, idx) => (
-                                            <span key={idx} className="text-[10px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
-                                                {keyword}
-                                            </span>
+                                <div className="px-1 flex flex-col flex-1">
+                                    <h3 className="text-xs font-bold text-gray-900 line-clamp-1 mb-1 group-hover:text-[#004fa2] transition-colors">{item.title}</h3>
+                                    <div className="flex flex-wrap gap-1 mb-2 h-[18px] overflow-hidden">
+                                        {item.keywords?.slice(0, 3).map((k, i) => (
+                                            <span key={i} className="text-[8px] bg-gray-100 text-gray-500 px-1.5 py-[1px] rounded uppercase font-semibold tracking-wider">{k}</span>
                                         ))}
-                                        {item.keywords?.length > 3 && (
-                                            <span className="text-[10px] text-gray-400">
-                                                +{item.keywords.length - 3}
-                                            </span>
-                                        )}
                                     </div>
-
-                                    {/* Date */}
-                                    <div className="flex items-center gap-1.5 mt-3 text-xs text-gray-500">
-                                        <Calendar size={12} />
-                                        {item.createdAt}
+                                    <div className="mt-auto flex items-center justify-between text-[9px] text-gray-400 font-medium">
+                                        <div className="flex items-center gap-1">
+                                            <Calendar size={10} /> {item.createdAt}
+                                        </div>
+                                        <span className={item.status === 'published' ? 'text-green-600 uppercase font-bold' : 'text-gray-500 uppercase font-bold'}>{item.status}</span>
                                     </div>
                                 </div>
-
-                                {/* Actions */}
-                                <div className="px-4 py-3 border-t border-gray-100 flex items-center justify-between">
+                                <div className="mt-2 flex items-center justify-between pt-2 border-t border-gray-50 px-1">
                                     <div className="flex items-center gap-1">
-                                        <button
-                                            onClick={() => handleView(item)}
-                                            className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
-                                            title="View Album"
-                                        >
-                                            <Eye size={16} />
-                                        </button>
-                                        {isSuperAdmin && (
-                                            <>
-                                                <button
-                                                    onClick={() => handleEdit(item)}
-                                                    className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                                                    title="Edit Album"
-                                                >
-                                                    <Edit size={16} />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(item)}
-                                                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                    title="Delete Album"
-                                                >
-                                                    <Trash2 size={16} />
-                                                </button>
-                                            </>
-                                        )}
+                                        <button onClick={() => handleView(item)} className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-[#004fa2]"><Eye size={12}/></button>
+                                        <button onClick={() => handleEdit(item)} className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-green-600"><Edit size={12}/></button>
+                                        <button onClick={() => handleDelete(item)} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600"><Trash2 size={12}/></button>
                                     </div>
-                                    <a
-                                        href="/gallery"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-1 text-xs text-[#004fa2] hover:underline font-medium"
-                                    >
-                                        Preview
-                                        <ExternalLink size={12} />
+                                    <a href="/gallery" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-[9px] font-bold text-[#004fa2] hover:underline uppercase bg-blue-50 px-1.5 py-0.5 rounded">
+                                        Preview <ExternalLink size={10} />
                                     </a>
                                 </div>
                             </div>
@@ -640,7 +483,7 @@ const GalleryManagementPage = () => {
                 ) : (
                     /* List View */
                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                        <table className="w-full">
+                        <table className="w-full min-w-[800px]">
                             <thead className="bg-gray-50 border-b border-gray-100">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Album</th>
@@ -791,7 +634,7 @@ const GalleryManagementPage = () => {
             {/* View Album Modal */}
             {viewingItem && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[85vh] flex flex-col overflow-hidden">
                         {/* Modal Header */}
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-[#004fa2] to-[#0066cc]">
                             <div className="flex items-center gap-3">
@@ -814,7 +657,7 @@ const GalleryManagementPage = () => {
                         </div>
 
                         {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+                        <div className="p-4 md:p-6 overflow-y-auto flex-1">
                             {/* Main Image */}
                             <div className="relative aspect-video rounded-xl overflow-hidden bg-gray-100 mb-4">
                                 <img decoding="async"
@@ -912,7 +755,7 @@ const GalleryManagementPage = () => {
             {/* Add/Edit Album Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
                         {/* Modal Header */}
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -937,7 +780,7 @@ const GalleryManagementPage = () => {
                         </div>
 
                         {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+                        <div className="p-6 overflow-y-auto flex-1">
                             <div className="text-center py-12">
                                 <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                     <AlertCircle className="text-amber-500" size={32} />
@@ -988,41 +831,71 @@ const GalleryManagementPage = () => {
 
                         {/* Modal Body */}
                         <div className="p-6">
-                            <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-[#004fa2] transition-colors cursor-pointer">
-                                <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                className="hidden"
+                                multiple
+                                accept="image/jpeg, image/png, image/webp"
+                                onChange={handleFileSelect}
+                            />
+                            
+                            <div 
+                                onClick={triggerFileSelect}
+                                className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-[#004fa2] hover:bg-blue-50 transition-colors cursor-pointer group"
+                            >
+                                <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                                     <ImagePlus className="text-[#004fa2]" size={28} />
                                 </div>
                                 <p className="text-gray-700 font-medium mb-1">Drag and drop files here</p>
-                                <p className="text-sm text-gray-500 mb-4">or click to browse</p>
-                                <button className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors text-sm font-medium">
+                                <p className="text-sm text-gray-500 mb-4">or click anywhere to browse</p>
+                                <button type="button" className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors text-sm font-medium shadow-sm">
                                     Choose Files
                                 </button>
                                 <p className="text-xs text-gray-400 mt-4">
-                                    Supports: JPG, PNG, GIF, WEBP (Max 10MB each)
+                                    Supports: JPG, PNG, WEBP (Max 10MB each)
                                 </p>
                             </div>
 
-                            <div className="mt-4 p-4 bg-amber-50 rounded-lg">
-                                <div className="flex items-start gap-2">
-                                    <AlertCircle className="text-amber-500 shrink-0 mt-0.5" size={16} />
-                                    <div>
-                                        <p className="text-sm font-medium text-amber-800">Backend Required</p>
-                                        <p className="text-xs text-amber-600">
-                                            File upload functionality requires backend API integration.
-                                        </p>
+                            {uploadQueue.length > 0 && (
+                                <div className="mt-4 px-1">
+                                    <p className="text-sm font-semibold text-gray-900 mb-2">Selected Files ({uploadQueue.length})</p>
+                                    <div className="max-h-[160px] overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+                                        {uploadQueue.map((item, idx) => (
+                                            <div key={idx} className="flex items-center justify-between bg-gray-50 p-2.5 rounded-lg border border-gray-100 group">
+                                                <div className="flex items-center gap-2.5 overflow-hidden">
+                                                    <FileImage size={14} className="text-[#004fa2] shrink-0" />
+                                                    <span className="text-xs font-medium text-gray-700 truncate">{item.name}</span>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <span className="text-[10px] text-gray-500 font-semibold">{item.size}</span>
+                                                    <button onClick={() => removeQueuedFile(idx)} className="p-1 hover:bg-gray-200 rounded text-gray-400 hover:text-red-500 transition-colors">
+                                                        <X size={12} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
 
                         {/* Modal Footer */}
                         <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-end gap-3 bg-gray-50">
                             <button
-                                onClick={() => setShowUploadModal(false)}
+                                onClick={() => { setShowUploadModal(false); setUploadQueue([]); }}
                                 className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
                             >
                                 Cancel
                             </button>
+                            {uploadQueue.length > 0 && (
+                                <button
+                                    onClick={handleMockUpload}
+                                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm flex items-center gap-2"
+                                >
+                                    <Upload size={14} /> Upload {uploadQueue.length} files
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

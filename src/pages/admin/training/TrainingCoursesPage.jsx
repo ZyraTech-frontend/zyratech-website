@@ -461,81 +461,49 @@ const TrainingCoursesPage = () => {
 
                 {/* Statistics Cards - Conditionally Render Based on Active Tab */}
                 {activeTab === 'courses' && (
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                            onClick={() => { setSelectedCategory('all'); setCurrentPage(1); }}
-                        >
-                            <div className="flex items-center justify-between mb-2">
-                                <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                                    <BookOpen className="text-blue-600" size={18} />
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                        {[
+                            { id: 'all', title: 'Total Courses', count: stats.total, icon: BookOpen, cColor: 'text-blue-600', bg: 'bg-blue-50', badge: 'All' },
+                            { id: 'basic', title: 'Basic Programs', count: stats.basic, icon: Target, cColor: 'text-green-600', bg: 'bg-green-50', badge: 'Basic' },
+                            { id: 'intermediate', title: 'Intermediate', count: stats.intermediate, icon: TrendingUp, cColor: 'text-blue-600', bg: 'bg-blue-50', badge: 'Intermediate' },
+                            { id: 'advanced', title: 'Advanced', count: stats.advanced, icon: Award, cColor: 'text-purple-600', bg: 'bg-purple-50', badge: 'Advanced' },
+                            { id: 'internship', title: 'Internships', count: stats.internship, icon: Users, cColor: 'text-cyan-600', bg: 'bg-cyan-50', badge: 'Internship' },
+                        ].map((stat, i) => (
+                            <div key={i} className="p-2.5 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all bg-gray-50/80 flex items-center gap-2.5 cursor-pointer"
+                                onClick={() => { setSelectedCategory(stat.id); setCurrentPage(1); }}
+                            >
+                                <div className={`w-8 h-8 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
+                                    <stat.icon className={stat.cColor} size={14} />
                                 </div>
-                                <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">All</span>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between gap-1 mb-0.5">
+                                        <span className="text-[10px] text-gray-500 font-medium truncate">{stat.title}</span>
+                                        <span className={`text-[8px] font-bold uppercase px-1.5 py-[1px] rounded-full shrink-0 ${stat.bg} ${stat.cColor}`}>
+                                            {stat.badge}
+                                        </span>
+                                    </div>
+                                    <p className="text-sm font-bold text-gray-900 leading-none">{stat.count}</p>
+                                </div>
                             </div>
-                            <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-                            <p className="text-xs text-gray-500 mt-0.5">Total Courses</p>
-                        </div>
+                        ))}
 
-                        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                            onClick={() => { setSelectedCategory('basic'); setCurrentPage(1); }}
-                        >
-                            <div className="flex items-center justify-between mb-2">
-                                <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center group-hover:bg-green-100 transition-colors">
-                                    <Target className="text-green-600" size={18} />
-                                </div>
-                                <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Basic</span>
+                        {/* Rating Card */}
+                        <div className="p-2.5 rounded-lg border border-[#0066cc]/20 transition-all bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center gap-2.5 hover:shadow-md hover:brightness-105">
+                            <div className="w-8 h-8 rounded-md shrink-0 flex items-center justify-center bg-white/20">
+                                <Star className="text-white" size={14} />
                             </div>
-                            <p className="text-2xl font-bold text-gray-900">{stats.basic}</p>
-                            <p className="text-xs text-gray-500 mt-0.5">Basic Programs</p>
-                        </div>
-
-                        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                            onClick={() => { setSelectedCategory('intermediate'); setCurrentPage(1); }}
-                        >
-                            <div className="flex items-center justify-between mb-2">
-                                <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                                    <TrendingUp className="text-blue-600" size={18} />
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between gap-1 mb-0.5">
+                                    <span className="text-[10px] text-blue-100 font-medium truncate">Reviews</span>
+                                    <span className="text-[8px] font-bold uppercase px-1.5 py-[1px] rounded-full shrink-0 bg-white/20 text-white/90">
+                                        Rating
+                                    </span>
                                 </div>
-                                <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">Intermediate</span>
-                            </div>
-                            <p className="text-2xl font-bold text-gray-900">{stats.intermediate}</p>
-                            <p className="text-xs text-gray-500 mt-0.5">Intermediate</p>
-                        </div>
-
-                        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                            onClick={() => { setSelectedCategory('advanced'); setCurrentPage(1); }}
-                        >
-                            <div className="flex items-center justify-between mb-2">
-                                <div className="w-9 h-9 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
-                                    <Award className="text-purple-600" size={18} />
+                                <div className="flex items-end gap-1">
+                                    <p className="text-sm font-bold text-white leading-none">{stats.avgRating}</p>
+                                    <span className="text-[8px] text-blue-100/80 leading-none pb-px">({stats.totalReviews})</span>
                                 </div>
-                                <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">Advanced</span>
                             </div>
-                            <p className="text-2xl font-bold text-gray-900">{stats.advanced}</p>
-                            <p className="text-xs text-gray-500 mt-0.5">Advanced</p>
-                        </div>
-
-                        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                            onClick={() => { setSelectedCategory('internship'); setCurrentPage(1); }}
-                        >
-                            <div className="flex items-center justify-between mb-2">
-                                <div className="w-9 h-9 bg-cyan-50 rounded-lg flex items-center justify-center group-hover:bg-cyan-100 transition-colors">
-                                    <Users className="text-cyan-600" size={18} />
-                                </div>
-                                <span className="text-xs font-medium text-cyan-600 bg-cyan-50 px-2 py-0.5 rounded-full">Internship</span>
-                            </div>
-                            <p className="text-2xl font-bold text-gray-900">{stats.internship}</p>
-                            <p className="text-xs text-gray-500 mt-0.5">Internships</p>
-                        </div>
-
-                        <div className="bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
-                            <div className="flex items-center justify-between mb-2">
-                                <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
-                                    <Star className="text-white" size={18} />
-                                </div>
-                                <span className="text-xs font-medium text-white/90 bg-white/20 px-2 py-0.5 rounded-full">Rating</span>
-                            </div>
-                            <p className="text-2xl font-bold text-white">{stats.avgRating}</p>
-                            <p className="text-xs text-blue-100 mt-0.5">{stats.totalReviews} Reviews</p>
                         </div>
                     </div>
                 )}
@@ -625,89 +593,89 @@ const TrainingCoursesPage = () => {
                                     className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group"
                                 >
                                     {/* Card Header with Category */}
-                                    <div className="relative p-4 pb-2">
-                                        <div className="flex items-start justify-between mb-3">
-                                            <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${CATEGORY_CONFIG[course.category]?.color}`}>
+                                    <div className="relative p-3 pb-1.5">
+                                        <div className="flex items-start justify-between mb-2">
+                                            <span className={`px-1.5 py-0.5 rounded border text-[9px] font-bold uppercase ${CATEGORY_CONFIG[course.category]?.color}`}>
                                                 {CATEGORY_CONFIG[course.category]?.label}
                                             </span>
                                             {course.badge && <CourseBadge type={course.badge}>{course.badge}</CourseBadge>}
                                         </div>
 
-                                        <h3 className="text-base font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors line-clamp-2 min-h-[48px]">
+                                        <h3 className="text-sm font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors line-clamp-2 leading-tight min-h-[38px] mb-1">
                                             {course.title}
                                         </h3>
 
-                                        <p className="text-xs text-gray-500 mt-2 line-clamp-2">
+                                        <p className="text-[10px] text-gray-500 line-clamp-2 leading-snug">
                                             {course.description}
                                         </p>
                                     </div>
 
                                     {/* Course Meta */}
-                                    <div className="px-4 py-3 bg-gray-50/50 border-t border-gray-100">
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                                                <Clock size={13} className="text-gray-400" />
-                                                <span>{course.duration}</span>
+                                    <div className="px-3 py-2 bg-gray-50/50 border-t border-gray-100">
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div className="flex items-center gap-1.5 text-[10px] text-gray-600 truncate">
+                                                <Clock size={11} className="text-gray-400 shrink-0" />
+                                                <span className="truncate">{course.duration}</span>
                                             </div>
-                                            <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                                                <Users size={13} className="text-gray-400" />
-                                                <span>{course.participants}</span>
+                                            <div className="flex items-center gap-1.5 text-[10px] text-gray-600 truncate">
+                                                <Users size={11} className="text-gray-400 shrink-0" />
+                                                <span className="truncate">{course.participants}</span>
                                             </div>
-                                            <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                                                <Star size={13} className="text-amber-400 fill-amber-400" />
-                                                <span className="font-semibold text-gray-900">{course.rating}</span>
-                                                <span className="text-gray-400">({course.reviews})</span>
+                                            <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
+                                                <Star size={11} className="text-amber-400 fill-amber-400 shrink-0" />
+                                                <span className="font-bold text-gray-900">{course.rating}</span>
+                                                <span className="text-[8px] text-gray-400">({course.reviews})</span>
                                             </div>
-                                            <div className="flex items-center gap-1.5 text-xs">
-                                                <DollarSign size={13} className="text-green-500" />
-                                                <span className="font-bold text-gray-900">{course.price}</span>
+                                            <div className="flex items-center gap-1 text-[10px] truncate">
+                                                <DollarSign size={11} className="text-green-500 shrink-0" />
+                                                <span className="font-bold text-gray-900 truncate">{course.price}</span>
                                             </div>
                                         </div>
 
                                         {/* Level and Format */}
-                                        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-                                            <span className="text-[10px] font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                                        <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-gray-100">
+                                            <span className="text-[9px] font-bold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded truncate">
                                                 {course.level}
                                             </span>
-                                            <span className="text-[10px] font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                                            <span className="text-[9px] font-bold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded truncate">
                                                 {course.format}
                                             </span>
                                         </div>
                                     </div>
 
                                     {/* Actions */}
-                                    <div className="px-4 py-3 border-t border-gray-100 flex items-center justify-between">
-                                        <div className="flex items-center gap-1">
+                                    <div className="px-3 py-2 border-t border-gray-100 flex items-center justify-between bg-white">
+                                        <div className="flex items-center gap-0.5">
                                             <button
                                                 onClick={() => handleView(course)}
-                                                className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
+                                                className="p-1.5 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors"
                                                 title="View Details"
                                             >
-                                                <Eye size={16} />
+                                                <Eye size={14} />
                                             </button>
                                             <button
                                                 onClick={() => handleEdit(course)}
-                                                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
                                                 title="Edit Course"
                                             >
-                                                <Edit size={16} />
+                                                <Edit size={14} />
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(course)}
-                                                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                                                 title="Delete Course"
                                             >
-                                                <Trash2 size={16} />
+                                                <Trash2 size={14} />
                                             </button>
                                         </div>
                                         <a
                                             href={`/training/course/${course.id}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-1 text-xs text-[#004fa2] hover:underline font-medium"
+                                            className="flex items-center gap-1 text-[10px] text-[#004fa2] hover:underline font-bold uppercase transition-all"
                                         >
                                             Preview
-                                            <ExternalLink size={12} />
+                                            <ExternalLink size={10} />
                                         </a>
                                     </div>
                                 </div>
@@ -780,46 +748,27 @@ const TrainingCoursesPage = () => {
                 {activeTab === 'applications' && (
                     <>
                         {/* Applications Statistics */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center">
-                                        <Users className="text-blue-600" size={18} />
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            {[
+                                { id: 'all', title: 'Total Applications', count: applicationsStats.total, icon: Users, cColor: 'text-blue-600', bg: 'bg-blue-50' },
+                                { id: 'pending', title: 'Pending Review', count: applicationsStats.pending, icon: Clock, cColor: 'text-orange-600', bg: 'bg-orange-50' },
+                                { id: 'approved', title: 'Approved', count: applicationsStats.approved, icon: CheckCircle, cColor: 'text-green-600', bg: 'bg-green-50' },
+                                { id: 'rejected', title: 'Rejected', count: applicationsStats.rejected, icon: XCircle, cColor: 'text-red-600', bg: 'bg-red-50' }
+                            ].map((stat, i) => (
+                                <div key={i} className="p-2.5 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all bg-gray-50/80 flex items-center gap-2.5 cursor-pointer"
+                                    onClick={() => { setSelectedStatus(stat.id); setApplicationsPage(1); }}
+                                >
+                                    <div className={`w-8 h-8 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
+                                        <stat.icon className={stat.cColor} size={14} />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center justify-between gap-1 mb-0.5">
+                                            <span className="text-[10px] text-gray-500 font-medium truncate">{stat.title}</span>
+                                        </div>
+                                        <p className={`text-sm font-bold leading-none ${stat.cColor}`}>{stat.count}</p>
                                     </div>
                                 </div>
-                                <p className="text-2xl font-bold text-gray-900">{applicationsStats.total}</p>
-                                <p className="text-xs text-gray-500 mt-0.5">Total Applications</p>
-                            </div>
-
-                            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="w-9 h-9 bg-orange-50 rounded-lg flex items-center justify-center">
-                                        <Clock className="text-orange-600" size={18} />
-                                    </div>
-                                </div>
-                                <p className="text-2xl font-bold text-orange-600">{applicationsStats.pending}</p>
-                                <p className="text-xs text-gray-500 mt-0.5">Pending Review</p>
-                            </div>
-
-                            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center">
-                                        <CheckCircle className="text-green-600" size={18} />
-                                    </div>
-                                </div>
-                                <p className="text-2xl font-bold text-green-600">{applicationsStats.approved}</p>
-                                <p className="text-xs text-gray-500 mt-0.5">Approved</p>
-                            </div>
-
-                            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="w-9 h-9 bg-red-50 rounded-lg flex items-center justify-center">
-                                        <XCircle className="text-red-600" size={18} />
-                                    </div>
-                                </div>
-                                <p className="text-2xl font-bold text-red-600">{applicationsStats.rejected}</p>
-                                <p className="text-xs text-gray-500 mt-0.5">Rejected</p>
-                            </div>
+                            ))}
                         </div>
 
                         {/* Applications Filters */}
@@ -856,7 +805,7 @@ const TrainingCoursesPage = () => {
                                     className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[180px]"
                                 >
                                     <option value="all">All Courses</option>
-                                    {trainingCourses.map(course => (
+                                    {courses.map(course => (
                                         <option key={course.id} value={course.id}>{course.title}</option>
                                     ))}
                                 </select>
@@ -878,74 +827,74 @@ const TrainingCoursesPage = () => {
                         </div>
 
                         {/* Applications Cards */}
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                             {paginatedApplications.map((app) => (
                                 <div
                                     key={app.id}
                                     className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300"
                                 >
-                                    <div className="p-5">
-                                        <div className="flex items-start justify-between mb-4">
+                                    <div className="p-3">
+                                        <div className="flex items-start justify-between mb-2.5">
                                             <div className="flex-1">
-                                                <div className="flex items-center gap-3 mb-2">
-                                                    <h3 className="text-lg font-bold text-gray-900">{app.applicantName}</h3>
-                                                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${app.status === 'approved' ? 'bg-green-100 text-green-700' :
-                                                        app.status === 'rejected' ? 'bg-red-100 text-red-700' :
-                                                            'bg-orange-100 text-orange-700'
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <h3 className="text-sm font-bold text-gray-900 leading-none">{app.applicantName}</h3>
+                                                    <span className={`px-1.5 py-0.5 rounded border text-[9px] font-bold uppercase ${app.status === 'approved' ? 'bg-green-50 text-green-700 border-green-200' :
+                                                        app.status === 'rejected' ? 'bg-red-50 text-red-700 border-red-200' :
+                                                            'bg-orange-50 text-orange-700 border-orange-200'
                                                         }`}>
-                                                        {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
+                                                        {app.status}
                                                     </span>
                                                 </div>
-                                                <p className="text-sm text-gray-600 font-medium mb-1">{app.courseTitle}</p>
-                                                <div className="flex items-center gap-4 text-xs text-gray-500">
+                                                <p className="text-[11px] text-gray-600 font-medium mb-1 leading-tight">{app.courseTitle}</p>
+                                                <div className="flex items-center gap-3 text-[10px] text-gray-500">
                                                     <span className="flex items-center gap-1">
-                                                        <Calendar size={12} />
+                                                        <Calendar size={10} />
                                                         Applied: {new Date(app.appliedDate).toLocaleDateString()}
                                                     </span>
                                                     <span>ID: {app.id}</span>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-2">
+                                            <div className="flex items-center gap-1">
                                                 <button
                                                     onClick={() => handleViewApplication(app)}
-                                                    className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
+                                                    className="p-1.5 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors"
                                                     title="View Details"
                                                 >
-                                                    <Eye size={18} />
+                                                    <Eye size={14} />
                                                 </button>
                                                 {app.status === 'pending' && (
                                                     <>
                                                         <button
                                                             onClick={() => handleApproveApplication(app)}
-                                                            className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                            className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
                                                             title="Approve"
                                                         >
-                                                            <CheckCircle size={18} />
+                                                            <CheckCircle size={14} />
                                                         </button>
                                                         <button
                                                             onClick={() => handleRejectApplication(app)}
-                                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                                                             title="Reject"
                                                         >
-                                                            <XCircle size={18} />
+                                                            <XCircle size={14} />
                                                         </button>
                                                     </>
                                                 )}
                                             </div>
                                         </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-gray-100">
-                                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                <Mail size={14} className="text-gray-400" />
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 pt-2.5 border-t border-gray-100">
+                                            <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
+                                                <Mail size={12} className="text-gray-400 shrink-0" />
                                                 <span className="truncate">{app.email}</span>
                                             </div>
-                                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                <Phone size={14} className="text-gray-400" />
-                                                <span>{app.phone}</span>
+                                            <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
+                                                <Phone size={12} className="text-gray-400 shrink-0" />
+                                                <span className="truncate">{app.phone}</span>
                                             </div>
-                                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                <MapPin size={14} className="text-gray-400" />
-                                                <span>{app.location}, {app.country}</span>
+                                            <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
+                                                <MapPin size={12} className="text-gray-400 shrink-0" />
+                                                <span className="truncate">{app.location}, {app.country}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -1013,7 +962,7 @@ const TrainingCoursesPage = () => {
             {/* View Course Modal */}
             {viewingCourse && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
                         {/* Modal Header */}
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-[#004fa2] to-[#0066cc]">
                             <div className="flex items-center gap-3">

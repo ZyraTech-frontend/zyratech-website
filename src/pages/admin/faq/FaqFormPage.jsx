@@ -167,7 +167,7 @@ export default function FaqFormPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">
+                        <h1 className="text-xl md:text-3xl font-bold text-gray-900">
                             {id ? 'Edit FAQ' : 'Create New FAQ'}
                         </h1>
                         <p className="text-gray-600 mt-2">
