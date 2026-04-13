@@ -1,131 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { Users, MapPin, TrendingUp, Globe, Target, Flag } from 'lucide-react';
-import { motion, useReducedMotion } from 'framer-motion';
-import contentService from '../../../services/contentService';
+import React from 'react';
+import { Users, Building, MapPin, Globe, Handshake, TrendingUp } from 'lucide-react';
 
-const ICON_MAP = { Users, MapPin, TrendingUp, Globe, Target, Flag };
+const timelineData = [
+  { year: '2019', title: 'Inception', desc: 'Start of operations in Takoradi, Ghana. First cohort starts training at the Zyra Tech Training Academy.', icon: Users },
+  { year: '2020', title: 'Service Centre', desc: 'Service Centre opens in Takoradi with first European clients.', icon: Building },
+  { year: '2021', title: 'Expansion', desc: 'Expansion to new cities; satellite offices and cohorts start training.', icon: MapPin },
+  { year: '2022', title: 'Scaling', desc: 'Service Centre opens in additional locations; European clients scale with us.', icon: Globe },
+  { year: '2023', title: 'Partnerships', desc: 'First partnerships with international corporations; move to larger office spaces.', icon: Handshake },
+  { year: '2024', title: 'Growth', desc: 'Collaboration with partners to train thousands and open new offices in key cities.', icon: TrendingUp },
+];
 
 const Timeline = () => {
-  const shouldReduceMotion = useReducedMotion();
-
-  const [timelineData, setTimelineData] = useState([
-    { year: '2024', title: 'Established', desc: 'Formally established in Koforidua, Ghana.', icon: Users },
-    { year: '2025', title: 'Foundation Launch', desc: 'Launched Tech Talk 2025 and established the IT Education Foundation to provide digital skills training.', icon: MapPin },
-    { year: '2026', title: 'The Vision', desc: 'Executing our 4-quarter strategic plan, including new seminars, a technology competition, and expanding Academic Research Support.', icon: TrendingUp },
-  ]);
-
-  useEffect(() => {
-    const fetchTimeline = async () => {
-      try {
-        const { data } = await contentService.getTimeline();
-        if (data && data.length > 0) {
-          setTimelineData(data.map(item => ({
-            ...item,
-            icon: ICON_MAP[item.icon] || Users
-          })));
-        }
-      } catch (error) {
-        console.error('Error fetching timeline:', error);
-      }
-    };
-    fetchTimeline();
-  }, []);
-
   return (
-    <section className="py-16 sm:py-20 bg-white">
+    <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="max-w-3xl mx-auto text-center mb-10 sm:mb-12"
-          initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: shouldReduceMotion ? 0 : 0.6 }}
-        >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#004fa2] mb-6">Our Journey</h2>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">Key milestones from 2024 to 2026.</p>
-        </motion.div>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#004fa2] mb-10">Started in 2019 - Now We're Here!</h2>
 
-        <div className="hidden md:block">
-          <div className="relative max-w-6xl mx-auto">
-            <div className="absolute left-0 right-0 top-6 -translate-y-1/2 h-2 bg-[#004fa2] rounded-full" />
-
-            <div className="grid grid-cols-3 gap-8">
-              {timelineData.map((item, idx) => {
-                const Icon = item.icon;
-                return (
-                  <motion.div
-                    key={item.year}
-                    className="relative pt-12 group"
-                    initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.25 }}
-                    transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : idx * 0.08 }}
-                  >
-                    <div className="absolute top-6 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white flex items-center justify-center border border-[#004fa2]/25 shadow-sm z-10 transition-transform duration-200 group-hover:scale-105 group-focus-within:scale-105">
-                      <Icon className="w-5 h-5 text-[#004fa2]" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {timelineData.map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <div key={item.year} className="relative p-6 bg-white rounded-xl border border-gray-100 hover:shadow-lg transition">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-[#eaf6ff] flex items-center justify-center">
+                    <Icon className="w-5 h-5 text-[#60a5fa]" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div className="text-lg font-bold text-[#004fa2]">{item.year}</div>
                     </div>
-
-                    <div className="text-center">
-                      <div className="inline-flex text-sm font-semibold text-[#004fa2] bg-[#004fa2]/10 px-3 py-1 rounded-full">
-                        {item.year}
-                      </div>
+                    <div className="mt-2">
+                      <div className="text-sm font-semibold text-gray-700">{item.title}</div>
+                      <div className="mt-2 text-sm text-gray-600">{item.desc}</div>
                     </div>
-
-                    <div
-                      tabIndex={0}
-                      className="mt-4 bg-white rounded-2xl p-6 border-[3px] border-[#004fa2] shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004fa2]/35 focus-visible:ring-offset-2"
-                    >
-                      <div className="text-lg font-semibold text-gray-900">{item.title}</div>
-                      <div className="mt-2 text-sm sm:text-base text-gray-600 leading-relaxed">{item.desc}</div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        <div className="md:hidden">
-          <ol className="relative max-w-5xl mx-auto">
-            <div className="absolute left-4 sm:left-6 top-0 bottom-0 -translate-x-1/2 w-2 bg-[#004fa2] rounded-full" />
-            <div className="space-y-8 sm:space-y-10">
-              {timelineData.map((item, idx) => {
-                const Icon = item.icon;
-                return (
-                  <motion.li
-                    key={item.year}
-                    className="relative group"
-                    initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.25 }}
-                    transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : idx * 0.08 }}
-                  >
-                    <div className="absolute left-4 sm:left-6 top-6 w-10 h-10 rounded-full bg-white flex items-center justify-center -translate-x-1/2 border border-[#004fa2]/25 shadow-sm transition-transform duration-200 group-hover:scale-105 group-focus-within:scale-105">
-                      <Icon className="w-5 h-5 text-[#004fa2]" />
-                    </div>
-
-                    <div className="pl-12 sm:pl-16">
-                      <div className="grid gap-3 sm:gap-4 sm:grid-cols-[140px_1fr] items-start">
-                        <div className="pt-2">
-                          <div className="text-sm font-semibold text-[#004fa2] bg-[#004fa2]/10 px-3 py-1 rounded-full w-fit">
-                            {item.year}
-                          </div>
-                        </div>
-
-                        <div
-                          tabIndex={0}
-                          className="bg-white rounded-2xl p-6 border-[3px] border-[#004fa2] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004fa2]/35 focus-visible:ring-offset-2"
-                        >
-                          <div className="text-lg font-semibold text-gray-900">{item.title}</div>
-                          <div className="mt-2 text-sm sm:text-base text-gray-600 leading-relaxed">{item.desc}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.li>
-                );
-              })}
-            </div>
-          </ol>
+        <div className="mt-8">
+          <svg className="w-full h-12" viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 30 L1150 30" stroke="#dbeafe" strokeWidth="6" strokeLinecap="round" />
+            {timelineData.map((_, i) => {
+              const x = 50 + (1100 / (timelineData.length - 1)) * i;
+              return <circle key={i} cx={x} cy={30} r={6} fill="#ff6a00" />;
+            })}
+            {/* small connecting traces to look 'circuit-like' */}
+            {timelineData.map((_, i) => {
+              const x = 50 + (1100 / (timelineData.length - 1)) * i;
+              return <rect key={`r-${i}`} x={x - 2} y={20} width={4} height={6} fill="#ff6a00" opacity="0.6" />;
+            })}
+          </svg>
         </div>
       </div>
     </section>

@@ -326,7 +326,7 @@ const ReportsPage = () => {
     const [viewingReport, setViewingReport] = useState(null);
     const [showCreateModal, setShowCreateModal] = useState(false);
 
-    const itemsPerPage = 10;
+    const itemsPerPage = 6;
 
     // Filter reports
     const filteredReports = useMemo(() => {
@@ -425,8 +425,8 @@ const ReportsPage = () => {
                     </div>
                 </div>
 
-                {/* Quick Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {/* Quick Stats - Ultra High Density */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-3">
                     {quickStats.map((stat) => {
                         const Icon = stat.icon;
                         const isUp = stat.trend === 'up';
@@ -434,122 +434,123 @@ const ReportsPage = () => {
                         return (
                             <div
                                 key={stat.id}
-                                className={`bg-gradient-to-br ${stat.color} rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 text-white`}
+                                className="group bg-white rounded-lg p-2 sm:p-2.5 shadow-sm border border-gray-200 hover:border-[#004fa2]/50 hover:shadow-md transition-all duration-300 flex flex-col justify-between min-h-0"
                             >
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
-                                        <Icon className="text-white" size={18} />
-                                    </div>
-                                    <div className={`flex items-center gap-0.5 text-xs font-bold ${isUp ? 'text-green-200' : 'text-red-200'}`}>
-                                        {isUp ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+                                <div className="flex items-center justify-between mb-1">
+                                    <p className="text-[9px] sm:text-[10px] font-bold text-gray-400 group-hover:text-gray-600 transition-colors uppercase tracking-wider truncate pr-2">
+                                        {stat.title}
+                                    </p>
+                                    <Icon className="text-gray-300 group-hover:text-[#004fa2] transition-colors duration-300 shrink-0" size={12} />
+                                </div>
+                                <div className="flex items-end justify-between gap-1.5 mt-0.5 sm:mt-1">
+                                    <p className="text-[13px] sm:text-[15px] font-extrabold text-gray-900 truncate leading-none pt-0.5">
+                                        {stat.value}
+                                    </p>
+                                    <div className={`flex items-center gap-0.5 text-[8.5px] sm:text-[9px] font-bold px-1 py-0.5 rounded leading-none shrink-0 ${isUp ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'}`}>
+                                        {isUp ? <ArrowUpRight size={8} strokeWidth={3} /> : <ArrowDownRight size={8} strokeWidth={3} />}
                                         {stat.change}
                                     </div>
                                 </div>
-                                <p className="text-xl font-bold">{stat.value}</p>
-                                <p className="text-xs text-white/80 mt-0.5">{stat.title}</p>
                             </div>
                         );
                     })}
                 </div>
 
-                {/* Tabs */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-1.5 inline-flex">
+                {/* Tabs - Sleek & Compact */}
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-1 inline-flex w-full sm:w-auto overflow-x-auto scrollbar-hide shadow-sm shrink-0 items-center justify-start">
                     <button
                         onClick={() => setActiveTab('reports')}
-                        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${activeTab === 'reports'
-                            ? 'bg-[#004fa2] text-white shadow-md'
-                            : 'text-gray-600 hover:bg-gray-100'
+                        className={`shrink-0 px-4 py-1.5 rounded-lg text-[12px] font-semibold transition-all flex items-center gap-1.5 ${activeTab === 'reports'
+                            ? 'bg-white text-[#004fa2] shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                             }`}
                     >
-                        <FileText size={16} />
-                        Saved Reports
-                        <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'reports' ? 'bg-white/20' : 'bg-gray-100'
+                        <FileText size={14} />
+                        Saved 
+                        <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-bold ${activeTab === 'reports' ? 'bg-[#004fa2]/10 text-[#004fa2]' : 'bg-gray-200'
                             }`}>
                             {mockReports.length}
                         </span>
                     </button>
                     <button
                         onClick={() => setActiveTab('quick')}
-                        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${activeTab === 'quick'
-                            ? 'bg-[#004fa2] text-white shadow-md'
-                            : 'text-gray-600 hover:bg-gray-100'
+                        className={`shrink-0 px-4 py-1.5 rounded-lg text-[12px] font-semibold transition-all flex items-center gap-1.5 ${activeTab === 'quick'
+                            ? 'bg-white text-[#004fa2] shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                             }`}
                     >
-                        <BarChart3 size={16} />
-                        Quick Reports
+                        <BarChart3 size={14} />
+                        Quick
                     </button>
                     <button
                         onClick={() => setActiveTab('scheduled')}
-                        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${activeTab === 'scheduled'
-                            ? 'bg-[#004fa2] text-white shadow-md'
-                            : 'text-gray-600 hover:bg-gray-100'
+                        className={`shrink-0 px-4 py-1.5 rounded-lg text-[12px] font-semibold transition-all flex items-center gap-1.5 ${activeTab === 'scheduled'
+                            ? 'bg-white text-[#004fa2] shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                             }`}
                     >
-                        <Calendar size={16} />
+                        <Calendar size={14} />
                         Scheduled
                     </button>
                 </div>
 
-                {/* Filters and Search */}
+                {/* Filters and Search - Ultra Compact Dropdowns */}
                 {activeTab === 'reports' && (
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                        <div className="flex flex-col lg:flex-row gap-4">
+                    <div className="bg-white rounded-xl p-2 sm:p-2.5 shadow-sm border border-gray-200">
+                        <div className="flex flex-col md:flex-row gap-2">
                             {/* Search */}
                             <div className="flex-1 relative">
-                                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
                                 <input
                                     type="text"
-                                    placeholder="Search reports by name, description, or creator..."
+                                    placeholder="Search reports..."
                                     value={searchQuery}
                                     onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm transition-all"
+                                    className="w-full pl-8 pr-3 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#004fa2] text-[12px] bg-gray-50/50 transition-all font-medium h-[34px]"
                                 />
                             </div>
 
-                            {/* Type Filter */}
-                            <div className="flex items-center gap-2">
-                                <Filter className="text-gray-400" size={18} />
+                            {/* Filters Row */}
+                            <div className="flex gap-2">
                                 <select
                                     value={selectedType}
                                     onChange={(e) => { setSelectedType(e.target.value); setCurrentPage(1); }}
-                                    className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[160px]"
+                                    className="flex-1 sm:flex-none px-1.5 sm:px-2 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#004fa2] text-[11px] sm:text-xs bg-gray-50/50 min-w-0 font-medium h-[34px]"
                                 >
                                     <option value="all">All Types</option>
                                     {Object.entries(REPORT_TYPE_CONFIG).map(([key, val]) => (
                                         <option key={key} value={key}>{val.label}</option>
                                     ))}
                                 </select>
-                            </div>
 
-                            {/* Status Filter */}
-                            <select
-                                value={selectedStatus}
-                                onChange={(e) => { setSelectedStatus(e.target.value); setCurrentPage(1); }}
-                                className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[120px]"
-                            >
-                                <option value="all">All Status</option>
-                                <option value="active">✓ Active</option>
-                                <option value="paused">⏸ Paused</option>
-                                <option value="draft">📝 Draft</option>
-                            </select>
-
-                            {/* Reset Filters */}
-                            {(searchQuery || selectedType !== 'all' || selectedStatus !== 'all') && (
-                                <button
-                                    onClick={resetFilters}
-                                    className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
+                                <select
+                                    value={selectedStatus}
+                                    onChange={(e) => { setSelectedStatus(e.target.value); setCurrentPage(1); }}
+                                    className="flex-1 sm:flex-none px-1.5 sm:px-2 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#004fa2] text-[11px] sm:text-xs bg-gray-50/50 min-w-0 font-medium h-[34px]"
                                 >
-                                    <X size={16} />
-                                    Reset
-                                </button>
-                            )}
+                                    <option value="all">Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="paused">Paused</option>
+                                    <option value="draft">Draft</option>
+                                </select>
+
+                                {(searchQuery || selectedType !== 'all' || selectedStatus !== 'all') && (
+                                    <button
+                                        onClick={resetFilters}
+                                        className="shrink-0 h-[34px] w-[34px] flex items-center justify-center text-gray-500 hover:text-red-600 hover:bg-red-50 border border-gray-200 rounded-lg transition-colors bg-gray-50"
+                                        title="Reset Filters"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                 )}
 
-                {/* Saved Reports Tab */}
+                {/* Saved Reports Tab - High Density Flow */}
                 {activeTab === 'reports' && (
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 pb-4">
                         {paginatedReports.map((report) => {
                             const typeConfig = REPORT_TYPE_CONFIG[report.type];
                             const TypeIcon = typeConfig.icon;
@@ -558,65 +559,59 @@ const ReportsPage = () => {
                             return (
                                 <div
                                     key={report.id}
-                                    className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 overflow-hidden"
+                                    className="bg-white rounded-xl shadow-sm border border-gray-200 hover:border-[#004fa2]/40 hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col group relative"
                                 >
-                                    <div className="p-5">
-                                        <div className="flex items-start gap-4">
+                                    <div className="p-3 sm:p-4 flex-1">
+                                        <div className="flex items-start gap-3">
                                             {/* Icon */}
-                                            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${typeConfig.gradient} flex items-center justify-center text-white shrink-0`}>
-                                                <TypeIcon size={22} />
+                                            <div className={`w-10 h-10 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-500 shrink-0 group-hover:bg-[#004fa2]/5 transition-colors`}>
+                                                <TypeIcon size={18} />
                                             </div>
 
                                             {/* Content */}
                                             <div className="flex-1 min-w-0">
-                                                <div className="flex items-start justify-between gap-4">
-                                                    <div>
-                                                        <h3 className="font-bold text-gray-900 text-lg">{report.name}</h3>
-                                                        <p className="text-sm text-gray-500 mt-0.5 line-clamp-1">{report.description}</p>
+                                                <div className="flex items-start justify-between gap-2">
+                                                    <div className="min-w-0 flex-1">
+                                                        <h3 className="font-bold text-gray-900 text-[13px] sm:text-sm truncate pr-2 group-hover:text-[#004fa2] transition-colors">{report.name}</h3>
+                                                        <p className="text-[11px] sm:text-xs text-gray-500 mt-0.5 line-clamp-1">{report.description}</p>
                                                     </div>
-                                                    <div className="flex items-center gap-2 shrink-0">
-                                                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${report.status === 'active' ? 'bg-green-100 text-green-700' :
-                                                            report.status === 'paused' ? 'bg-amber-100 text-amber-700' :
-                                                                'bg-gray-100 text-gray-600'
-                                                            }`}>
+                                                    <div className="flex items-center gap-1 shrink-0 bg-gray-50 border border-gray-100 rounded-md px-1.5 py-0.5">
+                                                        <span className={`w-1.5 h-1.5 rounded-full ${report.status === 'active' ? 'bg-green-500' :
+                                                            report.status === 'paused' ? 'bg-amber-500' : 'bg-gray-400'}`} />
+                                                        <span className="text-[9px] font-bold uppercase text-gray-600 tracking-wider">
                                                             {report.status}
                                                         </span>
                                                     </div>
                                                 </div>
 
                                                 {/* Meta Info */}
-                                                <div className="flex items-center flex-wrap gap-3 mt-3">
-                                                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium border ${typeConfig.color}`}>
-                                                        <TypeIcon size={10} />
+                                                <div className="flex items-center flex-wrap gap-2 mt-2.5">
+                                                    <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide ${typeConfig.color}`}>
                                                         {typeConfig.label}
                                                     </span>
-                                                    <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${freqConfig.color}`}>
+                                                    <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide ${freqConfig.color}`}>
                                                         {freqConfig.label}
                                                     </span>
-                                                    <span className="text-xs text-gray-400 flex items-center gap-1">
-                                                        <FileText size={10} />
+                                                    <span className="text-[10px] font-medium text-gray-500 flex items-center gap-1 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">
+                                                        <FileText size={10} className="text-gray-400" />
                                                         {report.format}
                                                     </span>
-                                                    <span className="text-xs text-gray-400 flex items-center gap-1">
-                                                        <Clock size={10} />
-                                                        Last: {formatRelativeDate(report.lastGenerated)}
-                                                    </span>
-                                                    <span className="text-xs text-gray-400 flex items-center gap-1">
-                                                        <Mail size={10} />
-                                                        {report.recipients.length} recipient{report.recipients.length > 1 ? 's' : ''}
+                                                    <span className="text-[10px] font-medium text-gray-500 flex items-center gap-1">
+                                                        <Mail size={10} className="text-gray-400" />
+                                                        {report.recipients.length} rec.
                                                     </span>
                                                 </div>
-
-                                                {/* Metrics */}
-                                                <div className="flex flex-wrap gap-1 mt-3">
-                                                    {report.metrics.slice(0, 4).map((metric, idx) => (
-                                                        <span key={idx} className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[10px]">
+                                                
+                                                {/* Metrics Space (optional spacing element instead of listing them full) */}
+                                                <div className="flex flex-wrap gap-1 md:gap-1.5 mt-2.5 pt-2.5 border-t border-gray-50">
+                                                    {report.metrics.slice(0, 3).map((metric, idx) => (
+                                                        <span key={idx} className="px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded text-[9px] font-medium truncate max-w-[100px]">
                                                             {metric}
                                                         </span>
                                                     ))}
-                                                    {report.metrics.length > 4 && (
-                                                        <span className="px-2 py-0.5 bg-gray-100 text-gray-400 rounded text-[10px]">
-                                                            +{report.metrics.length - 4} more
+                                                    {report.metrics.length > 3 && (
+                                                        <span className="px-1.5 py-0.5 bg-gray-100 text-gray-400 rounded text-[9px] font-medium">
+                                                            +{report.metrics.length - 3}
                                                         </span>
                                                     )}
                                                 </div>
@@ -624,51 +619,49 @@ const ReportsPage = () => {
                                         </div>
                                     </div>
 
-                                    {/* Actions */}
-                                    <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-                                        <div className="text-xs text-gray-400">
-                                            Created by <span className="font-medium text-gray-600">{report.createdBy}</span>
+                                    {/* Actions & Footer */}
+                                    <div className="px-3 py-2 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
+                                        <div className="text-[10px] font-medium text-gray-500 flex flex-wrap gap-2 truncate">
+                                            <span>By {report.createdBy}</span>
                                             {report.nextScheduled && (
-                                                <span className="ml-3">
-                                                    Next run: <span className="font-medium text-gray-600">{formatDate(report.nextScheduled)}</span>
+                                                <span className="flex items-center gap-1 before:content-['•'] before:text-gray-300 before:mr-1 max-sm:hidden">
+                                                    <Clock size={10} />
+                                                    {formatDate(report.nextScheduled).split(',')[0]}
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="flex items-center gap-1">
+                                        <div className="flex items-center gap-1 shrink-0 ml-2">
                                             <button
                                                 onClick={() => handleRunReport(report)}
-                                                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
                                                 title="Run Now"
                                             >
-                                                <Play size={14} />
+                                                <Play size={13} />
                                             </button>
                                             <button
                                                 onClick={() => handleDownloadReport(report)}
-                                                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
                                                 title="Download"
                                             >
-                                                <Download size={14} />
+                                                <Download size={13} />
                                             </button>
                                             <button
                                                 onClick={() => handleViewReport(report)}
-                                                className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
+                                                className="p-1.5 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors"
                                                 title="View Details"
                                             >
-                                                <Eye size={14} />
+                                                <Eye size={13} />
                                             </button>
                                             <button
                                                 onClick={() => handleToggleStatus(report)}
-                                                className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
-                                                title={report.status === 'active' ? 'Pause' : 'Activate'}
+                                                className="p-1.5 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded transition-colors"
                                             >
-                                                {report.status === 'active' ? <Pause size={14} /> : <Play size={14} />}
+                                                {report.status === 'active' ? <Pause size={13} /> : <Play size={13} />}
                                             </button>
                                             <button
-                                                onClick={() => { }}
-                                                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                                                title="More"
+                                                className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
                                             >
-                                                <MoreVertical size={14} />
+                                                <MoreVertical size={13} />
                                             </button>
                                         </div>
                                     </div>
@@ -697,27 +690,27 @@ const ReportsPage = () => {
 
                         {/* Pagination */}
                         {totalPages > 1 && (
-                            <div className="flex items-center justify-between bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                                <p className="text-sm text-gray-500">
-                                    Showing <span className="font-semibold text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
-                                    <span className="font-semibold text-gray-900">{Math.min(currentPage * itemsPerPage, filteredReports.length)}</span> of{' '}
-                                    <span className="font-semibold text-gray-900">{filteredReports.length}</span> reports
+                            <div className="flex justify-center sm:justify-between items-center bg-white rounded-xl p-2.5 sm:p-3 shadow-sm border border-gray-200 mt-2">
+                                <p className="text-[11px] sm:text-xs text-gray-500 font-medium hidden sm:block">
+                                    Showing <span className="font-bold text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
+                                    <span className="font-bold text-gray-900">{Math.min(currentPage * itemsPerPage, filteredReports.length)}</span> of{' '}
+                                    <span className="font-bold text-gray-900">{filteredReports.length}</span> reports
                                 </p>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1 sm:ml-auto">
                                     <button
                                         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                         disabled={currentPage === 1}
-                                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                        className="p-1.5 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                                     >
-                                        <ChevronLeft size={18} />
+                                        <ChevronLeft size={16} />
                                     </button>
                                     <div className="flex items-center gap-1">
                                         {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                                             <button
                                                 key={page}
                                                 onClick={() => setCurrentPage(page)}
-                                                className={`min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-all ${currentPage === page
-                                                    ? 'bg-[#004fa2] text-white shadow-md'
+                                                className={`min-w-[28px] h-7 px-2 rounded-md text-[11px] font-bold transition-all ${currentPage === page
+                                                    ? 'bg-[#004fa2] text-white shadow-sm'
                                                     : 'text-gray-600 hover:bg-gray-100'
                                                     }`}
                                             >
@@ -728,9 +721,9 @@ const ReportsPage = () => {
                                     <button
                                         onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                         disabled={currentPage === totalPages}
-                                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                        className="p-1.5 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                                     >
-                                        <ChevronRight size={18} />
+                                        <ChevronRight size={16} />
                                     </button>
                                 </div>
                             </div>
@@ -738,33 +731,29 @@ const ReportsPage = () => {
                     </div>
                 )}
 
-                {/* Quick Reports Tab */}
+                {/* Quick Reports Tab - High Density */}
                 {activeTab === 'quick' && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                         {Object.entries(REPORT_TYPE_CONFIG).filter(([key]) => key !== 'custom').map(([key, config]) => {
                             const Icon = config.icon;
                             return (
                                 <div
                                     key={key}
-                                    className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 overflow-hidden group cursor-pointer"
+                                    className="bg-white rounded-xl shadow-sm border border-gray-200 hover:border-[#004fa2]/40 transition-all duration-300 group cursor-pointer overflow-hidden flex items-stretch"
                                     onClick={() => console.log('Generate quick report:', key)}
                                 >
-                                    <div className={`h-24 bg-gradient-to-br ${config.gradient} flex items-center justify-center`}>
-                                        <Icon className="text-white" size={40} />
+                                    <div className={`w-12 shrink-0 bg-gradient-to-br ${config.gradient} flex items-center justify-center`}>
+                                        <Icon className="text-white opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-all" size={20} />
                                     </div>
-                                    <div className="p-5">
-                                        <h3 className="font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors">
+                                    <div className="p-3 flex-1 min-w-0 flex flex-col justify-center">
+                                        <h3 className="font-bold text-gray-900 text-[13px] group-hover:text-[#004fa2] transition-colors truncate">
                                             {config.label}
                                         </h3>
-                                        <p className="text-sm text-gray-500 mt-1">
-                                            Generate a quick {config.label.toLowerCase()} for the current period
+                                        <p className="text-[10px] text-gray-500 mt-0.5 line-clamp-1">
+                                            Generate for current period
                                         </p>
-                                        <div className="mt-4 flex items-center justify-between">
-                                            <span className="text-xs text-gray-400">Instant generation</span>
-                                            <button className="px-3 py-1.5 bg-gray-100 hover:bg-[#004fa2] hover:text-white text-gray-600 rounded-lg text-xs font-medium transition-all flex items-center gap-1">
-                                                <Play size={12} />
-                                                Generate
-                                            </button>
+                                        <div className="mt-2 text-[#004fa2] text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 group-hover:underline">
+                                            <Play size={8} /> Run Now
                                         </div>
                                     </div>
                                 </div>
@@ -863,79 +852,82 @@ const ReportsPage = () => {
                 )}
             </div>
 
-            {/* View Report Modal */}
+            {/* View Report Modal - High Density & Professional */}
             {viewingReport && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 sm:p-4">
+                    <div className="bg-white sm:rounded-2xl shadow-2xl w-full sm:max-w-2xl max-h-[90vh] flex flex-col md:overflow-hidden rounded-t-2xl animate-fade-in-up sm:animate-scale-in">
                         {/* Modal Header */}
-                        <div className={`px-6 py-4 bg-gradient-to-r ${REPORT_TYPE_CONFIG[viewingReport.type].gradient} flex items-center justify-between`}>
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                        <div className={`px-4 sm:px-6 py-4 bg-gradient-to-r ${REPORT_TYPE_CONFIG[viewingReport.type].gradient} flex items-start justify-between gap-4 shrink-0`}>
+                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                                <div className="w-10 h-10 sm:w-12 sm:h-12 shrink-0 bg-white/20 sm:bg-white/20 rounded-xl flex items-center justify-center shadow-sm">
                                     {React.createElement(REPORT_TYPE_CONFIG[viewingReport.type].icon, { className: 'text-white', size: 22 })}
                                 </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-white">{viewingReport.name}</h2>
-                                    <p className="text-white/80 text-xs">{viewingReport.id}</p>
+                                <div className="min-w-0">
+                                    <h2 className="text-sm sm:text-lg font-bold text-white leading-tight mb-0.5 pr-2 truncate">{viewingReport.name}</h2>
+                                    <p className="text-white/80 text-[10px] sm:text-xs font-medium tracking-wide uppercase">{viewingReport.id}</p>
                                 </div>
                             </div>
                             <button
                                 onClick={() => setViewingReport(null)}
-                                className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                                className="p-1.5 text-white/70 hover:text-white hover:bg-white/20 rounded-lg transition-all shrink-0 -mr-2 sm:mr-0"
                             >
                                 <X size={20} />
                             </button>
                         </div>
 
                         {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-                            <div className="space-y-5">
-                                {/* Status & Type */}
+                        <div className="p-4 sm:p-6 overflow-y-auto w-full">
+                            <div className="space-y-5 sm:space-y-6">
+                                {/* Status & Type - Compact Row */}
                                 <div className="flex items-center flex-wrap gap-2">
-                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium border ${REPORT_TYPE_CONFIG[viewingReport.type].color}`}>
-                                        {React.createElement(REPORT_TYPE_CONFIG[viewingReport.type].icon, { size: 12 })}
+                                    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${REPORT_TYPE_CONFIG[viewingReport.type].color}`}>
+                                        {React.createElement(REPORT_TYPE_CONFIG[viewingReport.type].icon, { size: 10 })}
                                         {REPORT_TYPE_CONFIG[viewingReport.type].label}
                                     </span>
-                                    <span className={`px-2.5 py-1 rounded text-xs font-medium ${FREQUENCY_CONFIG[viewingReport.frequency].color}`}>
+                                    <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${FREQUENCY_CONFIG[viewingReport.frequency].color}`}>
                                         {FREQUENCY_CONFIG[viewingReport.frequency].label}
                                     </span>
-                                    <span className={`px-2.5 py-1 rounded text-xs font-bold ${viewingReport.status === 'active' ? 'bg-green-100 text-green-700' :
+                                    <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 ${viewingReport.status === 'active' ? 'bg-green-100 text-green-700' :
                                         viewingReport.status === 'paused' ? 'bg-amber-100 text-amber-700' :
                                             'bg-gray-100 text-gray-600'
                                         }`}>
-                                        {viewingReport.status.toUpperCase()}
+                                        <span className={`w-1.5 h-1.5 rounded-full ${viewingReport.status === 'active' ? 'bg-green-500' : viewingReport.status === 'paused' ? 'bg-amber-500' : 'bg-gray-400'}`} />
+                                        {viewingReport.status}
                                     </span>
                                 </div>
 
                                 {/* Description */}
                                 <div>
-                                    <h3 className="text-sm font-semibold text-gray-500 mb-1">Description</h3>
-                                    <p className="text-gray-700">{viewingReport.description}</p>
+                                    <h3 className="text-[11px] sm:text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Description</h3>
+                                    <p className="text-[13px] sm:text-sm text-gray-700 leading-relaxed bg-gray-50 p-3 rounded-lg border border-gray-100">{viewingReport.description}</p>
                                 </div>
 
                                 {/* Schedule Info */}
-                                <div className="bg-gray-50 rounded-xl p-4">
-                                    <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center gap-2">
-                                        <Calendar size={14} />
-                                        Schedule
-                                    </h3>
-                                    <div className="grid grid-cols-2 gap-4 text-sm">
-                                        <div>
-                                            <p className="text-gray-400">Last Generated</p>
-                                            <p className="font-semibold text-gray-900">{formatDate(viewingReport.lastGenerated)}</p>
+                                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                                    <div className="bg-gray-50 border border-gray-100 rounded-xl p-3 sm:p-4">
+                                        <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1 flex items-center gap-1.5">
+                                            <Calendar size={12} /> Last Generated
                                         </div>
-                                        <div>
-                                            <p className="text-gray-400">Next Scheduled</p>
-                                            <p className="font-semibold text-gray-900">{formatDate(viewingReport.nextScheduled)}</p>
+                                        <div className="text-[13px] sm:text-sm font-bold text-gray-900 truncate">
+                                            {formatDate(viewingReport.lastGenerated)}
+                                        </div>
+                                    </div>
+                                    <div className="bg-gray-50 border border-gray-100 rounded-xl p-3 sm:p-4">
+                                        <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1 flex items-center gap-1.5">
+                                            <Clock size={12} /> Next Scheduled
+                                        </div>
+                                        <div className="text-[13px] sm:text-sm font-bold text-gray-900 truncate">
+                                            {formatDate(viewingReport.nextScheduled)}
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Metrics */}
                                 <div>
-                                    <h3 className="text-sm font-semibold text-gray-500 mb-2">Included Metrics</h3>
-                                    <div className="flex flex-wrap gap-2">
+                                    <h3 className="text-[11px] sm:text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Included Metrics</h3>
+                                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                                         {viewingReport.metrics.map((metric, idx) => (
-                                            <span key={idx} className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">
+                                            <span key={idx} className="px-2.5 py-1 text-[11px] sm:text-xs bg-cyan-50/50 border border-cyan-100 text-[#004fa2] rounded-lg font-semibold hover:bg-cyan-50 transition-colors">
                                                 {metric}
                                             </span>
                                         ))}
@@ -944,60 +936,71 @@ const ReportsPage = () => {
 
                                 {/* Recipients */}
                                 <div>
-                                    <h3 className="text-sm font-semibold text-gray-500 mb-2 flex items-center gap-2">
-                                        <Mail size={14} />
-                                        Recipients ({viewingReport.recipients.length})
+                                    <h3 className="text-[11px] sm:text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                                        <Mail size={12} />
+                                        Recipients <span className="bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded-md text-[9px]">{viewingReport.recipients.length}</span>
                                     </h3>
-                                    <div className="space-y-1">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                         {viewingReport.recipients.map((email, idx) => (
-                                            <div key={idx} className="text-sm text-gray-700 flex items-center gap-2 py-1">
-                                                <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600">
+                                            <div key={idx} className="bg-white border border-gray-200 rounded-lg p-2.5 flex items-center gap-2.5 shadow-sm">
+                                                <div className="w-8 h-8 rounded-full bg-[#004fa2]/10 flex items-center justify-center text-[#004fa2] text-[11px] font-bold shrink-0">
                                                     {email.split('@')[0][0].toUpperCase()}
                                                 </div>
-                                                {email}
+                                                <p className="text-[12px] text-gray-800 font-semibold truncate min-w-0" title={email}>{email}</p>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
 
                                 {/* Format & Creator */}
-                                <div className="grid grid-cols-2 gap-4 text-sm">
-                                    <div className="bg-gray-50 rounded-xl p-3">
-                                        <p className="text-gray-400">Format</p>
-                                        <p className="font-semibold text-gray-900 flex items-center gap-1">
-                                            <FileText size={14} />
-                                            {viewingReport.format}
-                                        </p>
+                                <div className="grid grid-cols-2 gap-3 sm:gap-4 pt-1 sm:pt-0">
+                                    <div className="flex items-center gap-2.5 p-3 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden">
+                                        <div className="w-9 h-9 rounded-lg bg-gray-200/60 flex items-center justify-center shrink-0">
+                                            <FileText size={16} className="text-gray-500" />
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-[10px] text-gray-400 uppercase font-semibold">Format</p>
+                                            <p className="text-[12px] sm:text-sm font-bold text-gray-900 truncate">
+                                                {viewingReport.format}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="bg-gray-50 rounded-xl p-3">
-                                        <p className="text-gray-400">Created By</p>
-                                        <p className="font-semibold text-gray-900">{viewingReport.createdBy}</p>
+                                    <div className="flex items-center gap-2.5 p-3 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden">
+                                        <div className="w-9 h-9 rounded-lg bg-gray-200/60 flex items-center justify-center shrink-0">
+                                            <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-[10px] text-gray-400 uppercase font-semibold">Created By</p>
+                                            <p className="text-[12px] sm:text-sm font-bold text-gray-900 truncate">
+                                                {viewingReport.createdBy}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50">
+                        {/* Modal Footer - Responsive */}
+                        <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 bg-gray-50 flex flex-col-reverse sm:flex-row items-center justify-end gap-2 sm:gap-3 shrink-0">
                             <button
                                 onClick={() => setViewingReport(null)}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
+                                className="w-full sm:w-auto px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-lg transition-colors font-bold text-[13px] sm:text-sm"
                             >
                                 Close
                             </button>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 w-full sm:w-auto">
                                 <button
                                     onClick={() => handleDownloadReport(viewingReport)}
-                                    className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm flex items-center gap-1.5"
+                                    className="flex-1 sm:flex-none px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors shadow-sm font-bold text-[13px] sm:text-sm flex items-center justify-center gap-1.5 whitespace-nowrap"
                                 >
-                                    <Download size={14} />
+                                    <Download size={15} className="text-gray-500" />
                                     Download
                                 </button>
                                 <button
                                     onClick={() => handleRunReport(viewingReport)}
-                                    className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-medium text-sm flex items-center gap-1.5"
+                                    className="flex-1 sm:flex-none px-5 py-2 bg-[#004fa2] border border-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-all shadow-md hover:shadow-lg font-bold text-[13px] sm:text-sm flex items-center justify-center gap-1.5 whitespace-nowrap"
                                 >
-                                    <Play size={14} />
+                                    <Play size={15} className="fill-current" />
                                     Run Now
                                 </button>
                             </div>
@@ -1006,50 +1009,129 @@ const ReportsPage = () => {
                 </div>
             )}
 
-            {/* Create Report Modal */}
+            {/* Create Report Modal - Professional UI Form */}
             {showCreateModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 sm:p-4">
+                    <div className="bg-white sm:rounded-2xl shadow-2xl w-full sm:max-w-2xl max-h-[90vh] flex flex-col md:overflow-hidden rounded-t-2xl animate-fade-in-up sm:animate-scale-in">
                         {/* Modal Header */}
-                        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                        <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-start justify-between gap-4 bg-gray-50/50 shrink-0">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                    <Plus className="text-white" size={20} />
+                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center shadow-sm shrink-0">
+                                    <Plus className="text-white" size={22} />
                                 </div>
                                 <div>
-                                    <h2 className="text-lg font-bold text-gray-900">Create New Report</h2>
-                                    <p className="text-gray-500 text-xs">Configure a new scheduled report</p>
+                                    <h2 className="text-sm sm:text-lg font-bold text-gray-900">Create New Report</h2>
+                                    <p className="text-[11px] sm:text-xs text-gray-500 font-medium mt-0.5">Configure report parameters and schedule</p>
                                 </div>
                             </div>
                             <button
                                 onClick={() => setShowCreateModal(false)}
-                                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                className="p-1.5 text-gray-400 hover:text-gray-900 hover:bg-gray-200 rounded-lg transition-colors shrink-0 -mt-1 sm:mt-0"
                             >
                                 <X size={20} />
                             </button>
                         </div>
 
                         {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-                            <div className="text-center py-12">
-                                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <AlertCircle className="text-amber-500" size={32} />
+                        <div className="p-4 sm:p-6 overflow-y-auto w-full">
+                            <form className="space-y-6">
+                                {/* Basic Details */}
+                                <div>
+                                    <h3 className="text-[11px] sm:text-xs font-bold text-gray-800 uppercase tracking-wider mb-3">Basic Information</h3>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-medium text-gray-700 mb-1.5">Report Name <span className="text-red-500">*</span></label>
+                                            <input 
+                                                type="text" 
+                                                placeholder="e.g. Q1 Marketing Campaign Analysis" 
+                                                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-white shadow-sm transition-all"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-medium text-gray-700 mb-1.5">Description</label>
+                                            <textarea 
+                                                placeholder="Briefly describe the purpose of this report..." 
+                                                rows="2"
+                                                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-white shadow-sm transition-all resize-none"
+                                            ></textarea>
+                                        </div>
+                                    </div>
                                 </div>
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Coming Soon</h3>
-                                <p className="text-sm text-gray-500 max-w-md mx-auto">
-                                    The report builder form will be available once the backend API is ready.
-                                    You will be able to configure custom reports with flexible scheduling and delivery options.
-                                </p>
-                            </div>
+
+                                {/* Configuration */}
+                                <div>
+                                    <h3 className="text-[11px] sm:text-xs font-bold text-gray-800 uppercase tracking-wider mb-3 pt-2 border-t border-gray-100">Configuration</h3>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-medium text-gray-700 mb-1.5">Data Source (Type) <span className="text-red-500">*</span></label>
+                                            <select className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-white shadow-sm transition-all">
+                                                <option value="" disabled selected>Select a report type...</option>
+                                                {Object.entries(REPORT_TYPE_CONFIG).map(([key, val]) => (
+                                                    <option key={key} value={key}>{val.label}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-medium text-gray-700 mb-1.5">Export Format <span className="text-red-500">*</span></label>
+                                            <select className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-white shadow-sm transition-all">
+                                                <option value="PDF">PDF Document (.pdf)</option>
+                                                <option value="Excel">Excel Spreadsheet (.xlsx)</option>
+                                                <option value="CSV">Data File (.csv)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Schedule & Delivery */}
+                                <div>
+                                    <h3 className="text-[11px] sm:text-xs font-bold text-gray-800 uppercase tracking-wider mb-3 pt-2 border-t border-gray-100">Schedule & Delivery</h3>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-medium text-gray-700 mb-1.5">Generation Frequency</label>
+                                            <select className="w-full sm:w-1/2 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-white shadow-sm transition-all">
+                                                <option value="one_time">One-time (Run immediately)</option>
+                                                <option value="daily">Daily</option>
+                                                <option value="weekly">Weekly</option>
+                                                <option value="monthly">Monthly</option>
+                                                <option value="quarterly">Quarterly</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-medium text-gray-700 mb-1.5 flex items-center gap-1.5">
+                                                Recipients <span className="text-gray-400 font-normal">(comma separated emails)</span>
+                                            </label>
+                                            <div className="relative">
+                                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="admin@zyratech.com, managers@zyratech.com" 
+                                                    className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-white shadow-sm transition-all"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
 
                         {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-end gap-3 bg-gray-50">
+                        <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-100 bg-gray-50 flex flex-col-reverse sm:flex-row items-center justify-end gap-2 sm:gap-3 shrink-0">
                             <button
                                 onClick={() => setShowCreateModal(false)}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm"
+                                className="w-full sm:w-auto px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-lg transition-colors font-bold text-[13px] sm:text-sm"
                             >
-                                Close
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => {
+                                    /* Fake submit logic for now */
+                                    console.log("Create button clicked");
+                                    setShowCreateModal(false);
+                                }}
+                                className="w-full sm:w-auto px-6 py-2 bg-[#004fa2] border border-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] hover:shadow-lg transition-all font-bold text-[13px] sm:text-sm flex items-center justify-center gap-1.5"
+                            >
+                                <CheckCircle size={15} className="text-white" />
+                                Save & Create Report
                             </button>
                         </div>
                     </div>
