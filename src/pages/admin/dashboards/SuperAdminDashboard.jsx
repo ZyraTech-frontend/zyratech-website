@@ -247,157 +247,168 @@ const SuperAdminDashboard = ({ user }) => {
                 ))}
             </div>
 
-            {/* Main Metrics Cards - Modern Clean Design */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                {/* Total Revenue Card - Company Blue */}
-                <div className="bg-[#004fa2] rounded-2xl p-4 md:p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm shadow-lg">
-                            <DollarSign className="text-white" size={28} />
+            {/* Main Metrics Cards - Ultra High Density Design */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+                {/* Total Revenue Card */}
+                <div className="relative bg-gradient-to-br from-[#004fa2] via-[#0058b5] to-[#003d7a] rounded-xl p-4 text-white shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none transition-transform group-hover:scale-110 duration-700"></div>
+                    
+                    <div className="relative z-10">
+                        <div className="flex justify-between items-start mb-3">
+                            <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center backdrop-blur-md border border-white/20 shadow-inner">
+                                <DollarSign className="text-white drop-shadow-md" size={18} strokeWidth={2.5} />
+                            </div>
+                            <div className="flex flex-col items-end gap-1">
+                                <span className="flex items-center gap-1 text-[10px] font-bold text-green-300 bg-green-500/20 border border-green-400/30 px-2 py-0.5 rounded-md backdrop-blur-sm shadow-sm opacity-90">
+                                    <TrendingUp size={10} strokeWidth={3} /> +{metrics.revenueGrowth}%
+                                </span>
+                            </div>
                         </div>
-                        <div className="flex flex-col items-end gap-1">
-                            <span className="flex items-center gap-1.5 text-xs font-bold text-green-300 bg-green-500/30 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                                <TrendingUp size={14} /> +{metrics.revenueGrowth}%
-                            </span>
-                            <span className="text-xs text-blue-200">vs last month</span>
-                        </div>
-                    </div>
 
-                    <p className="text-blue-200 text-sm font-semibold uppercase tracking-wider mb-2">Total Revenue</p>
-                    <h3 className="text-2xl md:text-4xl font-black mb-1 tracking-tight">GHS {metrics.totalRevenue.toLocaleString()}</h3>
+                        <p className="text-blue-100/80 text-[10px] font-bold uppercase tracking-wider mb-0.5 shadow-sm">Total Revenue</p>
+                        <h3 className="text-2xl md:text-3xl font-black tracking-tight text-white drop-shadow-sm leading-none mb-3">
+                            <span className="text-lg md:text-xl text-blue-200 font-bold mr-1">GHS</span>
+                            {metrics.totalRevenue.toLocaleString()}
+                        </h3>
 
-                    <div className="mt-4 pt-4 border-t border-white/20">
-                        <div className="flex items-center justify-between text-sm">
-                            <span className="text-blue-200">This month</span>
-                            <span className="font-bold text-white">GHS {metrics.monthlyRevenue.toLocaleString()}</span>
-                        </div>
-                        {/* Mini sparkline */}
-                        <div className="mt-3 flex items-end gap-1 h-8">
-                            {[40, 45, 50, 48, 55, 60, 68, 75, 72, 80, 85, 95].map((h, i) => (
-                                <div key={i} className="flex-1 bg-white/30 rounded-t hover:bg-white/50 transition-all duration-200" style={{ height: `${h}%` }}></div>
-                            ))}
+                        <div className="mt-3 pt-3 border-t border-white/10">
+                            <div className="flex items-center justify-between text-xs mb-2">
+                                <span className="text-blue-200/80 text-[10px] font-medium uppercase tracking-wider">This month</span>
+                                <span className="font-bold text-white text-xs tracking-wide">GHS {metrics.monthlyRevenue.toLocaleString()}</span>
+                            </div>
+                            {/* Premium Sparkline */}
+                            <div className="flex items-end gap-0.5 h-6 w-full opacity-80 group-hover:opacity-100 transition-opacity">
+                                {[40, 45, 50, 48, 55, 60, 68, 75, 72, 80, 85, 95].map((h, i) => (
+                                    <div key={i} className="flex-1 bg-gradient-to-t from-white/20 to-white/40 rounded-t-sm hover:from-white/40 hover:to-white/70 transition-all duration-300 cursor-pointer" style={{ height: `${h}%` }}></div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Enrollments Card - Clean White */}
-                <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-200 shadow-lg hover:shadow-2xl transition-all duration-300">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-                            <GraduationCap className="text-white" size={28} />
+                {/* Enrollments Card */}
+                <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-300 flex flex-col group">
+                    <div className="flex justify-between items-start mb-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg flex items-center justify-center border border-blue-100 group-hover:bg-blue-600 transition-colors duration-500">
+                            <GraduationCap className="text-blue-600 group-hover:text-white transition-colors duration-500 drop-shadow-sm" size={18} strokeWidth={2.5} />
                         </div>
                         <div className="flex flex-col items-end">
-                            <span className="flex items-center gap-1.5 text-xs font-bold text-blue-700 bg-blue-100 px-3 py-1.5 rounded-full">
-                                <Clock size={12} /> {metrics.pendingEnrollments} pending
+                            <span className="flex items-center gap-1 text-[9px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100/50">
+                                <Clock size={10} strokeWidth={2.5} /> {metrics.pendingEnrollments} pending
                             </span>
                         </div>
                     </div>
 
-                    <p className="text-gray-500 text-sm font-semibold uppercase tracking-wider mb-2">Total Enrollments</p>
-                    <h3 className="text-2xl md:text-4xl font-black text-gray-900 mb-1">
+                    <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-0.5">Total Enrollments</p>
+                    <h3 className="text-2xl md:text-3xl font-black text-gray-900 leading-none tracking-tight mb-3">
                         {(metrics.activeEnrollments + metrics.completedEnrollments).toLocaleString()}
                     </h3>
 
-                    <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-100">
+                    <div className="mt-auto pt-3 border-t border-gray-100 flex items-center gap-3">
                         <div className="flex-1">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-xs text-gray-500 font-medium">Completed</span>
-                                <span className="text-xs font-bold text-green-600">{metrics.completedEnrollments}</span>
+                            <div className="flex items-center justify-between mb-1">
+                                <span className="text-[9px] text-gray-500 font-bold uppercase tracking-wider">Completed</span>
+                                <span className="text-[10px] font-black text-green-600">{metrics.completedEnrollments}</span>
                             </div>
-                            <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                                <div className="bg-gradient-to-r from-green-500 to-green-600 h-full rounded-full" style={{ width: `${(metrics.completedEnrollments / (metrics.completedEnrollments + metrics.activeEnrollments)) * 100}%` }}></div>
+                            <div className="w-full bg-gray-100 h-1 rounded-full overflow-hidden">
+                                <div className="bg-gradient-to-r from-green-400 to-green-500 h-full rounded-full shadow-[0_0_8px_rgba(34,197,94,0.4)]" style={{ width: `${(metrics.completedEnrollments / (metrics.completedEnrollments + metrics.activeEnrollments)) * 100}%` }}></div>
                             </div>
                         </div>
+                        <div className="w-px h-6 bg-gray-100"></div>
                         <div className="flex-1">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-xs text-gray-500 font-medium">Active</span>
-                                <span className="text-xs font-bold text-blue-600">{metrics.activeEnrollments}</span>
+                            <div className="flex items-center justify-between mb-1">
+                                <span className="text-[9px] text-gray-500 font-bold uppercase tracking-wider">Active</span>
+                                <span className="text-[10px] font-black text-blue-600">{metrics.activeEnrollments}</span>
                             </div>
-                            <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                                <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full" style={{ width: `${(metrics.activeEnrollments / (metrics.completedEnrollments + metrics.activeEnrollments)) * 100}%` }}></div>
+                            <div className="w-full bg-gray-100 h-1 rounded-full overflow-hidden">
+                                <div className="bg-gradient-to-r from-blue-400 to-blue-500 h-full rounded-full shadow-[0_0_8px_rgba(59,130,246,0.4)]" style={{ width: `${(metrics.activeEnrollments / (metrics.completedEnrollments + metrics.activeEnrollments)) * 100}%` }}></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Projects Card - Clean White */}
-                <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-200 shadow-lg hover:shadow-2xl transition-all duration-300">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="w-14 h-14 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg">
-                            <FolderKanban className="text-white" size={28} />
+                {/* Projects Card */}
+                <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md hover:border-cyan-200 transition-all duration-300 flex flex-col group">
+                    <div className="flex justify-between items-start mb-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-cyan-50 to-teal-50 rounded-lg flex items-center justify-center border border-cyan-100 group-hover:bg-cyan-600 transition-colors duration-500">
+                            <FolderKanban className="text-cyan-600 group-hover:text-white transition-colors duration-500 drop-shadow-sm" size={18} strokeWidth={2.5} />
                         </div>
                         <div className="flex flex-col items-end">
-                            <span className="flex items-center gap-1.5 text-xs font-bold text-orange-700 bg-orange-100 px-3 py-1.5 rounded-full">
-                                <Bell size={12} /> {metrics.pendingRequests} requests
+                            <span className="flex items-center gap-1 text-[9px] font-bold text-orange-700 bg-orange-50 px-2 py-0.5 rounded-md border border-orange-100/50">
+                                <Bell size={10} strokeWidth={2.5} /> {metrics.pendingRequests} requests
                             </span>
                         </div>
                     </div>
 
-                    <p className="text-gray-500 text-sm font-semibold uppercase tracking-wider mb-2">Total Projects</p>
-                    <h3 className="text-2xl md:text-4xl font-black text-gray-900 mb-1">
+                    <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-0.5">Total Projects</p>
+                    <h3 className="text-2xl md:text-3xl font-black text-gray-900 leading-none tracking-tight mb-3">
                         {(metrics.activeProjects + metrics.completedProjects).toLocaleString()}
                     </h3>
 
-                    <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
+                    <div className="mt-auto pt-3 border-t border-gray-100 space-y-1.5">
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
-                                <span className="text-sm text-gray-600 font-medium">Active</span>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-1 h-1 bg-cyan-500 rounded-full shadow-[0_0_5px_rgba(6,182,212,0.5)]"></div>
+                                <span className="text-[9px] text-gray-500 font-bold uppercase tracking-wider">Active</span>
                             </div>
-                            <span className="text-sm font-bold text-cyan-600">{metrics.activeProjects}</span>
+                            <span className="text-[10px] font-black text-cyan-600 bg-cyan-50 px-1.5 py-0.5 rounded">{metrics.activeProjects}</span>
                         </div>
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                <span className="text-sm text-gray-600 font-medium">Completed</span>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-1 h-1 bg-green-500 rounded-full shadow-[0_0_5px_rgba(34,197,94,0.5)]"></div>
+                                <span className="text-[9px] text-gray-500 font-bold uppercase tracking-wider">Completed</span>
                             </div>
-                            <span className="text-sm font-bold text-green-600">{metrics.completedProjects}</span>
+                            <span className="text-[10px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded">{metrics.completedProjects}</span>
                         </div>
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                                <span className="text-sm text-gray-600 font-medium">Pending</span>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-1 h-1 bg-orange-400 rounded-full shadow-[0_0_5px_rgba(251,146,60,0.5)]"></div>
+                                <span className="text-[9px] text-gray-500 font-bold uppercase tracking-wider">Pending</span>
                             </div>
-                            <span className="text-sm font-bold text-orange-600">{metrics.pendingRequests}</span>
+                            <span className="text-[10px] font-black text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded">{metrics.pendingRequests}</span>
                         </div>
                     </div>
                 </div>
 
-                {/* System Health Card - Clean Dark */}
-                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 md:p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-lg">
-                            <Server className="text-white" size={28} />
-                        </div>
-                        <span className="flex items-center gap-1.5 text-xs font-bold text-green-300 bg-green-500/20 px-3 py-1.5 rounded-full backdrop-blur-sm border border-green-400/30">
-                            <Zap size={12} /> Healthy
-                        </span>
-                    </div>
+                {/* Server Load Card */}
+                <div className="relative bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] rounded-xl p-4 text-white shadow-lg border border-slate-700/50 overflow-hidden group">
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:10px_10px] opacity-20 pointer-events-none"></div>
 
-                    <p className="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-2">Server Load</p>
-                    <h3 className="text-2xl md:text-4xl font-black mb-1 tracking-tight">{metrics.serverLoad}%</h3>
+                    <div className="relative z-10 flex flex-col h-full">
+                        <div className="flex justify-between items-start mb-3">
+                            <div className="w-10 h-10 bg-slate-800/80 rounded-lg flex items-center justify-center backdrop-blur-md border border-slate-600/50 shadow-inner group-hover:border-green-500/30 transition-colors">
+                                <Server className="text-slate-300 group-hover:text-green-400 transition-colors drop-shadow-md" size={18} strokeWidth={2} />
+                            </div>
+                            <span className="flex items-center gap-1 text-[9px] font-bold text-green-400 bg-green-500/10 px-2 py-0.5 rounded-md backdrop-blur-sm border border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.15)]">
+                                <Zap size={10} strokeWidth={2.5} className="text-green-400" /> Healthy
+                            </span>
+                        </div>
 
-                    <div className="mt-4">
-                        <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs text-slate-400">Capacity Usage</span>
-                            <span className="text-xs font-bold text-green-400">{100 - metrics.serverLoad}% free</span>
-                        </div>
-                        <div className="w-full bg-slate-700/50 h-3 rounded-full overflow-hidden backdrop-blur-sm">
-                            <div
-                                className="h-full rounded-full bg-gradient-to-r from-green-500 to-green-600"
-                                style={{ width: `${metrics.serverLoad}%` }}
-                            ></div>
-                        </div>
-                    </div>
+                        <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider mb-0.5">Server Load</p>
+                        <h3 className="text-2xl md:text-3xl font-black tracking-tight text-white drop-shadow-md leading-none mb-3">{metrics.serverLoad}%</h3>
 
-                    <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <p className="text-slate-500 mb-1">Uptime</p>
-                            <p className="font-bold text-green-400">{metrics.uptime}%</p>
+                        <div className="mt-auto">
+                            <div className="flex items-center justify-between mb-1">
+                                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Capacity Usage</span>
+                                <span className="text-[10px] font-black text-green-400">{100 - metrics.serverLoad}% free</span>
+                            </div>
+                            <div className="w-full bg-slate-800/80 h-1 rounded-full overflow-hidden backdrop-blur-sm border border-slate-700/50">
+                                <div
+                                    className="h-full rounded-full bg-gradient-to-r from-green-500 to-emerald-400 shadow-[0_0_10px_rgb(34,197,94)]"
+                                    style={{ width: `${metrics.serverLoad}%` }}
+                                ></div>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-slate-500 mb-1">Latency</p>
-                            <p className="font-bold text-blue-400">{metrics.apiLatency}ms</p>
+
+                        <div className="mt-3 pt-3 border-t border-slate-700/50 grid grid-cols-2 gap-2">
+                            <div>
+                                <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Uptime</p>
+                                <p className="text-xs font-black text-emerald-400 drop-shadow-sm">{metrics.uptime}%</p>
+                            </div>
+                            <div>
+                                <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Latency</p>
+                                <p className="text-xs font-black text-blue-400 drop-shadow-sm">{metrics.apiLatency}ms</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -406,50 +417,58 @@ const SuperAdminDashboard = ({ user }) => {
             {/* Two Column Layout: Revenue Trends & Recent Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Revenue Trends - Takes 2 columns */}
-                <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-                    <div className="flex items-center justify-between mb-6">
+                <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-[0_2px_20px_rgba(0,0,0,0.04)] p-5 md:p-7">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                         <div>
-                            <h2 className="text-lg font-bold text-gray-900">Revenue Overview</h2>
-                            <p className="text-sm text-gray-500">Monthly revenue trends</p>
+                            <h2 className="text-xl font-bold text-gray-900 tracking-tight">Revenue Overview</h2>
+                            <p className="text-[11px] sm:text-xs text-gray-500 font-bold uppercase tracking-wider mt-1">Monthly trend collection</p>
                         </div>
-                        <select className="text-sm border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2">
+                        <select className="text-sm border-gray-200 rounded-xl shadow-sm focus:border-[#004fa2] focus:ring-[#004fa2] px-4 py-2.5 font-bold text-gray-700 bg-gray-50 hover:bg-white transition-colors cursor-pointer outline-none">
                             <option>Last 12 Months</option>
                             <option>Last 6 Months</option>
                             <option>This Year</option>
                         </select>
                     </div>
                     {/* Chart Visualization */}
-                    <div className="overflow-x-auto">
-                    <div className="h-64 flex items-end gap-2 justify-between px-2 min-w-[600px]">
-                        {[
-                            { month: 'Jan', value: 40 },
-                            { month: 'Feb', value: 65 },
-                            { month: 'Mar', value: 45 },
-                            { month: 'Apr', value: 80 },
-                            { month: 'May', value: 55 },
-                            { month: 'Jun', value: 90 },
-                            { month: 'Jul', value: 70 },
-                            { month: 'Aug', value: 85 },
-                            { month: 'Sep', value: 60 },
-                            { month: 'Oct', value: 75 },
-                            { month: 'Nov', value: 50 },
-                            { month: 'Dec', value: 95 }
-                        ].map((m, i) => (
-                            <div key={i} className="w-full flex flex-col items-center gap-2">
-                                <div className="w-full bg-blue-50 rounded-t-lg relative group h-52 flex items-end">
-                                    <div
-                                        className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg opacity-80 group-hover:opacity-100 transition-all duration-300 relative"
-                                        style={{ height: `${m.value}%` }}
-                                    >
-                                        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                            GHS {Math.round(m.value * 1320)}
+                    <div className="overflow-x-auto pb-2">
+                        <div className="h-64 flex items-end gap-3 justify-between px-2 min-w-[600px] relative">
+                            {/* Grid Lines */}
+                            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-40 py-6">
+                                {[...Array(4)].map((_, i) => (
+                                    <div key={i} className="w-full border-b border-dashed border-gray-200 relative"></div>
+                                ))}
+                            </div>
+                            {/* Bars */}
+                            {[
+                                { month: 'Jan', value: 40 },
+                                { month: 'Feb', value: 65 },
+                                { month: 'Mar', value: 45 },
+                                { month: 'Apr', value: 80 },
+                                { month: 'May', value: 55 },
+                                { month: 'Jun', value: 90 },
+                                { month: 'Jul', value: 70 },
+                                { month: 'Aug', value: 85 },
+                                { month: 'Sep', value: 60 },
+                                { month: 'Oct', value: 75 },
+                                { month: 'Nov', value: 50 },
+                                { month: 'Dec', value: 95 }
+                            ].map((m, i) => (
+                                <div key={i} className="w-full flex flex-col items-center gap-3 relative z-10 group">
+                                    <div className="w-full bg-blue-50/50 rounded-t-md relative h-52 flex items-end overflow-visible">
+                                        <div
+                                            className="w-full bg-gradient-to-t from-[#004fa2] to-[#0066cc] rounded-t-md opacity-85 group-hover:opacity-100 transition-all duration-300 relative shadow-sm group-hover:shadow-[0_0_15px_rgba(0,79,162,0.3)] group-hover:-translate-y-1"
+                                            style={{ height: `${m.value}%` }}
+                                        >
+                                            <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-900 border border-gray-700 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl">
+                                                GHS {Math.round(m.value * 1320).toLocaleString()}
+                                                <div className="absolute bottom-[-5px] left-1/2 transform -translate-x-1/2 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[5px] border-t-gray-900"></div>
+                                            </div>
                                         </div>
                                     </div>
+                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{m.month}</span>
                                 </div>
-                                <span className="text-xs text-gray-500">{m.month}</span>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
@@ -506,71 +525,76 @@ const SuperAdminDashboard = ({ user }) => {
                     </div>
                 </div>
 
-                {/* Platform Health Panel */}
-                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-slate-700 shadow-lg p-6 text-white">
-                    <div className="flex items-center justify-between mb-6">
-                        <h3 className="font-bold text-base flex items-center gap-2">
-                            <Activity size={18} className="text-green-400" />
-                            Platform Health
-                        </h3>
-                        <span className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1">
-                            <CheckCircle size={12} /> Operational
-                        </span>
-                    </div>
-
-                    <div className="space-y-5">
-                        {/* Database */}
-                        <div>
-                            <div className="flex justify-between mb-2">
-                                <span className="text-slate-400 flex items-center gap-2">
-                                    <Database size={14} /> Database Cluster
-                                </span>
-                                <span className="text-green-400 font-mono">{metrics.uptime}% Uptime</span>
-                            </div>
-                            <div className="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-                                <div className="bg-green-500 h-full rounded-full" style={{ width: `${metrics.uptime}%` }}></div>
-                            </div>
+                {/* Platform Health Panel - Datacenter Vibe */}
+                <div className="relative bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] rounded-2xl border border-slate-700/60 shadow-[0_8px_30px_rgba(15,23,42,0.4)] p-6 md:p-7 text-white overflow-hidden group hover:border-slate-600/80 transition-all duration-500 flex flex-col">
+                    <div className="absolute top-0 right-0 w-full h-full bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] opacity-20 pointer-events-none"></div>
+                    <div className="absolute -top-24 -right-24 w-48 h-48 bg-green-500/10 rounded-full blur-3xl pointer-events-none transition-transform group-hover:scale-150 duration-1000"></div>
+                    
+                    <div className="relative z-10 flex flex-col h-full">
+                        <div className="flex items-center justify-between mb-8">
+                            <h3 className="font-bold text-lg flex items-center gap-2.5 tracking-tight">
+                                <Activity size={20} className="text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)]" strokeWidth={2.5} />
+                                Platform Health
+                            </h3>
+                            <span className="bg-green-500/10 border border-green-500/20 text-green-400 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
+                                <CheckCircle size={14} /> Operational
+                            </span>
                         </div>
 
-                        {/* Storage */}
-                        <div>
-                            <div className="flex justify-between mb-2">
-                                <span className="text-slate-400 flex items-center gap-2">
-                                    <Server size={14} /> Storage Usage
-                                </span>
-                                <span className="text-blue-300 font-mono">{metrics.storageUsed}GB / {metrics.storageTotal}GB</span>
+                        <div className="space-y-6 flex-1">
+                            {/* Database */}
+                            <div>
+                                <div className="flex justify-between mb-2 items-end">
+                                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                        <Database size={14} className="text-slate-500" /> Database Cluster
+                                    </span>
+                                    <span className="text-green-400 font-black text-sm drop-shadow-sm">{metrics.uptime}% Uptime</span>
+                                </div>
+                                <div className="w-full bg-slate-800/80 h-1.5 rounded-full overflow-hidden border border-slate-700/50">
+                                    <div className="bg-gradient-to-r from-green-500 to-green-400 h-full rounded-full shadow-[0_0_10px_rgba(34,197,94,0.6)]" style={{ width: `${metrics.uptime}%` }}></div>
+                                </div>
                             </div>
-                            <div className="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-                                <div className="bg-blue-500 h-full rounded-full" style={{ width: `${(metrics.storageUsed / metrics.storageTotal) * 100}%` }}></div>
-                            </div>
-                        </div>
 
-                        {/* API Latency */}
-                        <div>
-                            <div className="flex justify-between mb-2">
-                                <span className="text-slate-400 flex items-center gap-2">
-                                    <Zap size={14} /> API Latency
-                                </span>
-                                <span className="text-orange-300 font-mono">{metrics.apiLatency}ms</span>
+                            {/* Storage */}
+                            <div>
+                                <div className="flex justify-between mb-2 items-end">
+                                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                        <Server size={14} className="text-slate-500" /> Storage Usage
+                                    </span>
+                                    <span className="text-blue-400 font-black text-sm drop-shadow-sm">{metrics.storageUsed}GB / {metrics.storageTotal}GB</span>
+                                </div>
+                                <div className="w-full bg-slate-800/80 h-1.5 rounded-full overflow-hidden border border-slate-700/50">
+                                    <div className="bg-gradient-to-r from-blue-500 to-blue-400 h-full rounded-full shadow-[0_0_10px_rgba(59,130,246,0.6)]" style={{ width: `${(metrics.storageUsed / metrics.storageTotal) * 100}%` }}></div>
+                                </div>
                             </div>
-                            <div className="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-                                <div className="bg-orange-500 h-full rounded-full" style={{ width: `${(metrics.apiLatency / 1000) * 100}%` }}></div>
+
+                            {/* API Latency */}
+                            <div>
+                                <div className="flex justify-between mb-2 items-end">
+                                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                        <Zap size={14} className="text-slate-500" /> API Latency
+                                    </span>
+                                    <span className="text-amber-400 font-black text-sm drop-shadow-sm">{metrics.apiLatency}ms</span>
+                                </div>
+                                <div className="w-full bg-slate-800/80 h-1.5 rounded-full overflow-hidden border border-slate-700/50">
+                                    <div className="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full shadow-[0_0_10px_rgba(251,191,36,0.6)]" style={{ width: `${(metrics.apiLatency / 1000) * 100}%` }}></div>
+                                </div>
                             </div>
                         </div>
 
                         {/* Bottom Stats */}
-                        <div className="pt-4 border-t border-slate-700 grid grid-cols-3 gap-4">
-                            <div className="bg-slate-800/50 p-3 rounded-lg text-center">
-                                <span className="block text-slate-500 text-xs uppercase">Error Rate</span>
-                                <span className="text-xl font-bold text-white">{metrics.errorRate}%</span>
+                        <div className="pt-6 mt-auto border-t border-slate-700/60 grid grid-cols-3 gap-3 md:gap-4">
+                            <div className="bg-slate-800/40 border border-slate-700/50 p-3 md:p-4 rounded-xl text-center hover:bg-slate-800/60 transition-colors">
+                                <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Error Rate</span>
+                                <span className="text-lg md:text-xl font-black text-white drop-shadow-sm">{metrics.errorRate}%</span>
                             </div>
-                            <div className="bg-slate-800/50 p-3 rounded-lg text-center">
-                                <span className="block text-slate-500 text-xs uppercase">Sessions</span>
-                                <span className="text-xl font-bold text-white">{metrics.activeSessions.toLocaleString()}</span>
+                            <div className="bg-slate-800/40 border border-slate-700/50 p-3 md:p-4 rounded-xl text-center hover:bg-slate-800/60 transition-colors">
+                                <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Sessions</span>
+                                <span className="text-lg md:text-xl font-black text-white drop-shadow-sm">{metrics.activeSessions.toLocaleString()}</span>
                             </div>
-                            <div className="bg-slate-800/50 p-3 rounded-lg text-center">
-                                <span className="block text-slate-500 text-xs uppercase">Alerts</span>
-                                <span className="text-xl font-bold text-green-400">{metrics.securityAlerts}</span>
+                            <div className="bg-slate-800/40 border border-slate-700/50 p-3 md:p-4 rounded-xl text-center hover:bg-slate-800/60 transition-colors">
+                                <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Alerts</span>
+                                <span className="text-lg md:text-xl font-black text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">{metrics.securityAlerts}</span>
                             </div>
                         </div>
                     </div>
