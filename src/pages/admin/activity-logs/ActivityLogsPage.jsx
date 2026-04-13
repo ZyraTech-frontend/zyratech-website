@@ -670,144 +670,102 @@ const ActivityLogsPage = () => {
                     </div>
                 </div>
 
-                {/* Statistics Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center">
-                                <Activity className="text-blue-600" size={18} />
+                {/* Statistics Cards - High Density Professional Design */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
+                    {[
+                        { label: 'Total Events', value: stats.total, icon: Activity, iconColor: 'text-blue-600' },
+                        { label: 'Today', value: stats.today, icon: Clock, iconColor: 'text-green-600', badge: 'Live', badgeColor: 'bg-green-100 text-green-700' },
+                        { label: 'Logins', value: stats.logins, icon: LogIn, iconColor: 'text-emerald-600' },
+                        { label: 'Warnings', value: stats.warnings, icon: AlertCircle, iconColor: 'text-amber-600' },
+                        { label: 'Errors', value: stats.errors, icon: XCircle, iconColor: 'text-red-600' },
+                        { label: 'Failed Logins', value: stats.failedLogins, icon: Shield, iconColor: 'text-rose-600', alert: stats.failedLogins > 0 }
+                    ].map((stat, i) => (
+                        <div
+                            key={i}
+                            className={`group bg-white rounded-xl p-2.5 sm:p-3 border shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden flex flex-col justify-between ${stat.alert ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-[#004fa2]'}`}
+                        >
+                            <div className="flex items-center gap-2 mb-1.5 sm:mb-2">
+                                <stat.icon className={`${stat.iconColor} group-hover:scale-110 transition-transform duration-300 shrink-0 w-3.5 h-3.5 sm:w-4 sm:h-4`} />
+                                <p className="text-base sm:text-xl font-bold text-gray-900 truncate">
+                                    {stat.value.toLocaleString()}
+                                </p>
+                                {stat.badge && <span className={`ml-auto px-1.5 py-0.5 text-[9px] font-bold rounded-full hidden sm:inline-block ${stat.badgeColor}`}>{stat.badge}</span>}
+                                {stat.alert && <span className="ml-auto px-1.5 py-0.5 bg-red-100 text-red-700 text-[9px] font-bold rounded-full hidden sm:inline-block animate-pulse">Alert</span>}
                             </div>
+                            <p className="text-[9px] sm:text-[10px] font-semibold text-gray-500 uppercase tracking-wide truncate">
+                                {stat.label}
+                            </p>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Total Events</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center">
-                                <Clock className="text-green-600" size={18} />
-                            </div>
-                            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Live</span>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.today}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Today</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-emerald-50 rounded-lg flex items-center justify-center">
-                                <LogIn className="text-emerald-600" size={18} />
-                            </div>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.logins}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Logins</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center">
-                                <AlertCircle className="text-amber-600" size={18} />
-                            </div>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.warnings}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Warnings</p>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-red-50 rounded-lg flex items-center justify-center">
-                                <XCircle className="text-red-600" size={18} />
-                            </div>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.errors}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Errors</p>
-                    </div>
-
-                    <div className="bg-gradient-to-br from-red-500 to-rose-500 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
-                                <Shield className="text-white" size={18} />
-                            </div>
-                            {stats.failedLogins > 0 && (
-                                <span className="text-xs font-bold text-white bg-white/20 px-2 py-0.5 rounded-full">Alert</span>
-                            )}
-                        </div>
-                        <p className="text-2xl font-bold text-white">{stats.failedLogins}</p>
-                        <p className="text-xs text-red-100 mt-0.5">Failed Logins</p>
-                    </div>
+                    ))}
                 </div>
 
-                {/* Filters and Search */}
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                    <div className="flex flex-col lg:flex-row gap-4">
+                {/* Filters and Search - Ultra Compact Dropdowns */}
+                <div className="bg-white rounded-xl p-2 sm:p-2.5 shadow-sm border border-gray-200">
+                    <div className="flex flex-col md:flex-row gap-2">
                         {/* Search */}
                         <div className="flex-1 relative">
-                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
                             <input
                                 type="text"
-                                placeholder="Search by ID, description, user name or email..."
+                                placeholder="Search logs..."
                                 value={searchQuery}
                                 onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm transition-all"
+                                className="w-full pl-8 pr-3 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#004fa2] focus:border-[#004fa2] text-[12px] bg-gray-50/50 transition-all font-medium h-[34px]"
                             />
                         </div>
 
-                        {/* Category Filter */}
-                        <div className="flex items-center gap-2">
-                            <Filter className="text-gray-400" size={18} />
+                        {/* Filters Row */}
+                        <div className="flex gap-2">
                             <select
                                 value={selectedCategory}
                                 onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
-                                className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[140px]"
+                                className="flex-1 sm:flex-none px-1.5 sm:px-2 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#004fa2] text-[11px] sm:text-xs bg-gray-50/50 min-w-0 font-medium h-[34px]"
                             >
-                                <option value="all">All Categories</option>
+                                <option value="all">Categories</option>
                                 {Object.entries(CATEGORY_CONFIG).map(([key, val]) => (
                                     <option key={key} value={key}>{val.label}</option>
                                 ))}
                             </select>
-                        </div>
 
-                        {/* Severity Filter */}
-                        <select
-                            value={selectedSeverity}
-                            onChange={(e) => { setSelectedSeverity(e.target.value); setCurrentPage(1); }}
-                            className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[120px]"
-                        >
-                            <option value="all">All Severity</option>
-                            <option value="info">ℹ️ Info</option>
-                            <option value="success">✅ Success</option>
-                            <option value="warning">⚠️ Warning</option>
-                            <option value="error">❌ Error</option>
-                        </select>
-
-                        {/* Date Range Filter */}
-                        <select
-                            value={dateRange}
-                            onChange={(e) => { setDateRange(e.target.value); setCurrentPage(1); }}
-                            className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white min-w-[120px]"
-                        >
-                            <option value="all">All Time</option>
-                            <option value="today">Today</option>
-                            <option value="week">Last 7 Days</option>
-                            <option value="month">Last 30 Days</option>
-                        </select>
-
-                        {/* Reset Filters */}
-                        {(searchQuery || selectedCategory !== 'all' || selectedSeverity !== 'all' || dateRange !== 'all') && (
-                            <button
-                                onClick={resetFilters}
-                                className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
+                            <select
+                                value={selectedSeverity}
+                                onChange={(e) => { setSelectedSeverity(e.target.value); setCurrentPage(1); }}
+                                className="flex-1 sm:flex-none px-1.5 sm:px-2 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#004fa2] text-[11px] sm:text-xs bg-gray-50/50 min-w-0 font-medium h-[34px]"
                             >
-                                <X size={16} />
-                                Reset
-                            </button>
-                        )}
+                                <option value="all">Severity</option>
+                                <option value="info">Info</option>
+                                <option value="success">Success</option>
+                                <option value="warning">Warning</option>
+                                <option value="error">Error</option>
+                            </select>
+
+                            <select
+                                value={dateRange}
+                                onChange={(e) => { setDateRange(e.target.value); setCurrentPage(1); }}
+                                className="flex-1 sm:flex-none px-1.5 sm:px-2 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#004fa2] text-[11px] sm:text-xs bg-gray-50/50 min-w-0 font-medium h-[34px]"
+                            >
+                                <option value="all">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">Past Week</option>
+                                <option value="month">Past Month</option>
+                            </select>
+
+                            {(searchQuery || selectedCategory !== 'all' || selectedSeverity !== 'all' || dateRange !== 'all') && (
+                                <button
+                                    onClick={resetFilters}
+                                    className="shrink-0 h-[34px] w-[34px] flex items-center justify-center text-gray-500 hover:text-red-600 hover:bg-red-50 border border-gray-200 rounded-lg transition-colors bg-gray-50"
+                                    title="Reset Filters"
+                                >
+                                    <X size={14} />
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                {/* Activity Log Timeline */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="divide-y divide-gray-100">
+                {/* Activity Log Timeline - High Density */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="divide-y divide-gray-200">
                         {paginatedLogs.map((log) => {
                             const typeConfig = ACTIVITY_TYPE_CONFIG[log.type] || { label: log.type, color: 'bg-gray-100 text-gray-700', icon: Activity };
                             const TypeIcon = typeConfig.icon;
@@ -817,61 +775,63 @@ const ActivityLogsPage = () => {
                             const isSystem = log.user.id === 'SYSTEM';
 
                             return (
-                                <div key={log.id} className="hover:bg-gray-50 transition-colors">
-                                    <div className="px-5 py-4">
-                                        <div className="flex items-start gap-4">
+                                <div key={log.id} className="hover:bg-blue-50/30 transition-colors">
+                                    <div className="px-4 py-3">
+                                        <div className="flex items-start gap-3 md:gap-4">
                                             {/* Severity Indicator */}
-                                            <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${severityColor}`} />
+                                            <div className={`w-1.5 h-1.5 rounded-full mt-2.5 shrink-0 shadow-sm ${severityColor}`} />
 
                                             {/* Icon */}
-                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${typeConfig.color}`}>
-                                                <TypeIcon size={18} />
+                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-sm border border-white ${typeConfig.color}`}>
+                                                <TypeIcon size={14} />
                                             </div>
 
                                             {/* Content */}
                                             <div className="flex-1 min-w-0">
-                                                <div className="flex items-start justify-between gap-4">
+                                                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-4">
                                                     <div className="flex-1">
-                                                        <p className="text-sm font-medium text-gray-900">
+                                                        <p className="text-[13px] sm:text-sm font-semibold text-gray-900 leading-tight">
                                                             {log.description}
                                                         </p>
                                                         <div className="flex items-center flex-wrap gap-2 mt-1.5">
-                                                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium ${typeConfig.color}`}>
+                                                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide ${typeConfig.color}`}>
                                                                 {typeConfig.label}
                                                             </span>
                                                             {!isSystem && (
-                                                                <span className="text-xs text-gray-500 flex items-center gap-1">
-                                                                    <User size={10} />
+                                                                <span className="text-[11px] font-medium text-gray-600 flex items-center gap-1 bg-gray-100 px-1.5 py-0.5 rounded">
+                                                                    <User size={10} className="text-gray-400" />
                                                                     {log.user.name}
                                                                 </span>
                                                             )}
                                                             {isSystem && (
-                                                                <span className="text-xs text-gray-400 flex items-center gap-1">
-                                                                    <Server size={10} />
+                                                                <span className="text-[11px] font-medium text-gray-500 flex items-center gap-1 bg-gray-100 px-1.5 py-0.5 rounded">
+                                                                    <Server size={10} className="text-gray-400" />
                                                                     System
                                                                 </span>
                                                             )}
                                                             {log.details.ip && (
-                                                                <span className="text-xs text-gray-400 flex items-center gap-1">
-                                                                    <Globe size={10} />
+                                                                <span className="text-[11px] font-medium text-gray-500 flex items-center gap-1 hidden md:flex">
+                                                                    <Globe size={10} className="text-gray-400" />
                                                                     {log.details.ip}
                                                                 </span>
                                                             )}
                                                         </div>
                                                     </div>
-                                                    <div className="flex items-center gap-2 shrink-0">
-                                                        <span className="text-xs text-gray-400">
+                                                    <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto mt-1 sm:mt-0">
+                                                        <span className="text-[11px] font-medium text-gray-500 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
                                                             {formatTimestamp(log.timestamp)}
                                                         </span>
                                                         <button
                                                             onClick={() => toggleExpand(log.id)}
-                                                            className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                                            className="p-1.5 text-gray-400 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
+                                                            title={isExpanded ? "Collapse" : "Expand"}
                                                         >
-                                                            <ChevronDown size={14} className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                                                            <ChevronDown size={14} className={`transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
                                                         </button>
                                                         <button
                                                             onClick={() => handleViewDetails(log)}
-                                                            className="p-1.5 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
+                                                            className="p-1.5 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-md transition-colors"
+                                                            title="View full details"
                                                         >
                                                             <Eye size={14} />
                                                         </button>
@@ -880,18 +840,18 @@ const ActivityLogsPage = () => {
 
                                                 {/* Expanded Details */}
                                                 {isExpanded && (
-                                                    <div className="mt-3 p-3 bg-gray-50 rounded-lg text-xs space-y-2">
+                                                    <div className="mt-3 p-3 bg-gray-50 border border-gray-100 rounded-lg text-xs space-y-2 animate-in slide-in-from-top-1 fade-in duration-200">
                                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                                             {log.details.device && (
                                                                 <div className="flex items-center gap-1.5">
                                                                     <Monitor size={12} className="text-gray-400" />
-                                                                    <span className="text-gray-600">{log.details.device}</span>
+                                                                    <span className="text-gray-600 font-medium">{log.details.device}</span>
                                                                 </div>
                                                             )}
                                                             {log.details.browser && (
                                                                 <div className="flex items-center gap-1.5">
                                                                     <Globe size={12} className="text-gray-400" />
-                                                                    <span className="text-gray-600">{log.details.browser}</span>
+                                                                    <span className="text-gray-600 font-medium">{log.details.browser}</span>
                                                                 </div>
                                                             )}
                                                             {log.details.location && (
@@ -1053,14 +1013,14 @@ const ActivityLogsPage = () => {
                                         Performed By
                                     </h3>
                                     <div className="flex items-center gap-3">
-                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold ${viewingLog.user.id === 'SYSTEM' ? 'bg-gray-500' : 'bg-gradient-to-br from-[#004fa2] to-[#0066cc]'}`}>
+                                        <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold ${viewingLog.user.id === 'SYSTEM' ? 'bg-gray-500' : 'bg-gradient-to-br from-[#004fa2] to-[#0066cc]'}`}>
                                             {viewingLog.user.id === 'SYSTEM' ? <Server size={18} /> : viewingLog.user.name.split(' ').map(n => n[0]).join('')}
                                         </div>
-                                        <div>
-                                            <p className="font-semibold text-gray-900">{viewingLog.user.name}</p>
-                                            <p className="text-xs text-gray-500">{viewingLog.user.email}</p>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-semibold text-gray-900 truncate">{viewingLog.user.name}</p>
+                                            <p className="text-xs text-gray-500 truncate">{viewingLog.user.email}</p>
                                         </div>
-                                        <span className="ml-auto px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-medium">
+                                        <span className="shrink-0 whitespace-nowrap ml-auto px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-medium">
                                             {viewingLog.user.role}
                                         </span>
                                     </div>
