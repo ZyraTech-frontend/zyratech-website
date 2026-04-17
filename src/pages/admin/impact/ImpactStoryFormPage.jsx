@@ -156,7 +156,7 @@ const ImpactStoryFormPage = () => {
                     </button>
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
+                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
                                 <Quote className="text-white" size={22} />
                             </div>
                             {isEditing ? 'Edit Success Story' : 'Create New Success Story'}

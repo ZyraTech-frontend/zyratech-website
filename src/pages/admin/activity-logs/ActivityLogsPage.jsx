@@ -638,12 +638,12 @@ const ActivityLogsPage = () => {
 
     return (
         <AdminLayout>
-            <div className="space-y-6 pb-8">
+            <div className="space-y-3 md:space-y-6 pb-8">
                 {/* Page Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
+                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
                                 <Activity className="text-white" size={22} />
                             </div>
                             Activity Logs
@@ -777,12 +777,12 @@ const ActivityLogsPage = () => {
                             return (
                                 <div key={log.id} className="hover:bg-blue-50/30 transition-colors">
                                     <div className="px-4 py-3">
-                                        <div className="flex items-start gap-3 md:gap-4">
+                                        <div className="flex items-start gap-2 md:gap-4">
                                             {/* Severity Indicator */}
                                             <div className={`w-1.5 h-1.5 rounded-full mt-2.5 shrink-0 shadow-sm ${severityColor}`} />
 
                                             {/* Icon */}
-                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-sm border border-white ${typeConfig.color}`}>
+                                            <div className={`w-6 h-6 md:w-8 md:h-8 rounded-lg flex items-center justify-center shrink-0 shadow-sm border border-white ${typeConfig.color}`}>
                                                 <TypeIcon size={14} />
                                             </div>
 
@@ -969,7 +969,7 @@ const ActivityLogsPage = () => {
                         {/* Modal Header */}
                         <div className="px-6 py-4 bg-gradient-to-r from-[#004fa2] to-[#0066cc] flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white/20 rounded-xl flex items-center justify-center">
                                     <Activity className="text-white" size={22} />
                                 </div>
                                 <div>
@@ -1013,7 +1013,7 @@ const ActivityLogsPage = () => {
                                         Performed By
                                     </h3>
                                     <div className="flex items-center gap-3">
-                                        <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold ${viewingLog.user.id === 'SYSTEM' ? 'bg-gray-500' : 'bg-gradient-to-br from-[#004fa2] to-[#0066cc]'}`}>
+                                        <div className={`shrink-0 w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white text-sm font-bold ${viewingLog.user.id === 'SYSTEM' ? 'bg-gray-500' : 'bg-gradient-to-br from-[#004fa2] to-[#0066cc]'}`}>
                                             {viewingLog.user.id === 'SYSTEM' ? <Server size={18} /> : viewingLog.user.name.split(' ').map(n => n[0]).join('')}
                                         </div>
                                         <div className="flex-1 min-w-0">

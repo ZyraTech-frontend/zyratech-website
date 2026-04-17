@@ -393,12 +393,12 @@ const ReportsPage = () => {
 
     return (
         <AdminLayout>
-            <div className="space-y-6 pb-8">
+            <div className="space-y-3 md:space-y-6 pb-8">
                 {/* Page Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
+                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
                                 <FileBarChart className="text-white" size={22} />
                             </div>
                             Reports Center
@@ -564,7 +564,7 @@ const ReportsPage = () => {
                                     <div className="p-3 sm:p-4 flex-1">
                                         <div className="flex items-start gap-3">
                                             {/* Icon */}
-                                            <div className={`w-10 h-10 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-500 shrink-0 group-hover:bg-[#004fa2]/5 transition-colors`}>
+                                            <div className={`w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-500 shrink-0 group-hover:bg-[#004fa2]/5 transition-colors`}>
                                                 <TypeIcon size={18} />
                                             </div>
 
@@ -788,7 +788,7 @@ const ReportsPage = () => {
                                             <tr key={report.id} className="hover:bg-gray-50 transition-colors">
                                                 <td className="px-4 py-4">
                                                     <div className="flex items-center gap-3">
-                                                        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${typeConfig.gradient} flex items-center justify-center text-white shrink-0`}>
+                                                        <div className={`w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-lg bg-gradient-to-br ${typeConfig.gradient} flex items-center justify-center text-white shrink-0`}>
                                                             <TypeIcon size={18} />
                                                         </div>
                                                         <div>
@@ -859,7 +859,7 @@ const ReportsPage = () => {
                         {/* Modal Header */}
                         <div className={`px-4 sm:px-6 py-4 bg-gradient-to-r ${REPORT_TYPE_CONFIG[viewingReport.type].gradient} flex items-start justify-between gap-4 shrink-0`}>
                             <div className="flex items-center gap-3 min-w-0 flex-1">
-                                <div className="w-10 h-10 sm:w-12 sm:h-12 shrink-0 bg-white/20 sm:bg-white/20 rounded-xl flex items-center justify-center shadow-sm">
+                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 sm:w-12 sm:h-12 shrink-0 bg-white/20 sm:bg-white/20 rounded-xl flex items-center justify-center shadow-sm">
                                     {React.createElement(REPORT_TYPE_CONFIG[viewingReport.type].icon, { className: 'text-white', size: 22 })}
                                 </div>
                                 <div className="min-w-0">
@@ -943,7 +943,7 @@ const ReportsPage = () => {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                         {viewingReport.recipients.map((email, idx) => (
                                             <div key={idx} className="bg-white border border-gray-200 rounded-lg p-2.5 flex items-center gap-2.5 shadow-sm">
-                                                <div className="w-8 h-8 rounded-full bg-[#004fa2]/10 flex items-center justify-center text-[#004fa2] text-[11px] font-bold shrink-0">
+                                                <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-[#004fa2]/10 flex items-center justify-center text-[#004fa2] text-[11px] font-bold shrink-0">
                                                     {email.split('@')[0][0].toUpperCase()}
                                                 </div>
                                                 <p className="text-[12px] text-gray-800 font-semibold truncate min-w-0" title={email}>{email}</p>
@@ -1016,7 +1016,7 @@ const ReportsPage = () => {
                         {/* Modal Header */}
                         <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-start justify-between gap-4 bg-gray-50/50 shrink-0">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center shadow-sm shrink-0">
+                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center shadow-sm shrink-0">
                                     <Plus className="text-white" size={22} />
                                 </div>
                                 <div>

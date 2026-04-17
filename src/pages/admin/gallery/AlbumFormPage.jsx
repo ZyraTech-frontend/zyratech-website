@@ -304,7 +304,7 @@ const AlbumFormPage = () => {
                                                 {formData.images.map((image, index) => (
                                                     <div
                                                         key={index}
-                                                        className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 md:p-4 border rounded-lg transition-all ${
+                                                        className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-2 md:p-4 border rounded-lg transition-all ${
                                                             formData.thumbnail === image
                                                                 ? 'bg-blue-50 border-blue-300'
                                                                 : 'bg-gray-50 border-gray-200 hover:border-gray-300'

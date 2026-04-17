@@ -330,15 +330,15 @@ const GalleryManagementPage = () => {
 
     return (
         <AdminLayout>
-            <div className="space-y-6 pb-8">
+            <div className="space-y-3 md:space-y-6 pb-8">
                 {/* Page Header & Actions */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
                     <div className="flex items-center gap-3">
                         <div className="bg-blue-50 p-2 rounded-lg shrink-0">
                             <Image size={18} className="text-blue-600" />
                         </div>
                         <div>
-                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Gallery Management</h1>
+                            <h1 className="text-[11px] md:text-base font-bold text-gray-900 leading-tight">Gallery Management</h1>
                             <p className="text-[10px] text-gray-500">Manage photos and media packages</p>
                         </div>
                     </div>
@@ -638,7 +638,7 @@ const GalleryManagementPage = () => {
                         {/* Modal Header */}
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-[#004fa2] to-[#0066cc]">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white/20 rounded-xl flex items-center justify-center">
                                     <Image className="text-white" size={22} />
                                 </div>
                                 <div>
@@ -657,7 +657,7 @@ const GalleryManagementPage = () => {
                         </div>
 
                         {/* Modal Body */}
-                        <div className="p-4 md:p-6 overflow-y-auto flex-1">
+                        <div className="p-2 md:p-4 lg:p-5 lg:p-6 overflow-y-auto flex-1">
                             {/* Main Image */}
                             <div className="relative aspect-video rounded-xl overflow-hidden bg-gray-100 mb-4">
                                 <img decoding="async"
@@ -670,13 +670,13 @@ const GalleryManagementPage = () => {
                                     <>
                                         <button
                                             onClick={() => setSelectedImageIndex(prev => prev > 0 ? prev - 1 : viewingItem.images.length - 1)}
-                                            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white transition-colors"
+                                            className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white transition-colors"
                                         >
                                             <ChevronLeft size={24} />
                                         </button>
                                         <button
                                             onClick={() => setSelectedImageIndex(prev => prev < viewingItem.images.length - 1 ? prev + 1 : 0)}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white transition-colors"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white transition-colors"
                                         >
                                             <ChevronRight size={24} />
                                         </button>
@@ -759,7 +759,7 @@ const GalleryManagementPage = () => {
                         {/* Modal Header */}
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
+                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
                                     {editingItem ? <Edit className="text-white" size={20} /> : <Plus className="text-white" size={20} />}
                                 </div>
                                 <div>
@@ -813,7 +813,7 @@ const GalleryManagementPage = () => {
                         {/* Modal Header */}
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
+                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
                                     <Upload className="text-white" size={20} />
                                 </div>
                                 <div>

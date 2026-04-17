@@ -59,7 +59,7 @@ const JobDetailsPage = () => {
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => navigate('/admin/jobs')}
-                            className="w-10 h-10 bg-white border border-gray-200 rounded-lg flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
+                            className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white border border-gray-200 rounded-lg flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
                         >
                             <ChevronLeft size={20} />
                         </button>

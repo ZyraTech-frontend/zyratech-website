@@ -114,7 +114,7 @@ const StarRating = ({ rating, size = 14 }) => {
 // Avatar component
 const AvatarDisplay = ({ name, avatar, size = 'md' }) => {
     const sizeClasses = {
-        sm: 'w-8 h-8 text-xs',
+        sm: 'w-6 h-6 md:w-8 md:h-8 text-xs',
         md: 'w-12 h-12 text-sm',
         lg: 'w-16 h-16 text-lg'
     };
@@ -283,15 +283,15 @@ const TestimonialsManagementPage = () => {
 
     return (
         <AdminLayout>
-            <div className="space-y-6 pb-8">
+            <div className="space-y-3 md:space-y-6 pb-8">
                 {/* Page Header & Actions */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
                     <div className="flex items-center gap-3">
                         <div className="bg-blue-50 p-2 rounded-lg shrink-0">
                             <MessageCircle size={18} className="text-blue-600" />
                         </div>
                         <div>
-                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Testimonials Management</h1>
+                            <h1 className="text-[11px] md:text-base font-bold text-gray-900 leading-tight">Testimonials Management</h1>
                             <p className="text-[10px] text-gray-500">Manage customer reviews and success stories</p>
                         </div>
                     </div>
@@ -534,7 +534,7 @@ const TestimonialsManagementPage = () => {
                         {/* Modal Header */}
                         <div className="px-6 py-4 bg-gradient-to-r from-[#004fa2] to-[#0066cc] flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white/20 rounded-xl flex items-center justify-center">
                                     <MessageCircle className="text-white" size={22} />
                                 </div>
                                 <div>
@@ -650,7 +650,7 @@ const TestimonialsManagementPage = () => {
                         {/* Modal Header */}
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
+                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
                                     {editingTestimonial ? <Edit className="text-white" size={20} /> : <Plus className="text-white" size={20} />}
                                 </div>
                                 <div>

@@ -157,9 +157,9 @@ const RegularAdminDashboard = ({ user }) => {
     ];
 
     return (
-        <div className="space-y-6 pb-8">
+        <div className="space-y-3 md:space-y-6 pb-8">
             {/* Welcome Header */}
-            <div className="bg-gradient-to-br from-[#004fa2] via-[#0058b5] to-[#0066cc] rounded-xl p-4 md:p-6 text-white relative overflow-hidden shadow-md">
+            <div className="bg-gradient-to-br from-[#004fa2] via-[#0058b5] to-[#0066cc] rounded-xl p-2 md:p-4 lg:p-5 lg:p-6 text-white relative overflow-hidden shadow-md">
                 {/* Subtle Decorative Element */}
                 <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-3xl -mr-12 -mt-12 pointer-events-none"></div>
 
@@ -256,11 +256,11 @@ const RegularAdminDashboard = ({ user }) => {
             </div>
 
             {/* Main Metric Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
                 {/* Content Overview Card */}
                 <div className="bg-[#004fa2] rounded-xl p-3 text-white shadow-md hover:shadow-lg transition-all duration-300">
                     <div className="flex justify-between items-start mb-2">
-                        <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center backdrop-blur-sm shadow-sm">
+                        <div className="w-6 h-6 md:w-8 md:h-8 bg-white/20 rounded flex items-center justify-center backdrop-blur-sm shadow-sm">
                             <Layout className="text-white" size={16} />
                         </div>
                         <div className="flex flex-col items-end">
@@ -300,7 +300,7 @@ const RegularAdminDashboard = ({ user }) => {
                 {/* Inquiries & Messages Card */}
                 <div className="bg-white rounded-xl p-3 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
                     <div className="flex justify-between items-start mb-2">
-                        <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded flex items-center justify-center shadow-sm">
+                        <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded flex items-center justify-center shadow-sm">
                             <MessageSquare className="text-white" size={16} />
                         </div>
                         <div className="flex flex-col items-end">
@@ -345,7 +345,7 @@ const RegularAdminDashboard = ({ user }) => {
                 {/* Enrollments Card */}
                 <div className="bg-white rounded-xl p-3 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
                     <div className="flex justify-between items-start mb-2">
-                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded flex items-center justify-center shadow-sm">
+                        <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded flex items-center justify-center shadow-sm">
                             <GraduationCap className="text-white" size={16} />
                         </div>
                         <div className="flex flex-col items-end">
@@ -386,7 +386,7 @@ const RegularAdminDashboard = ({ user }) => {
                 <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-3 text-white shadow-md hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
                     <div>
                         <div className="flex justify-between items-start mb-2">
-                            <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-sm">
+                            <div className="w-6 h-6 md:w-8 md:h-8 bg-white/10 rounded flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-sm">
                                 <Activity className="text-white" size={16} />
                             </div>
                             <span className="flex items-center gap-0.5 text-[9px] font-bold text-green-300 bg-green-500/20 px-1.5 py-0.5 rounded-full backdrop-blur-sm border border-green-400/30">
@@ -430,7 +430,7 @@ const RegularAdminDashboard = ({ user }) => {
                     <div className="divide-y divide-gray-50">
                         {pendingItems.map((item, i) => (
                             <div key={i} className="p-3 hover:bg-gray-50 transition-colors flex items-center gap-3">
-                                <div className={`w-8 h-8 ${item.bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                                <div className={`w-6 h-6 md:w-8 md:h-8 ${item.bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
                                     <item.icon className={item.color} size={14} />
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -488,7 +488,7 @@ const RegularAdminDashboard = ({ user }) => {
                             to={action.path}
                             className="group p-2.5 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all bg-gray-50/80 hover:bg-white flex items-center gap-2.5"
                         >
-                            <div className={`w-8 h-8 rounded-md bg-gradient-to-br ${action.color} flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform`}>
+                            <div className={`w-6 h-6 md:w-8 md:h-8 rounded-md bg-gradient-to-br ${action.color} flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform`}>
                                 <action.icon className="text-white" size={14} />
                             </div>
                             <div className="flex-1 min-w-0">
@@ -587,7 +587,7 @@ const RegularAdminDashboard = ({ user }) => {
                         { label: 'Impact Stories', icon: TrendingUp, status: 'live', count: metrics.successStories, color: 'text-green-600', bg: 'bg-green-50' },
                     ].map((item, i) => (
                         <div key={i} className="p-2.5 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all bg-gray-50/80 flex items-center gap-2.5">
-                            <div className={`w-8 h-8 rounded-md shrink-0 flex items-center justify-center ${item.bg}`}>
+                            <div className={`w-6 h-6 md:w-8 md:h-8 rounded-md shrink-0 flex items-center justify-center ${item.bg}`}>
                                 <item.icon className={item.color} size={14} />
                             </div>
                             <div className="flex-1 min-w-0">

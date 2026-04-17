@@ -170,13 +170,13 @@ const NewsletterManagementPage = () => {
         <AdminLayout>
             <div className="space-y-6">
                 {/* Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3">
                     <div className="flex items-center gap-3">
                         <div className="bg-gradient-to-br from-[#004fa2] to-[#0066cc] p-2 rounded-lg shrink-0 shadow-sm">
                             <Mail size={18} className="text-white" />
                         </div>
                         <div>
-                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Newsletter Subscribers</h1>
+                            <h1 className="text-[11px] md:text-base font-bold text-gray-900 leading-tight">Newsletter Subscribers</h1>
                             <p className="text-[10px] text-gray-500 mt-0.5">Manage your newsletter mailing list</p>
                         </div>
                     </div>
@@ -251,7 +251,7 @@ const NewsletterManagementPage = () => {
                                 <div key={subscriber.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 hover:border-[#004fa2] transition-colors group flex flex-col gap-3">
                                     <div className="flex items-start justify-between gap-2">
                                         <div className="flex items-center gap-2 min-w-0">
-                                            <div className="w-8 h-8 rounded-full bg-blue-50/50 flex items-center justify-center shrink-0">
+                                            <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-blue-50/50 flex items-center justify-center shrink-0">
                                                 <Mail size={14} className="text-blue-500" />
                                             </div>
                                             <div className="min-w-0">
@@ -313,7 +313,7 @@ const NewsletterManagementPage = () => {
                 {/* Info Box */}
                 <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
                     <div className="flex gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                        <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
                             <RefreshCw className="text-blue-600" size={16} />
                         </div>
                         <div>

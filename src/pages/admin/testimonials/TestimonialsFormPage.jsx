@@ -420,7 +420,7 @@ export default function TestimonialsFormPage() {
                                         <img decoding="async"
                                             src={formData.avatar}
                                             alt="preview"
-                                            className="w-10 h-10 rounded-full object-cover"
+                                            className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-full object-cover"
                                             onError={(e) => { e.target.style.display = 'none'; }}
                                         />
                                     )}

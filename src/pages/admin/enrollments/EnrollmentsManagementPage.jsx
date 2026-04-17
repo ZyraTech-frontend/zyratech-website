@@ -485,15 +485,15 @@ const EnrollmentsManagementPage = () => {
 
     return (
         <AdminLayout>
-            <div className="space-y-6 pb-8">
+            <div className="space-y-3 md:space-y-6 pb-8">
                 {/* Page Header & Actions */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
                     <div className="flex items-center gap-3">
                         <div className="bg-blue-50 p-2 rounded-lg shrink-0">
                             <GraduationCap size={18} className="text-blue-600" />
                         </div>
                         <div>
-                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Enrollments Management</h1>
+                            <h1 className="text-[11px] md:text-base font-bold text-gray-900 leading-tight">Enrollments Management</h1>
                             <p className="text-[10px] text-gray-500">Track and manage student course enrollments</p>
                         </div>
                     </div>
@@ -599,7 +599,7 @@ const EnrollmentsManagementPage = () => {
                                 
                                 {/* Student Info */}
                                 <div className="flex items-start gap-3 min-w-0 xl:w-2/6">
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+                                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-[10px] font-bold shrink-0">
                                         {enrollment.student.name.split(' ').map(n => n[0]).join('')}
                                     </div>
                                     <div className="min-w-0">

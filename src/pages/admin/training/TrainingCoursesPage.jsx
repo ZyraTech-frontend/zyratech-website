@@ -401,12 +401,12 @@ const TrainingCoursesPage = () => {
 
     return (
         <AdminLayout>
-            <div className="space-y-6 pb-8">
+            <div className="space-y-3 md:space-y-6 pb-8">
                 {/* Page Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
+                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
                                 <GraduationCap className="text-white" size={22} />
                             </div>
                             Training Courses
@@ -472,7 +472,7 @@ const TrainingCoursesPage = () => {
                             <div key={i} className="p-2.5 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all bg-gray-50/80 flex items-center gap-2.5 cursor-pointer"
                                 onClick={() => { setSelectedCategory(stat.id); setCurrentPage(1); }}
                             >
-                                <div className={`w-8 h-8 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
+                                <div className={`w-6 h-6 md:w-8 md:h-8 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
                                     <stat.icon className={stat.cColor} size={14} />
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -489,7 +489,7 @@ const TrainingCoursesPage = () => {
 
                         {/* Rating Card */}
                         <div className="p-2.5 rounded-lg border border-[#0066cc]/20 transition-all bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center gap-2.5 hover:shadow-md hover:brightness-105">
-                            <div className="w-8 h-8 rounded-md shrink-0 flex items-center justify-center bg-white/20">
+                            <div className="w-6 h-6 md:w-8 md:h-8 rounded-md shrink-0 flex items-center justify-center bg-white/20">
                                 <Star className="text-white" size={14} />
                             </div>
                             <div className="flex-1 min-w-0">
@@ -758,7 +758,7 @@ const TrainingCoursesPage = () => {
                                 <div key={i} className="p-2.5 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all bg-gray-50/80 flex items-center gap-2.5 cursor-pointer"
                                     onClick={() => { setSelectedStatus(stat.id); setApplicationsPage(1); }}
                                 >
-                                    <div className={`w-8 h-8 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
+                                    <div className={`w-6 h-6 md:w-8 md:h-8 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
                                         <stat.icon className={stat.cColor} size={14} />
                                     </div>
                                     <div className="flex-1 min-w-0">
@@ -966,7 +966,7 @@ const TrainingCoursesPage = () => {
                         {/* Modal Header */}
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-[#004fa2] to-[#0066cc]">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white/20 rounded-xl flex items-center justify-center">
                                     <GraduationCap className="text-white" size={22} />
                                 </div>
                                 <div>

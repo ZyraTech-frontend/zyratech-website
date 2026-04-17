@@ -279,7 +279,7 @@ const FloatingInput = ({
 // ─── Error Alert Component ───────────────────────────────────────────
 const ErrorAlert = ({ title, message }) => (
   <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl animate-[slideDown_0.3s_ease-out]">
-    <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+    <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
       <AlertCircle size={18} className="text-red-600" />
     </div>
     <div>
@@ -439,7 +439,7 @@ const LoginView = ({
                 onClick={() => handleDemoSelect(cred)}
                 className={`w-full text-left p-2.5 rounded-lg bg-gradient-to-r ${cred.color} border ${cred.border} hover:shadow-md transition-all duration-200 group/cred flex items-center gap-3`}
               >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${cred.badge} font-bold text-xs`}>
+                <div className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center shrink-0 ${cred.badge} font-bold text-xs`}>
                   {cred.role[0]}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -518,7 +518,7 @@ const ChangePasswordView = ({ user, onSubmit, loading, error }) => {
     <div className="animate-[fadeIn_0.3s_ease-out]">
       {/* Combined Compact Info Banner */}
       <div className="bg-amber-50/80 border border-amber-200/60 rounded-xl p-3 mb-5 flex gap-3 items-start">
-        <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
+        <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
           <KeyRound size={16} className="text-amber-600" />
         </div>
         <div className="text-xs text-amber-800/80">
@@ -675,7 +675,7 @@ const KycView = ({ user, kycStatus, onSubmit, onSkip, loading, error }) => {
           {/* Government ID */}
           <label className={`flex flex-col items-center gap-2 p-4 border-2 border-dashed rounded-2xl cursor-pointer transition-all text-center ${governmentId ? 'border-green-300 bg-green-50' : 'border-gray-300 hover:border-[#004fa2] hover:bg-blue-50/50'
             }`}>
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${governmentId ? 'bg-green-100' : 'bg-gray-100'
+            <div className={`w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center ${governmentId ? 'bg-green-100' : 'bg-gray-100'
               }`}>
               {governmentId ? <FileCheck size={20} className="text-green-600" /> : <Upload size={20} className="text-gray-400" />}
             </div>
@@ -696,7 +696,7 @@ const KycView = ({ user, kycStatus, onSubmit, onSkip, loading, error }) => {
           {/* Proof of Address */}
           <label className={`flex flex-col items-center gap-2 p-4 border-2 border-dashed rounded-2xl cursor-pointer transition-all text-center ${proofOfAddress ? 'border-green-300 bg-green-50' : 'border-gray-300 hover:border-[#004fa2] hover:bg-blue-50/50'
             }`}>
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${proofOfAddress ? 'bg-green-100' : 'bg-gray-100'
+            <div className={`w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center ${proofOfAddress ? 'bg-green-100' : 'bg-gray-100'
               }`}>
               {proofOfAddress ? <FileCheck size={20} className="text-green-600" /> : <Upload size={20} className="text-gray-400" />}
             </div>
@@ -1017,11 +1017,11 @@ const LoginPage = () => {
           <div className="px-6 py-8 md:px-10 md:pt-10 md:pb-3">
             <div className="flex items-center justify-between mb-1.5">
               <h2 className="text-2xl md:text-3xl font-black text-gray-900 transition-all">{cardHeader.title}</h2>
-              <div className={`w-10 h-10 md:w-12 md:h-12 ${cardHeader.iconBg} rounded-xl flex items-center justify-center transition-all`}>
+              <div className={`w-6 h-6 md:w-8 md:h-8 md:w-12 md:h-12 ${cardHeader.iconBg} rounded-xl flex items-center justify-center transition-all`}>
                 {cardHeader.icon}
               </div>
             </div>
-            <p className="text-gray-500 text-sm md:text-base transition-all">{cardHeader.subtitle}</p>
+            <p className="text-gray-500 text-[11px] md:text-base transition-all">{cardHeader.subtitle}</p>
           </div>
 
           {/* Card Body */}
