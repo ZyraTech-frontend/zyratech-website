@@ -365,7 +365,7 @@ const AdministratorFormPage = () => {
                                 : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                             }`}
                           >
-                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                            <div className={`w-6 h-6 md:w-8 md:h-8 rounded-lg flex items-center justify-center ${
                               isSelected ? 'bg-[#004fa2] text-white' : 'bg-gray-100 text-gray-500'
                             }`}>
                               <Shield size={16} />
@@ -597,7 +597,7 @@ const AdministratorFormPage = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={handleCancel}
-              className="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
+              className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
             >
               <ChevronLeft size={20} />
             </button>
@@ -638,7 +638,7 @@ const AdministratorFormPage = () => {
                     className={`flex flex-col items-center gap-1 min-w-[80px] ${isCompleted ? 'cursor-pointer' : ''}`}
                   >
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                      className={`w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all ${
                         isActive
                           ? 'bg-[#004fa2] text-white'
                           : isCompleted
@@ -671,7 +671,7 @@ const AdministratorFormPage = () => {
         {/* Step Content */}
         <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100 mb-6">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
+            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
               <StepIcon className="text-white" size={20} />
             </div>
             <div>

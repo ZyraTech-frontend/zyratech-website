@@ -531,15 +531,15 @@ const ContactInquiriesPage = () => {
 
     return (
         <AdminLayout>
-            <div className="space-y-6 pb-8">
+            <div className="space-y-3 md:space-y-6 pb-8">
                 {/* Page Header & Actions */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
                     <div className="flex items-center gap-3">
                         <div className="bg-blue-50 p-2 rounded-lg shrink-0 text-blue-600">
                             <Contact size={18} />
                         </div>
                         <div>
-                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Contact Inquiries</h1>
+                            <h1 className="text-[11px] md:text-base font-bold text-gray-900 leading-tight">Contact Inquiries</h1>
                             <p className="text-[10px] text-gray-500">Manage and respond to contact form submissions</p>
                         </div>
                     </div>
@@ -651,7 +651,7 @@ const ContactInquiriesPage = () => {
                                         </button>
                                         <PriorityDot priority={inquiry.priority} />
                                     </div>
-                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-[10px] font-bold shadow-sm shrink-0">
+                                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-xl bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-[10px] font-bold shadow-sm shrink-0">
                                         {inquiry.contact.firstName[0]}{inquiry.contact.lastName[0]}
                                     </div>
                                     <div className="min-w-0 flex-1">
@@ -772,11 +772,11 @@ const ContactInquiriesPage = () => {
                         {/* Modal Header */}
                         <div className="px-4 py-3 bg-gradient-to-r from-[#004fa2] to-[#0066cc] flex items-center justify-between">
                             <div className="flex items-center gap-2 md:gap-3 min-w-0">
-                                <div className="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white/20 rounded-xl flex items-center justify-center">
                                     <Contact className="text-white" size={18} />
                                 </div>
                                 <div className="min-w-0">
-                                    <h2 className="text-sm md:text-base font-bold text-white truncate">Inquiry Details</h2>
+                                    <h2 className="text-[11px] md:text-base font-bold text-white truncate">Inquiry Details</h2>
                                     <p className="text-blue-100 text-[10px] font-mono truncate">{viewingInquiry.id}</p>
                                 </div>
                             </div>
@@ -797,7 +797,7 @@ const ContactInquiriesPage = () => {
                         </div>
 
                         {/* Modal Body */}
-                        <div className="p-4 md:p-6 overflow-y-auto max-h-[calc(90vh-140px)] md:max-h-[calc(85vh-140px)] custom-scrollbar">
+                        <div className="p-2 md:p-4 lg:p-5 lg:p-6 overflow-y-auto max-h-[calc(90vh-140px)] md:max-h-[calc(85vh-140px)] custom-scrollbar">
                             <div className="space-y-4 md:space-y-5">
                                 {/* Status & Type Row */}
                                 <div className="flex items-center flex-wrap gap-2">
@@ -816,17 +816,17 @@ const ContactInquiriesPage = () => {
 
                                 {/* Subject */}
                                 <div>
-                                    <h3 className="text-sm md:text-base font-bold text-gray-900">{viewingInquiry.subject}</h3>
+                                    <h3 className="text-[11px] md:text-base font-bold text-gray-900">{viewingInquiry.subject}</h3>
                                 </div>
 
                                 {/* Contact Info */}
-                                <div className="bg-gray-50 rounded-xl p-3 md:p-4">
+                                <div className="bg-gray-50 rounded-xl p-2 md:p-4">
                                     <h4 className="text-[11px] font-bold text-gray-500 mb-3 flex items-center gap-1.5 uppercase tracking-wider">
                                         <User size={12} />
                                         Contact Information
                                     </h4>
                                     <div className="flex items-center gap-3 mb-3">
-                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-xs font-bold shrink-0">
+                                        <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-xs font-bold shrink-0">
                                             {viewingInquiry.contact.firstName[0]}{viewingInquiry.contact.lastName[0]}
                                         </div>
                                         <div className="min-w-0">
@@ -864,7 +864,7 @@ const ContactInquiriesPage = () => {
                                 </div>
 
                                 {/* Message Content */}
-                                <div className="bg-white border border-gray-100 rounded-xl p-3 md:p-4 shadow-sm">
+                                <div className="bg-white border border-gray-100 rounded-xl p-2 md:p-4 shadow-sm">
                                     <div className="flex flex-wrap items-center justify-between mb-3 text-[10px] text-gray-400 gap-2">
                                         <span className="flex items-center gap-1 font-mono bg-gray-50 px-1.5 py-0.5 rounded">
                                             <Calendar size={10} />
@@ -884,7 +884,7 @@ const ContactInquiriesPage = () => {
 
                                 {/* Notes */}
                                 {viewingInquiry.notes.length > 0 && (
-                                    <div className="bg-amber-50 rounded-xl p-3 md:p-4 border border-amber-100">
+                                    <div className="bg-amber-50 rounded-xl p-2 md:p-4 border border-amber-100">
                                         <h4 className="text-[11px] font-bold text-amber-800 mb-1.5 uppercase tracking-wider">Internal Notes</h4>
                                         <ul className="space-y-1">
                                             {viewingInquiry.notes.map((note, idx) => (

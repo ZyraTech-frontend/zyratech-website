@@ -362,13 +362,13 @@ const EnrollmentDetailsPage = () => {
 
     return (
         <AdminLayout>
-            <div className="max-w-5xl mx-auto space-y-6 pb-8">
+            <div className="max-w-5xl mx-auto space-y-3 md:space-y-6 pb-8">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => navigate('/admin/enrollments')}
-                            className="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
+                            className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
                         >
                             <ChevronLeft size={20} />
                         </button>
@@ -430,7 +430,7 @@ const EnrollmentDetailsPage = () => {
                             {/* Contact Info Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6 border-t border-gray-100">
                                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-gray-400 shadow-sm">
+                                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center text-gray-400 shadow-sm">
                                         <Mail size={20} />
                                     </div>
                                     <div>
@@ -439,7 +439,7 @@ const EnrollmentDetailsPage = () => {
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-gray-400 shadow-sm">
+                                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center text-gray-400 shadow-sm">
                                         <Phone size={20} />
                                     </div>
                                     <div>
@@ -448,7 +448,7 @@ const EnrollmentDetailsPage = () => {
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-gray-400 shadow-sm">
+                                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center text-gray-400 shadow-sm">
                                         <MapPin size={20} />
                                     </div>
                                     <div>
@@ -457,7 +457,7 @@ const EnrollmentDetailsPage = () => {
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-gray-400 shadow-sm">
+                                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center text-gray-400 shadow-sm">
                                         <GraduationCap size={20} />
                                     </div>
                                     <div>
@@ -585,7 +585,7 @@ const EnrollmentDetailsPage = () => {
                                     onClick={handleDownloadCV}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center text-red-500">
+                                        <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-red-50 rounded-lg flex items-center justify-center text-red-500">
                                             <FileText size={20} />
                                         </div>
                                         <div className="flex-1 overflow-hidden">

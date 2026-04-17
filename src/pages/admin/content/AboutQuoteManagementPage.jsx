@@ -92,7 +92,7 @@ const AboutQuoteManagementPage = () => {
             <div className="max-w-4xl mx-auto space-y-6">
                 <div>
                     <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center shrink-0">
+                        <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-blue-100 rounded-xl flex items-center justify-center shrink-0">
                             <Quote className="text-blue-600" size={22} />
                         </div>
                         About Section Management

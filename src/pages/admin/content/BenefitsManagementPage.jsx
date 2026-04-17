@@ -152,7 +152,7 @@ const BenefitsManagementPage = () => {
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-blue-100 rounded-xl flex items-center justify-center">
                                 <CheckCircle className="text-blue-600" size={22} />
                             </div>
                             Benefits Management
@@ -197,7 +197,7 @@ const BenefitsManagementPage = () => {
                                     className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col h-full"
                                 >
                                     <div className="flex items-start justify-between mb-4">
-                                        <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-[#004fa2]">
+                                        <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-blue-50 rounded-lg flex items-center justify-center text-[#004fa2]">
                                             <IconComp size={20} />
                                         </div>
                                         <div className="flex gap-1">

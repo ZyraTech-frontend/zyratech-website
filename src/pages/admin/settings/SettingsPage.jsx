@@ -114,12 +114,12 @@ const SettingsPage = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-4 md:space-y-6 max-w-7xl mx-auto pb-8">
+      <div className="space-y-3 md:space-y-6 max-w-7xl mx-auto pb-8">
         {/* Modern Header - High Density Desktop, Compact Mobile */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden shrink-0">
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#004fa2]/5 to-[#0066cc]/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl pointer-events-none"></div>
           <div className="flex items-center gap-3 sm:gap-4 relative z-10 min-w-0">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center shadow-md shrink-0">
+            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center shadow-md shrink-0">
               <Settings className="text-white" size={20} />
             </div>
             <div className="min-w-0">
@@ -166,7 +166,7 @@ const SettingsPage = () => {
                 {/* Site Identity Card */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-[#004fa2]">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-blue-100 flex items-center justify-center text-[#004fa2]">
                         <Globe size={16} />
                     </div>
                     <div>
@@ -203,7 +203,7 @@ const SettingsPage = () => {
                 {/* Theme Colors Card */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
                         <Palette size={16} />
                     </div>
                     <div>
@@ -260,7 +260,7 @@ const SettingsPage = () => {
                 {/* Media Assets Card */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600">
                         <Upload size={16} />
                     </div>
                     <div>
@@ -303,7 +303,7 @@ const SettingsPage = () => {
                 {/* Primary Contact Card */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-[#004fa2]">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-blue-100 flex items-center justify-center text-[#004fa2]">
                         <Phone size={16} />
                     </div>
                     <div>
@@ -363,7 +363,7 @@ const SettingsPage = () => {
                 {/* HR Contact Card */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
                         <Mail size={16} />
                     </div>
                     <div>
@@ -410,7 +410,7 @@ const SettingsPage = () => {
                 {/* Business Hours Card */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center text-teal-600">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-teal-100 flex items-center justify-center text-teal-600">
                         <Shield size={16} />
                     </div>
                     <div>
@@ -463,7 +463,7 @@ const SettingsPage = () => {
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-pink-100 flex items-center justify-center text-pink-600">
+                        <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-pink-100 flex items-center justify-center text-pink-600">
                             <Share2 size={16} />
                         </div>
                         <div>
@@ -551,7 +551,7 @@ const SettingsPage = () => {
                 {/* Analytics Tracking Card */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
                         <BarChart3 size={16} />
                     </div>
                     <div>
@@ -607,7 +607,7 @@ const SettingsPage = () => {
                 {/* SEO Settings Card */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
                         <Search size={16} />
                     </div>
                     <div>
@@ -787,7 +787,7 @@ const SettingsPage = () => {
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
                         <Mail size={16} />
                     </div>
                     <div>
@@ -888,7 +888,7 @@ const SettingsPage = () => {
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-gray-200 flex items-center justify-center text-gray-700">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-gray-200 flex items-center justify-center text-gray-700">
                         <Settings size={16} />
                     </div>
                     <div>

@@ -156,12 +156,12 @@ const AdminProfilePage = () => {
 
     return (
         <AdminLayout>
-            <div className="max-w-5xl mx-auto space-y-6 pb-8">
+            <div className="max-w-5xl mx-auto space-y-3 md:space-y-6 pb-8">
                 {/* Page Header */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
+                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
                                 <User className="text-white" size={22} />
                             </div>
                             My Profile
@@ -345,7 +345,7 @@ const AdminProfilePage = () => {
 
                         {/* PERSONAL INFORMATION TAB */}
                         {activeTab === 'profile' && (
-                            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
+                            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 md:p-4 lg:p-5 lg:p-6">
                                 <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
                                     <User size={20} className="text-[#004fa2]" />
                                     Personal Information
@@ -450,7 +450,7 @@ const AdminProfilePage = () => {
                         {activeTab === 'security' && (
                             <div className="space-y-6">
                                 {/* Password Change */}
-                                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
+                                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 md:p-4 lg:p-5 lg:p-6">
                                     <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
                                         <Lock size={20} className="text-[#004fa2]" />
                                         Change Password
@@ -511,7 +511,7 @@ const AdminProfilePage = () => {
 
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 shrink-0">
+                                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 shrink-0">
                                                 <Smartphone size={20} />
                                             </div>
                                             <div>
@@ -539,7 +539,7 @@ const AdminProfilePage = () => {
                                     </h3>
 
                                     <div className="space-y-4">
-                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 md:p-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-2 md:p-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors">
                                             <div className="flex items-center gap-3">
                                                 <Monitor className="text-gray-400 shrink-0" size={20} />
                                                 <div>
@@ -551,7 +551,7 @@ const AdminProfilePage = () => {
                                                 <span className="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded">Current Session</span>
                                             </div>
                                         </div>
-                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 md:p-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-2 md:p-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors">
                                             <div className="flex items-center gap-3">
                                                 <Smartphone className="text-gray-400 shrink-0" size={20} />
                                                 <div>
@@ -708,10 +708,10 @@ const AdminProfilePage = () => {
                                         const Icon = item.icon;
                                         return (
                                             <div key={idx} className="relative flex items-start gap-3 ml-0 pl-0">
-                                                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-[#004fa2] shadow shrink-0 z-10 border border-gray-100">
+                                                <div className="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-full bg-white text-[#004fa2] shadow shrink-0 z-10 border border-gray-100">
                                                     <Icon size={16} />
                                                 </div>
-                                                <div className="flex-1 bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm">
+                                                <div className="flex-1 bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm">
                                                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-1">
                                                         <div className="font-bold text-slate-900 text-sm">{item.action}</div>
                                                         <time className="font-medium text-indigo-500 text-xs">{item.date}</time>

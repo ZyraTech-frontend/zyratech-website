@@ -209,16 +209,16 @@ const ProjectsManagementPage = () => {
 
     return (
         <AdminLayout>
-            <div className="space-y-6 pb-8">
+            <div className="space-y-3 md:space-y-6 pb-8">
                 {/* Page Header */}
                 {/* Page Header & Actions */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
                     <div className="flex items-center gap-3">
                         <div className="bg-blue-50 p-2 rounded-lg shrink-0">
                             <FolderKanban size={18} className="text-blue-600" />
                         </div>
                         <div>
-                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Projects Management</h1>
+                            <h1 className="text-[11px] md:text-base font-bold text-gray-900 leading-tight">Projects Management</h1>
                             <p className="text-[10px] text-gray-500">Manage portfolio projects and case studies</p>
                         </div>
                     </div>
