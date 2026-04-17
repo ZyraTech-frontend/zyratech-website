@@ -495,12 +495,12 @@ const PartnershipsManagementPage = () => {
 
     return (
         <AdminLayout>
-            <div className="space-y-6 pb-8">
+            <div className="space-y-3 md:space-y-6 pb-8">
                 {/* Page Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center shadow-md">
+                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center shadow-md">
                                 <Handshake className="text-white" size={22} />
                             </div>
                             Partnerships Management
@@ -849,7 +849,7 @@ const PartnershipsManagementPage = () => {
                                             <tr key={partnership.id} className="hover:bg-gray-50 transition-colors">
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                                                        <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-lg bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-sm font-bold shadow-sm">
                                                             {partnership.organization.name.split(' ').slice(0, 2).map(n => n[0]).join('')}
                                                         </div>
                                                         <div>

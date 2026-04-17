@@ -269,15 +269,15 @@ const FaqManagementPage = () => {
 
     return (
         <AdminLayout>
-            <div className="space-y-6 pb-8">
+            <div className="space-y-3 md:space-y-6 pb-8">
                 {/* Page Header & Actions */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
                     <div className="flex items-center gap-3">
                         <div className="bg-blue-50 p-2 rounded-lg shrink-0">
                             <HelpCircle size={18} className="text-blue-600" />
                         </div>
                         <div>
-                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">FAQ Management</h1>
+                            <h1 className="text-[11px] md:text-base font-bold text-gray-900 leading-tight">FAQ Management</h1>
                             <p className="text-[10px] text-gray-500">Manage frequently asked questions by category</p>
                         </div>
                     </div>
@@ -384,7 +384,7 @@ const FaqManagementPage = () => {
                                         className="w-full px-3 py-2.5 flex items-center justify-between hover:bg-gray-50 transition-colors"
                                     >
                                         <div className="flex items-center gap-2.5">
-                                            <div className={`w-8 h-8 bg-gradient-to-br ${config.bgGradient} rounded flex items-center justify-center`}>
+                                            <div className={`w-6 h-6 md:w-8 md:h-8 bg-gradient-to-br ${config.bgGradient} rounded flex items-center justify-center`}>
                                                 <Icon className="text-white" size={16} />
                                             </div>
                                             <div className="text-left">

@@ -159,13 +159,13 @@ const BlogManagementPage = () => {
             <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
                     {/* Header Section */}
-                    <div className="flex justify-between items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm mb-4">
+                    <div className="flex justify-between items-center bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm mb-4">
                         <div className="flex items-center gap-3">
                             <div className="bg-blue-50 p-2 rounded-lg shrink-0">
                                 <BookOpen size={18} className="text-blue-600" />
                             </div>
                             <div>
-                                <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Blog Management</h1>
+                                <h1 className="text-[11px] md:text-base font-bold text-gray-900 leading-tight">Blog Management</h1>
                                 <p className="text-[10px] text-gray-500">Manage blog articles</p>
                             </div>
                         </div>
@@ -260,7 +260,7 @@ const BlogManagementPage = () => {
                                                             src={article.image}
                                                             alt=""
                                                             aria-hidden="true"
-                                                            className="w-10 h-10 md:w-10 md:h-10 rounded shrink-0 object-cover border border-gray-200"
+                                                            className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 md:w-10 md:h-10 rounded shrink-0 object-cover border border-gray-200"
                                                         />
                                                         <div className="min-w-0 flex-1">
                                                             <p className="font-bold text-gray-900 text-sm md:text-xs line-clamp-2 leading-snug group-hover:text-[#004fa2] transition-colors">{article.title}</p>
@@ -369,7 +369,7 @@ const BlogManagementPage = () => {
                                     <button
                                         key={i + 1}
                                         onClick={() => setCurrentPage(i + 1)}
-                                        className={`w-10 h-10 rounded-lg font-semibold transition-all ${
+                                        className={`w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-lg font-semibold transition-all ${
                                             currentPage === i + 1
                                                 ? 'bg-blue-600 text-white'
                                                 : 'border border-gray-300 text-gray-700 hover:bg-gray-50'

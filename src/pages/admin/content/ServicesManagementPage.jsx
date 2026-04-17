@@ -160,7 +160,7 @@ const ServicesManagementPage = () => {
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-blue-100 rounded-xl flex items-center justify-center">
                                 <Briefcase className="text-blue-600" size={22} />
                             </div>
                             Services Management

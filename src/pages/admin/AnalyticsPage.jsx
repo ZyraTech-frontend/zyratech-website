@@ -154,9 +154,9 @@ const AnalyticsPage = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-4 md:space-y-6 pb-8">
+      <div className="space-y-4 md:space-y-3 md:space-y-6 pb-8">
         {/* Premium Header */}
-        <div className="bg-gradient-to-br from-[#004fa2] via-[#0058b5] to-[#0066cc] rounded-xl md:rounded-2xl p-3 md:p-5 text-white relative overflow-hidden shadow-md md:shadow-lg border border-blue-400/20">
+        <div className="bg-gradient-to-br from-[#004fa2] via-[#0058b5] to-[#0066cc] rounded-xl md:rounded-2xl p-2 md:p-4 lg:p-5 text-white relative overflow-hidden shadow-md md:shadow-lg border border-blue-400/20">
           <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 md:-mr-24 md:-mt-24 pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 md:w-64 md:h-64 bg-white/5 rounded-full blur-3xl -ml-12 -mb-12 md:-ml-16 md:-mb-16 pointer-events-none"></div>
           
@@ -167,7 +167,7 @@ const AnalyticsPage = () => {
                 <span className="text-blue-200 text-[10px] md:text-xs font-bold uppercase tracking-wider">Business Analytics</span>
                 <span className="ml-2 px-1.5 py-0.5 bg-green-500/20 text-green-300 rounded-full text-[9px] md:text-[10px] font-bold border border-green-500/30">LIVE METRICS</span>
               </div>
-              <h1 className="text-lg md:text-2xl font-bold mb-1 tracking-tight">
+              <h1 className="text-base md:text-2xl font-bold mb-1 tracking-tight">
                 Comprehensive Insights
               </h1>
               <p className="text-blue-200 text-[11px] md:text-sm max-w-xl">
@@ -442,7 +442,7 @@ const AnalyticsPage = () => {
         {/* Two Column Layout: Revenue Distribution & Trends */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
           {/* Revenue Distribution */}
-          <div className="bg-white rounded-xl md:rounded-2xl p-3 md:p-5 border border-gray-200 shadow-sm h-full flex flex-col">
+          <div className="bg-white rounded-xl md:rounded-2xl p-2 md:p-4 lg:p-5 border border-gray-200 shadow-sm h-full flex flex-col">
             <div className="flex items-center justify-between mb-4 md:mb-6">
               <div>
                 <h2 className="text-[11px] md:text-lg font-bold text-gray-900 tracking-tight">Revenue Stream</h2>
@@ -450,11 +450,11 @@ const AnalyticsPage = () => {
               </div>
             </div>
 
-            <div className="space-y-4 md:space-y-6 flex-1 flex flex-col justify-center">
+            <div className="space-y-3 md:space-y-6 flex-1 flex flex-col justify-center">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2.5 md:gap-3">
-                    <div className="w-8 h-8 md:w-12 md:h-12 bg-blue-50 rounded-lg md:rounded-xl flex items-center justify-center border border-blue-100/50 text-blue-600">
+                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-12 md:h-12 bg-blue-50 rounded-lg md:rounded-xl flex items-center justify-center border border-blue-100/50 text-blue-600">
                       <GraduationCap size={16} />
                     </div>
                     <div>
@@ -475,7 +475,7 @@ const AnalyticsPage = () => {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2.5 md:gap-3">
-                    <div className="w-8 h-8 md:w-12 md:h-12 bg-cyan-50 rounded-lg md:rounded-xl flex items-center justify-center border border-cyan-100/50 text-cyan-600">
+                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-12 md:h-12 bg-cyan-50 rounded-lg md:rounded-xl flex items-center justify-center border border-cyan-100/50 text-cyan-600">
                       <FolderKanban size={16} />
                     </div>
                     <div>
@@ -496,7 +496,7 @@ const AnalyticsPage = () => {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2.5 md:gap-3">
-                    <div className="w-8 h-8 md:w-12 md:h-12 bg-orange-50 rounded-lg md:rounded-xl flex items-center justify-center border border-orange-100/50 text-orange-600">
+                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-12 md:h-12 bg-orange-50 rounded-lg md:rounded-xl flex items-center justify-center border border-orange-100/50 text-orange-600">
                       <Briefcase size={16} />
                     </div>
                     <div>
@@ -517,7 +517,7 @@ const AnalyticsPage = () => {
           </div>
 
           {/* Revenue Trends */}
-          <div className="bg-white rounded-xl md:rounded-2xl p-3 md:p-5 border border-gray-200 shadow-sm h-full flex flex-col overflow-hidden">
+          <div className="bg-white rounded-xl md:rounded-2xl p-2 md:p-4 lg:p-5 border border-gray-200 shadow-sm h-full flex flex-col overflow-hidden">
              <div className="flex flex-row items-center justify-between mb-4 md:mb-6 gap-2">
               <div>
                 <h2 className="text-[11px] md:text-lg font-bold text-gray-900 tracking-tight">12-Month Trends</h2>
@@ -577,7 +577,7 @@ const AnalyticsPage = () => {
         {/* Funnel & Users Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
           {/* Conversion Funnel */}
-          <div className="bg-white rounded-xl md:rounded-2xl p-3 md:p-5 border border-gray-200 shadow-sm">
+          <div className="bg-white rounded-xl md:rounded-2xl p-2 md:p-4 lg:p-5 border border-gray-200 shadow-sm">
             <div className="flex items-center justify-between mb-4 md:mb-6">
                <div className="flex items-center gap-1.5 md:gap-2">
                  <Target size={16} className="text-[#004fa2]" />
@@ -612,7 +612,7 @@ const AnalyticsPage = () => {
           </div>
 
           {/* Geography */}
-          <div className="bg-white rounded-xl md:rounded-2xl p-3 md:p-5 border border-gray-200 shadow-sm">
+          <div className="bg-white rounded-xl md:rounded-2xl p-2 md:p-4 lg:p-5 border border-gray-200 shadow-sm">
              <div className="flex items-center justify-between mb-4 md:mb-6">
                 <div className="flex items-center gap-1.5 md:gap-2">
                    <Globe size={16} className="text-gray-400" />
@@ -643,7 +643,7 @@ const AnalyticsPage = () => {
         </div>
 
         {/* Top Courses TABLE */}
-        <div className="bg-white rounded-xl md:rounded-2xl p-3 md:p-5 border border-gray-200 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-xl md:rounded-2xl p-2 md:p-4 lg:p-5 border border-gray-200 shadow-sm overflow-hidden">
           <div className="flex items-center gap-1.5 md:gap-2 mb-4 md:mb-6">
              <Star size={16} className="text-yellow-500 fill-yellow-500" />
              <h2 className="text-[11px] md:text-lg font-bold text-gray-900 tracking-tight">Top Performing Courses</h2>

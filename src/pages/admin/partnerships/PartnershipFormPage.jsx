@@ -223,7 +223,7 @@ const PartnershipFormPage = () => {
                                     <div key={step.key} className="flex flex-col items-center flex-1">
                                         <div className="flex items-center w-full">
                                             <div
-                                                className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
+                                                className={`w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
                                                     isActive
                                                         ? 'bg-blue-600 text-white shadow-lg'
                                                         : isCompleted

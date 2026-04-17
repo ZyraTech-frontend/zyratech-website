@@ -213,7 +213,7 @@ const QAManagementPage = () => {
                                         <Trash2 size={16} />
                                     </button>
                                     <div className="flex items-center gap-3 mb-3">
-                                        <div className="w-10 h-10 border rounded flex items-center justify-center bg-gray-50">
+                                        <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 border rounded flex items-center justify-center bg-gray-50">
                                             <img decoding="async" src={tool.logo} alt="" className="w-6 h-6 object-contain" />
                                         </div>
                                         <Input label="Tool Name" value={tool.name} onChange={(e) => handleArrayChange('tools', index, 'name', e.target.value)} />

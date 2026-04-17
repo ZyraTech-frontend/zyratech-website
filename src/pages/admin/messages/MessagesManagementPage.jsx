@@ -447,15 +447,15 @@ const MessagesManagementPage = () => {
 
     return (
         <AdminLayout>
-            <div className="space-y-6 pb-8">
+            <div className="space-y-3 md:space-y-6 pb-8">
                 {/* Page Header & Actions */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
                     <div className="flex items-center gap-3">
                         <div className="bg-blue-50 p-2 rounded-lg shrink-0">
                             <MessageSquare size={18} className="text-blue-600" />
                         </div>
                         <div>
-                            <h1 className="text-sm md:text-base font-bold text-gray-900 leading-tight">Messages & Inquiries</h1>
+                            <h1 className="text-[11px] md:text-base font-bold text-gray-900 leading-tight">Messages & Inquiries</h1>
                             <p className="text-[10px] text-gray-500">Manage contact form submissions and customer inquiries</p>
                         </div>
                     </div>
@@ -559,7 +559,7 @@ const MessagesManagementPage = () => {
                                         <button onClick={(e) => { e.stopPropagation(); handleToggleStar(message); }} className="hover:scale-110 transition-transform">
                                             <Star size={14} className={message.starred ? 'text-amber-500 fill-amber-500' : 'text-gray-300'} />
                                         </button>
-                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-[10px] font-bold shadow-sm">
+                                        <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-[10px] font-bold shadow-sm">
                                             {message.sender.name.split(' ').map(n => n[0]).join('').substring(0,2)}
                                         </div>
                                     </div>
@@ -668,11 +668,11 @@ const MessagesManagementPage = () => {
                         {/* Modal Header */}
                         <div className="px-4 py-3 bg-gradient-to-r from-[#004fa2] to-[#0066cc] flex items-center justify-between">
                             <div className="flex items-center gap-2 md:gap-3 min-w-0">
-                                <div className="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
+                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
                                     <MessageSquare className="text-white" size={18} />
                                 </div>
                                 <div className="min-w-0">
-                                    <h2 className="text-sm md:text-base font-bold text-white truncate">Message Details</h2>
+                                    <h2 className="text-[11px] md:text-base font-bold text-white truncate">Message Details</h2>
                                     <p className="text-blue-100 text-[10px] font-mono truncate">{viewingMessage.id}</p>
                                 </div>
                             </div>
@@ -693,7 +693,7 @@ const MessagesManagementPage = () => {
                         </div>
 
                         {/* Modal Body */}
-                        <div className="p-4 md:p-6 overflow-y-auto max-h-[calc(90vh-140px)] md:max-h-[calc(85vh-140px)] custom-scrollbar">
+                        <div className="p-2 md:p-4 lg:p-5 lg:p-6 overflow-y-auto max-h-[calc(90vh-140px)] md:max-h-[calc(85vh-140px)] custom-scrollbar">
                             <div className="space-y-4">
                                 {/* Subject */}
                                 <div>
@@ -713,13 +713,13 @@ const MessagesManagementPage = () => {
                                 </div>
 
                                 {/* Sender Info */}
-                                <div className="bg-gray-50 rounded-xl p-3 md:p-4 flex flex-col gap-3">
+                                <div className="bg-gray-50 rounded-xl p-2 md:p-4 flex flex-col gap-3">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-sm md:text-base font-bold shrink-0">
+                                        <div className="w-6 h-6 md:w-8 md:h-8 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-[11px] md:text-base font-bold shrink-0">
                                             {viewingMessage.sender.name.split(' ').map(n => n[0]).join('').substring(0,2)}
                                         </div>
                                         <div className="min-w-0">
-                                            <p className="font-bold text-gray-900 text-sm md:text-base truncate">{viewingMessage.sender.name}</p>
+                                            <p className="font-bold text-gray-900 text-[11px] md:text-base truncate">{viewingMessage.sender.name}</p>
                                             {viewingMessage.sender.company && (
                                                 <p className="text-[11px] text-gray-500 flex items-center gap-1 truncate">
                                                     <Building size={10} className="shrink-0" />
@@ -747,7 +747,7 @@ const MessagesManagementPage = () => {
                                 </div>
 
                                 {/* Message Content */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-3 md:p-5 flex flex-col">
+                                <div className="bg-white border border-gray-200 rounded-xl p-2 md:p-4 lg:p-5 flex flex-col">
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3 pb-2 border-b border-gray-50 text-[10px] text-gray-400 shrink-0">
                                         <span className="flex items-center gap-1">
                                             <Calendar size={10} />

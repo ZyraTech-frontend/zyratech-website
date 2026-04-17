@@ -233,12 +233,12 @@ const UsersPage = () => {
   // ─── RENDER ──────────────────────────────────────────────
   return (
     <AdminLayout>
-      <div className="space-y-6 pb-8">
+      <div className="space-y-3 md:space-y-6 pb-8">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
+                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
                         <Users className="text-white" size={22} />
                     </div>
                     Administrator Accounts
@@ -374,7 +374,7 @@ const UsersPage = () => {
         {loading ? (
           <div className="flex items-center justify-center py-12 bg-white rounded-xl border border-gray-100 shadow-sm mt-4">
             <div className="text-center">
-              <div className="w-8 h-8 border-2 border-blue-100 border-t-[#004fa2] rounded-full animate-spin mx-auto mb-3" />
+              <div className="w-6 h-6 md:w-8 md:h-8 border-2 border-blue-100 border-t-[#004fa2] rounded-full animate-spin mx-auto mb-3" />
               <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Loading Accounts...</p>
             </div>
           </div>
@@ -420,7 +420,7 @@ const UsersPage = () => {
                   }`}
                 >
                   <div className="flex items-center gap-3 md:w-1/4 shrink-0">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-white shadow-sm overflow-hidden shrink-0 ${
+                    <div className={`w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-white shadow-sm overflow-hidden shrink-0 ${
                       isDeactivated ? 'bg-gray-400' : 'bg-[#004fa2]'
                     }`}>
                       {admin.avatar || admin.profileImage ? (
@@ -530,7 +530,7 @@ const UsersPage = () => {
               <div className="absolute top-0 right-0 w-[500px] h-full bg-gradient-to-l from-blue-50/80 to-transparent pointer-events-none"></div>
               <div className="px-4 py-4 sm:px-8 sm:py-5 flex flex-wrap items-start sm:items-center justify-between relative z-10 gap-3">
                 <div className="flex items-center gap-3 sm:gap-5 w-full sm:w-auto">
-                  <div className="w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md shadow-[#004fa2]/20 ring-4 ring-blue-50 shrink-0">
+                  <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md shadow-[#004fa2]/20 ring-4 ring-blue-50 shrink-0">
                     <BadgeCheck size={20} className="text-white sm:w-6 sm:h-6" />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -611,7 +611,7 @@ const UsersPage = () => {
                           
                           <div className="flex justify-between items-start mb-4 sm:mb-6 w-full relative z-10">
                             <div className="flex items-center gap-3 sm:gap-4">
-                              <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/80 rounded-xl flex items-center justify-center shadow-sm border border-blue-100/50">
+                              <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 sm:w-14 sm:h-14 bg-white/80 rounded-xl flex items-center justify-center shadow-sm border border-blue-100/50">
                                 <Shield size={20} className="text-[#004fa2] sm:w-7 sm:h-7" />
                               </div>
                               <div>
@@ -647,7 +647,7 @@ const UsersPage = () => {
                             </div>
                           </div>
                           {/* Hologram */}
-                          <div className="absolute bottom-4 right-4 w-10 h-10 sm:w-14 sm:h-14 rounded-full border border-yellow-300/40 bg-gradient-to-tr from-yellow-200/30 to-purple-300/30 backdrop-blur-md flex items-center justify-center shadow-lg">
+                          <div className="absolute bottom-4 right-4 w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 sm:w-14 sm:h-14 rounded-full border border-yellow-300/40 bg-gradient-to-tr from-yellow-200/30 to-purple-300/30 backdrop-blur-md flex items-center justify-center shadow-lg">
                             <BadgeCheck size={20} className="text-yellow-600/60 sm:w-7 sm:h-7" />
                           </div>
                         </div>
@@ -743,7 +743,7 @@ const UsersPage = () => {
                         <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-100/40 rounded-full blur-2xl pointer-events-none"></div>
                         
                         <div className="flex items-center gap-2.5 mb-5 relative z-10">
-                          <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 shadow-sm border border-emerald-200/50 mt-1 sm:mt-0">
+                          <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 shadow-sm border border-emerald-200/50 mt-1 sm:mt-0">
                             <CheckCircle size={16} className="text-emerald-600" />
                           </div>
                           <h4 className="text-sm font-black text-gray-900 tracking-tight">System Match Check</h4>
@@ -780,7 +780,7 @@ const UsersPage = () => {
                               <div className="text-[9px] sm:text-[10px] uppercase text-gray-400 font-bold mb-1.5 tracking-widest group-hover:text-[#004fa2] transition-colors">Extracted Name</div>
                               <div className="font-black text-gray-900 text-sm sm:text-base tracking-tight truncate max-w-[150px] sm:max-w-[220px]">{selectedAdmin.name}</div>
                             </div>
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
+                            <div className="w-6 h-6 md:w-8 md:h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
                                <BadgeCheck size={18} className="text-emerald-500 sm:w-5 sm:h-5" />
                             </div>
                           </div>
@@ -790,7 +790,7 @@ const UsersPage = () => {
                                <div className="text-[9px] sm:text-[10px] uppercase text-gray-400 font-bold mb-1.5 tracking-widest group-hover:text-amber-500 transition-colors">Document Expiry Date</div>
                                <div className="font-black text-gray-900 text-sm sm:text-base tracking-tight">14 Oct 2030</div>
                             </div>
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100">
+                            <div className="w-6 h-6 md:w-8 md:h-8 sm:w-10 sm:h-10 rounded-full bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100">
                                <Calendar size={16} className="text-gray-400 sm:w-4 sm:h-4" />
                             </div>
                           </div>
@@ -814,7 +814,7 @@ const UsersPage = () => {
                       
                       {/* Timeline Item 1 */}
                       <div className="relative flex items-start gap-4 sm:gap-6 mb-8 group is-active">
-                        <div className="flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12 rounded-full border-4 border-white bg-amber-500 shrink-0 shadow-md ring-1 ring-amber-100 z-10 mt-1 sm:mt-0">
+                        <div className="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 sm:w-12 sm:h-12 rounded-full border-4 border-white bg-amber-500 shrink-0 shadow-md ring-1 ring-amber-100 z-10 mt-1 sm:mt-0">
                           <Clock size={16} className="text-white sm:h-5 sm:w-5" />
                         </div>
                         <div className="flex-1 p-4 sm:p-5 rounded-2xl border border-amber-200/60 bg-gradient-to-br from-amber-50/80 to-white shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
@@ -829,7 +829,7 @@ const UsersPage = () => {
                       
                       {/* Timeline Item 2 */}
                       <div className="relative flex items-start gap-4 sm:gap-6 mb-8 group">
-                        <div className="flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12 rounded-full border-4 border-white bg-[#004fa2] shrink-0 shadow-md ring-1 ring-blue-100 z-10 mt-1 sm:mt-0">
+                        <div className="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 sm:w-12 sm:h-12 rounded-full border-4 border-white bg-[#004fa2] shrink-0 shadow-md ring-1 ring-blue-100 z-10 mt-1 sm:mt-0">
                           <Upload size={16} className="text-white sm:h-5 sm:w-5" />
                         </div>
                         <div className="flex-1 p-4 sm:p-5 rounded-2xl border border-gray-200/80 bg-white shadow-sm hover:shadow-md transition-shadow">
@@ -843,7 +843,7 @@ const UsersPage = () => {
 
                       {/* Timeline Item 3 */}
                       <div className="relative flex items-start gap-4 sm:gap-6 group">
-                        <div className="flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12 rounded-full border-4 border-white bg-gray-400 shrink-0 shadow-md ring-1 ring-gray-100 z-10 mt-1 sm:mt-0">
+                        <div className="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 sm:w-12 sm:h-12 rounded-full border-4 border-white bg-gray-400 shrink-0 shadow-md ring-1 ring-gray-100 z-10 mt-1 sm:mt-0">
                           <User size={16} className="text-white sm:h-5 sm:w-5" />
                         </div>
                         <div className="flex-1 p-4 sm:p-5 rounded-2xl border border-gray-200/80 bg-white shadow-sm hover:shadow-md transition-shadow">

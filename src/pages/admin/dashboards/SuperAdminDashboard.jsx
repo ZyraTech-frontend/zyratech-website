@@ -141,16 +141,16 @@ const SuperAdminDashboard = ({ user }) => {
     });
 
     return (
-        <div className="space-y-6 pb-8">
+        <div className="space-y-3 md:space-y-6 pb-8">
             {/* Premium Welcome Header */}
-            <div className="bg-gradient-to-br from-[#004fa2] via-[#0058b5] to-[#0066cc] rounded-xl p-4 md:p-6 text-white relative overflow-hidden shadow-md">
+            <div className="bg-gradient-to-br from-[#004fa2] via-[#0058b5] to-[#0066cc] rounded-xl p-2 md:p-4 lg:p-5 lg:p-6 text-white relative overflow-hidden shadow-md">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-24 -mt-24 pointer-events-none"></div>
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -ml-16 -mb-16 pointer-events-none"></div>
                 <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
 
                 <div className="relative z-10">
-                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 md:gap-6">
+                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 md:gap-6">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <Star size={14} className="fill-yellow-300 text-yellow-300" />
@@ -204,7 +204,7 @@ const SuperAdminDashboard = ({ user }) => {
             {/* Alerts Section (if any) */}
             {alerts.length > 0 && (
                 <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-4">
-                    <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-red-100 rounded-full flex items-center justify-center">
                         <AlertTriangle className="text-red-600" size={20} />
                     </div>
                     <div className="flex-1">
@@ -248,14 +248,14 @@ const SuperAdminDashboard = ({ user }) => {
             </div>
 
             {/* Main Metrics Cards - Ultra High Density Design */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
                 {/* Total Revenue Card */}
                 <div className="relative bg-gradient-to-br from-[#004fa2] via-[#0058b5] to-[#003d7a] rounded-xl p-4 text-white shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
                     <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none transition-transform group-hover:scale-110 duration-700"></div>
                     
                     <div className="relative z-10">
                         <div className="flex justify-between items-start mb-3">
-                            <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center backdrop-blur-md border border-white/20 shadow-inner">
+                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white/10 rounded-lg flex items-center justify-center backdrop-blur-md border border-white/20 shadow-inner">
                                 <DollarSign className="text-white drop-shadow-md" size={18} strokeWidth={2.5} />
                             </div>
                             <div className="flex flex-col items-end gap-1">
@@ -289,7 +289,7 @@ const SuperAdminDashboard = ({ user }) => {
                 {/* Enrollments Card */}
                 <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-300 flex flex-col group">
                     <div className="flex justify-between items-start mb-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg flex items-center justify-center border border-blue-100 group-hover:bg-blue-600 transition-colors duration-500">
+                        <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg flex items-center justify-center border border-blue-100 group-hover:bg-blue-600 transition-colors duration-500">
                             <GraduationCap className="text-blue-600 group-hover:text-white transition-colors duration-500 drop-shadow-sm" size={18} strokeWidth={2.5} />
                         </div>
                         <div className="flex flex-col items-end">
@@ -330,7 +330,7 @@ const SuperAdminDashboard = ({ user }) => {
                 {/* Projects Card */}
                 <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md hover:border-cyan-200 transition-all duration-300 flex flex-col group">
                     <div className="flex justify-between items-start mb-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-cyan-50 to-teal-50 rounded-lg flex items-center justify-center border border-cyan-100 group-hover:bg-cyan-600 transition-colors duration-500">
+                        <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-cyan-50 to-teal-50 rounded-lg flex items-center justify-center border border-cyan-100 group-hover:bg-cyan-600 transition-colors duration-500">
                             <FolderKanban className="text-cyan-600 group-hover:text-white transition-colors duration-500 drop-shadow-sm" size={18} strokeWidth={2.5} />
                         </div>
                         <div className="flex flex-col items-end">
@@ -376,7 +376,7 @@ const SuperAdminDashboard = ({ user }) => {
 
                     <div className="relative z-10 flex flex-col h-full">
                         <div className="flex justify-between items-start mb-3">
-                            <div className="w-10 h-10 bg-slate-800/80 rounded-lg flex items-center justify-center backdrop-blur-md border border-slate-600/50 shadow-inner group-hover:border-green-500/30 transition-colors">
+                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-slate-800/80 rounded-lg flex items-center justify-center backdrop-blur-md border border-slate-600/50 shadow-inner group-hover:border-green-500/30 transition-colors">
                                 <Server className="text-slate-300 group-hover:text-green-400 transition-colors drop-shadow-md" size={18} strokeWidth={2} />
                             </div>
                             <span className="flex items-center gap-1 text-[9px] font-bold text-green-400 bg-green-500/10 px-2 py-0.5 rounded-md backdrop-blur-sm border border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.15)]">
@@ -484,7 +484,7 @@ const SuperAdminDashboard = ({ user }) => {
                         {recentActivity.map((activity, i) => (
                             <div key={i} className="p-4 hover:bg-gray-50 transition">
                                 <div className="flex items-start gap-3">
-                                    <div className={`w-8 h-8 ${activity.bg} rounded-full flex items-center justify-center flex-shrink-0`}>
+                                    <div className={`w-6 h-6 md:w-8 md:h-8 ${activity.bg} rounded-full flex items-center justify-center flex-shrink-0`}>
                                         <activity.icon className={activity.color} size={16} />
                                     </div>
                                     <div className="flex-1 min-w-0">
@@ -514,7 +514,7 @@ const SuperAdminDashboard = ({ user }) => {
                                 to={action.path}
                                 className="group p-2.5 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all bg-gray-50/80 hover:bg-white flex items-center gap-2.5"
                             >
-                                <div className={`w-8 h-8 rounded-md bg-gradient-to-br ${action.color} flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform`}>
+                                <div className={`w-6 h-6 md:w-8 md:h-8 rounded-md bg-gradient-to-br ${action.color} flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform`}>
                                     <action.icon className="text-white" size={14} />
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -583,16 +583,16 @@ const SuperAdminDashboard = ({ user }) => {
                         </div>
 
                         {/* Bottom Stats */}
-                        <div className="pt-6 mt-auto border-t border-slate-700/60 grid grid-cols-3 gap-3 md:gap-4">
-                            <div className="bg-slate-800/40 border border-slate-700/50 p-3 md:p-4 rounded-xl text-center hover:bg-slate-800/60 transition-colors">
+                        <div className="pt-6 mt-auto border-t border-slate-700/60 grid grid-cols-3 gap-2 md:gap-4">
+                            <div className="bg-slate-800/40 border border-slate-700/50 p-2 md:p-4 rounded-xl text-center hover:bg-slate-800/60 transition-colors">
                                 <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Error Rate</span>
                                 <span className="text-lg md:text-xl font-black text-white drop-shadow-sm">{metrics.errorRate}%</span>
                             </div>
-                            <div className="bg-slate-800/40 border border-slate-700/50 p-3 md:p-4 rounded-xl text-center hover:bg-slate-800/60 transition-colors">
+                            <div className="bg-slate-800/40 border border-slate-700/50 p-2 md:p-4 rounded-xl text-center hover:bg-slate-800/60 transition-colors">
                                 <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Sessions</span>
                                 <span className="text-lg md:text-xl font-black text-white drop-shadow-sm">{metrics.activeSessions.toLocaleString()}</span>
                             </div>
-                            <div className="bg-slate-800/40 border border-slate-700/50 p-3 md:p-4 rounded-xl text-center hover:bg-slate-800/60 transition-colors">
+                            <div className="bg-slate-800/40 border border-slate-700/50 p-2 md:p-4 rounded-xl text-center hover:bg-slate-800/60 transition-colors">
                                 <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Alerts</span>
                                 <span className="text-lg md:text-xl font-black text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">{metrics.securityAlerts}</span>
                             </div>

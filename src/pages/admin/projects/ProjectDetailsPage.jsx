@@ -105,7 +105,7 @@ const ProjectDetailsPage = () => {
 
     return (
         <AdminLayout>
-            <div className="space-y-6 pb-8">
+            <div className="space-y-3 md:space-y-6 pb-8">
                 {/* Header */}
                 <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-4">
@@ -222,7 +222,7 @@ const ProjectDetailsPage = () => {
                         <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
                             <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-3">Team</p>
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-[#004fa2]/10 rounded-lg flex items-center justify-center">
+                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-[#004fa2]/10 rounded-lg flex items-center justify-center">
                                     <Users className="text-[#004fa2]" size={20} />
                                 </div>
                                 <div>
@@ -236,7 +236,7 @@ const ProjectDetailsPage = () => {
                         <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
                             <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-3">Started</p>
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-green-100 rounded-lg flex items-center justify-center">
                                     <Calendar className="text-green-600" size={20} />
                                 </div>
                                 <div>
