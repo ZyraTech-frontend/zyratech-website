@@ -62,7 +62,7 @@ const SplitTestimonial = () => {
                 <span className="text-[#004fa2] font-bold">—</span>
                 <div>
                   <div className="font-semibold">Theresa</div>
-                  <div className="text-sm text-white/80">Foodshop Owner in Takoradi</div>
+                  <div className="text-sm text-white/80">Foodshop Owner in Koforidua</div>
                 </div>
               </div>
             </div>
