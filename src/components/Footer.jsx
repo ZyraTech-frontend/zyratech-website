@@ -14,7 +14,7 @@ const Footer = () => {
   const settings = useSelector((state) => state.settings.values);
 
   // Fallback values if settings not loaded
-  const contactEmail = settings.contactEmail || 'info@zyratechhub.com';
+  const contactEmail = settings.contactEmail || 'richard@zyratechhub.com';
   const contactPhone = settings.contactPhone || '+233 55 955 4261';
   const contactWhatsApp = settings.contactWhatsApp || '233559554261';
   const contactAddress = settings.contactAddress || 'Koforidua, Eastern Region, Ghana';
