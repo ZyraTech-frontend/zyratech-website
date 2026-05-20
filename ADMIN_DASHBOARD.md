@@ -445,6 +445,11 @@ Already configured in `tailwind.config.js`. Uses colors:
 
 ## 🧪 Testing Credentials
 
+**Local Testing URL:**
+```
+http://admin.localhost:5174/
+```
+
 Default demo account (after backend setup):
 ```
 Email: admin@zyratech.com
