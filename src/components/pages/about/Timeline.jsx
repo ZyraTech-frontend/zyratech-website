@@ -2,19 +2,16 @@ import React from 'react';
 import { Users, Building, MapPin, Globe, Handshake, TrendingUp } from 'lucide-react';
 
 const timelineData = [
-  { year: '2019', title: 'Inception', desc: 'Start of operations in Takoradi, Ghana. First cohort starts training at the Zyra Tech Training Academy.', icon: Users },
-  { year: '2020', title: 'Service Centre', desc: 'Service Centre opens in Takoradi with first European clients.', icon: Building },
-  { year: '2021', title: 'Expansion', desc: 'Expansion to new cities; satellite offices and cohorts start training.', icon: MapPin },
-  { year: '2022', title: 'Scaling', desc: 'Service Centre opens in additional locations; European clients scale with us.', icon: Globe },
-  { year: '2023', title: 'Partnerships', desc: 'First partnerships with international corporations; move to larger office spaces.', icon: Handshake },
-  { year: '2024', title: 'Growth', desc: 'Collaboration with partners to train thousands and open new offices in key cities.', icon: TrendingUp },
+  { year: '2024', title: 'Inception', desc: 'Start of operations in Koforidua, Ghana. First cohort starts training at the Zyra Tech Training Academy.', icon: Users },
+  { year: '2025', title: 'Service Centre & Expansion', desc: 'Service Centre opens in Koforidua. Expansion to new cities; satellite offices and cohorts start training.', icon: Building },
+  { year: '2026', title: 'Growth & Scaling', desc: 'Collaboration with local partners to train thousands and open new offices in key cities across Ghana.', icon: TrendingUp },
 ];
 
 const Timeline = () => {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#004fa2] mb-10">Started in 2019 - Now We're Here!</h2>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#004fa2] mb-10">Started in 2024 - Now We're Here!</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {timelineData.map((item, idx) => {
