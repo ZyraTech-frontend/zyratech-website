@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import ImageWithSkeleton from '../../common/ImageWithSkeleton';
+import { motion } from 'framer-motion';
 
 const NewProjectsHero = () => {
   const [projects, setProjects] = useState(0);
@@ -27,28 +29,49 @@ const NewProjectsHero = () => {
         <ImageWithSkeleton
           src="/images/parallax1.webp"
           alt="ZyraTech Projects"
-          className="h-full w-full"
+          className="h-full w-full object-cover"
           skeletonClassName="bg-gray-800"
-          style={{ objectFit: 'cover', objectPosition: 'center 20%' }}
+          style={{ objectPosition: 'center 20%' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/15" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#004fa2]/25 to-transparent" />
+        {/* Match Home Page Hero Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
       </div>
 
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 md:px-10 lg:px-14 py-20 sm:py-24 md:py-28 pb-32 sm:pb-40 min-h-[520px] flex items-center">
-        <div className="max-w-4xl mx-auto text-center w-full">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl font-bold mb-6 leading-tight text-white">
+      <div className="relative max-w-7xl mx-auto px-6 md:px-16 lg:px-24 py-24 md:py-32 h-[75vh] min-h-[500px] max-h-[700px] flex items-center justify-start">
+        <motion.div 
+          className="max-w-5xl w-full"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          {/* Main Headline */}
+          <motion.h1 
+            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 tracking-tight text-white"
+            style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0 }}
+          >
             Turn Your Ideas Into Reality
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl font-semibold text-white/90 max-w-3xl mx-auto leading-relaxed">
+          </motion.h1>
+
+          <motion.p 
+            className="text-base md:text-lg lg:text-xl font-normal text-gray-200 mb-8 leading-relaxed max-w-2xl"
+            style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
             Custom projects for students, startups, and businesses. From final year projects to full-scale applications, we build it with you.
-          </p>
-        </div>
+          </motion.p>
+
+        </motion.div>
       </div>
 
       {/* Stats Card - Absolutely positioned to overlap section boundary */}
       <div className="absolute bottom-0 left-0 right-0 transform translate-y-1/2 z-10">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-8 md:p-12">
             <div className="grid grid-cols-3 gap-2 sm:gap-8">
               <div className="text-center">

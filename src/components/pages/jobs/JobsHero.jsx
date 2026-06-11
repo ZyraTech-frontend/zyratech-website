@@ -1,44 +1,74 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
 
 const JobsHero = () => {
   return (
     <section className="relative text-white overflow-hidden">
+      {/* Background Image with Overlays */}
       <div className="absolute inset-0">
-        <img decoding="async"
-          src="/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp"
+        <img 
+          decoding="async"
+          src="/images/jobb.jpg"
           alt="Careers banner"
-          className="h-full w-full object-cover"
-          onError={(e) => {
-            e.target.src = "/images/image3.webp";
-          }}
+          className="h-full w-full object-cover brightness-110"
+          style={{ objectPosition: 'center 25%' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/30" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#003d7a]/35 to-transparent" />
+        {/* Consistent Gradient from left to dark */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 min-h-[400px] sm:min-h-[480px] lg:min-h-[520px] flex items-center">
-        <div className="max-w-3xl w-full">
-          <motion.h1
-            initial={{ opacity: 0, y: 12 }}
+      <div className="relative max-w-7xl mx-auto px-6 md:px-16 lg:px-24 py-24 md:py-32 h-[75vh] min-h-[500px] max-h-[700px] flex items-center justify-start">
+        <motion.div 
+          className="max-w-5xl w-full"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          {/* Main Headline */}
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight"
+            transition={{ duration: 0.6, delay: 0 }}
+            style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)' }}
+            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 tracking-tight text-white"
           >
             Build Your Career With Us
           </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.06 }}
-            className="mt-4 sm:mt-5 text-sm sm:text-base lg:text-lg text-white/90 max-w-2xl leading-relaxed"
+            transition={{ duration: 0.6, delay: 0.1 }}
+            style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}
+            className="text-base md:text-lg lg:text-xl font-normal text-gray-200 mb-8 leading-relaxed max-w-2xl"
           >
             Join ZyraTech and be part of a mission to empower innovators and transform communities across Africa through technology and innovation.
           </motion.p>
-        </div>
+
+          {/* CTA Buttons */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex flex-col sm:flex-row gap-4 md:gap-6"
+          >
+            <Link
+              to="#explore-roles"
+              className="bg-[#004fa2] hover:bg-[#003b7a] text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center shadow-lg"
+            >
+              Explore Roles
+            </Link>
+
+            <Link
+              to="#life-at-zyratech"
+              className="bg-black/40 hover:bg-black/60 backdrop-blur-sm border border-white/70 text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center"
+            >
+              Our Culture
+            </Link>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
