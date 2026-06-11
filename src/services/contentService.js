@@ -129,7 +129,7 @@ let mockTimeline = [
 // Mock Data for Partnership Page
 let mockPartnershipHero = {
     title: 'Partner with ZyraTech',
-    subtitle: 'Together, we can bridge the digital divide.',
+    subtitle: 'Together, we can bridge the digital divide and build a thriving tech ecosystem. Join our mission to empower the next generation of innovators through strategic collaboration and shared vision.',
     backgroundImage: "/images/partnership-hero.webp"
 };
 

@@ -49,77 +49,82 @@ const BlogDetailPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative isolate overflow-hidden">
-        <div className="max-w-none px-0">
-          <div
-            className="relative overflow-hidden h-[60vh] min-h-[400px] max-h-[600px] bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${article.image})`
-            }}
+      <section className="relative text-white overflow-hidden">
+        {/* Background Image with Overlays */}
+        <div className="absolute inset-0">
+          <img 
+            decoding="async"
+            src={article.image}
+            alt={article.title}
+            className="h-full w-full object-cover object-center brightness-110"
+          />
+          {/* Consistent Gradient from left to dark */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+          <div className="absolute inset-0 bg-black/20"></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative max-w-7xl mx-auto px-6 md:px-16 lg:px-24 py-16 sm:py-20 md:py-24 h-[75vh] min-h-[500px] max-h-[700px] flex flex-col justify-between items-start">
+          {/* Back Button */}
+          <motion.div
+            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
+            className="mb-8"
           >
-            {/* Dark overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80" />
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors text-sm sm:text-base font-medium"
+            >
+              <ArrowLeft size={20} />
+              Back to Blog
+            </Link>
+          </motion.div>
 
-            {/* Content */}
-            <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-8 sm:py-12 h-full flex flex-col justify-between">
-              {/* Back Button */}
-              <motion.div
-                initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
-              >
-                <Link
-                  to="/blog"
-                  className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors text-sm sm:text-base"
-                >
-                  <ArrowLeft size={20} />
-                  Back to Blog
-                </Link>
-              </motion.div>
-
-              {/* Article Info */}
-              <motion.div
-                className="max-w-4xl"
-                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: shouldReduceMotion ? 0 : 0.8, delay: 0.2 }}
-              >
-                {/* Category Badge */}
-                <div className="mb-4">
-                  <span className={`${getCategoryColor(article.category)} text-white px-4 py-2 rounded-full text-sm font-medium inline-block`}>
-                    {article.category}
-                  </span>
-                </div>
-
-                {/* Title */}
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
-                  {article.title}
-                </h1>
-
-                {/* Meta */}
-                <div className="flex flex-wrap items-center gap-4 text-white/90 text-sm sm:text-base">
-                  <div className="flex items-center gap-2">
-                    <img decoding="async"
-                      src={article.author.avatar}
-                      alt={article.author.name}
-                      className="w-10 h-10 rounded-full object-cover ring-2 ring-white/20"
-                    />
-                    <span className="font-medium">{article.author.name}</span>
-                  </div>
-                  <span>•</span>
-                  <div className="flex items-center gap-1">
-                    <Calendar size={16} />
-                    <span>{article.date}</span>
-                  </div>
-                  <span>•</span>
-                  <div className="flex items-center gap-1">
-                    <Clock size={16} />
-                    <span>{article.readingTime}</span>
-                  </div>
-                </div>
-              </motion.div>
+          {/* Article Info */}
+          <motion.div
+            className="max-w-5xl w-full"
+            initial={shouldReduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.6, delay: 0.2 }}
+          >
+            {/* Category Badge */}
+            <div className="mb-6">
+              <span className={`${getCategoryColor(article.category)} text-white px-4 py-2 rounded-full text-sm font-bold tracking-wide uppercase shadow-md inline-block`}>
+                {article.category}
+              </span>
             </div>
-          </div>
+
+            {/* Title */}
+            <h1 
+              style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)' }}
+              className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 leading-tight"
+            >
+              {article.title}
+            </h1>
+
+            {/* Meta */}
+            <div className="flex flex-wrap items-center gap-4 text-gray-200 text-sm sm:text-base md:text-lg font-medium" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}>
+              <div className="flex items-center gap-3">
+                <img decoding="async"
+                  src={article.author.avatar}
+                  alt={article.author.name}
+                  className="w-12 h-12 rounded-full object-cover ring-2 ring-white/30 shadow-md"
+                />
+                <span className="font-semibold">{article.author.name}</span>
+              </div>
+              <span className="opacity-60">•</span>
+              <div className="flex items-center gap-2">
+                <Calendar size={18} />
+                <span>{article.date}</span>
+              </div>
+              <span className="opacity-60">•</span>
+              <div className="flex items-center gap-2">
+                <Clock size={18} />
+                <span>{article.readingTime}</span>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
