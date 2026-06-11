@@ -182,9 +182,9 @@ export const galleryAlbums = [
     },
     {
         id: 2,
-        title: "Community Tech Awareness - Empowering Market Women", 
-        category: "community",
-        description: "Bridging the digital divide by bringing technology awareness to market women and local entrepreneurs in our community.",
+        title: "Hands-On Internship Training - Building Tomorrow's Developers", 
+        category: "training",
+        description: "Intensive internship program where students gain real-world experience through practical coding sessions and mentorship.",
         thumbnail: "/images/takeout-3-001-2/IMG_5433.webp",
         images: [
             "/images/takeout-3-001-2/IMG_5433.webp",
@@ -207,15 +207,15 @@ export const galleryAlbums = [
             "/images/takeout-3-001-2/1B5863E3-719D-4433-BD51-C9D47FA91470.webp",
             "/images/takeout-3-001-2/3B89CEAB-C0C2-470B-B4A4-C711BB25F32A.webp"
         ],
-        keywords: ["community", "awareness", "market", "women", "digital"],
+        keywords: ["internship", "training", "coding", "mentorship", "development"],
         status: "published",
         createdAt: "2024-12-14"
     },
     {
         id: 3,
-        title: "Hands-On Internship Training - Building Tomorrow's Developers",
-        category: "training",
-        description: "Intensive internship program where students gain real-world experience through practical coding sessions and mentorship.",
+        title: "Community Tech Awareness - Empowering Market Women",
+        category: "community",
+        description: "Bridging the digital divide by bringing technology awareness to market women and local entrepreneurs in our community.",
         thumbnail: "/images/takeout-3-001-1/0338037e-9eba-4071-9e34-a5d34e0c51a1.webp",
         images: [
             "/images/takeout-3-001-1/0338037e-9eba-4071-9e34-a5d34e0c51a1.webp",
@@ -240,7 +240,7 @@ export const galleryAlbums = [
             "/images/takeout-3-001-1/e6dfa5d5-f3cb-4898-a031-eccd7c0e2e75.webp",
             "/images/takeout-3-001-1/e74af2d6-8475-4a9e-aaa6-038f70145bd8.webp"
         ],
-        keywords: ["internship", "training", "coding", "mentorship", "development"],
+        keywords: ["community", "awareness", "market", "women", "digital"],
         status: "published",
         createdAt: "2024-12-13"
     }

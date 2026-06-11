@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -25,6 +24,7 @@ const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slides, setSlides] = useState(defaultSlides);
   const [loading, setLoading] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
 
   const preloadImage = (src) => {
     return new Promise((resolve) => {
@@ -55,7 +55,7 @@ const Hero = () => {
 
   // Auto-rotate slides
   useEffect(() => {
-    if (slides.length <= 1) return;
+    if (slides.length <= 1 || isPaused) return;
 
     // Preload next image
     const nextIndex = (currentSlide + 1) % slides.length;
@@ -66,10 +66,7 @@ const Hero = () => {
     }, 5000); // Change slide every 5 seconds
 
     return () => clearInterval(timer);
-  }, [slides.length, currentSlide]);
-
-  // Remove loading spinner since we have default slides for LCP
-  // if (loading) { ... }
+  }, [slides.length, currentSlide, isPaused]);
 
   // Fallback if no slides are returned
   if (slides.length === 0) {
@@ -77,6 +74,33 @@ const Hero = () => {
   }
 
   const slide = slides[currentSlide];
+
+  // Helper to convert ALL CAPS to Title Case (and keep IT uppercase)
+  const formatTitle = (title) => {
+    if (!title) return '';
+    if (title === title.toUpperCase()) {
+      return title
+        .toLowerCase()
+        .split(' ')
+        .map(word => {
+          if (word === 'it') return 'IT';
+          return word.charAt(0).toUpperCase() + word.slice(1);
+        })
+        .join(' ');
+    }
+    return title;
+  };
+
+  // Helper to shorten description to make it punchy like AmaliTech
+  const formatDescription = (desc) => {
+    if (!desc) return '';
+    // If there's a period, cut it off after the first sentence
+    const firstPeriod = desc.indexOf('.');
+    if (firstPeriod > -1 && firstPeriod < desc.length - 1) {
+      return desc.substring(0, firstPeriod + 1);
+    }
+    return desc;
+  };
 
   return (
     <section className="relative w-full text-white overflow-hidden" style={{ height: 'calc(100vh - 88px)' }}>
@@ -111,78 +135,85 @@ const Hero = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="absolute inset-0 bg-black/30"></div>
+        {/* Overlay - Gradient from left to dark, similar to AmaliTech */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
       </div>
 
-      {/* Content with animations */}
-      <div className="relative z-10 w-full h-full flex items-center justify-center px-6 md:px-12 lg:px-16 pt-32 pb-32">
+      {/* Content with animations - Left aligned */}
+      <div className="relative z-10 w-full h-full flex items-center justify-start px-6 md:px-16 lg:px-24 pt-20 pb-20">
         <AnimatePresence mode="wait">
           <motion.div
-            className="max-w-4xl w-full"
+            className="max-w-5xl w-full"
             key={currentSlide}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.6 }}
           >
             {/* Main Headline */}
             <motion.h1
-              className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-relaxed mb-8 tracking-tight text-white uppercase"
+              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 tracking-tight text-white"
               style={{
-                textShadow: '3px 3px 12px rgba(0,0,0,0.7)',
-                lineHeight: '1.2'
+                textShadow: '2px 2px 8px rgba(0,0,0,0.5)',
               }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0 }}
             >
-              {slide.title}
+              {formatTitle(slide.title)}
             </motion.h1>
+
+            {/* Pillar (Sub-heading) - AmaliTech puts it below headline */}
+            {slide.pillar && (
+              <motion.h3
+                className="text-lg md:text-xl font-bold text-white mb-3"
+                style={{
+                  textShadow: '1px 1px 4px rgba(0,0,0,0.5)',
+                }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+              >
+                {formatTitle(slide.pillar)}
+              </motion.h3>
+            )}
 
             {/* Description */}
             <motion.p
-              className="text-base md:text-lg lg:text-xl font-medium text-white mb-12 leading-relaxed max-w-2xl"
+              className="text-base md:text-lg lg:text-xl font-normal text-gray-200 mb-8 leading-relaxed max-w-2xl"
               style={{
-                textShadow: '2px 2px 8px rgba(0,0,0,0.7)',
-                lineHeight: '1.6'
+                textShadow: '1px 1px 4px rgba(0,0,0,0.5)',
               }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              {slide.description}
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div
-              className="flex flex-col sm:flex-row gap-6 md:gap-8 mb-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
+              {formatDescription(slide.description)}
+            </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4 md:gap-6 mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
               {slide.cta1Text && slide.cta1Link && (
                 <Link
                   to={slide.cta1Link}
-                  className="cta-btn px-8 py-4 rounded-xl text-lg transform hover:-translate-y-1 flex items-center justify-center gap-2"
+                  className="bg-[#004fa2] hover:bg-[#003b7a] text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center shadow-lg"
                 >
                   {slide.cta1Text}
-                  <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
                 </Link>
               )}
 
               {slide.cta2Text && slide.cta2Link && (
                 <Link
                   to={slide.cta2Link}
-                  className="cta-ghost px-8 py-4 rounded-xl text-lg transform hover:-translate-y-1 flex items-center justify-center gap-2"
+                  className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center"
                 >
                   {slide.cta2Text}
-                  <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
                 </Link>
               )}
             </motion.div>
@@ -190,19 +221,42 @@ const Hero = () => {
         </AnimatePresence>
       </div>
 
-      {/* Slideshow Dots */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex justify-center items-center gap-3">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`rounded-full transition-all duration-500 hover:scale-110 ${index === currentSlide
-              ? 'bg-white w-12 h-3 shadow-lg'
-              : 'bg-white/50 w-3 h-3 hover:bg-white/70'
+      {/* Slideshow Controls (Play/Pause and Dots) - Bottom left */}
+      <div className="absolute bottom-12 left-6 md:left-16 lg:left-24 z-20 flex items-center gap-4">
+        {/* Pause/Play Button */}
+        <button
+          onClick={() => setIsPaused(!isPaused)}
+          className="text-white/80 hover:text-white transition-colors focus:outline-none flex items-center justify-center w-7 h-7 rounded-full border-[1.5px] border-white/80 hover:border-white"
+          aria-label={isPaused ? "Play slideshow" : "Pause slideshow"}
+        >
+          {isPaused ? (
+             // Play icon
+            <svg className="w-3.5 h-3.5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          ) : (
+            // Pause icon
+            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+            </svg>
+          )}
+        </button>
+
+        {/* Dots */}
+        <div className="flex items-center gap-2">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`transition-all duration-300 rounded-full ${
+                index === currentSlide
+                  ? 'bg-[#004fa2] w-8 h-1.5 shadow-lg'
+                  : 'bg-white/40 w-4 h-1.5 hover:bg-white/70'
               }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
