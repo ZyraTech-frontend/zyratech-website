@@ -24,7 +24,6 @@ const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slides, setSlides] = useState(defaultSlides);
   const [loading, setLoading] = useState(true);
-  const [isPaused, setIsPaused] = useState(false);
 
   const preloadImage = (src) => {
     return new Promise((resolve) => {
@@ -55,7 +54,7 @@ const Hero = () => {
 
   // Auto-rotate slides
   useEffect(() => {
-    if (slides.length <= 1 || isPaused) return;
+    if (slides.length <= 1) return;
 
     // Preload next image
     const nextIndex = (currentSlide + 1) % slides.length;
@@ -66,7 +65,7 @@ const Hero = () => {
     }, 5000); // Change slide every 5 seconds
 
     return () => clearInterval(timer);
-  }, [slides.length, currentSlide, isPaused]);
+  }, [slides.length, currentSlide]);
 
   // Fallback if no slides are returned
   if (slides.length === 0) {
@@ -221,27 +220,8 @@ const Hero = () => {
         </AnimatePresence>
       </div>
 
-      {/* Slideshow Controls (Play/Pause and Dots) - Bottom left */}
-      <div className="absolute bottom-12 left-6 md:left-16 lg:left-24 z-20 flex items-center gap-4">
-        {/* Pause/Play Button */}
-        <button
-          onClick={() => setIsPaused(!isPaused)}
-          className="text-white/80 hover:text-white transition-colors focus:outline-none flex items-center justify-center w-7 h-7 rounded-full border-[1.5px] border-white/80 hover:border-white"
-          aria-label={isPaused ? "Play slideshow" : "Pause slideshow"}
-        >
-          {isPaused ? (
-             // Play icon
-            <svg className="w-3.5 h-3.5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          ) : (
-            // Pause icon
-            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-            </svg>
-          )}
-        </button>
-
+      {/* Slideshow Controls (Dots) - Bottom left */}
+      <div className="absolute bottom-12 left-6 md:left-16 lg:left-24 z-20">
         {/* Dots */}
         <div className="flex items-center gap-2">
           {slides.map((_, index) => (

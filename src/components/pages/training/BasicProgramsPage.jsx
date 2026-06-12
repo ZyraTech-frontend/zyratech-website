@@ -33,71 +33,69 @@ const BasicProgramsPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative isolate overflow-hidden">
-        <div className="max-w-none px-0">
-          {/* Full-bleed hero container */}
-          <div
-            className="relative overflow-hidden h-[70vh] min-h-[520px] max-h-[780px] bg-cover bg-center bg-scroll md:bg-fixed flex items-center"
-            style={{
-              backgroundImage: 'url(/images/image3.webp)'
-            }}
+      <section className="relative text-white overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            decoding="async"
+            src="/images/image3.webp"
+            alt="Basic programs banner"
+            className="h-full w-full object-cover object-center brightness-110"
+          />
+          {/* Consistent Gradient from left to dark */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+          <div className="absolute inset-0 bg-black/20"></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-6 md:px-16 lg:px-24 py-24 md:py-32 h-[75vh] min-h-[500px] max-h-[700px] flex items-center justify-start">
+          <motion.div 
+            className="max-w-5xl w-full"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            <div className="absolute inset-0 bg-black/40"></div>
-            <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-28 h-full flex items-center">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0 }}
+              style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)' }}
+              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 tracking-tight text-white"
+            >
+              Start Your Tech Journey
+            </motion.h1>
 
-              {/* Hero Content */}
-              <motion.div
-                className="max-w-3xl pt-8 sm:pt-12 md:pt-16 lg:pt-20"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}
+              className="text-base md:text-lg lg:text-xl font-normal text-gray-200 mb-8 leading-relaxed max-w-2xl"
+            >
+              Build your tech foundation from scratch. No prior experience needed. Start your journey to a rewarding career in technology with our comprehensive beginner-friendly programs.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex flex-col sm:flex-row gap-4 md:gap-6"
+            >
+              <a
+                href="#programs"
+                className="bg-[#004fa2] hover:bg-[#003b7a] text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center shadow-lg gap-2"
               >
-                {/* Main Heading */}
-                <motion.h1
-                  className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.1 }}
-                >
-                  Start Your Tech Journey
-                  <span className="text-[#FFD700] block"> with Basic Training Programs</span>
-                </motion.h1>
+                <span>Explore Basic Programs</span>
+                <ChevronRight className="w-5 h-5" />
+              </a>
 
-                {/* Subtitle */}
-                <motion.p
-                  className="text-base sm:text-lg md:text-xl font-bold text-white mb-10 sm:mb-12 md:mb-14 leading-relaxed"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                >
-                  Build your tech foundation from scratch. No prior experience needed. Start your journey to a rewarding career in technology with our comprehensive beginner-friendly programs.
-                </motion.p>
-
-                {/* CTA Button */}
-                <motion.div
-                  className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                >
-                  <a
-                    href="#programs"
-                    className="cta-btn px-6 py-3 rounded-xl text-base sm:text-lg w-full sm:w-auto"
-                  >
-                    Explore Basic Programs
-                    <ChevronRight size={18} className="ml-2" />
-                  </a>
-                  <Link
-                    to="/training/programs"
-                    className="cta-ghost px-6 py-3 rounded-xl text-base sm:text-lg w-full sm:w-auto"
-                  >
-                    View All Programs
-                    <ChevronRight size={18} className="ml-2" />
-                  </Link>
-                </motion.div>
-              </motion.div>
-            </div>
-          </div>
+              <Link
+                to="/training/programs"
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center gap-2"
+              >
+                <span>View All Programs</span>
+                <ChevronRight className="w-5 h-5" />
+              </Link>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 

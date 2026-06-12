@@ -1,86 +1,86 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 
 const TrainingHero = () => {
-  const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
-
   return (
-    <section className="relative isolate overflow-hidden min-h-screen">
-      <div className="max-w-none px-0">
-        {/* Full-bleed hero container */}
-        <div
-          className="relative overflow-hidden min-h-screen bg-cover bg-center bg-scroll md:bg-fixed"
-          style={{
-            backgroundImage: 'url(/images/image2.webp)'
-          }}
+    <section className="relative text-white overflow-hidden">
+      {/* Background Image with Overlays */}
+      <div className="absolute inset-0">
+        <img 
+          decoding="async"
+          src="/images/traininghr.png"
+          alt="Training banner"
+          className="h-full w-full object-cover brightness-110"
+          style={{ objectPosition: 'center' }}
+        />
+        {/* Consistent Gradient from left to dark */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-6 md:px-16 lg:px-24 py-24 md:py-32 h-[75vh] min-h-[500px] max-h-[700px] flex items-center justify-start">
+        <motion.div 
+          className="max-w-5xl w-full"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
         >
-          {/* LCP Optimization: Preload the background image */}
-          <img decoding="async"
-            src="/images/image2.webp"
-            alt=""
-            className="hidden"
-            fetchpriority="high"
-          />
-          <div className="absolute inset-0 bg-black/40"></div>
-          <div className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-16 sm:py-20 md:py-24 lg:py-32 min-h-[500px] md:min-h-[580px] lg:min-h-[680px] flex items-center">
+          {/* Main Headline */}
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0 }}
+            style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)' }}
+            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 tracking-tight text-white"
+          >
+            Professional Training for<br />Modern Tech Skills
+          </motion.h1>
 
-            {/* Left Content */}
-            <motion.div
-              className="max-w-3xl pt-8 sm:pt-12 md:pt-16 lg:pt-20"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+          {/* Pillar (Sub-heading) */}
+          <motion.h3
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}
+            className="text-lg md:text-xl font-bold text-white mb-3"
+          >
+            Elevate Your Capabilities
+          </motion.h3>
+
+          {/* Description */}
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}
+            className="text-base md:text-lg lg:text-xl font-normal text-gray-200 mb-8 leading-relaxed max-w-2xl"
+          >
+            Industry-relevant programs in DevOps, Cloud Computing, Web Development, and more. Transform your workforce into tech leaders.
+          </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-4 md:gap-6"
+          >
+            <Link
+              to="/training/programs"
+              className="bg-[#004fa2] hover:bg-[#003b7a] text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center shadow-lg"
             >
-              {/* Main Heading */}
-              <motion.h1
-                className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-              >
-                Professional Training for
-                <span className="text-[#FFD700] block"> Modern Tech Skills</span>
-              </motion.h1>
+              Explore Programs
+            </Link>
 
-              {/* Subtitle */}
-              <motion.p
-                className="text-base sm:text-lg md:text-xl font-bold text-white mb-10 sm:mb-12 md:mb-14 leading-relaxed"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-              >
-                Elevate your team's capabilities with industry-leading training programs in DevOps, Cloud Computing, Web Development, and more. Transform your workforce into tech leaders.
-              </motion.p>
-
-              {/* CTA Buttons */}
-              <motion.div
-                className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-              >
-                <Link
-                  to="/training/programs"
-                  className="cta-btn px-8 py-4 rounded-xl text-lg w-full sm:w-auto"
-                >
-                  Explore Programs
-                  <ChevronRight size={20} className="ml-2" />
-                </Link>
-
-                <Link
-                  to="/training/programs"
-                  className="cta-ghost px-8 py-4 rounded-xl text-lg w-full sm:w-auto"
-                >
-                  Get Quote
-                  <ChevronRight size={20} className="ml-2" />
-                </Link>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
+            <Link
+              to="/training/programs"
+              className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center"
+            >
+              Get Quote
+            </Link>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
