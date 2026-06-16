@@ -37,9 +37,10 @@ const BasicProgramsPage = () => {
         <div className="absolute inset-0">
           <img 
             decoding="async"
-            src="/images/image3.webp"
+            src="/images/magggg.png"
             alt="Basic programs banner"
-            className="h-full w-full object-cover object-center brightness-110"
+            className="h-full w-full object-cover brightness-110"
+            style={{ objectPosition: 'center 20%' }}
           />
           {/* Consistent Gradient from left to dark */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
