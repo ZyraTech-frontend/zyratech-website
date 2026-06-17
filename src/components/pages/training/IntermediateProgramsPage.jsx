@@ -121,16 +121,17 @@ const IntermediateProgramsPage = () => {
         <div className="absolute inset-0">
           <img 
             decoding="async"
-            src="/images/image3.webp"
+            src="/images/advance.png"
             alt="Intermediate programs banner"
-            className="h-full w-full object-cover object-center brightness-110"
+            className="h-full w-full object-cover brightness-110"
+            style={{ objectPosition: 'center 40%' }}
           />
           {/* Consistent Gradient from left to dark */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
           <div className="absolute inset-0 bg-black/20"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-6 md:px-16 lg:px-24 py-24 md:py-32 h-[75vh] min-h-[500px] max-h-[700px] flex items-center justify-start">
+        <div className="relative max-w-7xl mx-auto px-6 md:px-16 lg:px-24 py-16 md:py-20 h-[75vh] min-h-[500px] max-h-[700px] flex items-center justify-start">
           <motion.div 
             className="max-w-5xl w-full"
             initial={{ opacity: 0, x: -20 }}
@@ -213,8 +214,7 @@ const IntermediateProgramsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {intermediatePrograms.map((program, index) => {
               const IconComponent = iconMap[program.iconKey] || Cloud;
-              const placeholderImages = ["/images/image1.webp", "/images/image2.webp", "/images/image3.webp"];
-              const imageUrl = placeholderImages[index % placeholderImages.length];
+              const imageUrl = program.heroImage || "/images/image1.webp";
 
               return (
                 <motion.div
