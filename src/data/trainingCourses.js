@@ -52,6 +52,7 @@ export const trainingCourses = [
     format: 'Online + Onsite',
     certificate: 'Python Data Analysis Certificate',
     deadline: 'Rolling Admission',
+    heroImage: '/images/python.png',
     description: 'Core logic, data visualization, and statistical insights for research. Master Python for real-world data problems.',
     longDescription: 'This course bridges the gap between basic programming and data science. You will master Python syntax, work with powerful libraries like Pandas, NumPy, and Matplotlib, and learn how to extract meaningful insights from complex datasets.',
     programOverview: 'An 8-week program designed to turn beginners into confident Python programmers capable of handling data analysis tasks.',
@@ -82,40 +83,41 @@ export const trainingCourses = [
     id: 2,
     iconKey: 'target',
     category: 'basic',
-    title: 'Digital Literacy & Office Mastery',
-    duration: '4 weeks',
+    title: 'Fundamentals of Digital Marketing',
+    duration: '8 weeks',
     level: 'Beginner',
-    participants: '20-30',
+    participants: '20-25',
     rating: 4.8,
     reviews: 98,
-    price: 'GHS 800',
-    badge: 'Bestseller',
-    instructor: 'ZyraTech Training Team',
-    schedule: 'Weekdays 9AM-12PM',
-    format: 'Onsite',
-    certificate: 'Digital Literacy Certificate',
+    price: 'GHS 1,500',
+    badge: 'Popular',
+    instructor: 'Digital Marketing Team',
+    schedule: 'Weekdays 6PM-8PM',
+    format: 'Online + Onsite',
+    certificate: 'Digital Marketing Certificate',
     deadline: 'Rolling Admission',
-    description: 'Perfect for absolute beginners needing essential workplace skills. Master the Microsoft Office Suite and core computer skills in just 1 month.',
-    longDescription: 'This foundational course is designed for absolute beginners who want to become confident with computers and essential workplace tools. You will learn to navigate operating systems, manage files, and master the Microsoft Office Suite — including Word for professional documents, Excel for data and calculations, and PowerPoint for impactful presentations.',
-    programOverview: 'A 4-week intensive program that equips absolute beginners with the digital skills needed to thrive in any modern workplace.',
-    heroInfoText: 'Master essential computer and office skills in 4 weeks.',
-    topics: ['Computer Basics', 'Microsoft Word', 'Microsoft Excel', 'Microsoft PowerPoint', 'File Management', 'Internet & Email'],
+    heroImage: '/images/digitalmarketing.png',
+    description: 'Discover the new Fundamentals of Digital Marketing course and learn about current digital marketing topics, from AI tools to video marketing.',
+    longDescription: 'Learn modern digital marketing strategies and tools. This course covers social media marketing, content creation, SEO basics, email marketing, analytics, and emerging technologies like AI in marketing.',
+    programOverview: 'An 8-week program designed to equip you with practical digital marketing skills needed in today\'s digital economy.',
+    heroInfoText: 'Master digital marketing in the AI era.',
+    topics: ['Social Media Marketing', 'AI Tools & Automation', 'Video Marketing', 'Content Strategy', 'SEO Fundamentals', 'Email Marketing'],
     programmeObjectives: [
       {
-        title: 'Navigate computers confidently',
-        description: 'Understand operating systems, file management, and basic troubleshooting for everyday use.'
+        title: 'Understand digital marketing landscape',
+        description: 'Learn current trends, platforms, and how AI is transforming digital marketing.'
       },
       {
-        title: 'Create professional documents in Word',
-        description: 'Format letters, reports, and professional documents with proper styling and layout.'
+        title: 'Create effective content',
+        description: 'Develop content strategies for social media and learn video marketing basics.'
       },
       {
-        title: 'Work with data in Excel',
-        description: 'Build spreadsheets, use formulas, and create charts for data analysis and reporting.'
+        title: 'Use AI marketing tools',
+        description: 'Explore automation and AI tools that streamline marketing campaigns and analytics.'
       },
       {
-        title: 'Design effective presentations in PowerPoint',
-        description: 'Create clear, visually engaging presentations for academic and professional settings.'
+        title: 'Measure marketing performance',
+        description: 'Understand analytics, KPIs, and how to optimize campaigns for better results.'
       }
     ],
     applicationProcess: defaultApplicationProcess,
@@ -166,6 +168,50 @@ export const trainingCourses = [
   },
   {
     id: 4,
+    iconKey: 'code',
+    category: 'basic',
+    title: 'Programming for Everybody (Getting Started with Python)',
+    duration: '6 weeks',
+    level: 'Beginner',
+    participants: '20-25',
+    rating: 4.9,
+    reviews: 234,
+    price: 'GHS 1,800',
+    badge: 'Popular',
+    instructor: 'ZyraTech Training Team',
+    schedule: 'Weekdays 6PM-8PM',
+    format: 'Hybrid',
+    certificate: 'Python Programming Certificate',
+    deadline: 'Rolling Admission',
+    heroImage: '/images/python.png',
+    description: 'Learn Python programming from scratch. Install Python, write your first program, and master core programming tools.',
+    longDescription: 'This beginner-friendly course teaches Python from the ground up. Perfect for absolute beginners with no prior programming experience.',
+    programOverview: 'A 6-week program to introduce Python programming and develop core programming skills for absolute beginners.',
+    heroInfoText: 'Write your first Python program and start your coding journey.',
+    topics: ['Software Installation', 'Python Basics', 'Variables & Data Types', 'Functions & Loops', 'Debugging', 'Program Development'],
+    programmeObjectives: [
+      {
+        title: 'Install Python and write your first program',
+        description: 'Get Python up and running on your computer and create your first working program.'
+      },
+      {
+        title: 'Describe the basics of the Python programming language',
+        description: 'Understand Python syntax, data types, and fundamental programming concepts.'
+      },
+      {
+        title: 'Use variables to store, retrieve and calculate information',
+        description: 'Work with variables to store data, perform calculations, and manipulate information.'
+      },
+      {
+        title: 'Utilize core programming tools such as functions and loops',
+        description: 'Master essential programming constructs including functions, loops, and conditional logic.'
+      }
+    ],
+    applicationProcess: defaultApplicationProcess,
+    contactPerson: defaultContactPerson
+  },
+  {
+    id: 5,
     iconKey: 'target',
     category: 'basic',
     title: 'Cyber Awareness & Digital Research',
@@ -207,7 +253,7 @@ export const trainingCourses = [
     contactPerson: defaultContactPerson
   },
   {
-    id: 5,
+    id: 6,
     iconKey: 'code',
     category: 'intermediate',
     title: 'Frontend Web Development',
@@ -251,7 +297,7 @@ export const trainingCourses = [
     contactPerson: defaultContactPerson
   },
   {
-    id: 6,
+    id: 7,
     iconKey: 'code',
     category: 'advanced',
     title: 'Full-Stack Web Development',
@@ -295,7 +341,7 @@ export const trainingCourses = [
     contactPerson: defaultContactPerson
   },
   {
-    id: 7,
+    id: 8,
     iconKey: 'cpu',
     category: 'advanced',
     title: 'Mobile App Development',
@@ -339,7 +385,7 @@ export const trainingCourses = [
     contactPerson: defaultContactPerson
   },
   {
-    id: 8,
+    id: 9,
     iconKey: 'bookOpen',
     category: 'matured',
     title: 'IT Fundamentals for Professionals',
@@ -382,7 +428,7 @@ export const trainingCourses = [
     contactPerson: defaultContactPerson
   },
   {
-    id: 9,
+    id: 10,
     iconKey: 'target',
     category: 'matured',
     title: 'Digital Literacy & Office Automation',
@@ -424,7 +470,7 @@ export const trainingCourses = [
     contactPerson: defaultContactPerson
   },
   {
-    id: 10,
+    id: 11,
     iconKey: 'briefcase',
     category: 'matured',
     title: 'Career Transition to Tech Program',
@@ -467,7 +513,7 @@ export const trainingCourses = [
     contactPerson: defaultContactPerson
   },
   {
-    id: 11,
+    id: 12,
     iconKey: 'bookOpen',
     category: 'internship',
     title: 'Software Development Internship',
@@ -510,7 +556,7 @@ export const trainingCourses = [
     contactPerson: defaultContactPerson
   },
   {
-    id: 12,
+    id: 13,
     iconKey: 'building',
     category: 'internship',
     title: 'IT Infrastructure Internship',
@@ -552,7 +598,7 @@ export const trainingCourses = [
     contactPerson: defaultContactPerson
   },
   {
-    id: 13,
+    id: 14,
     iconKey: 'rocket',
     category: 'internship',
     title: 'Digital Marketing Internship',
@@ -595,7 +641,7 @@ export const trainingCourses = [
     contactPerson: defaultContactPerson
   },
   {
-    id: 14,
+    id: 15,
     iconKey: 'database',
     category: 'intermediate',
     title: 'Backend Web Development',
@@ -639,7 +685,7 @@ export const trainingCourses = [
     contactPerson: defaultContactPerson
   },
   {
-    id: 15,
+    id: 16,
     iconKey: 'target',
     category: 'advanced',
     title: 'UI/UX Design & Strategy',

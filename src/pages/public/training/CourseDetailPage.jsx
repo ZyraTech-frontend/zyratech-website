@@ -19,7 +19,7 @@ const CourseDetailPage = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
 
   const course = getTrainingCourseById(courseId);
-  const heroImage = course?.heroImage || "/images/image1.webp";
+  const heroImage = course?.heroImage || "/images/digitalmarketing.png";
   const parallaxImage1 = "/images/parallax9.webp";
   const parallaxImage2 = "/images/parallax10.webp";
   const parallaxImage3 = "/images/parallax1.webp";
@@ -115,49 +115,48 @@ const CourseDetailPage = () => {
   return (
     <TrainingLayout>
       {/* Course Header */}
-      <section
-        className="relative min-h-[70vh] sm:min-h-[80vh] lg:min-h-screen flex items-center bg-center bg-cover"
-        style={{ backgroundImage: `url('${heroImage}')` }}
-      >
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="absolute z-20 top-3 sm:top-6 left-3 sm:left-6 lg:left-8 right-3 sm:right-auto">
-          <TrainingBreadcrumb
-            variant="light"
-            items={[
-              { label: 'Programs', link: '/training/programs' },
-              { label: course.category.charAt(0).toUpperCase() + course.category.slice(1), link: `/training/programs/${course.category}` },
-              { label: course.title }
-            ]}
+      <section className="relative text-white overflow-hidden">
+        {/* Background Image with Overlays */}
+        <div className="absolute inset-0">
+          <img 
+            decoding="async"
+            src={heroImage}
+            alt="Course banner"
+            className="h-full w-full object-cover brightness-110"
+            style={{ objectPosition: 'center 30%' }}
           />
+          {/* Consistent Gradient from left to dark */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+          <div className="absolute inset-0 bg-black/20"></div>
         </div>
-        <div className="absolute z-20 bottom-4 sm:bottom-36 left-4 right-4 sm:left-6 sm:right-6 lg:left-auto lg:right-8">
-          <div className="bg-white/10 backdrop-blur-[10px] rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 border border-white/20 shadow-lg w-full sm:w-fit mx-auto lg:mx-0">
-            <div className="text-white font-semibold text-sm sm:text-base text-center lg:text-left">
-              {heroInfoText}
-            </div>
-          </div>
-        </div>
-        <div className="relative z-10 w-full py-10 sm:py-6 pt-16 sm:pt-8">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              ref={titleAnimation.ref}
-              initial={titleAnimation.initial}
-              animate={titleAnimation.animate}
-              variants={titleAnimation.variants}
-              transition={titleAnimation.transition}
+
+        <div className="relative max-w-7xl mx-auto px-6 md:px-16 lg:px-24 py-24 md:py-32 h-[75vh] min-h-[500px] max-h-[700px] flex items-center justify-start">
+          <motion.div 
+            className="max-w-5xl w-full"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0 }}
+              style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)' }}
+              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 tracking-tight text-white"
             >
-              <div className="grid lg:grid-cols-3 gap-4 sm:gap-10 items-start">
-                <div className="lg:col-span-2 text-center lg:text-left">
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-3 sm:mb-4 leading-tight">
-                    {heroTitle}
-                  </h1>
-                  <p className="text-white/90 text-sm sm:text-base md:text-xl lg:text-2xl leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                    {heroSubtitle}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+              {heroTitle}
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}
+              className="text-base md:text-lg lg:text-xl font-normal text-gray-200 mb-8 leading-relaxed max-w-2xl"
+            >
+              {heroSubtitle}
+            </motion.p>
+          </motion.div>
         </div>
       </section>
 

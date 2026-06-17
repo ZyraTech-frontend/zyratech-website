@@ -40,7 +40,7 @@ const BasicProgramsPage = () => {
             src="/images/magggg.png"
             alt="Basic programs banner"
             className="h-full w-full object-cover brightness-110"
-            style={{ objectPosition: 'center 20%' }}
+            style={{ objectPosition: 'center 30%' }}
           />
           {/* Consistent Gradient from left to dark */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
@@ -130,8 +130,7 @@ const BasicProgramsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {basicPrograms.map((program, index) => {
               const IconComponent = iconMap[program.iconKey] || Target;
-              const placeholderImages = ["/images/image1.webp", "/images/image2.webp", "/images/image3.webp"];
-              const imageUrl = placeholderImages[index % placeholderImages.length];
+              const imageUrl = program.heroImage || "/images/image1.webp";
 
               return (
                 <motion.div
@@ -172,7 +171,8 @@ const BasicProgramsPage = () => {
                   {/* Card Body */}
                   <div className="p-5">
                     {/* Description */}
-                    <p className="text-gray-600 text-sm leading-relaxed mb-5 line-clamp-3">{program.description}</p>
+                    <p className="hidden sm:block text-gray-600 text-sm leading-relaxed mb-5 line-clamp-3">{program.description}</p>
+                    <p className="sm:hidden text-gray-600 text-sm leading-relaxed mb-5 line-clamp-2">{program.description}</p>
 
                     {/* Feature Grid 2x2 */}
                     <div className="grid grid-cols-2 gap-3 mb-5">
