@@ -864,9 +864,9 @@ const PartnershipsManagementPage = () => {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium border ${typeConfig.color}`}>
+                                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium border ${typeData.colorClass}`}>
                                                         <TypeIcon size={12} />
-                                                        {typeConfig.label}
+                                                        {typeData.label}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4">

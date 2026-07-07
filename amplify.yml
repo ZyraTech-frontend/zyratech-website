@@ -6,6 +6,10 @@ frontend:
         - npm ci
     build:
       commands:
+        - echo "VITE_API_BASE_URL=$VITE_API_BASE_URL" >> .env
+        - echo "VITE_ENABLE_DYNAMIC_API=$VITE_ENABLE_DYNAMIC_API" >> .env
+        - echo "VITE_APP_NAME=$VITE_APP_NAME" >> .env
+        - echo "VITE_APP_URL=$VITE_APP_URL" >> .env
         - npm run build
   artifacts:
     baseDirectory: dist
@@ -14,3 +18,16 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
+  customHeaders:
+    - pattern: '**/*'
+      headers:
+        - key: 'X-Frame-Options'
+          value: 'DENY'
+        - key: 'X-Content-Type-Options'
+          value: 'nosniff'
+        - key: 'Referrer-Policy'
+          value: 'strict-origin-when-cross-origin'
+customRules:
+  - source: '</^[^.]+$|\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|woff2|ttf|map|json|webp|xml)$)([^.]+$)/>'
+    target: /index.html
+    status: '200'

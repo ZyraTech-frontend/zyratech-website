@@ -5,7 +5,6 @@ import CategoryFilter from '../../../components/pages/blog/CategoryFilter';
 import BlogCard from '../../../components/pages/blog/BlogCard';
 import { articlesData, getFeaturedArticle, getCategories } from '../../../data/articlesData';
 import { Search } from 'lucide-react';
-import NewProjectsHero from '../../../components/pages/projects/NewProjectsHero';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
 import useSEO from '../../../hooks/useSEO';
@@ -19,7 +18,7 @@ const BlogPage = () => {
   });
 
   const [activeCategory, setActiveCategory] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 6;
 

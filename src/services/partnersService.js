@@ -1,6 +1,4 @@
 
-import api from './api';
-
 // Initial data - Only Royal Klast Group as per requirements
 let mockPartnerships = [
     {

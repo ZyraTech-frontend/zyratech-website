@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ImageWithSkeleton from '../../common/ImageWithSkeleton';
-import { motion } from 'framer-motion';
 
 const NewProjectsHero = () => {
   const [projects, setProjects] = useState(0);

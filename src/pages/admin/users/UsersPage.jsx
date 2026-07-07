@@ -108,6 +108,17 @@ const UsersPage = () => {
     };
   }, [administrators]);
 
+  // Pagination Logic
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(filteredAdmins.length / itemsPerPage);
+  const currentAdmins = filteredAdmins.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter, departmentFilter, kycFilter]);
+
   // Redirect if not super admin
   if (!isSuperAdmin) {
     return (
@@ -208,17 +219,6 @@ const UsersPage = () => {
     setKycFilter('all');
     setCurrentPage(1);
   };
-
-  // Pagination Logic
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-  const totalPages = Math.ceil(filteredAdmins.length / itemsPerPage);
-  const currentAdmins = filteredAdmins.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-  // Reset to first page when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, statusFilter, departmentFilter, kycFilter]);
 
   // Helper to get Tailwind color classes for roles
   const getRoleBadgeClasses = (color) => {

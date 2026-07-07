@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import contentService from '../../../services/contentService';
+
+const storyVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+};
 
 const PartnershipStories = () => {
   const [stories, setStories] = useState([
@@ -38,28 +42,21 @@ const PartnershipStories = () => {
         </div>
 
         <div className="space-y-8 md:space-y-12">
-          {stories.map((story, index) => {
-            const anim = useScrollAnimation({ type: 'fadeIn', delay: 0 });
-            const imageAnim = useScrollAnimation({ type: 'slideLeft', delay: 0.1 });
-            const contentAnim = useScrollAnimation({ type: 'slideRight', delay: 0.15 });
-
-            return (
+          {stories.map((story, index) => (
               <motion.div
                 key={index}
-                ref={anim.ref}
-                initial={anim.initial}
-                animate={anim.animate}
-                variants={anim.variants}
-                transition={anim.transition}
+                variants={storyVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
                 className="w-screen -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden shadow-lg md:flex md:items-stretch"
               >
                 {/* Image - alternates left/right */}
                 <motion.div
-                  ref={imageAnim.ref}
-                  initial={imageAnim.initial}
-                  animate={imageAnim.animate}
-                  variants={imageAnim.variants}
-                  transition={imageAnim.transition}
+                  variants={storyVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
                   className={`md:w-1/2 ${index % 2 === 0 ? 'order-1 md:order-2' : 'order-1 md:order-1'} h-48 md:h-[360px] relative overflow-hidden`}
                 >
                   <img decoding="async"
@@ -74,11 +71,10 @@ const PartnershipStories = () => {
 
                 {/* Content */}
                 <motion.div
-                  ref={contentAnim.ref}
-                  initial={contentAnim.initial}
-                  animate={contentAnim.animate}
-                  variants={contentAnim.variants}
-                  transition={contentAnim.transition}
+                  variants={storyVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
                   className={`md:w-1/2 bg-[#004fa2] text-white px-6 sm:px-8 md:px-12 py-6 md:py-10 flex flex-col justify-center ${index % 2 === 0 ? 'order-2 md:order-1' : 'order-2 md:order-2'}`}
                 >
                   <div className="max-w-xl mx-auto">
@@ -103,8 +99,7 @@ const PartnershipStories = () => {
                   </div>
                 </motion.div>
               </motion.div>
-            );
-          })}
+            ))}
         </div>
       </div>
     </section>
