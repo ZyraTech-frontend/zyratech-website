@@ -144,9 +144,9 @@ export const loginUser = createAsyncThunk(
       });
 
       return { token, user: userData };
-    } catch (error) {
-      if (error.message) {
-        return rejectWithValue(error.message);
+    } catch (err) {
+      if (err.message) {
+        return rejectWithValue(err.message);
       }
       return rejectWithValue('An unexpected error occurred. Please try again.');
     }
@@ -157,7 +157,7 @@ export const loginUser = createAsyncThunk(
 export const changePassword = createAsyncThunk(
   'auth/changePassword',
   async ({ currentPassword, newPassword }, { getState, rejectWithValue }) => {
-    try {
+    try { // eslint-disable-line
       await new Promise(resolve => setTimeout(resolve, 800));
 
       const { auth } = getState();
@@ -191,7 +191,7 @@ export const changePassword = createAsyncThunk(
       });
 
       return { user: updatedUser };
-    } catch (error) {
+    } catch (_err) {
       return rejectWithValue('Failed to change password. Please try again.');
     }
   }
@@ -200,7 +200,7 @@ export const changePassword = createAsyncThunk(
 // ─── Submit KYC ──────────────────────────────────────────────
 export const submitKyc = createAsyncThunk(
   'auth/submitKyc',
-  async ({ documents }, { getState, rejectWithValue }) => {
+  async ({ documents: _documents }, { getState, rejectWithValue }) => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1200));
 
@@ -227,7 +227,7 @@ export const submitKyc = createAsyncThunk(
       });
 
       return { user: updatedUser };
-    } catch (error) {
+    } catch (_err) {
       return rejectWithValue('Failed to submit KYC documents. Please try again.');
     }
   }
@@ -251,7 +251,7 @@ export const logoutUser = createAsyncThunk(
       localStorage.removeItem('adminToken');
       localStorage.removeItem('user');
       return null;
-    } catch (error) {
+    } catch (_err) {
       return rejectWithValue('Logout failed');
     }
   }

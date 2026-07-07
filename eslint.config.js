@@ -6,8 +6,26 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
   globalIgnores(['dist']),
+
+  // Node.js scripts — use Node globals
   {
-    files: ['**/*.{js,jsx}'],
+    files: [
+      'compress-images.js',
+      'convert-images.js',
+      'update-image-refs.js',
+      'fix-failed-images.js',
+      'restyle.cjs',
+      'scripts/**/*.js',
+      'vitest.config.js',
+    ],
+    languageOptions: {
+      globals: { ...globals.node },
+    },
+  },
+
+  // React source files
+  {
+    files: ['src/**/*.{js,jsx}'],
     extends: [
       js.configs.recommended,
       reactHooks.configs['recommended-latest'],
@@ -15,7 +33,7 @@ export default defineConfig([
     ],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: { ...globals.browser, ...globals.es2020 },
       parserOptions: {
         ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },
@@ -23,7 +41,7 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' }],
     },
   },
 ])

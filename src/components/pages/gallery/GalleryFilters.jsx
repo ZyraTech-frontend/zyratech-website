@@ -1,8 +1,5 @@
-import React, { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Search, Filter, X } from 'lucide-react';
-
-// Create Gallery Context for state management
-export const GalleryContext = React.createContext();
 
 const GalleryFilters = ({ onFiltersChange }) => {
   const [searchTerm, setSearchTerm] = useState('');

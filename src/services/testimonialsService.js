@@ -1,6 +1,4 @@
 
-import api from './api';
-
 // Testimonials data - real testimonials added
 let mockTestimonials = [
     {

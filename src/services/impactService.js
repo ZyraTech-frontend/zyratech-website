@@ -3,8 +3,6 @@
  * Handles API calls for impact metrics and success stories
  */
 
-import api from './api';
-
 // Category configuration
 export const IMPACT_CATEGORIES = {
     'students': {
