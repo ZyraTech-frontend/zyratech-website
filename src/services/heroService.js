@@ -1,7 +1,4 @@
 
-import api from './api';
-
-// Initial data mirroring the current hardcoded Hero.jsx
 let mockSlides = [
     {
         id: 1,

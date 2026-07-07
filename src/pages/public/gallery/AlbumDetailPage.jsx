@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getAlbumById } from '../../../data/galleryAlbums';
@@ -111,8 +111,6 @@ const AlbumDetailPage = () => {
   }, [selectedImageIndex, album.images.length]);
 
   if (!album) {
-    console.log('Album not found for ID:', id);
-    console.log('Available albums:', galleryAlbums.map(a => ({ id: a.id, title: a.title })));
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
