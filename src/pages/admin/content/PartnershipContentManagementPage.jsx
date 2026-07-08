@@ -114,7 +114,7 @@ const StoriesManager = ({ stories, setStories, dispatch }) => {
                 {stories.length === 0 ? <p className="text-gray-500 italic">No stories found.</p> : stories.map(s => (
                     <div key={s.id} className="bg-white p-4 rounded-xl border flex justify-between items-start shadow-sm">
                         <div className="flex gap-4">
-                            <img decoding="async" src={s.image} alt="" className="w-16 h-16 object-cover rounded bg-gray-100" />
+                            <img decoding="async" src={s.image} alt="" className="w-16 h-16 object-cover rounded bg-gray-100" loading="lazy" />
                             <div>
                                 <h4 className="font-bold text-gray-900">{s.title}</h4>
                                 <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">{s.category}</span>

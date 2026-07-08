@@ -315,6 +315,7 @@ const AlbumFormPage = () => {
                                                             src={image}
                                                             alt={`Album image ${index + 1}`}
                                                             className="w-full sm:w-16 h-32 sm:h-16 rounded object-cover"
+                                                            loading="lazy"
                                                         />
 
                                                         {/* Image Info */}

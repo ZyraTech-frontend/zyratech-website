@@ -993,6 +993,8 @@ const LoginPage = () => {
         <img decoding="async"
           src="/zyrateclogopng.webp"
           alt="ZyraTech Hub"
+          loading="eager"
+          fetchPriority="high"
           className="h-24 w-auto object-contain drop-shadow-lg"
         />
       </div>
@@ -1002,6 +1004,8 @@ const LoginPage = () => {
         <img decoding="async"
           src="/zyrateclogopng.webp"
           alt="ZyraTech Hub"
+          loading="eager"
+          fetchPriority="high"
           className="h-48 w-auto object-contain drop-shadow-lg transition-all duration-500"
         />
       </div>

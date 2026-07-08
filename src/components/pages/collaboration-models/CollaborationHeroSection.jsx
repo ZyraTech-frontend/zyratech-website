@@ -11,6 +11,8 @@ const CollaborationHeroSection = ({ hero }) => {
           src={hero?.bannerImage}
           alt="Collaboration"
           className="w-full h-56 sm:h-72 lg:h-96 object-cover"
+          loading="eager"
+          fetchPriority="high"
           onError={(e) => {
             e.currentTarget.src = hero?.bannerFallback;
           }}

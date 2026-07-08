@@ -29,6 +29,7 @@ const ToolsOrbit = ({ tools = [] }) => {
           src="/zyrateclogopng.webp"
           alt="ZyraTech"
           className="w-16 h-16 object-contain filter drop-shadow-md"
+          loading="lazy"
         />
       </div>
 
@@ -49,6 +50,7 @@ const ToolsOrbit = ({ tools = [] }) => {
                   src={tool.logo}
                   alt={tool.name}
                   className="w-8 h-8 md:w-16 md:h-16 object-contain mb-1"
+                  loading="lazy"
                   onError={(e) => e.target.style.display = 'none'}
                 />
                 <span className="text-[6px] md:text-[8px] font-medium text-gray-700">{tool.name}</span>

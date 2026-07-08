@@ -157,6 +157,7 @@ const ProjectDetailsPage = () => {
                                 src={project.image}
                                 alt={project.title}
                                 className="w-full h-96 object-cover"
+                                loading="lazy"
                                 onError={(e) => {
                                     e.target.src = "/images/placeholder.webp";
                                 }}

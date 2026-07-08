@@ -261,6 +261,7 @@ const BlogManagementPage = () => {
                                                             alt=""
                                                             aria-hidden="true"
                                                             className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 md:w-10 md:h-10 rounded shrink-0 object-cover border border-gray-200"
+                                                            loading="lazy"
                                                         />
                                                         <div className="min-w-0 flex-1">
                                                             <p className="font-bold text-gray-900 text-sm md:text-xs line-clamp-2 leading-snug group-hover:text-[#004fa2] transition-colors">{article.title}</p>
@@ -284,6 +285,7 @@ const BlogManagementPage = () => {
                                                             alt=""
                                                             aria-hidden="true"
                                                             className="w-4 h-4 md:w-6 md:h-6 rounded-full shrink-0 border border-gray-200"
+                                                            loading="lazy"
                                                         />
                                                         <span className="text-[11px] text-gray-700 font-medium whitespace-nowrap">{article.author.name}</span>
                                                     </div>

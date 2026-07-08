@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ImageWithSkeleton from '../../common/ImageWithSkeleton';
 
@@ -31,6 +30,7 @@ const NewProjectsHero = () => {
           alt="ZyraTech Projects"
           className="h-full w-full object-cover"
           skeletonClassName="bg-gray-800"
+          priority
           style={{ objectPosition: 'center 20%' }}
         />
         {/* Match Home Page Hero Gradient */}

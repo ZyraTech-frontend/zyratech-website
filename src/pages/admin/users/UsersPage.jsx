@@ -424,7 +424,7 @@ const UsersPage = () => {
                       isDeactivated ? 'bg-gray-400' : 'bg-[#004fa2]'
                     }`}>
                       {admin.avatar || admin.profileImage ? (
-                          <img src={admin.avatar || admin.profileImage} alt={admin.name} className="w-full h-full object-cover" />
+                          <img src={admin.avatar || admin.profileImage} alt={admin.name} className="w-full h-full object-cover" loading="lazy" />
                       ) : (
                           <User size={20} className="opacity-90" strokeWidth={2.5} />
                       )}
@@ -624,7 +624,7 @@ const UsersPage = () => {
                           <div className="flex gap-4 sm:gap-6 mt-auto w-full relative z-10">
                             <div className="w-20 h-24 sm:w-28 sm:h-36 bg-gray-200/80 rounded-xl shrink-0 border-2 border-white shadow-md flex items-center justify-center overflow-hidden bg-white">
                               {selectedAdmin.avatar ? (
-                                <img src={selectedAdmin.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                                <img src={selectedAdmin.avatar} alt="Avatar" className="w-full h-full object-cover" loading="lazy" />
                               ) : (
                                 <User size={32} className="text-gray-400" />
                               )}
@@ -962,7 +962,7 @@ const UsersPage = () => {
                     isDeactivated ? 'bg-gradient-to-br from-gray-400 to-gray-600' : 'bg-gradient-to-br from-[#004fa2] to-[#0066cc]'
                   }`}>
                     {selectedAdmin.avatar || selectedAdmin.profileImage ? (
-                        <img src={selectedAdmin.avatar || selectedAdmin.profileImage} alt={selectedAdmin.name} className="w-full h-full object-cover" />
+                        <img src={selectedAdmin.avatar || selectedAdmin.profileImage} alt={selectedAdmin.name} className="w-full h-full object-cover" loading="lazy" />
                     ) : (
                         <User size={36} className="opacity-90" strokeWidth={2.5} />
                     )}

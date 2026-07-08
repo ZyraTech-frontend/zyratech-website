@@ -12,6 +12,10 @@ const OptimizedImage = ({
   onError,
   ...props
 }) => {
+  const loading = priority ? 'eager' : props.loading || 'lazy';
+  const decoding = props.decoding || 'async';
+  const fetchPriority = priority ? 'high' : props.fetchPriority || 'auto';
+
   return (
     <div className={containerClassName}>
       <Image
@@ -21,6 +25,9 @@ const OptimizedImage = ({
         height={height}
         layout="constrained"
         priority={priority}
+        loading={loading}
+        decoding={decoding}
+        fetchPriority={fetchPriority}
         className={className}
         onError={onError}
         {...props}
