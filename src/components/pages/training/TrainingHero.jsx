@@ -12,6 +12,8 @@ const TrainingHero = () => {
           src="/images/traininghr.png"
           alt="Training banner"
           className="h-full w-full object-cover brightness-110"
+          loading="eager"
+          fetchPriority="high"
           style={{ objectPosition: 'center' }}
         />
         {/* Consistent Gradient from left to dark */}

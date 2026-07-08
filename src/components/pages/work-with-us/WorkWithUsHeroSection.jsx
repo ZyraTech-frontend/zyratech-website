@@ -11,6 +11,8 @@ const WorkWithUsHeroSection = ({ title, subtitle, description, image }) => {
           src={image || "/images/work-with-us-hero.webp"}
           alt="Work with us"
           className="h-full w-full object-cover"
+          loading="eager"
+          fetchPriority="high"
           onError={(e) => {
             e.target.src = 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200';
           }}

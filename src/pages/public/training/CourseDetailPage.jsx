@@ -123,6 +123,8 @@ const CourseDetailPage = () => {
             src={heroImage}
             alt="Course banner"
             className="h-full w-full object-cover brightness-110"
+            loading="eager"
+            fetchPriority="high"
             style={{ objectPosition: 'center 30%' }}
           />
           {/* Consistent Gradient from left to dark */}

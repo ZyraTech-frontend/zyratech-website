@@ -31,6 +31,7 @@ const SplitTestimonial = () => {
               src="/images/testimonial.webp"
               alt="Smiling local shop owner"
               className="w-full h-full object-cover object-center"
+              loading="lazy"
               style={{ objectPosition: 'center 30%' }}
               onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1200'; }}
             />

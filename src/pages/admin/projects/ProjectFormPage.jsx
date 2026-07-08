@@ -306,7 +306,7 @@ const ProjectFormPage = () => {
                                 </div>
                                 {formData.image && (
                                     <div className="w-full md:w-48 aspect-video rounded-lg overflow-hidden border border-gray-200 shrink-0 bg-gray-50">
-                                        <img decoding="async" src={formData.image} alt="Preview" className="w-full h-full object-cover" />
+                                        <img decoding="async" src={formData.image} alt="Preview" className="w-full h-full object-cover" loading="lazy" />
                                     </div>
                                 )}
                             </div>

@@ -131,6 +131,7 @@ const AvatarDisplay = ({ name, avatar, size = 'md' }) => {
             <img decoding="async"
                 src={avatar}
                 alt={name}
+                loading="lazy"
                 className={`${sizeClasses[size]} rounded-full object-cover ring-2 ring-white shadow-md`}
                 onError={(e) => {
                     e.target.style.display = 'none';

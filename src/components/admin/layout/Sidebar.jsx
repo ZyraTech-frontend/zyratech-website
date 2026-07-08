@@ -74,6 +74,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
               <img decoding="async"
                 src="/zyrateclogopng.webp"
                 alt="ZyraTech"
+                loading="eager"
+                fetchPriority="high"
                 className="w-full h-full object-contain"
               />
             </div>

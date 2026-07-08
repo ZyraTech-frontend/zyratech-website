@@ -109,7 +109,7 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
               >
                 <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 overflow-hidden">
                   {avatarUrl ? (
-                    <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
+                    <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" loading="lazy" />
                   ) : (
                     getInitials(user?.name || user?.email)
                   )}
