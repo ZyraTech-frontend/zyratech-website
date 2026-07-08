@@ -218,6 +218,7 @@ const HeroSlidesManagementPage = () => {
                                             src={slide.backgroundImage}
                                             alt={slide.title}
                                             className={`w-full h-full object-cover transition-opacity ${slide.isVisible ? '' : 'opacity-60 grayscale'}`}
+                                            loading="lazy"
                                             onError={(e) => { e.target.src = '/placeholder-image.webp' }}
                                         />
                                         {!slide.isVisible && (

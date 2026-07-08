@@ -34,6 +34,7 @@ const FeaturedPost = ({ article }) => {
                 src={article.image}
                 alt={article.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                loading="lazy"
               />
               <div className={`absolute top-4 left-4 ${getCategoryColor(article.category)} text-white px-3 py-1 rounded-full text-xs sm:text-sm font-medium`}>
                 {article.category}
@@ -56,6 +57,7 @@ const FeaturedPost = ({ article }) => {
                     src={article.author.avatar}
                     alt={article.author.name}
                     className="w-8 h-8 rounded-full object-cover"
+                    loading="lazy"
                   />
                   <span className="font-medium text-gray-700">{article.author.name}</span>
                 </div>

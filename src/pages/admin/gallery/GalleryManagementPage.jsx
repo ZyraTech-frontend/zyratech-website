@@ -443,7 +443,7 @@ const GalleryManagementPage = () => {
                         {paginatedItems.map((item) => (
                             <div key={item.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col hover:border-[#004fa2] transition-colors group p-2">
                                 <div className="relative aspect-video rounded-lg overflow-hidden mb-2">
-                                    <img decoding="async" src={item.thumbnail} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                    <img decoding="async" src={item.thumbnail} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                                     <div className="absolute top-1 right-1 bg-black/60 text-white px-1.5 py-0.5 rounded flex items-center gap-1 text-[9px] font-bold backdrop-blur-sm">
                                         <FileImage size={10} /> {item.images?.length || 0}
                                     </div>
@@ -504,6 +504,7 @@ const GalleryManagementPage = () => {
                                                         src={item.thumbnail}
                                                         alt={item.title}
                                                         className="w-full h-full object-cover"
+                                                        loading="lazy"
                                                     />
                                                 </div>
                                                 <div>
@@ -664,6 +665,7 @@ const GalleryManagementPage = () => {
                                     src={viewingItem.images?.[selectedImageIndex]}
                                     alt={`${viewingItem.title} - Image ${selectedImageIndex + 1}`}
                                     className="w-full h-full object-cover"
+                                    loading="lazy"
                                 />
                                 {/* Navigation */}
                                 {viewingItem.images?.length > 1 && (
@@ -699,7 +701,7 @@ const GalleryManagementPage = () => {
                                                 : 'opacity-60 hover:opacity-100'
                                                 }`}
                                         >
-                                            <img decoding="async" src={img} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
+                                            <img decoding="async" src={img} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
                                         </button>
                                     ))}
                                 </div>

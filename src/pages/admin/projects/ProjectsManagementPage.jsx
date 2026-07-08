@@ -318,7 +318,7 @@ const ProjectsManagementPage = () => {
                         {paginatedProjects.map((project) => (
                             <div key={project.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col hover:border-[#004fa2] transition-colors group p-2">
                                 <div className="relative w-full aspect-video bg-gray-100 rounded-lg overflow-hidden mb-2 shrink-0">
-                                    <img decoding="async" src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                    <img decoding="async" src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                                     <div className="absolute top-1 left-1 flex flex-col gap-1 items-start">
                                         <span className={`px-1.5 py-[1px] rounded text-[8px] font-bold uppercase backdrop-blur-sm shadow-sm ${CATEGORY_CONFIG[project.category]?.color || 'bg-white/90 text-gray-800'}`}>
                                             {project.category}
@@ -398,6 +398,7 @@ const ProjectsManagementPage = () => {
                                                         src={project.image}
                                                         alt={project.title}
                                                         className="w-full h-full object-cover"
+                                                        loading="lazy"
                                                     />
                                                 </div>
                                                 <div>

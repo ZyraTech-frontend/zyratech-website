@@ -246,6 +246,7 @@ const BlogFormPage = () => {
                                                     src={formData.image}
                                                     alt="Preview"
                                                     className="w-full h-48 object-cover rounded-lg mb-4"
+                                                    loading="lazy"
                                                 />
                                             ) : (
                                                 <ImageIcon size={48} className="mx-auto text-gray-400 mb-2" />

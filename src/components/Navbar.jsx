@@ -90,6 +90,8 @@ const Navbar = () => {
                 alt="Zyra Tech Hub Logo"
                 width="112"
                 height="112"
+                loading="eager"
+                fetchPriority="high"
                 className="h-20 md:h-24 lg:h-28 w-auto object-contain"
               />
             </NavLink>

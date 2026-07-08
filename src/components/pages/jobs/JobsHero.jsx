@@ -12,6 +12,8 @@ const JobsHero = () => {
           src="/images/jobb.jpg"
           alt="Careers banner"
           className="h-full w-full object-cover brightness-110"
+          loading="eager"
+          fetchPriority="high"
           style={{ objectPosition: 'center 25%' }}
         />
         {/* Consistent Gradient from left to dark */}

@@ -11,6 +11,8 @@ const OurServicesHeroSection = () => {
           src="/images/Gemini_Generated_Image_7f3aff7f3aff7f3a.webp"
           alt="Services banner"
           className="h-full w-full object-cover"
+          loading="eager"
+          fetchPriority="high"
           onError={(e) => {
             e.target.src = "/images/image3.webp";
           }}

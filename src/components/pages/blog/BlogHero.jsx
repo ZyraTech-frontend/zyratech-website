@@ -13,6 +13,8 @@ const BlogHero = () => {
           src="/images/download.jpg"
           alt="ZyraTech Blog Banner"
           className="h-full w-full object-cover brightness-110"
+          loading="eager"
+          fetchPriority="high"
           style={{ objectPosition: 'right 25%' }}
         />
         {/* Consistent Gradient from left to dark */}

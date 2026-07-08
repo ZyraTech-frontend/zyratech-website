@@ -52,6 +52,7 @@ const About = () => {
               src="/images/image1.webp" 
               alt="Zyra Tech Hub" 
               className="w-full h-full object-cover"
+              loading="lazy"
             />
           </motion.div>
           

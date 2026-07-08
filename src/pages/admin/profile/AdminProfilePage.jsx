@@ -225,7 +225,7 @@ const AdminProfilePage = () => {
                                 {/* Avatar */}
                                 <div className="w-16 h-16 rounded-full border-2 border-gray-200 shadow-sm shrink-0 overflow-hidden relative group">
                                     {userData.avatar ? (
-                                        <img decoding="async" src={userData.avatar} alt="Profile" className="w-full h-full object-cover" />
+                                        <img decoding="async" src={userData.avatar} alt="Profile" className="w-full h-full object-cover" loading="lazy" />
                                     ) : (
                                         <div className="w-full h-full bg-gray-100 flex items-center justify-center">
                                             <span className="text-lg font-bold text-gray-400">

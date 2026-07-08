@@ -102,6 +102,7 @@ const BlogDetailsPage = () => {
                             src={article.image}
                             alt={article.title}
                             className="w-full h-96 object-cover"
+                            loading="lazy"
                         />
                     </div>
 
@@ -179,6 +180,7 @@ const BlogDetailsPage = () => {
                                         src={article.author.avatar}
                                         alt={article.author.name}
                                         className="w-20 h-20 rounded-full object-cover border-4 border-blue-100"
+                                        loading="lazy"
                                     />
                                     <div>
                                         <p className="text-base font-semibold text-gray-900">{article.author.name}</p>
