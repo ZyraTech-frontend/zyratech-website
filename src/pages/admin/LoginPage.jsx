@@ -600,8 +600,15 @@ const KycView = ({ user, kycStatus, onSubmit, onSkip, loading, error }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    if (governmentId) formData.append('documents', governmentId);
-    if (proofOfAddress) formData.append('documents', proofOfAddress);
+    formData.append('documentType', 'national_id');
+    if (governmentId) {
+      formData.append('documents', governmentId);
+      formData.append('document', governmentId);
+    }
+    if (proofOfAddress) {
+      formData.append('documents', proofOfAddress);
+      formData.append('proofOfAddress', proofOfAddress);
+    }
     onSubmit(formData);
   };
 
@@ -854,10 +861,10 @@ const LoginPage = () => {
     if (isAuthenticated && user && view === 'login') {
       if (user.mustChangePassword) {
         setView('change_password');
-      } else if (user.kycStatus === 'not_submitted' || user.kycStatus === 'rejected') {
+      } else if (user.role !== 'super_admin' && (user.kycStatus === 'not_submitted' || user.kycStatus === 'rejected')) {
         setView('kyc');
-      } else if (user.kycStatus === 'pending') {
-        setView('kyc');
+      } else {
+        setLoginSuccess(true);
       }
     }
   }, [isAuthenticated, user, view]);
@@ -893,10 +900,10 @@ const LoginPage = () => {
       // Determine next step based on user status
       if (loggedUser?.mustChangePassword) {
         setView('change_password');
-      } else if (loggedUser?.kycStatus === 'not_submitted' || loggedUser?.kycStatus === 'rejected' || loggedUser?.kycStatus === 'pending') {
+      } else if (loggedUser?.role !== 'super_admin' && (loggedUser?.kycStatus === 'not_submitted' || loggedUser?.kycStatus === 'rejected')) {
         setView('kyc');
       } else {
-        // Fully verified — go to dashboard
+        // Fully verified or super admin — go to dashboard
         setLoginSuccess(true);
       }
     }
@@ -912,7 +919,7 @@ const LoginPage = () => {
       const loggedUser = result.payload.user;
       if (loggedUser?.mustChangePassword) {
         setView('change_password');
-      } else if (loggedUser?.kycStatus === 'not_submitted' || loggedUser?.kycStatus === 'rejected' || loggedUser?.kycStatus === 'pending') {
+      } else if (loggedUser?.role !== 'super_admin' && (loggedUser?.kycStatus === 'not_submitted' || loggedUser?.kycStatus === 'rejected')) {
         setView('kyc');
       } else {
         setLoginSuccess(true);
@@ -927,9 +934,7 @@ const LoginPage = () => {
     if (result.payload && !result.error) {
       // Password changed — now check KYC
       const updatedUser = result.payload.user;
-      if (updatedUser?.kycStatus === 'not_submitted' || updatedUser?.kycStatus === 'rejected') {
-        setView('kyc');
-      } else if (updatedUser?.kycStatus === 'pending') {
+      if (updatedUser?.role !== 'super_admin' && (updatedUser?.kycStatus === 'not_submitted' || updatedUser?.kycStatus === 'rejected')) {
         setView('kyc');
       } else {
         setLoginSuccess(true);
