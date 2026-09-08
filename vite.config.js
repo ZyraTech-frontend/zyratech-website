@@ -8,6 +8,16 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'https://api.zyratechhub.com',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
   build: {
     // Enable source maps for better debugging in production
     sourcemap: false,
