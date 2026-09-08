@@ -3,14 +3,23 @@
  * Ensures only authenticated users with proper role can access admin pages
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { useAuth } from '../../../hooks/useAuth';
 import { usePermissions } from '../../../hooks/usePermissions';
+import { verifySession } from '../../../store/slices/authSlice';
 
 const ProtectedRoute = ({ children, requiredPermission = null, requiredRole = null }) => {
+  const dispatch = useDispatch();
   const { isAuthenticated, userRole } = useAuth();
   const { can } = usePermissions();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(verifySession());
+    }
+  }, [dispatch, isAuthenticated]);
 
   // Not authenticated - redirect to login
   if (!isAuthenticated) {

@@ -15,7 +15,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser, changePassword, submitKyc, clearError } from '../../store/slices/authSlice';
+import { loginUser, changePassword, submitKyc, verify2FACode, clearError } from '../../store/slices/authSlice';
+import authService from '../../services/authService';
 import {
   Eye,
   EyeOff,
@@ -326,15 +327,8 @@ const PrimaryButton = ({ onClick, disabled, loading, loadingText, icon: Icon, ch
 const LoginView = ({
   onSubmit, email, setEmail, password, setPassword,
   showPassword, setShowPassword, rememberMe, setRememberMe,
-  loading, error, onForgotPassword,
-  onShowCredentials, showCredentials
+  loading, error, onForgotPassword
 }) => {
-
-  const handleDemoSelect = (cred) => {
-    setEmail(cred.email);
-    setPassword(cred.password);
-  };
-
   return (
     <div>
       <form onSubmit={onSubmit} className="space-y-5">
@@ -410,50 +404,6 @@ const LoginView = ({
           Sign In
         </PrimaryButton>
       </form>
-
-      {/* Demo Credentials Footer */}
-      <div className="border-t border-gray-100 pt-4 mt-5">
-        <button
-          type="button"
-          onClick={onShowCredentials}
-          className="w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-600 transition-colors py-2 px-2 hover:bg-gray-50 rounded-lg group"
-        >
-          <div className="flex items-center gap-2">
-            <Fingerprint size={16} />
-            <span className="font-medium">Demo Access</span>
-          </div>
-          <ChevronRight size={14} className={`transition-transform duration-300 ${showCredentials ? 'rotate-90' : 'group-hover:translate-x-1'}`} />
-        </button>
-
-        {showCredentials && (
-          <div className="mt-3 space-y-2 animate-[slideDown_0.3s_ease-out]">
-            {[
-              { role: 'Super Admin', email: 'superadmin@zyratech.com', password: 'Super@123', color: 'from-purple-500/10 to-purple-600/10', border: 'border-purple-200', badge: 'bg-purple-100 text-purple-700', desc: 'Full access' },
-              { role: 'Admin', email: 'admin@zyratech.com', password: 'Admin@123', color: 'from-blue-500/10 to-blue-600/10', border: 'border-blue-200', badge: 'bg-blue-100 text-blue-700', desc: 'Standard' },
-              { role: 'New User', email: 'kwame.asante@zyratech.com', password: 'TempPass@2025', color: 'from-amber-500/10 to-amber-600/10', border: 'border-amber-200', badge: 'bg-amber-100 text-amber-700', desc: 'Validates change password' },
-              { role: 'Deactivated', email: 'john.mensah@zyratech.com', password: 'John@123', color: 'from-red-500/10 to-red-600/10', border: 'border-red-200', badge: 'bg-red-100 text-red-700', desc: 'Shows error' }
-            ].map((cred) => (
-              <button
-                key={cred.role}
-                type="button"
-                onClick={() => handleDemoSelect(cred)}
-                className={`w-full text-left p-2.5 rounded-lg bg-gradient-to-r ${cred.color} border ${cred.border} hover:shadow-md transition-all duration-200 group/cred flex items-center gap-3`}
-              >
-                <div className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center shrink-0 ${cred.badge} font-bold text-xs`}>
-                  {cred.role[0]}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-gray-800 truncate">{cred.role}</span>
-                  </div>
-                  <p className="text-[10px] text-gray-500 truncate">{cred.desc}</p>
-                </div>
-                <ArrowRight size={12} className="text-gray-400 group-hover/cred:text-gray-600 transition-colors" />
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
     </div>
   );
 };
@@ -649,7 +599,10 @@ const KycView = ({ user, kycStatus, onSubmit, onSkip, loading, error }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ governmentId: governmentId?.name, proofOfAddress: proofOfAddress?.name });
+    const formData = new FormData();
+    if (governmentId) formData.append('documents', governmentId);
+    if (proofOfAddress) formData.append('documents', proofOfAddress);
+    onSubmit(formData);
   };
 
   return (
@@ -740,7 +693,7 @@ const KycView = ({ user, kycStatus, onSubmit, onSkip, loading, error }) => {
 };
 
 // ─── Forgot Password View ────────────────────────────────────────────
-const ForgotPasswordView = ({ onBack, onSubmit, email, setEmail, loading, sent }) => {
+const ForgotPasswordView = ({ onBack, onSubmit, email, setEmail, loading, sent, error }) => {
   if (sent) {
     return (
       <div className="text-center space-y-6 py-4 animate-[fadeIn_0.4s_ease-out]">
@@ -794,8 +747,56 @@ const ForgotPasswordView = ({ onBack, onSubmit, email, setEmail, loading, sent }
           disabled={loading}
         />
 
+        {error && <ErrorAlert title="Reset Request Failed" message={error} />}
+
         <PrimaryButton type="submit" disabled={!email} loading={loading} loadingText="Sending..." icon={Mail}>
           Send Reset Instructions
+        </PrimaryButton>
+      </form>
+
+      <div className="text-center">
+        <button
+          onClick={onBack}
+          className="inline-flex items-center gap-2 text-sm text-gray-500 font-medium hover:text-gray-700 transition-colors"
+        >
+          <ArrowLeft size={16} />
+          Back to Sign In
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// ─── Two-Factor Authentication View ──────────────────────────────────
+const TwoFactorView = ({ onBack, onSubmit, code, setCode, loading, error }) => {
+  return (
+    <div className="space-y-6 animate-[fadeIn_0.3s_ease-out]">
+      <div className="text-center">
+        <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+          <ShieldCheck size={28} className="text-[#004fa2]" />
+        </div>
+        <h3 className="text-xl font-bold text-gray-900">Two-Factor Authentication</h3>
+        <p className="text-gray-500 text-sm mt-1.5">
+          Enter the 6-digit verification code from your authenticator application.
+        </p>
+      </div>
+
+      <form onSubmit={onSubmit} className="space-y-5">
+        <FloatingInput
+          id="2fa-code"
+          label="6-Digit Verification Code"
+          type="text"
+          value={code}
+          onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+          icon={KeyRound}
+          autoComplete="one-time-code"
+          disabled={loading}
+        />
+
+        {error && <ErrorAlert title="Verification Failed" message={error} />}
+
+        <PrimaryButton type="submit" disabled={code.length !== 6} loading={loading} loadingText="Verifying..." icon={ShieldCheck}>
+          Verify & Continue
         </PrimaryButton>
       </form>
 
@@ -821,11 +822,14 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [showCredentials, setShowCredentials] = useState(false);
-  const [view, setView] = useState('login'); // 'login' | 'forgot' | 'change_password' | 'kyc'
+  const [view, setView] = useState('login'); // 'login' | 'forgot' | 'change_password' | 'kyc' | '2fa'
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotSent, setForgotSent] = useState(false);
   const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotError, setForgotError] = useState(null);
+  const [twoFactorCode, setTwoFactorCode] = useState('');
+  const [twoFactorLoading, setTwoFactorLoading] = useState(false);
+  const [twoFactorError, setTwoFactorError] = useState(null);
   const [loginSuccess, setLoginSuccess] = useState(false);
 
   const dispatch = useDispatch();
@@ -855,7 +859,6 @@ const LoginPage = () => {
       } else if (user.kycStatus === 'pending') {
         setView('kyc');
       }
-      // If fully verified (active + KYC verified) and no view change, we'll navigate below
     }
   }, [isAuthenticated, user, view]);
 
@@ -881,12 +884,16 @@ const LoginPage = () => {
 
     const result = await dispatch(loginUser({ email, password }));
     if (result.payload && !result.error) {
+      if (result.payload.requires2FA) {
+        setView('2fa');
+        return;
+      }
       const loggedUser = result.payload.user;
 
       // Determine next step based on user status
-      if (loggedUser.mustChangePassword) {
+      if (loggedUser?.mustChangePassword) {
         setView('change_password');
-      } else if (loggedUser.kycStatus === 'not_submitted' || loggedUser.kycStatus === 'rejected' || loggedUser.kycStatus === 'pending') {
+      } else if (loggedUser?.kycStatus === 'not_submitted' || loggedUser?.kycStatus === 'rejected' || loggedUser?.kycStatus === 'pending') {
         setView('kyc');
       } else {
         // Fully verified — go to dashboard
@@ -895,14 +902,34 @@ const LoginPage = () => {
     }
   };
 
+  const handleTwoFactorSubmit = async (e) => {
+    e.preventDefault();
+    setTwoFactorLoading(true);
+    setTwoFactorError(null);
+    const result = await dispatch(verify2FACode({ code: twoFactorCode }));
+    setTwoFactorLoading(false);
+    if (result.payload && !result.error) {
+      const loggedUser = result.payload.user;
+      if (loggedUser?.mustChangePassword) {
+        setView('change_password');
+      } else if (loggedUser?.kycStatus === 'not_submitted' || loggedUser?.kycStatus === 'rejected' || loggedUser?.kycStatus === 'pending') {
+        setView('kyc');
+      } else {
+        setLoginSuccess(true);
+      }
+    } else {
+      setTwoFactorError(result.payload || 'Invalid verification code.');
+    }
+  };
+
   const handlePasswordChange = async ({ currentPassword, newPassword }) => {
     const result = await dispatch(changePassword({ currentPassword, newPassword }));
     if (result.payload && !result.error) {
       // Password changed — now check KYC
       const updatedUser = result.payload.user;
-      if (updatedUser.kycStatus === 'not_submitted' || updatedUser.kycStatus === 'rejected') {
+      if (updatedUser?.kycStatus === 'not_submitted' || updatedUser?.kycStatus === 'rejected') {
         setView('kyc');
-      } else if (updatedUser.kycStatus === 'pending') {
+      } else if (updatedUser?.kycStatus === 'pending') {
         setView('kyc');
       } else {
         setLoginSuccess(true);
@@ -910,10 +937,16 @@ const LoginPage = () => {
     }
   };
 
-  const handleKycSubmit = async (documents) => {
-    const result = await dispatch(submitKyc({ documents }));
+  const handleKycSubmit = async (formDataOrFiles) => {
+    let formData = formDataOrFiles;
+    if (!(formDataOrFiles instanceof FormData)) {
+      formData = new FormData();
+      if (formDataOrFiles.governmentId) formData.append('documents', formDataOrFiles.governmentId);
+      if (formDataOrFiles.proofOfAddress) formData.append('documents', formDataOrFiles.proofOfAddress);
+    }
+    const result = await dispatch(submitKyc(formData));
     if (result.payload && !result.error) {
-      // KYC submitted — it's now pending. Allow user to proceed.
+      // KYC submitted — allow user to proceed
       setLoginSuccess(true);
     }
   };
@@ -925,13 +958,20 @@ const LoginPage = () => {
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     setForgotLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setForgotLoading(false);
-    setForgotSent(true);
+    setForgotError(null);
+    try {
+      await authService.forgotPassword(forgotEmail);
+      setForgotSent(true);
+    } catch (err) {
+      setForgotError(err.userMessage || 'Failed to send reset instructions. Please check your email and try again.');
+    } finally {
+      setForgotLoading(false);
+    }
   };
 
   const switchToForgot = () => {
     dispatch(clearError());
+    setForgotError(null);
     setView('forgot');
     setForgotEmail(email);
     setForgotSent(false);
@@ -939,12 +979,15 @@ const LoginPage = () => {
 
   const switchToLogin = () => {
     dispatch(clearError());
+    setTwoFactorError(null);
     setView('login');
   };
 
   // ─── Determine card title and icon based on current view ───
   const getCardHeader = () => {
     switch (view) {
+      case '2fa':
+        return { title: 'Security Verification', subtitle: 'Enter your 6-digit authentication code', icon: <ShieldCheck size={24} className="text-[#004fa2]" />, iconBg: 'bg-blue-50' };
       case 'change_password':
         return { title: 'Password Required', subtitle: 'Set a new secure password to continue', icon: <KeyRound size={24} className="text-amber-600" />, iconBg: 'bg-amber-50' };
       case 'kyc':
@@ -1044,8 +1087,17 @@ const LoginPage = () => {
                 loading={loading}
                 error={error}
                 onForgotPassword={switchToForgot}
-                onShowCredentials={() => setShowCredentials(!showCredentials)}
-                showCredentials={showCredentials}
+              />
+            )}
+
+            {view === '2fa' && (
+              <TwoFactorView
+                onBack={switchToLogin}
+                onSubmit={handleTwoFactorSubmit}
+                code={twoFactorCode}
+                setCode={setTwoFactorCode}
+                loading={twoFactorLoading}
+                error={twoFactorError}
               />
             )}
 
@@ -1057,6 +1109,7 @@ const LoginPage = () => {
                 setEmail={setForgotEmail}
                 loading={forgotLoading}
                 sent={forgotSent}
+                error={forgotError}
               />
             )}
 

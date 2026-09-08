@@ -127,7 +127,8 @@ function App() {
   // hostname we show the public website with zero admin exposure.
   // ============================================================
   const currentHostname = window.location.hostname;
-  const isAdminDomain = currentHostname.startsWith('admin.');
+  const isLocalDev = currentHostname === 'localhost' || currentHostname === '127.0.0.1';
+  const isAdminDomain = currentHostname.startsWith('admin.') || (isLocalDev && location.pathname.startsWith('/admin'));
 
   // ============================================================
   // BRANCH 1 — ADMIN PORTAL  (admin.zyratechhub.com)
