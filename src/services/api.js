@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'https://api.zyratechhub.com/api';
+// Ensure clean production API URL: strip any trailing parenthesis, accidental staging references, or whitespace
+const rawBaseURL = import.meta.env.VITE_API_BASE_URL || 'https://api.zyratechhub.com/api';
+const baseURL = (rawBaseURL || '')
+  .replace(/\)+$/, '')
+  .replace('staging-api.zyratechhub.com', 'api.zyratechhub.com')
+  .trim() || 'https://api.zyratechhub.com/api';
 
 const api = axios.create({
   baseURL,
