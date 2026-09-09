@@ -60,7 +60,7 @@ const DEPARTMENT_SECTIONS = [
 ];
 
 // Mapping of department to its default backend permissions
-export const DEPARTMENT_PERMISSIONS_MAP = {
+const DEPARTMENT_PERMISSIONS_MAP = {
   'Training Courses': ['training_courses', 'enrollments'],
   'Blog Articles': ['blog_articles'],
   'Job Listings': ['job_listings'],
@@ -78,7 +78,7 @@ export const DEPARTMENT_PERMISSIONS_MAP = {
   'Newsletter': ['newsletter']
 };
 
-export const AVAILABLE_PERMISSIONS = [
+const AVAILABLE_PERMISSIONS = [
   // Content Management
   { id: 'training_courses', label: 'Training Courses', section: 'Content' },
   { id: 'blog_articles', label: 'Blog Articles', section: 'Content' },
