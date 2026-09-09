@@ -59,6 +59,53 @@ const DEPARTMENT_SECTIONS = [
   { label: 'Business Operations', departments: DEPARTMENTS.filter(d => d.section === 'Business') }
 ];
 
+// Mapping of department to its default backend permissions
+export const DEPARTMENT_PERMISSIONS_MAP = {
+  'Training Courses': ['training_courses', 'enrollments'],
+  'Blog Articles': ['blog_articles'],
+  'Job Listings': ['job_listings'],
+  'Gallery': ['gallery'],
+  'Projects': ['projects'],
+  'FAQ': ['faq'],
+  'Testimonials': ['testimonials'],
+  'Team Members': ['about_page', 'about_section'],
+  'Payments': ['payments'],
+  'Enrollments': ['enrollments', 'training_courses'],
+  'Messages': ['messages'],
+  'Partnerships': ['partnership_requests', 'partnership_content'],
+  'Contact Inquiries': ['contact_inquiries'],
+  'Impact Stories': ['impact_stories'],
+  'Newsletter': ['newsletter']
+};
+
+export const AVAILABLE_PERMISSIONS = [
+  // Content Management
+  { id: 'training_courses', label: 'Training Courses', section: 'Content' },
+  { id: 'blog_articles', label: 'Blog Articles', section: 'Content' },
+  { id: 'job_listings', label: 'Job Listings', section: 'Content' },
+  { id: 'gallery', label: 'Gallery Albums', section: 'Content' },
+  { id: 'projects', label: 'Projects & Case Studies', section: 'Content' },
+  { id: 'faq', label: 'FAQ', section: 'Content' },
+  { id: 'testimonials', label: 'Testimonials', section: 'Content' },
+  { id: 'hero_slides', label: 'Hero Slides', section: 'Content' },
+  { id: 'services', label: 'Services', section: 'Content' },
+  { id: 'benefits', label: 'Why Choose Us', section: 'Content' },
+  { id: 'about_section', label: 'About Section', section: 'Content' },
+  { id: 'about_page', label: 'About Page', section: 'Content' },
+  { id: 'work_with_us', label: 'Work With Us', section: 'Content' },
+  { id: 'quality_assurance', label: 'Quality Assurance', section: 'Content' },
+  { id: 'partnership_content', label: 'Partnership Content', section: 'Content' },
+
+  // Business Operations
+  { id: 'enrollments', label: 'Enrollments', section: 'Business' },
+  { id: 'payments', label: 'Payments & Revenue', section: 'Business' },
+  { id: 'messages', label: 'Messages', section: 'Business' },
+  { id: 'partnership_requests', label: 'Partnership Requests', section: 'Business' },
+  { id: 'contact_inquiries', label: 'Contact Inquiries', section: 'Business' },
+  { id: 'impact_stories', label: 'Impact Stories', section: 'Business' },
+  { id: 'newsletter', label: 'Newsletter Subscribers', section: 'Business' }
+];
+
 // Step definitions
 const STEPS = [
   { key: 'personal', title: 'Personal Info', icon: User },
@@ -96,6 +143,7 @@ const AdministratorFormPage = () => {
     phone: '',
     role: 'admin',
     department: '',
+    permissions: [],
     tempPassword: generateTempPassword()
   });
 
@@ -113,6 +161,7 @@ const AdministratorFormPage = () => {
         phone: existingAdmin.phone || '',
         role: existingAdmin.role || 'admin',
         department: existingAdmin.department || '',
+        permissions: Array.isArray(existingAdmin.permissions) ? existingAdmin.permissions : [],
         tempPassword: '' // Not relevant when editing
       });
     }
@@ -123,6 +172,40 @@ const AdministratorFormPage = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  const togglePermission = (permId) => {
+    setFormData(prev => {
+      const exists = prev.permissions.includes(permId);
+      const updated = exists
+        ? prev.permissions.filter(p => p !== permId)
+        : [...prev.permissions, permId];
+      return { ...prev, permissions: updated };
+    });
+    if (errors.permissions) {
+      setErrors(prev => ({ ...prev, permissions: undefined }));
+    }
+  };
+
+  const selectAllPermissions = () => {
+    setFormData(prev => ({
+      ...prev,
+      permissions: AVAILABLE_PERMISSIONS.map(p => p.id)
+    }));
+    if (errors.permissions) {
+      setErrors(prev => ({ ...prev, permissions: undefined }));
+    }
+  };
+
+  const resetToDepartmentDefaults = () => {
+    const defaultPerms = DEPARTMENT_PERMISSIONS_MAP[formData.department] || [];
+    setFormData(prev => ({
+      ...prev,
+      permissions: [...defaultPerms]
+    }));
+    if (errors.permissions) {
+      setErrors(prev => ({ ...prev, permissions: undefined }));
     }
   };
 
@@ -147,6 +230,12 @@ const AdministratorFormPage = () => {
 
     if (stepKey === 'department') {
       if (!formData.department) newErrors.department = 'Please assign a department';
+      const effectivePerms = formData.permissions.length > 0
+        ? formData.permissions
+        : (DEPARTMENT_PERMISSIONS_MAP[formData.department] || []);
+      if (effectivePerms.length === 0) {
+        newErrors.permissions = 'At least one permission is required';
+      }
     }
 
     setErrors(newErrors);
@@ -174,46 +263,65 @@ const AdministratorFormPage = () => {
 
     setIsSaving(true);
 
-    if (isEditing) {
-      const updatedData = {
-        ...existingAdmin,
-        name: formData.name.trim(),
-        email: formData.email.trim().toLowerCase(),
-        phone: formData.phone.trim(),
-        role: formData.role,
-        department: formData.department.trim()
-      };
+    const activePermissions = formData.permissions && formData.permissions.length > 0
+      ? formData.permissions
+      : (DEPARTMENT_PERMISSIONS_MAP[formData.department] || [formData.department.toLowerCase().replace(/\s+/g, '_')]);
 
-      dispatch(updateUser({ id, data: updatedData }));
-    } else {
-      const newAdmin = {
-        name: formData.name.trim(),
-        email: formData.email.trim().toLowerCase(),
-        phone: formData.phone.trim(),
-        role: formData.role,
-        department: formData.department.trim(),
-        password: formData.tempPassword,
-        accountStatus: 'pending_password',
-        kycStatus: 'not_submitted',
-        mustChangePassword: true,
-        createdAt: new Date().toISOString()
-      };
+    try {
+      if (isEditing) {
+        const updatedData = {
+          name: formData.name.trim(),
+          email: formData.email.trim().toLowerCase(),
+          phone: formData.phone.trim(),
+          role: formData.role,
+          department: formData.department.trim(),
+          permissions: activePermissions
+        };
 
-      dispatch(createUser(newAdmin));
+        await dispatch(updateUser({ id, data: updatedData })).unwrap();
+        dispatch(addNotification({
+          type: 'success',
+          message: `"${formData.name}" has been updated successfully.`
+        }));
+      } else {
+        const newAdmin = {
+          name: formData.name.trim(),
+          email: formData.email.trim().toLowerCase(),
+          phone: formData.phone.trim(),
+          role: 'admin',
+          department: formData.department.trim(),
+          password: formData.tempPassword,
+          temporaryPassword: formData.tempPassword,
+          permissions: activePermissions,
+          mustChangePassword: true
+        };
+
+        await dispatch(createUser(newAdmin)).unwrap();
+        dispatch(addNotification({
+          type: 'success',
+          message: `Administrator account for "${formData.name}" created. Share the temporary password securely.`
+        }));
+      }
+
+      setIsSaving(false);
+      navigate('/admin/users');
+    } catch (err) {
+      setIsSaving(false);
+      const errMsg = typeof err === 'string' ? err : (err?.message || 'Failed to save administrator');
+      dispatch(addNotification({
+        type: 'error',
+        message: errMsg
+      }));
+
+      // If validation error, direct user to corresponding step
+      if (errMsg.toLowerCase().includes('permission')) {
+        setErrors(prev => ({ ...prev, permissions: errMsg }));
+        setCurrentStep(1);
+      } else if (errMsg.toLowerCase().includes('email')) {
+        setErrors(prev => ({ ...prev, email: errMsg }));
+        setCurrentStep(0);
+      }
     }
-
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    setIsSaving(false);
-
-    dispatch(addNotification({
-      type: 'success',
-      message: isEditing
-        ? `"${formData.name}" has been updated successfully.`
-        : `Administrator account for "${formData.name}" created. Share the temporary password securely.`
-    }));
-
-    navigate('/admin/users');
   };
 
   const handleCancel = () => {
@@ -358,7 +466,20 @@ const AdministratorFormPage = () => {
                           <button
                             key={dept.value}
                             type="button"
-                            onClick={() => { setFormData(prev => ({ ...prev, department: dept.value })); if (errors.department) setErrors(prev => ({ ...prev, department: undefined })); }}
+                            onClick={() => {
+                              const defaultPerms = DEPARTMENT_PERMISSIONS_MAP[dept.value] || [dept.value.toLowerCase().replace(/\s+/g, '_')];
+                              setFormData(prev => {
+                                const currentPerms = prev.permissions.length > 0 ? prev.permissions : [];
+                                const mergedPerms = Array.from(new Set([...currentPerms, ...defaultPerms]));
+                                return {
+                                  ...prev,
+                                  department: dept.value,
+                                  permissions: mergedPerms
+                                };
+                              });
+                              if (errors.department) setErrors(prev => ({ ...prev, department: undefined }));
+                              if (errors.permissions) setErrors(prev => ({ ...prev, permissions: undefined }));
+                            }}
                             className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left ${
                               isSelected
                                 ? 'border-[#004fa2] bg-[#004fa2]/5'
@@ -382,6 +503,115 @@ const AdministratorFormPage = () => {
                 ))}
               </div>
               {errors.department && <p className="text-red-500 text-sm mt-1">{errors.department}</p>}
+            </div>
+
+            {/* Permissions Granular Selection */}
+            <div className="pt-6 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900">
+                    Module Permissions & Access Scope <span className="text-red-500">*</span>
+                  </label>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Select which modules this administrator can view and manage. At least 1 permission is required.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={selectAllPermissions}
+                    className="text-xs px-2.5 py-1 bg-blue-50 text-[#004fa2] hover:bg-blue-100 rounded-lg font-medium transition-colors"
+                  >
+                    Select All
+                  </button>
+                  {formData.department && (
+                    <button
+                      type="button"
+                      onClick={resetToDepartmentDefaults}
+                      className="text-xs px-2.5 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg font-medium transition-colors"
+                    >
+                      Department Defaults
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, permissions: [] }))}
+                    className="text-xs px-2.5 py-1 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg font-medium transition-colors"
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+
+              {errors.permissions && (
+                <div className="mb-3 p-2.5 bg-red-50 border border-red-200 rounded-lg text-red-600 text-xs flex items-center gap-2">
+                  <AlertCircle size={14} className="shrink-0" />
+                  <span>{errors.permissions}</span>
+                </div>
+              )}
+
+              <div className="space-y-4 bg-gray-50/50 p-4 rounded-xl border border-gray-200/80">
+                {/* Content Management Permissions */}
+                <div>
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Content Management Modules</p>
+                  <div className="flex flex-wrap gap-2">
+                    {AVAILABLE_PERMISSIONS.filter(p => p.section === 'Content').map(perm => {
+                      const isChecked = formData.permissions.includes(perm.id);
+                      return (
+                        <button
+                          key={perm.id}
+                          type="button"
+                          onClick={() => togglePermission(perm.id)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all flex items-center gap-1.5 ${
+                            isChecked
+                              ? 'bg-[#004fa2] text-white border-[#004fa2] shadow-sm shadow-[#004fa2]/20'
+                              : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          <span className={`w-3.5 h-3.5 rounded flex items-center justify-center ${isChecked ? 'bg-white text-[#004fa2]' : 'border border-gray-300'}`}>
+                            {isChecked && <Check size={10} strokeWidth={3} />}
+                          </span>
+                          {perm.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Business Operations Permissions */}
+                <div className="pt-3 border-t border-gray-200/60">
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Business Operations Modules</p>
+                  <div className="flex flex-wrap gap-2">
+                    {AVAILABLE_PERMISSIONS.filter(p => p.section === 'Business').map(perm => {
+                      const isChecked = formData.permissions.includes(perm.id);
+                      return (
+                        <button
+                          key={perm.id}
+                          type="button"
+                          onClick={() => togglePermission(perm.id)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all flex items-center gap-1.5 ${
+                            isChecked
+                              ? 'bg-[#004fa2] text-white border-[#004fa2] shadow-sm shadow-[#004fa2]/20'
+                              : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          <span className={`w-3.5 h-3.5 rounded flex items-center justify-center ${isChecked ? 'bg-white text-[#004fa2]' : 'border border-gray-300'}`}>
+                            {isChecked && <Check size={10} strokeWidth={3} />}
+                          </span>
+                          {perm.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="pt-2 flex items-center justify-between text-xs text-gray-500 font-medium">
+                  <span>Selected: <strong className="text-gray-900">{formData.permissions.length}</strong> modules</span>
+                  {formData.permissions.length === 0 && (
+                    <span className="text-amber-600 font-semibold">⚠️ At least 1 permission required</span>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         );
@@ -524,9 +754,9 @@ const AdministratorFormPage = () => {
               {/* Role & Department */}
               <div className="mb-6 pt-6 border-t border-gray-200">
                 <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-3 flex items-center gap-2">
-                  <Shield size={14} /> Department & Access
+                  <Shield size={14} /> Department & Access Scope
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div className="bg-white rounded-lg p-4">
                     <p className="text-xs text-gray-500 mb-1">Role</p>
                     <div className="flex items-center gap-2">
@@ -535,9 +765,32 @@ const AdministratorFormPage = () => {
                     </div>
                   </div>
                   <div className="bg-white rounded-lg p-4">
-                    <p className="text-xs text-gray-500 mb-1">Department</p>
+                    <p className="text-xs text-gray-500 mb-1">Primary Department</p>
                     <p className="font-semibold text-gray-900">{formData.department || 'Not assigned'}</p>
                   </div>
+                </div>
+
+                {/* Granted Permissions Badges */}
+                <div className="bg-white rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs text-gray-500 font-medium">Assigned Module Permissions</p>
+                    <span className="text-xs font-bold text-[#004fa2]">{formData.permissions.length} module(s)</span>
+                  </div>
+                  {formData.permissions.length > 0 ? (
+                    <div className="flex flex-wrap gap-1.5">
+                      {formData.permissions.map(permId => {
+                        const perm = AVAILABLE_PERMISSIONS.find(p => p.id === permId);
+                        return (
+                          <span key={permId} className="px-2.5 py-1 bg-blue-50 text-[#004fa2] rounded-md text-xs font-medium border border-blue-100 flex items-center gap-1">
+                            <Check size={12} />
+                            {perm?.label || permId}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-amber-600 font-medium">⚠️ No permissions selected (At least 1 required)</p>
+                  )}
                 </div>
               </div>
 

@@ -21,13 +21,13 @@ export const userService = {
   // Create user (super admin)
   createUser: async (userData) => {
     const response = await api.post('/admin/users', userData);
-    return response.data.data;
+    return response.data?.data?.user || response.data?.data || response.data;
   },
 
   // Update user (super admin)
   updateUser: async (id, userData) => {
     const response = await api.put(`/admin/users/${id}`, userData);
-    return response.data.data;
+    return response.data?.data?.user || response.data?.data || response.data;
   },
 
   // Change user role (super admin)

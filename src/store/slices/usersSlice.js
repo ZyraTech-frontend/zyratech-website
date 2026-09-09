@@ -22,6 +22,7 @@ const normalizeUser = (u) => {
        u.mustChangePassword ? 'pending_password' : 'active'),
     status: u.status || (u.isDeactivated ? 'inactive' : 'active'),
     kycStatus: u.kycStatus || 'not_submitted',
+    permissions: Array.isArray(u.permissions) ? u.permissions : [],
   };
 };
 
@@ -57,7 +58,15 @@ export const createUser = createAsyncThunk(
       const created = await userService.createUser(userData);
       return normalizeUser(created);
     } catch (error) {
-      return rejectWithValue(error.userMessage || error.message || 'Failed to create user');
+      const details = error.response?.data?.error?.details;
+      const detailMsg = details ? Object.values(details).filter(Boolean).join(', ') : null;
+      const msg = detailMsg ||
+                  error.response?.data?.error?.message ||
+                  error.response?.data?.message ||
+                  error.userMessage ||
+                  error.message ||
+                  'Failed to create user';
+      return rejectWithValue(msg);
     }
   }
 );
@@ -69,7 +78,15 @@ export const updateUser = createAsyncThunk(
       const updated = await userService.updateUser(id, data);
       return normalizeUser(updated);
     } catch (error) {
-      return rejectWithValue(error.userMessage || error.message || 'Failed to update user');
+      const details = error.response?.data?.error?.details;
+      const detailMsg = details ? Object.values(details).filter(Boolean).join(', ') : null;
+      const msg = detailMsg ||
+                  error.response?.data?.error?.message ||
+                  error.response?.data?.message ||
+                  error.userMessage ||
+                  error.message ||
+                  'Failed to update user';
+      return rejectWithValue(msg);
     }
   }
 );
