@@ -46,7 +46,14 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
     return 'Dashboard';
   };
 
+  const displayName = (user?.firstName && user?.lastName)
+    ? `${user.firstName} ${user.lastName}`.trim()
+    : (user?.name || user?.email || 'User');
+
   const getInitials = (name) => {
+    if (user?.firstName && user?.lastName) {
+      return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
+    }
     return name
       ?.split(' ')
       .map((n) => n[0])
@@ -67,7 +74,6 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
       <div className="px-4 lg:px-8 py-4">
         {/* Top Row: Search, Avatar, Notifications */}
         <div className="flex items-center justify-between mb-3">
-          {/* Left: Hamburger + Search Bar */}
           {/* Left: Hamburger + Search Bar */}
           <div className="flex items-center gap-3 flex-1 lg:max-w-xl">
             {/* Hamburger/Toggle Menu Button - always visible */}
@@ -111,10 +117,10 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
                   {avatarUrl ? (
                     <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" loading="lazy" />
                   ) : (
-                    getInitials(user?.name || user?.email)
+                    getInitials(displayName)
                   )}
                 </div>
-                <span className="hidden sm:block text-sm font-medium text-gray-900 truncate max-w-[100px] sm:max-w-none">{user?.name || user?.email}</span>
+                <span className="hidden sm:block text-sm font-medium text-gray-900 truncate max-w-[100px] sm:max-w-none">{displayName}</span>
                 <ChevronDown size={16} className="text-gray-600" />
               </button>
 
@@ -122,7 +128,7 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
               {showUserMenu && (
                 <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-50">
                   <div className="px-4 py-3 border-b border-gray-200">
-                    <p className="text-sm font-medium text-gray-900">{user?.name || 'User'}</p>
+                    <p className="text-sm font-medium text-gray-900">{displayName}</p>
                     <p className="text-xs text-gray-600">{user?.email}</p>
                   </div>
 

@@ -16,6 +16,8 @@ export const useAuth = () => {
     isAuthenticated: auth.isAuthenticated,
     userRole: auth.user?.role || null,
     userId: auth.user?.id || null,
-    userName: auth.user?.name || auth.user?.email || null
+    userName: (auth.user?.firstName && auth.user?.lastName)
+      ? `${auth.user.firstName} ${auth.user.lastName}`.trim()
+      : (auth.user?.name || auth.user?.email || null)
   };
 };

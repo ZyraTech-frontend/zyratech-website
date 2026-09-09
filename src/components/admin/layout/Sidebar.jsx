@@ -444,7 +444,9 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
       {/* User Info & Logout */}
       <div className="border-t border-blue-500/30 p-3">
         <div className="mb-3">
-          <div className="text-sm font-semibold truncate">{user?.name || user?.email}</div>
+          <div className="text-sm font-semibold truncate">
+            {(user?.firstName && user?.lastName) ? `${user.firstName} ${user.lastName}`.trim() : (user?.name || user?.email)}
+          </div>
           <div className="text-xs text-blue-200 capitalize">{user?.role}</div>
         </div>
         <button

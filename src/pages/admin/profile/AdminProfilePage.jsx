@@ -96,7 +96,9 @@ const AdminProfilePage = () => {
         if (user) {
             const firstName = user.firstName || (user.name ? user.name.split(' ')[0] : '') || '';
             const lastName = user.lastName || (user.name ? user.name.split(' ').slice(1).join(' ') : '') || '';
-            const displayName = user.name || `${firstName} ${lastName}`.trim();
+            const displayName = (firstName && lastName)
+                ? `${firstName} ${lastName}`.trim()
+                : (user.name || `${firstName} ${lastName}`.trim());
             const formattedRole = user.role === 'super_admin' ? 'Super Admin'
                 : user.role === 'admin' ? 'Administrator'
                 : (user.role || 'Admin');
@@ -166,10 +168,18 @@ const AdminProfilePage = () => {
     // Handle profile text inputs
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setUserData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        setUserData(prev => {
+            const next = {
+                ...prev,
+                [name]: value
+            };
+            if (name === 'firstName' || name === 'lastName') {
+                const fn = name === 'firstName' ? value : prev.firstName;
+                const ln = name === 'lastName' ? value : prev.lastName;
+                next.name = `${fn || ''} ${ln || ''}`.trim();
+            }
+            return next;
+        });
     };
 
     // Handle save profile changes
@@ -179,9 +189,14 @@ const AdminProfilePage = () => {
         setShowSuccess(false);
 
         try {
+            const fn = userData.firstName.trim();
+            const ln = userData.lastName.trim();
+            const fullName = `${fn} ${ln}`.trim();
+
             const payload = {
-                firstName: userData.firstName.trim(),
-                lastName: userData.lastName.trim(),
+                name: fullName || userData.name,
+                firstName: fn,
+                lastName: ln,
                 phone: userData.phone.trim(),
                 department: userData.department.trim(),
                 location: userData.location.trim(),
@@ -194,13 +209,13 @@ const AdminProfilePage = () => {
                 const u = result.user;
                 setUserData(prev => ({
                     ...prev,
-                    firstName: u.firstName || prev.firstName,
-                    lastName: u.lastName || prev.lastName,
-                    name: u.name || `${u.firstName || prev.firstName} ${u.lastName || prev.lastName}`.trim(),
-                    phone: u.phone || prev.phone,
-                    department: u.department || prev.department,
-                    location: u.location || prev.location,
-                    bio: u.bio || prev.bio
+                    firstName: u.firstName ?? fn,
+                    lastName: u.lastName ?? ln,
+                    name: u.name ?? fullName,
+                    phone: u.phone ?? prev.phone,
+                    department: u.department ?? prev.department,
+                    location: u.location ?? prev.location,
+                    bio: u.bio ?? prev.bio
                 }));
             }
 
@@ -273,8 +288,9 @@ const AdminProfilePage = () => {
         if (userData.firstName && userData.lastName) {
             return `${userData.firstName[0]}${userData.lastName[0]}`.toUpperCase();
         }
-        if (userData.name) {
-            const parts = userData.name.trim().split(/\s+/);
+        const displayName = getDisplayName();
+        if (displayName && displayName !== 'Admin User') {
+            const parts = displayName.trim().split(/\s+/);
             if (parts.length >= 2) {
                 return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
             }
@@ -287,9 +303,10 @@ const AdminProfilePage = () => {
     };
 
     const getDisplayName = () => {
-        if (userData.name) return userData.name;
         const combined = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
-        return combined || userData.email || 'Admin User';
+        if (combined) return combined;
+        if (userData.name) return userData.name;
+        return userData.email || 'Admin User';
     };
 
     // Format date

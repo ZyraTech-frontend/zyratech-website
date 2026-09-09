@@ -174,11 +174,28 @@ export const updateUserProfile = createAsyncThunk(
     try {
       const result = await authService.updateProfile(profileData);
       const { auth } = getState();
+      const apiUser = result?.user || result?.data || result || {};
+
+      const fn = profileData.firstName ?? apiUser.firstName ?? auth.user?.firstName ?? '';
+      const ln = profileData.lastName ?? apiUser.lastName ?? auth.user?.lastName ?? '';
+      const fullName = (fn && ln)
+        ? `${fn} ${ln}`.trim()
+        : (profileData.name || apiUser.name || auth.user?.name || `${fn} ${ln}`.trim());
+
       const updatedUser = {
         ...auth.user,
-        ...(result?.user || result || {})
+        ...apiUser,
+        name: fullName,
+        firstName: fn,
+        lastName: ln,
+        phone: profileData.phone ?? apiUser.phone ?? auth.user?.phone,
+        department: profileData.department ?? apiUser.department ?? auth.user?.department,
+        location: profileData.location ?? apiUser.location ?? auth.user?.location,
+        bio: profileData.bio ?? apiUser.bio ?? auth.user?.bio
       };
+
       localStorage.setItem('user', JSON.stringify(updatedUser));
+      window.dispatchEvent(new Event('user-profile-updated'));
       return { user: updatedUser };
     } catch (err) {
       return rejectWithValue(err.userMessage || err.message || 'Failed to update profile');
