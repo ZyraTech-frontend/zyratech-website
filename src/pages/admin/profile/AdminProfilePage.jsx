@@ -105,7 +105,8 @@ const AdminProfilePage = () => {
 
             const savedAvatar = localStorage.getItem('admin_avatar');
 
-            setUserData({
+            setUserData(prev => ({
+                ...prev,
                 firstName,
                 lastName,
                 name: displayName,
@@ -114,13 +115,13 @@ const AdminProfilePage = () => {
                 role: formattedRole,
                 department: user.department || 'Software Engineering',
                 location: user.location || 'Ghana',
-                avatar: user.avatar || savedAvatar || null,
+                avatar: user.avatar || savedAvatar || prev.avatar || null,
                 bio: user.bio || '',
                 joinedDate: user.createdAt || user.joinedDate || '',
                 lastLogin: user.lastLogin || '',
                 accountStatus: user.accountStatus || 'active',
                 twoFactorEnabled: !!user.twoFactorEnabled
-            });
+            }));
 
             if (user.notificationPreferences && typeof user.notificationPreferences === 'object') {
                 setNotifications(prev => ({
@@ -131,8 +132,47 @@ const AdminProfilePage = () => {
         }
     }, [user]);
 
+    // Compress avatar to max 256x256 jpeg (~15-25KB) so it never exceeds localStorage quota or backend payload limits
+    const compressAvatarImage = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const maxSize = 256;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxSize) {
+                            height = Math.round((height * maxSize) / width);
+                            width = maxSize;
+                        }
+                    } else {
+                        if (height > maxSize) {
+                            width = Math.round((width * maxSize) / height);
+                            height = maxSize;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const compressed = canvas.toDataURL('image/jpeg', 0.85);
+                    resolve(compressed);
+                };
+                img.onerror = () => reject(new Error('Failed to load image'));
+            };
+            reader.onerror = () => reject(new Error('Failed to read file'));
+        });
+    };
+
     // Handle avatar upload
-    const handleAvatarUpload = (e) => {
+    const handleAvatarUpload = async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -141,28 +181,29 @@ const AdminProfilePage = () => {
             return;
         }
 
-        if (file.size > 2 * 1024 * 1024) {
-            alert('Image must be less than 2MB');
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = async (event) => {
-            const dataUrl = event.target.result;
+        try {
+            const dataUrl = await compressAvatarImage(file);
             setUserData(prev => ({
                 ...prev,
                 avatar: dataUrl
             }));
-            localStorage.setItem('admin_avatar', dataUrl);
+            try {
+                localStorage.setItem('admin_avatar', dataUrl);
+            } catch (storageErr) {
+                console.warn('LocalStorage avatar save failed:', storageErr);
+            }
             window.dispatchEvent(new Event('avatar-updated'));
+            window.dispatchEvent(new Event('user-profile-updated'));
 
             try {
                 await dispatch(updateUserProfile({ avatar: dataUrl }));
             } catch (_err) {
                 // Keep locally saved
             }
-        };
-        reader.readAsDataURL(file);
+        } catch (err) {
+            console.error('Avatar upload compression error:', err);
+            alert('Failed to process image. Please try another image.');
+        }
     };
 
     // Handle profile text inputs
@@ -192,6 +233,7 @@ const AdminProfilePage = () => {
             const fn = userData.firstName.trim();
             const ln = userData.lastName.trim();
             const fullName = `${fn} ${ln}`.trim();
+            const currentAvatar = userData.avatar || localStorage.getItem('admin_avatar') || null;
 
             const payload = {
                 name: fullName || userData.name,
@@ -200,7 +242,8 @@ const AdminProfilePage = () => {
                 phone: userData.phone.trim(),
                 department: userData.department.trim(),
                 location: userData.location.trim(),
-                bio: userData.bio.trim()
+                bio: userData.bio.trim(),
+                avatar: currentAvatar
             };
 
             const result = await dispatch(updateUserProfile(payload)).unwrap();
@@ -212,6 +255,7 @@ const AdminProfilePage = () => {
                     firstName: u.firstName ?? fn,
                     lastName: u.lastName ?? ln,
                     name: u.name ?? fullName,
+                    avatar: u.avatar || currentAvatar || prev.avatar,
                     phone: u.phone ?? prev.phone,
                     department: u.department ?? prev.department,
                     location: u.location ?? prev.location,

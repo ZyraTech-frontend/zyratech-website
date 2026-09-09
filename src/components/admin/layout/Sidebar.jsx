@@ -443,17 +443,31 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
 
       {/* User Info & Logout */}
       <div className="border-t border-blue-500/30 p-3">
-        <div className="mb-3">
-          <div className="text-sm font-semibold truncate">
-            {(user?.firstName && user?.lastName) ? `${user.firstName} ${user.lastName}`.trim() : (user?.name || user?.email)}
+        <div className="flex items-center gap-3 mb-3">
+          {(user?.avatar || localStorage.getItem('admin_avatar')) ? (
+            <img
+              src={user?.avatar || localStorage.getItem('admin_avatar')}
+              alt="Profile"
+              className="w-9 h-9 rounded-full object-cover border border-white/20 shrink-0"
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white text-xs shrink-0">
+              {((user?.firstName?.[0] || '') + (user?.lastName?.[0] || '')) || 'AU'}
+            </div>
+          )}
+          <div className="min-w-0 flex-1">
+            <div className="text-sm font-semibold truncate text-white">
+              {(user?.firstName && user?.lastName) ? `${user.firstName} ${user.lastName}`.trim() : (user?.name || user?.email)}
+            </div>
+            <div className="text-xs text-blue-200 capitalize truncate">{user?.role?.replace(/_/g, ' ')}</div>
           </div>
-          <div className="text-xs text-blue-200 capitalize">{user?.role}</div>
         </div>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2 px-4 py-2 bg-red-600 rounded hover:bg-red-700 transition"
+          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-600/90 hover:bg-red-600 text-white rounded-lg transition text-sm font-medium"
         >
-          <LogOut size={18} />
+          <LogOut size={16} />
           Logout
         </button>
       </div>

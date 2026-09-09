@@ -76,6 +76,10 @@ export const verifySession = createAsyncThunk(
       const user = data.user || data;
 
       if (user) {
+        const savedAvatar = localStorage.getItem('admin_avatar');
+        if (!user.avatar && savedAvatar) {
+          user.avatar = savedAvatar;
+        }
         localStorage.setItem('user', JSON.stringify(user));
       }
       return { user };
@@ -182,9 +186,18 @@ export const updateUserProfile = createAsyncThunk(
         ? `${fn} ${ln}`.trim()
         : (profileData.name || apiUser.name || auth.user?.name || `${fn} ${ln}`.trim());
 
+      const savedAvatar = localStorage.getItem('admin_avatar');
+      const avatar = profileData.avatar || apiUser.avatar || auth.user?.avatar || savedAvatar || null;
+      if (avatar) {
+        try {
+          localStorage.setItem('admin_avatar', avatar);
+        } catch (_e) {}
+      }
+
       const updatedUser = {
         ...auth.user,
         ...apiUser,
+        avatar,
         name: fullName,
         firstName: fn,
         lastName: ln,
@@ -196,6 +209,7 @@ export const updateUserProfile = createAsyncThunk(
 
       localStorage.setItem('user', JSON.stringify(updatedUser));
       window.dispatchEvent(new Event('user-profile-updated'));
+      window.dispatchEvent(new Event('avatar-updated'));
       return { user: updatedUser };
     } catch (err) {
       return rejectWithValue(err.userMessage || err.message || 'Failed to update profile');

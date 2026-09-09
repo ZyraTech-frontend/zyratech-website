@@ -20,23 +20,24 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState(null);
 
-  // Listen for avatar changes from profile page
+  // Listen for avatar changes from profile page or auth state
   React.useEffect(() => {
-    const stored = localStorage.getItem('admin_avatar');
-    if (stored) setAvatarUrl(stored);
+    const getActiveAvatar = () => localStorage.getItem('admin_avatar') || user?.avatar || null;
+    setAvatarUrl(getActiveAvatar());
 
     const handleStorageChange = () => {
-      const updated = localStorage.getItem('admin_avatar');
-      setAvatarUrl(updated);
+      setAvatarUrl(getActiveAvatar());
     };
 
     window.addEventListener('avatar-updated', handleStorageChange);
+    window.addEventListener('user-profile-updated', handleStorageChange);
     window.addEventListener('storage', handleStorageChange);
     return () => {
       window.removeEventListener('avatar-updated', handleStorageChange);
+      window.removeEventListener('user-profile-updated', handleStorageChange);
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, []);
+  }, [user?.avatar]);
 
   const getBreadcrumb = () => {
     const path = location.pathname;
