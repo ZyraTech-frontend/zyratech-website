@@ -8,17 +8,20 @@ import { Bell, Settings, Search, ChevronDown, User, LogOut, Menu, PanelLeftClose
 import { useAuth } from '../../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../../store/slices/authSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { usePermissions } from '../../../hooks/usePermissions';
 
 const Header = ({ onMenuClick, sidebarOpen }) => {
-  const { user } = useAuth();
+  const { user: hookUser } = useAuth();
+  const reduxUser = useSelector((state) => state.auth.user);
+  const user = reduxUser || hookUser;
   const { isSuperAdmin } = usePermissions();
   const location = useLocation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState(null);
+  const [, setTick] = useState(0);
 
   // Listen for avatar changes from profile page or auth state
   React.useEffect(() => {
@@ -27,6 +30,7 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
 
     const handleStorageChange = () => {
       setAvatarUrl(getActiveAvatar());
+      setTick(t => t + 1);
     };
 
     window.addEventListener('avatar-updated', handleStorageChange);

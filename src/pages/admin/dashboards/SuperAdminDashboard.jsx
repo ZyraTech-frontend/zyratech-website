@@ -5,7 +5,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
     Users,
@@ -44,15 +44,24 @@ import { fetchSettings } from '../../../store/slices/settingsSlice';
 import { trainingCourses } from '../../../data/trainingCourses';
 import { jobsData } from '../../../data/jobsData';
 
-const SuperAdminDashboard = ({ user }) => {
+const SuperAdminDashboard = ({ user: propUser }) => {
     const dispatch = useDispatch();
+    const authUser = useSelector((state) => state.auth.user);
+    const user = authUser || propUser;
     const [currentDate, setCurrentDate] = useState(new Date());
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const [, setTick] = useState(0);
 
     useEffect(() => {
         dispatch(fetchSettings());
         const timer = setInterval(() => setCurrentDate(new Date()), 60000);
-        return () => clearInterval(timer);
+
+        const handleSync = () => setTick(t => t + 1);
+        window.addEventListener('user-profile-updated', handleSync);
+        return () => {
+            clearInterval(timer);
+            window.removeEventListener('user-profile-updated', handleSync);
+        };
     }, [dispatch]);
 
     // Simulated refresh function
@@ -158,7 +167,7 @@ const SuperAdminDashboard = ({ user }) => {
                                 <span className="ml-2 px-1.5 py-0.5 bg-green-500/20 text-green-300 rounded-full text-[9px] sm:text-[10px] font-bold">ALL SYSTEMS OPERATIONAL</span>
                             </div>
                             <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-1 md:mb-2">
-                                Welcome back, {user?.name?.split(' ')[0] || 'Super'}
+                                Welcome back, {user?.firstName || (user?.name ? user.name.split(' ')[0] : '') || 'Super'}
                             </h1>
                             <p className="text-blue-200 text-xs md:text-sm">
                                 {formattedDate} • <span className="text-white font-semibold">{formattedTime}</span>

@@ -38,13 +38,37 @@ import {
 import { useAuth } from '../../../hooks/useAuth';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { logoutUser } from '../../../store/slices/authSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Sidebar = ({ isOpen, onClose, isMobile }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user: authUser } = useAuth();
+  const reduxUser = useSelector((state) => state.auth.user);
+  const user = reduxUser || authUser;
   const { isSuperAdmin } = usePermissions();
+
+  const [avatarUrl, setAvatarUrl] = useState(null);
+  const [, setTick] = useState(0);
+
+  React.useEffect(() => {
+    const getActive = () => localStorage.getItem('admin_avatar') || user?.avatar || null;
+    setAvatarUrl(getActive());
+
+    const handleSync = () => {
+      setAvatarUrl(getActive());
+      setTick(t => t + 1);
+    };
+
+    window.addEventListener('avatar-updated', handleSync);
+    window.addEventListener('user-profile-updated', handleSync);
+    window.addEventListener('storage', handleSync);
+    return () => {
+      window.removeEventListener('avatar-updated', handleSync);
+      window.removeEventListener('user-profile-updated', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
+  }, [user?.avatar]);
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -444,9 +468,9 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
       {/* User Info & Logout */}
       <div className="border-t border-blue-500/30 p-3">
         <div className="flex items-center gap-3 mb-3">
-          {(user?.avatar || localStorage.getItem('admin_avatar')) ? (
+          {(avatarUrl || user?.avatar) ? (
             <img
-              src={user?.avatar || localStorage.getItem('admin_avatar')}
+              src={avatarUrl || user?.avatar}
               alt="Profile"
               className="w-9 h-9 rounded-full object-cover border border-white/20 shrink-0"
               loading="lazy"
@@ -458,7 +482,7 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           )}
           <div className="min-w-0 flex-1">
             <div className="text-sm font-semibold truncate text-white">
-              {(user?.firstName && user?.lastName) ? `${user.firstName} ${user.lastName}`.trim() : (user?.name || user?.email)}
+              {(user?.firstName && user?.lastName) ? `${user.firstName} ${user.lastName}`.trim() : (user?.name || user?.email || 'Admin')}
             </div>
             <div className="text-xs text-blue-200 capitalize truncate">{user?.role?.replace(/_/g, ' ')}</div>
           </div>

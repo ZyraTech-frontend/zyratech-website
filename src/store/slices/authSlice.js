@@ -9,13 +9,52 @@ import authService from '../../services/authService';
 import { clearAuthStorage, storeAuthTokens, getStoredToken } from '../../services/api';
 import activityLogService from '../../services/activityLogService';
 
+// ─── Helper: Normalize & Sanitize User Data ───────────────────
+export const sanitizeUser = (rawUser) => {
+  if (!rawUser || typeof rawUser !== 'object') return null;
+  const user = { ...rawUser };
+
+  let firstName = (user.firstName || '').trim();
+  let lastName = (user.lastName || '').trim();
+
+  if (!firstName && user.name) {
+    const parts = user.name.trim().split(/\s+/);
+    firstName = parts[0] || '';
+    if (!lastName && parts.length > 1) {
+      lastName = parts.slice(1).join(' ');
+    }
+  }
+
+  const fullName = (firstName && lastName)
+    ? `${firstName} ${lastName}`.trim()
+    : (user.name || firstName || user.email || 'Admin');
+
+  user.firstName = firstName;
+  user.lastName = lastName;
+  user.name = fullName;
+
+  // Preserve & sync avatar across browser storage
+  const savedAvatar = typeof localStorage !== 'undefined' ? localStorage.getItem('admin_avatar') : null;
+  if (user.avatar) {
+    try {
+      localStorage.setItem('admin_avatar', user.avatar);
+    } catch {
+      // Ignore quota errors in restricted environments
+    }
+  } else if (savedAvatar) {
+    user.avatar = savedAvatar;
+  }
+
+  return user;
+};
+
 // ─── Login ───────────────────────────────────────────────────
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const data = await authService.login(email, password);
-      const user = data.user;
+      const user = sanitizeUser(data.user);
       const token = data.token;
       const refreshToken = data.refreshToken;
 
@@ -73,13 +112,10 @@ export const verifySession = createAsyncThunk(
         return rejectWithValue('No token found');
       }
       const data = await authService.getCurrentUser();
-      const user = data.user || data;
+      const rawUser = data.user || data;
+      const user = sanitizeUser(rawUser);
 
       if (user) {
-        const savedAvatar = localStorage.getItem('admin_avatar');
-        if (!user.avatar && savedAvatar) {
-          user.avatar = savedAvatar;
-        }
         localStorage.setItem('user', JSON.stringify(user));
       }
       return { user };
@@ -188,15 +224,8 @@ export const updateUserProfile = createAsyncThunk(
 
       const savedAvatar = localStorage.getItem('admin_avatar');
       const avatar = profileData.avatar || apiUser.avatar || auth.user?.avatar || savedAvatar || null;
-      if (avatar) {
-        try {
-          localStorage.setItem('admin_avatar', avatar);
-        } catch {
-          // Ignore storage quota errors in private/restricted environments
-        }
-      }
 
-      const updatedUser = {
+      const updatedUser = sanitizeUser({
         ...auth.user,
         ...apiUser,
         avatar,
@@ -207,14 +236,40 @@ export const updateUserProfile = createAsyncThunk(
         department: profileData.department ?? apiUser.department ?? auth.user?.department,
         location: profileData.location ?? apiUser.location ?? auth.user?.location,
         bio: profileData.bio ?? apiUser.bio ?? auth.user?.bio
-      };
+      });
 
       localStorage.setItem('user', JSON.stringify(updatedUser));
       window.dispatchEvent(new Event('user-profile-updated'));
       window.dispatchEvent(new Event('avatar-updated'));
       return { user: updatedUser };
     } catch (err) {
-      return rejectWithValue(err.userMessage || err.message || 'Failed to update profile');
+      // If server update failed, keep the local user state updated so user changes aren't lost
+      const { auth } = getState();
+      const fn = profileData.firstName ?? auth.user?.firstName ?? '';
+      const ln = profileData.lastName ?? auth.user?.lastName ?? '';
+      const fullName = (fn && ln)
+        ? `${fn} ${ln}`.trim()
+        : (profileData.name || auth.user?.name || `${fn} ${ln}`.trim());
+      const savedAvatar = localStorage.getItem('admin_avatar');
+      const avatar = profileData.avatar || auth.user?.avatar || savedAvatar || null;
+
+      const fallbackUser = sanitizeUser({
+        ...auth.user,
+        avatar,
+        name: fullName,
+        firstName: fn,
+        lastName: ln,
+        phone: profileData.phone ?? auth.user?.phone,
+        department: profileData.department ?? auth.user?.department,
+        location: profileData.location ?? auth.user?.location,
+        bio: profileData.bio ?? auth.user?.bio
+      });
+
+      localStorage.setItem('user', JSON.stringify(fallbackUser));
+      window.dispatchEvent(new Event('user-profile-updated'));
+      window.dispatchEvent(new Event('avatar-updated'));
+
+      return rejectWithValue(err.userMessage || err.message || 'Failed to update profile on server');
     }
   }
 );
@@ -278,7 +333,7 @@ export const logoutUser = createAsyncThunk(
 const getInitialUser = () => {
   try {
     const item = localStorage.getItem('user');
-    return item ? JSON.parse(item) : null;
+    return item ? sanitizeUser(JSON.parse(item)) : null;
   } catch {
     return null;
   }

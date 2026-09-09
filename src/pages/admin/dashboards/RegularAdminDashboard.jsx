@@ -45,17 +45,26 @@ import {
     AlertCircle,
     Sparkles
 } from 'lucide-react';
+import { useSelector } from 'react-redux';
 import { trainingCourses } from '../../../data/trainingCourses';
 import { jobsData } from '../../../data/jobsData';
 
-const RegularAdminDashboard = ({ user }) => {
+const RegularAdminDashboard = ({ user: propUser }) => {
+    const authUser = useSelector((state) => state.auth.user);
+    const user = authUser || propUser;
     const [currentDate, setCurrentDate] = useState(new Date());
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [greeting, setGreeting] = useState('');
+    const [, setTick] = useState(0);
 
     useEffect(() => {
         const timer = setInterval(() => setCurrentDate(new Date()), 60000);
-        return () => clearInterval(timer);
+        const handleSync = () => setTick(t => t + 1);
+        window.addEventListener('user-profile-updated', handleSync);
+        return () => {
+            clearInterval(timer);
+            window.removeEventListener('user-profile-updated', handleSync);
+        };
     }, []);
 
     useEffect(() => {
@@ -168,7 +177,7 @@ const RegularAdminDashboard = ({ user }) => {
                         <div>
                             <div className="flex items-center gap-2 mb-1">
                                 <h1 className="text-lg md:text-xl font-bold">
-                                    {greeting}, {user?.name?.split(' ')[0] || 'Admin'}
+                                    {greeting}, {user?.firstName || (user?.name ? user.name.split(' ')[0] : '') || 'Admin'}
                                 </h1>
                                 <span className="px-2 py-0.5 bg-green-500/20 text-green-300 rounded-full text-[10px] font-medium">Content Manager</span>
                             </div>

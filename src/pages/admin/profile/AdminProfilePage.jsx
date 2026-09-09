@@ -180,6 +180,7 @@ const AdminProfilePage = () => {
         }
 
         try {
+            // 1. Instant local preview with compression
             const dataUrl = await compressAvatarImage(file);
             setUserData(prev => ({
                 ...prev,
@@ -193,13 +194,36 @@ const AdminProfilePage = () => {
             window.dispatchEvent(new Event('avatar-updated'));
             window.dispatchEvent(new Event('user-profile-updated'));
 
+            // 2. Upload file to backend storage (Cloudinary / server) so it is permanent across devices
+            let persistentAvatarUrl = null;
             try {
-                await dispatch(updateUserProfile({ avatar: dataUrl }));
+                persistentAvatarUrl = await authService.uploadAvatar(file);
+                if (persistentAvatarUrl) {
+                    setUserData(prev => ({
+                        ...prev,
+                        avatar: persistentAvatarUrl
+                    }));
+                    try {
+                        localStorage.setItem('admin_avatar', persistentAvatarUrl);
+                    } catch {
+                        // Ignore quota errors in restricted environments
+                    }
+                    window.dispatchEvent(new Event('avatar-updated'));
+                    window.dispatchEvent(new Event('user-profile-updated'));
+                }
+            } catch (uploadErr) {
+                console.warn('Backend file upload attempt failed:', uploadErr);
+            }
+
+            // 3. Persist avatar in user profile via authSlice
+            const avatarToPersist = persistentAvatarUrl || dataUrl;
+            try {
+                await dispatch(updateUserProfile({ avatar: avatarToPersist })).unwrap();
             } catch {
-                // Keep locally saved
+                // Kept safely in local store & Redux fallback
             }
         } catch (err) {
-            console.error('Avatar upload compression error:', err);
+            console.error('Avatar upload error:', err);
             alert('Failed to process image. Please try another image.');
         }
     };
