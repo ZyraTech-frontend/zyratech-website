@@ -114,14 +114,38 @@ const STEPS = [
   { key: 'review', title: 'Review & Confirm', icon: Check }
 ];
 
-// Generate a temporary password
+// Generate a temporary password that always satisfies backend password complexity rules
 const generateTempPassword = () => {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$';
-  let password = '';
-  for (let i = 0; i < 12; i++) {
-    password += chars.charAt(Math.floor(Math.random() * chars.length));
+  const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const lower = 'abcdefghjkmnpqrstuvwxyz';
+  const numbers = '23456789';
+  const specials = '!@#$%^&*';
+  const all = upper + lower + numbers + specials;
+
+  // Guarantee at least 2 uppercase, 2 lowercase, 2 numbers, and 2 special characters
+  const passwordArr = [
+    upper.charAt(Math.floor(Math.random() * upper.length)),
+    upper.charAt(Math.floor(Math.random() * upper.length)),
+    lower.charAt(Math.floor(Math.random() * lower.length)),
+    lower.charAt(Math.floor(Math.random() * lower.length)),
+    numbers.charAt(Math.floor(Math.random() * numbers.length)),
+    numbers.charAt(Math.floor(Math.random() * numbers.length)),
+    specials.charAt(Math.floor(Math.random() * specials.length)),
+    specials.charAt(Math.floor(Math.random() * specials.length)),
+  ];
+
+  // Fill up to 12 characters
+  for (let i = passwordArr.length; i < 12; i++) {
+    passwordArr.push(all.charAt(Math.floor(Math.random() * all.length)));
   }
-  return password;
+
+  // Fisher-Yates shuffle
+  for (let i = passwordArr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [passwordArr[i], passwordArr[j]] = [passwordArr[j], passwordArr[i]];
+  }
+
+  return passwordArr.join('');
 };
 
 const AdministratorFormPage = () => {
@@ -238,6 +262,14 @@ const AdministratorFormPage = () => {
       }
     }
 
+    if (stepKey === 'security' && !isEditing) {
+      if (!formData.tempPassword || formData.tempPassword.length < 8) {
+        newErrors.tempPassword = 'Password must be at least 8 characters long';
+      } else if (!/[!@#$%^&*]/.test(formData.tempPassword)) {
+        newErrors.tempPassword = 'Password must contain at least one special character (!@#$%^&*)';
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -320,6 +352,9 @@ const AdministratorFormPage = () => {
       } else if (errMsg.toLowerCase().includes('email')) {
         setErrors(prev => ({ ...prev, email: errMsg }));
         setCurrentStep(0);
+      } else if (errMsg.toLowerCase().includes('password')) {
+        setErrors(prev => ({ ...prev, tempPassword: errMsg }));
+        setCurrentStep(2);
       }
     }
   };
@@ -652,13 +687,20 @@ const AdministratorFormPage = () => {
                   </p>
 
                   <div className="bg-gray-50 border border-gray-200 rounded-xl p-5">
-                    <div className="flex items-center gap-2 mb-4">
+                    <div className="flex items-center gap-2 mb-3">
                       <div className="relative flex-1">
                         <input
                           type={showPassword ? 'text' : 'password'}
+                          name="tempPassword"
                           value={formData.tempPassword}
-                          readOnly
-                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-mono pr-12 focus:outline-none"
+                          onChange={(e) => {
+                            setFormData(prev => ({ ...prev, tempPassword: e.target.value }));
+                            if (errors.tempPassword) setErrors(prev => ({ ...prev, tempPassword: undefined }));
+                          }}
+                          placeholder="Type or generate temporary password"
+                          className={`w-full px-4 py-3 bg-white border rounded-xl text-sm font-mono pr-12 focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
+                            errors.tempPassword ? 'border-red-300 bg-red-50 text-red-900' : 'border-gray-200 text-gray-900'
+                          }`}
                         />
                         <button
                           type="button"
@@ -684,10 +726,45 @@ const AdministratorFormPage = () => {
                         type="button"
                         onClick={handleRegeneratePassword}
                         className="p-3 rounded-xl bg-white border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-all"
-                        title="Generate new password"
+                        title="Generate new compliant password"
                       >
                         <RefreshCw size={18} />
                       </button>
+                    </div>
+
+                    {errors.tempPassword && (
+                      <p className="text-red-500 text-xs font-medium mb-3 flex items-center gap-1.5">
+                        <AlertCircle size={14} className="shrink-0" />
+                        {errors.tempPassword}
+                      </p>
+                    )}
+
+                    {/* Live Password Complexity Checklist */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 p-3 bg-white rounded-lg border border-gray-200/80">
+                      <div className={`flex items-center gap-1.5 text-xs font-medium ${formData.tempPassword.length >= 8 ? 'text-green-600' : 'text-gray-400'}`}>
+                        <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${formData.tempPassword.length >= 8 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
+                          {formData.tempPassword.length >= 8 ? '✓' : '•'}
+                        </span>
+                        8+ characters
+                      </div>
+                      <div className={`flex items-center gap-1.5 text-xs font-medium ${/[A-Z]/.test(formData.tempPassword) ? 'text-green-600' : 'text-gray-400'}`}>
+                        <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${/[A-Z]/.test(formData.tempPassword) ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
+                          {/[A-Z]/.test(formData.tempPassword) ? '✓' : '•'}
+                        </span>
+                        Uppercase (A-Z)
+                      </div>
+                      <div className={`flex items-center gap-1.5 text-xs font-medium ${/[0-9]/.test(formData.tempPassword) ? 'text-green-600' : 'text-gray-400'}`}>
+                        <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${/[0-9]/.test(formData.tempPassword) ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
+                          {/[0-9]/.test(formData.tempPassword) ? '✓' : '•'}
+                        </span>
+                        Number (0-9)
+                      </div>
+                      <div className={`flex items-center gap-1.5 text-xs font-medium ${/[!@#$%^&*]/.test(formData.tempPassword) ? 'text-green-600' : 'text-gray-400'}`}>
+                        <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${/[!@#$%^&*]/.test(formData.tempPassword) ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
+                          {/[!@#$%^&*]/.test(formData.tempPassword) ? '✓' : '•'}
+                        </span>
+                        Special (!@#$%^&*)
+                      </div>
                     </div>
 
                     <div className="flex items-start gap-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
