@@ -1,101 +1,51 @@
 /**
  * Users Redux Slice
- * Handles user management
+ * Handles user management — calls real API via userService
  */
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { userService } from '../../services/userService';
 
-const MOCK_USERS = [
-  {
-    id: 'u-1001',
-    name: 'Mihael Afedi',
-    email: 'superadmin@zyratech.com',
-    role: 'super_admin',
-    status: 'active',
-    accountStatus: 'active',
-    kycStatus: 'verified',
-    mustChangePassword: false,
-    phone: '+233 24 000 0001',
-    department: 'Training Courses',
-    createdAt: '2024-01-01T00:00:00.000Z',
-    lastLoginAt: '2025-06-15T09:30:00.000Z'
-  },
-  {
-    id: 'u-1002',
-    name: 'Admin User',
-    email: 'admin@zyratech.com',
-    role: 'admin',
-    status: 'active',
-    accountStatus: 'active',
-    kycStatus: 'verified',
-    mustChangePassword: false,
-    phone: '+233 24 000 0002',
-    department: 'Blog Articles',
-    createdAt: '2024-03-15T10:00:00.000Z',
-    lastLoginAt: '2025-06-14T14:20:00.000Z'
-  },
-  {
-    id: 'u-1003',
-    name: 'Kwame Asante',
-    email: 'kwame.asante@zyratech.com',
-    role: 'admin',
-    status: 'active',
-    accountStatus: 'pending_password',
-    kycStatus: 'pending',
-    mustChangePassword: true,
-    phone: '+233 24 000 0003',
-    department: 'Partnerships',
-    createdAt: '2025-06-01T08:00:00.000Z',
-    lastLoginAt: null
-  },
-  {
-    id: 'u-1004',
-    name: 'John Mensah',
-    email: 'john.mensah@zyratech.com',
-    role: 'admin',
-    status: 'inactive',
-    accountStatus: 'deactivated',
-    kycStatus: 'verified',
-    mustChangePassword: false,
-    phone: '+233 24 000 0004',
-    department: 'Payments',
-    createdAt: '2024-06-20T12:00:00.000Z',
-    lastLoginAt: '2025-04-10T16:45:00.000Z',
-    deactivatedAt: '2025-05-01T09:00:00.000Z',
-    deactivationReason: 'Left the organization'
-  },
-  {
-    id: 'u-1005',
-    name: 'Ama Serwaa',
-    email: 'ama.serwaa@zyratech.com',
-    role: 'admin',
-    status: 'active',
-    accountStatus: 'active',
-    kycStatus: 'not_submitted',
-    mustChangePassword: false,
-    phone: '+233 24 000 0005',
-    department: 'Enrollments',
-    createdAt: '2025-02-10T11:00:00.000Z',
-    lastLoginAt: '2025-06-13T10:15:00.000Z'
-  }
-];
+/**
+ * Normalize a user object from the backend into the shape the UI expects.
+ * The backend may use _id, firstName/lastName, isActive, etc.
+ */
+const normalizeUser = (u) => {
+  if (!u) return u;
+  return {
+    ...u,
+    id: u.id || u._id,
+    name: u.name || [u.firstName, u.lastName].filter(Boolean).join(' ') || u.email,
+    accountStatus:
+      u.accountStatus ||
+      (u.isDeactivated || u.status === 'inactive' ? 'deactivated' :
+       u.mustChangePassword ? 'pending_password' : 'active'),
+    status: u.status || (u.isDeactivated ? 'inactive' : 'active'),
+    kycStatus: u.kycStatus || 'not_submitted',
+  };
+};
+
+// ─── ASYNC THUNKS ─────────────────────────────────────────────────────────────
 
 export const fetchUsers = createAsyncThunk(
   'users/fetchUsers',
   async (params, { rejectWithValue }) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      return {
-        data: MOCK_USERS,
-        pagination: {
-          page: params?.page || 1,
-          limit: params?.limit || 20,
-          total: MOCK_USERS.length,
-          totalPages: 1
-        }
+      const result = await userService.getAllUsers(params);
+
+      const rawUsers = Array.isArray(result) ? result : (result?.users || result?.data || []);
+      const users = rawUsers.map(normalizeUser);
+
+      const pagination = result?.pagination || {
+        page: params?.page || 1,
+        limit: params?.limit || 20,
+        total: users.length,
+        totalPages: Math.ceil(users.length / (params?.limit || 20))
       };
+
+      return { data: users, pagination };
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error?.message);
+      return rejectWithValue(error.userMessage || error.message || 'Failed to fetch users');
     }
   }
 );
@@ -104,10 +54,10 @@ export const createUser = createAsyncThunk(
   'users/createUser',
   async (userData, { rejectWithValue }) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 250));
-      return { id: `u-${Date.now()}`, ...userData };
+      const created = await userService.createUser(userData);
+      return normalizeUser(created);
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error?.message);
+      return rejectWithValue(error.userMessage || error.message || 'Failed to create user');
     }
   }
 );
@@ -116,10 +66,10 @@ export const updateUser = createAsyncThunk(
   'users/updateUser',
   async ({ id, data }, { rejectWithValue }) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      return { id, ...data };
+      const updated = await userService.updateUser(id, data);
+      return normalizeUser(updated);
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error?.message);
+      return rejectWithValue(error.userMessage || error.message || 'Failed to update user');
     }
   }
 );
@@ -128,10 +78,10 @@ export const changeUserRole = createAsyncThunk(
   'users/changeUserRole',
   async ({ id, role }, { rejectWithValue }) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      return { id, role };
+      const updated = await userService.changeUserRole(id, role);
+      return normalizeUser(updated);
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error?.message);
+      return rejectWithValue(error.userMessage || error.message || 'Failed to change user role');
     }
   }
 );
@@ -140,10 +90,10 @@ export const deleteUser = createAsyncThunk(
   'users/deleteUser',
   async (id, { rejectWithValue }) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      await userService.deleteUser(id);
       return id;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error?.message);
+      return rejectWithValue(error.userMessage || error.message || 'Failed to delete user');
     }
   }
 );
@@ -152,10 +102,10 @@ export const deactivateUser = createAsyncThunk(
   'users/deactivateUser',
   async (id, { rejectWithValue }) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      return { id, deactivatedAt: new Date().toISOString() };
+      const result = await userService.suspendUser(id);
+      return { id, deactivatedAt: result?.deactivatedAt || new Date().toISOString() };
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error?.message);
+      return rejectWithValue(error.userMessage || error.message || 'Failed to deactivate user');
     }
   }
 );
@@ -164,10 +114,10 @@ export const reactivateUser = createAsyncThunk(
   'users/reactivateUser',
   async (id, { rejectWithValue }) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      return { id };
+      const result = await userService.updateUser(id, { status: 'active', isDeactivated: false });
+      return normalizeUser(result);
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error?.message);
+      return rejectWithValue(error.userMessage || error.message || 'Failed to reactivate user');
     }
   }
 );
