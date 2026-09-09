@@ -8,7 +8,6 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { useAuth } from '../../../hooks/useAuth';
-import { usePermissions } from '../../../hooks/usePermissions';
 import { updateUserProfile, changePassword, verifySession } from '../../../store/slices/authSlice';
 import authService from '../../../services/authService';
 import activityLogService from '../../../services/activityLogService';
@@ -35,8 +34,7 @@ import {
 } from 'lucide-react';
 
 const AdminProfilePage = () => {
-    const { user, loading: authLoading } = useAuth();
-    const { isSuperAdmin } = usePermissions();
+    const { user } = useAuth();
     const dispatch = useDispatch();
 
     // Tab & Edit state
@@ -197,7 +195,7 @@ const AdminProfilePage = () => {
 
             try {
                 await dispatch(updateUserProfile({ avatar: dataUrl }));
-            } catch (_err) {
+            } catch {
                 // Keep locally saved
             }
         } catch (err) {
@@ -265,7 +263,7 @@ const AdminProfilePage = () => {
 
             try {
                 await authService.updateNotificationPreferences(notifications);
-            } catch (_e) {
+            } catch {
                 // Non-blocking
             }
 
@@ -949,7 +947,7 @@ const AdminProfilePage = () => {
                                                         setSuccessMessage('Notification preferences saved!');
                                                         setShowSuccess(true);
                                                         setTimeout(() => setShowSuccess(false), 3000);
-                                                    } catch (_e) {
+                                                    } catch {
                                                         setErrorMessage('Failed to save preferences.');
                                                         setTimeout(() => setErrorMessage(''), 3000);
                                                     }

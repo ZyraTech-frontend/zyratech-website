@@ -191,7 +191,9 @@ export const updateUserProfile = createAsyncThunk(
       if (avatar) {
         try {
           localStorage.setItem('admin_avatar', avatar);
-        } catch (_e) {}
+        } catch {
+          // Ignore storage quota errors in private/restricted environments
+        }
       }
 
       const updatedUser = {
@@ -277,7 +279,7 @@ const getInitialUser = () => {
   try {
     const item = localStorage.getItem('user');
     return item ? JSON.parse(item) : null;
-  } catch (_e) {
+  } catch {
     return null;
   }
 };
