@@ -1,11 +1,17 @@
 /**
  * Admin Profile Page
- * Professional interface for managing admin profile, security settings, and preferences
+ * Professional interface for managing admin profile, security settings, and preferences.
+ * Connected directly to live ZyraTech API and Redux auth store.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
+import { useAuth } from '../../../hooks/useAuth';
 import { usePermissions } from '../../../hooks/usePermissions';
+import { updateUserProfile, changePassword, verifySession } from '../../../store/slices/authSlice';
+import authService from '../../../services/authService';
+import activityLogService from '../../../services/activityLogService';
 import {
     User,
     Mail,
@@ -15,7 +21,6 @@ import {
     Key,
     Lock,
     Bell,
-    Globe,
     Monitor,
     Smartphone,
     Camera,
@@ -23,47 +28,54 @@ import {
     Edit,
     CheckCircle,
     AlertCircle,
-    LogOut,
     Briefcase,
     Calendar,
     Clock,
-    Activity,
-    Award
+    Activity
 } from 'lucide-react';
 
 const AdminProfilePage = () => {
+    const { user, loading: authLoading } = useAuth();
     const { isSuperAdmin } = usePermissions();
+    const dispatch = useDispatch();
 
-    // State management
+    // Tab & Edit state
     const [activeTab, setActiveTab] = useState('profile');
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('Profile updated successfully!');
+    const [errorMessage, setErrorMessage] = useState('');
 
-    // Mock user data
+    // User profile state
     const [userData, setUserData] = useState({
-        firstName: 'Admin',
-        lastName: 'User',
-        email: 'admin@zyratech.com',
-        phone: '+233 20 123 4567',
-        role: 'Super Admin',
-        department: 'Management',
-        location: 'Accra, Ghana',
+        firstName: '',
+        lastName: '',
+        name: '',
+        email: '',
+        phone: '',
+        role: '',
+        department: '',
+        location: '',
         avatar: null,
-        bio: 'Senior Administrator responsible for platform management and oversight. Joined ZyraTech in 2021.',
-        joinedDate: '2021-05-15',
-        lastLogin: '2024-12-19T14:30:00Z'
+        bio: '',
+        joinedDate: '',
+        lastLogin: '',
+        accountStatus: 'active',
+        twoFactorEnabled: false
     });
 
-    // Load avatar from localStorage on mount
-    React.useEffect(() => {
-        const savedAvatar = localStorage.getItem('admin_avatar');
-        if (savedAvatar) {
-            setUserData(prev => ({ ...prev, avatar: savedAvatar }));
-        }
-    }, []);
+    // Password change state
+    const [passwordData, setPasswordData] = useState({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    });
+    const [passwordLoading, setPasswordLoading] = useState(false);
+    const [passwordSuccess, setPasswordSuccess] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
-    // Mock notification settings
+    // Notification settings
     const [notifications, setNotifications] = useState({
         emailAlerts: true,
         browserPush: true,
@@ -74,45 +86,84 @@ const AdminProfilePage = () => {
         reportSummaries: false
     });
 
-    // Mock security settings
-    const [security, setSecurity] = useState({
-        twoFactor: true,
-        sessionTimeout: '30m',
-        loginAlerts: true
-    });
+    // Fetch fresh session on mount
+    useEffect(() => {
+        dispatch(verifySession());
+    }, [dispatch]);
+
+    // Sync state with live user data from Redux / API
+    useEffect(() => {
+        if (user) {
+            const firstName = user.firstName || (user.name ? user.name.split(' ')[0] : '') || '';
+            const lastName = user.lastName || (user.name ? user.name.split(' ').slice(1).join(' ') : '') || '';
+            const displayName = user.name || `${firstName} ${lastName}`.trim();
+            const formattedRole = user.role === 'super_admin' ? 'Super Admin'
+                : user.role === 'admin' ? 'Administrator'
+                : (user.role || 'Admin');
+
+            const savedAvatar = localStorage.getItem('admin_avatar');
+
+            setUserData({
+                firstName,
+                lastName,
+                name: displayName,
+                email: user.email || '',
+                phone: user.phone || '',
+                role: formattedRole,
+                department: user.department || 'Software Engineering',
+                location: user.location || 'Ghana',
+                avatar: user.avatar || savedAvatar || null,
+                bio: user.bio || '',
+                joinedDate: user.createdAt || user.joinedDate || '',
+                lastLogin: user.lastLogin || '',
+                accountStatus: user.accountStatus || 'active',
+                twoFactorEnabled: !!user.twoFactorEnabled
+            });
+
+            if (user.notificationPreferences && typeof user.notificationPreferences === 'object') {
+                setNotifications(prev => ({
+                    ...prev,
+                    ...user.notificationPreferences
+                }));
+            }
+        }
+    }, [user]);
 
     // Handle avatar upload
     const handleAvatarUpload = (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Validate file type
         if (!file.type.startsWith('image/')) {
             alert('Please select an image file (JPG, PNG, etc.)');
             return;
         }
 
-        // Validate file size (max 2MB)
         if (file.size > 2 * 1024 * 1024) {
             alert('Image must be less than 2MB');
             return;
         }
 
         const reader = new FileReader();
-        reader.onload = (event) => {
+        reader.onload = async (event) => {
             const dataUrl = event.target.result;
             setUserData(prev => ({
                 ...prev,
                 avatar: dataUrl
             }));
-            // Persist to localStorage & notify header
             localStorage.setItem('admin_avatar', dataUrl);
             window.dispatchEvent(new Event('avatar-updated'));
+
+            try {
+                await dispatch(updateUserProfile({ avatar: dataUrl }));
+            } catch (_err) {
+                // Keep locally saved
+            }
         };
         reader.readAsDataURL(file);
     };
 
-    // Handle input change
+    // Handle profile text inputs
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setUserData(prev => ({
@@ -121,22 +172,131 @@ const AdminProfilePage = () => {
         }));
     };
 
-    // Handle save
-    const handleSave = () => {
+    // Handle save profile changes
+    const handleSave = async () => {
         setIsSaving(true);
-        // Simulate API call
-        setTimeout(() => {
-            setIsSaving(false);
-            setIsEditing(false);
+        setErrorMessage('');
+        setShowSuccess(false);
+
+        try {
+            const payload = {
+                firstName: userData.firstName.trim(),
+                lastName: userData.lastName.trim(),
+                phone: userData.phone.trim(),
+                department: userData.department.trim(),
+                location: userData.location.trim(),
+                bio: userData.bio.trim()
+            };
+
+            const result = await dispatch(updateUserProfile(payload)).unwrap();
+            
+            if (result?.user) {
+                const u = result.user;
+                setUserData(prev => ({
+                    ...prev,
+                    firstName: u.firstName || prev.firstName,
+                    lastName: u.lastName || prev.lastName,
+                    name: u.name || `${u.firstName || prev.firstName} ${u.lastName || prev.lastName}`.trim(),
+                    phone: u.phone || prev.phone,
+                    department: u.department || prev.department,
+                    location: u.location || prev.location,
+                    bio: u.bio || prev.bio
+                }));
+            }
+
+            try {
+                await authService.updateNotificationPreferences(notifications);
+            } catch (_e) {
+                // Non-blocking
+            }
+
+            setSuccessMessage('Profile updated successfully!');
             setShowSuccess(true);
-            setTimeout(() => setShowSuccess(false), 3000);
-        }, 1500);
+            setIsEditing(false);
+            setTimeout(() => setShowSuccess(false), 4000);
+        } catch (err) {
+            const msg = typeof err === 'string' ? err : err?.message || 'Failed to update profile. Please try again.';
+            setErrorMessage(msg);
+            setTimeout(() => setErrorMessage(''), 6000);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    // Handle password change
+    const handlePasswordChange = async (e) => {
+        e.preventDefault();
+        setPasswordError('');
+        setPasswordSuccess('');
+
+        if (!passwordData.currentPassword) {
+            setPasswordError('Please enter your current password.');
+            return;
+        }
+        if (!passwordData.newPassword) {
+            setPasswordError('Please enter a new password.');
+            return;
+        }
+        if (passwordData.newPassword.length < 8) {
+            setPasswordError('New password must be at least 8 characters long.');
+            return;
+        }
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+            setPasswordError('New password and confirmation password do not match.');
+            return;
+        }
+
+        setPasswordLoading(true);
+        try {
+            await dispatch(changePassword({
+                currentPassword: passwordData.currentPassword,
+                newPassword: passwordData.newPassword
+            })).unwrap();
+
+            setPasswordSuccess('Password changed successfully!');
+            setPasswordData({
+                currentPassword: '',
+                newPassword: '',
+                confirmPassword: ''
+            });
+            setTimeout(() => setPasswordSuccess(''), 5000);
+        } catch (err) {
+            const msg = typeof err === 'string' ? err : err?.message || 'Failed to change password. Please verify your current password.';
+            setPasswordError(msg);
+        } finally {
+            setPasswordLoading(false);
+        }
+    };
+
+    // Helper: Compute initials
+    const getInitials = () => {
+        if (userData.firstName && userData.lastName) {
+            return `${userData.firstName[0]}${userData.lastName[0]}`.toUpperCase();
+        }
+        if (userData.name) {
+            const parts = userData.name.trim().split(/\s+/);
+            if (parts.length >= 2) {
+                return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+            }
+            return parts[0].slice(0, 2).toUpperCase();
+        }
+        if (userData.email) {
+            return userData.email.slice(0, 2).toUpperCase();
+        }
+        return 'AU';
+    };
+
+    const getDisplayName = () => {
+        if (userData.name) return userData.name;
+        const combined = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
+        return combined || userData.email || 'Admin User';
     };
 
     // Format date
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
+        if (isNaN(date.getTime())) return dateString;
         return date.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
@@ -148,11 +308,15 @@ const AdminProfilePage = () => {
     const formatTime = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
+        if (isNaN(date.getTime())) return '';
         return date.toLocaleTimeString('en-US', {
             hour: '2-digit',
             minute: '2-digit'
         });
     };
+
+    // Activity logs from service or fallback
+    const activityLogs = activityLogService.getLogs ? activityLogService.getLogs({ limit: 6 }) : [];
 
     return (
         <AdminLayout>
@@ -161,58 +325,71 @@ const AdminProfilePage = () => {
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center">
-                                <User className="text-white" size={22} />
+                            <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center shadow-sm">
+                                <User className="text-white" size={20} />
                             </div>
                             My Profile
                         </h1>
-                        <p className="text-sm text-gray-500 mt-1 ml-[52px]">
+                        <p className="text-sm text-gray-500 mt-1 ml-[44px] md:ml-[52px]">
                             Manage your account settings and preferences
                         </p>
                     </div>
-                    {isEditing ? (
-                        <div className="flex items-center gap-3">
+
+                    {activeTab === 'profile' && (
+                        isEditing ? (
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => {
+                                        setIsEditing(false);
+                                        setErrorMessage('');
+                                    }}
+                                    disabled={isSaving}
+                                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl transition-colors font-medium text-sm"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleSave}
+                                    disabled={isSaving}
+                                    className={`flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md ${isSaving ? 'opacity-70 cursor-wait' : ''}`}
+                                >
+                                    {isSaving ? (
+                                        <>
+                                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                            Saving...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Save size={18} />
+                                            Save Changes
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        ) : (
                             <button
-                                onClick={() => setIsEditing(false)}
-                                disabled={isSaving}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl transition-colors font-medium text-sm"
+                                onClick={() => setIsEditing(true)}
+                                className="flex items-center gap-2 px-5 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm font-medium text-sm"
                             >
-                                Cancel
+                                <Edit size={16} />
+                                Edit Profile
                             </button>
-                            <button
-                                onClick={handleSave}
-                                disabled={isSaving}
-                                className={`flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md ${isSaving ? 'opacity-70 cursor-wait' : ''}`}
-                            >
-                                {isSaving ? (
-                                    <>
-                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                        Saving...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Save size={18} />
-                                        Save Changes
-                                    </>
-                                )}
-                            </button>
-                        </div>
-                    ) : (
-                        <button
-                            onClick={() => setIsEditing(true)}
-                            className="flex items-center gap-2 px-5 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm font-medium text-sm"
-                        >
-                            <Edit size={16} />
-                            Edit Profile
-                        </button>
+                        )
                     )}
                 </div>
 
-                {/* Success Message */}
+                {/* Alerts */}
                 {showSuccess && (
-                    <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 text-green-700 animate-in fade-in slide-in-from-top-4 duration-300">
-                        <CheckCircle size={20} />
-                        <span className="font-medium">Profile updated successfully!</span>
+                    <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 text-green-700 animate-in fade-in slide-in-from-top-4 duration-300 shadow-sm">
+                        <CheckCircle size={20} className="shrink-0" />
+                        <span className="font-medium text-sm">{successMessage}</span>
+                    </div>
+                )}
+
+                {errorMessage && (
+                    <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3 text-red-700 animate-in fade-in slide-in-from-top-4 duration-300 shadow-sm">
+                        <AlertCircle size={20} className="shrink-0" />
+                        <span className="font-medium text-sm">{errorMessage}</span>
                     </div>
                 )}
 
@@ -220,27 +397,24 @@ const AdminProfilePage = () => {
                     {/* Left Column: Profile Card & Menu */}
                     <div className="space-y-6">
                         {/* Profile Summary Card */}
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden p-4">
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden p-5">
                             <div className="flex items-center gap-4">
                                 {/* Avatar */}
                                 <div className="w-16 h-16 rounded-full border-2 border-gray-200 shadow-sm shrink-0 overflow-hidden relative group">
                                     {userData.avatar ? (
                                         <img decoding="async" src={userData.avatar} alt="Profile" className="w-full h-full object-cover" loading="lazy" />
                                     ) : (
-                                        <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                                            <span className="text-lg font-bold text-gray-400">
-                                                {userData.firstName[0]}{userData.lastName[0]}
-                                            </span>
+                                        <div className="w-full h-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white font-bold text-lg">
+                                            {getInitials()}
                                         </div>
                                     )}
-                                    {isEditing && (
-                                        <div
-                                            className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                                            onClick={() => document.getElementById('avatar-upload').click()}
-                                        >
-                                            <Camera className="text-white" size={16} />
-                                        </div>
-                                    )}
+                                    <div
+                                        className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                        onClick={() => document.getElementById('avatar-upload').click()}
+                                        title="Change Photo"
+                                    >
+                                        <Camera className="text-white" size={16} />
+                                    </div>
                                     <input
                                         id="avatar-upload"
                                         type="file"
@@ -251,25 +425,29 @@ const AdminProfilePage = () => {
                                 </div>
                                 {/* Info */}
                                 <div className="flex-1 min-w-0">
-                                    <h2 className="text-base font-bold text-gray-900 truncate">{userData.firstName} {userData.lastName}</h2>
-                                    <p className="text-xs text-gray-500 mb-2">{userData.email}</p>
+                                    <h2 className="text-base font-bold text-gray-900 truncate">
+                                        {getDisplayName()}
+                                    </h2>
+                                    <p className="text-xs text-gray-500 mb-2 truncate">{userData.email || 'Loading...'}</p>
                                     <div className="flex items-center flex-wrap gap-1.5">
-                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${userData.role === 'Super Admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
-                                            {userData.role}
+                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                            userData.role.toLowerCase().includes('super')
+                                                ? 'bg-purple-100 text-purple-700'
+                                                : 'bg-blue-100 text-blue-700'
+                                        }`}>
+                                            {userData.role || 'Admin'}
                                         </span>
-                                        <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold flex items-center gap-1">
+                                        <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold flex items-center gap-1 capitalize">
                                             <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                                            Active
+                                            {userData.accountStatus || 'Active'}
                                         </span>
                                     </div>
-                                    {isEditing && (
-                                        <button
-                                            onClick={() => document.getElementById('avatar-upload').click()}
-                                            className="mt-2 text-xs text-[#004fa2] hover:underline font-medium"
-                                        >
-                                            Change Photo
-                                        </button>
-                                    )}
+                                    <button
+                                        onClick={() => document.getElementById('avatar-upload').click()}
+                                        className="mt-2 text-xs text-[#004fa2] hover:underline font-medium block"
+                                    >
+                                        Change Photo
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -279,43 +457,47 @@ const AdminProfilePage = () => {
                             <nav className="flex lg:flex-col overflow-x-auto p-2 gap-1">
                                 <button
                                     onClick={() => setActiveTab('profile')}
-                                    className={`flex items-center gap-2 px-3 lg:px-4 py-2.5 lg:py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${activeTab === 'profile'
-                                        ? 'bg-blue-50 text-[#004fa2]'
-                                        : 'text-gray-600 hover:bg-gray-50'
-                                        }`}
+                                    className={`flex items-center gap-2 px-3 lg:px-4 py-2.5 lg:py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                                        activeTab === 'profile'
+                                            ? 'bg-blue-50 text-[#004fa2] font-semibold'
+                                            : 'text-gray-600 hover:bg-gray-50'
+                                    }`}
                                 >
                                     <User size={18} />
-                                    <span className="hidden sm:inline">Personal</span> Info
+                                    <span>Personal Info</span>
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('security')}
-                                    className={`flex items-center gap-2 px-3 lg:px-4 py-2.5 lg:py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${activeTab === 'security'
-                                        ? 'bg-blue-50 text-[#004fa2]'
-                                        : 'text-gray-600 hover:bg-gray-50'
-                                        }`}
+                                    className={`flex items-center gap-2 px-3 lg:px-4 py-2.5 lg:py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                                        activeTab === 'security'
+                                            ? 'bg-blue-50 text-[#004fa2] font-semibold'
+                                            : 'text-gray-600 hover:bg-gray-50'
+                                    }`}
                                 >
                                     <Shield size={18} />
-                                    Security
+                                    <span>Security</span>
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('notifications')}
-                                    className={`flex items-center gap-2 px-3 lg:px-4 py-2.5 lg:py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${activeTab === 'notifications'
-                                        ? 'bg-blue-50 text-[#004fa2]'
-                                        : 'text-gray-600 hover:bg-gray-50'
-                                        }`}
+                                    className={`flex items-center gap-2 px-3 lg:px-4 py-2.5 lg:py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                                        activeTab === 'notifications'
+                                            ? 'bg-blue-50 text-[#004fa2] font-semibold'
+                                            : 'text-gray-600 hover:bg-gray-50'
+                                    }`}
                                 >
                                     <Bell size={18} />
-                                    Notifications
+                                    <span>Notifications</span>
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('activity')}
-                                    className={`flex items-center gap-2 px-3 lg:px-4 py-2.5 lg:py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${activeTab === 'activity'
-                                        ? 'bg-blue-50 text-[#004fa2]'
-                                        : 'text-gray-600 hover:bg-gray-50'
-                                        }`}
+                                    className={`flex items-center gap-2 px-3 lg:px-4 py-2.5 lg:py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                                        activeTab === 'activity'
+                                            ? 'bg-blue-50 text-[#004fa2] font-semibold'
+                                            : 'text-gray-600 hover:bg-gray-50'
+                                    }`}
                                 >
                                     <Activity size={18} />
-                                    Activity
+                                    <span>Activity</span>
                                 </button>
                             </nav>
                         </div>
@@ -325,16 +507,18 @@ const AdminProfilePage = () => {
                             <h3 className="font-semibold text-gray-900 text-sm">Account Info</h3>
                             <div className="space-y-3">
                                 <div className="flex items-center gap-3 text-sm text-gray-600">
-                                    <Calendar size={16} className="text-gray-400" />
-                                    <span>Joined {formatDate(userData.joinedDate)}</span>
+                                    <Calendar size={16} className="text-gray-400 shrink-0" />
+                                    <span>{userData.joinedDate ? `Joined ${formatDate(userData.joinedDate)}` : 'Status: Verified Admin'}</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-sm text-gray-600">
-                                    <Clock size={16} className="text-gray-400" />
-                                    <span>Last Login: {formatDate(userData.lastLogin)}, {formatTime(userData.lastLogin)}</span>
+                                    <Clock size={16} className="text-gray-400 shrink-0" />
+                                    <span className="truncate">
+                                        Last Login: {userData.lastLogin ? `${formatDate(userData.lastLogin)}, ${formatTime(userData.lastLogin)}` : 'Active now'}
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-3 text-sm text-gray-600">
-                                    <MapPin size={16} className="text-gray-400" />
-                                    <span>IP: 192.168.1.100</span>
+                                    <MapPin size={16} className="text-gray-400 shrink-0" />
+                                    <span>{userData.location || 'Ghana'}</span>
                                 </div>
                             </div>
                         </div>
@@ -345,7 +529,7 @@ const AdminProfilePage = () => {
 
                         {/* PERSONAL INFORMATION TAB */}
                         {activeTab === 'profile' && (
-                            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 md:p-4 lg:p-5 lg:p-6">
+                            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
                                 <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
                                     <User size={20} className="text-[#004fa2]" />
                                     Personal Information
@@ -360,6 +544,7 @@ const AdminProfilePage = () => {
                                             value={userData.firstName}
                                             onChange={handleInputChange}
                                             disabled={!isEditing}
+                                            placeholder="First Name"
                                             className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                                         />
                                     </div>
@@ -371,6 +556,7 @@ const AdminProfilePage = () => {
                                             value={userData.lastName}
                                             onChange={handleInputChange}
                                             disabled={!isEditing}
+                                            placeholder="Last Name"
                                             className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                                         />
                                     </div>
@@ -382,12 +568,11 @@ const AdminProfilePage = () => {
                                                 type="email"
                                                 name="email"
                                                 value={userData.email}
-                                                onChange={handleInputChange}
-                                                disabled={true} // Email typically cannot be changed easily
-                                                className="w-full pl-10 pr-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-500 cursor-not-allowed"
+                                                disabled={true}
+                                                className="w-full pl-10 pr-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-600 cursor-not-allowed"
                                             />
                                         </div>
-                                        <p className="text-xs text-gray-400">Contact admin support to change email</p>
+                                        <p className="text-xs text-gray-400">Account email cannot be modified directly</p>
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700">Phone Number</label>
@@ -399,6 +584,7 @@ const AdminProfilePage = () => {
                                                 value={userData.phone}
                                                 onChange={handleInputChange}
                                                 disabled={!isEditing}
+                                                placeholder="+233..."
                                                 className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                                             />
                                         </div>
@@ -413,6 +599,7 @@ const AdminProfilePage = () => {
                                                 value={userData.department}
                                                 onChange={handleInputChange}
                                                 disabled={!isEditing}
+                                                placeholder="Department"
                                                 className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                                             />
                                         </div>
@@ -427,6 +614,7 @@ const AdminProfilePage = () => {
                                                 value={userData.location}
                                                 onChange={handleInputChange}
                                                 disabled={!isEditing}
+                                                placeholder="City, Country"
                                                 className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                                             />
                                         </div>
@@ -439,6 +627,7 @@ const AdminProfilePage = () => {
                                             onChange={handleInputChange}
                                             disabled={!isEditing}
                                             rows={4}
+                                            placeholder="A short description about yourself..."
                                             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all resize-none"
                                         />
                                     </div>
@@ -450,22 +639,38 @@ const AdminProfilePage = () => {
                         {activeTab === 'security' && (
                             <div className="space-y-6">
                                 {/* Password Change */}
-                                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 md:p-4 lg:p-5 lg:p-6">
-                                    <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                                         <Lock size={20} className="text-[#004fa2]" />
                                         Change Password
                                     </h3>
+                                    <p className="text-sm text-gray-500 mb-6">Ensure your account uses a strong, unique password.</p>
 
-                                    <div className="space-y-4 max-w-lg">
+                                    {passwordSuccess && (
+                                        <div className="mb-4 bg-green-50 border border-green-200 text-green-700 rounded-lg p-3 text-sm flex items-center gap-2">
+                                            <CheckCircle size={16} />
+                                            <span>{passwordSuccess}</span>
+                                        </div>
+                                    )}
+                                    {passwordError && (
+                                        <div className="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm flex items-center gap-2">
+                                            <AlertCircle size={16} />
+                                            <span>{passwordError}</span>
+                                        </div>
+                                    )}
+
+                                    <form onSubmit={handlePasswordChange} className="space-y-4 max-w-lg">
                                         <div className="space-y-2">
                                             <label className="text-sm font-medium text-gray-700">Current Password</label>
                                             <div className="relative">
                                                 <Key className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                                                 <input
                                                     type="password"
-                                                    disabled={!isEditing}
-                                                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                                                    value={passwordData.currentPassword}
+                                                    onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
+                                                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
                                                     placeholder="••••••••••••"
+                                                    required
                                                 />
                                             </div>
                                         </div>
@@ -475,9 +680,12 @@ const AdminProfilePage = () => {
                                                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                                                 <input
                                                     type="password"
-                                                    disabled={!isEditing}
-                                                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
-                                                    placeholder="Enter new password"
+                                                    value={passwordData.newPassword}
+                                                    onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
+                                                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                                    placeholder="Minimum 8 characters"
+                                                    required
+                                                    minLength={8}
                                                 />
                                             </div>
                                         </div>
@@ -487,18 +695,29 @@ const AdminProfilePage = () => {
                                                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                                                 <input
                                                     type="password"
-                                                    disabled={!isEditing}
-                                                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                                                    value={passwordData.confirmPassword}
+                                                    onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                                                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
                                                     placeholder="Confirm new password"
+                                                    required
                                                 />
                                             </div>
                                         </div>
-                                        {isEditing && (
-                                            <button className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors">
-                                                Update Password
-                                            </button>
-                                        )}
-                                    </div>
+                                        <button
+                                            type="submit"
+                                            disabled={passwordLoading}
+                                            className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all text-sm font-medium shadow-sm disabled:opacity-60"
+                                        >
+                                            {passwordLoading ? (
+                                                <>
+                                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                    Updating...
+                                                </>
+                                            ) : (
+                                                'Update Password'
+                                            )}
+                                        </button>
+                                    </form>
                                 </div>
 
                                 {/* Two-Factor Authentication */}
@@ -507,26 +726,24 @@ const AdminProfilePage = () => {
                                         <Shield size={20} className="text-[#004fa2]" />
                                         Two-Factor Authentication
                                     </h3>
-                                    <p className="text-sm text-gray-500 mb-6">Adds an extra layer of security to your account.</p>
+                                    <p className="text-sm text-gray-500 mb-6">Adds an extra layer of security to your admin account.</p>
 
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 shrink-0">
+                                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 shrink-0">
                                                 <Smartphone size={20} />
                                             </div>
                                             <div>
                                                 <h4 className="font-bold text-gray-900 text-sm sm:text-base">Authenticator App</h4>
-                                                <p className="text-xs sm:text-sm text-gray-500">Use an app like Google Authenticator or Authy</p>
+                                                <p className="text-xs sm:text-sm text-gray-500">Google Authenticator, Microsoft Authenticator, or Authy</p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3 ml-13 sm:ml-0">
-                                            <span className="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Enabled</span>
-                                            <button
-                                                disabled={!isEditing}
-                                                className="px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium disabled:opacity-50"
-                                            >
-                                                Disable
-                                            </button>
+                                        <div className="flex items-center gap-3">
+                                            {userData.twoFactorEnabled ? (
+                                                <span className="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Enabled</span>
+                                            ) : (
+                                                <span className="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-bold">Disabled</span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -539,37 +756,21 @@ const AdminProfilePage = () => {
                                     </h3>
 
                                     <div className="space-y-4">
-                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-2 md:p-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 border border-gray-100 hover:bg-gray-50 rounded-xl transition-colors">
                                             <div className="flex items-center gap-3">
                                                 <Monitor className="text-gray-400 shrink-0" size={20} />
                                                 <div>
-                                                    <p className="font-semibold text-gray-900 text-sm">Windows PC - Chrome</p>
-                                                    <p className="text-xs text-gray-500">Accra, Ghana • 192.168.1.100</p>
+                                                    <p className="font-semibold text-gray-900 text-sm">Active Browser Session</p>
+                                                    <p className="text-xs text-gray-500">{userData.location || 'Ghana'} • Authenticated Admin</p>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-3 ml-8 sm:ml-0">
-                                                <span className="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded">Current Session</span>
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-2 md:p-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors">
                                             <div className="flex items-center gap-3">
-                                                <Smartphone className="text-gray-400 shrink-0" size={20} />
-                                                <div>
-                                                    <p className="font-semibold text-gray-900 text-sm">iPhone 13 - Safari</p>
-                                                    <p className="text-xs text-gray-500">Accra, Ghana • 41.215.160.50</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-3 ml-8 sm:ml-0">
-                                                <p className="text-xs text-gray-400">Active 2 days ago</p>
-                                                <button className="text-xs text-red-600 font-medium hover:underline">Revoke</button>
+                                                <span className="text-xs text-green-600 font-medium bg-green-50 px-2.5 py-1 rounded-full border border-green-200">
+                                                    Current Session
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <button className="mt-6 text-sm text-red-600 font-medium hover:text-red-700 flex items-center gap-2">
-                                        <LogOut size={16} />
-                                        Sign out of all other sessions
-                                    </button>
                                 </div>
                             </div>
                         )}
@@ -578,10 +779,15 @@ const AdminProfilePage = () => {
                         {activeTab === 'notifications' && (
                             <div className="space-y-6">
                                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                                    <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                        <Bell size={20} className="text-[#004fa2]" />
-                                        Notification Preferences
-                                    </h3>
+                                    <div className="flex items-center justify-between mb-6">
+                                        <div>
+                                            <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                                <Bell size={20} className="text-[#004fa2]" />
+                                                Notification Preferences
+                                            </h3>
+                                            <p className="text-sm text-gray-500 mt-1">Manage what notifications you receive across the platform</p>
+                                        </div>
+                                    </div>
 
                                     <div className="space-y-6">
                                         {/* Activity Alerts */}
@@ -590,14 +796,13 @@ const AdminProfilePage = () => {
                                             <div className="space-y-4">
                                                 <div className="flex items-center justify-between">
                                                     <div>
-                                                        <p className="font-medium text-gray-900">New Enrollment Alerts</p>
-                                                        <p className="text-sm text-gray-500">Get notified when a new student enrolls</p>
+                                                        <p className="font-medium text-gray-900 text-sm">New Enrollment Alerts</p>
+                                                        <p className="text-xs text-gray-500">Get notified when a student registers for training</p>
                                                     </div>
                                                     <label className="relative inline-flex items-center cursor-pointer">
                                                         <input
                                                             type="checkbox"
                                                             checked={notifications.newEnrollments}
-                                                            disabled={!isEditing}
                                                             onChange={() => setNotifications(p => ({ ...p, newEnrollments: !p.newEnrollments }))}
                                                             className="sr-only peer"
                                                         />
@@ -606,14 +811,13 @@ const AdminProfilePage = () => {
                                                 </div>
                                                 <div className="flex items-center justify-between">
                                                     <div>
-                                                        <p className="font-medium text-gray-900">Payment Confirmations</p>
-                                                        <p className="text-sm text-gray-500">Get notified when a payment is processed</p>
+                                                        <p className="font-medium text-gray-900 text-sm">Payment Confirmations</p>
+                                                        <p className="text-xs text-gray-500">Receive alerts when payments are processed</p>
                                                     </div>
                                                     <label className="relative inline-flex items-center cursor-pointer">
                                                         <input
                                                             type="checkbox"
                                                             checked={notifications.paymentConfirmations}
-                                                            disabled={!isEditing}
                                                             onChange={() => setNotifications(p => ({ ...p, paymentConfirmations: !p.paymentConfirmations }))}
                                                             className="sr-only peer"
                                                         />
@@ -629,33 +833,17 @@ const AdminProfilePage = () => {
                                             <div className="space-y-4">
                                                 <div className="flex items-center justify-between">
                                                     <div>
-                                                        <p className="font-medium text-gray-900">Security Alerts</p>
-                                                        <p className="text-sm text-gray-500">Unusual login attempts and password changes</p>
+                                                        <p className="font-medium text-gray-900 text-sm">Security Alerts</p>
+                                                        <p className="text-xs text-gray-500">Unusual login attempts and security events</p>
                                                     </div>
                                                     <label className="relative inline-flex items-center cursor-pointer">
                                                         <input
                                                             type="checkbox"
                                                             checked={notifications.securityAlerts}
-                                                            disabled={!isEditing}
                                                             onChange={() => setNotifications(p => ({ ...p, securityAlerts: !p.securityAlerts }))}
                                                             className="sr-only peer"
                                                         />
                                                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#004fa2]"></div>
-                                                    </label>
-                                                </div>
-                                                <div className="flex items-center justify-between">
-                                                    <div>
-                                                        <p className="font-medium text-gray-900">System Updates</p>
-                                                        <p className="text-sm text-gray-500">Platform maintenance and update announcements</p>
-                                                    </div>
-                                                    <label className="relative inline-flex items-center cursor-pointer">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={true}
-                                                            disabled={true}
-                                                            className="sr-only peer"
-                                                        />
-                                                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#004fa2] opacity-60"></div>
                                                     </label>
                                                 </div>
                                             </div>
@@ -665,25 +853,50 @@ const AdminProfilePage = () => {
                                         <div>
                                             <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">Delivery Channels</h4>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${notifications.emailAlerts ? 'border-[#004fa2] bg-blue-50' : 'border-gray-200 hover:border-blue-200'}`}
-                                                    onClick={() => isEditing && setNotifications(p => ({ ...p, emailAlerts: !p.emailAlerts }))}
+                                                <div
+                                                    className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                                                        notifications.emailAlerts ? 'border-[#004fa2] bg-blue-50/50' : 'border-gray-200 hover:border-blue-200'
+                                                    }`}
+                                                    onClick={() => setNotifications(p => ({ ...p, emailAlerts: !p.emailAlerts }))}
                                                 >
                                                     <div className="flex items-center gap-3 mb-2">
                                                         <Mail size={20} className={notifications.emailAlerts ? 'text-[#004fa2]' : 'text-gray-400'} />
-                                                        <span className="font-bold text-gray-900">Email</span>
+                                                        <span className="font-bold text-gray-900 text-sm">Email</span>
                                                     </div>
-                                                    <p className="text-xs text-gray-500">Receive notifications via email to {userData.email}</p>
+                                                    <p className="text-xs text-gray-500">Deliver notifications to {userData.email}</p>
                                                 </div>
-                                                <div className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${notifications.browserPush ? 'border-[#004fa2] bg-blue-50' : 'border-gray-200 hover:border-blue-200'}`}
-                                                    onClick={() => isEditing && setNotifications(p => ({ ...p, browserPush: !p.browserPush }))}
+                                                <div
+                                                    className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                                                        notifications.browserPush ? 'border-[#004fa2] bg-blue-50/50' : 'border-gray-200 hover:border-blue-200'
+                                                    }`}
+                                                    onClick={() => setNotifications(p => ({ ...p, browserPush: !p.browserPush }))}
                                                 >
                                                     <div className="flex items-center gap-3 mb-2">
                                                         <Bell size={20} className={notifications.browserPush ? 'text-[#004fa2]' : 'text-gray-400'} />
-                                                        <span className="font-bold text-gray-900">Browser Push</span>
+                                                        <span className="font-bold text-gray-900 text-sm">Browser Push</span>
                                                     </div>
-                                                    <p className="text-xs text-gray-500">Receive pop-up notifications when online</p>
+                                                    <p className="text-xs text-gray-500">Deliver pop-up notifications when online</p>
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        <div className="pt-4 border-t border-gray-100">
+                                            <button
+                                                onClick={async () => {
+                                                    try {
+                                                        await authService.updateNotificationPreferences(notifications);
+                                                        setSuccessMessage('Notification preferences saved!');
+                                                        setShowSuccess(true);
+                                                        setTimeout(() => setShowSuccess(false), 3000);
+                                                    } catch (_e) {
+                                                        setErrorMessage('Failed to save preferences.');
+                                                        setTimeout(() => setErrorMessage(''), 3000);
+                                                    }
+                                                }}
+                                                className="px-5 py-2.5 bg-[#004fa2] hover:bg-[#003d7a] text-white text-sm font-medium rounded-xl transition-colors shadow-sm"
+                                            >
+                                                Save Notification Preferences
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -698,30 +911,35 @@ const AdminProfilePage = () => {
                                     Recent Activity
                                 </h3>
 
-                                <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
-                                    {[
-                                        { action: 'Updated Payment Settings', desc: 'Changed global currency settings to GHS', date: '2 hours ago', icon: Edit, color: 'text-blue-500' },
-                                        { action: 'Approved New Course', desc: 'Released "Advanced Data Science" module', date: 'Yesterday', icon: CheckCircle, color: 'text-green-500' },
-                                        { action: 'Login Detected', desc: 'Login from new device (Safari on iPhone)', date: '2 days ago', icon: Lock, color: 'text-gray-500' },
-                                        { action: 'Exported Report', desc: 'Downloaded Monthly Revenue Report (PDF)', date: '3 days ago', icon: Save, color: 'text-purple-500' },
-                                    ].map((item, idx) => {
-                                        const Icon = item.icon;
-                                        return (
-                                            <div key={idx} className="relative flex items-start gap-3 ml-0 pl-0">
-                                                <div className="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-full bg-white text-[#004fa2] shadow shrink-0 z-10 border border-gray-100">
-                                                    <Icon size={16} />
+                                {activityLogs.length > 0 ? (
+                                    <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
+                                        {activityLogs.map((item, idx) => (
+                                            <div key={item.id || idx} className="relative flex items-start gap-3 ml-0 pl-0">
+                                                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 text-[#004fa2] shadow-sm shrink-0 z-10 border border-blue-100">
+                                                    <Activity size={14} />
                                                 </div>
-                                                <div className="flex-1 bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm">
+                                                <div className="flex-1 bg-white p-3 md:p-4 rounded-xl border border-gray-100 shadow-sm">
                                                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-1">
-                                                        <div className="font-bold text-slate-900 text-sm">{item.action}</div>
-                                                        <time className="font-medium text-indigo-500 text-xs">{item.date}</time>
+                                                        <div className="font-bold text-slate-900 text-sm capitalize">
+                                                            {item.description || item.type?.replace(/_/g, ' ')}
+                                                        </div>
+                                                        <time className="font-medium text-blue-600 text-xs">
+                                                            {formatDate(item.timestamp)}
+                                                        </time>
                                                     </div>
-                                                    <div className="text-slate-500 text-xs sm:text-sm">{item.desc}</div>
+                                                    <div className="text-slate-500 text-xs">
+                                                        {item.details?.device ? `${item.details.device} • ${item.details.browser || ''}` : 'Admin activity recorded'}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        );
-                                    })}
-                                </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8 text-gray-500 text-sm">
+                                        <Activity className="mx-auto mb-2 text-gray-400" size={32} />
+                                        <p>No recent activity recorded yet.</p>
+                                    </div>
+                                )}
                             </div>
                         )}
 
