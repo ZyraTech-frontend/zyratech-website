@@ -36,10 +36,22 @@ export const userService = {
     return response.data.data;
   },
 
-  // Suspend user (super admin)
-  suspendUser: async (id) => {
-    const response = await api.patch(`/admin/users/${id}/suspend`);
-    return response.data.data;
+  // Deactivate user (super admin)
+  deactivateUser: async (id, reason) => {
+    const body = reason ? { reason } : {};
+    const response = await api.put(`/admin/users/${id}/deactivate`, body);
+    return response.data?.data || response.data;
+  },
+
+  // Activate user (super admin)
+  activateUser: async (id) => {
+    const response = await api.put(`/admin/users/${id}/activate`);
+    return response.data?.data || response.data;
+  },
+
+  // Suspend user (super admin - alias to deactivateUser)
+  suspendUser: async (id, reason) => {
+    return userService.deactivateUser(id, reason);
   },
 
   // Delete user (super admin)

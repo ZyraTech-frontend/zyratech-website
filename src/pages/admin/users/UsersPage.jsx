@@ -140,9 +140,13 @@ const UsersPage = () => {
       title: 'Deactivate Administrator',
       message: `Are you sure you want to deactivate "${admin.name}"? This will revoke their access immediately. Their account can be reactivated later. Accounts are never deleted to preserve audit trails.`,
       isDangerous: true,
-      onConfirm: () => {
-        dispatch(deactivateUser(admin.id));
-        dispatch(addNotification({ type: 'success', message: `"${admin.name}" has been deactivated.` }));
+      onConfirm: async () => {
+        try {
+          await dispatch(deactivateUser(admin.id)).unwrap();
+          dispatch(addNotification({ type: 'success', message: `"${admin.name}" has been deactivated.` }));
+        } catch (err) {
+          dispatch(addNotification({ type: 'error', message: err || `Failed to deactivate "${admin.name}".` }));
+        }
       }
     }));
   };
@@ -150,10 +154,14 @@ const UsersPage = () => {
   const handleReactivate = (admin) => {
     dispatch(openConfirmDialog({
       title: 'Reactivate Administrator',
-      message: `Reactivate "${admin.name}"'s account? They will regain access with their existing role (${ROLE_LABELS[admin.role]}).`,
-      onConfirm: () => {
-        dispatch(reactivateUser(admin.id));
-        dispatch(addNotification({ type: 'success', message: `"${admin.name}" has been reactivated.` }));
+      message: `Reactivate "${admin.name}"'s account? They will regain access with their existing role (${ROLE_LABELS[admin.role] || admin.role}).`,
+      onConfirm: async () => {
+        try {
+          await dispatch(reactivateUser(admin.id)).unwrap();
+          dispatch(addNotification({ type: 'success', message: `"${admin.name}" has been reactivated.` }));
+        } catch (err) {
+          dispatch(addNotification({ type: 'error', message: err || `Failed to reactivate "${admin.name}".` }));
+        }
       }
     }));
   };

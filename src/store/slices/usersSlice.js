@@ -100,10 +100,17 @@ export const deleteUser = createAsyncThunk(
 
 export const deactivateUser = createAsyncThunk(
   'users/deactivateUser',
-  async (id, { rejectWithValue }) => {
+  async (arg, { rejectWithValue }) => {
     try {
-      const result = await userService.suspendUser(id);
-      return { id, deactivatedAt: result?.deactivatedAt || new Date().toISOString() };
+      const id = typeof arg === 'string' ? arg : arg?.id;
+      const reason = typeof arg === 'object' ? arg?.reason : undefined;
+      const result = await userService.deactivateUser(id, reason);
+      return {
+        id,
+        accountStatus: 'deactivated',
+        status: 'inactive',
+        deactivatedAt: result?.deactivatedAt || new Date().toISOString()
+      };
     } catch (error) {
       return rejectWithValue(error.userMessage || error.message || 'Failed to deactivate user');
     }
@@ -114,8 +121,14 @@ export const reactivateUser = createAsyncThunk(
   'users/reactivateUser',
   async (id, { rejectWithValue }) => {
     try {
-      const result = await userService.updateUser(id, { status: 'active', isDeactivated: false });
-      return normalizeUser(result);
+      const result = await userService.activateUser(id);
+      return {
+        id,
+        accountStatus: 'active',
+        status: 'active',
+        deactivatedAt: null,
+        ...(result || {})
+      };
     } catch (error) {
       return rejectWithValue(error.userMessage || error.message || 'Failed to reactivate user');
     }
@@ -179,12 +192,28 @@ const usersSlice = createSlice({
             deactivatedAt: action.payload.deactivatedAt
           };
         }
+        if (state.selectedUser?.id === action.payload.id) {
+          state.selectedUser = {
+            ...state.selectedUser,
+            accountStatus: 'deactivated',
+            status: 'inactive',
+            deactivatedAt: action.payload.deactivatedAt
+          };
+        }
       })
       .addCase(reactivateUser.fulfilled, (state, action) => {
         const index = state.items.findIndex((u) => u.id === action.payload.id);
         if (index !== -1) {
           state.items[index] = {
             ...state.items[index],
+            accountStatus: 'active',
+            status: 'active',
+            deactivatedAt: null
+          };
+        }
+        if (state.selectedUser?.id === action.payload.id) {
+          state.selectedUser = {
+            ...state.selectedUser,
             accountStatus: 'active',
             status: 'active',
             deactivatedAt: null
