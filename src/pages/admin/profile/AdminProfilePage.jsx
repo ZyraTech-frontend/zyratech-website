@@ -163,7 +163,13 @@ const AdminProfilePage = () => {
 
         try {
             const actionResult = await dispatch(uploadUserAvatar(file)).unwrap();
-            const persistentAvatarUrl = actionResult?.avatar || actionResult?.user?.avatar;
+            const persistentAvatarUrl =
+                actionResult?.avatar ||
+                actionResult?.user?.avatar ||
+                actionResult?.user?.avatarUrl ||
+                actionResult?.url ||
+                actionResult?.avatarUrl ||
+                actionResult?.imageUrl;
 
             if (persistentAvatarUrl) {
                 setUserData(prev => ({

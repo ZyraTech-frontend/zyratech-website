@@ -265,7 +265,13 @@ export const uploadUserAvatar = createAsyncThunk(
       const { auth } = getState();
       const apiUser = result?.user || result?.data || result || {};
 
-      const avatarUrl = apiUser.avatar || (typeof apiUser === 'string' ? apiUser : null);
+      const avatarUrl =
+        apiUser.avatar ||
+        apiUser.avatarUrl ||
+        apiUser.url ||
+        apiUser.imageUrl ||
+        apiUser.image ||
+        (typeof apiUser === 'string' ? apiUser : null);
 
       const updatedUser = sanitizeUser({
         ...auth.user,
