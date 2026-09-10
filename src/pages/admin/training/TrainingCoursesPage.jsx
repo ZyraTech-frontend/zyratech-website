@@ -3,13 +3,14 @@
  * Professional admin interface for managing training courses
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
+import { fetchCourses, deleteCourse, togglePublishCourse } from '../../../store/slices/coursesSlice';
+import trainingService from '../../../services/trainingService';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { trainingCourses as initialMockCourses } from '../../../data/trainingCourses';
 import {
     GraduationCap,
     Plus,
@@ -72,129 +73,18 @@ const CourseBadge = ({ type, children }) => {
     );
 };
 
-// Mock Applications Data (TODO: Replace with API calls)
-const MOCK_APPLICATIONS = [
-    {
-        id: 'APP001',
-        courseId: 1,
-        courseTitle: 'Full Stack Web Development',
-        applicantName: 'Kwame Mensah',
-        email: 'kwame.mensah@email.com',
-        phone: '+233 24 123 4567',
-        country: 'Ghana',
-        location: 'Accra',
-        educationLevel: 'Undergraduate',
-        preferredCohort: 'April to July',
-        learningMode: 'Hybrid',
-        status: 'pending',
-        appliedDate: '2026-02-05',
-        cvFileName: 'Kwame_Mensah_CV.pdf',
-        motivationStatement: 'I am passionate about web development and have been self-learning for 2 years. This program will help me transition into a full-time developer role.',
-        linkedinUrl: 'https://linkedin.com/in/kwamemensah',
-        websiteUrl: 'https://kwamemensah.dev'
-    },
-    {
-        id: 'APP002',
-        courseId: 2,
-        courseTitle: 'Software Development Internship',
-        applicantName: 'Ama Osei',
-        email: 'ama.osei@email.com',
-        phone: '+233 27 987 6543',
-        country: 'Ghana',
-        location: 'Kumasi',
-        educationLevel: 'Graduate',
-        preferredCohort: 'January to April',
-        learningMode: 'Onsite',
-        status: 'approved',
-        appliedDate: '2026-02-03',
-        cvFileName: 'Ama_Osei_Resume.pdf',
-        motivationStatement: 'Recent CS graduate eager to gain hands-on industry experience. I have strong foundation in Java and Python.',
-        linkedinUrl: 'https://linkedin.com/in/amaosei'
-    },
-    {
-        id: 'APP003',
-        courseId: 3,
-        courseTitle: 'AI & Machine Learning',
-        applicantName: 'Ebenezer Lartey',
-        email: 'kofi.asante@email.com',
-        phone: '+233 20 555 8888',
-        country: 'Ghana',
-        location: 'Takoradi',
-        educationLevel: 'Graduate',
-        preferredCohort: 'July to October',
-        learningMode: 'Online',
-        status: 'pending',
-        appliedDate: '2026-02-07',
-        cvFileName: 'Kofi_Asante_CV.pdf',
-        motivationStatement: 'Data scientist looking to expand skills in AI/ML. Have experience with TensorFlow and want to work on real-world projects.',
-        linkedinUrl: 'https://linkedin.com/in/kofiasante',
-        websiteUrl: 'https://github.com/kofiasante'
-    },
-    {
-        id: 'APP004',
-        courseId: 1,
-        courseTitle: 'Full Stack Web Development',
-        applicantName: 'Abena Frimpong',
-        email: 'abena.frimpong@email.com',
-        phone: '+233 24 777 3333',
-        country: 'Ghana',
-        location: 'Koforidua',
-        educationLevel: 'Diploma',
-        preferredCohort: 'April to July',
-        learningMode: 'Hybrid',
-        status: 'rejected',
-        appliedDate: '2026-02-01',
-        cvFileName: 'Abena_Frimpong_CV.pdf',
-        motivationStatement: 'Career changer from marketing to tech. Completed online HTML/CSS courses and ready for intensive training.',
-        rejectionReason: 'Insufficient technical background for this advanced program'
-    },
-    {
-        id: 'APP005',
-        courseId: 4,
-        courseTitle: 'DevOps Engineering',
-        applicantName: 'Yaw Boateng',
-        email: 'yaw.boateng@email.com',
-        phone: '+233 55 444 2222',
-        country: 'Ghana',
-        location: 'Accra',
-        educationLevel: 'Undergraduate',
-        preferredCohort: 'April to July',
-        learningMode: 'Online',
-        status: 'approved',
-        appliedDate: '2026-02-06',
-        cvFileName: 'Yaw_Boateng_Resume.pdf',
-        motivationStatement: 'Systems administrator with 3 years experience. Want to learn modern DevOps practices, CI/CD, and cloud infrastructure.',
-        linkedinUrl: 'https://linkedin.com/in/yawboateng'
-    },
-    {
-        id: 'APP006',
-        courseId: 5,
-        courseTitle: 'Career Transition to Tech Program',
-        applicantName: 'Efua Darko',
-        email: 'efua.darko@email.com',
-        phone: '+233 26 111 9999',
-        country: 'Ghana',
-        location: 'Tema',
-        educationLevel: 'JHS / SHS',
-        preferredCohort: 'January to April',
-        learningMode: 'Onsite',
-        status: 'pending',
-        appliedDate: '2026-02-08',
-        cvFileName: 'Efua_Darko_CV.pdf',
-        motivationStatement: 'Teacher looking to transition into tech industry. Fascinated by technology and eager to learn coding from scratch.'
-    }
-];
-
 const TrainingCoursesPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { isSuperAdmin } = usePermissions();
 
+    // Redux live courses state
+    const { items: courses = [], loading: coursesLoading, error: coursesError } = useSelector((state) => state.courses);
+
     // Tab state
     const [activeTab, setActiveTab] = useState('courses'); // 'courses' or 'applications'
 
     // Courses state
-    const [courses, setCourses] = useState(initialMockCourses);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [selectedLevel, setSelectedLevel] = useState('all');
@@ -202,14 +92,38 @@ const TrainingCoursesPage = () => {
     const [viewingCourse, setViewingCourse] = useState(null);
     const [showDropdown, setShowDropdown] = useState(null);
 
-    // Applications state
-    const [applications, setApplications] = useState(MOCK_APPLICATIONS);
+    // Live Applications state
+    const [applications, setApplications] = useState([]);
+    const [applicationsLoading, setApplicationsLoading] = useState(false);
     const [applicationsSearch, setApplicationsSearch] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [selectedCourse, setSelectedCourse] = useState('all');
     const [applicationsPage, setApplicationsPage] = useState(1);
 
     const itemsPerPage = 8;
+
+    // Fetch courses on mount
+    useEffect(() => {
+        dispatch(fetchCourses());
+    }, [dispatch]);
+
+    // Fetch live applications / enrollments
+    const loadApplications = async () => {
+        setApplicationsLoading(true);
+        try {
+            const data = await trainingService.getAllEnrollments();
+            const list = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.enrollments || []));
+            setApplications(list);
+        } catch (err) {
+            console.error('Failed to load applications:', err);
+        } finally {
+            setApplicationsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadApplications();
+    }, []);
 
     // Filter and search courses
     const filteredCourses = useMemo(() => {
@@ -219,24 +133,25 @@ const TrainingCoursesPage = () => {
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
             result = result.filter(course =>
-                course.title.toLowerCase().includes(query) ||
-                course.description.toLowerCase().includes(query) ||
-                course.instructor?.toLowerCase().includes(query)
+                (course.title || '').toLowerCase().includes(query) ||
+                (course.description || '').toLowerCase().includes(query) ||
+                (course.shortDescription || '').toLowerCase().includes(query) ||
+                (course.instructor || '').toLowerCase().includes(query)
             );
         }
 
         // Category filter
         if (selectedCategory !== 'all') {
-            result = result.filter(course => course.category === selectedCategory);
+            result = result.filter(course => (course.category || '').toLowerCase() === selectedCategory.toLowerCase());
         }
 
         // Level filter
         if (selectedLevel !== 'all') {
-            result = result.filter(course => course.level.toLowerCase().includes(selectedLevel.toLowerCase()));
+            result = result.filter(course => (course.level || '').toLowerCase().includes(selectedLevel.toLowerCase()));
         }
 
         return result;
-    }, [searchQuery, selectedCategory, selectedLevel]);
+    }, [courses, searchQuery, selectedCategory, selectedLevel]);
 
     // Pagination
     const totalPages = Math.ceil(filteredCourses.length / itemsPerPage);
@@ -246,16 +161,15 @@ const TrainingCoursesPage = () => {
     );
 
     // Statistics
-    // Statistics
     const stats = useMemo(() => ({
         total: courses.length,
-        basic: courses.filter(c => c.category === 'basic').length,
-        intermediate: courses.filter(c => c.category === 'intermediate').length,
-        advanced: courses.filter(c => c.category === 'advanced').length,
-        matured: courses.filter(c => c.category === 'matured').length,
-        internship: courses.filter(c => c.category === 'internship').length,
-        avgRating: (courses.reduce((acc, c) => acc + c.rating, 0) / Math.max(1, courses.length)).toFixed(1),
-        totalReviews: courses.reduce((acc, c) => acc + c.reviews, 0)
+        basic: courses.filter(c => (c.category || '').toLowerCase() === 'basic').length,
+        intermediate: courses.filter(c => (c.category || '').toLowerCase() === 'intermediate').length,
+        advanced: courses.filter(c => (c.category || '').toLowerCase() === 'advanced').length,
+        matured: courses.filter(c => (c.category || '').toLowerCase() === 'matured').length,
+        internship: courses.filter(c => (c.category || '').toLowerCase() === 'internship').length,
+        avgRating: (courses.reduce((acc, c) => acc + (c.rating || 5.0), 0) / Math.max(1, courses.length)).toFixed(1),
+        totalReviews: courses.reduce((acc, c) => acc + (c.reviews || 0), 0)
     }), [courses]);
 
     // Applications filtering and stats
@@ -312,14 +226,38 @@ const TrainingCoursesPage = () => {
             title: 'Delete Course',
             message: `Are you sure you want to delete "${course.title}"? This action cannot be undone.`,
             isDangerous: true,
-            onConfirm: () => {
-                setCourses(prev => prev.filter(c => c.id !== course.id));
-                dispatch(addNotification({
-                    type: 'success',
-                    message: `Course "${course.title}" deleted successfully`
-                }));
+            onConfirm: async () => {
+                try {
+                    await dispatch(deleteCourse(course.id)).unwrap();
+                    dispatch(addNotification({
+                        type: 'success',
+                        message: `Course "${course.title}" deleted successfully`
+                    }));
+                } catch (err) {
+                    dispatch(addNotification({
+                        type: 'error',
+                        message: err || 'Failed to delete course'
+                    }));
+                }
             }
         }));
+    };
+
+    const handleTogglePublish = async (course) => {
+        const isPublished = course.status === 'published' || course.isPublished;
+        const nextStatus = isPublished ? 'draft' : 'published';
+        try {
+            await dispatch(togglePublishCourse({ id: course.id, status: nextStatus })).unwrap();
+            dispatch(addNotification({
+                type: 'success',
+                message: `Course "${course.title}" marked as ${nextStatus}`
+            }));
+        } catch (err) {
+            dispatch(addNotification({
+                type: 'error',
+                message: err || 'Failed to update course status'
+            }));
+        }
     };
 
     const handleView = (course) => {
@@ -347,34 +285,52 @@ const TrainingCoursesPage = () => {
     };
 
     const handleApproveApplication = (application) => {
+        const applicantName = application.applicantName || application.student?.name || application.user?.name || 'Applicant';
         dispatch(openConfirmDialog({
             title: 'Approve Application',
-            message: `Approve ${application.applicantName}'s application for ${application.courseTitle}?`,
-            onConfirm: () => {
-                setApplications(prev => prev.map(app =>
-                    app.id === application.id ? { ...app, status: 'approved' } : app
-                ));
-                dispatch(addNotification({
-                    type: 'success',
-                    message: `Application for ${application.applicantName} approved`
-                }));
+            message: `Approve application for ${applicantName}?`,
+            onConfirm: async () => {
+                try {
+                    await trainingService.updateEnrollmentStatus(application.id, 'approved');
+                    setApplications(prev => prev.map(app =>
+                        app.id === application.id ? { ...app, status: 'approved' } : app
+                    ));
+                    dispatch(addNotification({
+                        type: 'success',
+                        message: `Application for ${applicantName} approved`
+                    }));
+                } catch (err) {
+                    dispatch(addNotification({
+                        type: 'error',
+                        message: err?.message || 'Failed to approve application'
+                    }));
+                }
             }
         }));
     };
 
     const handleRejectApplication = (application) => {
+        const applicantName = application.applicantName || application.student?.name || application.user?.name || 'Applicant';
         dispatch(openConfirmDialog({
             title: 'Reject Application',
-            message: `Are you sure you want to reject ${application.applicantName}'s application?`,
+            message: `Are you sure you want to reject application for ${applicantName}?`,
             isDangerous: true,
-            onConfirm: () => {
-                setApplications(prev => prev.map(app =>
-                    app.id === application.id ? { ...app, status: 'rejected' } : app
-                ));
-                dispatch(addNotification({
-                    type: 'info',
-                    message: `Application for ${application.applicantName} rejected`
-                }));
+            onConfirm: async () => {
+                try {
+                    await trainingService.updateEnrollmentStatus(application.id, 'rejected');
+                    setApplications(prev => prev.map(app =>
+                        app.id === application.id ? { ...app, status: 'rejected' } : app
+                    ));
+                    dispatch(addNotification({
+                        type: 'info',
+                        message: `Application for ${applicantName} rejected`
+                    }));
+                } catch (err) {
+                    dispatch(addNotification({
+                        type: 'error',
+                        message: err?.message || 'Failed to reject application'
+                    }));
+                }
             }
         }));
     };
@@ -586,101 +542,122 @@ const TrainingCoursesPage = () => {
                         </div>
 
                         {/* Course Cards Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                            {paginatedCourses.map((course) => (
-                                <div
-                                    key={course.id}
-                                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group"
-                                >
-                                    {/* Card Header with Category */}
-                                    <div className="relative p-3 pb-1.5">
-                                        <div className="flex items-start justify-between mb-2">
-                                            <span className={`px-1.5 py-0.5 rounded border text-[9px] font-bold uppercase ${CATEGORY_CONFIG[course.category]?.color}`}>
-                                                {CATEGORY_CONFIG[course.category]?.label}
-                                            </span>
-                                            {course.badge && <CourseBadge type={course.badge}>{course.badge}</CourseBadge>}
+                        {coursesLoading ? (
+                            <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100 flex flex-col items-center justify-center min-h-[300px]">
+                                <div className="w-10 h-10 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin mb-3"></div>
+                                <p className="text-sm font-medium text-gray-600">Loading courses from server...</p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                                {paginatedCourses.map((course) => (
+                                    <div
+                                        key={course.id}
+                                        className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group"
+                                    >
+                                        {/* Card Header with Category */}
+                                        <div className="relative p-3 pb-1.5">
+                                            <div className="flex items-start justify-between mb-2">
+                                                <span className={`px-1.5 py-0.5 rounded border text-[9px] font-bold uppercase ${CATEGORY_CONFIG[course.category]?.color || 'bg-gray-100 text-gray-700'}`}>
+                                                    {CATEGORY_CONFIG[course.category]?.label || course.category || 'Course'}
+                                                </span>
+                                                <div className="flex items-center gap-1">
+                                                    <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase ${(course.status === 'published' || course.isPublished) ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                                                        {(course.status === 'published' || course.isPublished) ? 'Published' : 'Draft'}
+                                                    </span>
+                                                    {course.badge && <CourseBadge type={course.badge}>{course.badge}</CourseBadge>}
+                                                </div>
+                                            </div>
+
+                                            <h3 className="text-sm font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors line-clamp-2 leading-tight min-h-[38px] mb-1">
+                                                {course.title}
+                                            </h3>
+
+                                            <p className="text-[10px] text-gray-500 line-clamp-2 leading-snug">
+                                                {course.shortDescription || course.description}
+                                            </p>
                                         </div>
 
-                                        <h3 className="text-sm font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors line-clamp-2 leading-tight min-h-[38px] mb-1">
-                                            {course.title}
-                                        </h3>
+                                        {/* Course Meta */}
+                                        <div className="px-3 py-2 bg-gray-50/50 border-t border-gray-100">
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div className="flex items-center gap-1.5 text-[10px] text-gray-600 truncate">
+                                                    <Clock size={11} className="text-gray-400 shrink-0" />
+                                                    <span className="truncate">{course.duration || 'Flexible'}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1.5 text-[10px] text-gray-600 truncate">
+                                                    <Users size={11} className="text-gray-400 shrink-0" />
+                                                    <span className="truncate">{course.participants || course._count?.enrollments || 0} enrolled</span>
+                                                </div>
+                                                <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
+                                                    <Star size={11} className="text-amber-400 fill-amber-400 shrink-0" />
+                                                    <span className="font-bold text-gray-900">{course.rating || '5.0'}</span>
+                                                    <span className="text-[8px] text-gray-400">({course.reviews || 0})</span>
+                                                </div>
+                                                <div className="flex items-center gap-1 text-[10px] truncate">
+                                                    <DollarSign size={11} className="text-green-500 shrink-0" />
+                                                    <span className="font-bold text-gray-900 truncate">
+                                                        {course.price ? (typeof course.price === 'number' ? `GHS ${course.price.toLocaleString()}` : course.price) : 'Free'}
+                                                    </span>
+                                                </div>
+                                            </div>
 
-                                        <p className="text-[10px] text-gray-500 line-clamp-2 leading-snug">
-                                            {course.description}
-                                        </p>
-                                    </div>
-
-                                    {/* Course Meta */}
-                                    <div className="px-3 py-2 bg-gray-50/50 border-t border-gray-100">
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <div className="flex items-center gap-1.5 text-[10px] text-gray-600 truncate">
-                                                <Clock size={11} className="text-gray-400 shrink-0" />
-                                                <span className="truncate">{course.duration}</span>
-                                            </div>
-                                            <div className="flex items-center gap-1.5 text-[10px] text-gray-600 truncate">
-                                                <Users size={11} className="text-gray-400 shrink-0" />
-                                                <span className="truncate">{course.participants}</span>
-                                            </div>
-                                            <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
-                                                <Star size={11} className="text-amber-400 fill-amber-400 shrink-0" />
-                                                <span className="font-bold text-gray-900">{course.rating}</span>
-                                                <span className="text-[8px] text-gray-400">({course.reviews})</span>
-                                            </div>
-                                            <div className="flex items-center gap-1 text-[10px] truncate">
-                                                <DollarSign size={11} className="text-green-500 shrink-0" />
-                                                <span className="font-bold text-gray-900 truncate">{course.price}</span>
+                                            {/* Level and Format */}
+                                            <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-gray-100">
+                                                <span className="text-[9px] font-bold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded truncate">
+                                                    {course.level || 'All Levels'}
+                                                </span>
+                                                <span className="text-[9px] font-bold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded truncate">
+                                                    {course.format || 'Online'}
+                                                </span>
                                             </div>
                                         </div>
 
-                                        {/* Level and Format */}
-                                        <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-gray-100">
-                                            <span className="text-[9px] font-bold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded truncate">
-                                                {course.level}
-                                            </span>
-                                            <span className="text-[9px] font-bold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded truncate">
-                                                {course.format}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* Actions */}
-                                    <div className="px-3 py-2 border-t border-gray-100 flex items-center justify-between bg-white">
-                                        <div className="flex items-center gap-0.5">
-                                            <button
-                                                onClick={() => handleView(course)}
-                                                className="p-1.5 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors"
-                                                title="View Details"
+                                        {/* Actions */}
+                                        <div className="px-3 py-2 border-t border-gray-100 flex items-center justify-between bg-white">
+                                            <div className="flex items-center gap-0.5">
+                                                <button
+                                                    onClick={() => handleView(course)}
+                                                    className="p-1.5 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors"
+                                                    title="View Details"
+                                                >
+                                                    <Eye size={14} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleTogglePublish(course)}
+                                                    className={`p-1.5 rounded transition-colors ${(course.status === 'published' || course.isPublished) ? 'text-green-600 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-100'}`}
+                                                    title={(course.status === 'published' || course.isPublished) ? 'Published (Click to unpublish)' : 'Draft (Click to publish)'}
+                                                >
+                                                    {(course.status === 'published' || course.isPublished) ? <CheckCircle size={14} /> : <EyeOff size={14} />}
+                                                </button>
+                                                <button
+                                                    onClick={() => handleEdit(course)}
+                                                    className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
+                                                    title="Edit Course"
+                                                >
+                                                    <Edit size={14} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(course)}
+                                                    className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                                                    title="Delete Course"
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </div>
+                                            <a
+                                                href={`/training/course/${course.id || course.slug}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-1 text-[10px] text-[#004fa2] hover:underline font-bold uppercase transition-all"
                                             >
-                                                <Eye size={14} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleEdit(course)}
-                                                className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
-                                                title="Edit Course"
-                                            >
-                                                <Edit size={14} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(course)}
-                                                className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                                                title="Delete Course"
-                                            >
-                                                <Trash2 size={14} />
-                                            </button>
+                                                Preview
+                                                <ExternalLink size={10} />
+                                            </a>
                                         </div>
-                                        <a
-                                            href={`/training/course/${course.id}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center gap-1 text-[10px] text-[#004fa2] hover:underline font-bold uppercase transition-all"
-                                        >
-                                            Preview
-                                            <ExternalLink size={10} />
-                                        </a>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        )}
 
                         {/* Empty State */}
                         {filteredCourses.length === 0 && (

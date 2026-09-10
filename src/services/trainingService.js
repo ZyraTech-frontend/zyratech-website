@@ -42,10 +42,10 @@ export const trainingService = {
     return response.data;
   },
 
-  // Admin: Publish course
-  publishCourse: async (id) => {
-    const response = await api.patch(`/admin/training-courses/${id}/publish`);
-    return response.data.data;
+  // Admin: Publish / Unpublish course
+  publishCourse: async (id, status = 'published') => {
+    const response = await api.patch(`/admin/training-courses/${id}/publish`, { status });
+    return response.data?.data || response.data;
   },
 
   // Admin: Get course enrollments
@@ -53,7 +53,31 @@ export const trainingService = {
     const response = await api.get(`/admin/training-courses/${courseId}/enrollments`, {
       params
     });
-    return response.data.data;
+    return response.data?.data || response.data;
+  },
+
+  // Admin: Get all enrollments
+  getAllEnrollments: async (params = {}) => {
+    const response = await api.get('/admin/enrollments', { params });
+    return response.data?.data || response.data;
+  },
+
+  // Admin: Get single enrollment
+  getEnrollment: async (id) => {
+    const response = await api.get(`/admin/enrollments/${id}`);
+    return response.data?.data || response.data;
+  },
+
+  // Admin: Update enrollment status
+  updateEnrollmentStatus: async (id, status, notes = '') => {
+    const response = await api.patch(`/admin/enrollments/${id}`, { status, notes });
+    return response.data?.data || response.data;
+  },
+
+  // Admin: Delete enrollment
+  deleteEnrollment: async (id) => {
+    const response = await api.delete(`/admin/enrollments/${id}`);
+    return response.data?.data || response.data;
   }
 };
 

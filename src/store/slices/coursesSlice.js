@@ -42,6 +42,31 @@ export const updateCourse = createAsyncThunk(
   }
 );
 
+export const fetchCourseById = createAsyncThunk(
+  'courses/fetchCourseById',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/training-courses/${id}`);
+      return response.data?.data || response.data;
+    } catch (error) {
+      return rejectWithValue(error.userMessage || error.response?.data?.error?.message || error.message);
+    }
+  }
+);
+
+export const togglePublishCourse = createAsyncThunk(
+  'courses/togglePublishCourse',
+  async ({ id, status }, { rejectWithValue }) => {
+    try {
+      const response = await api.patch(`/admin/training-courses/${id}/publish`, { status });
+      const payload = response.data?.data || response.data;
+      return { id, status, ...(typeof payload === 'object' ? payload : {}) };
+    } catch (error) {
+      return rejectWithValue(error.userMessage || error.response?.data?.error?.message || error.message);
+    }
+  }
+);
+
 export const deleteCourse = createAsyncThunk(
   'courses/deleteCourse',
   async (id, { rejectWithValue }) => {
@@ -49,7 +74,7 @@ export const deleteCourse = createAsyncThunk(
       await api.delete(`/admin/training-courses/${id}`);
       return id;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error?.message);
+      return rejectWithValue(error.userMessage || error.response?.data?.error?.message || error.message);
     }
   }
 );
@@ -68,15 +93,46 @@ const coursesSlice = createSlice({
       totalPages: 0
     }
   },
+  reducers: {
+    clearSelectedCourse: (state) => {
+      state.selectedCourse = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
       // Fetch courses
       .addCase(fetchCourses.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchCourses.fulfilled, (state, action) => {
-        state.items = action.payload.data || [];
-        state.pagination = action.payload.pagination || state.pagination;
+        const raw = action.payload;
+        const items = Array.isArray(raw)
+          ? raw
+          : Array.isArray(raw?.data)
+          ? raw.data
+          : Array.isArray(raw?.courses)
+          ? raw.courses
+          : [];
+
+        state.items = items;
+        if (raw?.pagination) {
+          state.pagination = raw.pagination;
+        } else if (raw?.total !== undefined) {
+          state.pagination = {
+            page: raw.page || 1,
+            limit: raw.limit || 10,
+            total: raw.total,
+            totalPages: raw.totalPages || Math.ceil(raw.total / (raw.limit || 10))
+          };
+        } else {
+          state.pagination = {
+            page: 1,
+            limit: items.length || 10,
+            total: items.length,
+            totalPages: 1
+          };
+        }
         state.loading = false;
         state.error = null;
       })
@@ -85,16 +141,48 @@ const coursesSlice = createSlice({
         state.loading = false;
       })
 
+      // Fetch course by id
+      .addCase(fetchCourseById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCourseById.fulfilled, (state, action) => {
+        state.selectedCourse = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchCourseById.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      })
+
       // Create course
       .addCase(createCourse.fulfilled, (state, action) => {
-        state.items.unshift(action.payload);
+        const newCourse = action.payload?.course || action.payload?.data || action.payload;
+        if (newCourse && typeof newCourse === 'object') {
+          state.items.unshift(newCourse);
+        }
       })
 
       // Update course
       .addCase(updateCourse.fulfilled, (state, action) => {
+        const updated = action.payload?.course || action.payload?.data || action.payload;
+        if (updated && updated.id) {
+          const index = state.items.findIndex((c) => c.id === updated.id);
+          if (index !== -1) {
+            state.items[index] = { ...state.items[index], ...updated };
+          }
+        }
+      })
+
+      // Toggle Publish
+      .addCase(togglePublishCourse.fulfilled, (state, action) => {
         const index = state.items.findIndex((c) => c.id === action.payload.id);
         if (index !== -1) {
-          state.items[index] = action.payload;
+          state.items[index] = {
+            ...state.items[index],
+            ...action.payload,
+            status: action.payload.status
+          };
         }
       })
 
@@ -105,4 +193,5 @@ const coursesSlice = createSlice({
   }
 });
 
+export const { clearSelectedCourse } = coursesSlice.actions;
 export default coursesSlice.reducer;

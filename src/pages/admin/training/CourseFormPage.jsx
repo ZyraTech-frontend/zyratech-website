@@ -6,9 +6,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
+import { createCourse, updateCourse } from '../../../store/slices/coursesSlice';
+import trainingService from '../../../services/trainingService';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { getTrainingCourseById } from '../../../data/trainingCourses';
 import {
     ChevronLeft,
     ChevronRight,
@@ -103,7 +104,7 @@ const CourseFormPage = () => {
     const dispatch = useDispatch();
 
     const isEditing = Boolean(id);
-    const existingCourse = isEditing ? getTrainingCourseById(parseInt(id)) : null;
+    const [isLoadingCourse, setIsLoadingCourse] = useState(false);
 
     // Step state
     const [currentStep, setCurrentStep] = useState(0);
@@ -112,6 +113,7 @@ const CourseFormPage = () => {
     const [formData, setFormData] = useState({
         // Basic Info
         title: '',
+        slug: '',
         category: 'basic',
         level: 'Beginner',
         iconKey: 'code',
@@ -155,38 +157,56 @@ const CourseFormPage = () => {
     const [errors, setErrors] = useState({});
     const [isSaving, setIsSaving] = useState(false);
 
-    // Load existing course data for editing
+    // Load existing course data for editing from live backend
     useEffect(() => {
-        if (isEditing && existingCourse) {
-            setFormData({
-                title: existingCourse.title || '',
-                category: existingCourse.category || 'basic',
-                level: existingCourse.level || 'Beginner',
-                iconKey: existingCourse.iconKey || 'code',
-                badge: existingCourse.badge || '',
-                description: existingCourse.description || '',
-                longDescription: existingCourse.longDescription || '',
-                programOverview: existingCourse.programOverview || '',
-                heroInfoText: existingCourse.heroInfoText || '',
-                duration: existingCourse.duration || '',
-                schedule: existingCourse.schedule || '',
-                format: existingCourse.format || 'Hybrid',
-                deadline: existingCourse.deadline || '',
-                price: existingCourse.price || '',
-                originalPrice: existingCourse.originalPrice || '',
-                participants: existingCourse.participants || '',
-                instructor: existingCourse.instructor || '',
-                certificate: existingCourse.certificate || '',
-                rating: existingCourse.rating?.toString() || '',
-                reviews: existingCourse.reviews?.toString() || '',
-                heroImage: existingCourse.heroImage || '',
-                topicsText: existingCourse.topics?.join(', ') || '',
-                programmeObjectives: existingCourse.programmeObjectives?.length > 0
-                    ? existingCourse.programmeObjectives
-                    : [{ title: '', description: '' }]
-            });
+        if (isEditing && id) {
+            setIsLoadingCourse(true);
+            trainingService.getCourse(id)
+                .then(res => {
+                    const c = res?.course || res?.data || res;
+                    if (c) {
+                        setFormData({
+                            title: c.title || '',
+                            slug: c.slug || '',
+                            category: c.category || 'basic',
+                            level: c.level || 'Beginner',
+                            iconKey: c.iconKey || 'code',
+                            badge: c.badge || '',
+                            description: c.description || '',
+                            longDescription: c.longDescription || '',
+                            programOverview: c.programOverview || '',
+                            heroInfoText: c.heroInfoText || '',
+                            duration: c.duration || '',
+                            schedule: c.schedule || '',
+                            format: c.format || 'Hybrid',
+                            deadline: c.deadline || '',
+                            price: c.price ? String(c.price).replace(/[^0-9.]/g, '') : '',
+                            originalPrice: (c.discountPrice || c.originalPrice) ? String(c.discountPrice || c.originalPrice).replace(/[^0-9.]/g, '') : '',
+                            participants: c.participants ? String(c.participants) : '',
+                            instructor: c.instructor || (Array.isArray(c.instructors) ? c.instructors[0]?.name : '') || '',
+                            certificate: c.certificate || '',
+                            rating: c.rating ? String(c.rating) : '',
+                            reviews: c.reviews ? String(c.reviews) : '',
+                            heroImage: c.heroImage || c.image || '',
+                            topicsText: Array.isArray(c.topics) ? c.topics.join(', ') : (Array.isArray(c.tools) ? c.tools.join(', ') : ''),
+                            programmeObjectives: Array.isArray(c.programmeObjectives) && c.programmeObjectives.length > 0
+                                ? c.programmeObjectives
+                                : (Array.isArray(c.outcomes) ? c.outcomes.map(o => ({ title: o, description: '' })) : [{ title: '', description: '' }])
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.error('Failed to load course details:', err);
+                    dispatch(addNotification({
+                        type: 'error',
+                        message: 'Failed to load course details from server'
+                    }));
+                })
+                .finally(() => {
+                    setIsLoadingCourse(false);
+                });
         }
-    }, [isEditing, existingCourse]);
+    }, [isEditing, id, dispatch]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -304,23 +324,42 @@ const CourseFormPage = () => {
             }
         });
 
-        console.log('Saving course:', courseData);
+        try {
+            // Prepare normalized payload for backend
+            const payload = {
+                ...courseData,
+                slug: courseData.slug || courseData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+                shortDescription: (courseData.description || courseData.title || '').slice(0, 160),
+                price: typeof courseData.price === 'string' ? (parseFloat(courseData.price.replace(/[^0-9.]/g, '')) || 0) : (courseData.price || 0),
+                discountPrice: courseData.originalPrice ? parseFloat(String(courseData.originalPrice).replace(/[^0-9.]/g, '')) : undefined,
+                tools: courseData.topics,
+                outcomes: courseData.programmeObjectives.map(o => o.title || o.description).filter(Boolean)
+            };
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+            if (isEditing) {
+                await dispatch(updateCourse({ id, data: payload })).unwrap();
+                dispatch(addNotification({
+                    type: 'success',
+                    message: `Course "${formData.title}" updated successfully.`
+                }));
+            } else {
+                await dispatch(createCourse(payload)).unwrap();
+                dispatch(addNotification({
+                    type: 'success',
+                    message: `Course "${formData.title}" created successfully.`
+                }));
+            }
 
-        setIsSaving(false);
-
-        // Show success and navigate back
-        dispatch(openConfirmDialog({
-            title: isEditing ? 'Course Updated' : 'Course Created',
-            message: isEditing
-                ? `"${formData.title}" has been updated successfully.`
-                : `"${formData.title}" has been created successfully.`,
-            confirmText: 'OK',
-            hideCancelButton: true,
-            onConfirm: () => navigate('/admin/training')
-        }));
+            navigate('/admin/training');
+        } catch (err) {
+            console.error('Failed to save course:', err);
+            dispatch(addNotification({
+                type: 'error',
+                message: typeof err === 'string' ? err : 'Failed to save course. Please check all required fields.'
+            }));
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const handleCancel = () => {
@@ -337,20 +376,13 @@ const CourseFormPage = () => {
         }
     };
 
-    // If editing and course not found
-    if (isEditing && !existingCourse) {
+    // While loading the course for editing, show spinner
+    if (isEditing && isLoadingCourse) {
         return (
             <AdminLayout>
                 <div className="flex flex-col items-center justify-center min-h-[60vh]">
-                    <AlertCircle size={48} className="text-red-500 mb-4" />
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">Course Not Found</h2>
-                    <p className="text-gray-500 mb-4">The course you're trying to edit doesn't exist.</p>
-                    <button
-                        onClick={() => navigate('/admin/training')}
-                        className="text-[#004fa2] hover:underline font-medium"
-                    >
-                        Return to Training
-                    </button>
+                    <div className="w-10 h-10 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin mb-3"></div>
+                    <p className="text-sm font-medium text-gray-600">Loading course details...</p>
                 </div>
             </AdminLayout>
         );
@@ -876,7 +908,7 @@ const CourseFormPage = () => {
                                 {isEditing ? 'Edit Course' : 'Add New Course'}
                             </h1>
                             <p className="text-sm text-gray-500 mt-1">
-                                {isEditing ? `Editing: ${existingCourse?.title}` : 'Create a new training course'}
+                                {isEditing ? `Editing: ${formData.title || '...'}` : 'Create a new training course'}
                             </p>
                         </div>
                     </div>
