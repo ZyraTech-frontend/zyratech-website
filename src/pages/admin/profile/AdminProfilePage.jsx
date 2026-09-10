@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { useAuth } from '../../../hooks/useAuth';
-import { updateUserProfile, changePassword, verifySession } from '../../../store/slices/authSlice';
+import { updateUserProfile, changePassword, verifySession, uploadUserAvatar } from '../../../store/slices/authSlice';
 import authService from '../../../services/authService';
 import activityLogService from '../../../services/activityLogService';
 import {
@@ -30,7 +30,8 @@ import {
     Briefcase,
     Calendar,
     Clock,
-    Activity
+    Activity,
+    Loader2
 } from 'lucide-react';
 
 const AdminProfilePage = () => {
@@ -44,6 +45,7 @@ const AdminProfilePage = () => {
     const [showSuccess, setShowSuccess] = useState(false);
     const [successMessage, setSuccessMessage] = useState('Profile updated successfully!');
     const [errorMessage, setErrorMessage] = useState('');
+    const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
     // User profile state
     const [userData, setUserData] = useState({
@@ -130,101 +132,61 @@ const AdminProfilePage = () => {
         }
     }, [user]);
 
-    // Compress avatar to max 256x256 jpeg (~15-25KB) so it never exceeds localStorage quota or backend payload limits
-    const compressAvatarImage = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (event) => {
-                const img = new Image();
-                img.src = event.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const maxSize = 256;
-                    let width = img.width;
-                    let height = img.height;
-
-                    if (width > height) {
-                        if (width > maxSize) {
-                            height = Math.round((height * maxSize) / width);
-                            width = maxSize;
-                        }
-                    } else {
-                        if (height > maxSize) {
-                            width = Math.round((width * maxSize) / height);
-                            height = maxSize;
-                        }
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    const compressed = canvas.toDataURL('image/jpeg', 0.85);
-                    resolve(compressed);
-                };
-                img.onerror = () => reject(new Error('Failed to load image'));
-            };
-            reader.onerror = () => reject(new Error('Failed to read file'));
-        });
-    };
-
-    // Handle avatar upload
+    // Handle avatar upload via official POST /api/auth/profile/avatar endpoint
     const handleAvatarUpload = async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        if (!file.type.startsWith('image/')) {
-            alert('Please select an image file (JPG, PNG, etc.)');
+        // Validation per backend doc: JPG, PNG, WebP only, max 10MB
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        if (!validTypes.includes(file.type.toLowerCase())) {
+            setErrorMessage('Please select a valid image file (JPG, PNG, or WebP).');
+            setTimeout(() => setErrorMessage(''), 5000);
             return;
         }
 
+        const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+        if (file.size > MAX_SIZE) {
+            setErrorMessage('Image size exceeds 10MB limit. Please choose a smaller image.');
+            setTimeout(() => setErrorMessage(''), 5000);
+            return;
+        }
+
+        setIsUploadingAvatar(true);
+        setErrorMessage('');
+        setShowSuccess(false);
+
+        // Instant local preview for immediate visual feedback
+        const localPreviewUrl = URL.createObjectURL(file);
+        const previousAvatar = userData.avatar;
+        setUserData(prev => ({ ...prev, avatar: localPreviewUrl }));
+
         try {
-            // 1. Instant local preview with compression
-            const dataUrl = await compressAvatarImage(file);
-            setUserData(prev => ({
-                ...prev,
-                avatar: dataUrl
-            }));
-            try {
-                localStorage.setItem('admin_avatar', dataUrl);
-            } catch (storageErr) {
-                console.warn('LocalStorage avatar save failed:', storageErr);
-            }
-            window.dispatchEvent(new Event('avatar-updated'));
-            window.dispatchEvent(new Event('user-profile-updated'));
+            const actionResult = await dispatch(uploadUserAvatar(file)).unwrap();
+            const persistentAvatarUrl = actionResult?.avatar || actionResult?.user?.avatar;
 
-            // 2. Upload file to backend storage (Cloudinary / server) so it is permanent across devices
-            let persistentAvatarUrl = null;
-            try {
-                persistentAvatarUrl = await authService.uploadAvatar(file);
-                if (persistentAvatarUrl) {
-                    setUserData(prev => ({
-                        ...prev,
-                        avatar: persistentAvatarUrl
-                    }));
-                    try {
-                        localStorage.setItem('admin_avatar', persistentAvatarUrl);
-                    } catch {
-                        // Ignore quota errors in restricted environments
-                    }
-                    window.dispatchEvent(new Event('avatar-updated'));
-                    window.dispatchEvent(new Event('user-profile-updated'));
-                }
-            } catch (uploadErr) {
-                console.warn('Backend file upload attempt failed:', uploadErr);
+            if (persistentAvatarUrl) {
+                setUserData(prev => ({
+                    ...prev,
+                    avatar: persistentAvatarUrl
+                }));
             }
 
-            // 3. Persist avatar in user profile via authSlice
-            const avatarToPersist = persistentAvatarUrl || dataUrl;
-            try {
-                await dispatch(updateUserProfile({ avatar: avatarToPersist })).unwrap();
-            } catch {
-                // Kept safely in local store & Redux fallback
-            }
+            setSuccessMessage('Avatar uploaded successfully!');
+            setShowSuccess(true);
+            setTimeout(() => setShowSuccess(false), 4000);
         } catch (err) {
-            console.error('Avatar upload error:', err);
-            alert('Failed to process image. Please try another image.');
+            console.error('Avatar upload failed:', err);
+            // Revert preview on failure
+            setUserData(prev => ({ ...prev, avatar: previousAvatar }));
+            const msg = typeof err === 'string' ? err : err?.message || 'Failed to upload avatar. Please try again.';
+            setErrorMessage(msg);
+            setTimeout(() => setErrorMessage(''), 6000);
+        } finally {
+            setIsUploadingAvatar(false);
+            if (e.target) {
+                e.target.value = '';
+            }
         }
     };
 
@@ -245,7 +207,7 @@ const AdminProfilePage = () => {
         });
     };
 
-    // Handle save profile changes
+    // Handle save profile changes with automatic name sync
     const handleSave = async () => {
         setIsSaving(true);
         setErrorMessage('');
@@ -254,19 +216,21 @@ const AdminProfilePage = () => {
         try {
             const fn = userData.firstName.trim();
             const ln = userData.lastName.trim();
-            const fullName = `${fn} ${ln}`.trim();
             const currentAvatar = userData.avatar || localStorage.getItem('admin_avatar') || null;
 
             const payload = {
-                name: fullName || userData.name,
                 firstName: fn,
                 lastName: ln,
                 phone: userData.phone.trim(),
                 department: userData.department.trim(),
                 location: userData.location.trim(),
-                bio: userData.bio.trim(),
-                avatar: currentAvatar
+                bio: userData.bio.trim()
             };
+
+            // Only pass avatar if it's a valid remote URL (never blob or base64)
+            if (currentAvatar && /^https?:\/\//i.test(currentAvatar)) {
+                payload.avatar = currentAvatar;
+            }
 
             const result = await dispatch(updateUserProfile(payload)).unwrap();
             
@@ -276,7 +240,7 @@ const AdminProfilePage = () => {
                     ...prev,
                     firstName: u.firstName ?? fn,
                     lastName: u.lastName ?? ln,
-                    name: u.name ?? fullName,
+                    name: u.name || `${fn} ${ln}`.trim(),
                     avatar: u.avatar || currentAvatar || prev.avatar,
                     phone: u.phone ?? prev.phone,
                     department: u.department ?? prev.department,
@@ -491,18 +455,25 @@ const AdminProfilePage = () => {
                                             {getInitials()}
                                         </div>
                                     )}
-                                    <div
-                                        className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                                        onClick={() => document.getElementById('avatar-upload').click()}
-                                        title="Change Photo"
-                                    >
-                                        <Camera className="text-white" size={16} />
-                                    </div>
+                                    {isUploadingAvatar ? (
+                                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                            <Loader2 className="text-white animate-spin" size={22} />
+                                        </div>
+                                    ) : (
+                                        <div
+                                            className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                            onClick={() => document.getElementById('avatar-upload').click()}
+                                            title="Change Photo"
+                                        >
+                                            <Camera className="text-white" size={16} />
+                                        </div>
+                                    )}
                                     <input
                                         id="avatar-upload"
                                         type="file"
-                                        accept="image/*"
+                                        accept="image/jpeg,image/png,image/webp"
                                         className="hidden"
+                                        disabled={isUploadingAvatar}
                                         onChange={handleAvatarUpload}
                                     />
                                 </div>
@@ -527,9 +498,16 @@ const AdminProfilePage = () => {
                                     </div>
                                     <button
                                         onClick={() => document.getElementById('avatar-upload').click()}
-                                        className="mt-2 text-xs text-[#004fa2] hover:underline font-medium block"
+                                        disabled={isUploadingAvatar}
+                                        className="mt-2 text-xs text-[#004fa2] hover:underline font-medium block disabled:opacity-50"
                                     >
-                                        Change Photo
+                                        {isUploadingAvatar ? (
+                                            <span className="flex items-center gap-1">
+                                                <Loader2 size={12} className="animate-spin" /> Uploading...
+                                            </span>
+                                        ) : (
+                                            'Change Photo'
+                                        )}
                                     </button>
                                 </div>
                             </div>

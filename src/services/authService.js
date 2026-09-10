@@ -134,83 +134,33 @@ export const authService = {
     return payload;
   },
 
-  // 18. Update Profile Data
+  // 18. Update Profile Data (PUT /api/auth/profile)
   updateProfile: async (profileData) => {
-    try {
-      const response = await api.put('/auth/profile', profileData);
-      return response.data?.data || response.data;
-    } catch (err) {
-      // If server rejected due to payload size, strict schema, or avatar URL validation
-      const isValidationError =
-        err.response?.status === 400 ||
-        err.response?.status === 413 ||
-        err.response?.status === 422;
+    // Send clean payload matching backend schema with name synchronization
+    const payload = {};
+    if (profileData.firstName !== undefined) payload.firstName = profileData.firstName?.trim();
+    if (profileData.lastName !== undefined) payload.lastName = profileData.lastName?.trim();
+    if (profileData.phone !== undefined) payload.phone = profileData.phone?.trim();
+    if (profileData.location !== undefined) payload.location = profileData.location?.trim();
+    if (profileData.bio !== undefined) payload.bio = profileData.bio?.trim();
+    if (profileData.department !== undefined) payload.department = profileData.department?.trim();
 
-      if (isValidationError) {
-        // Fallback: send clean minimal payload conforming strictly to Postman schema:
-        // { firstName, lastName, phone, bio, avatar (only if valid http URL) }
-        const cleanPayload = {};
-        if (profileData.firstName) cleanPayload.firstName = profileData.firstName;
-        if (profileData.lastName) cleanPayload.lastName = profileData.lastName;
-        if (profileData.phone) cleanPayload.phone = profileData.phone;
-        if (profileData.bio) cleanPayload.bio = profileData.bio;
-        if (profileData.avatar && /^https?:\/\//i.test(profileData.avatar)) {
-          cleanPayload.avatar = profileData.avatar;
-        }
-
-        const retryResponse = await api.put('/auth/profile', cleanPayload);
-        return retryResponse.data?.data || retryResponse.data;
-      }
-      throw err;
+    // Only include avatar if it's a valid remote URL (never base64)
+    if (profileData.avatar && /^https?:\/\//i.test(profileData.avatar)) {
+      payload.avatar = profileData.avatar;
     }
+
+    const response = await api.put('/auth/profile', payload);
+    return response.data?.data || response.data;
   },
 
-  // 18b. Upload User Avatar (Uploads to Cloudinary/storage via backend endpoints)
+  // 18b. Upload User Avatar (POST /api/auth/profile/avatar)
   uploadAvatar: async (file) => {
-    // Attempt 1: Dedicated Admin Users Avatar route
-    try {
-      const formData = new FormData();
-      formData.append('avatar', file);
-      formData.append('image', file);
-      formData.append('file', file);
-      const response = await api.post('/admin/users/avatar', formData);
-      const payload = response.data?.data || response.data;
-      const url = payload?.avatar || payload?.url || payload?.imageUrl || (typeof payload === 'string' ? payload : null);
-      if (url && typeof url === 'string' && (url.startsWith('http') || url.startsWith('/'))) {
-        return url;
-      }
-      if (payload?.user?.avatar) {
-        return payload.user.avatar;
-      }
-    } catch (err) {
-      console.warn('POST /admin/users/avatar failed:', err.response?.status || err.message);
-    }
+    const formData = new FormData();
+    formData.append('file', file);
 
-    // Attempt 2: Admin Project Image Upload route (Cloudinary)
-    try {
-      const formData = new FormData();
-      formData.append('image', file);
-      const response = await api.post('/admin/projects/upload', formData);
-      const payload = response.data?.data || response.data;
-      const url = payload?.url || payload?.secure_url || payload?.imageUrl;
-      if (url && typeof url === 'string') return url;
-    } catch (err) {
-      console.warn('POST /admin/projects/upload failed:', err.response?.status || err.message);
-    }
-
-    // Attempt 3: Admin Blog Image Upload route (Cloudinary)
-    try {
-      const formData = new FormData();
-      formData.append('image', file);
-      const response = await api.post('/admin/blog/upload', formData);
-      const payload = response.data?.data || response.data;
-      const url = payload?.url || payload?.secure_url || payload?.imageUrl;
-      if (url && typeof url === 'string') return url;
-    } catch (err) {
-      console.warn('POST /admin/blog/upload failed:', err.response?.status || err.message);
-    }
-
-    return null;
+    const response = await api.post('/auth/profile/avatar', formData);
+    return response.data?.data || response.data;
   },
 
   // 19. Update Notification Preferences

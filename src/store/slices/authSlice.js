@@ -216,14 +216,14 @@ export const updateUserProfile = createAsyncThunk(
       const { auth } = getState();
       const apiUser = result?.user || result?.data || result || {};
 
-      const fn = profileData.firstName ?? apiUser.firstName ?? auth.user?.firstName ?? '';
-      const ln = profileData.lastName ?? apiUser.lastName ?? auth.user?.lastName ?? '';
-      const fullName = (fn && ln)
+      const fn = apiUser.firstName ?? profileData.firstName ?? auth.user?.firstName ?? '';
+      const ln = apiUser.lastName ?? profileData.lastName ?? auth.user?.lastName ?? '';
+      const fullName = apiUser.name || ((fn && ln)
         ? `${fn} ${ln}`.trim()
-        : (profileData.name || apiUser.name || auth.user?.name || `${fn} ${ln}`.trim());
+        : (profileData.name || auth.user?.name || `${fn} ${ln}`.trim()));
 
       const savedAvatar = localStorage.getItem('admin_avatar');
-      const avatar = profileData.avatar || apiUser.avatar || auth.user?.avatar || savedAvatar || null;
+      const avatar = apiUser.avatar || profileData.avatar || auth.user?.avatar || savedAvatar || null;
 
       const updatedUser = sanitizeUser({
         ...auth.user,
@@ -232,47 +232,70 @@ export const updateUserProfile = createAsyncThunk(
         name: fullName,
         firstName: fn,
         lastName: ln,
-        phone: profileData.phone ?? apiUser.phone ?? auth.user?.phone,
-        department: profileData.department ?? apiUser.department ?? auth.user?.department,
-        location: profileData.location ?? apiUser.location ?? auth.user?.location,
-        bio: profileData.bio ?? apiUser.bio ?? auth.user?.bio
+        phone: apiUser.phone ?? profileData.phone ?? auth.user?.phone,
+        department: apiUser.department ?? profileData.department ?? auth.user?.department,
+        location: apiUser.location ?? profileData.location ?? auth.user?.location,
+        bio: apiUser.bio ?? profileData.bio ?? auth.user?.bio
       });
 
+      if (updatedUser?.avatar) {
+        try {
+          localStorage.setItem('admin_avatar', updatedUser.avatar);
+        } catch {
+          // Ignore quota errors
+        }
+      }
       localStorage.setItem('user', JSON.stringify(updatedUser));
       window.dispatchEvent(new Event('user-profile-updated'));
       window.dispatchEvent(new Event('avatar-updated'));
       return { user: updatedUser };
     } catch (err) {
-      // If server update failed, keep the local user state updated so user changes aren't lost
-      const { auth } = getState();
-      const fn = profileData.firstName ?? auth.user?.firstName ?? '';
-      const ln = profileData.lastName ?? auth.user?.lastName ?? '';
-      const fullName = (fn && ln)
-        ? `${fn} ${ln}`.trim()
-        : (profileData.name || auth.user?.name || `${fn} ${ln}`.trim());
-      const savedAvatar = localStorage.getItem('admin_avatar');
-      const avatar = profileData.avatar || auth.user?.avatar || savedAvatar || null;
-
-      const fallbackUser = sanitizeUser({
-        ...auth.user,
-        avatar,
-        name: fullName,
-        firstName: fn,
-        lastName: ln,
-        phone: profileData.phone ?? auth.user?.phone,
-        department: profileData.department ?? auth.user?.department,
-        location: profileData.location ?? auth.user?.location,
-        bio: profileData.bio ?? auth.user?.bio
-      });
-
-      localStorage.setItem('user', JSON.stringify(fallbackUser));
-      window.dispatchEvent(new Event('user-profile-updated'));
-      window.dispatchEvent(new Event('avatar-updated'));
-
-      return rejectWithValue(err.userMessage || err.message || 'Failed to update profile on server');
+      const msg = err.response?.data?.error?.message || err.response?.data?.message || err.userMessage || err.message || 'Failed to update profile on server';
+      return rejectWithValue(msg);
     }
   }
 );
+
+// ─── Upload Avatar ────────────────────────────────────────────
+export const uploadUserAvatar = createAsyncThunk(
+  'auth/uploadUserAvatar',
+  async (file, { getState, rejectWithValue }) => {
+    try {
+      const result = await authService.uploadAvatar(file);
+      const { auth } = getState();
+      const apiUser = result?.user || result?.data || result || {};
+
+      const avatarUrl = apiUser.avatar || (typeof apiUser === 'string' ? apiUser : null);
+
+      const updatedUser = sanitizeUser({
+        ...auth.user,
+        ...(typeof apiUser === 'object' ? apiUser : {}),
+        avatar: avatarUrl || auth.user?.avatar,
+      });
+
+      if (avatarUrl) {
+        try {
+          localStorage.setItem('admin_avatar', avatarUrl);
+        } catch {
+          // Ignore quota errors
+        }
+      }
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      window.dispatchEvent(new Event('user-profile-updated'));
+      window.dispatchEvent(new Event('avatar-updated'));
+      return { user: updatedUser, avatar: avatarUrl };
+    } catch (err) {
+      const msg =
+        err.response?.data?.error?.message ||
+        err.response?.data?.message ||
+        err.userMessage ||
+        err.message ||
+        'Failed to upload avatar';
+      return rejectWithValue(msg);
+    }
+  }
+);
+
 
 // ─── Active Sessions Management ──────────────────────────────
 export const fetchActiveSessions = createAsyncThunk(
@@ -462,6 +485,11 @@ const authSlice = createSlice({
 
       // Update Profile
       .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+      })
+
+      // Upload Avatar
+      .addCase(uploadUserAvatar.fulfilled, (state, action) => {
         state.user = action.payload.user;
       })
 
