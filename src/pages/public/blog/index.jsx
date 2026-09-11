@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import BlogHero from '../../../components/pages/blog/BlogHero';
 import FeaturedPost from '../../../components/pages/blog/FeaturedPost';
 import CategoryFilter from '../../../components/pages/blog/CategoryFilter';
 import BlogCard from '../../../components/pages/blog/BlogCard';
-import { articlesData, getFeaturedArticle, getCategories } from '../../../data/articlesData';
-import { Search } from 'lucide-react';
+import { articlesData } from '../../../data/articlesData';
+import blogService, { normalizeArticle } from '../../../services/blogService';
+import { Search, Loader2 } from 'lucide-react';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
 import useSEO from '../../../hooks/useSEO';
@@ -17,17 +18,61 @@ const BlogPage = () => {
     keywords: 'tech blog Ghana, student success stories, Ghana technology education, digital skills blog'
   });
 
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
-  const [searchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 6;
 
-  const categories = getCategories();
-  const featuredArticle = getFeaturedArticle();
+  // Load published articles from live backend API, falling back to mock data
+  useEffect(() => {
+    let isMounted = true;
 
-  // Filter articles
+    const loadPublicArticles = async () => {
+      setLoading(true);
+      try {
+        const res = await blogService.getPublicArticles({ limit: 50 });
+        if (isMounted) {
+          if (res.data && res.data.length > 0) {
+            setArticles(res.data);
+          } else {
+            // Fallback to initial mock articles if database is currently empty
+            setArticles(articlesData.map(normalizeArticle));
+          }
+        }
+      } catch (err) {
+        console.warn('API unavailable, falling back to mock articles:', err);
+        if (isMounted) {
+          setArticles(articlesData.map(normalizeArticle));
+        }
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    loadPublicArticles();
+    return () => { isMounted = false; };
+  }, []);
+
+  // Compute categories from active articles
+  const categories = useMemo(() => {
+    const set = new Set();
+    articles.forEach(a => {
+      if (a.category) set.add(a.category);
+    });
+    return ['all', ...Array.from(set)];
+  }, [articles]);
+
+  // Featured article is either explicitly marked as featured, or the newest article
+  const featuredArticle = useMemo(() => {
+    if (articles.length === 0) return null;
+    return articles.find(a => a.featured) || articles[0];
+  }, [articles]);
+
+  // Filter articles (excluding the hero featured article)
   const filteredArticles = useMemo(() => {
-    let filtered = articlesData.filter(article => !article.featured);
+    let filtered = articles.filter(article => article.id !== featuredArticle?.id);
 
     // Category filter
     if (activeCategory !== 'all') {
@@ -45,7 +90,7 @@ const BlogPage = () => {
     }
 
     return filtered;
-  }, [activeCategory, searchTerm]);
+  }, [articles, featuredArticle, activeCategory, searchTerm]);
 
   // Pagination
   const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
@@ -58,7 +103,7 @@ const BlogPage = () => {
       <BlogHero />
 
       {/* Featured Post */}
-      <FeaturedPost article={featuredArticle} />
+      {featuredArticle && <FeaturedPost article={featuredArticle} />}
 
       {/* Category Filter */}
       <CategoryFilter
@@ -74,24 +119,46 @@ const BlogPage = () => {
       <section className="py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Results Header */}
-          <div className="mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              {activeCategory === 'all' ? 'All Articles' : activeCategory}
-            </h2>
-            <p className="text-gray-600 mt-2">
-              {filteredArticles.length} {filteredArticles.length === 1 ? 'article' : 'articles'} found
-              {searchTerm && ` for "${searchTerm}"`}
-            </p>
+          <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                {activeCategory === 'all' ? 'All Articles' : activeCategory}
+              </h2>
+              <p className="text-gray-600 mt-2">
+                {filteredArticles.length} {filteredArticles.length === 1 ? 'article' : 'articles'} found
+                {searchTerm && ` for "${searchTerm}"`}
+              </p>
+            </div>
+
+            {/* Quick Search */}
+            <div className="relative w-full sm:w-72">
+              <Search size={16} className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search articles..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="w-full pl-9 pr-4 py-2 text-sm bg-white border border-gray-200 rounded-xl shadow-xs focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all"
+              />
+            </div>
           </div>
 
-          {/* No Results */}
-          {filteredArticles.length === 0 ? (
-            <div className="text-center py-16">
+          {/* Loading state */}
+          {loading ? (
+            <div className="text-center py-20">
+              <Loader2 size={36} className="animate-spin text-[#004fa2] mx-auto mb-3" />
+              <p className="text-sm font-semibold text-gray-700">Loading latest articles...</p>
+            </div>
+          ) : filteredArticles.length === 0 ? (
+            <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 p-8">
               <div className="text-gray-400 mb-4">
                 <Search size={48} className="mx-auto" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">No articles found</h3>
-              <p className="text-gray-600">Try adjusting your search or filter to find what you're looking for.</p>
+              <p className="text-gray-600 text-sm">Try adjusting your search or category filter.</p>
             </div>
           ) : (
             <>
@@ -147,10 +214,8 @@ const BlogPage = () => {
         </div>
       </section>
 
-      <HrContactSection/>
-
-
-      <NewsletterHero/>
+      <HrContactSection />
+      <NewsletterHero />
     </div>
   );
 };
