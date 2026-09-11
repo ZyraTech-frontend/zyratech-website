@@ -283,16 +283,23 @@ const CourseFormPage = () => {
 
             let uploadedUrl = '';
             try {
-                const res = await api.post('/admin/gallery/upload', uploadFormData, {
+                const res = await api.post('/admin/blog/upload', uploadFormData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
                 uploadedUrl = res.data?.data?.url || res.data?.url;
-            } catch (galleryErr) {
-                // Fallback to avatar upload endpoint
-                const res = await api.post('/auth/profile/avatar', uploadFormData, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                });
-                uploadedUrl = res.data?.data?.avatar || res.data?.data?.avatarUrl || res.data?.avatar || res.data?.url;
+            } catch (blogUploadErr) {
+                try {
+                    const res = await api.post('/admin/gallery/upload', uploadFormData, {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    });
+                    uploadedUrl = res.data?.data?.url || res.data?.url;
+                } catch (galleryErr) {
+                    // Fallback to avatar upload endpoint
+                    const res = await api.post('/auth/profile/avatar', uploadFormData, {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    });
+                    uploadedUrl = res.data?.data?.avatar || res.data?.data?.avatarUrl || res.data?.avatar || res.data?.url;
+                }
             }
 
             if (uploadedUrl) {
@@ -436,7 +443,7 @@ const CourseFormPage = () => {
                 ? rawPrice  // already has currency label (e.g. "GHS 2,800")
                 : rawPrice ? `GHS ${rawPrice}` : 'GHS 0';
 
-            // Only send fields the backend UpdateCourseInput accepts
+            // Send all fields now supported by the live backend TrainingCourse API
             const payload = {
                 title: courseData.title,
                 category: courseData.category,
@@ -447,9 +454,25 @@ const CourseFormPage = () => {
                 topics: courseData.topics,
                 instructor: courseData.instructor,
                 format: courseData.format,
+                // Extended fields
+                image: courseData.heroImage || formData.heroImage || undefined,
+                slug: formData.slug ? formData.slug.trim() : (courseData.title || '').toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-'),
+                badge: courseData.badge || undefined,
+                iconKey: courseData.iconKey || undefined,
+                longDescription: courseData.longDescription || undefined,
+                programOverview: courseData.programOverview || undefined,
+                heroInfoText: courseData.heroInfoText || undefined,
+                schedule: courseData.schedule || undefined,
+                deadline: courseData.deadline || undefined,
+                originalPrice: courseData.originalPrice || undefined,
+                participants: courseData.participants ? String(courseData.participants) : undefined,
+                certificate: courseData.certificate || undefined,
+                rating: courseData.rating ? Number(courseData.rating) : undefined,
+                reviews: courseData.reviews ? Number(courseData.reviews) : undefined,
+                programmeObjectives: courseData.programmeObjectives?.length ? courseData.programmeObjectives : undefined,
             };
 
-            // Strip undefined so backend validation stays clean
+            // Strip undefined and empty string values
             Object.keys(payload).forEach(key => {
                 if (payload[key] === undefined || payload[key] === '') {
                     delete payload[key];

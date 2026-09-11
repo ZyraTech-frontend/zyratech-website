@@ -552,22 +552,37 @@ const TrainingCoursesPage = () => {
                                 {paginatedCourses.map((course) => (
                                     <div
                                         key={course.id}
-                                        className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group"
+                                        className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group flex flex-col"
                                     >
-                                        {/* Card Header with Category */}
-                                        <div className="relative p-3 pb-1.5">
-                                            <div className="flex items-start justify-between mb-2">
-                                                <span className={`px-1.5 py-0.5 rounded border text-[9px] font-bold uppercase ${CATEGORY_CONFIG[course.category]?.color || 'bg-gray-100 text-gray-700'}`}>
+                                        {/* Card Cover Image Header */}
+                                        <div className="relative h-36 w-full bg-gray-100 overflow-hidden shrink-0">
+                                            {course.image || course.heroImage ? (
+                                                <img
+                                                    src={course.image || course.heroImage}
+                                                    alt={course.title}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                                />
+                                            ) : (
+                                                <div className={`w-full h-full flex items-center justify-center ${CATEGORY_CONFIG[course.category]?.bg || 'bg-gradient-to-br from-blue-50 to-indigo-50'}`}>
+                                                    <BookOpen size={36} className="text-[#004fa2]/30" />
+                                                </div>
+                                            )}
+                                            <div className="absolute top-2.5 left-2.5">
+                                                <span className={`px-2 py-0.5 rounded shadow-xs text-[9px] font-bold uppercase backdrop-blur-xs ${CATEGORY_CONFIG[course.category]?.color || 'bg-white/90 text-gray-700'}`}>
                                                     {CATEGORY_CONFIG[course.category]?.label || course.category || 'Course'}
                                                 </span>
-                                                <div className="flex items-center gap-1">
-                                                    <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase ${(course.status === 'published' || course.isPublished) ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                                                        {(course.status === 'published' || course.isPublished) ? 'Published' : 'Draft'}
-                                                    </span>
-                                                    {course.badge && <CourseBadge type={course.badge}>{course.badge}</CourseBadge>}
-                                                </div>
                                             </div>
+                                            <div className="absolute top-2.5 right-2.5 flex items-center gap-1">
+                                                <span className={`px-1.5 py-0.5 rounded shadow-xs text-[8px] font-bold uppercase backdrop-blur-xs ${(course.status === 'published' || course.isPublished) ? 'bg-green-600 text-white' : 'bg-gray-800/80 text-white'}`}>
+                                                    {(course.status === 'published' || course.isPublished) ? 'Published' : 'Draft'}
+                                                </span>
+                                                {course.badge && <CourseBadge type={course.badge}>{course.badge}</CourseBadge>}
+                                            </div>
+                                        </div>
 
+                                        {/* Card Header Content */}
+                                        <div className="relative p-3 pb-1.5 flex-1">
                                             <h3 className="text-sm font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors line-clamp-2 leading-tight min-h-[38px] mb-1">
                                                 {course.title}
                                             </h3>
@@ -962,6 +977,18 @@ const TrainingCoursesPage = () => {
                         {/* Modal Body */}
                         <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
                             <div className="space-y-5">
+                                {/* Cover Image Banner */}
+                                {(viewingCourse.image || viewingCourse.heroImage) && (
+                                    <div className="rounded-xl overflow-hidden h-44 w-full border border-gray-200">
+                                        <img
+                                            src={viewingCourse.image || viewingCourse.heroImage}
+                                            alt={viewingCourse.title}
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                        />
+                                    </div>
+                                )}
+
                                 {/* Title and Badge */}
                                 <div>
                                     <div className="flex items-center gap-2 mb-2">

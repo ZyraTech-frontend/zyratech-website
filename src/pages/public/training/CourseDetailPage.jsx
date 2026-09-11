@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, Users, Star, Award, Check, CheckCircle, Calendar, Briefcase, TrendingUp, UsersRound, Target, BookOpen } from 'lucide-react';
+import { Clock, Users, Star, Award, Check, CheckCircle, Calendar, Briefcase, TrendingUp, UsersRound, Target, BookOpen, Loader2 } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import TrainingLayout from '../../../components/TrainingLayout';
 import TrainingBreadcrumb from '../../../components/pages/training/TrainingBreadcrumb';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
 import { getTrainingCourseById } from '../../../data/trainingCourses.js';
+import trainingService from '../../../services/trainingService.js';
 import useSEO from '../../../hooks/useSEO';
 
 const CourseDetailPage = () => {
@@ -18,8 +19,53 @@ const CourseDetailPage = () => {
 
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
 
-  const course = getTrainingCourseById(courseId);
-  const heroImage = course?.heroImage || "/images/digitalmarketing.png";
+  const initialMock = getTrainingCourseById(courseId);
+  const [course, setCourse] = useState(initialMock || null);
+  const [loading, setLoading] = useState(!initialMock);
+
+  // Fetch course from live backend API
+  useEffect(() => {
+    let isMounted = true;
+    const loadCourse = async () => {
+      try {
+        const res = await trainingService.getCourse(courseId);
+        const liveCourse = res?.course || res?.data || res;
+        if (isMounted && liveCourse) {
+          setCourse(prev => ({
+            ...(prev || {}),
+            ...liveCourse,
+            heroImage: liveCourse.image || liveCourse.heroImage || prev?.heroImage || "/images/digitalmarketing.png",
+            programOverview: liveCourse.programOverview || liveCourse.description || prev?.programOverview,
+            longDescription: liveCourse.longDescription || liveCourse.description || prev?.longDescription,
+            duration: liveCourse.duration || prev?.duration || '12 Weeks',
+            format: liveCourse.format || prev?.format || 'Hybrid',
+            certificate: liveCourse.certificate || prev?.certificate || 'Professional Certificate',
+            price: liveCourse.price || prev?.price || 'GHS 2,800',
+            deadline: liveCourse.deadline || prev?.deadline || 'Rolling Admissions',
+            programmeObjectives: Array.isArray(liveCourse.programmeObjectives) && liveCourse.programmeObjectives.length > 0
+              ? liveCourse.programmeObjectives
+              : (prev?.programmeObjectives || []),
+            applicationProcess: Array.isArray(liveCourse.applicationProcess) && liveCourse.applicationProcess.length > 0
+              ? liveCourse.applicationProcess
+              : (prev?.applicationProcess || [
+                  { title: 'Online Application', description: 'Complete the short online enrollment form with your academic details and goals.' },
+                  { title: 'Profile Review & Admissions', description: 'Our admissions team evaluates your background and confirms batch placement.' },
+                  { title: 'Onboarding & Induction', description: 'Receive portal access, development environment setup guides, and start learning.' }
+                ])
+          }));
+        }
+      } catch (err) {
+        console.warn('Could not load course from live API, using fallback if available:', err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    loadCourse();
+    return () => { isMounted = false; };
+  }, [courseId]);
+
+  const heroImage = course?.heroImage || course?.image || "/images/digitalmarketing.png";
   const parallaxImage1 = "/images/parallax9.webp";
   const parallaxImage2 = "/images/parallax10.webp";
   const parallaxImage3 = "/images/parallax1.webp";
@@ -32,6 +78,19 @@ const CourseDetailPage = () => {
       : 'Explore training course details at Zyra Tech Hub.',
     url: `/training/course/${courseId}`
   });
+
+  if (loading) {
+    return (
+      <TrainingLayout>
+        <div className="flex items-center justify-center px-4 py-28 min-h-[60vh]">
+          <div className="text-center">
+            <Loader2 size={40} className="animate-spin text-[#004fa2] mx-auto mb-3" />
+            <p className="text-sm font-semibold text-gray-700">Loading course curriculum & details...</p>
+          </div>
+        </div>
+      </TrainingLayout>
+    );
+  }
 
   if (!course) {
     return (
@@ -261,7 +320,11 @@ const CourseDetailPage = () => {
             <div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6 sm:mb-8">Application Process</h2>
               <ol className="relative border-l-4 border-[#004fa2] pl-6 sm:pl-8 space-y-6 sm:space-y-8">
-                {course.applicationProcess
+                {(course.applicationProcess || [
+                    { title: 'Online Application', description: 'Complete the short online enrollment form with your academic details and goals.' },
+                    { title: 'Profile Review & Admissions', description: 'Our admissions team evaluates your background and confirms batch placement.' },
+                    { title: 'Onboarding & Induction', description: 'Receive portal access, development environment setup guides, and start learning.' }
+                  ])
                   .filter(step => step.title !== 'Phone Interview' && step.title !== 'Assessment')
                   .map((step, idx) => (
                     <li key={step.title} className="relative ml-2">
@@ -372,7 +435,7 @@ const CourseDetailPage = () => {
             Become part of a community shaping the future of technology. This is more than training—it's your launchpad to a tech career.
           </p>
           <p className="text-base sm:text-lg font-medium mb-8 sm:mb-10">
-            <span className="text-white/80">Deadline:</span> <span className="font-bold">{course.deadline}</span>
+            <span className="text-white/80">Deadline:</span> <span className="font-bold">{course.deadline || 'Rolling Admissions'}</span>
           </p>
           <button
             onClick={handleEnroll}
