@@ -106,26 +106,28 @@ const AdminProfilePage = () => {
                 : (user.role || 'Admin');
 
             const savedAvatar = normalizeAvatarUrl(localStorage.getItem('admin_avatar'));
-            const resolvedAvatar = normalizeAvatarUrl(user.avatar) || savedAvatar || normalizeAvatarUrl(prev.avatar) || null;
             setImageError(false);
 
-            setUserData(prev => ({
-                ...prev,
-                firstName,
-                lastName,
-                name: displayName,
-                email: user.email || '',
-                phone: user.phone || '',
-                role: formattedRole,
-                department: user.department || 'Software Engineering',
-                location: user.location || 'Ghana',
-                avatar: resolvedAvatar,
-                bio: user.bio || '',
-                joinedDate: user.createdAt || user.joinedDate || '',
-                lastLogin: user.lastLogin || '',
-                accountStatus: user.accountStatus || 'active',
-                twoFactorEnabled: !!user.twoFactorEnabled
-            }));
+            setUserData(prev => {
+                const resolvedAvatar = normalizeAvatarUrl(user.avatar) || savedAvatar || normalizeAvatarUrl(prev.avatar) || null;
+                return {
+                    ...prev,
+                    firstName,
+                    lastName,
+                    name: displayName,
+                    email: user.email || '',
+                    phone: user.phone || '',
+                    role: formattedRole,
+                    department: user.department || 'Software Engineering',
+                    location: user.location || 'Ghana',
+                    avatar: resolvedAvatar,
+                    bio: user.bio || '',
+                    joinedDate: user.createdAt || user.joinedDate || '',
+                    lastLogin: user.lastLogin || '',
+                    accountStatus: user.accountStatus || 'active',
+                    twoFactorEnabled: !!user.twoFactorEnabled
+                };
+            });
 
             if (user.notificationPreferences && typeof user.notificationPreferences === 'object') {
                 setNotifications(prev => ({
