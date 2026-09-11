@@ -325,16 +325,31 @@ const CourseFormPage = () => {
         });
 
         try {
-            // Prepare normalized payload for backend
+            // Normalize price: backend Prisma field is a String (e.g. "GHS 2,800")
+            const rawPrice = String(courseData.price || '').trim();
+            const normalizedPrice = rawPrice.match(/[a-zA-Z]/)
+                ? rawPrice  // already has currency label (e.g. "GHS 2,800")
+                : rawPrice ? `GHS ${rawPrice}` : 'GHS 0';
+
+            // Only send fields the backend UpdateCourseInput accepts
             const payload = {
-                ...courseData,
-                slug: courseData.slug || courseData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-                shortDescription: (courseData.description || courseData.title || '').slice(0, 160),
-                price: typeof courseData.price === 'string' ? (parseFloat(courseData.price.replace(/[^0-9.]/g, '')) || 0) : (courseData.price || 0),
-                discountPrice: courseData.originalPrice ? parseFloat(String(courseData.originalPrice).replace(/[^0-9.]/g, '')) : undefined,
-                tools: courseData.topics,
-                outcomes: courseData.programmeObjectives.map(o => o.title || o.description).filter(Boolean)
+                title: courseData.title,
+                category: courseData.category,
+                duration: courseData.duration,
+                level: courseData.level,
+                price: normalizedPrice,
+                description: courseData.description,
+                topics: courseData.topics,
+                instructor: courseData.instructor,
+                format: courseData.format,
             };
+
+            // Strip undefined so backend validation stays clean
+            Object.keys(payload).forEach(key => {
+                if (payload[key] === undefined || payload[key] === '') {
+                    delete payload[key];
+                }
+            });
 
             if (isEditing) {
                 await dispatch(updateCourse({ id, data: payload })).unwrap();
