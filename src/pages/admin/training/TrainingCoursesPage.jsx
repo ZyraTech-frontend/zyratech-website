@@ -11,6 +11,7 @@ import { fetchCourses, deleteCourse, togglePublishCourse } from '../../../store/
 import trainingService from '../../../services/trainingService';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
+import { normalizeImageUrl, DEFAULT_CATEGORY_IMAGES } from '../../../utils/imageUrl';
 import {
     GraduationCap,
     Plus,
@@ -556,18 +557,17 @@ const TrainingCoursesPage = () => {
                                     >
                                         {/* Card Cover Image Header */}
                                         <div className="relative h-36 w-full bg-gray-100 overflow-hidden shrink-0">
-                                            {course.image || course.heroImage ? (
-                                                <img
-                                                    src={course.image || course.heroImage}
-                                                    alt={course.title}
-                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                                                />
-                                            ) : (
-                                                <div className={`w-full h-full flex items-center justify-center ${CATEGORY_CONFIG[course.category]?.bg || 'bg-gradient-to-br from-blue-50 to-indigo-50'}`}>
-                                                    <BookOpen size={36} className="text-[#004fa2]/30" />
-                                                </div>
-                                            )}
+                                            <img
+                                                src={normalizeImageUrl(course.image || course.heroImage) || DEFAULT_CATEGORY_IMAGES[course.category] || DEFAULT_CATEGORY_IMAGES.default}
+                                                alt={course.title}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                onError={(e) => {
+                                                    if (!e.currentTarget.dataset.fallbackTried) {
+                                                        e.currentTarget.dataset.fallbackTried = 'true';
+                                                        e.currentTarget.src = DEFAULT_CATEGORY_IMAGES[course.category] || DEFAULT_CATEGORY_IMAGES.default;
+                                                    }
+                                                }}
+                                            />
                                             <div className="absolute top-2.5 left-2.5">
                                                 <span className={`px-2 py-0.5 rounded shadow-xs text-[9px] font-bold uppercase backdrop-blur-xs ${CATEGORY_CONFIG[course.category]?.color || 'bg-white/90 text-gray-700'}`}>
                                                     {CATEGORY_CONFIG[course.category]?.label || course.category || 'Course'}
@@ -978,16 +978,19 @@ const TrainingCoursesPage = () => {
                         <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
                             <div className="space-y-5">
                                 {/* Cover Image Banner */}
-                                {(viewingCourse.image || viewingCourse.heroImage) && (
-                                    <div className="rounded-xl overflow-hidden h-44 w-full border border-gray-200">
-                                        <img
-                                            src={viewingCourse.image || viewingCourse.heroImage}
-                                            alt={viewingCourse.title}
-                                            className="w-full h-full object-cover"
-                                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                                        />
-                                    </div>
-                                )}
+                                <div className="rounded-xl overflow-hidden h-44 w-full border border-gray-200 bg-gray-100">
+                                    <img
+                                        src={normalizeImageUrl(viewingCourse.image || viewingCourse.heroImage) || DEFAULT_CATEGORY_IMAGES[viewingCourse.category] || DEFAULT_CATEGORY_IMAGES.default}
+                                        alt={viewingCourse.title}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            if (!e.currentTarget.dataset.fallbackTried) {
+                                                e.currentTarget.dataset.fallbackTried = 'true';
+                                                e.currentTarget.src = DEFAULT_CATEGORY_IMAGES[viewingCourse.category] || DEFAULT_CATEGORY_IMAGES.default;
+                                            }
+                                        }}
+                                    />
+                                </div>
 
                                 {/* Title and Badge */}
                                 <div>

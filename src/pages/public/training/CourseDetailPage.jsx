@@ -9,6 +9,7 @@ import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
 import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import trainingService from '../../../services/trainingService.js';
+import { normalizeImageUrl, DEFAULT_CATEGORY_IMAGES } from '../../../utils/imageUrl';
 import useSEO from '../../../hooks/useSEO';
 
 const CourseDetailPage = () => {
@@ -34,7 +35,7 @@ const CourseDetailPage = () => {
           setCourse(prev => ({
             ...(prev || {}),
             ...liveCourse,
-            heroImage: liveCourse.image || liveCourse.heroImage || prev?.heroImage || "/images/digitalmarketing.png",
+            heroImage: normalizeImageUrl(liveCourse.image || liveCourse.heroImage) || prev?.heroImage || "/images/digitalmarketing.png",
             programOverview: liveCourse.programOverview || liveCourse.description || prev?.programOverview,
             longDescription: liveCourse.longDescription || liveCourse.description || prev?.longDescription,
             duration: liveCourse.duration || prev?.duration || '12 Weeks',
@@ -65,7 +66,7 @@ const CourseDetailPage = () => {
     return () => { isMounted = false; };
   }, [courseId]);
 
-  const heroImage = course?.heroImage || course?.image || "/images/digitalmarketing.png";
+  const heroImage = normalizeImageUrl(course?.image || course?.heroImage) || course?.heroImage || "/images/digitalmarketing.png";
   const parallaxImage1 = "/images/parallax9.webp";
   const parallaxImage2 = "/images/parallax10.webp";
   const parallaxImage3 = "/images/parallax1.webp";
@@ -180,11 +181,17 @@ const CourseDetailPage = () => {
           <img 
             decoding="async"
             src={heroImage}
-            alt="Course banner"
+            alt={course?.title || "Course banner"}
             className="h-full w-full object-cover brightness-110"
             loading="eager"
             fetchPriority="high"
             style={{ objectPosition: 'center 30%' }}
+            onError={(e) => {
+              if (!e.currentTarget.dataset.fallbackTried) {
+                e.currentTarget.dataset.fallbackTried = 'true';
+                e.currentTarget.src = DEFAULT_CATEGORY_IMAGES[course?.category] || '/images/digitalmarketing.png';
+              }
+            }}
           />
           {/* Consistent Gradient from left to dark */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>

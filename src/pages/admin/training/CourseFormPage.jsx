@@ -11,6 +11,7 @@ import { createCourse, updateCourse } from '../../../store/slices/coursesSlice';
 import trainingService from '../../../services/trainingService';
 import api from '../../../services/api';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
+import { normalizeImageUrl, DEFAULT_CATEGORY_IMAGES } from '../../../utils/imageUrl';
 import {
     ChevronLeft,
     ChevronRight,
@@ -206,7 +207,7 @@ const CourseFormPage = () => {
                             certificate: c.certificate || '',
                             rating: c.rating ? String(c.rating) : '',
                             reviews: c.reviews ? String(c.reviews) : '',
-                            heroImage: c.heroImage || c.image || '',
+                            heroImage: normalizeImageUrl(c.image || c.heroImage || '') || '',
                             topicsText: Array.isArray(c.topics) ? c.topics.join(', ') : (Array.isArray(c.tools) ? c.tools.join(', ') : ''),
                             programmeObjectives: Array.isArray(c.programmeObjectives) && c.programmeObjectives.length > 0
                                 ? c.programmeObjectives
@@ -302,8 +303,9 @@ const CourseFormPage = () => {
                 }
             }
 
-            if (uploadedUrl) {
-                setFormData(prev => ({ ...prev, heroImage: uploadedUrl }));
+            const normalizedUrl = normalizeImageUrl(uploadedUrl);
+            if (normalizedUrl) {
+                setFormData(prev => ({ ...prev, heroImage: normalizedUrl }));
                 dispatch(addNotification({
                     type: 'success',
                     message: 'Course image uploaded successfully!'
@@ -455,7 +457,7 @@ const CourseFormPage = () => {
                 instructor: courseData.instructor,
                 format: courseData.format,
                 // Extended fields
-                image: courseData.heroImage || formData.heroImage || undefined,
+                image: normalizeImageUrl(courseData.heroImage || formData.heroImage) || undefined,
                 slug: formData.slug ? formData.slug.trim() : (courseData.title || '').toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-'),
                 badge: courseData.badge || undefined,
                 iconKey: courseData.iconKey || undefined,
@@ -555,11 +557,11 @@ const CourseFormPage = () => {
             {formData.heroImage ? (
                 <div className="relative rounded-2xl overflow-hidden border border-gray-200 bg-gray-50 shadow-sm mb-4">
                     <img
-                        src={formData.heroImage}
+                        src={normalizeImageUrl(formData.heroImage)}
                         alt="Course preview"
                         className="w-full h-44 object-cover"
                         onError={(e) => {
-                            e.currentTarget.src = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&auto=format&fit=crop&q=80';
+                            e.currentTarget.src = DEFAULT_CATEGORY_IMAGES[formData.category] || DEFAULT_CATEGORY_IMAGES.default;
                         }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent flex items-end justify-between p-4">
@@ -1138,11 +1140,11 @@ const CourseFormPage = () => {
                             {formData.heroImage ? (
                                 <div className="mb-6 rounded-xl overflow-hidden border border-gray-200 shadow-sm relative h-48 bg-gray-100">
                                     <img
-                                        src={formData.heroImage}
+                                        src={normalizeImageUrl(formData.heroImage)}
                                         alt="Course cover"
                                         className="w-full h-full object-cover"
                                         onError={(e) => {
-                                            e.currentTarget.src = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&auto=format&fit=crop&q=80';
+                                            e.currentTarget.src = DEFAULT_CATEGORY_IMAGES[formData.category] || DEFAULT_CATEGORY_IMAGES.default;
                                         }}
                                     />
                                     <div className="absolute top-3 right-3 px-2.5 py-1 bg-black/60 text-white rounded-lg text-xs font-semibold backdrop-blur-sm flex items-center gap-1.5">

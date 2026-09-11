@@ -5,6 +5,7 @@ import { Globe, Cpu, Server, Clock, Users, Star, ChevronRight, Target, Award, Ne
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
 import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
+import { normalizeImageUrl } from '../../../utils/imageUrl';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
 
@@ -214,7 +215,8 @@ const AdvancedProgramsPage = () => {
             {advancedPrograms.map((program, index) => {
               const IconComponent = iconMap[program.iconKey] || Globe;
               const placeholderImages = ["/images/image1.webp", "/images/image2.webp", "/images/image3.webp"];
-              const imageUrl = placeholderImages[index % placeholderImages.length];
+              const defaultPlaceholder = placeholderImages[index % placeholderImages.length];
+              const imageUrl = normalizeImageUrl(program.image || program.heroImage) || defaultPlaceholder;
 
               return (
                 <motion.div
@@ -231,6 +233,12 @@ const AdvancedProgramsPage = () => {
                       src={imageUrl}
                       alt={program.title}
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        if (!e.currentTarget.dataset.fallbackTried) {
+                          e.currentTarget.dataset.fallbackTried = 'true';
+                          e.currentTarget.src = defaultPlaceholder;
+                        }
+                      }}
                     />
                     <div className="absolute inset-0 bg-black/40"></div>
 

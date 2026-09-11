@@ -7,6 +7,7 @@
  */
 
 import api from './api';
+import { normalizeImageUrl } from '../utils/imageUrl';
 
 /**
  * Format date string into human readable format like "January 2026"
@@ -51,7 +52,8 @@ export const normalizeArticle = (article) => {
         avatar: article.author?.avatar || article.authorAvatar || '/images/image1.webp'
       };
 
-  const image = article.coverImageUrl || article.image || '/images/image1.webp';
+  const rawImage = article.coverImageUrl || article.image;
+  const image = normalizeImageUrl(rawImage) || rawImage || '/images/image1.webp';
 
   return {
     id: article.id,
@@ -60,7 +62,7 @@ export const normalizeArticle = (article) => {
     content: article.content || '',
     excerpt: article.excerpt || '',
     image,
-    coverImageUrl: article.coverImageUrl || article.image || '',
+    coverImageUrl: normalizeImageUrl(rawImage) || rawImage || '',
     category,
     tags: rawTags,
     featured: isFeatured,
@@ -188,7 +190,8 @@ export const blogService = {
       },
     });
 
-    return response.data?.data?.url;
+    const rawUrl = response.data?.data?.url || response.data?.url;
+    return normalizeImageUrl(rawUrl) || rawUrl;
   },
 };
 

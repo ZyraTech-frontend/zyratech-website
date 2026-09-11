@@ -5,6 +5,7 @@ import { Code, Terminal, Database, Clock, Users, Star, ChevronRight, Award, Book
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
 import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
+import { normalizeImageUrl } from '../../../utils/imageUrl';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
 
@@ -130,7 +131,7 @@ const BasicProgramsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {basicPrograms.map((program, index) => {
               const IconComponent = iconMap[program.iconKey] || Target;
-              const imageUrl = program.heroImage || "/images/image1.webp";
+              const imageUrl = normalizeImageUrl(program.image || program.heroImage) || "/images/image1.webp";
 
               return (
                 <motion.div
@@ -147,6 +148,12 @@ const BasicProgramsPage = () => {
                       src={imageUrl}
                       alt={program.title}
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        if (!e.currentTarget.dataset.fallbackTried) {
+                          e.currentTarget.dataset.fallbackTried = 'true';
+                          e.currentTarget.src = "/images/image1.webp";
+                        }
+                      }}
                     />
                     <div className="absolute inset-0 bg-black/40"></div>
 
