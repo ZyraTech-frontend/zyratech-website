@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import { createCourse, updateCourse } from '../../../store/slices/coursesSlice';
 import trainingService from '../../../services/trainingService';
+import api from '../../../services/api';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import {
     ChevronLeft,
@@ -29,7 +30,13 @@ import {
     Layers,
     List,
     AlertCircle,
-    Check
+    Check,
+    Upload,
+    Image as ImageIcon,
+    Trash,
+    Loader2,
+    Sparkles,
+    ExternalLink
 } from 'lucide-react';
 
 // Category options
@@ -98,6 +105,15 @@ const STEPS = [
     { key: 'review', title: 'Review', icon: Check }
 ];
 
+// Stock tech cover images for quick selection
+const STOCK_COURSE_IMAGES = [
+    { label: 'Software Eng', url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&auto=format&fit=crop&q=80' },
+    { label: 'Cloud & DevOps', url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&auto=format&fit=crop&q=80' },
+    { label: 'Cybersecurity', url: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&auto=format&fit=crop&q=80' },
+    { label: 'Data Science & AI', url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&auto=format&fit=crop&q=80' },
+    { label: 'Mobile Apps', url: 'https://images.unsplash.com/photo-1526470608268-f674ce90ebd4?w=1200&auto=format&fit=crop&q=80' }
+];
+
 const CourseFormPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -105,6 +121,9 @@ const CourseFormPage = () => {
 
     const isEditing = Boolean(id);
     const [isLoadingCourse, setIsLoadingCourse] = useState(false);
+    const [isUploadingHeroImage, setIsUploadingHeroImage] = useState(false);
+    const [imageUploadError, setImageUploadError] = useState('');
+    const [showUrlInput, setShowUrlInput] = useState(false);
 
     // Step state
     const [currentStep, setCurrentStep] = useState(0);
@@ -207,6 +226,92 @@ const CourseFormPage = () => {
                 });
         }
     }, [isEditing, id, dispatch]);
+
+    // Convert current deadline text to YYYY-MM-DD for native date picker
+    const deadlineAsIsoDate = useMemo(() => {
+        if (!formData.deadline) return '';
+        if (/^\d{4}-\d{2}-\d{2}$/.test(formData.deadline)) return formData.deadline;
+        const cleaned = formData.deadline.replace(/(\d+)(st|nd|rd|th)/, '$1');
+        const parsed = Date.parse(cleaned);
+        if (!isNaN(parsed)) {
+            const d = new Date(parsed);
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+        return '';
+    }, [formData.deadline]);
+
+    const handleDeadlineDateChange = (e) => {
+        const isoValue = e.target.value;
+        if (!isoValue) {
+            setFormData(prev => ({ ...prev, deadline: '' }));
+            return;
+        }
+        try {
+            const [year, month, day] = isoValue.split('-').map(Number);
+            const date = new Date(year, month - 1, day);
+            const dayNum = date.getDate();
+            const suffix = (dayNum % 10 === 1 && dayNum !== 11) ? 'st'
+                         : (dayNum % 10 === 2 && dayNum !== 12) ? 'nd'
+                         : (dayNum % 10 === 3 && dayNum !== 13) ? 'rd' : 'th';
+            const monthName = date.toLocaleString('default', { month: 'long' });
+            const formatted = `${dayNum}${suffix} ${monthName}, ${year}`;
+            setFormData(prev => ({ ...prev, deadline: formatted }));
+        } catch {
+            setFormData(prev => ({ ...prev, deadline: isoValue }));
+        }
+    };
+
+    const handleHeroImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (!['image/jpeg', 'image/png', 'image/webp', 'image/jpg'].includes(file.type)) {
+            setImageUploadError('Please choose a JPG, PNG, or WebP image.');
+            return;
+        }
+        if (file.size > 10 * 1024 * 1024) {
+            setImageUploadError('Image size must be less than 10MB.');
+            return;
+        }
+
+        setImageUploadError('');
+        setIsUploadingHeroImage(true);
+
+        try {
+            const uploadFormData = new FormData();
+            uploadFormData.append('file', file);
+
+            let uploadedUrl = '';
+            try {
+                const res = await api.post('/admin/gallery/upload', uploadFormData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                uploadedUrl = res.data?.data?.url || res.data?.url;
+            } catch (galleryErr) {
+                // Fallback to avatar upload endpoint
+                const res = await api.post('/auth/profile/avatar', uploadFormData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                uploadedUrl = res.data?.data?.avatar || res.data?.data?.avatarUrl || res.data?.avatar || res.data?.url;
+            }
+
+            if (uploadedUrl) {
+                setFormData(prev => ({ ...prev, heroImage: uploadedUrl }));
+                dispatch(addNotification({
+                    type: 'success',
+                    message: 'Course image uploaded successfully!'
+                }));
+            } else {
+                throw new Error('Upload returned no URL');
+            }
+        } catch (err) {
+            console.error('Image upload failed:', err);
+            setImageUploadError(err.response?.data?.message || err.message || 'Image upload failed. You can paste an image URL directly.');
+        } finally {
+            setIsUploadingHeroImage(false);
+            if (e.target) e.target.value = '';
+        }
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -541,16 +646,126 @@ const CourseFormPage = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Hero Image URL (Optional)</label>
-                            <input
-                                type="text"
-                                name="heroImage"
-                                value={formData.heroImage}
-                                onChange={handleInputChange}
-                                placeholder="e.g., /images/course-hero.webp"
-                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
-                            />
-                            <p className="text-xs text-gray-500 mt-2">Custom hero background image for the course detail page. Leave empty to use default.</p>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Course Cover / Hero Image (Optional)
+                            </label>
+
+                            {/* Image Preview & Upload Area */}
+                            {formData.heroImage ? (
+                                <div className="relative rounded-2xl overflow-hidden border border-gray-200 bg-gray-50 shadow-sm mb-4">
+                                    <img
+                                        src={formData.heroImage}
+                                        alt="Course preview"
+                                        className="w-full h-44 object-cover"
+                                        onError={(e) => {
+                                            e.currentTarget.src = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&auto=format&fit=crop&q=80';
+                                        }}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent flex items-end justify-between p-4">
+                                        <div className="text-white text-xs truncate max-w-[70%]">
+                                            <p className="font-semibold text-white/95">Selected Course Image</p>
+                                            <p className="text-white/70 truncate">{formData.heroImage}</p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <label className="cursor-pointer px-3 py-1.5 bg-white/90 hover:bg-white text-gray-800 text-xs font-semibold rounded-lg shadow transition-all flex items-center gap-1.5">
+                                                <Upload size={13} />
+                                                <span>Change</span>
+                                                <input
+                                                    type="file"
+                                                    accept="image/png,image/jpeg,image/webp,image/jpg"
+                                                    onChange={handleHeroImageUpload}
+                                                    disabled={isUploadingHeroImage}
+                                                    className="hidden"
+                                                />
+                                            </label>
+                                            <button
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, heroImage: '' }))}
+                                                className="p-1.5 bg-red-600/90 hover:bg-red-600 text-white rounded-lg shadow transition-all"
+                                                title="Remove image"
+                                            >
+                                                <Trash2 size={14} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="border-2 border-dashed border-gray-200 hover:border-[#004fa2] rounded-2xl p-6 text-center transition-all bg-gray-50/60 hover:bg-blue-50/20 mb-4 group">
+                                    <div className="w-12 h-12 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center mx-auto mb-3 text-[#004fa2] group-hover:scale-110 transition-transform">
+                                        {isUploadingHeroImage ? (
+                                            <Loader2 size={24} className="animate-spin text-[#004fa2]" />
+                                        ) : (
+                                            <Upload size={22} />
+                                        )}
+                                    </div>
+                                    <p className="text-sm font-semibold text-gray-800 mb-1">
+                                        {isUploadingHeroImage ? 'Uploading course image...' : 'Click or drag & drop to choose course image'}
+                                    </p>
+                                    <p className="text-xs text-gray-500 mb-4">PNG, JPG, or WebP up to 10MB</p>
+                                    <label className={`inline-flex items-center gap-2 px-4 py-2 bg-[#004fa2] hover:bg-[#003d7e] text-white text-xs font-semibold rounded-xl shadow cursor-pointer transition-all ${isUploadingHeroImage ? 'opacity-60 pointer-events-none' : ''}`}>
+                                        <Upload size={14} />
+                                        <span>Choose from Computer</span>
+                                        <input
+                                            type="file"
+                                            accept="image/png,image/jpeg,image/webp,image/jpg"
+                                            onChange={handleHeroImageUpload}
+                                            disabled={isUploadingHeroImage}
+                                            className="hidden"
+                                        />
+                                    </label>
+                                </div>
+                            )}
+
+                            {imageUploadError && (
+                                <p className="text-red-500 text-xs mb-3 flex items-center gap-1.5">
+                                    <AlertCircle size={13} />
+                                    {imageUploadError}
+                                </p>
+                            )}
+
+                            {/* Quick Stock Image Selection */}
+                            <div className="bg-gray-50/80 rounded-xl p-3 border border-gray-100">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-xs font-semibold text-gray-700 flex items-center gap-1.5">
+                                        <Sparkles size={13} className="text-[#004fa2]" />
+                                        Or pick a curated tech cover:
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowUrlInput(!showUrlInput)}
+                                        className="text-xs text-[#004fa2] hover:underline"
+                                    >
+                                        {showUrlInput ? 'Hide URL input' : 'Enter URL manually'}
+                                    </button>
+                                </div>
+                                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                                    {STOCK_COURSE_IMAGES.map((img) => (
+                                        <button
+                                            key={img.label}
+                                            type="button"
+                                            onClick={() => setFormData(prev => ({ ...prev, heroImage: img.url }))}
+                                            className={`relative rounded-lg overflow-hidden border text-left group p-1.5 transition-all ${formData.heroImage === img.url ? 'ring-2 ring-[#004fa2] border-transparent bg-blue-50/50' : 'border-gray-200 hover:border-gray-300 bg-white'}`}
+                                        >
+                                            <img src={img.url} alt={img.label} className="w-full h-12 object-cover rounded mb-1" />
+                                            <p className="text-[11px] font-medium text-gray-700 truncate">{img.label}</p>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Optional URL input toggle */}
+                            {showUrlInput && (
+                                <div className="mt-3">
+                                    <input
+                                        type="text"
+                                        name="heroImage"
+                                        value={formData.heroImage}
+                                        onChange={handleInputChange}
+                                        placeholder="Paste custom image URL (e.g., https://...)"
+                                        className="w-full px-4 py-2.5 text-xs border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
                 );
@@ -601,15 +816,76 @@ const CourseFormPage = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Application Deadline</label>
-                                <input
-                                    type="text"
-                                    name="deadline"
-                                    value={formData.deadline}
-                                    onChange={handleInputChange}
-                                    placeholder="e.g., 31st January, 2026"
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
-                                />
+                                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center justify-between">
+                                    <span className="flex items-center gap-1.5">
+                                        <Calendar size={15} className="text-[#004fa2]" />
+                                        Application Deadline
+                                    </span>
+                                    {formData.deadline && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setFormData(prev => ({ ...prev, deadline: '' }))}
+                                            className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+                                        >
+                                            Clear
+                                        </button>
+                                    )}
+                                </label>
+
+                                {/* Date Input with Calendar Picker */}
+                                <div className="relative mb-2.5">
+                                    <input
+                                        type="date"
+                                        value={deadlineAsIsoDate}
+                                        onChange={handleDeadlineDateChange}
+                                        className="w-full px-4 py-3 pl-11 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all font-medium text-gray-800 bg-white cursor-pointer"
+                                    />
+                                    <Calendar size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                                </div>
+
+                                {/* Formatted Display & Quick Presets */}
+                                <div className="space-y-2">
+                                    {formData.deadline && (
+                                        <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-lg text-xs text-[#004fa2]">
+                                            <span className="font-semibold">Selected:</span>
+                                            <span className="font-medium">{formData.deadline}</span>
+                                        </div>
+                                    )}
+                                    <div className="flex flex-wrap items-center gap-1.5">
+                                        <span className="text-[11px] text-gray-400 font-medium mr-1">Presets:</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => setFormData(prev => ({ ...prev, deadline: 'Rolling Admission' }))}
+                                            className={`px-2.5 py-1 text-xs rounded-lg font-medium transition-all ${formData.deadline === 'Rolling Admission' ? 'bg-[#004fa2] text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
+                                        >
+                                            Rolling Admission
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const now = new Date();
+                                                const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                                                const iso = `${endOfMonth.getFullYear()}-${String(endOfMonth.getMonth() + 1).padStart(2, '0')}-${String(endOfMonth.getDate()).padStart(2, '0')}`;
+                                                handleDeadlineDateChange({ target: { value: iso } });
+                                            }}
+                                            className="px-2.5 py-1 text-xs rounded-lg font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all"
+                                        >
+                                            End of Month
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const now = new Date();
+                                                const nextMonth = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+                                                const iso = `${nextMonth.getFullYear()}-${String(nextMonth.getMonth() + 1).padStart(2, '0')}-${String(nextMonth.getDate()).padStart(2, '0')}`;
+                                                handleDeadlineDateChange({ target: { value: iso } });
+                                            }}
+                                            className="px-2.5 py-1 text-xs rounded-lg font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all"
+                                        >
+                                            End of Next Month
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
 
                             <div>
