@@ -10,6 +10,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../../store/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { usePermissions } from '../../../hooks/usePermissions';
+import { normalizeAvatarUrl } from '../../../utils/avatar';
 
 const Header = ({ onMenuClick, sidebarOpen }) => {
   const { user: hookUser } = useAuth();
@@ -21,15 +22,18 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState(null);
+  const [avatarLoadError, setAvatarLoadError] = useState(false);
   const [, setTick] = useState(0);
 
   // Listen for avatar changes from profile page or auth state
   React.useEffect(() => {
-    const getActiveAvatar = () => localStorage.getItem('admin_avatar') || user?.avatar || null;
+    const getActiveAvatar = () => normalizeAvatarUrl(localStorage.getItem('admin_avatar') || user?.avatar || null);
     setAvatarUrl(getActiveAvatar());
+    setAvatarLoadError(false);
 
     const handleStorageChange = () => {
       setAvatarUrl(getActiveAvatar());
+      setAvatarLoadError(false);
       setTick(t => t + 1);
     };
 
@@ -119,8 +123,14 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
                 className="flex items-center gap-2 px-1 sm:px-3 py-2 hover:bg-gray-100 rounded transition-colors"
               >
                 <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 overflow-hidden">
-                  {avatarUrl ? (
-                    <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" loading="lazy" />
+                  {avatarUrl && !avatarLoadError ? (
+                    <img
+                      key={avatarUrl}
+                      src={avatarUrl}
+                      alt={displayName || 'Profile'}
+                      className="w-full h-full object-cover"
+                      onError={() => setAvatarLoadError(true)}
+                    />
                   ) : (
                     getInitials(displayName)
                   )}

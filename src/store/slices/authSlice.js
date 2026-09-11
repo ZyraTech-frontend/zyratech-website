@@ -8,6 +8,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authService from '../../services/authService';
 import { clearAuthStorage, storeAuthTokens, getStoredToken } from '../../services/api';
 import activityLogService from '../../services/activityLogService';
+import { normalizeAvatarUrl } from '../../utils/avatar';
 
 // ─── Helper: Normalize & Sanitize User Data ───────────────────
 export const sanitizeUser = (rawUser) => {
@@ -34,8 +35,11 @@ export const sanitizeUser = (rawUser) => {
   user.name = fullName;
 
   // Preserve & sync avatar across browser storage
-  const savedAvatar = typeof localStorage !== 'undefined' ? localStorage.getItem('admin_avatar') : null;
+  const rawSavedAvatar = typeof localStorage !== 'undefined' ? localStorage.getItem('admin_avatar') : null;
+  const savedAvatar = normalizeAvatarUrl(rawSavedAvatar);
+
   if (user.avatar) {
+    user.avatar = normalizeAvatarUrl(user.avatar);
     try {
       localStorage.setItem('admin_avatar', user.avatar);
     } catch {
@@ -222,8 +226,9 @@ export const updateUserProfile = createAsyncThunk(
         ? `${fn} ${ln}`.trim()
         : (profileData.name || auth.user?.name || `${fn} ${ln}`.trim()));
 
-      const savedAvatar = localStorage.getItem('admin_avatar');
-      const avatar = apiUser.avatar || profileData.avatar || auth.user?.avatar || savedAvatar || null;
+      const savedAvatar = normalizeAvatarUrl(localStorage.getItem('admin_avatar'));
+      const rawAvatar = apiUser.avatar || profileData.avatar || auth.user?.avatar || savedAvatar || null;
+      const avatar = normalizeAvatarUrl(rawAvatar);
 
       const updatedUser = sanitizeUser({
         ...auth.user,
@@ -265,13 +270,15 @@ export const uploadUserAvatar = createAsyncThunk(
       const { auth } = getState();
       const apiUser = result?.user || result?.data || result || {};
 
-      const avatarUrl =
+      const rawAvatarUrl =
         apiUser.avatar ||
         apiUser.avatarUrl ||
         apiUser.url ||
         apiUser.imageUrl ||
         apiUser.image ||
         (typeof apiUser === 'string' ? apiUser : null);
+
+      const avatarUrl = normalizeAvatarUrl(rawAvatarUrl);
 
       const updatedUser = sanitizeUser({
         ...auth.user,

@@ -39,6 +39,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { logoutUser } from '../../../store/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { normalizeAvatarUrl } from '../../../utils/avatar';
 
 const Sidebar = ({ isOpen, onClose, isMobile }) => {
   const location = useLocation();
@@ -49,14 +50,17 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
   const { isSuperAdmin } = usePermissions();
 
   const [avatarUrl, setAvatarUrl] = useState(null);
+  const [avatarLoadError, setAvatarLoadError] = useState(false);
   const [, setTick] = useState(0);
 
   React.useEffect(() => {
-    const getActive = () => localStorage.getItem('admin_avatar') || user?.avatar || null;
+    const getActive = () => normalizeAvatarUrl(localStorage.getItem('admin_avatar') || user?.avatar || null);
     setAvatarUrl(getActive());
+    setAvatarLoadError(false);
 
     const handleSync = () => {
       setAvatarUrl(getActive());
+      setAvatarLoadError(false);
       setTick(t => t + 1);
     };
 
@@ -468,12 +472,13 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
       {/* User Info & Logout */}
       <div className="border-t border-blue-500/30 p-3">
         <div className="flex items-center gap-3 mb-3">
-          {(avatarUrl || user?.avatar) ? (
+          {normalizeAvatarUrl(avatarUrl || user?.avatar) && !avatarLoadError ? (
             <img
-              src={avatarUrl || user?.avatar}
+              key={normalizeAvatarUrl(avatarUrl || user?.avatar)}
+              src={normalizeAvatarUrl(avatarUrl || user?.avatar)}
               alt="Profile"
               className="w-9 h-9 rounded-full object-cover border border-white/20 shrink-0"
-              loading="lazy"
+              onError={() => setAvatarLoadError(true)}
             />
           ) : (
             <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white text-xs shrink-0">

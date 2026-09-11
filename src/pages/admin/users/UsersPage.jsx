@@ -14,6 +14,7 @@ import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlic
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { ROLES, ROLE_LABELS } from '../../../utils/constants';
+import { normalizeAvatarUrl } from '../../../utils/avatar';
 import {
   UserPlus, Edit, Shield, ShieldCheck, ShieldX,
   User, Phone, Calendar, Search, X, Eye,
@@ -431,8 +432,13 @@ const UsersPage = () => {
                     <div className={`w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-white shadow-sm overflow-hidden shrink-0 ${
                       isDeactivated ? 'bg-gray-400' : 'bg-[#004fa2]'
                     }`}>
-                      {admin.avatar || admin.profileImage ? (
-                          <img src={admin.avatar || admin.profileImage} alt={admin.name} className="w-full h-full object-cover" loading="lazy" />
+                      {normalizeAvatarUrl(admin.avatar || admin.profileImage) ? (
+                          <img
+                            src={normalizeAvatarUrl(admin.avatar || admin.profileImage)}
+                            alt={admin.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                          />
                       ) : (
                           <User size={20} className="opacity-90" strokeWidth={2.5} />
                       )}
@@ -631,8 +637,13 @@ const UsersPage = () => {
                           </div>
                           <div className="flex gap-4 sm:gap-6 mt-auto w-full relative z-10">
                             <div className="w-20 h-24 sm:w-28 sm:h-36 bg-gray-200/80 rounded-xl shrink-0 border-2 border-white shadow-md flex items-center justify-center overflow-hidden bg-white">
-                              {selectedAdmin.avatar ? (
-                                <img src={selectedAdmin.avatar} alt="Avatar" className="w-full h-full object-cover" loading="lazy" />
+                              {normalizeAvatarUrl(selectedAdmin.avatar) ? (
+                                <img
+                                  src={normalizeAvatarUrl(selectedAdmin.avatar)}
+                                  alt="Avatar"
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                />
                               ) : (
                                 <User size={32} className="text-gray-400" />
                               )}
@@ -969,8 +980,13 @@ const UsersPage = () => {
                   <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center text-white font-bold overflow-hidden shrink-0 shadow-md ring-4 ring-white relative ${
                     isDeactivated ? 'bg-gradient-to-br from-gray-400 to-gray-600' : 'bg-gradient-to-br from-[#004fa2] to-[#0066cc]'
                   }`}>
-                    {selectedAdmin.avatar || selectedAdmin.profileImage ? (
-                        <img src={selectedAdmin.avatar || selectedAdmin.profileImage} alt={selectedAdmin.name} className="w-full h-full object-cover" loading="lazy" />
+                    {normalizeAvatarUrl(selectedAdmin.avatar || selectedAdmin.profileImage) ? (
+                        <img
+                          src={normalizeAvatarUrl(selectedAdmin.avatar || selectedAdmin.profileImage)}
+                          alt={selectedAdmin.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
                     ) : (
                         <User size={36} className="opacity-90" strokeWidth={2.5} />
                     )}

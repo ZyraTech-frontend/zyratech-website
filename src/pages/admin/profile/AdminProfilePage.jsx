@@ -11,6 +11,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import { updateUserProfile, changePassword, verifySession, uploadUserAvatar } from '../../../store/slices/authSlice';
 import authService from '../../../services/authService';
 import activityLogService from '../../../services/activityLogService';
+import { normalizeAvatarUrl } from '../../../utils/avatar';
 import {
     User,
     Mail,
@@ -46,6 +47,7 @@ const AdminProfilePage = () => {
     const [successMessage, setSuccessMessage] = useState('Profile updated successfully!');
     const [errorMessage, setErrorMessage] = useState('');
     const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+    const [imageError, setImageError] = useState(false);
 
     // User profile state
     const [userData, setUserData] = useState({
@@ -103,7 +105,9 @@ const AdminProfilePage = () => {
                 : user.role === 'admin' ? 'Administrator'
                 : (user.role || 'Admin');
 
-            const savedAvatar = localStorage.getItem('admin_avatar');
+            const savedAvatar = normalizeAvatarUrl(localStorage.getItem('admin_avatar'));
+            const resolvedAvatar = normalizeAvatarUrl(user.avatar) || savedAvatar || normalizeAvatarUrl(prev.avatar) || null;
+            setImageError(false);
 
             setUserData(prev => ({
                 ...prev,
@@ -115,7 +119,7 @@ const AdminProfilePage = () => {
                 role: formattedRole,
                 department: user.department || 'Software Engineering',
                 location: user.location || 'Ghana',
-                avatar: user.avatar || savedAvatar || prev.avatar || null,
+                avatar: resolvedAvatar,
                 bio: user.bio || '',
                 joinedDate: user.createdAt || user.joinedDate || '',
                 lastLogin: user.lastLogin || '',
@@ -163,7 +167,7 @@ const AdminProfilePage = () => {
 
         try {
             const actionResult = await dispatch(uploadUserAvatar(file)).unwrap();
-            const persistentAvatarUrl =
+            const rawPersistentAvatarUrl =
                 actionResult?.avatar ||
                 actionResult?.user?.avatar ||
                 actionResult?.user?.avatarUrl ||
@@ -171,11 +175,14 @@ const AdminProfilePage = () => {
                 actionResult?.avatarUrl ||
                 actionResult?.imageUrl;
 
+            const persistentAvatarUrl = normalizeAvatarUrl(rawPersistentAvatarUrl);
+
             if (persistentAvatarUrl) {
                 setUserData(prev => ({
                     ...prev,
                     avatar: persistentAvatarUrl
                 }));
+                setImageError(false);
             }
 
             setSuccessMessage('Avatar uploaded successfully!');
@@ -222,7 +229,7 @@ const AdminProfilePage = () => {
         try {
             const fn = userData.firstName.trim();
             const ln = userData.lastName.trim();
-            const currentAvatar = userData.avatar || localStorage.getItem('admin_avatar') || null;
+            const currentAvatar = normalizeAvatarUrl(userData.avatar) || normalizeAvatarUrl(localStorage.getItem('admin_avatar')) || null;
 
             const payload = {
                 firstName: fn,
@@ -454,8 +461,15 @@ const AdminProfilePage = () => {
                             <div className="flex items-center gap-4">
                                 {/* Avatar */}
                                 <div className="w-16 h-16 rounded-full border-2 border-gray-200 shadow-sm shrink-0 overflow-hidden relative group">
-                                    {userData.avatar ? (
-                                        <img decoding="async" src={userData.avatar} alt="Profile" className="w-full h-full object-cover" loading="lazy" />
+                                    {userData.avatar && !imageError ? (
+                                        <img
+                                            key={userData.avatar}
+                                            decoding="async"
+                                            src={normalizeAvatarUrl(userData.avatar)}
+                                            alt="Profile"
+                                            className="w-full h-full object-cover"
+                                            onError={() => setImageError(true)}
+                                        />
                                     ) : (
                                         <div className="w-full h-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white font-bold text-lg">
                                             {getInitials()}
