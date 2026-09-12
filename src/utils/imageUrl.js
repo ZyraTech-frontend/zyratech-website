@@ -16,11 +16,11 @@
 const SUPABASE_STORAGE_BASE = 'https://cblfpfsvavahttedfloe.supabase.co/storage/v1/object/public/zyratech-assets';
 
 export const DEFAULT_CATEGORY_IMAGES = {
-  basic: '/images/software.webp',
+  basic: '/images/image1.webp',
   intermediate: '/images/digitalmarketing.png',
-  advanced: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&auto=format&fit=crop&q=80',
-  internship: '/images/workingspace.webp',
-  matured: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&auto=format&fit=crop&q=80',
+  advanced: '/images/advance.png',
+  internship: '/images/training1.webp',
+  matured: '/images/image2.webp',
   default: '/images/image1.webp'
 };
 
