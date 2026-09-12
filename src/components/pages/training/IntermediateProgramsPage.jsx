@@ -5,7 +5,7 @@ import { Cloud, BarChart3, Server, Clock, Users, Star, ChevronRight, Award, Data
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
 import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
-import { normalizeImageUrl } from '../../../utils/imageUrl';
+import { normalizeImageUrl, getCourseImageUrl } from '../../../utils/imageUrl';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
 
@@ -216,7 +216,7 @@ const IntermediateProgramsPage = () => {
             {intermediatePrograms.map((program, index) => {
               const IconComponent = iconMap[program.iconKey] || Cloud;
               const defaultImage = "/images/image1.webp";
-              const imageUrl = normalizeImageUrl(program.image || program.heroImage) || defaultImage;
+              const imageUrl = getCourseImageUrl(program) || program.heroImage || program.image || defaultImage;
 
               return (
                 <motion.div

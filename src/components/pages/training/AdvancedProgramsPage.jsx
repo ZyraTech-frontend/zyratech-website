@@ -5,7 +5,7 @@ import { Globe, Cpu, Server, Clock, Users, Star, ChevronRight, Target, Award, Ne
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
 import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
-import { normalizeImageUrl } from '../../../utils/imageUrl';
+import { normalizeImageUrl, getCourseImageUrl } from '../../../utils/imageUrl';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
 
@@ -216,7 +216,7 @@ const AdvancedProgramsPage = () => {
               const IconComponent = iconMap[program.iconKey] || Globe;
               const placeholderImages = ["/images/image1.webp", "/images/image2.webp", "/images/image3.webp"];
               const defaultPlaceholder = placeholderImages[index % placeholderImages.length];
-              const imageUrl = normalizeImageUrl(program.image || program.heroImage) || defaultPlaceholder;
+              const imageUrl = getCourseImageUrl(program) || program.heroImage || program.image || defaultPlaceholder;
 
               return (
                 <motion.div

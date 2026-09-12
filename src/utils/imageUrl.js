@@ -26,33 +26,58 @@ export const DEFAULT_CATEGORY_IMAGES = {
 
 /**
  * Resolves course cover image from any potential field property
- * @param {object} course 
+ * @param {object|string} course 
  * @returns {string|null}
  */
 export const getCourseImageUrl = (course) => {
-  if (!course || typeof course !== 'object') return null;
-  const raw = course.image ||
-              course.heroImage ||
-              course.imageUrl ||
-              course.image_url ||
-              course.hero_image ||
-              course.coverImage ||
-              course.cover_image ||
-              course.thumbnail ||
-              course.thumbnailUrl ||
-              course.photo ||
-              course.photoUrl ||
-              course.s3Url ||
-              course.s3_url ||
-              null;
-  return normalizeImageUrl(raw);
+  if (!course) return null;
+  if (typeof course === 'string') return normalizeImageUrl(course);
+  if (typeof course !== 'object') return null;
+
+  const candidate = course.image ||
+                    course.heroImage ||
+                    course.imageUrl ||
+                    course.image_url ||
+                    course.hero_image ||
+                    course.coverImage ||
+                    course.cover_image ||
+                    course.thumbnail ||
+                    course.thumbnailUrl ||
+                    course.photo ||
+                    course.photoUrl ||
+                    course.s3Url ||
+                    course.s3_url ||
+                    course.url ||
+                    null;
+
+  if (!candidate) return null;
+
+  if (typeof candidate === 'string') {
+    return normalizeImageUrl(candidate);
+  }
+
+  if (typeof candidate === 'object') {
+    const nested = candidate.url ||
+                   candidate.location ||
+                   candidate.path ||
+                   candidate.fileUrl ||
+                   candidate.imageUrl ||
+                   candidate.key ||
+                   null;
+    return nested ? normalizeImageUrl(nested) : null;
+  }
+
+  return null;
 };
 
 /**
- * Normalizes any image URL.
- * Preserves all valid AWS S3 URLs, CDNs, data/blob URLs, and relative paths as-is.
+ * Normalizes any image URL to ensure it points to a reachable public asset URL.
+ * Converts Supabase S3 bucket URLs (virtual-hosted style, path-style, Supabase S3 endpoint,
+ * or raw storage keys) into the live public Supabase Storage CDN URL.
+ * Preserves local previews (blob:, data:), local static paths (/images/...), and other CDNs intact.
+ *
  * @param {string} url - Raw image URL or storage key
- * @returns {string|null} Reachable image URL
+ * @returns {string|null} Reachable public image URL
  */
 export const normalizeImageUrl = (url) => {
   if (!url || typeof url !== 'string') return null;
@@ -65,13 +90,60 @@ export const normalizeImageUrl = (url) => {
     return trimmed;
   }
 
-  // Preserve all absolute URLs (AWS S3, CloudFront, Unsplash, Supabase, etc.) intact
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+  // Already a Supabase public storage URL
+  if (trimmed.includes('supabase.co/storage/v1/object/public/zyratech-assets/')) {
     return trimmed;
   }
 
-  // Relative path starting with /
+  // Supabase S3 API endpoint: rewrite to public storage CDN so browser can fetch without S3 auth
+  const supabaseS3Match = trimmed.match(/^https?:\/\/[^/]+\.supabase\.co\/storage\/v1\/s3\/zyratech-assets\/(.+)$/i);
+  if (supabaseS3Match) {
+    const key = supabaseS3Match[1].replace(/^\/+/, '').split('?')[0];
+    return `${SUPABASE_STORAGE_BASE}/${key}`;
+  }
+
+  // Handle virtual-hosted style AWS S3 URL: zyratech-assets.s3.<region>.amazonaws.com/<key>
+  const vhostMatch = trimmed.match(/^https?:\/\/zyratech-assets\.s3[.-]?[^/]*\.amazonaws\.com\/(.+)$/i);
+  if (vhostMatch) {
+    const key = vhostMatch[1].replace(/^\/+/, '').split('?')[0];
+    return `${SUPABASE_STORAGE_BASE}/${key}`;
+  }
+
+  // Handle path style AWS S3 URL: s3.<region>.amazonaws.com/zyratech-assets/<key>
+  const pathMatch = trimmed.match(/^https?:\/\/s3[.-]?[^/]*\.amazonaws\.com\/zyratech-assets\/(.+)$/i);
+  if (pathMatch) {
+    const key = pathMatch[1].replace(/^\/+/, '').split('?')[0];
+    return `${SUPABASE_STORAGE_BASE}/${key}`;
+  }
+
+  // Handle any other S3 URL containing zyratech-assets and amazonaws.com
+  if (trimmed.includes('zyratech-assets') && trimmed.includes('amazonaws.com')) {
+    const parts = trimmed.split(/zyratech-assets[./]/);
+    if (parts.length > 1) {
+      const key = parts[parts.length - 1].replace(/^[^/]*\//, '').replace(/^\/+/, '').split('?')[0];
+      return `${SUPABASE_STORAGE_BASE}/${key}`;
+    }
+  }
+
+  // Relative Supabase path without base host
+  if (trimmed.startsWith('/storage/v1/object/public/')) {
+    return `https://cblfpfsvavahttedfloe.supabase.co${trimmed}`;
+  }
+
+  // Relative storage key (e.g. "courses/123-image.jpg" or "avatars/photo.png")
+  if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://') && !trimmed.startsWith('/')) {
+    if (trimmed.includes('/') || /\.(jpe?g|png|webp|gif|svg|avif)$/i.test(trimmed.split('?')[0])) {
+      return `${SUPABASE_STORAGE_BASE}/${trimmed}`;
+    }
+  }
+
+  // Local static paths (e.g. /images/...)
   if (trimmed.startsWith('/')) {
+    return trimmed;
+  }
+
+  // Preserve other absolute URLs (Unsplash, external CDNs, etc.) intact
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
     return trimmed;
   }
 
@@ -79,3 +151,4 @@ export const normalizeImageUrl = (url) => {
 };
 
 export default normalizeImageUrl;
+

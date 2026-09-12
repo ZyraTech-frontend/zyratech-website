@@ -11,7 +11,7 @@ import { createCourse, updateCourse } from '../../../store/slices/coursesSlice';
 import trainingService from '../../../services/trainingService';
 import api from '../../../services/api';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { normalizeImageUrl, DEFAULT_CATEGORY_IMAGES } from '../../../utils/imageUrl';
+import { normalizeImageUrl, DEFAULT_CATEGORY_IMAGES, getCourseImageUrl } from '../../../utils/imageUrl';
 import {
     ChevronLeft,
     ChevronRight,
@@ -198,7 +198,7 @@ const CourseFormPage = () => {
                 }
 
                 if (c) {
-                    const existingImg = c.image || c.imageUrl || c.image_url || c.heroImage || c.hero_image || c.coverImage || c.cover_image || c.thumbnail || '';
+                    const existingImg = getCourseImageUrl(c) || c.image || c.imageUrl || c.image_url || c.heroImage || c.hero_image || c.coverImage || c.cover_image || c.thumbnail || '';
                     setFormData({
                         title: c.title || '',
                         slug: c.slug || '',
@@ -336,7 +336,8 @@ const CourseFormPage = () => {
             }
 
             if (uploadedUrl) {
-                setFormData(prev => ({ ...prev, heroImage: uploadedUrl, image: uploadedUrl }));
+                const normalizedUrl = normalizeImageUrl(uploadedUrl) || uploadedUrl;
+                setFormData(prev => ({ ...prev, heroImage: normalizedUrl, image: normalizedUrl }));
                 dispatch(addNotification({
                     type: 'success',
                     message: 'Course image uploaded successfully to S3!'
@@ -588,7 +589,7 @@ const CourseFormPage = () => {
             {formData.heroImage ? (
                 <div className="relative rounded-2xl overflow-hidden border border-gray-200 bg-gray-50 shadow-sm mb-4">
                     <img
-                        src={formData.heroImage}
+                        src={normalizeImageUrl(formData.heroImage)}
                         alt="Course preview"
                         className="w-full h-44 object-cover"
                         onError={(e) => {

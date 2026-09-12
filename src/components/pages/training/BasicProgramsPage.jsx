@@ -5,7 +5,7 @@ import { Code, Terminal, Database, Clock, Users, Star, ChevronRight, Award, Book
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
 import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
-import { normalizeImageUrl } from '../../../utils/imageUrl';
+import { normalizeImageUrl, getCourseImageUrl } from '../../../utils/imageUrl';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
 
@@ -131,7 +131,7 @@ const BasicProgramsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {basicPrograms.map((program, index) => {
               const IconComponent = iconMap[program.iconKey] || Target;
-              const imageUrl = normalizeImageUrl(program.image || program.heroImage) || "/images/image1.webp";
+              const imageUrl = getCourseImageUrl(program) || program.heroImage || program.image || "/images/image1.webp";
 
               return (
                 <motion.div
