@@ -9,7 +9,7 @@ import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
 import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import trainingService from '../../../services/trainingService.js';
-import { normalizeImageUrl, DEFAULT_CATEGORY_IMAGES } from '../../../utils/imageUrl';
+import { normalizeImageUrl, DEFAULT_CATEGORY_IMAGES, getCourseImageUrl } from '../../../utils/imageUrl';
 import useSEO from '../../../hooks/useSEO';
 
 const CourseDetailPage = () => {
@@ -35,7 +35,7 @@ const CourseDetailPage = () => {
           setCourse(prev => ({
             ...(prev || {}),
             ...liveCourse,
-            heroImage: normalizeImageUrl(liveCourse.image || liveCourse.heroImage) || prev?.heroImage || "/images/digitalmarketing.png",
+            heroImage: getCourseImageUrl(liveCourse) || prev?.heroImage || "/images/digitalmarketing.png",
             programOverview: liveCourse.programOverview || liveCourse.description || prev?.programOverview,
             longDescription: liveCourse.longDescription || liveCourse.description || prev?.longDescription,
             duration: liveCourse.duration || prev?.duration || '12 Weeks',
@@ -66,7 +66,7 @@ const CourseDetailPage = () => {
     return () => { isMounted = false; };
   }, [courseId]);
 
-  const heroImage = normalizeImageUrl(course?.image || course?.heroImage) || course?.heroImage || "/images/digitalmarketing.png";
+  const heroImage = getCourseImageUrl(course) || course?.heroImage || "/images/digitalmarketing.png";
   const parallaxImage1 = "/images/parallax9.webp";
   const parallaxImage2 = "/images/parallax10.webp";
   const parallaxImage3 = "/images/parallax1.webp";

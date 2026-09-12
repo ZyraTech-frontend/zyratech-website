@@ -181,50 +181,62 @@ const CourseFormPage = () => {
     useEffect(() => {
         if (isEditing && id) {
             setIsLoadingCourse(true);
-            trainingService.getCourse(id)
-                .then(res => {
-                    const c = res?.course || res?.data || res;
-                    if (c) {
-                        setFormData({
-                            title: c.title || '',
-                            slug: c.slug || '',
-                            category: c.category || 'basic',
-                            level: c.level || 'Beginner',
-                            iconKey: c.iconKey || 'code',
-                            badge: c.badge || '',
-                            description: c.description || '',
-                            longDescription: c.longDescription || '',
-                            programOverview: c.programOverview || '',
-                            heroInfoText: c.heroInfoText || '',
-                            duration: c.duration || '',
-                            schedule: c.schedule || '',
-                            format: c.format || 'Hybrid',
-                            deadline: c.deadline || '',
-                            price: c.price ? String(c.price).replace(/[^0-9.]/g, '') : '',
-                            originalPrice: (c.discountPrice || c.originalPrice) ? String(c.discountPrice || c.originalPrice).replace(/[^0-9.]/g, '') : '',
-                            participants: c.participants ? String(c.participants) : '',
-                            instructor: c.instructor || (Array.isArray(c.instructors) ? c.instructors[0]?.name : '') || '',
-                            certificate: c.certificate || '',
-                            rating: c.rating ? String(c.rating) : '',
-                            reviews: c.reviews ? String(c.reviews) : '',
-                            heroImage: normalizeImageUrl(c.image || c.heroImage || '') || '',
-                            topicsText: Array.isArray(c.topics) ? c.topics.join(', ') : (Array.isArray(c.tools) ? c.tools.join(', ') : ''),
-                            programmeObjectives: Array.isArray(c.programmeObjectives) && c.programmeObjectives.length > 0
-                                ? c.programmeObjectives
-                                : (Array.isArray(c.outcomes) ? c.outcomes.map(o => ({ title: o, description: '' })) : [{ title: '', description: '' }])
-                        });
+            const loadData = async () => {
+                let c = null;
+                try {
+                    const res = await trainingService.getCourse(id);
+                    c = res?.course || res?.data || res;
+                } catch (publicErr) {
+                    // Public API returns 404 for draft courses, fallback to admin courses
+                    try {
+                        const adminRes = await trainingService.getAllCoursesAdmin();
+                        const list = Array.isArray(adminRes) ? adminRes : (adminRes?.data || adminRes?.courses || []);
+                        c = list.find(item => String(item.id) === String(id) || item.slug === id);
+                    } catch (adminErr) {
+                        console.error('Failed to load from admin courses:', adminErr);
                     }
-                })
-                .catch(err => {
-                    console.error('Failed to load course details:', err);
+                }
+
+                if (c) {
+                    const existingImg = c.image || c.imageUrl || c.image_url || c.heroImage || c.hero_image || c.coverImage || c.cover_image || c.thumbnail || '';
+                    setFormData({
+                        title: c.title || '',
+                        slug: c.slug || '',
+                        category: c.category || 'basic',
+                        level: c.level || 'Beginner',
+                        iconKey: c.iconKey || 'code',
+                        badge: c.badge || '',
+                        description: c.description || '',
+                        longDescription: c.longDescription || '',
+                        programOverview: c.programOverview || '',
+                        heroInfoText: c.heroInfoText || '',
+                        duration: c.duration || '',
+                        schedule: c.schedule || '',
+                        format: c.format || 'Hybrid',
+                        deadline: c.deadline || '',
+                        price: c.price ? String(c.price).replace(/[^0-9.]/g, '') : '',
+                        originalPrice: (c.discountPrice || c.originalPrice) ? String(c.discountPrice || c.originalPrice).replace(/[^0-9.]/g, '') : '',
+                        participants: c.participants ? String(c.participants) : '',
+                        instructor: c.instructor || (Array.isArray(c.instructors) ? c.instructors[0]?.name : '') || '',
+                        certificate: c.certificate || '',
+                        rating: c.rating ? String(c.rating) : '',
+                        reviews: c.reviews ? String(c.reviews) : '',
+                        heroImage: existingImg,
+                        topicsText: Array.isArray(c.topics) ? c.topics.join(', ') : (Array.isArray(c.tools) ? c.tools.join(', ') : ''),
+                        programmeObjectives: Array.isArray(c.programmeObjectives) && c.programmeObjectives.length > 0
+                            ? c.programmeObjectives
+                            : (Array.isArray(c.outcomes) ? c.outcomes.map(o => ({ title: o, description: '' })) : [{ title: '', description: '' }])
+                    });
+                } else {
                     dispatch(addNotification({
                         type: 'error',
-                        message: 'Failed to load course details from server'
+                        message: 'Could not find course details to edit.'
                     }));
-                })
-                .finally(() => {
-                    setIsLoadingCourse(false);
-                });
+                }
+                setIsLoadingCourse(false);
+            };
+
+            loadData();
         }
     }, [isEditing, id, dispatch]);
 
@@ -282,36 +294,55 @@ const CourseFormPage = () => {
             const uploadFormData = new FormData();
             uploadFormData.append('file', file);
 
+            const extractUrl = (response) => {
+                const d = response?.data;
+                return d?.data?.url ||
+                       d?.data?.location ||
+                       d?.data?.fileUrl ||
+                       d?.data?.imageUrl ||
+                       d?.data?.path ||
+                       d?.data?.key ||
+                       d?.url ||
+                       d?.location ||
+                       d?.fileUrl ||
+                       d?.imageUrl ||
+                       d?.path ||
+                       (typeof d === 'string' ? d : '');
+            };
+
             let uploadedUrl = '';
             try {
                 const res = await api.post('/admin/blog/upload', uploadFormData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
-                uploadedUrl = res.data?.data?.url || res.data?.url;
+                uploadedUrl = extractUrl(res);
             } catch (blogUploadErr) {
                 try {
                     const res = await api.post('/admin/gallery/upload', uploadFormData, {
                         headers: { 'Content-Type': 'multipart/form-data' }
                     });
-                    uploadedUrl = res.data?.data?.url || res.data?.url;
+                    uploadedUrl = extractUrl(res);
                 } catch (galleryErr) {
-                    // Fallback to avatar upload endpoint
-                    const res = await api.post('/auth/profile/avatar', uploadFormData, {
-                        headers: { 'Content-Type': 'multipart/form-data' }
-                    });
-                    uploadedUrl = res.data?.data?.avatar || res.data?.data?.avatarUrl || res.data?.avatar || res.data?.url;
+                    try {
+                        const res = await api.post('/auth/profile/avatar', uploadFormData, {
+                            headers: { 'Content-Type': 'multipart/form-data' }
+                        });
+                        const d = res?.data;
+                        uploadedUrl = d?.data?.avatar || d?.data?.avatarUrl || d?.data?.url || d?.data?.location || d?.avatar || d?.url || d?.location || '';
+                    } catch (avatarErr) {
+                        console.error('All upload endpoints failed:', avatarErr);
+                    }
                 }
             }
 
-            const normalizedUrl = normalizeImageUrl(uploadedUrl);
-            if (normalizedUrl) {
-                setFormData(prev => ({ ...prev, heroImage: normalizedUrl }));
+            if (uploadedUrl) {
+                setFormData(prev => ({ ...prev, heroImage: uploadedUrl, image: uploadedUrl }));
                 dispatch(addNotification({
                     type: 'success',
-                    message: 'Course image uploaded successfully!'
+                    message: 'Course image uploaded successfully to S3!'
                 }));
             } else {
-                throw new Error('Upload returned no URL');
+                throw new Error('Upload succeeded but no image URL was returned');
             }
         } catch (err) {
             console.error('Image upload failed:', err);
@@ -455,9 +486,9 @@ const CourseFormPage = () => {
                 description: courseData.description,
                 topics: courseData.topics,
                 instructor: courseData.instructor,
-                format: courseData.format,
-                // Extended fields
-                image: normalizeImageUrl(courseData.heroImage || formData.heroImage) || undefined,
+                // Send all fields including image and heroImage for S3
+                image: (formData.heroImage || formData.image || '').trim() || undefined,
+                heroImage: (formData.heroImage || formData.image || '').trim() || undefined,
                 slug: formData.slug ? formData.slug.trim() : (courseData.title || '').toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-'),
                 badge: courseData.badge || undefined,
                 iconKey: courseData.iconKey || undefined,
@@ -557,11 +588,11 @@ const CourseFormPage = () => {
             {formData.heroImage ? (
                 <div className="relative rounded-2xl overflow-hidden border border-gray-200 bg-gray-50 shadow-sm mb-4">
                     <img
-                        src={normalizeImageUrl(formData.heroImage)}
+                        src={formData.heroImage}
                         alt="Course preview"
                         className="w-full h-44 object-cover"
                         onError={(e) => {
-                            e.currentTarget.src = DEFAULT_CATEGORY_IMAGES[formData.category] || DEFAULT_CATEGORY_IMAGES.default;
+                            console.warn('Preview image load error for:', formData.heroImage);
                         }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent flex items-end justify-between p-4">

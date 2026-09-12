@@ -25,9 +25,34 @@ export const DEFAULT_CATEGORY_IMAGES = {
 };
 
 /**
- * Normalizes any image URL to ensure it points to a reachable, public CDN endpoint.
+ * Resolves course cover image from any potential field property
+ * @param {object} course 
+ * @returns {string|null}
+ */
+export const getCourseImageUrl = (course) => {
+  if (!course || typeof course !== 'object') return null;
+  const raw = course.image ||
+              course.heroImage ||
+              course.imageUrl ||
+              course.image_url ||
+              course.hero_image ||
+              course.coverImage ||
+              course.cover_image ||
+              course.thumbnail ||
+              course.thumbnailUrl ||
+              course.photo ||
+              course.photoUrl ||
+              course.s3Url ||
+              course.s3_url ||
+              null;
+  return normalizeImageUrl(raw);
+};
+
+/**
+ * Normalizes any image URL.
+ * Preserves all valid AWS S3 URLs, CDNs, data/blob URLs, and relative paths as-is.
  * @param {string} url - Raw image URL or storage key
- * @returns {string|null} Reachable public image URL
+ * @returns {string|null} Reachable image URL
  */
 export const normalizeImageUrl = (url) => {
   if (!url || typeof url !== 'string') return null;
@@ -40,44 +65,14 @@ export const normalizeImageUrl = (url) => {
     return trimmed;
   }
 
-  // Already a Supabase storage URL
-  if (trimmed.includes('supabase.co/storage/v1/object/public/')) {
+  // Preserve all absolute URLs (AWS S3, CloudFront, Unsplash, Supabase, etc.) intact
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
     return trimmed;
   }
 
-  // Handle virtual-hosted style AWS S3 URL: zyratech-assets.s3.<region>.amazonaws.com/<key>
-  const vhostMatch = trimmed.match(/^https?:\/\/zyratech-assets\.s3[.-]?[^/]*\.amazonaws\.com\/(.+)$/i);
-  if (vhostMatch) {
-    const key = vhostMatch[1].replace(/^\/+/, '');
-    return `${SUPABASE_STORAGE_BASE}/${key}`;
-  }
-
-  // Handle path style AWS S3 URL: s3.<region>.amazonaws.com/zyratech-assets/<key>
-  const pathMatch = trimmed.match(/^https?:\/\/s3[.-]?[^/]*\.amazonaws\.com\/zyratech-assets\/(.+)$/i);
-  if (pathMatch) {
-    const key = pathMatch[1].replace(/^\/+/, '');
-    return `${SUPABASE_STORAGE_BASE}/${key}`;
-  }
-
-  // Handle any other AWS URL containing zyratech-assets
-  if (trimmed.includes('zyratech-assets') && trimmed.includes('amazonaws.com')) {
-    const parts = trimmed.split(/zyratech-assets[./]/);
-    if (parts.length > 1) {
-      const key = parts[parts.length - 1].replace(/^[^/]*\//, '').replace(/^\/+/, '');
-      return `${SUPABASE_STORAGE_BASE}/${key}`;
-    }
-  }
-
-  // Relative storage key (e.g. "courses/123-image.jpg" or "blog/photo.png")
-  if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://') && !trimmed.startsWith('/')) {
-    if (trimmed.includes('/') && /\.(jpe?g|png|webp|gif|svg)$/i.test(trimmed)) {
-      return `${SUPABASE_STORAGE_BASE}/${trimmed}`;
-    }
-  }
-
-  // Relative Supabase path without base host
-  if (trimmed.startsWith('/storage/v1/object/public/')) {
-    return `https://cblfpfsvavahttedfloe.supabase.co${trimmed}`;
+  // Relative path starting with /
+  if (trimmed.startsWith('/')) {
+    return trimmed;
   }
 
   return trimmed;
