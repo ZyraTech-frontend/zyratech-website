@@ -557,20 +557,24 @@ const TrainingCoursesPage = () => {
                                     >
                                         {/* Card Cover Image Header */}
                                         <div className="relative h-36 w-full bg-gray-100 overflow-hidden shrink-0">
-                                            {getCourseImageUrl(course) ? (
-                                                <img
-                                                    src={getCourseImageUrl(course)}
-                                                    alt={course.title}
-                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                    onError={(e) => {
-                                                        console.warn('Course image failed to load from S3:', getCourseImageUrl(course));
-                                                    }}
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
-                                                    <BookOpen size={32} className="opacity-40" />
-                                                </div>
-                                            )}
+                                            {(() => {
+                                                const resolvedImg = getCourseImageUrl(course);
+                                                const fallbackImg = DEFAULT_CATEGORY_IMAGES[course.category?.toLowerCase()] || DEFAULT_CATEGORY_IMAGES.default;
+                                                const displayImg = resolvedImg || fallbackImg;
+
+                                                return (
+                                                    <img
+                                                        src={displayImg}
+                                                        alt={course.title}
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                        onError={(e) => {
+                                                            if (e.currentTarget.src !== fallbackImg) {
+                                                                e.currentTarget.src = fallbackImg;
+                                                            }
+                                                        }}
+                                                    />
+                                                );
+                                            })()}
                                             <div className="absolute top-2.5 left-2.5">
                                                 <span className={`px-2 py-0.5 rounded shadow-xs text-[9px] font-bold uppercase backdrop-blur-xs ${CATEGORY_CONFIG[course.category]?.color || 'bg-white/90 text-gray-700'}`}>
                                                     {CATEGORY_CONFIG[course.category]?.label || course.category || 'Course'}
@@ -982,20 +986,24 @@ const TrainingCoursesPage = () => {
                             <div className="space-y-5">
                                 {/* Cover Image Banner */}
                                 <div className="rounded-xl overflow-hidden h-44 w-full border border-gray-200 bg-gray-100">
-                                    {getCourseImageUrl(viewingCourse) ? (
-                                        <img
-                                            src={getCourseImageUrl(viewingCourse)}
-                                            alt={viewingCourse.title}
-                                            className="w-full h-full object-cover"
-                                            onError={(e) => {
-                                                console.warn('Modal course image failed to load from S3:', getCourseImageUrl(viewingCourse));
-                                            }}
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
-                                            <GraduationCap size={40} className="opacity-40" />
-                                        </div>
-                                    )}
+                                    {(() => {
+                                        const resolvedImg = getCourseImageUrl(viewingCourse);
+                                        const fallbackImg = DEFAULT_CATEGORY_IMAGES[viewingCourse.category?.toLowerCase()] || DEFAULT_CATEGORY_IMAGES.default;
+                                        const displayImg = resolvedImg || fallbackImg;
+
+                                        return (
+                                            <img
+                                                src={displayImg}
+                                                alt={viewingCourse.title}
+                                                className="w-full h-full object-cover"
+                                                onError={(e) => {
+                                                    if (e.currentTarget.src !== fallbackImg) {
+                                                        e.currentTarget.src = fallbackImg;
+                                                    }
+                                                }}
+                                            />
+                                        );
+                                    })()}
                                 </div>
 
                                 {/* Title and Badge */}

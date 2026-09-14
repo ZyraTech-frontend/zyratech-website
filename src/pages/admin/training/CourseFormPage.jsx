@@ -198,7 +198,7 @@ const CourseFormPage = () => {
                 }
 
                 if (c) {
-                    const existingImg = getCourseImageUrl(c) || c.image || c.imageUrl || c.image_url || c.heroImage || c.hero_image || c.coverImage || c.cover_image || c.thumbnail || '';
+                    const existingImg = getCourseImageUrl(c) || c.image || c.imageUrl || c.image_url || c.coverImageUrl || c.cover_image_url || c.heroImage || c.hero_image || c.coverImage || c.cover_image || c.thumbnail || '';
                     setFormData({
                         title: c.title || '',
                         slug: c.slug || '',
@@ -477,6 +477,8 @@ const CourseFormPage = () => {
                 ? rawPrice  // already has currency label (e.g. "GHS 2,800")
                 : rawPrice ? `GHS ${rawPrice}` : 'GHS 0';
 
+            const courseImg = (formData.heroImage || formData.image || '').trim() || undefined;
+
             // Send all fields now supported by the live backend TrainingCourse API
             const payload = {
                 title: courseData.title,
@@ -487,9 +489,13 @@ const CourseFormPage = () => {
                 description: courseData.description,
                 topics: courseData.topics,
                 instructor: courseData.instructor,
-                // Send all fields including image and heroImage for S3
-                image: (formData.heroImage || formData.image || '').trim() || undefined,
-                heroImage: (formData.heroImage || formData.image || '').trim() || undefined,
+                // Send all image property variations to guarantee compatibility with backend
+                image: courseImg,
+                imageUrl: courseImg,
+                heroImage: courseImg,
+                coverImage: courseImg,
+                coverImageUrl: courseImg,
+                thumbnail: courseImg,
                 slug: formData.slug ? formData.slug.trim() : (courseData.title || '').toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-'),
                 badge: courseData.badge || undefined,
                 iconKey: courseData.iconKey || undefined,

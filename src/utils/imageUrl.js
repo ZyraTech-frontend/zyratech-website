@@ -13,7 +13,7 @@
  *   `https://cblfpfsvavahttedfloe.supabase.co/storage/v1/object/public/zyratech-assets/...`
  */
 
-const SUPABASE_STORAGE_BASE = 'https://cblfpfsvavahttedfloe.supabase.co/storage/v1/object/public/zyratech-assets';
+export const SUPABASE_STORAGE_BASE = 'https://cblfpfsvavahttedfloe.supabase.co/storage/v1/object/public/zyratech-assets';
 
 export const DEFAULT_CATEGORY_IMAGES = {
   basic: '/images/image1.webp',
@@ -25,46 +25,114 @@ export const DEFAULT_CATEGORY_IMAGES = {
 };
 
 /**
- * Resolves course cover image from any potential field property
+ * Resolves course cover image from any potential field property, JSON representation, or nested structure
  * @param {object|string} course 
  * @returns {string|null}
  */
 export const getCourseImageUrl = (course) => {
   if (!course) return null;
-  if (typeof course === 'string') return normalizeImageUrl(course);
+  if (typeof course === 'string') {
+    const trimmed = course.trim();
+    if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return getCourseImageUrl(parsed);
+      } catch (_) {
+        // Not valid JSON, treat as raw URL
+      }
+    }
+    return normalizeImageUrl(trimmed);
+  }
+  if (Array.isArray(course)) {
+    return course.length > 0 ? getCourseImageUrl(course[0]) : null;
+  }
   if (typeof course !== 'object') return null;
 
-  const candidate = course.image ||
-                    course.heroImage ||
-                    course.imageUrl ||
-                    course.image_url ||
-                    course.hero_image ||
-                    course.coverImage ||
-                    course.cover_image ||
-                    course.thumbnail ||
-                    course.thumbnailUrl ||
-                    course.photo ||
-                    course.photoUrl ||
-                    course.s3Url ||
-                    course.s3_url ||
-                    course.url ||
+  const candidate = course.image ??
+                    course.heroImage ??
+                    course.imageUrl ??
+                    course.image_url ??
+                    course.coverImageUrl ??
+                    course.cover_image_url ??
+                    course.coverImage ??
+                    course.cover_image ??
+                    course.hero_image ??
+                    course.courseImage ??
+                    course.course_image ??
+                    course.courseImageUrl ??
+                    course.course_image_url ??
+                    course.featuredImage ??
+                    course.featured_image ??
+                    course.photo ??
+                    course.photoUrl ??
+                    course.photo_url ??
+                    course.picture ??
+                    course.pictureUrl ??
+                    course.picture_url ??
+                    course.thumbnail ??
+                    course.thumbnailUrl ??
+                    course.thumbnail_url ??
+                    course.banner ??
+                    course.bannerUrl ??
+                    course.banner_url ??
+                    course.poster ??
+                    course.posterUrl ??
+                    course.poster_url ??
+                    course.file ??
+                    course.fileUrl ??
+                    course.file_url ??
+                    course.s3Url ??
+                    course.s3_url ??
+                    course.url ??
+                    course.src ??
+                    course.path ??
+                    (Array.isArray(course.images) && course.images[0] ? course.images[0] : null) ??
+                    (Array.isArray(course.media) && course.media[0] ? course.media[0] : null) ??
+                    (Array.isArray(course.photos) && course.photos[0] ? course.photos[0] : null) ??
+                    (Array.isArray(course.attachments) && course.attachments[0] ? course.attachments[0] : null) ??
                     null;
 
   if (!candidate) return null;
 
   if (typeof candidate === 'string') {
-    return normalizeImageUrl(candidate);
+    const trimmed = candidate.trim();
+    if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return getCourseImageUrl(parsed);
+      } catch (_) {
+        // fallback to normalizing raw string
+      }
+    }
+    return normalizeImageUrl(trimmed);
+  }
+
+  if (Array.isArray(candidate)) {
+    return candidate.length > 0 ? getCourseImageUrl(candidate[0]) : null;
   }
 
   if (typeof candidate === 'object') {
-    const nested = candidate.url ||
+    const nested = candidate.publicUrl ||
+                   candidate.public_url ||
+                   candidate.url ||
                    candidate.location ||
-                   candidate.path ||
+                   candidate.secure_url ||
                    candidate.fileUrl ||
+                   candidate.file_url ||
                    candidate.imageUrl ||
+                   candidate.image_url ||
+                   candidate.coverImageUrl ||
+                   candidate.cover_image_url ||
+                   candidate.path ||
                    candidate.key ||
+                   candidate.src ||
+                   candidate.href ||
+                   candidate.data?.publicUrl ||
+                   candidate.data?.url ||
+                   candidate.image ||
+                   candidate.heroImage ||
                    null;
-    return nested ? normalizeImageUrl(nested) : null;
+    return nested ? getCourseImageUrl(nested) : null;
   }
 
   return null;
@@ -82,7 +150,7 @@ export const getCourseImageUrl = (course) => {
 export const normalizeImageUrl = (url) => {
   if (!url || typeof url !== 'string') return null;
 
-  const trimmed = url.trim();
+  let trimmed = url.trim();
   if (!trimmed) return null;
 
   // Local object URLs or data URIs (e.g. user selected file preview)
@@ -90,16 +158,16 @@ export const normalizeImageUrl = (url) => {
     return trimmed;
   }
 
-  // Already a Supabase public storage URL
-  if (trimmed.includes('supabase.co/storage/v1/object/public/zyratech-assets/')) {
-    return trimmed;
+  // Handle Supabase S3 API endpoints: convert /storage/v1/s3/ to /storage/v1/object/public/
+  // e.g. https://cblfpfsvavahttedfloe.supabase.co/storage/v1/s3/zyratech-assets/courses/photo.png
+  //  ->  https://cblfpfsvavahttedfloe.supabase.co/storage/v1/object/public/zyratech-assets/courses/photo.png
+  if (trimmed.includes('.supabase.co/storage/v1/s3/')) {
+    return trimmed.replace('/storage/v1/s3/', '/storage/v1/object/public/').split('?')[0];
   }
 
-  // Supabase S3 API endpoint: rewrite to public storage CDN so browser can fetch without S3 auth
-  const supabaseS3Match = trimmed.match(/^https?:\/\/[^/]+\.supabase\.co\/storage\/v1\/s3\/zyratech-assets\/(.+)$/i);
-  if (supabaseS3Match) {
-    const key = supabaseS3Match[1].replace(/^\/+/, '').split('?')[0];
-    return `${SUPABASE_STORAGE_BASE}/${key}`;
+  // Already a valid Supabase public storage CDN URL
+  if (trimmed.includes('.supabase.co/storage/v1/object/public/')) {
+    return trimmed.split('?')[0];
   }
 
   // Handle virtual-hosted style AWS S3 URL: zyratech-assets.s3.<region>.amazonaws.com/<key>
@@ -125,15 +193,18 @@ export const normalizeImageUrl = (url) => {
     }
   }
 
-  // Relative Supabase path without base host
-  if (trimmed.startsWith('/storage/v1/object/public/')) {
-    return `https://cblfpfsvavahttedfloe.supabase.co${trimmed}`;
+  // Relative Supabase path without base host: /storage/v1/object/public/... or /storage/v1/s3/...
+  if (trimmed.startsWith('/storage/v1/')) {
+    const publicPath = trimmed.replace('/storage/v1/s3/', '/storage/v1/object/public/');
+    return `https://cblfpfsvavahttedfloe.supabase.co${publicPath}`;
   }
 
-  // Relative storage key (e.g. "courses/123-image.jpg" or "avatars/photo.png")
+  // Relative storage key (e.g. "courses/123-image.jpg" or "zyratech-assets/courses/photo.png")
   if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://') && !trimmed.startsWith('/')) {
-    if (trimmed.includes('/') || /\.(jpe?g|png|webp|gif|svg|avif)$/i.test(trimmed.split('?')[0])) {
-      return `${SUPABASE_STORAGE_BASE}/${trimmed}`;
+    // If it already includes the bucket name at the start, strip it to prevent duplication
+    const cleanKey = trimmed.replace(/^zyratech-assets\//i, '').replace(/^\/+/, '');
+    if (cleanKey.includes('/') || /\.(jpe?g|png|webp|gif|svg|avif)$/i.test(cleanKey.split('?')[0])) {
+      return `${SUPABASE_STORAGE_BASE}/${cleanKey}`;
     }
   }
 
@@ -142,7 +213,7 @@ export const normalizeImageUrl = (url) => {
     return trimmed;
   }
 
-  // Preserve other absolute URLs (Unsplash, external CDNs, etc.) intact
+  // Preserve other absolute URLs (Unsplash, Cloudinary, external CDNs, etc.) intact
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
     return trimmed;
   }
@@ -151,4 +222,5 @@ export const normalizeImageUrl = (url) => {
 };
 
 export default normalizeImageUrl;
+
 
