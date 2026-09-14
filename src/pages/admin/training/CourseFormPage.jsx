@@ -117,7 +117,6 @@ const CourseFormPage = () => {
     const [isLoadingCourse, setIsLoadingCourse] = useState(false);
     const [isUploadingHeroImage, setIsUploadingHeroImage] = useState(false);
     const [imageUploadError, setImageUploadError] = useState('');
-    const [showUrlInput, setShowUrlInput] = useState(false);
 
     // Step state
     const [currentStep, setCurrentStep] = useState(0);
@@ -180,7 +179,7 @@ const CourseFormPage = () => {
                 try {
                     const res = await trainingService.getCourse(id);
                     c = res?.course || res?.data || res;
-                } catch (publicErr) {
+                } catch (_publicErr) {
                     // Public API returns 404 for draft courses, fallback to admin courses
                     try {
                         const adminRes = await trainingService.getAllCoursesAdmin();
@@ -311,13 +310,13 @@ const CourseFormPage = () => {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
                 uploadedUrl = extractUrl(res);
-            } catch (galleryErr) {
+            } catch (_galleryErr) {
                 try {
                     const res = await api.post('/admin/blog/upload', uploadFormData, {
                         headers: { 'Content-Type': 'multipart/form-data' }
                     });
                     uploadedUrl = extractUrl(res);
-                } catch (blogUploadErr) {
+                } catch (_blogUploadErr) {
                     try {
                         const res = await api.post('/auth/profile/avatar', uploadFormData, {
                             headers: { 'Content-Type': 'multipart/form-data' }
@@ -593,14 +592,14 @@ const CourseFormPage = () => {
                         src={normalizeImageUrl(formData.image || formData.heroImage)}
                         alt="Course preview"
                         className="w-full h-44 object-cover"
-                        onError={(e) => {
+                        onError={() => {
                             console.warn('Preview image load error for:', formData.image || formData.heroImage);
                         }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent flex items-end justify-between p-4">
                         <div className="text-white text-xs truncate max-w-[70%]">
                             <p className="font-semibold text-white/95">Selected Course Cover</p>
-                            <p className="text-white/70 truncate">{formData.heroImage}</p>
+                            <p className="text-white/70 truncate">{formData.heroImage || formData.image}</p>
                         </div>
                         <div className="flex items-center gap-2">
                             <label className="cursor-pointer px-3 py-1.5 bg-white/90 hover:bg-white text-gray-800 text-xs font-semibold rounded-lg shadow transition-all flex items-center gap-1.5">
@@ -616,7 +615,7 @@ const CourseFormPage = () => {
                             </label>
                             <button
                                 type="button"
-                                onClick={() => setFormData(prev => ({ ...prev, heroImage: '' }))}
+                                onClick={() => setFormData(prev => ({ ...prev, heroImage: '', image: '' }))}
                                 className="p-1.5 bg-red-600/90 hover:bg-red-600 text-white rounded-lg shadow transition-all"
                                 title="Remove image"
                             >
@@ -1168,14 +1167,14 @@ const CourseFormPage = () => {
                                 <div className="mb-6 p-4 rounded-xl border border-dashed border-gray-300 bg-white/60 flex items-center justify-between text-xs text-gray-600">
                                     <span className="flex items-center gap-1.5">
                                         <ImageIcon size={16} className="text-gray-400" />
-                                        No custom cover chosen (a default cover will be shown)
+                                        No cover image uploaded
                                     </span>
                                     <button
                                         type="button"
                                         onClick={() => setCurrentStep(0)}
                                         className="text-[#004fa2] font-semibold hover:underline"
                                     >
-                                        Choose Cover
+                                        Upload Cover
                                     </button>
                                 </div>
                             )}

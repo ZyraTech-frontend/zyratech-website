@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Clock, Users, Star, Award, Check, CheckCircle, Calendar, Briefcase, TrendingUp, UsersRound, Target, BookOpen, Loader2 } from 'lucide-react';
-import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import TrainingLayout from '../../../components/TrainingLayout';
 import TrainingBreadcrumb from '../../../components/pages/training/TrainingBreadcrumb';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import trainingService from '../../../services/trainingService.js';
-import { normalizeImageUrl, getCourseImageUrl } from '../../../utils/imageUrl';
+import { getCourseImageUrl } from '../../../utils/imageUrl';
 import useSEO from '../../../hooks/useSEO';
 
 const CourseDetailPage = () => {
@@ -16,8 +15,6 @@ const CourseDetailPage = () => {
   const navigate = useNavigate();
 
   const _motion = motion;
-
-  const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
 
   const initialMock = getTrainingCourseById(courseId);
   const [course, setCourse] = useState(initialMock || null);
@@ -169,7 +166,6 @@ const CourseDetailPage = () => {
 
   const heroTitle = course.title;
   const heroSubtitle = course.longDescription || course.description;
-  const heroInfoText = course.heroInfoText || 'Learn modern technologies and best practices.';
 
   return (
     <TrainingLayout>
@@ -394,15 +390,18 @@ const CourseDetailPage = () => {
       <section className="py-10 sm:py-14 md:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-            {pillars.map(({ title, description, Icon: IconComponent }) => (
-              <div key={title} className="bg-gray-50 rounded-lg sm:rounded-xl p-4 sm:p-5 border border-gray-200 shadow-sm">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#004fa2]/10 flex items-center justify-center mb-3 sm:mb-4">
-                  <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 text-[#004fa2]" />
+            {pillars.map((pillar) => {
+              const IconComp = pillar.Icon;
+              return (
+                <div key={pillar.title} className="bg-gray-50 rounded-lg sm:rounded-xl p-4 sm:p-5 border border-gray-200 shadow-sm">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#004fa2]/10 flex items-center justify-center mb-3 sm:mb-4">
+                    <IconComp className="w-4 h-4 sm:w-5 sm:h-5 text-[#004fa2]" />
+                  </div>
+                  <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 sm:mb-2">{pillar.title}</h3>
+                  <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">{pillar.description}</p>
                 </div>
-                <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 sm:mb-2">{title}</h3>
-                <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">{description}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Globe, Cpu, Server, Clock, Users, Star, ChevronRight, Target, Award, Network, Rocket, Database } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
 import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
-import { normalizeImageUrl, getCourseImageUrl } from '../../../utils/imageUrl';
+import trainingService from '../../../services/trainingService.js';
+import { getCourseImageUrl } from '../../../utils/imageUrl';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
 
@@ -28,7 +29,22 @@ const AdvancedProgramsPage = () => {
     server: Server
   };
 
-  const advancedPrograms = getTrainingCoursesByCategory('advanced');
+  const [advancedPrograms, setAdvancedPrograms] = useState(() => getTrainingCoursesByCategory('advanced'));
+
+  useEffect(() => {
+    let isMounted = true;
+    trainingService.getAllCourses({ category: 'advanced' })
+      .then(res => {
+        const liveList = Array.isArray(res) ? res : (res?.courses || res?.data || []);
+        if (isMounted && liveList.length > 0) {
+          setAdvancedPrograms(liveList);
+        }
+      })
+      .catch(err => {
+        console.warn('Could not fetch advanced courses from API, using default catalog:', err);
+      });
+    return () => { isMounted = false; };
+  }, []);
 
   const benefits = [
     {
@@ -214,9 +230,7 @@ const AdvancedProgramsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {advancedPrograms.map((program, index) => {
               const IconComponent = iconMap[program.iconKey] || Globe;
-              const placeholderImages = ["/images/image1.webp", "/images/image2.webp", "/images/image3.webp"];
-              const defaultPlaceholder = placeholderImages[index % placeholderImages.length];
-              const imageUrl = getCourseImageUrl(program) || program.heroImage || program.image || defaultPlaceholder;
+              const imageUrl = getCourseImageUrl(program) || program.heroImage || program.image || null;
 
               return (
                 <motion.div
@@ -225,19 +239,25 @@ const AdvancedProgramsPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
+                  className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col"
                 >
                   {/* Image Header */}
-                  <div className="relative h-60 overflow-hidden">
-                    <img decoding="async"
-                      src={imageUrl}
-                      alt={program.title}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-black/40"></div>
+                  <div className="relative h-60 overflow-hidden bg-gradient-to-br from-[#002f6c] to-[#004fa2] shrink-0">
+                    {imageUrl ? (
+                      <img decoding="async"
+                        src={imageUrl}
+                        alt={program.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center text-white/30">
+                        <IconComponent size={56} className="opacity-40 mb-2" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none"></div>
 
                     {/* Content on Image */}
                     <div className="absolute inset-0 p-5 flex flex-col justify-end">

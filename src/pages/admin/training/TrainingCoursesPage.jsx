@@ -8,9 +8,9 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import { fetchCourses, deleteCourse, togglePublishCourse } from '../../../store/slices/coursesSlice';
+import trainingService from '../../../services/trainingService';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
-import { normalizeImageUrl, getCourseImageUrl } from '../../../utils/imageUrl';
+import { getCourseImageUrl } from '../../../utils/imageUrl';
 import {
     GraduationCap,
     Plus,
@@ -76,10 +76,9 @@ const CourseBadge = ({ type, children }) => {
 const TrainingCoursesPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isSuperAdmin } = usePermissions();
 
     // Redux live courses state
-    const { items: courses = [], loading: coursesLoading, error: coursesError } = useSelector((state) => state.courses);
+    const { items: courses = [], loading: coursesLoading } = useSelector((state) => state.courses);
 
     // Tab state
     const [activeTab, setActiveTab] = useState('courses'); // 'courses' or 'applications'
@@ -90,11 +89,9 @@ const TrainingCoursesPage = () => {
     const [selectedLevel, setSelectedLevel] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [viewingCourse, setViewingCourse] = useState(null);
-    const [showDropdown, setShowDropdown] = useState(null);
 
     // Live Applications state
     const [applications, setApplications] = useState([]);
-    const [applicationsLoading, setApplicationsLoading] = useState(false);
     const [applicationsSearch, setApplicationsSearch] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [selectedCourse, setSelectedCourse] = useState('all');
@@ -109,15 +106,12 @@ const TrainingCoursesPage = () => {
 
     // Fetch live applications / enrollments
     const loadApplications = async () => {
-        setApplicationsLoading(true);
         try {
             const data = await trainingService.getAllEnrollments();
             const list = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.enrollments || []));
             setApplications(list);
         } catch (err) {
             console.error('Failed to load applications:', err);
-        } finally {
-            setApplicationsLoading(false);
         }
     };
 
@@ -198,7 +192,7 @@ const TrainingCoursesPage = () => {
         }
 
         return result;
-    }, [applicationsSearch, selectedStatus, selectedCourse]);
+    }, [applicationsSearch, selectedStatus, selectedCourse, applications]);
 
     const applicationsStats = useMemo(() => ({
         total: applications.length,
@@ -218,7 +212,7 @@ const TrainingCoursesPage = () => {
     const uniqueLevels = useMemo(() => {
         const levels = new Set(courses.map(c => c.level));
         return Array.from(levels);
-    }, []);
+    }, [courses]);
 
     // Handlers
     const handleDelete = (course) => {
@@ -333,26 +327,6 @@ const TrainingCoursesPage = () => {
                 }
             }
         }));
-    };
-
-    const handleDownloadCV = (application) => {
-        dispatch(addNotification({
-            type: 'info',
-            message: `Downloading CV for ${application.applicantName}...`
-        }));
-        // Simulate download
-        setTimeout(() => {
-            const element = document.createElement("a");
-            const file = new Blob(["Simulated CV content"], { type: 'text/plain' });
-            element.href = URL.createObjectURL(file);
-            element.download = application.cvFileName;
-            document.body.appendChild(element); // Required for this to work in FireFox
-            element.click();
-            dispatch(addNotification({
-                type: 'success',
-                message: 'Download started'
-            }));
-        }, 1000);
     };
 
     return (
