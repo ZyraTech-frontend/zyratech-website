@@ -28,44 +28,16 @@ const CourseDetailPage = () => {
         const res = await trainingService.getCourse(courseId);
         const liveCourse = res?.course || res?.data || res;
         
-        console.log('========================================');
-        console.log('COURSE FETCH DEBUG');
-        console.log('========================================');
-        console.log('Raw response:', res);
-        console.log('Extracted course:', liveCourse);
-        
-        if (liveCourse) {
-          console.log('Checking image fields:');
-          console.log('  - image:', liveCourse.image);
-          console.log('  - heroImage:', liveCourse.heroImage);
-          console.log('  - imageUrl:', liveCourse.imageUrl);
-          console.log('  - image_url:', liveCourse.image_url);
-          console.log('  - coverImageUrl:', liveCourse.coverImageUrl);
-          console.log('  - cover_image_url:', liveCourse.cover_image_url);
-        }
-        
         if (isMounted && liveCourse) {
-          // Extract image from any possible field (same as avatar strategy)
-          const rawImage = 
-            liveCourse.image ||
-            liveCourse.heroImage ||
-            liveCourse.imageUrl ||
-            liveCourse.image_url ||
-            liveCourse.coverImageUrl ||
-            liveCourse.cover_image_url ||
-            null;
-          
-          console.log('Raw image extracted:', rawImage);
-          
-          // Normalize the URL to Supabase CDN
-          const normalizedImage = normalizeImageUrl(rawImage);
-          console.log('Normalized image:', normalizedImage);
-          console.log('========================================');
+          // Backend returns image field directly - use it as-is
+          // If it comes as S3 URL, normalize it to Supabase CDN
+          const imageUrl = liveCourse.image || liveCourse.heroImage || null;
+          const normalizedImage = imageUrl ? normalizeImageUrl(imageUrl) : null;
           
           setCourse(prev => ({
             ...(prev || {}),
             ...liveCourse,
-            heroImage: normalizedImage || null,
+            heroImage: normalizedImage || liveCourse.heroImage || null,
             programOverview: liveCourse.programOverview || liveCourse.description || prev?.programOverview,
             longDescription: liveCourse.longDescription || liveCourse.description || prev?.longDescription,
             duration: liveCourse.duration || prev?.duration || '12 Weeks',
@@ -96,7 +68,7 @@ const CourseDetailPage = () => {
     return () => { isMounted = false; };
   }, [courseId]);
 
-  const heroImage = normalizeImageUrl(course?.image || course?.heroImage || course?.imageUrl) || null;
+  const heroImage = normalizeImageUrl(course?.image) || null;
   const parallaxImage1 = "/images/parallax9.webp";
   const parallaxImage2 = "/images/parallax10.webp";
   const parallaxImage3 = "/images/parallax1.webp";
