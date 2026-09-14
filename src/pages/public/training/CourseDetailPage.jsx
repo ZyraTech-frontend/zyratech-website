@@ -27,11 +27,27 @@ const CourseDetailPage = () => {
       try {
         const res = await trainingService.getCourse(courseId);
         const liveCourse = res?.course || res?.data || res;
+        
+        // DEBUG: Log what backend returns
+        console.log('=== BACKEND COURSE RESPONSE ===');
+        console.log('Full response:', res);
+        console.log('Extracted liveCourse:', liveCourse);
+        console.log('Image field candidates:', {
+          image: liveCourse?.image,
+          heroImage: liveCourse?.heroImage,
+          imageUrl: liveCourse?.imageUrl,
+          image_url: liveCourse?.image_url,
+          coverImageUrl: liveCourse?.coverImageUrl
+        });
+        
         if (isMounted && liveCourse) {
+          const processedHeroImage = getCourseImageUrl(liveCourse);
+          console.log('Processed heroImage:', processedHeroImage);
+          
           setCourse(prev => ({
             ...(prev || {}),
             ...liveCourse,
-            heroImage: getCourseImageUrl(liveCourse) || null,
+            heroImage: processedHeroImage || null,
             programOverview: liveCourse.programOverview || liveCourse.description || prev?.programOverview,
             longDescription: liveCourse.longDescription || liveCourse.description || prev?.longDescription,
             duration: liveCourse.duration || prev?.duration || '12 Weeks',

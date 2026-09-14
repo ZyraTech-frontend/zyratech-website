@@ -2,7 +2,7 @@
  * Image URL Normalization Utility
  *
  * Background:
- * Uploaded media (course covers, avatars, blog images, gallery) are stored in the
+ * Uploaded media (course covers, avatars, blog images, gallery) are stored in
  * Supabase Storage S3-compatible bucket (`zyratech-assets`).
  * When backend services or S3 clients generate standard AWS S3 URLs:
  *   e.g. `https://zyratech-assets.s3.<region>.amazonaws.com/...`
