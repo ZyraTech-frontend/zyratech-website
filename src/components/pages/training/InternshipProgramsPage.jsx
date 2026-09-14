@@ -240,10 +240,7 @@ const InternshipProgramsPage = () => {
                       alt={program.title}
                       className="w-full h-full object-cover"
                       onError={(e) => {
-                        if (!e.currentTarget.dataset.fallbackTried) {
-                          e.currentTarget.dataset.fallbackTried = 'true';
-                          e.currentTarget.src = defaultPlaceholder;
-                        }
+                        e.currentTarget.style.display = 'none';
                       }}
                     />
                     <div className="absolute inset-0 bg-black/40"></div>

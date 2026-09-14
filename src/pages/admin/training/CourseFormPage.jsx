@@ -11,7 +11,7 @@ import { createCourse, updateCourse } from '../../../store/slices/coursesSlice';
 import trainingService from '../../../services/trainingService';
 import api from '../../../services/api';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { normalizeImageUrl, DEFAULT_CATEGORY_IMAGES, getCourseImageUrl } from '../../../utils/imageUrl';
+import { normalizeImageUrl, getCourseImageUrl } from '../../../utils/imageUrl';
 import {
     ChevronLeft,
     ChevronRight,
@@ -106,14 +106,7 @@ const STEPS = [
     { key: 'review', title: 'Review', icon: Check }
 ];
 
-// Stock tech cover images for quick selection
-const STOCK_COURSE_IMAGES = [
-    { label: 'Software Eng', url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&auto=format&fit=crop&q=80' },
-    { label: 'Cloud & DevOps', url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&auto=format&fit=crop&q=80' },
-    { label: 'Cybersecurity', url: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&auto=format&fit=crop&q=80' },
-    { label: 'Data Science & AI', url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&auto=format&fit=crop&q=80' },
-    { label: 'Mobile Apps', url: 'https://images.unsplash.com/photo-1526470608268-f674ce90ebd4?w=1200&auto=format&fit=crop&q=80' }
-];
+
 
 const CourseFormPage = () => {
     const { id } = useParams();
@@ -162,7 +155,8 @@ const CourseFormPage = () => {
         rating: '',
         reviews: '',
 
-        // Media
+        // Media (Backend Supabase S3 image URL)
+        image: '',
         heroImage: '',
 
         // Topics (comma-separated for simplicity)
@@ -221,6 +215,7 @@ const CourseFormPage = () => {
                         certificate: c.certificate || '',
                         rating: c.rating ? String(c.rating) : '',
                         reviews: c.reviews ? String(c.reviews) : '',
+                        image: existingImg,
                         heroImage: existingImg,
                         topicsText: Array.isArray(c.topics) ? c.topics.join(', ') : (Array.isArray(c.tools) ? c.tools.join(', ') : ''),
                         programmeObjectives: Array.isArray(c.programmeObjectives) && c.programmeObjectives.length > 0
@@ -312,17 +307,17 @@ const CourseFormPage = () => {
 
             let uploadedUrl = '';
             try {
-                const res = await api.post('/admin/blog/upload', uploadFormData, {
+                const res = await api.post('/admin/gallery/upload', uploadFormData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
                 uploadedUrl = extractUrl(res);
-            } catch (blogUploadErr) {
+            } catch (galleryErr) {
                 try {
-                    const res = await api.post('/admin/gallery/upload', uploadFormData, {
+                    const res = await api.post('/admin/blog/upload', uploadFormData, {
                         headers: { 'Content-Type': 'multipart/form-data' }
                     });
                     uploadedUrl = extractUrl(res);
-                } catch (galleryErr) {
+                } catch (blogUploadErr) {
                     try {
                         const res = await api.post('/auth/profile/avatar', uploadFormData, {
                             headers: { 'Content-Type': 'multipart/form-data' }
@@ -337,10 +332,10 @@ const CourseFormPage = () => {
 
             if (uploadedUrl) {
                 const normalizedUrl = normalizeImageUrl(uploadedUrl) || uploadedUrl;
-                setFormData(prev => ({ ...prev, heroImage: normalizedUrl, image: normalizedUrl }));
+                setFormData(prev => ({ ...prev, image: normalizedUrl, heroImage: normalizedUrl }));
                 dispatch(addNotification({
                     type: 'success',
-                    message: 'Course image uploaded successfully to S3!'
+                    message: 'Course image uploaded successfully to Supabase S3!'
                 }));
             } else {
                 throw new Error('Upload succeeded but no image URL was returned');
@@ -595,11 +590,11 @@ const CourseFormPage = () => {
             {formData.heroImage ? (
                 <div className="relative rounded-2xl overflow-hidden border border-gray-200 bg-gray-50 shadow-sm mb-4">
                     <img
-                        src={normalizeImageUrl(formData.heroImage)}
+                        src={normalizeImageUrl(formData.image || formData.heroImage)}
                         alt="Course preview"
                         className="w-full h-44 object-cover"
                         onError={(e) => {
-                            console.warn('Preview image load error for:', formData.heroImage);
+                            console.warn('Preview image load error for:', formData.image || formData.heroImage);
                         }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent flex items-end justify-between p-4">
@@ -664,49 +659,20 @@ const CourseFormPage = () => {
                 </p>
             )}
 
-            {/* Quick Stock Image Selection */}
-            <div className="bg-gray-50/80 rounded-xl p-3 border border-gray-100">
-                <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-semibold text-gray-700 flex items-center gap-1.5">
-                        <Sparkles size={13} className="text-[#004fa2]" />
-                        Or pick a curated tech cover:
-                    </span>
-                    <button
-                        type="button"
-                        onClick={() => setShowUrlInput(!showUrlInput)}
-                        className="text-xs text-[#004fa2] hover:underline"
-                    >
-                        {showUrlInput ? 'Hide URL input' : 'Enter URL manually'}
-                    </button>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                    {STOCK_COURSE_IMAGES.map((img) => (
-                        <button
-                            key={img.label}
-                            type="button"
-                            onClick={() => setFormData(prev => ({ ...prev, heroImage: img.url }))}
-                            className={`relative rounded-lg overflow-hidden border text-left group p-1.5 transition-all ${formData.heroImage === img.url ? 'ring-2 ring-[#004fa2] border-transparent bg-blue-50/50' : 'border-gray-200 hover:border-gray-300 bg-white'}`}
-                        >
-                            <img src={img.url} alt={img.label} className="w-full h-12 object-cover rounded mb-1" />
-                            <p className="text-[11px] font-medium text-gray-700 truncate">{img.label}</p>
-                        </button>
-                    ))}
-                </div>
+            {/* Direct Supabase S3 URL input */}
+            <div className="mt-3">
+                <input
+                    type="text"
+                    name="image"
+                    value={formData.image || formData.heroImage || ''}
+                    onChange={(e) => {
+                        const val = e.target.value;
+                        setFormData(prev => ({ ...prev, image: val, heroImage: val }));
+                    }}
+                    placeholder="Or paste direct Supabase S3 image URL (https://...)"
+                    className="w-full px-4 py-2.5 text-xs border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all bg-white"
+                />
             </div>
-
-            {/* Optional URL input toggle */}
-            {showUrlInput && (
-                <div className="mt-3">
-                    <input
-                        type="text"
-                        name="heroImage"
-                        value={formData.heroImage}
-                        onChange={handleInputChange}
-                        placeholder="Paste custom image URL (e.g., https://...)"
-                        className="w-full px-4 py-2.5 text-xs border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
-                    />
-                </div>
-            )}
         </div>
     );
 
@@ -1182,7 +1148,7 @@ const CourseFormPage = () => {
                                         alt="Course cover"
                                         className="w-full h-full object-cover"
                                         onError={(e) => {
-                                            e.currentTarget.src = DEFAULT_CATEGORY_IMAGES[formData.category] || DEFAULT_CATEGORY_IMAGES.default;
+                                            e.currentTarget.style.display = 'none';
                                         }}
                                     />
                                     <div className="absolute top-3 right-3 px-2.5 py-1 bg-black/60 text-white rounded-lg text-xs font-semibold backdrop-blur-sm flex items-center gap-1.5">

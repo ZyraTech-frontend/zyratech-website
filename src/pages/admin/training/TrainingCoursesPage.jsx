@@ -8,10 +8,9 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import { fetchCourses, deleteCourse, togglePublishCourse } from '../../../store/slices/coursesSlice';
-import trainingService from '../../../services/trainingService';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { normalizeImageUrl, DEFAULT_CATEGORY_IMAGES, getCourseImageUrl } from '../../../utils/imageUrl';
+import { normalizeImageUrl, getCourseImageUrl } from '../../../utils/imageUrl';
 import {
     GraduationCap,
     Plus,
@@ -556,21 +555,25 @@ const TrainingCoursesPage = () => {
                                         className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group flex flex-col"
                                     >
                                         {/* Card Cover Image Header */}
-                                        <div className="relative h-36 w-full bg-gray-100 overflow-hidden shrink-0">
+                                        <div className="relative h-36 w-full bg-slate-100 overflow-hidden shrink-0">
                                             {(() => {
                                                 const resolvedImg = getCourseImageUrl(course);
-                                                const fallbackImg = DEFAULT_CATEGORY_IMAGES[course.category?.toLowerCase()] || DEFAULT_CATEGORY_IMAGES.default;
-                                                const displayImg = resolvedImg || fallbackImg;
+                                                if (!resolvedImg) {
+                                                    return (
+                                                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400">
+                                                            <GraduationCap size={32} className="opacity-40 mb-1" />
+                                                            <span className="text-[10px] font-medium text-slate-400">No Image Uploaded</span>
+                                                        </div>
+                                                    );
+                                                }
 
                                                 return (
                                                     <img
-                                                        src={displayImg}
+                                                        src={resolvedImg}
                                                         alt={course.title}
                                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                                         onError={(e) => {
-                                                            if (e.currentTarget.src !== fallbackImg) {
-                                                                e.currentTarget.src = fallbackImg;
-                                                            }
+                                                            e.currentTarget.style.display = 'none';
                                                         }}
                                                     />
                                                 );
@@ -985,21 +988,25 @@ const TrainingCoursesPage = () => {
                         <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
                             <div className="space-y-5">
                                 {/* Cover Image Banner */}
-                                <div className="rounded-xl overflow-hidden h-44 w-full border border-gray-200 bg-gray-100">
+                                <div className="rounded-xl overflow-hidden h-44 w-full border border-gray-200 bg-slate-100">
                                     {(() => {
                                         const resolvedImg = getCourseImageUrl(viewingCourse);
-                                        const fallbackImg = DEFAULT_CATEGORY_IMAGES[viewingCourse.category?.toLowerCase()] || DEFAULT_CATEGORY_IMAGES.default;
-                                        const displayImg = resolvedImg || fallbackImg;
+                                        if (!resolvedImg) {
+                                            return (
+                                                <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400">
+                                                    <GraduationCap size={40} className="opacity-40 mb-1" />
+                                                    <span className="text-xs font-medium text-slate-400">No cover image uploaded</span>
+                                                </div>
+                                            );
+                                        }
 
                                         return (
                                             <img
-                                                src={displayImg}
+                                                src={resolvedImg}
                                                 alt={viewingCourse.title}
                                                 className="w-full h-full object-cover"
                                                 onError={(e) => {
-                                                    if (e.currentTarget.src !== fallbackImg) {
-                                                        e.currentTarget.src = fallbackImg;
-                                                    }
+                                                    e.currentTarget.style.display = 'none';
                                                 }}
                                             />
                                         );

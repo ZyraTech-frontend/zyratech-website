@@ -15,15 +15,6 @@
 
 export const SUPABASE_STORAGE_BASE = 'https://cblfpfsvavahttedfloe.supabase.co/storage/v1/object/public/zyratech-assets';
 
-export const DEFAULT_CATEGORY_IMAGES = {
-  basic: '/images/image1.webp',
-  intermediate: '/images/digitalmarketing.png',
-  advanced: '/images/advance.png',
-  internship: '/images/training1.webp',
-  matured: '/images/image2.webp',
-  default: '/images/image1.webp'
-};
-
 /**
  * Resolves course cover image from any potential field property, JSON representation, or nested structure
  * @param {object|string} course 

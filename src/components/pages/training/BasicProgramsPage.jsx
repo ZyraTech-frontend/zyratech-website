@@ -149,10 +149,7 @@ const BasicProgramsPage = () => {
                       alt={program.title}
                       className="w-full h-full object-cover"
                       onError={(e) => {
-                        if (!e.currentTarget.dataset.fallbackTried) {
-                          e.currentTarget.dataset.fallbackTried = 'true';
-                          e.currentTarget.src = "/images/image1.webp";
-                        }
+                        e.currentTarget.style.display = 'none';
                       }}
                     />
                     <div className="absolute inset-0 bg-black/40"></div>

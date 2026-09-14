@@ -6,10 +6,9 @@ import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import TrainingLayout from '../../../components/TrainingLayout';
 import TrainingBreadcrumb from '../../../components/pages/training/TrainingBreadcrumb';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
-import HrContactSection from '../../../components/common/HrContactSection';
 import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import trainingService from '../../../services/trainingService.js';
-import { normalizeImageUrl, DEFAULT_CATEGORY_IMAGES, getCourseImageUrl } from '../../../utils/imageUrl';
+import { normalizeImageUrl, getCourseImageUrl } from '../../../utils/imageUrl';
 import useSEO from '../../../hooks/useSEO';
 
 const CourseDetailPage = () => {
@@ -35,7 +34,7 @@ const CourseDetailPage = () => {
           setCourse(prev => ({
             ...(prev || {}),
             ...liveCourse,
-            heroImage: getCourseImageUrl(liveCourse) || prev?.heroImage || "/images/digitalmarketing.png",
+            heroImage: getCourseImageUrl(liveCourse) || null,
             programOverview: liveCourse.programOverview || liveCourse.description || prev?.programOverview,
             longDescription: liveCourse.longDescription || liveCourse.description || prev?.longDescription,
             duration: liveCourse.duration || prev?.duration || '12 Weeks',
@@ -66,7 +65,7 @@ const CourseDetailPage = () => {
     return () => { isMounted = false; };
   }, [courseId]);
 
-  const heroImage = getCourseImageUrl(course) || course?.heroImage || "/images/digitalmarketing.png";
+  const heroImage = getCourseImageUrl(course) || null;
   const parallaxImage1 = "/images/parallax9.webp";
   const parallaxImage2 = "/images/parallax10.webp";
   const parallaxImage3 = "/images/parallax1.webp";
@@ -178,21 +177,22 @@ const CourseDetailPage = () => {
       <section className="relative text-white overflow-hidden">
         {/* Background Image with Overlays */}
         <div className="absolute inset-0">
-          <img 
-            decoding="async"
-            src={heroImage}
-            alt={course?.title || "Course banner"}
-            className="h-full w-full object-cover brightness-110"
-            loading="eager"
-            fetchPriority="high"
-            style={{ objectPosition: 'center 30%' }}
-            onError={(e) => {
-              if (!e.currentTarget.dataset.fallbackTried) {
-                e.currentTarget.dataset.fallbackTried = 'true';
-                e.currentTarget.src = DEFAULT_CATEGORY_IMAGES[course?.category] || '/images/digitalmarketing.png';
-              }
-            }}
-          />
+          {heroImage ? (
+            <img 
+              decoding="async"
+              src={heroImage}
+              alt={course?.title || "Course banner"}
+              className="h-full w-full object-cover brightness-110"
+              loading="eager"
+              fetchPriority="high"
+              style={{ objectPosition: 'center 30%' }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          ) : (
+            <div className="h-full w-full bg-gradient-to-r from-[#002f6c] to-[#004fa2]"></div>
+          )}
           {/* Consistent Gradient from left to dark */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
           <div className="absolute inset-0 bg-black/20"></div>
