@@ -28,6 +28,22 @@ const CourseDetailPage = () => {
         const res = await trainingService.getCourse(courseId);
         const liveCourse = res?.course || res?.data || res;
         
+        console.log('========================================');
+        console.log('COURSE FETCH DEBUG');
+        console.log('========================================');
+        console.log('Raw response:', res);
+        console.log('Extracted course:', liveCourse);
+        
+        if (liveCourse) {
+          console.log('Checking image fields:');
+          console.log('  - image:', liveCourse.image);
+          console.log('  - heroImage:', liveCourse.heroImage);
+          console.log('  - imageUrl:', liveCourse.imageUrl);
+          console.log('  - image_url:', liveCourse.image_url);
+          console.log('  - coverImageUrl:', liveCourse.coverImageUrl);
+          console.log('  - cover_image_url:', liveCourse.cover_image_url);
+        }
+        
         if (isMounted && liveCourse) {
           // Extract image from any possible field (same as avatar strategy)
           const rawImage = 
@@ -39,8 +55,12 @@ const CourseDetailPage = () => {
             liveCourse.cover_image_url ||
             null;
           
+          console.log('Raw image extracted:', rawImage);
+          
           // Normalize the URL to Supabase CDN
           const normalizedImage = normalizeImageUrl(rawImage);
+          console.log('Normalized image:', normalizedImage);
+          console.log('========================================');
           
           setCourse(prev => ({
             ...(prev || {}),
