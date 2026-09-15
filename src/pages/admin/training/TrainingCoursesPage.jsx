@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import { fetchCourses, deleteCourse, togglePublishCourse } from '../../../store/slices/coursesSlice';
 import trainingService from '../../../services/trainingService';
+import trainingApplicationService from '../../../services/trainingApplicationService';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { getCourseImageUrl } from '../../../utils/imageUrl';
 import {
@@ -105,13 +106,30 @@ const TrainingCoursesPage = () => {
     }, [dispatch]);
 
     // Fetch live applications / enrollments
+    const [applicationsLoading, setApplicationsLoading] = useState(false);
     const loadApplications = async () => {
         try {
-            const data = await trainingService.getAllEnrollments();
-            const list = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.enrollments || []));
+            setApplicationsLoading(true);
+            // First try to fetch training applications (course enrollment applications)
+            const data = await trainingApplicationService.getAllApplications();
+            const list = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.applications || []));
             setApplications(list);
         } catch (err) {
-            console.error('Failed to load applications:', err);
+            console.warn('Could not fetch training applications, falling back to enrollments:', err);
+            // Fallback to enrollments if training applications endpoint not available
+            try {
+                const data = await trainingService.getAllEnrollments();
+                const list = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.enrollments || []));
+                setApplications(list);
+            } catch (fallbackErr) {
+                console.error('Failed to load applications:', fallbackErr);
+                dispatch(addNotification({
+                    type: 'error',
+                    message: 'Failed to load applications'
+                }));
+            }
+        } finally {
+            setApplicationsLoading(false);
         }
     };
 
@@ -173,12 +191,18 @@ const TrainingCoursesPage = () => {
         // Search filter
         if (applicationsSearch) {
             const query = applicationsSearch.toLowerCase();
-            result = result.filter(app =>
-                app.applicantName.toLowerCase().includes(query) ||
-                app.email.toLowerCase().includes(query) ||
-                app.courseTitle.toLowerCase().includes(query) ||
-                app.id.toLowerCase().includes(query)
-            );
+            result = result.filter(app => {
+                // Handle different field names from backend
+                const applicantName = app.applicantName || app.fullName || app.studentName || '';
+                const email = app.emailAddress || app.email || '';
+                const courseTitle = app.courseTitle || app.courseName || app.course?.title || '';
+                const id = app.id || app.applicationId || '';
+                
+                return applicantName.toLowerCase().includes(query) ||
+                    email.toLowerCase().includes(query) ||
+                    courseTitle.toLowerCase().includes(query) ||
+                    id.toLowerCase().includes(query);
+            });
         }
 
         // Status filter
@@ -188,7 +212,11 @@ const TrainingCoursesPage = () => {
 
         // Course filter
         if (selectedCourse !== 'all') {
-            result = result.filter(app => app.courseId === parseInt(selectedCourse));
+            const courseIdNum = parseInt(selectedCourse);
+            result = result.filter(app => {
+                const appCourseId = app.courseId || app.course?.id;
+                return appCourseId === courseIdNum || appCourseId === selectedCourse;
+            });
         }
 
         return result;
@@ -275,19 +303,20 @@ const TrainingCoursesPage = () => {
 
     // Application handlers
     const handleViewApplication = (application) => {
-        navigate(`/admin/training/applications/${application.id}`);
+        navigate(`/admin/training/applications/${application.id || application.applicationId}`);
     };
 
     const handleApproveApplication = (application) => {
-        const applicantName = application.applicantName || application.student?.name || application.user?.name || 'Applicant';
+        const applicantName = application.applicantName || application.fullName || application.studentName || 'Applicant';
         dispatch(openConfirmDialog({
             title: 'Approve Application',
             message: `Approve application for ${applicantName}?`,
             onConfirm: async () => {
                 try {
-                    await trainingService.updateEnrollmentStatus(application.id, 'approved');
+                    const appId = application.id || application.applicationId;
+                    await trainingApplicationService.updateApplicationStatus(appId, 'approved');
                     setApplications(prev => prev.map(app =>
-                        app.id === application.id ? { ...app, status: 'approved' } : app
+                        (app.id === application.id || app.applicationId === application.applicationId) ? { ...app, status: 'approved' } : app
                     ));
                     dispatch(addNotification({
                         type: 'success',
@@ -304,16 +333,17 @@ const TrainingCoursesPage = () => {
     };
 
     const handleRejectApplication = (application) => {
-        const applicantName = application.applicantName || application.student?.name || application.user?.name || 'Applicant';
+        const applicantName = application.applicantName || application.fullName || application.studentName || 'Applicant';
         dispatch(openConfirmDialog({
             title: 'Reject Application',
             message: `Are you sure you want to reject application for ${applicantName}?`,
             isDangerous: true,
             onConfirm: async () => {
                 try {
-                    await trainingService.updateEnrollmentStatus(application.id, 'rejected');
+                    const appId = application.id || application.applicationId;
+                    await trainingApplicationService.updateApplicationStatus(appId, 'rejected');
                     setApplications(prev => prev.map(app =>
-                        app.id === application.id ? { ...app, status: 'rejected' } : app
+                        (app.id === application.id || app.applicationId === application.applicationId) ? { ...app, status: 'rejected' } : app
                     ));
                     dispatch(addNotification({
                         type: 'info',
@@ -724,28 +754,36 @@ const TrainingCoursesPage = () => {
                 {activeTab === 'applications' && (
                     <>
                         {/* Applications Statistics */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            {[
-                                { id: 'all', title: 'Total Applications', count: applicationsStats.total, icon: Users, cColor: 'text-blue-600', bg: 'bg-blue-50' },
-                                { id: 'pending', title: 'Pending Review', count: applicationsStats.pending, icon: Clock, cColor: 'text-orange-600', bg: 'bg-orange-50' },
-                                { id: 'approved', title: 'Approved', count: applicationsStats.approved, icon: CheckCircle, cColor: 'text-green-600', bg: 'bg-green-50' },
-                                { id: 'rejected', title: 'Rejected', count: applicationsStats.rejected, icon: XCircle, cColor: 'text-red-600', bg: 'bg-red-50' }
-                            ].map((stat, i) => (
-                                <div key={i} className="p-2.5 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all bg-gray-50/80 flex items-center gap-2.5 cursor-pointer"
-                                    onClick={() => { setSelectedStatus(stat.id); setApplicationsPage(1); }}
-                                >
-                                    <div className={`w-6 h-6 md:w-8 md:h-8 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
-                                        <stat.icon className={stat.cColor} size={14} />
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center justify-between gap-1 mb-0.5">
-                                            <span className="text-[10px] text-gray-500 font-medium truncate">{stat.title}</span>
+                        {applicationsLoading ? (
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                {[1, 2, 3, 4].map((i) => (
+                                    <div key={i} className="p-2.5 rounded-lg border border-gray-200 bg-gray-50/80 animate-pulse h-16"></div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                {[
+                                    { id: 'all', title: 'Total Applications', count: applicationsStats.total, icon: Users, cColor: 'text-blue-600', bg: 'bg-blue-50' },
+                                    { id: 'pending', title: 'Pending Review', count: applicationsStats.pending, icon: Clock, cColor: 'text-orange-600', bg: 'bg-orange-50' },
+                                    { id: 'approved', title: 'Approved', count: applicationsStats.approved, icon: CheckCircle, cColor: 'text-green-600', bg: 'bg-green-50' },
+                                    { id: 'rejected', title: 'Rejected', count: applicationsStats.rejected, icon: XCircle, cColor: 'text-red-600', bg: 'bg-red-50' }
+                                ].map((stat, i) => (
+                                    <div key={i} className="p-2.5 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all bg-gray-50/80 flex items-center gap-2.5 cursor-pointer"
+                                        onClick={() => { setSelectedStatus(stat.id); setApplicationsPage(1); }}
+                                    >
+                                        <div className={`w-6 h-6 md:w-8 md:h-8 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
+                                            <stat.icon className={stat.cColor} size={14} />
                                         </div>
-                                        <p className={`text-sm font-bold leading-none ${stat.cColor}`}>{stat.count}</p>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center justify-between gap-1 mb-0.5">
+                                                <span className="text-[10px] text-gray-500 font-medium truncate">{stat.title}</span>
+                                            </div>
+                                            <p className={`text-sm font-bold leading-none ${stat.cColor}`}>{stat.count}</p>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        )}
 
                         {/* Applications Filters */}
                         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
@@ -803,83 +841,101 @@ const TrainingCoursesPage = () => {
                         </div>
 
                         {/* Applications Cards */}
-                        <div className="space-y-3">
-                            {paginatedApplications.map((app) => (
-                                <div
-                                    key={app.id}
-                                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300"
-                                >
-                                    <div className="p-3">
-                                        <div className="flex items-start justify-between mb-2.5">
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <h3 className="text-sm font-bold text-gray-900 leading-none">{app.applicantName}</h3>
-                                                    <span className={`px-1.5 py-0.5 rounded border text-[9px] font-bold uppercase ${app.status === 'approved' ? 'bg-green-50 text-green-700 border-green-200' :
-                                                        app.status === 'rejected' ? 'bg-red-50 text-red-700 border-red-200' :
-                                                            'bg-orange-50 text-orange-700 border-orange-200'
-                                                        }`}>
-                                                        {app.status}
-                                                    </span>
+                        {applicationsLoading ? (
+                            <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100 flex flex-col items-center justify-center min-h-[300px]">
+                                <div className="w-10 h-10 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin mb-3"></div>
+                                <p className="text-sm font-medium text-gray-600">Loading applications from server...</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                            {paginatedApplications.map((app) => {
+                                // Handle field name variations from backend
+                                const applicantName = app.applicantName || app.fullName || app.studentName || 'Unknown Applicant';
+                                const email = app.emailAddress || app.email || '';
+                                const phone = app.phoneNumber || app.phone || '';
+                                const courseTitle = app.courseTitle || app.courseName || app.course?.title || 'Unknown Course';
+                                const appliedDate = app.appliedDate || app.submittedAt || app.createdAt || new Date().toISOString();
+                                const location = app.currentLocation || app.city || '';
+                                const country = app.country || '';
+                                
+                                return (
+                                    <div
+                                        key={app.id}
+                                        className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300"
+                                    >
+                                        <div className="p-3">
+                                            <div className="flex items-start justify-between mb-2.5">
+                                                <div className="flex-1">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <h3 className="text-sm font-bold text-gray-900 leading-none">{applicantName}</h3>
+                                                        <span className={`px-1.5 py-0.5 rounded border text-[9px] font-bold uppercase ${app.status === 'approved' ? 'bg-green-50 text-green-700 border-green-200' :
+                                                            app.status === 'rejected' ? 'bg-red-50 text-red-700 border-red-200' :
+                                                                'bg-orange-50 text-orange-700 border-orange-200'
+                                                            }`}>
+                                                            {app.status}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-[11px] text-gray-600 font-medium mb-1 leading-tight">{courseTitle}</p>
+                                                    <div className="flex items-center gap-3 text-[10px] text-gray-500">
+                                                        <span className="flex items-center gap-1">
+                                                            <Calendar size={10} />
+                                                            Applied: {new Date(appliedDate).toLocaleDateString()}
+                                                        </span>
+                                                        <span>ID: {app.id || app.applicationId}</span>
+                                                    </div>
                                                 </div>
-                                                <p className="text-[11px] text-gray-600 font-medium mb-1 leading-tight">{app.courseTitle}</p>
-                                                <div className="flex items-center gap-3 text-[10px] text-gray-500">
-                                                    <span className="flex items-center gap-1">
-                                                        <Calendar size={10} />
-                                                        Applied: {new Date(app.appliedDate).toLocaleDateString()}
-                                                    </span>
-                                                    <span>ID: {app.id}</span>
+                                                <div className="flex items-center gap-1">
+                                                    <button
+                                                        onClick={() => handleViewApplication(app)}
+                                                        className="p-1.5 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors"
+                                                        title="View Details"
+                                                    >
+                                                        <Eye size={14} />
+                                                    </button>
+                                                    {app.status === 'pending' && (
+                                                        <>
+                                                            <button
+                                                                onClick={() => handleApproveApplication(app)}
+                                                                className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
+                                                                title="Approve"
+                                                            >
+                                                                <CheckCircle size={14} />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleRejectApplication(app)}
+                                                                className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                                                                title="Reject"
+                                                            >
+                                                                <XCircle size={14} />
+                                                            </button>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-1">
-                                                <button
-                                                    onClick={() => handleViewApplication(app)}
-                                                    className="p-1.5 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded transition-colors"
-                                                    title="View Details"
-                                                >
-                                                    <Eye size={14} />
-                                                </button>
-                                                {app.status === 'pending' && (
-                                                    <>
-                                                        <button
-                                                            onClick={() => handleApproveApplication(app)}
-                                                            className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
-                                                            title="Approve"
-                                                        >
-                                                            <CheckCircle size={14} />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleRejectApplication(app)}
-                                                            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                                                            title="Reject"
-                                                        >
-                                                            <XCircle size={14} />
-                                                        </button>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 pt-2.5 border-t border-gray-100">
-                                            <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
-                                                <Mail size={12} className="text-gray-400 shrink-0" />
-                                                <span className="truncate">{app.email}</span>
-                                            </div>
-                                            <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
-                                                <Phone size={12} className="text-gray-400 shrink-0" />
-                                                <span className="truncate">{app.phone}</span>
-                                            </div>
-                                            <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
-                                                <MapPin size={12} className="text-gray-400 shrink-0" />
-                                                <span className="truncate">{app.location}, {app.country}</span>
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 pt-2.5 border-t border-gray-100">
+                                                <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
+                                                    <Mail size={12} className="text-gray-400 shrink-0" />
+                                                    <span className="truncate">{email}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
+                                                    <Phone size={12} className="text-gray-400 shrink-0" />
+                                                    <span className="truncate">{phone}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
+                                                    <MapPin size={12} className="text-gray-400 shrink-0" />
+                                                    <span className="truncate">{location}{country && `, ${country}`}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
+                        )}
 
                         {/* Applications Empty State */}
-                        {filteredApplications.length === 0 && (
+                        {!applicationsLoading && filteredApplications.length === 0 && (
                             <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100">
                                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                     <Users className="text-gray-400" size={28} />
