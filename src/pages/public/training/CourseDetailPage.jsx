@@ -5,6 +5,7 @@ import { Clock, Users, Star, Award, Check, CheckCircle, Calendar, Briefcase, Tre
 import TrainingLayout from '../../../components/TrainingLayout';
 import TrainingBreadcrumb from '../../../components/pages/training/TrainingBreadcrumb';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
+import HrContactSection from '../../../components/common/HrContactSection';
 import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import trainingService from '../../../services/trainingService.js';
 import { normalizeImageUrl } from '../../../utils/imageUrl';
