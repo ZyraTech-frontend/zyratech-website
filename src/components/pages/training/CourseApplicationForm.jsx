@@ -1,9 +1,12 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../../store/slices/uiSlice';
 import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
-import { Upload, X, FileText, Linkedin, Globe } from 'lucide-react';
+import trainingApplicationService from '../../../services/trainingApplicationService';
+import { Upload, X, FileText, Linkedin, Globe, Loader2 } from 'lucide-react';
 
 const DRAFT_STORAGE_KEY = 'trainingApplicationDraft';
 
@@ -75,6 +78,8 @@ const CourseApplicationForm = () => {
   const [formData, setFormData] = useState(initialState.formData);
   const [stepIndex, setStepIndex] = useState(initialState.stepIndex);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
 
   // Save draft to localStorage whenever form data or step changes
   const saveDraft = useCallback(() => {
@@ -165,17 +170,65 @@ const CourseApplicationForm = () => {
     setStepIndex((prev) => Math.max(prev - 1, 0));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateStep(steps.length - 1)) return;
-    clearDraft(); // Clear saved draft on successful submission
-    navigate('/training/application-success', {
-      state: {
+    
+    setIsSubmitting(true);
+    try {
+      // Prepare application data
+      const applicationData = {
         courseId,
-        courseTitle: resolvedCourseTitle,
-        applicantName: formData.fullName
-      }
-    });
+        fullName: formData.fullName,
+        emailAddress: formData.emailAddress,
+        phoneNumber: formData.phoneNumber,
+        country: formData.country,
+        currentLocation: formData.currentLocation,
+        educationLevel: formData.educationLevel,
+        preferredCohort: formData.preferredCohort,
+        learningMode: formData.learningMode,
+        message: formData.message,
+        ...(requiresExtraFields && {
+          cvFile: formData.cvFile,
+          motivationStatement: formData.motivationStatement,
+          linkedinUrl: formData.linkedinUrl,
+          websiteUrl: formData.websiteUrl
+        })
+      };
+
+      // Submit to backend
+      const result = await trainingApplicationService.submitApplication(applicationData);
+      
+      // Clear draft on successful submission
+      clearDraft();
+      
+      // Show success notification
+      dispatch(addNotification({
+        type: 'success',
+        message: result?.message || 'Application submitted successfully!'
+      }));
+      
+      // Navigate to success page
+      navigate('/training/application-success', {
+        state: {
+          courseId,
+          courseTitle: resolvedCourseTitle,
+          applicantName: formData.fullName,
+          applicationId: result?.applicationId
+        }
+      });
+    } catch (error) {
+      console.error('Application submission failed:', error);
+      const errorMessage = error.response?.data?.error?.message || 
+                          error.message || 
+                          'Failed to submit application. Please try again.';
+      dispatch(addNotification({
+        type: 'error',
+        message: errorMessage
+      }));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -681,9 +734,11 @@ const CourseApplicationForm = () => {
               ) : (
                 <button
                   type="submit"
-                  className="cta-btn px-7 py-3 text-base font-semibold w-full sm:w-auto rounded-lg"
+                  disabled={isSubmitting || !agreedToTerms}
+                  className="cta-btn px-7 py-3 text-base font-semibold w-full sm:w-auto rounded-lg disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  Submit Application
+                  {isSubmitting && <Loader2 size={18} className="animate-spin" />}
+                  {isSubmitting ? 'Submitting...' : 'Submit Application'}
                 </button>
               )}
             </div>
