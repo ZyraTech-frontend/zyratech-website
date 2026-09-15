@@ -238,13 +238,13 @@ const TrainingCoursesPage = () => {
     };
 
     const handleTogglePublish = async (course) => {
-        const isPublished = course.status === 'published' || course.isPublished;
-        const nextStatus = isPublished ? 'draft' : 'published';
+        const isPublished = course.status === 'active' || course.status === 'published' || course.isPublished;
+        const nextStatus = isPublished ? 'draft' : 'active';
         try {
             await dispatch(togglePublishCourse({ id: course.id, status: nextStatus })).unwrap();
             dispatch(addNotification({
                 type: 'success',
-                message: `Course "${course.title}" marked as ${nextStatus}`
+                message: `Course "${course.title}" marked as ${nextStatus === 'active' ? 'published' : 'draft'}`
             }));
         } catch (err) {
             dispatch(addNotification({
