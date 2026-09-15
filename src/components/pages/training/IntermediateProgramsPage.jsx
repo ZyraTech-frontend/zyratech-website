@@ -29,20 +29,39 @@ const IntermediateProgramsPage = () => {
     network: Network
   };
 
-  const [intermediatePrograms, setIntermediatePrograms] = useState(() => getTrainingCoursesByCategory('intermediate'));
+  const [intermediatePrograms, setIntermediatePrograms] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
-    trainingService.getAllCourses({ category: 'intermediate' })
-      .then(res => {
-        const liveList = Array.isArray(res) ? res : (res?.courses || res?.data || []);
-        if (isMounted && liveList.length > 0) {
-          setIntermediatePrograms(liveList);
+    const loadCourses = async () => {
+      try {
+        const allCourses = await trainingService.getAllCourses();
+        if (isMounted) {
+          const intermediateCourses = Array.isArray(allCourses) 
+            ? allCourses.filter(c => (c.category || '').toLowerCase() === 'intermediate')
+            : [];
+          
+          if (intermediateCourses.length > 0) {
+            setIntermediatePrograms(intermediateCourses);
+          } else {
+            console.warn('No intermediate courses found from API, using default catalog');
+            setIntermediatePrograms(getTrainingCoursesByCategory('intermediate'));
+          }
         }
-      })
-      .catch(err => {
-        console.warn('Could not fetch intermediate courses from API, using default catalog:', err);
-      });
+      } catch (err) {
+        console.warn('Could not fetch courses from API:', err);
+        if (isMounted) {
+          setIntermediatePrograms(getTrainingCoursesByCategory('intermediate'));
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+    
+    loadCourses();
     return () => { isMounted = false; };
   }, []);
 

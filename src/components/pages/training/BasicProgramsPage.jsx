@@ -30,20 +30,42 @@ const BasicProgramsPage = () => {
     bookOpen: BookOpen
   };
 
-  const [basicPrograms, setBasicPrograms] = useState(() => getTrainingCoursesByCategory('basic'));
+  const [basicPrograms, setBasicPrograms] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
-    trainingService.getAllCourses({ category: 'basic' })
-      .then(res => {
-        const liveList = Array.isArray(res) ? res : (res?.courses || res?.data || []);
-        if (isMounted && liveList.length > 0) {
-          setBasicPrograms(liveList);
+    const loadCourses = async () => {
+      try {
+        // Try to fetch all courses and filter by category
+        const allCourses = await trainingService.getAllCourses();
+        if (isMounted) {
+          const basicCourses = Array.isArray(allCourses) 
+            ? allCourses.filter(c => (c.category || '').toLowerCase() === 'basic')
+            : [];
+          
+          if (basicCourses.length > 0) {
+            setBasicPrograms(basicCourses);
+          } else {
+            // Fallback to mock data if no courses from backend
+            console.warn('No basic courses found from API, using default catalog');
+            setBasicPrograms(getTrainingCoursesByCategory('basic'));
+          }
         }
-      })
-      .catch(err => {
-        console.warn('Could not fetch basic courses from API, using default catalog:', err);
-      });
+      } catch (err) {
+        console.warn('Could not fetch courses from API:', err);
+        if (isMounted) {
+          // Fallback to mock data on error
+          setBasicPrograms(getTrainingCoursesByCategory('basic'));
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+    
+    loadCourses();
     return () => { isMounted = false; };
   }, []);
 

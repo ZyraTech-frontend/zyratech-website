@@ -29,20 +29,39 @@ const AdvancedProgramsPage = () => {
     server: Server
   };
 
-  const [advancedPrograms, setAdvancedPrograms] = useState(() => getTrainingCoursesByCategory('advanced'));
+  const [advancedPrograms, setAdvancedPrograms] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
-    trainingService.getAllCourses({ category: 'advanced' })
-      .then(res => {
-        const liveList = Array.isArray(res) ? res : (res?.courses || res?.data || []);
-        if (isMounted && liveList.length > 0) {
-          setAdvancedPrograms(liveList);
+    const loadCourses = async () => {
+      try {
+        const allCourses = await trainingService.getAllCourses();
+        if (isMounted) {
+          const advancedCourses = Array.isArray(allCourses) 
+            ? allCourses.filter(c => (c.category || '').toLowerCase() === 'advanced')
+            : [];
+          
+          if (advancedCourses.length > 0) {
+            setAdvancedPrograms(advancedCourses);
+          } else {
+            console.warn('No advanced courses found from API, using default catalog');
+            setAdvancedPrograms(getTrainingCoursesByCategory('advanced'));
+          }
         }
-      })
-      .catch(err => {
-        console.warn('Could not fetch advanced courses from API, using default catalog:', err);
-      });
+      } catch (err) {
+        console.warn('Could not fetch courses from API:', err);
+        if (isMounted) {
+          setAdvancedPrograms(getTrainingCoursesByCategory('advanced'));
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+    
+    loadCourses();
     return () => { isMounted = false; };
   }, []);
 

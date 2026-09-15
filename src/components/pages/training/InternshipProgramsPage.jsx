@@ -30,20 +30,39 @@ const InternshipProgramsPage = () => {
     handshake: Handshake
   };
 
-  const [internshipPrograms, setInternshipPrograms] = useState(() => getTrainingCoursesByCategory('internship'));
+  const [internshipPrograms, setInternshipPrograms] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
-    trainingService.getAllCourses({ category: 'internship' })
-      .then(res => {
-        const liveList = Array.isArray(res) ? res : (res?.courses || res?.data || []);
-        if (isMounted && liveList.length > 0) {
-          setInternshipPrograms(liveList);
+    const loadCourses = async () => {
+      try {
+        const allCourses = await trainingService.getAllCourses();
+        if (isMounted) {
+          const internshipCourses = Array.isArray(allCourses) 
+            ? allCourses.filter(c => (c.category || '').toLowerCase() === 'internship')
+            : [];
+          
+          if (internshipCourses.length > 0) {
+            setInternshipPrograms(internshipCourses);
+          } else {
+            console.warn('No internship courses found from API, using default catalog');
+            setInternshipPrograms(getTrainingCoursesByCategory('internship'));
+          }
         }
-      })
-      .catch(err => {
-        console.warn('Could not fetch internship courses from API, using default catalog:', err);
-      });
+      } catch (err) {
+        console.warn('Could not fetch courses from API:', err);
+        if (isMounted) {
+          setInternshipPrograms(getTrainingCoursesByCategory('internship'));
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+    
+    loadCourses();
     return () => { isMounted = false; };
   }, []);
 

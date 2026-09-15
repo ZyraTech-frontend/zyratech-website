@@ -30,20 +30,39 @@ const MaturedProgramsPage = () => {
     award: Award
   };
 
-  const [maturedPrograms, setMaturedPrograms] = useState(() => getTrainingCoursesByCategory('matured'));
+  const [maturedPrograms, setMaturedPrograms] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
-    trainingService.getAllCourses({ category: 'matured' })
-      .then(res => {
-        const liveList = Array.isArray(res) ? res : (res?.courses || res?.data || []);
-        if (isMounted && liveList.length > 0) {
-          setMaturedPrograms(liveList);
+    const loadCourses = async () => {
+      try {
+        const allCourses = await trainingService.getAllCourses();
+        if (isMounted) {
+          const maturedCourses = Array.isArray(allCourses) 
+            ? allCourses.filter(c => (c.category || '').toLowerCase() === 'matured')
+            : [];
+          
+          if (maturedCourses.length > 0) {
+            setMaturedPrograms(maturedCourses);
+          } else {
+            console.warn('No matured courses found from API, using default catalog');
+            setMaturedPrograms(getTrainingCoursesByCategory('matured'));
+          }
         }
-      })
-      .catch(err => {
-        console.warn('Could not fetch matured courses from API, using default catalog:', err);
-      });
+      } catch (err) {
+        console.warn('Could not fetch courses from API:', err);
+        if (isMounted) {
+          setMaturedPrograms(getTrainingCoursesByCategory('matured'));
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+    
+    loadCourses();
     return () => { isMounted = false; };
   }, []);
 
