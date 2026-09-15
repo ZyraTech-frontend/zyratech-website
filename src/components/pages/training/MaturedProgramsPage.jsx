@@ -32,28 +32,29 @@ const MaturedProgramsPage = () => {
 
   const [maturedPrograms, setMaturedPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
     const loadCourses = async () => {
       try {
+        setError(null);
         const allCourses = await trainingService.getAllCourses();
         if (isMounted) {
           const maturedCourses = Array.isArray(allCourses) 
             ? allCourses.filter(c => (c.category || '').toLowerCase() === 'matured')
             : [];
           
-          if (maturedCourses.length > 0) {
-            setMaturedPrograms(maturedCourses);
-          } else {
-            console.warn('No matured courses found from API, using default catalog');
-            setMaturedPrograms(getTrainingCoursesByCategory('matured'));
+          setMaturedPrograms(maturedCourses);
+          if (maturedCourses.length === 0) {
+            console.warn('No matured courses returned from backend API');
           }
         }
       } catch (err) {
-        console.warn('Could not fetch courses from API:', err);
+        console.error('Failed to fetch courses from backend:', err);
         if (isMounted) {
-          setMaturedPrograms(getTrainingCoursesByCategory('matured'));
+          setError('Unable to load courses. Please try again later.');
+          setMaturedPrograms([]);
         }
       } finally {
         if (isMounted) {

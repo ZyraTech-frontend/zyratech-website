@@ -31,28 +31,29 @@ const AdvancedProgramsPage = () => {
 
   const [advancedPrograms, setAdvancedPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
     const loadCourses = async () => {
       try {
+        setError(null);
         const allCourses = await trainingService.getAllCourses();
         if (isMounted) {
           const advancedCourses = Array.isArray(allCourses) 
             ? allCourses.filter(c => (c.category || '').toLowerCase() === 'advanced')
             : [];
           
-          if (advancedCourses.length > 0) {
-            setAdvancedPrograms(advancedCourses);
-          } else {
-            console.warn('No advanced courses found from API, using default catalog');
-            setAdvancedPrograms(getTrainingCoursesByCategory('advanced'));
+          setAdvancedPrograms(advancedCourses);
+          if (advancedCourses.length === 0) {
+            console.warn('No advanced courses returned from backend API');
           }
         }
       } catch (err) {
-        console.warn('Could not fetch courses from API:', err);
+        console.error('Failed to fetch courses from backend:', err);
         if (isMounted) {
-          setAdvancedPrograms(getTrainingCoursesByCategory('advanced'));
+          setError('Unable to load courses. Please try again later.');
+          setAdvancedPrograms([]);
         }
       } finally {
         if (isMounted) {

@@ -31,28 +31,29 @@ const IntermediateProgramsPage = () => {
 
   const [intermediatePrograms, setIntermediatePrograms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
     const loadCourses = async () => {
       try {
+        setError(null);
         const allCourses = await trainingService.getAllCourses();
         if (isMounted) {
           const intermediateCourses = Array.isArray(allCourses) 
             ? allCourses.filter(c => (c.category || '').toLowerCase() === 'intermediate')
             : [];
           
-          if (intermediateCourses.length > 0) {
-            setIntermediatePrograms(intermediateCourses);
-          } else {
-            console.warn('No intermediate courses found from API, using default catalog');
-            setIntermediatePrograms(getTrainingCoursesByCategory('intermediate'));
+          setIntermediatePrograms(intermediateCourses);
+          if (intermediateCourses.length === 0) {
+            console.warn('No intermediate courses returned from backend API');
           }
         }
       } catch (err) {
-        console.warn('Could not fetch courses from API:', err);
+        console.error('Failed to fetch courses from backend:', err);
         if (isMounted) {
-          setIntermediatePrograms(getTrainingCoursesByCategory('intermediate'));
+          setError('Unable to load courses. Please try again later.');
+          setIntermediatePrograms([]);
         }
       } finally {
         if (isMounted) {

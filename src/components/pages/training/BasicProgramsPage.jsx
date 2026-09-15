@@ -32,31 +32,31 @@ const BasicProgramsPage = () => {
 
   const [basicPrograms, setBasicPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
     const loadCourses = async () => {
       try {
-        // Try to fetch all courses and filter by category
+        setError(null);
+        // Fetch all courses from backend API only
         const allCourses = await trainingService.getAllCourses();
         if (isMounted) {
           const basicCourses = Array.isArray(allCourses) 
             ? allCourses.filter(c => (c.category || '').toLowerCase() === 'basic')
             : [];
           
-          if (basicCourses.length > 0) {
-            setBasicPrograms(basicCourses);
-          } else {
-            // Fallback to mock data if no courses from backend
-            console.warn('No basic courses found from API, using default catalog');
-            setBasicPrograms(getTrainingCoursesByCategory('basic'));
+          setBasicPrograms(basicCourses);
+          
+          if (basicCourses.length === 0) {
+            console.warn('No basic courses returned from backend API');
           }
         }
       } catch (err) {
-        console.warn('Could not fetch courses from API:', err);
+        console.error('Failed to fetch courses from backend:', err);
         if (isMounted) {
-          // Fallback to mock data on error
-          setBasicPrograms(getTrainingCoursesByCategory('basic'));
+          setError('Unable to load courses. Please try again later.');
+          setBasicPrograms([]);
         }
       } finally {
         if (isMounted) {
@@ -165,7 +165,29 @@ const BasicProgramsPage = () => {
             </p>
           </motion.div>
 
+          {/* Error State */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+              <p className="text-red-800 font-medium">{error}</p>
+            </div>
+          )}
+
+          {/* Loading State */}
+          {loading && (
+            <div className="flex justify-center py-12">
+              <div className="w-12 h-12 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin"></div>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!loading && basicPrograms.length === 0 && !error && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+              <p className="text-yellow-800 font-medium">No basic programs available from backend. Please contact support.</p>
+            </div>
+          )}
+
           {/* Programs Grid */}
+          {!loading && basicPrograms.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {basicPrograms.map((program, index) => {
               const IconComponent = iconMap[program.iconKey] || Target;
@@ -263,6 +285,7 @@ const BasicProgramsPage = () => {
               );
             })}
           </div>
+          )}
         </div>
       </section>
 
