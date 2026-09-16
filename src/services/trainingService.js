@@ -9,13 +9,15 @@ export const trainingService = {
   // Public: Get all courses
   getAllCourses: async (params = {}) => {
     const response = await api.get('/training-courses', { params });
-    return response.data.data;
+    // Backend response: { success: true, data: { data: [...], pagination: {...} } }
+    return response.data.data?.data || response.data.data || [];
   },
 
   // Public: Get single course
   getCourse: async (slug) => {
     const response = await api.get(`/training-courses/${slug}`);
-    return response.data.data;
+    // Handle both nested and flat response formats
+    return response.data.data?.data || response.data.data || response.data;
   },
 
   // Admin: Get all courses
