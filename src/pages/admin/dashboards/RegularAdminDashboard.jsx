@@ -47,7 +47,7 @@ import {
 } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { trainingCourses } from '../../../data/trainingCourses';
-import { jobsData } from '../../../data/jobsData';
+import jobsService from '../../../services/jobsService';
 
 const RegularAdminDashboard = ({ user: propUser }) => {
     const authUser = useSelector((state) => state.auth.user);
@@ -56,14 +56,30 @@ const RegularAdminDashboard = ({ user: propUser }) => {
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [greeting, setGreeting] = useState('');
     const [, setTick] = useState(0);
+    const [jobsData, setJobsData] = useState([]);
 
     useEffect(() => {
+        // Fetch jobs from backend
+        let isMounted = true;
+        const loadJobs = async () => {
+            try {
+                const jobs = await jobsService.getAllJobsAdmin();
+                if (isMounted) {
+                    setJobsData(Array.isArray(jobs) ? jobs : []);
+                }
+            } catch (err) {
+                console.warn('Failed to fetch jobs:', err);
+            }
+        };
+        loadJobs();
+
         const timer = setInterval(() => setCurrentDate(new Date()), 60000);
         const handleSync = () => setTick(t => t + 1);
         window.addEventListener('user-profile-updated', handleSync);
         return () => {
             clearInterval(timer);
             window.removeEventListener('user-profile-updated', handleSync);
+            isMounted = false;
         };
     }, []);
 

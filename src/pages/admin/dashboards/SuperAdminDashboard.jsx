@@ -42,7 +42,7 @@ import {
 } from 'lucide-react';
 import { fetchSettings } from '../../../store/slices/settingsSlice';
 import { trainingCourses } from '../../../data/trainingCourses';
-import { jobsData } from '../../../data/jobsData';
+import jobsService from '../../../services/jobsService';
 
 const SuperAdminDashboard = ({ user: propUser }) => {
     const dispatch = useDispatch();
@@ -51,9 +51,25 @@ const SuperAdminDashboard = ({ user: propUser }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [, setTick] = useState(0);
+    const [jobsCount, setJobsCount] = useState(0);
 
     useEffect(() => {
         dispatch(fetchSettings());
+        
+        // Fetch jobs count from backend
+        let isMounted = true;
+        const loadJobsCount = async () => {
+            try {
+                const jobs = await jobsService.getAllJobsAdmin();
+                if (isMounted) {
+                    setJobsCount(Array.isArray(jobs) ? jobs.length : 0);
+                }
+            } catch (err) {
+                console.warn('Failed to fetch jobs count:', err);
+            }
+        };
+        loadJobsCount();
+
         const timer = setInterval(() => setCurrentDate(new Date()), 60000);
 
         const handleSync = () => setTick(t => t + 1);
@@ -61,6 +77,7 @@ const SuperAdminDashboard = ({ user: propUser }) => {
         return () => {
             clearInterval(timer);
             window.removeEventListener('user-profile-updated', handleSync);
+            isMounted = false;
         };
     }, [dispatch]);
 
@@ -91,7 +108,7 @@ const SuperAdminDashboard = ({ user: propUser }) => {
         completedEnrollments: 892,
 
         // Jobs
-        activeJobs: jobsData.length,
+        activeJobs: jobsCount,
         applications: 34,
         positionsFilled: 8,
 
