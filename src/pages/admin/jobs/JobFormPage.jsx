@@ -188,21 +188,37 @@ const JobFormPage = () => {
 
         console.log('Saving job:', jobData);
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        try {
+            if (isEditing) {
+                await jobsService.updateJob(id, jobData);
+            } else {
+                await jobsService.createJob(jobData);
+            }
 
-        setIsSaving(false);
+            setIsSaving(false);
 
-        // Show success and navigate back
-        dispatch(openConfirmDialog({
-            title: isEditing ? 'Job Updated' : 'Job Created',
-            message: isEditing
-                ? `"${formData.title}" has been updated successfully.`
-                : `"${formData.title}" has been posted successfully.`,
-            confirmText: 'OK',
-            hideCancelButton: true,
-            onConfirm: () => navigate('/admin/jobs')
-        }));
+            // Show success and navigate back
+            dispatch(openConfirmDialog({
+                title: isEditing ? 'Job Updated' : 'Job Created',
+                message: isEditing
+                    ? `"${formData.title}" has been updated successfully.`
+                    : `"${formData.title}" has been posted successfully.`,
+                confirmText: 'OK',
+                hideCancelButton: true,
+                onConfirm: () => navigate('/admin/jobs')
+            }));
+        } catch (error) {
+            setIsSaving(false);
+            console.error('Failed to save job:', error);
+
+            dispatch(openConfirmDialog({
+                title: 'Error',
+                message: `Failed to ${isEditing ? 'update' : 'create'} job. Please try again.`,
+                isDangerous: true,
+                confirmText: 'OK',
+                hideCancelButton: true
+            }));
+        }
     };
 
     const handleCancel = () => {
