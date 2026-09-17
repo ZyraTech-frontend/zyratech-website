@@ -8,7 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { jobsData } from '../../../data/jobsData';
+import jobsService from '../../../services/jobsService';
 import {
     ChevronLeft,
     ChevronRight,
@@ -47,9 +47,8 @@ const STEPS = [
 ];
 
 function getJobById(id) {
-    const numericId = Number(id);
-    if (!Number.isFinite(numericId)) return null;
-    return jobsData.find(job => job.id === numericId) || null;
+    // This will be fetched from backend in useEffect
+    return null;
 }
 
 const JobFormPage = () => {
@@ -88,20 +87,32 @@ const JobFormPage = () => {
 
     // Load existing job data for editing
     useEffect(() => {
-        if (isEditing && existingJob) {
-            setFormData({
-                title: existingJob.title || '',
-                type: existingJob.type || 'Full-time',
-                description: existingJob.description || '',
-                jobDescription: existingJob.jobDescription || '',
-                companyDescription: existingJob.companyDescription || '',
-                responsibilitiesText: existingJob.responsibilities?.join('\n') || '',
-                qualificationsText: existingJob.qualifications?.join('\n') || '',
-                locationsText: existingJob.locations?.join(', ') || '',
-                perksText: existingJob.perks?.join('\n') || ''
-            });
+        if (isEditing) {
+            let isMounted = true;
+            const loadJob = async () => {
+                try {
+                    const job = await jobsService.getJob(id);
+                    if (isMounted && job) {
+                        setFormData({
+                            title: job.title || '',
+                            type: job.type || 'Full-time',
+                            description: job.description || '',
+                            jobDescription: job.jobDescription || '',
+                            companyDescription: job.companyDescription || '',
+                            responsibilitiesText: job.responsibilities?.join('\n') || '',
+                            qualificationsText: job.qualifications?.join('\n') || '',
+                            locationsText: job.locations?.join(', ') || '',
+                            perksText: job.perks?.join('\n') || ''
+                        });
+                    }
+                } catch (err) {
+                    console.error('Failed to load job:', err);
+                }
+            };
+            loadJob();
+            return () => { isMounted = false; };
         }
-    }, [isEditing, existingJob]);
+    }, [isEditing, id]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
