@@ -1,17 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Linkedin, Facebook, Twitter, Mail, Copy } from 'lucide-react';
-import { jobsData } from '../../../data/jobsData';
+import jobsService from '../../../services/jobsService';
 
 const JobDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const job = jobsData.find(j => j.id === parseInt(id));
+  const [job, setJob] = useState(null);
+  const [otherJobs, setOtherJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showCopied, setShowCopied] = useState(false);
 
-  if (!job) return <div className="text-center py-12">Job not found</div>;
+  useEffect(() => {
+    let isMounted = true;
+    const loadJob = async () => {
+      try {
+        setError(null);
+        // Fetch specific job from backend API
+        const jobData = await jobsService.getJob(id);
+        if (isMounted) {
+          setJob(jobData);
+          
+          // Fetch other jobs for "Similar Roles"
+          try {
+            const allJobs = await jobsService.getAllJobs();
+            if (isMounted && Array.isArray(allJobs)) {
+              setOtherJobs(allJobs.filter(j => j.id !== jobData.id).slice(0, 2));
+            }
+          } catch (err) {
+            console.warn('Could not fetch other jobs:', err);
+            setOtherJobs([]);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch job:', err);
+        if (isMounted) {
+          setError('Job not found or could not be loaded.');
+          setJob(null);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
 
-  const otherJobs = jobsData.filter(j => j.id !== job.id);
+    loadJob();
+    return () => { isMounted = false; };
+  }, [id]);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -21,6 +58,21 @@ const JobDetail = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      {loading ? (
+        <div className="flex justify-center items-center py-24">
+          <div className="w-12 h-12 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin"></div>
+        </div>
+      ) : error || !job ? (
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+            <p className="text-red-800 font-medium mb-4">{error || 'Job not found'}</p>
+            <button onClick={() => navigate('/jobs')} className="text-[#004fa2] font-medium hover:underline">
+              ← Back to all jobs
+            </button>
+          </div>
+        </div>
+      ) : (
+      <div className="min-h-screen bg-white">
       {/* Sticky Header */}
       <div className="sticky top-0 bg-[#004fa2] text-white py-3 sm:py-4 px-4 sm:px-6 z-40">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0">
@@ -176,6 +228,7 @@ const JobDetail = () => {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 };
