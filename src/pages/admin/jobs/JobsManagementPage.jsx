@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { jobsData as initialJobs } from '../../../data/jobsData';
+import jobsService from '../../../services/jobsService';
 import {
     Briefcase,
     Plus,
@@ -77,8 +77,9 @@ const JobsManagementPage = () => {
     const { isSuperAdmin } = usePermissions();
 
     // State management
-    // State management
-    const [jobs, setJobs] = useState(initialJobs);
+    const [jobs, setJobs] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedType, setSelectedType] = useState('all');
     const [selectedLocation, setSelectedLocation] = useState('all');
@@ -86,6 +87,33 @@ const JobsManagementPage = () => {
     const [appCurrentPage, setAppCurrentPage] = useState(1);
     const [activeTab, setActiveTab] = useState('jobs'); // 'jobs' or 'applications'
     const [showModal, setShowModal] = useState(false);
+
+    // Fetch jobs from backend API
+    useEffect(() => {
+      let isMounted = true;
+      const loadJobs = async () => {
+        try {
+          setError(null);
+          const jobsData = await jobsService.getAllJobsAdmin();
+          if (isMounted) {
+            setJobs(Array.isArray(jobsData) ? jobsData : []);
+          }
+        } catch (err) {
+          console.error('Failed to fetch jobs:', err);
+          if (isMounted) {
+            setError('Failed to load jobs');
+            setJobs([]);
+          }
+        } finally {
+          if (isMounted) {
+            setLoading(false);
+          }
+        }
+      };
+
+      loadJobs();
+      return () => { isMounted = false; };
+    }, []);
 
     // Redirect to form when modal is opened
     useEffect(() => {
