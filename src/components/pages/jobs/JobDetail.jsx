@@ -17,7 +17,7 @@ const JobDetail = () => {
     const loadJob = async () => {
       try {
         setError(null);
-        // Fetch specific job from backend API
+        // Fetch specific job from backend API only - no mock data
         const jobData = await jobsService.getJob(id);
         if (isMounted) {
           setJob(jobData);
@@ -56,13 +56,17 @@ const JobDetail = () => {
     setTimeout(() => setShowCopied(false), 2000);
   };
 
-  return (
-    <div className="min-h-screen bg-white">
-      {loading ? (
-        <div className="flex justify-center items-center py-24">
-          <div className="w-12 h-12 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin"></div>
-        </div>
-      ) : error || !job ? (
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex justify-center items-center py-24">
+        <div className="w-12 h-12 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (error || !job) {
+    return (
+      <div className="min-h-screen bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
             <p className="text-red-800 font-medium mb-4">{error || 'Job not found'}</p>
@@ -71,8 +75,12 @@ const JobDetail = () => {
             </button>
           </div>
         </div>
-      ) : (
-      <div className="min-h-screen bg-white">
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
       {/* Sticky Header */}
       <div className="sticky top-0 bg-[#004fa2] text-white py-3 sm:py-4 px-4 sm:px-6 z-40">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0">
@@ -106,7 +114,7 @@ const JobDetail = () => {
             <section>
               <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-black mb-3 sm:mb-4">Key Responsibilities</h3>
               <ul className="space-y-2 sm:space-y-3">
-                {job.responsibilities.map((resp, i) => (
+                {job.responsibilities && job.responsibilities.map((resp, i) => (
                   <li key={i} className="text-sm sm:text-base text-gray-700 flex gap-2 sm:gap-3">
                     <span className="text-[#004fa2] font-bold mt-1 text-xs sm:text-sm">•</span>
                     <span className="leading-relaxed">{resp}</span>
@@ -118,7 +126,7 @@ const JobDetail = () => {
             <section>
               <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-black mb-3 sm:mb-4">Qualifications</h3>
               <ul className="space-y-2 sm:space-y-3">
-                {job.qualifications.map((qual, i) => (
+                {job.qualifications && job.qualifications.map((qual, i) => (
                   <li key={i} className="text-sm sm:text-base text-gray-700 flex gap-2 sm:gap-3">
                     <span className="text-[#004fa2] font-bold mt-1 text-xs sm:text-sm">•</span>
                     <span className="leading-relaxed">{qual}</span>
@@ -130,7 +138,7 @@ const JobDetail = () => {
             <section>
               <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-black mb-3 sm:mb-4">Perks</h3>
               <ul className="space-y-2 sm:space-y-3">
-                {job.perks.map((perk, i) => (
+                {job.perks && job.perks.map((perk, i) => (
                   <li key={i} className="text-sm sm:text-base text-gray-700 flex gap-2 sm:gap-3">
                     <span className="text-[#004fa2] font-bold mt-1 text-xs sm:text-sm">•</span>
                     <span className="leading-relaxed">{perk}</span>
@@ -210,7 +218,7 @@ const JobDetail = () => {
             <div className="p-3 sm:p-4 rounded bg-gray-50">
               <h4 className="font-bold text-gray-900 mb-2 sm:mb-3 text-xs sm:text-sm">SIMILAR ROLES</h4>
               <div className="space-y-1.5 sm:space-y-2">
-                {otherJobs.slice(0, 2).map(otherJob => (
+                {otherJobs.map(otherJob => (
                   <button
                     key={otherJob.id}
                     onClick={() => navigate(`/jobs/${otherJob.id}`)}
@@ -228,7 +236,6 @@ const JobDetail = () => {
           </div>
         </div>
       </div>
-      )}
     </div>
   );
 };
