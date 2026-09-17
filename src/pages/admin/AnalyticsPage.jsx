@@ -3,7 +3,7 @@
  * Comprehensive analytics with premium, high-density professional UI
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TrendingUp,
   TrendingDown,
@@ -30,10 +30,27 @@ import {
 } from 'lucide-react';
 import AdminLayout from '../../components/admin/layout/AdminLayout';
 import { trainingCourses } from '../../data/trainingCourses';
-import { jobsData } from '../../data/jobsData';
+import jobsService from '../../services/jobsService';
 
 const AnalyticsPage = () => {
   const [timeRange, setTimeRange] = useState('30days');
+  const [jobsCount, setJobsCount] = useState(0);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadJobs = async () => {
+      try {
+        const jobs = await jobsService.getAllJobsAdmin();
+        if (isMounted) {
+          setJobsCount(Array.isArray(jobs) ? jobs.length : 0);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch jobs:', err);
+      }
+    };
+    loadJobs();
+    return () => { isMounted = false; };
+  }, []);
 
   // Core Business Metrics
   const metrics = {
@@ -86,7 +103,7 @@ const AnalyticsPage = () => {
 
   // Jobs Analytics
   const jobs = {
-    active: jobsData.length,
+    active: jobsCount,
     applications: 1456,
     placements: 87,
     revenue: 13220,
