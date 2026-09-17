@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { jobsData } from '../../../data/jobsData';
+import jobsService from '../../../services/jobsService';
 import {
     ChevronLeft,
     MapPin,
@@ -27,15 +27,49 @@ const JOB_TYPE_CONFIG = {
 const JobDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [job, setJob] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const job = jobsData.find(j => j.id === parseInt(id));
+    useEffect(() => {
+        let isMounted = true;
+        const loadJob = async () => {
+            try {
+                const jobData = await jobsService.getJob(id);
+                if (isMounted) {
+                    setJob(jobData);
+                }
+            } catch (err) {
+                console.error('Failed to load job:', err);
+                if (isMounted) {
+                    setError('Failed to load job details');
+                }
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
+        };
+        loadJob();
+        return () => { isMounted = false; };
+    }, [id]);
 
-    if (!job) {
+    if (loading) {
+        return (
+            <AdminLayout>
+                <div className="flex justify-center items-center min-h-[60vh]">
+                    <div className="w-12 h-12 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin"></div>
+                </div>
+            </AdminLayout>
+        );
+    }
+
+    if (error || !job) {
         return (
             <AdminLayout>
                 <div className="flex flex-col items-center justify-center min-h-[60vh]">
                     <AlertCircle size={48} className="text-red-500 mb-4" />
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">Job Not Found</h2>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">{error || 'Job Not Found'}</h2>
                     <button
                         onClick={() => navigate('/admin/jobs')}
                         className="text-[#004fa2] hover:underline font-medium"
