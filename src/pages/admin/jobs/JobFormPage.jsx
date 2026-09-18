@@ -57,10 +57,10 @@ const JobFormPage = () => {
     const dispatch = useDispatch();
 
     const isEditing = Boolean(id);
-    const existingJob = isEditing ? getJobById(parseInt(id)) : null;
 
     // Step state
     const [currentStep, setCurrentStep] = useState(0);
+    const [isLoading, setIsLoading] = useState(isEditing);
 
     // Form state
     const [formData, setFormData] = useState({
@@ -91,6 +91,7 @@ const JobFormPage = () => {
             let isMounted = true;
             const loadJob = async () => {
                 try {
+                    setIsLoading(true);
                     const job = await jobsService.getJob(id);
                     if (isMounted && job) {
                         setFormData({
@@ -104,9 +105,15 @@ const JobFormPage = () => {
                             locationsText: job.locations?.join(', ') || '',
                             perksText: job.perks?.join('\n') || ''
                         });
+                    } else if (isMounted) {
+                        console.error('Job not found');
                     }
                 } catch (err) {
                     console.error('Failed to load job:', err);
+                } finally {
+                    if (isMounted) {
+                        setIsLoading(false);
+                    }
                 }
             };
             loadJob();
@@ -235,20 +242,15 @@ const JobFormPage = () => {
         }
     };
 
-    // If editing and job not found
-    if (isEditing && !existingJob) {
+    // If editing and loading
+    if (isEditing && isLoading) {
         return (
             <AdminLayout>
                 <div className="flex flex-col items-center justify-center min-h-[60vh]">
-                    <AlertCircle size={48} className="text-red-500 mb-4" />
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">Job Not Found</h2>
-                    <p className="text-gray-500 mb-4">The job you're trying to edit doesn't exist.</p>
-                    <button
-                        onClick={() => navigate('/admin/jobs')}
-                        className="text-[#004fa2] hover:underline font-medium"
-                    >
-                        Return to Jobs
-                    </button>
+                    <div className="animate-spin">
+                        <div className="w-12 h-12 border-4 border-gray-200 border-t-[#004fa2] rounded-full"></div>
+                    </div>
+                    <p className="text-gray-500 mt-4">Loading job...</p>
                 </div>
             </AdminLayout>
         );
