@@ -42,10 +42,14 @@ export const jobsService = {
         ...job,
         // Handle location field - backend uses 'location', frontend expects 'locations' array
         locations: job.locations || (job.location ? [job.location] : []),
+        // Map backend field names to frontend field names for display
+        qualifications: job.requirements || job.qualifications || [],
+        perks: job.benefits || job.perks || [],
         // Ensure arrays exist
         responsibilities: job.responsibilities || [],
-        qualifications: job.qualifications || [],
-        perks: job.perks || []
+        // Ensure text fields exist
+        jobDescription: job.jobDescription || '',
+        companyDescription: job.companyDescription || ''
       }));
       
       console.log('Processed jobs:', jobs);
@@ -71,10 +75,11 @@ export const jobsService = {
           ...job,
           // Handle location field - backend uses 'location', frontend expects 'locations' array
           locations: job.locations || (job.location ? [job.location] : []),
+          // Map backend field names to frontend field names for display
+          qualifications: job.requirements || job.qualifications || [],
+          perks: job.benefits || job.perks || [],
           // Ensure arrays exist
           responsibilities: job.responsibilities || [],
-          qualifications: job.qualifications || [],
-          perks: job.perks || [],
           // Ensure text fields exist
           jobDescription: job.jobDescription || '',
           companyDescription: job.companyDescription || ''

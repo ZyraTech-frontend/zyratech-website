@@ -185,9 +185,10 @@ const JobFormPage = () => {
             // Include optional fields that backend accepts
             jobDescription: formData.jobDescription || '',
             companyDescription: formData.companyDescription || '',
+            // Backend expects: requirements, responsibilities, benefits (not qualifications, perks)
+            requirements: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
             responsibilities: formData.responsibilitiesText.split('\n').map(r => r.trim()).filter(Boolean),
-            qualifications: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
-            perks: formData.perksText.split('\n').map(p => p.trim()).filter(Boolean),
+            benefits: formData.perksText.split('\n').map(p => p.trim()).filter(Boolean),
             // Add status if not already set
             status: 'draft'
         };
