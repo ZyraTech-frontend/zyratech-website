@@ -175,17 +175,21 @@ const JobFormPage = () => {
 
         setIsSaving(true);
 
-        // Prepare the job data
+        // Prepare the job data - match backend schema
         const jobData = {
             title: formData.title,
             type: formData.type,
             description: formData.description,
-            jobDescription: formData.jobDescription,
-            companyDescription: formData.companyDescription,
+            // Backend might use 'location' instead of 'locations'
+            location: formData.locationsText.split(',').map(l => l.trim()).filter(Boolean).join(', '),
+            // Include optional fields that backend accepts
+            jobDescription: formData.jobDescription || '',
+            companyDescription: formData.companyDescription || '',
             responsibilities: formData.responsibilitiesText.split('\n').map(r => r.trim()).filter(Boolean),
             qualifications: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
-            locations: formData.locationsText.split(',').map(l => l.trim()).filter(Boolean),
-            perks: formData.perksText.split('\n').map(p => p.trim()).filter(Boolean)
+            perks: formData.perksText.split('\n').map(p => p.trim()).filter(Boolean),
+            // Add status if not already set
+            status: 'draft'
         };
 
         console.log('Saving job:', jobData);

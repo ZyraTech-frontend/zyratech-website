@@ -37,6 +37,17 @@ export const jobsService = {
         jobs = data;
       }
       
+      // Normalize job fields to match frontend expectations
+      jobs = jobs.map(job => ({
+        ...job,
+        // Handle location field - backend uses 'location', frontend expects 'locations' array
+        locations: job.locations || (job.location ? [job.location] : []),
+        // Ensure arrays exist
+        responsibilities: job.responsibilities || [],
+        qualifications: job.qualifications || [],
+        perks: job.perks || []
+      }));
+      
       console.log('Processed jobs:', jobs);
       return jobs;
     } catch (error) {
