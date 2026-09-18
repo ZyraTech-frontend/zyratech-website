@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin } from 'lucide-react';
+import { MapPin, DollarSign } from 'lucide-react';
 
 const JobCard = ({ job }) => {
   const navigate = useNavigate();
@@ -10,7 +10,22 @@ const JobCard = ({ job }) => {
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 lg:gap-8">
         <div className="flex-1">
           <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">{job.title}</h3>
-          <p className="text-gray-700 text-sm sm:text-base leading-relaxed line-clamp-3 mb-4 lg:mb-0">{job.description}</p>
+          <p className="text-gray-700 text-sm sm:text-base leading-relaxed line-clamp-3 mb-3 lg:mb-0">{job.description}</p>
+          
+          {/* Salary Display */}
+          {(job.salaryMin || job.salaryMax) && (
+            <div className="flex items-center gap-2 text-[#004fa2] font-semibold mb-4 lg:mb-0">
+              <DollarSign className="w-4 h-4" />
+              <span className="text-sm sm:text-base">
+                {job.salaryCurrency || 'GHS'} {job.salaryMin && job.salaryMax 
+                  ? `${Number(job.salaryMin).toLocaleString()}-${Number(job.salaryMax).toLocaleString()}`
+                  : job.salaryMin 
+                  ? `${Number(job.salaryMin).toLocaleString()}`
+                  : `${Number(job.salaryMax).toLocaleString()}`
+                }
+              </span>
+            </div>
+          )}
           
           {/* Mobile location */}
           <div className="flex items-center gap-2 text-gray-600 mb-4 lg:hidden">
