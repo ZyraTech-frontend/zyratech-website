@@ -63,7 +63,26 @@ export const jobsService = {
     try {
       const response = await api.get(`/jobs/${idOrSlug}`);
       // Handle both nested and flat response formats
-      return response.data.data?.data || response.data.data || response.data;
+      let job = response.data.data?.data || response.data.data || response.data;
+      
+      // Normalize job fields to match frontend expectations
+      if (job) {
+        job = {
+          ...job,
+          // Handle location field - backend uses 'location', frontend expects 'locations' array
+          locations: job.locations || (job.location ? [job.location] : []),
+          // Ensure arrays exist
+          responsibilities: job.responsibilities || [],
+          qualifications: job.qualifications || [],
+          perks: job.perks || [],
+          // Ensure text fields exist
+          jobDescription: job.jobDescription || '',
+          companyDescription: job.companyDescription || ''
+        };
+      }
+      
+      console.log('Processed single job:', job);
+      return job;
     } catch (error) {
       console.error(`Error fetching job ${idOrSlug}:`, error);
       throw error;
