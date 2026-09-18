@@ -24,7 +24,8 @@ import {
     Zap,
     List,
     AlertCircle,
-    Check
+    Check,
+    DollarSign
 } from 'lucide-react';
 
 // Job type options
@@ -42,6 +43,7 @@ const STEPS = [
     { key: 'basic', title: 'Basic Info', icon: Briefcase },
     { key: 'description', title: 'Job Description', icon: FileText },
     { key: 'details', title: 'Responsibilities & Qualifications', icon: List },
+    { key: 'salary', title: 'Salary & Compensation', icon: DollarSign },
     { key: 'locations', title: 'Locations & Perks', icon: MapPin },
     { key: 'review', title: 'Review', icon: Check }
 ];
@@ -67,6 +69,11 @@ const JobFormPage = () => {
         // Job Description
         jobDescription: '',
         companyDescription: '',
+
+        // Salary Range
+        salaryMin: '',
+        salaryMax: '',
+        salaryCurrency: 'GHS',
 
         // Responsibilities and Qualifications (comma-separated for simplicity)
         responsibilitiesText: '',
@@ -98,7 +105,10 @@ const JobFormPage = () => {
                             responsibilitiesText: job.responsibilities?.join('\n') || '',
                             qualificationsText: job.qualifications?.join('\n') || '',
                             locationsText: job.locations?.join(', ') || '',
-                            perksText: job.perks?.join('\n') || ''
+                            perksText: job.perks?.join('\n') || '',
+                            salaryMin: job.salaryMin || '',
+                            salaryMax: job.salaryMax || '',
+                            salaryCurrency: job.salaryCurrency || 'GHS'
                         });
                     } else if (isMounted) {
                         console.error('Job not found');
@@ -182,6 +192,10 @@ const JobFormPage = () => {
             description: formData.description,
             // Send locations as array like backend expects
             locations: formData.locationsText.split(',').map(l => l.trim()).filter(Boolean),
+            // Salary information for transparency
+            salaryMin: formData.salaryMin ? parseInt(formData.salaryMin) : null,
+            salaryMax: formData.salaryMax ? parseInt(formData.salaryMax) : null,
+            salaryCurrency: formData.salaryCurrency,
             // Include optional fields that backend accepts
             jobDescription: formData.jobDescription || '',
             companyDescription: formData.companyDescription || '',
@@ -406,6 +420,77 @@ const JobFormPage = () => {
                                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all resize-none"
                             />
                             <p className="text-xs text-gray-500 mt-2">Enter each perk on a new line</p>
+                        </div>
+                    </div>
+                );
+
+            case 'salary':
+                return (
+                    <div className="space-y-6">
+                        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+                            <p className="text-sm text-blue-800">
+                                <span className="font-semibold">Transparency Matters:</span> Providing salary information helps attract qualified candidates and demonstrates your commitment to fair compensation.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Minimum Salary (Optional)
+                                </label>
+                                <input
+                                    type="number"
+                                    name="salaryMin"
+                                    value={formData.salaryMin}
+                                    onChange={handleInputChange}
+                                    placeholder="e.g., 2500"
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Maximum Salary (Optional)
+                                </label>
+                                <input
+                                    type="number"
+                                    name="salaryMax"
+                                    value={formData.salaryMax}
+                                    onChange={handleInputChange}
+                                    placeholder="e.g., 5000"
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                                <select
+                                    name="salaryCurrency"
+                                    value={formData.salaryCurrency}
+                                    onChange={handleInputChange}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all bg-white"
+                                >
+                                    <option value="GHS">GHS (Ghana Cedis)</option>
+                                    <option value="USD">USD (US Dollars)</option>
+                                    <option value="EUR">EUR (Euros)</option>
+                                    <option value="GBP">GBP (British Pounds)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="bg-gray-50 rounded-xl p-4">
+                            <h4 className="font-semibold text-gray-900 mb-2">Salary Display Preview</h4>
+                            {formData.salaryMin && formData.salaryMax ? (
+                                <p className="text-lg font-bold text-[#004fa2]">
+                                    {formData.salaryCurrency} {Number(formData.salaryMin).toLocaleString()} - {Number(formData.salaryMax).toLocaleString()}
+                                </p>
+                            ) : formData.salaryMin || formData.salaryMax ? (
+                                <p className="text-lg font-bold text-[#004fa2]">
+                                    {formData.salaryCurrency} {Number(formData.salaryMin || formData.salaryMax).toLocaleString()}
+                                </p>
+                            ) : (
+                                <p className="text-sm text-gray-500">Enter salary amounts to see preview</p>
+                            )}
                         </div>
                     </div>
                 );
