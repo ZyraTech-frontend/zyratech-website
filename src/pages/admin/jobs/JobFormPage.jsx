@@ -46,11 +46,6 @@ const STEPS = [
     { key: 'review', title: 'Review', icon: Check }
 ];
 
-function getJobById(id) {
-    // This will be fetched from backend in useEffect
-    return null;
-}
-
 const JobFormPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
