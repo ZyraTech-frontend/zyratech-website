@@ -18,7 +18,9 @@ const JobsList = () => {
         // Fetch jobs from backend API ONLY - no mock data fallback
         const jobs = await jobsService.getAllJobs();
         if (isMounted) {
-          setAllJobs(Array.isArray(jobs) ? jobs : []);
+          // Only show active/published jobs on public page
+          const activeJobs = Array.isArray(jobs) ? jobs.filter(job => job.status === 'active' || job.status === 'published') : [];
+          setAllJobs(activeJobs);
         }
       } catch (err) {
         console.error('Failed to fetch jobs from backend:', err);

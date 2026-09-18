@@ -225,6 +225,26 @@ const JobsManagementPage = () => {
         }));
     };
 
+    const handlePublish = async (job) => {
+        const isPublishing = job.status !== 'active';
+        const newStatus = isPublishing ? 'active' : 'draft';
+        
+        try {
+            await jobsService.updateJob(job.id, { ...job, status: newStatus });
+            setJobs(prev => prev.map(j => j.id === job.id ? { ...j, status: newStatus } : j));
+            dispatch(addNotification({
+                type: 'success',
+                message: `Job "${job.title}" ${isPublishing ? 'published' : 'unpublished'} successfully`
+            }));
+        } catch (error) {
+            console.error('Failed to publish/unpublish job:', error);
+            dispatch(addNotification({
+                type: 'error',
+                message: 'Failed to update job status. Please try again.'
+            }));
+        }
+    };
+
     const handleView = (job) => {
         navigate(`/admin/jobs/${job.id}`);
     };
@@ -418,6 +438,7 @@ const JobsManagementPage = () => {
                                         {/* Action Bar */}
                                         <div className="flex items-center justify-between pt-2">
                                             <div className="flex items-center gap-1">
+                                                <button onClick={() => handlePublish(job)} className={`p-1.5 hover:bg-gray-100 rounded transition-colors ${job.status === 'active' ? 'text-green-600 hover:text-green-700' : 'text-gray-400 hover:text-amber-600'}`} title={job.status === 'active' ? 'Unpublish' : 'Publish'}>{job.status === 'active' ? <Eye size={12}/> : <EyeOff size={12}/>}</button>
                                                 <button onClick={() => handleView(job)} className="p-1.5 hover:bg-gray-100 rounded text-gray-400 hover:text-[#004fa2] transition-colors" title="View"><Eye size={12}/></button>
                                                 <button onClick={() => handleEdit(job)} className="p-1.5 hover:bg-gray-100 rounded text-gray-400 hover:text-green-600 transition-colors" title="Edit"><Edit size={12}/></button>
                                                 <button onClick={() => handleDelete(job)} className="p-1.5 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors" title="Delete"><Trash2 size={12}/></button>
