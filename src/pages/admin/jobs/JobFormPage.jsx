@@ -502,7 +502,7 @@ const JobFormPage = () => {
                                 {isEditing ? 'Edit Job' : 'Post New Job'}
                             </h1>
                             <p className="text-sm text-gray-500 mt-1">
-                                {isEditing ? `Editing: ${existingJob?.title}` : 'Create a new job listing'}
+                                {isEditing ? `Editing job...` : 'Create a new job listing'}
                             </p>
                         </div>
                     </div>
