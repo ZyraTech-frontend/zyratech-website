@@ -180,8 +180,8 @@ const JobFormPage = () => {
             title: formData.title,
             type: formData.type,
             description: formData.description,
-            // Backend might use 'location' instead of 'locations'
-            location: formData.locationsText.split(',').map(l => l.trim()).filter(Boolean).join(', '),
+            // Send locations as array like backend expects
+            locations: formData.locationsText.split(',').map(l => l.trim()).filter(Boolean),
             // Include optional fields that backend accepts
             jobDescription: formData.jobDescription || '',
             companyDescription: formData.companyDescription || '',
