@@ -10,10 +10,39 @@ export const jobsService = {
   getAllJobs: async (params = {}) => {
     try {
       const response = await api.get('/jobs', { params });
-      // Handle nested response structure: { success: true, data: { data: [...], pagination: {...} } }
-      return response.data.data?.data || response.data.data || [];
+      console.log('Backend jobs response:', response);
+      
+      // Handle multiple possible response formats
+      const data = response.data;
+      let jobs = [];
+      
+      // Format 1: { success: true, data: { data: [...] } }
+      if (data.success && data.data && Array.isArray(data.data.data)) {
+        jobs = data.data.data;
+      }
+      // Format 2: { success: true, data: [...] }
+      else if (data.success && Array.isArray(data.data)) {
+        jobs = data.data;
+      }
+      // Format 3: { data: [...] }
+      else if (data.data && Array.isArray(data.data.data)) {
+        jobs = data.data.data;
+      }
+      // Format 4: Direct array
+      else if (Array.isArray(data.data)) {
+        jobs = data.data;
+      }
+      // Format 5: Direct array response
+      else if (Array.isArray(data)) {
+        jobs = data;
+      }
+      
+      console.log('Processed jobs:', jobs);
+      return jobs;
     } catch (error) {
       console.error('Error fetching jobs:', error);
+      console.error('Response status:', error.response?.status);
+      console.error('Response data:', error.response?.data);
       throw error;
     }
   },
