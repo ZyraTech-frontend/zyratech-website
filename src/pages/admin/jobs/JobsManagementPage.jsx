@@ -206,12 +206,21 @@ const JobsManagementPage = () => {
             title: 'Delete Job Listing',
             message: `Are you sure you want to delete "${job.title}"? This will also delete all associated applications. This action cannot be undone.`,
             isDangerous: true,
-            onConfirm: () => {
-                setJobs(prev => prev.filter(j => j.id !== job.id));
-                dispatch(addNotification({
-                    type: 'success',
-                    message: `Job "${job.title}" and associated applications deleted`
-                }));
+            onConfirm: async () => {
+                try {
+                    await jobsService.deleteJob(job.id);
+                    setJobs(prev => prev.filter(j => j.id !== job.id));
+                    dispatch(addNotification({
+                        type: 'success',
+                        message: `Job "${job.title}" and associated applications deleted`
+                    }));
+                } catch (error) {
+                    console.error('Failed to delete job:', error);
+                    dispatch(addNotification({
+                        type: 'error',
+                        message: 'Failed to delete job. Please try again.'
+                    }));
+                }
             }
         }));
     };
