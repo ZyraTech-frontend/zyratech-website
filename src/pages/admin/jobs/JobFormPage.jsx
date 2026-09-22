@@ -66,6 +66,8 @@ const JobFormPage = () => {
         title: '',
         type: 'Full-time',
         description: '',
+        department: 'Engineering',
+        level: 'Junior',
 
         // Job Description
         jobDescription: '',
@@ -155,7 +157,7 @@ const JobFormPage = () => {
             };
         } else if (stepKey === 'details') {
             stepData = {
-                qualifications: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
+                requirements: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
                 responsibilities: formData.responsibilitiesText.split('\n').map(r => r.trim()).filter(Boolean),
             };
         } else if (stepKey === 'salary') {
@@ -166,7 +168,6 @@ const JobFormPage = () => {
             };
         } else if (stepKey === 'locations') {
             stepData = {
-                locations: formData.locationsText.split(',').map(l => l.trim()).filter(Boolean),
                 benefits: formData.perksText.split('\n').map(p => p.trim()).filter(Boolean),
             };
         }
@@ -262,15 +263,15 @@ const JobFormPage = () => {
                     title: formData.title,
                     type: formData.type,
                     description: formData.description,
-                    jobDescription: formData.jobDescription || '',
-                    companyDescription: formData.companyDescription || '',
-                    locations: formData.locationsText.split(',').map(l => l.trim()).filter(Boolean),
-                    salaryMin: formData.salaryMin ? parseInt(formData.salaryMin) : null,
-                    salaryMax: formData.salaryMax ? parseInt(formData.salaryMax) : null,
-                    salaryCurrency: formData.salaryCurrency,
-                    qualifications: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
+                    department: formData.department || 'Engineering',
+                    level: formData.level || 'Junior',
+                    location: formData.locationsText.split(',')[0]?.trim() || 'Remote',
+                    requirements: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
                     responsibilities: formData.responsibilitiesText.split('\n').map(r => r.trim()).filter(Boolean),
                     benefits: formData.perksText.split('\n').map(p => p.trim()).filter(Boolean),
+                    salary: formData.salaryMin && formData.salaryMax 
+                        ? `${formData.salaryCurrency}${Number(formData.salaryMin).toLocaleString()} - ${formData.salaryCurrency}${Number(formData.salaryMax).toLocaleString()}`
+                        : '',
                     status: 'draft'
                 };
                 const response = await jobsService.createJob(jobData);
@@ -358,18 +359,62 @@ const JobFormPage = () => {
                             {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Job Type</label>
-                            <select
-                                name="type"
-                                value={formData.type}
-                                onChange={handleInputChange}
-                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all bg-white"
-                            >
-                                {JOB_TYPES.map(type => (
-                                    <option key={type.value} value={type.value}>{type.label}</option>
-                                ))}
-                            </select>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Job Type</label>
+                                <select
+                                    name="type"
+                                    value={formData.type}
+                                    onChange={handleInputChange}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all bg-white"
+                                >
+                                    {JOB_TYPES.map(type => (
+                                        <option key={type.value} value={type.value}>{type.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Level</label>
+                                <select
+                                    name="level"
+                                    value={formData.level}
+                                    onChange={handleInputChange}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all bg-white"
+                                >
+                                    <option value="Junior">Junior</option>
+                                    <option value="Mid-level">Mid-level</option>
+                                    <option value="Senior">Senior</option>
+                                    <option value="Lead">Lead</option>
+                                    <option value="Manager">Manager</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
+                                <input
+                                    type="text"
+                                    name="department"
+                                    value={formData.department}
+                                    onChange={handleInputChange}
+                                    placeholder="e.g., Engineering, Design, Sales"
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                                <input
+                                    type="text"
+                                    name="locationsText"
+                                    value={formData.locationsText}
+                                    onChange={handleInputChange}
+                                    placeholder="e.g., Accra, Kumasi, Remote"
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                />
+                            </div>
                         </div>
 
                         <div>
@@ -458,22 +503,6 @@ const JobFormPage = () => {
             case 'locations':
                 return (
                     <div className="space-y-6">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Job Locations <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                name="locationsText"
-                                value={formData.locationsText}
-                                onChange={handleInputChange}
-                                placeholder="e.g., Accra, Takoradi, Kumasi"
-                                className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${errors.locationsText ? 'border-red-300 bg-red-50' : 'border-gray-200'}`}
-                            />
-                            {errors.locationsText && <p className="text-red-500 text-sm mt-1">{errors.locationsText}</p>}
-                            <p className="text-xs text-gray-500 mt-2">Separate locations with commas</p>
-                        </div>
-
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">Perks & Benefits (Optional)</label>
                             <textarea

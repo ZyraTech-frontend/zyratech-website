@@ -43,14 +43,18 @@ export const jobsService = {
         // Handle location field - backend uses 'location', frontend expects 'locations' array
         locations: job.locations || (job.location ? [job.location] : []),
         // Map backend field names to frontend field names for display
-        // Backend sends: qualifications, responsibilities, benefits
-        qualifications: job.qualifications || [],
+        // Backend sends: requirements, responsibilities, benefits
+        qualifications: job.requirements || [],
         perks: job.benefits || [],
         // Ensure arrays exist
         responsibilities: job.responsibilities || [],
         // Ensure text fields exist
-        jobDescription: job.jobDescription || '',
-        companyDescription: job.companyDescription || ''
+        description: job.description || '',
+        jobDescription: job.description || '',
+        companyDescription: job.companyDescription || '',
+        // Level and department fields
+        level: job.level || '',
+        department: job.department || ''
       }));
       
       console.log('Processed jobs:', jobs);
@@ -77,14 +81,18 @@ export const jobsService = {
           // Handle location field - backend uses 'location', frontend expects 'locations' array
           locations: job.locations || (job.location ? [job.location] : []),
           // Map backend field names to frontend field names for display
-          // Backend sends: qualifications, responsibilities, benefits
-          qualifications: job.qualifications || [],
+          // Backend sends: requirements, responsibilities, benefits
+          qualifications: job.requirements || [],
           perks: job.benefits || [],
           // Ensure arrays exist
           responsibilities: job.responsibilities || [],
           // Ensure text fields exist
-          jobDescription: job.jobDescription || '',
-          companyDescription: job.companyDescription || ''
+          description: job.description || '',
+          jobDescription: job.description || '',
+          companyDescription: job.companyDescription || '',
+          // Level and department fields
+          level: job.level || '',
+          department: job.department || ''
         };
       }
       
