@@ -145,26 +145,32 @@ const JobDetail = () => {
             </section>
 
             <section>
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-black mb-3 sm:mb-4">Qualifications</h3>
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-black mb-3 sm:mb-4">Requirements</h3>
               <ul className="space-y-2 sm:space-y-3">
-                {job.qualifications && job.qualifications.map((qual, i) => (
+                {(job.requirements || job.qualifications) && (job.requirements || job.qualifications).map((req, i) => (
                   <li key={i} className="text-sm sm:text-base text-gray-700 flex gap-2 sm:gap-3">
                     <span className="text-[#004fa2] font-bold mt-1 text-xs sm:text-sm">•</span>
-                    <span className="leading-relaxed">{qual}</span>
+                    <span className="leading-relaxed">{req}</span>
                   </li>
                 ))}
+                {!(job.requirements || job.qualifications) && (
+                  <p className="text-sm text-gray-500">No requirements listed</p>
+                )}
               </ul>
             </section>
 
             <section>
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-black mb-3 sm:mb-4">Perks</h3>
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-black mb-3 sm:mb-4">Benefits</h3>
               <ul className="space-y-2 sm:space-y-3">
-                {job.perks && job.perks.map((perk, i) => (
+                {(job.benefits || job.perks) && (job.benefits || job.perks).map((benefit, i) => (
                   <li key={i} className="text-sm sm:text-base text-gray-700 flex gap-2 sm:gap-3">
                     <span className="text-[#004fa2] font-bold mt-1 text-xs sm:text-sm">•</span>
-                    <span className="leading-relaxed">{perk}</span>
+                    <span className="leading-relaxed">{benefit}</span>
                   </li>
                 ))}
+                {!(job.benefits || job.perks) && (
+                  <p className="text-sm text-gray-500">No benefits listed</p>
+                )}
               </ul>
             </section>
 

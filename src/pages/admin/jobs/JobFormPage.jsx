@@ -216,11 +216,22 @@ const JobFormPage = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (validateStep(currentStep)) {
             // Auto-save current step data before moving to next
-            saveStepData();
-            setCurrentStep(prev => Math.min(prev + 1, STEPS.length - 1));
+            try {
+                await saveStepData();
+                setCurrentStep(prev => Math.min(prev + 1, STEPS.length - 1));
+            } catch (error) {
+                console.error('Failed to save step before proceeding:', error);
+                dispatch(openConfirmDialog({
+                    title: 'Save Error',
+                    message: 'Failed to save your changes. Please try again.',
+                    isDangerous: true,
+                    confirmText: 'OK',
+                    hideCancelButton: true
+                }));
+            }
         }
     };
 
