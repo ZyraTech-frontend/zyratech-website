@@ -19,6 +19,7 @@ const JobDetail = () => {
         setError(null);
         // Fetch specific job from backend API only - no mock data
         const jobData = await jobsService.getJob(id);
+        console.log('✅ Fetched job data from backend:', jobData);
         if (isMounted) {
           setJob(jobData);
           
