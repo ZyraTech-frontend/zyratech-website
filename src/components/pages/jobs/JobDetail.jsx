@@ -103,26 +103,16 @@ const JobDetail = () => {
           {/* Main Content - Full width on mobile, 3 columns on desktop */}
           <div className="lg:col-span-3 space-y-6 sm:space-y-8">
             <section>
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-black mb-3 sm:mb-4">Company Description</h3>
-              <p className="text-sm sm:text-base text-gray-700 leading-relaxed">{job.companyDescription}</p>
-            </section>
-
-            <section>
               <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-black mb-3 sm:mb-4">Job Description</h3>
-              <p className="text-sm sm:text-base text-gray-700 leading-relaxed">{job.jobDescription}</p>
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-line">{job.description}</p>
             </section>
 
-            {(job.salaryMin || job.salaryMax) && (
+            {job.salary && (
               <section className="bg-gradient-to-r from-[#004fa2]/5 to-[#0066cc]/5 rounded-xl p-6 border-l-4 border-[#004fa2]">
                 <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-black mb-3 sm:mb-4">Salary & Compensation</h3>
                 <div className="flex items-baseline gap-2 sm:gap-3">
                   <span className="text-2xl sm:text-3xl font-bold text-[#004fa2]">
-                    {job.salaryCurrency || 'GHS'} {job.salaryMin && job.salaryMax 
-                      ? `${Number(job.salaryMin).toLocaleString()} - ${Number(job.salaryMax).toLocaleString()}`
-                      : job.salaryMin 
-                      ? `${Number(job.salaryMin).toLocaleString()}`
-                      : `${Number(job.salaryMax).toLocaleString()}`
-                    }
+                    {job.salary}
                   </span>
                   <span className="text-sm sm:text-base text-gray-600">per month</span>
                 </div>
@@ -214,16 +204,11 @@ const JobDetail = () => {
                   <span className="text-gray-600">Work Arrangement:</span>
                   <p className="font-medium text-gray-900">Remote / Hybrid / On-site</p>
                 </div>
-                {(job.salaryMin || job.salaryMax) && (
+                {job.salary && (
                   <div className="pt-1.5 sm:pt-2 border-t border-[#004fa2]/10">
                     <span className="text-gray-600">Salary Range:</span>
                     <p className="font-semibold text-[#004fa2]">
-                      {job.salaryCurrency || 'GHS'} {job.salaryMin && job.salaryMax 
-                        ? `${Number(job.salaryMin).toLocaleString()}-${Number(job.salaryMax).toLocaleString()}`
-                        : job.salaryMin 
-                        ? `${Number(job.salaryMin).toLocaleString()}`
-                        : `${Number(job.salaryMax).toLocaleString()}`
-                      }
+                      {job.salary}
                     </p>
                   </div>
                 )}

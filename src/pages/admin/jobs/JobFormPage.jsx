@@ -155,9 +155,9 @@ const JobFormPage = () => {
             };
         } else if (stepKey === 'salary') {
             stepData = {
-                salaryMin: formData.salaryMin ? parseInt(formData.salaryMin) : null,
-                salaryMax: formData.salaryMax ? parseInt(formData.salaryMax) : null,
-                salaryCurrency: formData.salaryCurrency,
+                salary: formData.salaryMin && formData.salaryMax 
+                    ? `${formData.salaryCurrency}${Number(formData.salaryMin).toLocaleString()} - ${formData.salaryCurrency}${Number(formData.salaryMax).toLocaleString()}`
+                    : '',
             };
         } else if (stepKey === 'locations') {
             stepData = {
