@@ -41,10 +41,9 @@ const JOB_TYPES = [
 // Step definitions
 const STEPS = [
     { key: 'basic', title: 'Basic Info', icon: Briefcase },
-    { key: 'description', title: 'Job Description', icon: FileText },
     { key: 'details', title: 'Responsibilities & Qualifications', icon: List },
     { key: 'salary', title: 'Salary & Compensation', icon: DollarSign },
-    { key: 'locations', title: 'Locations & Perks', icon: MapPin },
+    { key: 'locations', title: 'Benefits', icon: MapPin },
     { key: 'review', title: 'Review', icon: Check }
 ];
 
@@ -68,10 +67,6 @@ const JobFormPage = () => {
         description: '',
         department: 'Engineering',
         level: 'Junior',
-
-        // Job Description
-        jobDescription: '',
-        companyDescription: '',
 
         // Salary Range
         salaryMin: '',
@@ -149,11 +144,9 @@ const JobFormPage = () => {
                 title: formData.title,
                 type: formData.type,
                 description: formData.description,
-            };
-        } else if (stepKey === 'description') {
-            stepData = {
-                jobDescription: formData.jobDescription || '',
-                companyDescription: formData.companyDescription || '',
+                department: formData.department || 'Engineering',
+                level: formData.level || 'Junior',
+                location: formData.locationsText.split(',')[0]?.trim() || 'Remote',
             };
         } else if (stepKey === 'details') {
             stepData = {
@@ -198,10 +191,7 @@ const JobFormPage = () => {
 
         if (stepKey === 'basic') {
             if (!formData.title.trim()) newErrors.title = 'Job title is required';
-        }
-
-        if (stepKey === 'description') {
-            if (!formData.jobDescription.trim()) newErrors.jobDescription = 'Job description is required';
+            if (!formData.description.trim()) newErrors.description = 'Job description is required';
         }
 
         if (stepKey === 'details') {
@@ -418,47 +408,16 @@ const JobFormPage = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Short Description</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Job Description <span className="text-red-500">*</span></label>
                             <textarea
                                 name="description"
                                 value={formData.description}
                                 onChange={handleInputChange}
-                                rows={3}
-                                placeholder="Brief overview of the position (shown on job listings)"
-                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all resize-none"
-                            />
-                        </div>
-                    </div>
-                );
-
-            case 'description':
-                return (
-                    <div className="space-y-6">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Job Description <span className="text-red-500">*</span>
-                            </label>
-                            <textarea
-                                name="jobDescription"
-                                value={formData.jobDescription}
-                                onChange={handleInputChange}
                                 rows={5}
-                                placeholder="Detailed job description and overview"
-                                className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all resize-none ${errors.jobDescription ? 'border-red-300 bg-red-50' : 'border-gray-200'}`}
+                                placeholder="Detailed description of the position, responsibilities, and what the role entails"
+                                className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all resize-none ${errors.description ? 'border-red-300 bg-red-50' : 'border-gray-200'}`}
                             />
-                            {errors.jobDescription && <p className="text-red-500 text-sm mt-1">{errors.jobDescription}</p>}
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Company Description (Optional)</label>
-                            <textarea
-                                name="companyDescription"
-                                value={formData.companyDescription}
-                                onChange={handleInputChange}
-                                rows={3}
-                                placeholder="Information about ZyraTech and what we do"
-                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all resize-none"
-                            />
+                            {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
                         </div>
                     </div>
                 );
