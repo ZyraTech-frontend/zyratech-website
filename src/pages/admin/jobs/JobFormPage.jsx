@@ -155,7 +155,7 @@ const JobFormPage = () => {
             };
         } else if (stepKey === 'details') {
             stepData = {
-                requirements: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
+                qualifications: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
                 responsibilities: formData.responsibilitiesText.split('\n').map(r => r.trim()).filter(Boolean),
             };
         } else if (stepKey === 'salary') {
@@ -268,7 +268,7 @@ const JobFormPage = () => {
                     salaryMin: formData.salaryMin ? parseInt(formData.salaryMin) : null,
                     salaryMax: formData.salaryMax ? parseInt(formData.salaryMax) : null,
                     salaryCurrency: formData.salaryCurrency,
-                    requirements: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
+                    qualifications: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
                     responsibilities: formData.responsibilitiesText.split('\n').map(r => r.trim()).filter(Boolean),
                     benefits: formData.perksText.split('\n').map(p => p.trim()).filter(Boolean),
                     status: 'draft'

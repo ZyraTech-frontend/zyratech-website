@@ -43,8 +43,9 @@ export const jobsService = {
         // Handle location field - backend uses 'location', frontend expects 'locations' array
         locations: job.locations || (job.location ? [job.location] : []),
         // Map backend field names to frontend field names for display
-        qualifications: job.requirements || job.qualifications || [],
-        perks: job.benefits || job.perks || [],
+        // Backend sends: qualifications, responsibilities, benefits
+        qualifications: job.qualifications || [],
+        perks: job.benefits || [],
         // Ensure arrays exist
         responsibilities: job.responsibilities || [],
         // Ensure text fields exist
@@ -76,8 +77,9 @@ export const jobsService = {
           // Handle location field - backend uses 'location', frontend expects 'locations' array
           locations: job.locations || (job.location ? [job.location] : []),
           // Map backend field names to frontend field names for display
-          qualifications: job.requirements || job.qualifications || [],
-          perks: job.benefits || job.perks || [],
+          // Backend sends: qualifications, responsibilities, benefits
+          qualifications: job.qualifications || [],
+          perks: job.benefits || [],
           // Ensure arrays exist
           responsibilities: job.responsibilities || [],
           // Ensure text fields exist
