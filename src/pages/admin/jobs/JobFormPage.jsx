@@ -58,6 +58,7 @@ const JobFormPage = () => {
     // Step state
     const [currentStep, setCurrentStep] = useState(0);
     const [isLoading, setIsLoading] = useState(isEditing);
+    const [jobId, setJobId] = useState(id || null); // Track job ID for PATCH requests
 
     // Form state
     const [formData, setFormData] = useState({
@@ -135,6 +136,61 @@ const JobFormPage = () => {
         }
     };
 
+    // Save current step data using PATCH (or POST for first step)
+    const saveStepData = async () => {
+        const stepKey = STEPS[currentStep]?.key;
+        let stepData = {};
+
+        // Collect data for current step
+        if (stepKey === 'basic') {
+            stepData = {
+                title: formData.title,
+                type: formData.type,
+                description: formData.description,
+            };
+        } else if (stepKey === 'description') {
+            stepData = {
+                jobDescription: formData.jobDescription || '',
+                companyDescription: formData.companyDescription || '',
+            };
+        } else if (stepKey === 'details') {
+            stepData = {
+                requirements: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
+                responsibilities: formData.responsibilitiesText.split('\n').map(r => r.trim()).filter(Boolean),
+            };
+        } else if (stepKey === 'salary') {
+            stepData = {
+                salaryMin: formData.salaryMin ? parseInt(formData.salaryMin) : null,
+                salaryMax: formData.salaryMax ? parseInt(formData.salaryMax) : null,
+                salaryCurrency: formData.salaryCurrency,
+            };
+        } else if (stepKey === 'locations') {
+            stepData = {
+                locations: formData.locationsText.split(',').map(l => l.trim()).filter(Boolean),
+                benefits: formData.perksText.split('\n').map(p => p.trim()).filter(Boolean),
+            };
+        }
+
+        try {
+            if (!jobId && stepKey === 'basic') {
+                // First step: Create new job
+                console.log('📝 Creating new job with Step 1 data:', stepData);
+                const response = await jobsService.createJob({ ...stepData, status: 'draft' });
+                const newJobId = response.id;
+                setJobId(newJobId);
+                console.log('✅ Job created with ID:', newJobId);
+            } else if (jobId) {
+                // Subsequent steps: Update existing job with PATCH
+                console.log(`📝 Updating job ${jobId} with ${stepKey} data:`, stepData);
+                await jobsService.updateJob(jobId, stepData);
+                console.log(`✅ Job ${jobId} updated successfully`);
+            }
+        } catch (error) {
+            console.error(`Failed to save step data: ${stepKey}`, error);
+            throw error;
+        }
+    };
+
     const validateStep = (stepIndex) => {
         const newErrors = {};
         const stepKey = STEPS[stepIndex]?.key;
@@ -162,6 +218,8 @@ const JobFormPage = () => {
 
     const handleNext = () => {
         if (validateStep(currentStep)) {
+            // Auto-save current step data before moving to next
+            saveStepData();
             setCurrentStep(prev => Math.min(prev + 1, STEPS.length - 1));
         }
     };
@@ -185,35 +243,31 @@ const JobFormPage = () => {
 
         setIsSaving(true);
 
-        // Prepare the job data - match backend schema
-        const jobData = {
-            title: formData.title,
-            type: formData.type,
-            description: formData.description,
-            // Send locations as array like backend expects
-            locations: formData.locationsText.split(',').map(l => l.trim()).filter(Boolean),
-            // Salary information for transparency
-            salaryMin: formData.salaryMin ? parseInt(formData.salaryMin) : null,
-            salaryMax: formData.salaryMax ? parseInt(formData.salaryMax) : null,
-            salaryCurrency: formData.salaryCurrency,
-            // Include optional fields that backend accepts
-            jobDescription: formData.jobDescription || '',
-            companyDescription: formData.companyDescription || '',
-            // Backend expects: requirements, responsibilities, benefits (not qualifications, perks)
-            requirements: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
-            responsibilities: formData.responsibilitiesText.split('\n').map(r => r.trim()).filter(Boolean),
-            benefits: formData.perksText.split('\n').map(p => p.trim()).filter(Boolean),
-            // Add status if not already set
-            status: 'draft'
-        };
-
-        console.log('Saving job:', jobData);
-
         try {
-            if (isEditing) {
-                await jobsService.updateJob(id, jobData);
+            // If we haven't saved the job yet (not on review step with jobId), save all remaining steps
+            if (!jobId) {
+                console.log('📝 First-time submission: Creating job with all data');
+                const jobData = {
+                    title: formData.title,
+                    type: formData.type,
+                    description: formData.description,
+                    jobDescription: formData.jobDescription || '',
+                    companyDescription: formData.companyDescription || '',
+                    locations: formData.locationsText.split(',').map(l => l.trim()).filter(Boolean),
+                    salaryMin: formData.salaryMin ? parseInt(formData.salaryMin) : null,
+                    salaryMax: formData.salaryMax ? parseInt(formData.salaryMax) : null,
+                    salaryCurrency: formData.salaryCurrency,
+                    requirements: formData.qualificationsText.split('\n').map(q => q.trim()).filter(Boolean),
+                    responsibilities: formData.responsibilitiesText.split('\n').map(r => r.trim()).filter(Boolean),
+                    benefits: formData.perksText.split('\n').map(p => p.trim()).filter(Boolean),
+                    status: 'draft'
+                };
+                const response = await jobsService.createJob(jobData);
+                setJobId(response.id);
             } else {
-                await jobsService.createJob(jobData);
+                // Job exists, make final PATCH to set status to active
+                console.log(`📝 Final submission: Publishing job ${jobId}`);
+                await jobsService.updateJob(jobId, { status: 'draft' });
             }
 
             setIsSaving(false);
@@ -223,7 +277,7 @@ const JobFormPage = () => {
                 title: isEditing ? 'Job Updated' : 'Job Created',
                 message: isEditing
                     ? `"${formData.title}" has been updated successfully.`
-                    : `"${formData.title}" has been posted successfully.`,
+                    : `"${formData.title}" has been posted successfully. You can publish it from the Jobs page.`,
                 confirmText: 'OK',
                 hideCancelButton: true,
                 onConfirm: () => navigate('/admin/jobs')
