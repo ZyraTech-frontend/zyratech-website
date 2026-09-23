@@ -94,7 +94,7 @@ const JobApplicationForm = ({ job, onSubmit }) => {
              formData.city.trim() && formData.phoneNumber.trim();
     }
     if (step === 2) {
-      return formData.message.trim();
+      return formData.resume && formData.message.trim();
     }
     if (step === 3) {
       return formData.legalAuthorization && formData.workExperience && 
@@ -125,7 +125,13 @@ const JobApplicationForm = ({ job, onSubmit }) => {
     if (!validateStep()) return;
     
     try {
-      // Build cover letter from all form data
+      // Create FormData for multipart/form-data submission
+      const submitData = new FormData();
+      
+      // 1. Add jobId (required)
+      submitData.append('jobId', job.id);
+      
+      // 2. Build coverLetter from all form data (required)
       const coverLetter = `
 APPLICANT INFORMATION:
 Name: ${formData.firstName} ${formData.lastName}
@@ -134,16 +140,16 @@ Phone: +233 ${formData.phoneNumber}
 Work Preference: ${formData.city}
 
 PROFESSIONAL PROFILES:
-${formData.linkedin ? `LinkedIn: ${formData.linkedin}` : ''}
-${formData.facebook ? `Facebook: ${formData.facebook}` : ''}
-${formData.twitter ? `Twitter: ${formData.twitter}` : ''}
-${formData.website ? `Website: ${formData.website}` : ''}
+LinkedIn: ${formData.linkedin || 'N/A'}
+Facebook: ${formData.facebook || 'N/A'}
+Twitter: ${formData.twitter || 'N/A'}
+Website: ${formData.website || 'N/A'}
 
 MESSAGE TO HIRING TEAM:
 ${formData.message}
 
 PROFESSIONAL BACKGROUND:
-${formData.title ? `Current/Desired Title: ${formData.title}` : ''}
+Current/Desired Title: ${formData.title || 'N/A'}
 Work Experience: ${formData.workExperience} months
 Residence: ${formData.residence}
 Current Salary: ${formData.currentSalary}
@@ -163,24 +169,32 @@ CERTIFICATION:
 Full Name (Signature): ${formData.fullName}
 I certify the information provided is true: ${formData.certifyTruth ? 'Yes' : 'No'}
 Privacy Policy Agreement: ${formData.agreePrivacy ? 'Yes' : 'No'}
-
-RESUME: ${formData.resumeFileName || 'Not uploaded'}
-ADDITIONAL ATTACHMENTS: ${formData.additionalFileName || 'None'}
       `.trim();
       
-      // Simple JSON payload matching Postman collection
-      const submitData = {
-        jobId: job.id,
-        coverLetter: coverLetter
-      };
+      submitData.append('coverLetter', coverLetter);
+      
+      // 3. Add resume file (required)
+      if (formData.resume) {
+        submitData.append('resume', formData.resume);
+      } else {
+        alert('Please upload your resume before submitting.');
+        return;
+      }
+      
+      // 4. Add additional attachments (optional)
+      if (formData.additionalAttachments) {
+        submitData.append('additionalAttachments', formData.additionalAttachments);
+      }
       
       console.log('Submitting job application to backend...');
-      console.log('Payload:', submitData);
+      console.log('JobId:', job.id);
+      console.log('Resume:', formData.resume?.name);
+      console.log('Additional Attachments:', formData.additionalAttachments?.name || 'None');
       
       // Call the backend API
       const response = await jobsService.submitJobApplication(job.id, submitData);
       
-      console.log('Application submitted successfully:', response);
+      console.log('✅ Application submitted successfully:', response);
       
       // Show success message
       setSubmitted(true);
@@ -189,7 +203,7 @@ ADDITIONAL ATTACHMENTS: ${formData.additionalFileName || 'None'}
       setTimeout(() => onSubmit(), 2000);
       
     } catch (error) {
-      console.error('Failed to submit job application:', error);
+      console.error('❌ Failed to submit job application:', error);
       alert('Failed to submit application. Please try again. Error: ' + (error.response?.data?.message || error.message));
     }
   };
