@@ -352,46 +352,50 @@ Privacy Policy Agreement: ${formData.agreePrivacy ? 'Yes' : 'No'}
         {step === 2 && (
           <div className="space-y-4 sm:space-y-6">
             <h3 className="text-lg sm:text-xl font-bold text-gray-900">Your Profiles</h3>
-            <p className="text-gray-600 text-sm sm:text-base">Fields marked with <span className="text-red-500">*</span> are required.</p>
+            <p className="text-gray-600 text-sm sm:text-base">Fields marked with <span className="text-red-500">*</span> are required. <span className="text-gray-500 italic">(All profile links are optional)</span></p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label className="block text-gray-700 mb-2 text-sm sm:text-base">LinkedIn</label>
+                <label className="block text-gray-700 mb-2 text-sm sm:text-base">LinkedIn <span className="text-gray-500 text-xs">(Optional)</span></label>
                 <input
                   type="url"
                   name="linkedin"
                   value={formData.linkedin}
                   onChange={handleChange}
+                  placeholder="https://linkedin.com/in/yourprofile"
                   className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-[#004fa2] text-sm sm:text-base"
                 />
               </div>
               <div>
-                <label className="block text-gray-700 mb-2 text-sm sm:text-base">Facebook</label>
+                <label className="block text-gray-700 mb-2 text-sm sm:text-base">Facebook <span className="text-gray-500 text-xs">(Optional)</span></label>
                 <input
                   type="url"
                   name="facebook"
                   value={formData.facebook}
                   onChange={handleChange}
+                  placeholder="https://facebook.com/yourprofile"
                   className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-[#004fa2] text-sm sm:text-base"
                 />
               </div>
               <div>
-                <label className="block text-gray-700 mb-2 text-sm sm:text-base">X (fka Twitter)</label>
+                <label className="block text-gray-700 mb-2 text-sm sm:text-base">X (fka Twitter) <span className="text-gray-500 text-xs">(Optional)</span></label>
                 <input
                   type="url"
                   name="twitter"
                   value={formData.twitter}
                   onChange={handleChange}
+                  placeholder="https://twitter.com/yourhandle"
                   className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-[#004fa2] text-sm sm:text-base"
                 />
               </div>
               <div>
-                <label className="block text-gray-700 mb-2 text-sm sm:text-base">Website</label>
+                <label className="block text-gray-700 mb-2 text-sm sm:text-base">Website <span className="text-gray-500 text-xs">(Optional)</span></label>
                 <input
                   type="url"
                   name="website"
                   value={formData.website}
                   onChange={handleChange}
+                  placeholder="https://yourwebsite.com"
                   className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-[#004fa2] text-sm sm:text-base"
                 />
               </div>
@@ -519,17 +523,28 @@ Privacy Policy Agreement: ${formData.agreePrivacy ? 'Yes' : 'No'}
 
             <div>
               <label className="block text-gray-700 mb-2">How did you know about ZyraTech? *</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  name="howDidYouKnowZyra"
-                  value={formData.howDidYouKnowZyra}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 pr-10 focus:outline-none focus:border-[#004fa2]"
-                  required
-                />
-                <Search className="w-4 h-4 absolute right-3 top-3 text-gray-400" />
-              </div>
+              <select
+                name="howDidYouKnowZyra"
+                value={formData.howDidYouKnowZyra}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-[#004fa2]"
+                required
+              >
+                <option value="">Select an option</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Twitter/X">Twitter/X</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Google Search">Google Search</option>
+                <option value="Friend/Family Referral">Friend/Family Referral</option>
+                <option value="Former Student">Former Student</option>
+                <option value="Company Website">Company Website</option>
+                <option value="Job Board">Job Board</option>
+                <option value="University/School">University/School</option>
+                <option value="Tech Community/Forum">Tech Community/Forum</option>
+                <option value="Advertisement">Advertisement</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
           </div>
         )}
@@ -583,16 +598,26 @@ Privacy Policy Agreement: ${formData.agreePrivacy ? 'Yes' : 'No'}
 
             <div>
               <label className="block text-gray-700 mb-2">ZyraTech is committed to fostering an inclusive learning environment that values diversity. We believe in creating equal opportunities for all individuals, including those with disabilities. To ensure we accommodate your needs effectively, please select the disability that applies to you. *</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  name="disability"
-                  value={formData.disability}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 pr-10 focus:outline-none focus:border-[#004fa2]"
-                />
-                <Search className="w-4 h-4 absolute right-3 top-3 text-gray-400" />
-              </div>
+              <select
+                name="disability"
+                value={formData.disability}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-[#004fa2]"
+              >
+                <option value="">Select an option</option>
+                <option value="None">None</option>
+                <option value="Visual Impairment">Visual Impairment</option>
+                <option value="Hearing Impairment">Hearing Impairment</option>
+                <option value="Physical/Mobility Disability">Physical/Mobility Disability</option>
+                <option value="Cognitive Disability">Cognitive Disability</option>
+                <option value="Learning Disability">Learning Disability</option>
+                <option value="Speech/Language Disability">Speech/Language Disability</option>
+                <option value="Chronic Health Condition">Chronic Health Condition</option>
+                <option value="Mental Health Condition">Mental Health Condition</option>
+                <option value="Multiple Disabilities">Multiple Disabilities</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
 
             <div>
@@ -619,16 +644,29 @@ Privacy Policy Agreement: ${formData.agreePrivacy ? 'Yes' : 'No'}
 
             <div>
               <label className="block text-gray-700 mb-2">How did you know about the job? *</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  name="howDidYouKnowJob"
-                  value={formData.howDidYouKnowJob}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 pr-10 focus:outline-none focus:border-[#004fa2]"
-                />
-                <Search className="w-4 h-4 absolute right-3 top-3 text-gray-400" />
-              </div>
+              <select
+                name="howDidYouKnowJob"
+                value={formData.howDidYouKnowJob}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-[#004fa2]"
+              >
+                <option value="">Select an option</option>
+                <option value="ZyraTech Website">ZyraTech Website</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Twitter/X">Twitter/X</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Google Search">Google Search</option>
+                <option value="Job Portal (Indeed, Glassdoor, etc.)">Job Portal (Indeed, Glassdoor, etc.)</option>
+                <option value="Friend/Family Referral">Friend/Family Referral</option>
+                <option value="Current/Former Employee">Current/Former Employee</option>
+                <option value="University Career Center">University Career Center</option>
+                <option value="Tech Community/Forum">Tech Community/Forum</option>
+                <option value="Email Newsletter">Email Newsletter</option>
+                <option value="Recruitment Agency">Recruitment Agency</option>
+                <option value="Job Fair/Career Event">Job Fair/Career Event</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
 
             <div>
