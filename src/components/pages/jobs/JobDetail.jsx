@@ -108,8 +108,8 @@ const JobDetail = () => {
             </section>
 
             {job.salary && (
-              <section className="bg-gradient-to-r from-[#004fa2]/5 to-[#0066cc]/5 rounded-xl p-6 border-l-4 border-[#004fa2]">
-                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-black mb-3 sm:mb-4">Salary & Compensation</h3>
+              <section className="bg-gray-50 rounded-xl p-6">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-black mb-3 sm:mb-4">Salary</h3>
                 <div className="flex items-baseline gap-2 sm:gap-3">
                   <span className="text-2xl sm:text-3xl font-bold text-[#004fa2]">
                     {job.salary}

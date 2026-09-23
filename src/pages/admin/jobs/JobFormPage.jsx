@@ -42,7 +42,7 @@ const JOB_TYPES = [
 const STEPS = [
     { key: 'basic', title: 'Basic Info', icon: Briefcase },
     { key: 'details', title: 'Responsibilities & Qualifications', icon: List },
-    { key: 'salary', title: 'Salary & Compensation', icon: DollarSign },
+    { key: 'salary', title: 'Salary', icon: DollarSign },
     { key: 'locations', title: 'Benefits', icon: MapPin },
     { key: 'review', title: 'Review', icon: Check }
 ];
