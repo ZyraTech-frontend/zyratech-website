@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Check, Upload, Plus, Search } from 'lucide-react';
+import jobsService from '../../../services/jobsService';
 
 const JobApplicationForm = ({ job, onSubmit }) => {
   const [step, setStep] = useState(1);
@@ -118,11 +119,87 @@ const JobApplicationForm = ({ job, onSubmit }) => {
     if (step > 1) setStep(step - 1);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Job Application:', formData);
-    setSubmitted(true);
-    setTimeout(() => onSubmit(), 2000);
+    
+    if (!validateStep()) return;
+    
+    try {
+      // Create FormData for multipart/form-data submission
+      const submitData = new FormData();
+      
+      // Add jobId from job prop
+      submitData.append('jobId', job.id);
+      
+      // Build cover letter from all form data
+      const coverLetter = `
+APPLICANT INFORMATION:
+Name: ${formData.firstName} ${formData.lastName}
+Email: ${formData.email}
+Phone: +233 ${formData.phoneNumber}
+Work Preference: ${formData.city}
+
+PROFESSIONAL PROFILES:
+${formData.linkedin ? `LinkedIn: ${formData.linkedin}` : ''}
+${formData.facebook ? `Facebook: ${formData.facebook}` : ''}
+${formData.twitter ? `Twitter: ${formData.twitter}` : ''}
+${formData.website ? `Website: ${formData.website}` : ''}
+
+MESSAGE TO HIRING TEAM:
+${formData.message}
+
+PROFESSIONAL BACKGROUND:
+${formData.title ? `Current/Desired Title: ${formData.title}` : ''}
+Work Experience: ${formData.workExperience} months
+Residence: ${formData.residence}
+Current Salary: ${formData.currentSalary}
+
+ADDITIONAL INFORMATION:
+Legal Authorization: ${formData.legalAuthorization}
+How I heard about ZyraTech: ${formData.howDidYouKnowZyra}
+How I heard about this job: ${formData.howDidYouKnowJob || 'N/A'}
+Background Check: ${formData.backgroundCheck || 'N/A'}
+Criminal Charges: ${formData.criminalCharges || 'N/A'}
+Disability Information: ${formData.disability || 'N/A'}
+
+REFERENCES:
+${formData.references || 'Not provided'}
+
+CERTIFICATION:
+Full Name (Signature): ${formData.fullName}
+I certify the information provided is true: ${formData.certifyTruth ? 'Yes' : 'No'}
+Privacy Policy Agreement: ${formData.agreePrivacy ? 'Yes' : 'No'}
+      `.trim();
+      
+      submitData.append('coverLetter', coverLetter);
+      
+      // Add resume file if provided
+      if (formData.resume) {
+        submitData.append('resume', formData.resume);
+      }
+      
+      // Add additional attachments if provided
+      if (formData.additionalAttachments) {
+        submitData.append('additionalAttachments', formData.additionalAttachments);
+      }
+      
+      console.log('Submitting job application to backend...');
+      
+      // Call the backend API
+      const response = await jobsService.submitJobApplication(job.id, submitData);
+      
+      console.log('Application submitted successfully:', response);
+      
+      // Show success message
+      setSubmitted(true);
+      
+      // Call parent onSubmit after 2 seconds
+      setTimeout(() => onSubmit(), 2000);
+      
+    } catch (error) {
+      console.error('Failed to submit job application:', error);
+      alert('Failed to submit application. Please try again. Error: ' + (error.response?.data?.message || error.message));
+    }
   };
 
   if (submitted) {
