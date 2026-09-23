@@ -131,7 +131,41 @@ const JobApplicationForm = ({ job, onSubmit }) => {
       // 1. Add jobId (required)
       submitData.append('jobId', job.id);
       
-      // 2. Build coverLetter from all form data (required)
+      // 2. Add all individual fields (backend needs these for database storage)
+      submitData.append('firstName', formData.firstName);
+      submitData.append('lastName', formData.lastName);
+      submitData.append('email', formData.email);
+      submitData.append('phoneNumber', formData.phoneNumber);
+      submitData.append('city', formData.city);
+      
+      // Professional profiles (optional)
+      if (formData.linkedin) submitData.append('linkedin', formData.linkedin);
+      if (formData.facebook) submitData.append('facebook', formData.facebook);
+      if (formData.twitter) submitData.append('twitter', formData.twitter);
+      if (formData.website) submitData.append('website', formData.website);
+      
+      // Message and professional info
+      submitData.append('message', formData.message);
+      if (formData.title) submitData.append('title', formData.title);
+      submitData.append('workExperience', formData.workExperience);
+      submitData.append('residence', formData.residence);
+      submitData.append('currentSalary', formData.currentSalary);
+      
+      // Additional information
+      submitData.append('legalAuthorization', formData.legalAuthorization);
+      submitData.append('howDidYouKnowZyra', formData.howDidYouKnowZyra);
+      if (formData.howDidYouKnowJob) submitData.append('howDidYouKnowJob', formData.howDidYouKnowJob);
+      if (formData.backgroundCheck) submitData.append('backgroundCheck', formData.backgroundCheck);
+      if (formData.criminalCharges) submitData.append('criminalCharges', formData.criminalCharges);
+      if (formData.disability) submitData.append('disability', formData.disability);
+      if (formData.references) submitData.append('references', formData.references);
+      
+      // Certification
+      submitData.append('fullName', formData.fullName);
+      submitData.append('certifyTruth', formData.certifyTruth);
+      submitData.append('agreePrivacy', formData.agreePrivacy);
+      
+      // 3. Build coverLetter from all form data (for display/email purposes)
       const coverLetter = `
 APPLICANT INFORMATION:
 Name: ${formData.firstName} ${formData.lastName}
@@ -173,7 +207,7 @@ Privacy Policy Agreement: ${formData.agreePrivacy ? 'Yes' : 'No'}
       
       submitData.append('coverLetter', coverLetter);
       
-      // 3. Add resume file (required)
+      // 4. Add resume file (required)
       if (formData.resume) {
         submitData.append('resume', formData.resume);
       } else {
@@ -181,7 +215,7 @@ Privacy Policy Agreement: ${formData.agreePrivacy ? 'Yes' : 'No'}
         return;
       }
       
-      // 4. Add additional attachments (optional)
+      // 5. Add additional attachments (optional)
       if (formData.additionalAttachments) {
         submitData.append('additionalAttachments', formData.additionalAttachments);
       }
