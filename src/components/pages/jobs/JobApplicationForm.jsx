@@ -33,7 +33,7 @@ const JobApplicationForm = ({ job, onSubmit }) => {
     howDidYouKnowZyra: '',
     uploadDocuments: false,
     additionalAttachments: null,
-    additionalFileName: '',
+    additionalAttachmentsFileName: '',
     disability: '',
     references: '',
     howDidYouKnowJob: '',
@@ -593,8 +593,8 @@ Privacy Policy Agreement: ${formData.agreePrivacy ? 'Yes' : 'No'}
                       <Upload className="w-6 h-6 text-blue-500 mx-auto mb-2" />
                       <p className="text-blue-500 font-medium">Choose a file or drop it here</p>
                       <p className="text-xs text-gray-500 mt-2">Supported files: DOC, DOT, RMR, RSM, RESUME, OXPS, PDF, P7S, AI, RTF, PAGES, GDOC, GSLIDES, XLS, XLSM, PUB, MSG, PPT, WPS, ODS, ODT, PPTX, PPSX, XLSX, DOCX, DOTX, SXW, WPD, ABW, MP3, M4A, WAV, PSD, EML, ICAL, ICS, IFB, ICALENDAR, ICS_RESPONSE, CSV, TXT, TEXT, VCF, MP4, MOV, BMP, GIF, JFIF, JPEG, JPG, PNG, TIF, TIFF, WEBP (10MB size limit)</p>
-                      {formData.additionalFileName && (
-                        <p className="text-green-600 text-sm mt-2">Selected: {formData.additionalFileName}</p>
+                      {formData.additionalAttachmentsFileName && (
+                        <p className="text-green-600 text-sm mt-2">Selected: {formData.additionalAttachmentsFileName}</p>
                       )}
                     </div>
                   </div>

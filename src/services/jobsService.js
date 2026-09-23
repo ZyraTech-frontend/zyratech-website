@@ -137,9 +137,8 @@ export const jobsService = {
     try {
       // Backend expects: POST /jobs/applications with FormData (multipart/form-data)
       // Fields: jobId, coverLetter, resume (required), additionalAttachments (optional)
-      const response = await api.post('/jobs/applications', applicationData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      // Note: Don't set Content-Type manually - let browser set it with boundary
+      const response = await api.post('/jobs/applications', applicationData);
       return response.data?.data || response.data;
     } catch (error) {
       console.error('Error submitting job application:', error);
