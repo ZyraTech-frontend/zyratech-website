@@ -135,10 +135,8 @@ export const jobsService = {
   // Public: Submit job application
   submitJobApplication: async (jobId, applicationData) => {
     try {
-      // Backend expects: POST /jobs/applications with multipart form data
-      const response = await api.post('/jobs/applications', applicationData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      // Backend expects: POST /jobs/applications with JSON { jobId, coverLetter }
+      const response = await api.post('/jobs/applications', applicationData);
       return response.data?.data || response.data;
     } catch (error) {
       console.error('Error submitting job application:', error);

@@ -125,12 +125,6 @@ const JobApplicationForm = ({ job, onSubmit }) => {
     if (!validateStep()) return;
     
     try {
-      // Create FormData for multipart/form-data submission
-      const submitData = new FormData();
-      
-      // Add jobId from job prop
-      submitData.append('jobId', job.id);
-      
       // Build cover letter from all form data
       const coverLetter = `
 APPLICANT INFORMATION:
@@ -169,21 +163,19 @@ CERTIFICATION:
 Full Name (Signature): ${formData.fullName}
 I certify the information provided is true: ${formData.certifyTruth ? 'Yes' : 'No'}
 Privacy Policy Agreement: ${formData.agreePrivacy ? 'Yes' : 'No'}
+
+RESUME: ${formData.resumeFileName || 'Not uploaded'}
+ADDITIONAL ATTACHMENTS: ${formData.additionalFileName || 'None'}
       `.trim();
       
-      submitData.append('coverLetter', coverLetter);
-      
-      // Add resume file if provided
-      if (formData.resume) {
-        submitData.append('resume', formData.resume);
-      }
-      
-      // Add additional attachments if provided
-      if (formData.additionalAttachments) {
-        submitData.append('additionalAttachments', formData.additionalAttachments);
-      }
+      // Simple JSON payload matching Postman collection
+      const submitData = {
+        jobId: job.id,
+        coverLetter: coverLetter
+      };
       
       console.log('Submitting job application to backend...');
+      console.log('Payload:', submitData);
       
       // Call the backend API
       const response = await jobsService.submitJobApplication(job.id, submitData);
