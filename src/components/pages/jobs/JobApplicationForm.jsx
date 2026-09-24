@@ -138,27 +138,27 @@ const JobApplicationForm = ({ job, onSubmit }) => {
       submitData.append('phoneNumber', formData.phoneNumber);
       submitData.append('city', formData.city);
       
-      // Professional profiles (optional)
-      if (formData.linkedin) submitData.append('linkedin', formData.linkedin);
-      if (formData.facebook) submitData.append('facebook', formData.facebook);
-      if (formData.twitter) submitData.append('twitter', formData.twitter);
-      if (formData.website) submitData.append('website', formData.website);
+      // Professional profiles (optional - send empty string if not provided)
+      submitData.append('linkedin', formData.linkedin || '');
+      submitData.append('facebook', formData.facebook || '');
+      submitData.append('twitter', formData.twitter || '');
+      submitData.append('website', formData.website || '');
       
-      // Message and professional info
+      // Message and professional info (required)
       submitData.append('message', formData.message);
-      if (formData.title) submitData.append('title', formData.title);
+      submitData.append('title', formData.title || '');
       submitData.append('workExperience', formData.workExperience);
       submitData.append('residence', formData.residence);
       submitData.append('currentSalary', formData.currentSalary);
       
-      // Additional information
+      // Additional information (required + optional)
       submitData.append('legalAuthorization', formData.legalAuthorization);
       submitData.append('howDidYouKnowZyra', formData.howDidYouKnowZyra);
-      if (formData.howDidYouKnowJob) submitData.append('howDidYouKnowJob', formData.howDidYouKnowJob);
-      if (formData.backgroundCheck) submitData.append('backgroundCheck', formData.backgroundCheck);
-      if (formData.criminalCharges) submitData.append('criminalCharges', formData.criminalCharges);
-      if (formData.disability) submitData.append('disability', formData.disability);
-      if (formData.references) submitData.append('references', formData.references);
+      submitData.append('howDidYouKnowJob', formData.howDidYouKnowJob || '');
+      submitData.append('backgroundCheck', formData.backgroundCheck || '');
+      submitData.append('criminalCharges', formData.criminalCharges || '');
+      submitData.append('disability', formData.disability || '');
+      submitData.append('references', formData.references || '');
       
       // Certification
       submitData.append('fullName', formData.fullName);
