@@ -79,7 +79,9 @@ const JobsManagementPage = () => {
 
     // State management
     const [jobs, setJobs] = useState([]);
+    const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [appsLoading, setAppsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedType, setSelectedType] = useState('all');
@@ -116,6 +118,60 @@ const JobsManagementPage = () => {
       return () => { isMounted = false; };
     }, []);
 
+    // Fetch applications from backend API
+    useEffect(() => {
+      let isMounted = true;
+      const loadApplications = async () => {
+        if (activeTab !== 'applications' || jobs.length === 0) return;
+        
+        try {
+          setAppsLoading(true);
+          const allApplications = [];
+          
+          // Fetch applications for all jobs
+          for (const job of jobs) {
+            try {
+              const jobApps = await jobsService.getJobApplications(job.id);
+              if (Array.isArray(jobApps)) {
+                // Map backend data to match table expectations
+                const mappedApps = jobApps.map(app => ({
+                  id: app.id,
+                  jobId: job.id,
+                  name: `${app.firstName} ${app.lastName}`,
+                  email: app.email,
+                  status: app.status || 'pending',
+                  appliedAt: app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A',
+                  phone: app.phoneNumber,
+                  ...app // Include all original fields for details view
+                }));
+                allApplications.push(...mappedApps);
+              }
+            } catch (err) {
+              console.error(`Failed to fetch applications for job ${job.id}:`, err);
+            }
+          }
+          
+          if (isMounted) {
+            // Sort by appliedAt (newest first)
+            allApplications.sort((a, b) => new Date(b.appliedAt) - new Date(a.appliedAt));
+            setApplications(allApplications);
+          }
+        } catch (err) {
+          console.error('Failed to fetch applications:', err);
+          if (isMounted) {
+            setApplications([]);
+          }
+        } finally {
+          if (isMounted) {
+            setAppsLoading(false);
+          }
+        }
+      };
+
+      loadApplications();
+      return () => { isMounted = false; };
+    }, [activeTab, jobs]);
+
     // Redirect to form when modal is opened
     useEffect(() => {
         if (showModal) {
@@ -126,14 +182,8 @@ const JobsManagementPage = () => {
 
     const itemsPerPage = 6;
 
-    // Mock applications data
-    const mockApplications = useMemo(() => [
-        { id: '1', jobId: 1, name: 'Kwame Asante', email: 'kwame@email.com', status: 'pending', appliedAt: '2026-02-05', phone: '+233 24 123 4567' },
-        { id: '2', jobId: 2, name: 'Ama Serwaa', email: 'ama@email.com', status: 'reviewed', appliedAt: '2026-02-03', phone: '+233 20 234 5678' },
-        { id: '3', jobId: 3, name: 'Kofi Mensah', email: 'kofi@email.com', status: 'interviewed', appliedAt: '2026-02-07', phone: '+233 27 345 6789' },
-        { id: '4', jobId: 1, name: 'Akua Frimpong', email: 'akua@email.com', status: 'rejected', appliedAt: '2026-02-01', phone: '+233 24 456 7890' },
-        { id: '5', jobId: 2, name: 'Yaw Boateng', email: 'yaw@email.com', status: 'pending', appliedAt: '2026-02-08', phone: '+233 55 567 8901' },
-    ], []);
+    // Mock applications data - REPLACED WITH REAL DATA ABOVE
+    // const mockApplications = useMemo(() => [...], []);
 
     // Filter and search jobs
     const filteredJobs = useMemo(() => {
@@ -171,8 +221,8 @@ const JobsManagementPage = () => {
 
     // Application Pagination
     const appsPerPage = 4;
-    const totalAppPages = Math.ceil(mockApplications.length / appsPerPage);
-    const paginatedApps = mockApplications.slice(
+    const totalAppPages = Math.ceil(applications.length / appsPerPage);
+    const paginatedApps = applications.slice(
         (appCurrentPage - 1) * appsPerPage,
         appCurrentPage * appsPerPage
     );
@@ -183,9 +233,9 @@ const JobsManagementPage = () => {
         fullTime: jobs.filter(j => j.type === 'Full-time').length,
         internship: jobs.filter(j => j.type === 'Internship').length,
         nationalService: jobs.filter(j => j.type === 'National Service').length,
-        totalApplications: mockApplications.length,
-        pendingApplications: mockApplications.filter(a => a.status === 'pending').length
-    }), [jobs, mockApplications]);
+        totalApplications: applications.length,
+        pendingApplications: applications.filter(a => a.status === 'pending').length
+    }), [jobs, applications]);
 
     // Unique locations for filter
     const uniqueLocations = useMemo(() => {
@@ -516,137 +566,162 @@ const JobsManagementPage = () => {
                 ) : (
                     /* Applications Tab */
                     <div className="space-y-5">
-                        {/* Applications Table */}
-                        {/* Applications Table */}
-                        <div className="bg-transparent md:bg-white md:rounded-xl md:shadow-sm md:border border-gray-100 overflow-hidden">
-                            <div className="hidden md:block px-6 py-4 border-b border-gray-100">
-                                <h3 className="text-sm font-semibold text-gray-900">Recent Applications</h3>
-                                <p className="text-[10px] text-gray-500">Review and manage job applications</p>
-                            </div>
-                            <div className="overflow-x-visible md:overflow-x-auto">
-                                <table className="w-full text-left border-collapse">
-                                    <thead className="hidden md:table-header-group bg-gray-50 border-b border-gray-100">
-                                        <tr>
-                                            <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider w-[35%]">Applicant</th>
-                                            <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider w-[30%]">Job Position</th>
-                                            <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Applied Date</th>
-                                            <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                                            <th className="px-4 py-3 text-right text-[10px] font-bold text-gray-500 uppercase tracking-wider">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="flex flex-col md:table-row-group divide-y-0 md:divide-y divide-gray-100">
-                                        {paginatedApps.map((application) => {
-                                            const job = jobs.find(j => j.id === application.jobId);
-                                            return (
-                                                <tr key={application.id} className="flex flex-wrap items-center md:table-row bg-white rounded-xl shadow-sm border border-gray-100 md:border-none md:shadow-none mb-3 md:mb-0 hover:bg-gray-50/80 transition-colors group p-3 md:p-0 gap-x-3 gap-y-1">
-                                                    
-                                                    {/* Applicant Info */}
-                                                    <td className="w-full md:w-auto md:table-cell md:px-4 md:py-3 mb-1 md:mb-0">
-                                                        <div className="flex items-center gap-2.5">
-                                                            <div className="w-6 h-6 md:w-8 md:h-8 md:w-7 md:h-7 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-full flex items-center justify-center text-white font-bold text-[10px] shrink-0">
-                                                                {application.name.split(' ').map(n => n[0]).join('')}
-                                                            </div>
-                                                            <div className="min-w-0">
-                                                                <p className="font-bold text-sm md:text-sm text-gray-900 truncate leading-tight">{application.name}</p>
-                                                                <p className="text-[10px] text-gray-500 truncate">{application.email}</p>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-
-                                                    {/* Job Position */}
-                                                    <td className="w-full md:w-auto md:table-cell md:px-4 md:py-3 mt-1 md:mt-0">
-                                                        <p className="font-medium text-xs md:text-[11px] text-gray-900 line-clamp-1">{job?.title || 'Unknown'}</p>
-                                                        <span className={`inline-block mt-0.5 px-1.5 py-[1px] rounded text-[9px] font-bold uppercase ${JOB_TYPE_CONFIG[job?.type]?.color || 'bg-gray-100'}`}>
-                                                            {job?.type}
-                                                        </span>
-                                                    </td>
-
-                                                    {/* Date */}
-                                                    <td className="w-auto md:table-cell md:px-4 md:py-3">
-                                                        <div className="flex items-center gap-1.5 text-[10px] text-gray-500 whitespace-nowrap">
-                                                            <Calendar size={10} className="text-gray-400" />
-                                                            {application.appliedAt}
-                                                        </div>
-                                                    </td>
-
-                                                    {/* Status */}
-                                                    <td className="w-auto md:table-cell md:px-4 md:py-3 border-l border-gray-200 pl-3 md:border-l-0 md:pl-0">
-                                                        <span className={`px-2 py-[2px] rounded text-[9px] font-bold uppercase border ${getApplicationStatusColor(application.status)}`}>
-                                                            {application.status}
-                                                        </span>
-                                                    </td>
-
-                                                    {/* Actions */}
-                                                    <td className="w-full md:w-auto md:table-cell md:px-4 md:py-3 mt-2 md:mt-0 pt-2 border-t border-gray-100 md:border-none">
-                                                        <div className="flex items-center justify-end gap-1">
-                                                            <button
-                                                                onClick={() => handleViewApplication(application.id)}
-                                                                className="p-1.5 flex items-center justify-center hover:bg-gray-100 rounded text-gray-500 hover:text-[#004fa2] md:shadow-sm md:border border-transparent md:hover:border-gray-200 transition-colors"
-                                                                title="View Application"
-                                                            >
-                                                                <Eye size={14} className="md:w-3.5 md:h-3.5" />
-                                                            </button>
-                                                            <button
-                                                                className="p-1.5 flex items-center justify-center hover:bg-gray-100 rounded text-gray-500 hover:text-green-600 md:shadow-sm md:border border-transparent md:hover:border-gray-200 transition-colors"
-                                                                title="Send Email"
-                                                            >
-                                                                <Mail size={14} className="md:w-3.5 md:h-3.5" />
-                                                            </button>
-                                                            <button
-                                                                className="p-1.5 flex items-center justify-center hover:bg-gray-100 rounded text-gray-500 hover:text-purple-600 md:shadow-sm md:border border-transparent md:hover:border-gray-200 transition-colors"
-                                                                title="Schedule Interview"
-                                                            >
-                                                                <Calendar size={14} className="md:w-3.5 md:h-3.5" />
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        {/* Pagination for Applications */}
-                        {totalAppPages > 1 && (
-                            <div className="flex items-center justify-between bg-white rounded-xl p-4 shadow-sm border border-gray-100 mt-4">
-                                <p className="text-sm text-gray-500">
-                                    Showing <span className="font-semibold text-gray-900">{(appCurrentPage - 1) * appsPerPage + 1}</span> to{' '}
-                                    <span className="font-semibold text-gray-900">{Math.min(appCurrentPage * appsPerPage, mockApplications.length)}</span> of{' '}
-                                    <span className="font-semibold text-gray-900">{mockApplications.length}</span> apps
-                                </p>
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => setAppCurrentPage(p => Math.max(1, p - 1))}
-                                        disabled={appCurrentPage === 1}
-                                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                                    >
-                                        <ChevronLeft size={18} />
-                                    </button>
-                                    <div className="flex items-center gap-1">
-                                        {Array.from({ length: totalAppPages }, (_, i) => i + 1).map(page => (
-                                            <button
-                                                key={page}
-                                                onClick={() => setAppCurrentPage(page)}
-                                                className={`min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-all ${appCurrentPage === page
-                                                    ? 'bg-[#004fa2] text-white shadow-md'
-                                                    : 'text-gray-600 hover:bg-gray-100'
-                                                    }`}
-                                            >
-                                                {page}
-                                            </button>
-                                        ))}
-                                    </div>
-                                    <button
-                                        onClick={() => setAppCurrentPage(p => Math.min(totalAppPages, p + 1))}
-                                        disabled={appCurrentPage === totalAppPages}
-                                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                                    >
-                                        <ChevronRight size={18} />
-                                    </button>
+                        {/* Loading State */}
+                        {appsLoading && (
+                            <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100">
+                                <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-4">
+                                    <Briefcase className="text-blue-600 animate-spin" size={24} />
                                 </div>
+                                <p className="text-gray-600 font-medium">Loading applications...</p>
                             </div>
+                        )}
+
+                        {/* Applications Table */}
+                        {!appsLoading && (
+                            <>
+                                <div className="bg-transparent md:bg-white md:rounded-xl md:shadow-sm md:border border-gray-100 overflow-hidden">
+                                    <div className="hidden md:block px-6 py-4 border-b border-gray-100">
+                                        <h3 className="text-sm font-semibold text-gray-900">Recent Applications</h3>
+                                        <p className="text-[10px] text-gray-500">Review and manage job applications</p>
+                                    </div>
+                                    <div className="overflow-x-visible md:overflow-x-auto">
+                                        <table className="w-full text-left border-collapse">
+                                            <thead className="hidden md:table-header-group bg-gray-50 border-b border-gray-100">
+                                                <tr>
+                                                    <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider w-[35%]">Applicant</th>
+                                                    <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider w-[30%]">Job Position</th>
+                                                    <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Applied Date</th>
+                                                    <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                                                    <th className="px-4 py-3 text-right text-[10px] font-bold text-gray-500 uppercase tracking-wider">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="flex flex-col md:table-row-group divide-y-0 md:divide-y divide-gray-100">
+                                                {paginatedApps.length > 0 ? (
+                                                    paginatedApps.map((application) => {
+                                                        const job = jobs.find(j => j.id === application.jobId);
+                                                        return (
+                                                            <tr key={application.id} className="flex flex-wrap items-center md:table-row bg-white rounded-xl shadow-sm border border-gray-100 md:border-none md:shadow-none mb-3 md:mb-0 hover:bg-gray-50/80 transition-colors group p-3 md:p-0 gap-x-3 gap-y-1">
+                                                                
+                                                                {/* Applicant Info */}
+                                                                <td className="w-full md:w-auto md:table-cell md:px-4 md:py-3 mb-1 md:mb-0">
+                                                                    <div className="flex items-center gap-2.5">
+                                                                        <div className="w-6 h-6 md:w-8 md:h-8 md:w-7 md:h-7 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-full flex items-center justify-center text-white font-bold text-[10px] shrink-0">
+                                                                            {application.name.split(' ').map(n => n[0]).join('')}
+                                                                        </div>
+                                                                        <div className="min-w-0">
+                                                                            <p className="font-bold text-sm md:text-sm text-gray-900 truncate leading-tight">{application.name}</p>
+                                                                            <p className="text-[10px] text-gray-500 truncate">{application.email}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+
+                                                                {/* Job Position */}
+                                                                <td className="w-full md:w-auto md:table-cell md:px-4 md:py-3 mt-1 md:mt-0">
+                                                                    <p className="font-medium text-xs md:text-[11px] text-gray-900 line-clamp-1">{job?.title || 'Unknown'}</p>
+                                                                    <span className={`inline-block mt-0.5 px-1.5 py-[1px] rounded text-[9px] font-bold uppercase ${JOB_TYPE_CONFIG[job?.type]?.color || 'bg-gray-100'}`}>
+                                                                        {job?.type}
+                                                                    </span>
+                                                                </td>
+
+                                                                {/* Date */}
+                                                                <td className="w-auto md:table-cell md:px-4 md:py-3">
+                                                                    <div className="flex items-center gap-1.5 text-[10px] text-gray-500 whitespace-nowrap">
+                                                                        <Calendar size={10} className="text-gray-400" />
+                                                                        {application.appliedAt}
+                                                                    </div>
+                                                                </td>
+
+                                                                {/* Status */}
+                                                                <td className="w-auto md:table-cell md:px-4 md:py-3 border-l border-gray-200 pl-3 md:border-l-0 md:pl-0">
+                                                                    <span className={`px-2 py-[2px] rounded text-[9px] font-bold uppercase border ${getApplicationStatusColor(application.status)}`}>
+                                                                        {application.status}
+                                                                    </span>
+                                                                </td>
+
+                                                                {/* Actions */}
+                                                                <td className="w-full md:w-auto md:table-cell md:px-4 md:py-3 mt-2 md:mt-0 pt-2 border-t border-gray-100 md:border-none">
+                                                                    <div className="flex items-center justify-end gap-1">
+                                                                        <button
+                                                                            onClick={() => handleViewApplication(application.id)}
+                                                                            className="p-1.5 flex items-center justify-center hover:bg-gray-100 rounded text-gray-500 hover:text-[#004fa2] md:shadow-sm md:border border-transparent md:hover:border-gray-200 transition-colors"
+                                                                            title="View Application"
+                                                                        >
+                                                                            <Eye size={14} className="md:w-3.5 md:h-3.5" />
+                                                                        </button>
+                                                                        <button
+                                                                            className="p-1.5 flex items-center justify-center hover:bg-gray-100 rounded text-gray-500 hover:text-green-600 md:shadow-sm md:border border-transparent md:hover:border-gray-200 transition-colors"
+                                                                            title="Send Email"
+                                                                        >
+                                                                            <Mail size={14} className="md:w-3.5 md:h-3.5" />
+                                                                        </button>
+                                                                        <button
+                                                                            className="p-1.5 flex items-center justify-center hover:bg-gray-100 rounded text-gray-500 hover:text-purple-600 md:shadow-sm md:border border-transparent md:hover:border-gray-200 transition-colors"
+                                                                            title="Schedule Interview"
+                                                                        >
+                                                                            <Calendar size={14} className="md:w-3.5 md:h-3.5" />
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })
+                                                ) : (
+                                                    <tr>
+                                                        <td colSpan="5" className="px-4 py-12 text-center">
+                                                            <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full mb-4">
+                                                                <FileText className="text-gray-400" size={24} />
+                                                            </div>
+                                                            <p className="text-gray-600 font-medium">No applications yet</p>
+                                                            <p className="text-gray-500 text-sm">Applicants will appear here</p>
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                {/* Pagination for Applications */}
+                                {totalAppPages > 1 && (
+                                    <div className="flex items-center justify-between bg-white rounded-xl p-4 shadow-sm border border-gray-100 mt-4">
+                                        <p className="text-sm text-gray-500">
+                                            Showing <span className="font-semibold text-gray-900">{(appCurrentPage - 1) * appsPerPage + 1}</span> to{' '}
+                                            <span className="font-semibold text-gray-900">{Math.min(appCurrentPage * appsPerPage, applications.length)}</span> of{' '}
+                                            <span className="font-semibold text-gray-900">{applications.length}</span> apps
+                                        </p>
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => setAppCurrentPage(p => Math.max(1, p - 1))}
+                                                disabled={appCurrentPage === 1}
+                                                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                            >
+                                                <ChevronLeft size={18} />
+                                            </button>
+                                            <div className="flex items-center gap-1">
+                                                {Array.from({ length: totalAppPages }, (_, i) => i + 1).map(page => (
+                                                    <button
+                                                        key={page}
+                                                        onClick={() => setAppCurrentPage(page)}
+                                                        className={`min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-all ${appCurrentPage === page
+                                                            ? 'bg-[#004fa2] text-white shadow-md'
+                                                            : 'text-gray-600 hover:bg-gray-100'
+                                                            }`}
+                                                    >
+                                                        {page}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            <button
+                                                onClick={() => setAppCurrentPage(p => Math.min(totalAppPages, p + 1))}
+                                                disabled={appCurrentPage === totalAppPages}
+                                                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                            >
+                                                <ChevronRight size={18} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
                 )}
