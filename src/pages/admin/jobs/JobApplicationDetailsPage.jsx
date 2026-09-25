@@ -570,31 +570,6 @@ const JobApplicationDetailsPage = () => {
 
                     {/* Sidebar - Quick Info */}
                     <div className="space-y-6">
-                        {/* Key Metrics Card */}
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                            <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-6">Quick Facts</h3>
-                            <div className="space-y-5">
-                                <div>
-                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Application ID</p>
-                                    <p className="text-sm font-mono text-gray-900">{application.id}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Applied</p>
-                                    <p className="text-sm text-gray-900">{formatDate(application.appliedDate)}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Experience</p>
-                                    <p className="text-sm text-gray-900 font-semibold">{application.workExperience} months</p>
-                                </div>
-                                {application.currentLocation && (
-                                    <div>
-                                        <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Location</p>
-                                        <p className="text-sm text-gray-900">{application.currentLocation}</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
                         {/* Application Status */}
                         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                             <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">Status</h3>
@@ -604,23 +579,27 @@ const JobApplicationDetailsPage = () => {
                             </div>
                         </div>
 
-                        {/* About Section */}
+                        {/* About & Contact - Combined Card */}
                         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                            <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">About</h3>
-                            <div className="space-y-4 text-sm text-gray-700">
+                            <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-6">About</h3>
+                            
+                            {/* Position - Prominent */}
+                            <div className="mb-6 pb-6 border-b border-gray-200">
+                                <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Position</p>
+                                <p className="text-sm font-bold text-gray-900">{application.jobTitle}</p>
+                            </div>
+
+                            {/* Contact Info */}
+                            <div className="space-y-5">
                                 <div>
-                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Position</p>
-                                    <p className="font-medium">{application.jobTitle}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Email</p>
-                                    <a href={`mailto:${application.emailAddress}`} className="text-[#004fa2] hover:underline break-all text-xs">
+                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Email</p>
+                                    <a href={`mailto:${application.emailAddress}`} className="text-sm text-[#004fa2] hover:underline break-all font-medium">
                                         {application.emailAddress}
                                     </a>
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Phone</p>
-                                    <a href={`tel:${application.phoneNumber}`} className="font-medium">
+                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Phone</p>
+                                    <a href={`tel:${application.phoneNumber}`} className="text-sm font-bold text-gray-900">
                                         {application.phoneNumber}
                                     </a>
                                 </div>
@@ -642,6 +621,31 @@ const JobApplicationDetailsPage = () => {
                                     <div className="w-3 h-3 rounded-full bg-green-600 flex-shrink-0 mt-1"></div>
                                     <span className="text-green-900">Privacy agreement signed</span>
                                 </div>
+                            </div>
+                        </div>
+
+                        {/* Quick Facts */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                            <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-6">Quick Facts</h3>
+                            <div className="space-y-5">
+                                <div>
+                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Application ID</p>
+                                    <p className="text-sm font-mono text-gray-900">{application.id}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Applied</p>
+                                    <p className="text-sm text-gray-900">{formatDate(application.appliedDate)}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Experience</p>
+                                    <p className="text-sm text-gray-900 font-semibold">{application.workExperience} months</p>
+                                </div>
+                                {application.currentLocation && (
+                                    <div>
+                                        <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Location</p>
+                                        <p className="text-sm text-gray-900">{application.currentLocation}</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
