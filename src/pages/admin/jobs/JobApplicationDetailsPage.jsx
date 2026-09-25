@@ -14,109 +14,19 @@ import {
     Download,
     Linkedin,
     Github,
+    Globe,
     ExternalLink,
     XCircle,
     CheckCircle,
     Calendar,
     Clock,
     AlertCircle,
-    Loader
+    Loader,
+    Award,
+    User,
+    Shield,
+    Users
 } from 'lucide-react';
-
-// Mock Applications Data (fallback only)
-const MOCK_JOB_APPLICATIONS = [
-    {
-        id: '1',
-        jobId: 1,
-        jobTitle: 'ZyraTech Internship Program',
-        fullName: 'Kwame Asante',
-        emailAddress: 'kwame@email.com',
-        phoneNumber: '+233 24 123 4567',
-        country: 'Ghana',
-        currentLocation: 'Accra',
-        educationLevel: 'Undergraduate',
-        status: 'pending',
-        appliedDate: '2026-02-05',
-        cvFileName: 'Kwame_Asante_CV.pdf',
-        motivationStatement: 'I am passionate about technology and innovation. This internship program aligns perfectly with my career goals in tech.',
-        relevantExperience: '2 years of self-learning in web development, completed 3 online projects',
-        linkedinUrl: 'https://linkedin.com/in/kwameasante',
-        portfolioUrl: 'https://kwameasante.dev',
-        availableStartDate: '2026-03-01'
-    },
-    {
-        id: '2',
-        jobId: 2,
-        jobTitle: 'National Service at ZyraTech',
-        fullName: 'Ama Serwaa',
-        emailAddress: 'ama@email.com',
-        phoneNumber: '+233 20 234 5678',
-        country: 'Ghana',
-        currentLocation: 'Kumasi',
-        educationLevel: 'Graduate',
-        status: 'reviewed',
-        appliedDate: '2026-02-03',
-        cvFileName: 'Ama_Serwaa_Resume.pdf',
-        motivationStatement: 'Recent computer science graduate eager to contribute to meaningful tech projects while serving the community.',
-        relevantExperience: 'Recent CS graduate, Java, Python, web development background',
-        linkedinUrl: 'https://linkedin.com/in/amaserwaa',
-        githubUrl: 'https://github.com/amaserwaa'
-    },
-    {
-        id: '3',
-        jobId: 3,
-        jobTitle: 'Software Engineer',
-        fullName: 'Kofi Mensah',
-        emailAddress: 'kofi@email.com',
-        phoneNumber: '+233 27 345 6789',
-        country: 'Ghana',
-        currentLocation: 'Takoradi',
-        educationLevel: 'Bachelor\'s Degree',
-        status: 'interviewed',
-        appliedDate: '2026-02-07',
-        cvFileName: 'Kofi_Mensah_CV.pdf',
-        motivationStatement: 'Software engineer with 3 years of experience in full-stack development. Excited about ZyraTech\'s mission in education and community impact.',
-        relevantExperience: '3 years full-stack development, React, Node.js, AWS, Docker, Kubernetes',
-        linkedinUrl: 'https://linkedin.com/in/kofimensah',
-        portfolioUrl: 'https://kofimensah.dev',
-        githubUrl: 'https://github.com/kofimensah'
-    },
-    {
-        id: '4',
-        jobId: 1,
-        jobTitle: 'ZyraTech Internship Program',
-        fullName: 'Akua Frimpong',
-        emailAddress: 'akua@email.com',
-        phoneNumber: '+233 24 456 7890',
-        country: 'Ghana',
-        currentLocation: 'Koforidua',
-        educationLevel: 'Diploma',
-        status: 'rejected',
-        appliedDate: '2026-02-01',
-        cvFileName: 'Akua_Frimpong_CV.pdf',
-        motivationStatement: 'Career changer from marketing to tech. Completed online coding bootcamp and ready to apply skills.',
-        relevantExperience: 'Bootcamp graduate, HTML, CSS, JavaScript basics',
-        rejectionReason: 'Does not meet the minimum experience requirement for this position'
-    },
-    {
-        id: '5',
-        jobId: 2,
-        jobTitle: 'National Service at ZyraTech',
-        fullName: 'Yaw Boateng',
-        emailAddress: 'yaw@email.com',
-        phoneNumber: '+233 55 567 8901',
-        country: 'Ghana',
-        currentLocation: 'Accra',
-        educationLevel: 'Undergraduate',
-        status: 'pending',
-        appliedDate: '2026-02-08',
-        cvFileName: 'Yaw_Boateng_CV.pdf',
-        motivationStatement: 'Computer science student passionate about solving real-world problems with technology.',
-        relevantExperience: 'Currently studying CS, worked on 2 personal projects, basic Python and JavaScript',
-        linkedinUrl: 'https://linkedin.com/in/yawboateng',
-        githubUrl: 'https://github.com/yawboateng'
-    }
-];
 
 const JobApplicationDetailsPage = () => {
     const { id } = useParams();
@@ -125,8 +35,8 @@ const JobApplicationDetailsPage = () => {
     const [application, setApplication] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [activeTab, setActiveTab] = useState('overview');
 
-    // Fetch application data from backend API
     useEffect(() => {
         let isMounted = true;
 
@@ -138,7 +48,6 @@ const JobApplicationDetailsPage = () => {
                 const data = await jobsService.getApplication(id);
                 
                 if (isMounted) {
-                    // Map backend data to expected format
                     const mappedApp = {
                         id: data.id,
                         jobId: data.jobId,
@@ -146,21 +55,18 @@ const JobApplicationDetailsPage = () => {
                         fullName: `${data.firstName} ${data.lastName}`,
                         emailAddress: data.email,
                         phoneNumber: data.phoneNumber,
-                        country: 'Ghana', // From backend if available
+                        country: 'Ghana',
                         currentLocation: data.city,
-                        educationLevel: 'Not specified', // From backend if available
+                        educationLevel: 'Not specified',
                         status: data.status || 'pending',
                         appliedDate: data.createdAt || new Date().toISOString(),
-                        cvFileName: 'Resume.pdf', // From backend if available
+                        cvFileName: 'Resume.pdf',
                         motivationStatement: data.message || 'No message provided',
-                        relevantExperience: `Work Experience: ${data.workExperience} months`,
-                        // Optional fields
                         linkedinUrl: data.linkedin || null,
                         facebookUrl: data.facebook || null,
                         twitterUrl: data.twitter || null,
                         portfolioUrl: data.website || null,
                         githubUrl: data.github || null,
-                        // Additional fields from backend
                         workExperience: data.workExperience,
                         residence: data.residence,
                         currentSalary: data.currentSalary,
@@ -168,7 +74,14 @@ const JobApplicationDetailsPage = () => {
                         disability: data.disability,
                         certifyTruth: data.certifyTruth,
                         agreePrivacy: data.agreePrivacy,
-                        ...data // Include all original fields
+                        title: data.title,
+                        howDidYouKnowZyra: data.howDidYouKnowZyra,
+                        howDidYouKnowJob: data.howDidYouKnowJob,
+                        backgroundCheck: data.backgroundCheck,
+                        criminalCharges: data.criminalCharges,
+                        references: data.references,
+                        resumeUrl: data.resume,
+                        ...data
                     };
                     
                     setApplication(mappedApp);
@@ -278,381 +191,457 @@ const JobApplicationDetailsPage = () => {
     };
 
     const getStatusColor = (status) => {
-        switch (status) {
-            case 'approved':
-                return 'bg-green-100 text-green-700 border border-green-200';
-            case 'rejected':
-                return 'bg-red-100 text-red-700 border border-red-200';
-            case 'interviewed':
-                return 'bg-purple-100 text-purple-700 border border-purple-200';
-            case 'reviewed':
-                return 'bg-blue-100 text-blue-700 border border-blue-200';
-            default:
-                return 'bg-amber-100 text-amber-700 border border-amber-200';
-        }
+        const colors = {
+            'approved': 'bg-green-50 text-green-700 border-green-200',
+            'hired': 'bg-green-50 text-green-700 border-green-200',
+            'rejected': 'bg-red-50 text-red-700 border-red-200',
+            'interviewed': 'bg-purple-50 text-purple-700 border-purple-200',
+            'reviewed': 'bg-blue-50 text-blue-700 border-blue-200',
+            'pending': 'bg-amber-50 text-amber-700 border-amber-200'
+        };
+        return colors[status] || colors['pending'];
     };
+
+    const getStatusIcon = (status) => {
+        if (status === 'approved' || status === 'hired') return <CheckCircle size={16} />;
+        if (status === 'rejected') return <XCircle size={16} />;
+        return null;
+    };
+
+    const formatDate = (dateStr) => {
+        return new Date(dateStr).toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+    };
+
+    // Tab definitions
+    const tabs = [
+        { id: 'overview', label: 'Overview', icon: User },
+        { id: 'experience', label: 'Experience', icon: Briefcase },
+        { id: 'background', label: 'Background', icon: Shield },
+        { id: 'documents', label: 'Documents', icon: FileText }
+    ];
 
     return (
         <AdminLayout>
-            <div className="max-w-5xl mx-auto space-y-3 md:space-y-6 pb-8">
-                {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                        <button
-                            onClick={() => navigate('/admin/jobs')}
-                            className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
-                        >
-                            <ChevronLeft size={20} />
-                        </button>
-                        <div>
-                            <h1 className="text-2xl font-bold text-gray-900">Application Details</h1>
-                            <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                                <span>ID: {application.id}</span>
-                                <span>•</span>
-                                <span className="flex items-center gap-1">
-                                    <Calendar size={14} />
-                                    Applied {new Date(application.appliedDate).toLocaleDateString()}
-                                </span>
+            <div className="max-w-6xl mx-auto pb-12">
+                {/* Navigation Header */}
+                <div className="mb-8">
+                    <button
+                        onClick={() => navigate('/admin/jobs')}
+                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 font-medium mb-6 transition-colors"
+                    >
+                        <ChevronLeft size={20} />
+                        Back to Applications
+                    </button>
+                </div>
+
+                {/* Hero Section - Applicant Card */}
+                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 mb-8 overflow-hidden">
+                    <div className="p-8 bg-gradient-to-r from-[#004fa2]/5 to-transparent">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                            {/* Applicant Info */}
+                            <div className="flex items-start gap-6">
+                                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#004fa2] to-[#0066cc] flex items-center justify-center text-white text-4xl font-bold shadow-lg flex-shrink-0">
+                                    {application.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                                </div>
+                                <div className="flex-1">
+                                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{application.fullName}</h1>
+                                    <div className="space-y-2">
+                                        <div className="flex items-center gap-2 text-gray-600">
+                                            <Briefcase size={16} className="text-gray-400" />
+                                            <span className="text-sm">{application.jobTitle}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-gray-600">
+                                            <Calendar size={16} className="text-gray-400" />
+                                            <span className="text-sm">Applied {formatDate(application.appliedDate)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Status & Actions */}
+                            <div className="space-y-4">
+                                <div>
+                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Status</p>
+                                    <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border font-semibold text-sm ${getStatusColor(application.status)}`}>
+                                        {getStatusIcon(application.status)}
+                                        {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
+                                    </div>
+                                </div>
+                                {application.status === 'pending' && (
+                                    <div className="flex gap-3">
+                                        <button
+                                            onClick={handleReject}
+                                            className="px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 transition-colors font-semibold text-sm flex items-center gap-2"
+                                        >
+                                            <XCircle size={16} />
+                                            Reject
+                                        </button>
+                                        <button
+                                            onClick={handleApprove}
+                                            className="px-6 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-semibold text-sm flex items-center gap-2 shadow-sm"
+                                        >
+                                            <CheckCircle size={16} />
+                                            Approve
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
-                    </div>
 
-                    <div className="flex items-center gap-3">
-                        {application.status === 'pending' && (
-                            <>
-                                <button
-                                    onClick={handleReject}
-                                    className="px-4 py-2.5 bg-white border border-red-200 text-red-600 rounded-xl hover:bg-red-50 transition-colors font-medium flex items-center gap-2"
-                                >
-                                    <XCircle size={18} />
-                                    Reject
-                                </button>
-                                <button
-                                    onClick={handleApprove}
-                                    className="px-4 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors font-medium flex items-center gap-2 shadow-sm"
-                                >
-                                    <CheckCircle size={18} />
-                                    Approve
-                                </button>
-                            </>
-                        )}
-                        {application.status !== 'pending' && (
-                            <span className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 ${getStatusColor(application.status)}`}>
-                                {application.status === 'approved' ? <CheckCircle size={18} /> : <XCircle size={18} />}
-                                {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
-                            </span>
-                        )}
+                        {/* Quick Contact Info */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-8 border-t border-gray-200">
+                            <div>
+                                <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Email</p>
+                                <a href={`mailto:${application.emailAddress}`} className="text-sm font-medium text-[#004fa2] hover:underline truncate">
+                                    {application.emailAddress}
+                                </a>
+                            </div>
+                            <div>
+                                <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Phone</p>
+                                <a href={`tel:${application.phoneNumber}`} className="text-sm font-medium text-gray-900">
+                                    {application.phoneNumber}
+                                </a>
+                            </div>
+                            <div>
+                                <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Location</p>
+                                <p className="text-sm font-medium text-gray-900">{application.currentLocation}</p>
+                            </div>
+                            <div>
+                                <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Application ID</p>
+                                <p className="text-sm font-medium text-gray-700 font-mono">{application.id}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Tab Navigation */}
+                <div className="flex gap-1 mb-8 border-b border-gray-200 overflow-x-auto">
+                    {tabs.map(tab => {
+                        const Icon = tab.icon;
+                        const isActive = activeTab === tab.id;
+                        return (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`flex items-center gap-2 px-4 py-4 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
+                                    isActive
+                                        ? 'border-[#004fa2] text-[#004fa2]'
+                                        : 'border-transparent text-gray-600 hover:text-gray-900'
+                                }`}
+                            >
+                                <Icon size={18} />
+                                {tab.label}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Tab Content */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-6">
-                        {/* Applicant Profile Card */}
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                            <div className="flex items-start justify-between mb-6">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-16 h-16 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-md">
-                                        {application.fullName.split(' ').map(n => n[0]).join('')}
-                                    </div>
-                                    <div>
-                                        <h2 className="text-xl font-bold text-gray-900">{application.fullName}</h2>
-                                        <p className="text-sm text-gray-500">{application.educationLevel}</p>
-                                    </div>
+                        {/* OVERVIEW TAB */}
+                        {activeTab === 'overview' && (
+                            <div className="space-y-6">
+                                {/* Motivation Statement */}
+                                <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                                    <h2 className="text-lg font-bold text-gray-900 mb-4">Motivation Statement</h2>
+                                    <p className="text-gray-700 leading-relaxed text-base">
+                                        {application.motivationStatement}
+                                    </p>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-xs text-gray-400 mb-1">Applying for</p>
-                                    <p className="text-sm font-bold text-[#004fa2]">{application.jobTitle}</p>
-                                </div>
-                            </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6 border-t border-gray-100">
-                                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center text-gray-400 shadow-sm">
-                                        <Mail size={20} />
+                                {/* How They Found Us */}
+                                <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                                    <h2 className="text-lg font-bold text-gray-900 mb-6">How They Found Us</h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {application.howDidYouKnowZyra && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 font-semibold uppercase mb-3">Source - ZyraTech</p>
+                                                <p className="text-gray-700">{application.howDidYouKnowZyra}</p>
+                                            </div>
+                                        )}
+                                        {application.howDidYouKnowJob && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 font-semibold uppercase mb-3">Source - Position</p>
+                                                <p className="text-gray-700">{application.howDidYouKnowJob}</p>
+                                            </div>
+                                        )}
                                     </div>
-                                    <div>
-                                        <p className="text-xs text-gray-500">Email Address</p>
-                                        <p className="text-sm font-semibold text-gray-900">{application.emailAddress}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center text-gray-400 shadow-sm">
-                                        <Phone size={20} />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-500">Phone Number</p>
-                                        <p className="text-sm font-semibold text-gray-900">{application.phoneNumber}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center text-gray-400 shadow-sm">
-                                        <MapPin size={20} />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-500">Location</p>
-                                        <p className="text-sm font-semibold text-gray-900">{application.currentLocation}, {application.country}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                                    <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center text-gray-400 shadow-sm">
-                                        <Briefcase size={20} />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-500">Education Level</p>
-                                        <p className="text-sm font-semibold text-gray-900">{application.educationLevel}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Motivation Statement */}
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <FileText size={20} className="text-[#004fa2]" />
-                                Motivation Statement
-                            </h3>
-                            <div className="prose prose-sm max-w-none text-gray-600 bg-gray-50 p-6 rounded-xl border border-gray-100">
-                                {application.motivationStatement}
-                            </div>
-                        </div>
-
-                        {/* Relevant Experience */}
-                        {application.relevantExperience && (
-                            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                    <Briefcase size={20} className="text-[#004fa2]" />
-                                    Experience & Background
-                                </h3>
-                                <div className="space-y-4">
-                                    <div className="text-gray-600 bg-blue-50/50 p-6 rounded-xl border border-blue-100">
-                                        <p className="font-semibold mb-2">Work Experience:</p>
-                                        <p>{application.workExperience} months</p>
-                                    </div>
-                                    {application.residence && (
-                                        <div className="text-gray-600 bg-blue-50/50 p-6 rounded-xl border border-blue-100">
-                                            <p className="font-semibold mb-2">Residence:</p>
-                                            <p>{application.residence}</p>
-                                        </div>
-                                    )}
-                                    {application.currentSalary && (
-                                        <div className="text-gray-600 bg-blue-50/50 p-6 rounded-xl border border-blue-100">
-                                            <p className="font-semibold mb-2">Current Salary:</p>
-                                            <p>{application.currentSalary}</p>
-                                        </div>
-                                    )}
-                                    {application.title && (
-                                        <div className="text-gray-600 bg-blue-50/50 p-6 rounded-xl border border-blue-100">
-                                            <p className="font-semibold mb-2">Current/Desired Title:</p>
-                                            <p>{application.title}</p>
-                                        </div>
-                                    )}
                                 </div>
                             </div>
                         )}
 
-                        {/* How They Heard About Us */}
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4">How They Found Us</h3>
-                            <div className="space-y-4">
-                                {application.howDidYouKnowZyra && (
-                                    <div className="text-gray-600 bg-amber-50/50 p-4 rounded-xl border border-amber-100">
-                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">How They Heard About ZyraTech</p>
-                                        <p className="text-sm">{application.howDidYouKnowZyra}</p>
+                        {/* EXPERIENCE TAB */}
+                        {activeTab === 'experience' && (
+                            <div className="space-y-6">
+                                <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                                    <h2 className="text-lg font-bold text-gray-900 mb-6">Work Experience & Qualifications</h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Experience</p>
+                                            <p className="text-2xl font-bold text-gray-900">{application.workExperience} <span className="text-sm text-gray-500 font-normal">months</span></p>
+                                        </div>
+                                        {application.title && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Current/Desired Title</p>
+                                                <p className="text-lg font-semibold text-gray-900">{application.title}</p>
+                                            </div>
+                                        )}
+                                        {application.residence && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Residence</p>
+                                                <p className="text-gray-700">{application.residence}</p>
+                                            </div>
+                                        )}
+                                        {application.currentSalary && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Current Salary</p>
+                                                <p className="text-gray-700">{application.currentSalary}</p>
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                                {application.howDidYouKnowJob && (
-                                    <div className="text-gray-600 bg-amber-50/50 p-4 rounded-xl border border-amber-100">
-                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">How They Heard About This Job</p>
-                                        <p className="text-sm">{application.howDidYouKnowJob}</p>
-                                    </div>
-                                )}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
-                        {/* Additional Information */}
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4">Additional Information</h3>
-                            <div className="space-y-4">
-                                {application.legalAuthorization && (
-                                    <div className="text-gray-600 bg-green-50/50 p-4 rounded-xl border border-green-100">
-                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">Legal Authorization</p>
-                                        <p className="text-sm capitalize font-medium text-green-700">{application.legalAuthorization}</p>
+                        {/* BACKGROUND TAB */}
+                        {activeTab === 'background' && (
+                            <div className="space-y-6">
+                                <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                                    <h2 className="text-lg font-bold text-gray-900 mb-6">Background Information</h2>
+                                    <div className="space-y-6">
+                                        {/* Legal Authorization */}
+                                        <div className="pb-6 border-b border-gray-200">
+                                            <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Legal Work Authorization</p>
+                                            <div className="flex items-center gap-2">
+                                                <Shield size={16} className={application.legalAuthorization === 'Yes' ? 'text-green-600' : 'text-gray-400'} />
+                                                <p className="text-gray-900 font-medium">{application.legalAuthorization}</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Background Check */}
+                                        {application.backgroundCheck && (
+                                            <div className="pb-6 border-b border-gray-200">
+                                                <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Background Check</p>
+                                                <p className="text-gray-900 font-medium capitalize">{application.backgroundCheck}</p>
+                                            </div>
+                                        )}
+
+                                        {/* Criminal Charges */}
+                                        {application.criminalCharges && (
+                                            <div className="pb-6 border-b border-gray-200">
+                                                <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Criminal Charges</p>
+                                                <p className="text-gray-900 font-medium capitalize">{application.criminalCharges}</p>
+                                            </div>
+                                        )}
+
+                                        {/* Disability */}
+                                        {application.disability && application.disability !== 'None' && (
+                                            <div className="pb-6 border-b border-gray-200">
+                                                <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Disability Information</p>
+                                                <p className="text-gray-900 font-medium">{application.disability}</p>
+                                            </div>
+                                        )}
+
+                                        {/* Certifications */}
+                                        <div className="pb-6 border-b border-gray-200">
+                                            <p className="text-xs text-gray-500 font-semibold uppercase mb-3">Certifications</p>
+                                            <div className="space-y-2">
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`w-3 h-3 rounded-full ${application.certifyTruth ? 'bg-green-600' : 'bg-gray-300'}`}></div>
+                                                    <span className="text-sm text-gray-700">Certifies truth of application</span>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`w-3 h-3 rounded-full ${application.agreePrivacy ? 'bg-green-600' : 'bg-gray-300'}`}></div>
+                                                    <span className="text-sm text-gray-700">Agrees to privacy policy</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* References */}
+                                        {application.references && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 font-semibold uppercase mb-3">References</p>
+                                                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                                    <p className="text-sm text-gray-700 whitespace-pre-wrap font-mono text-xs">{application.references}</p>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                                {application.disability && application.disability !== 'None' && (
-                                    <div className="text-gray-600 bg-purple-50/50 p-4 rounded-xl border border-purple-100">
-                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">Disability Information</p>
-                                        <p className="text-sm">{application.disability}</p>
-                                    </div>
-                                )}
-                                {application.backgroundCheck && (
-                                    <div className="text-gray-600 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
-                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">Background Check</p>
-                                        <p className="text-sm capitalize">{application.backgroundCheck}</p>
-                                    </div>
-                                )}
-                                {application.criminalCharges && (
-                                    <div className="text-gray-600 bg-red-50/50 p-4 rounded-xl border border-red-100">
-                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">Criminal Charges</p>
-                                        <p className="text-sm capitalize">{application.criminalCharges}</p>
-                                    </div>
-                                )}
-                                {application.references && (
-                                    <div className="text-gray-600 bg-teal-50/50 p-4 rounded-xl border border-teal-100">
-                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">References</p>
-                                        <p className="text-sm whitespace-pre-wrap">{application.references}</p>
-                                    </div>
-                                )}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
-                        {/* Rejection Reason (if applicable) */}
-                        {application.status === 'rejected' && application.rejectionReason && (
-                            <div className="bg-red-50 rounded-2xl p-6 border border-red-100">
-                                <h3 className="text-lg font-bold text-red-800 mb-2">Rejection Reason</h3>
-                                <p className="text-red-700">{application.rejectionReason}</p>
+                        {/* DOCUMENTS TAB */}
+                        {activeTab === 'documents' && (
+                            <div className="space-y-6">
+                                <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                                    <h2 className="text-lg font-bold text-gray-900 mb-6">Application Documents</h2>
+                                    
+                                    {/* Resume */}
+                                    <div className="mb-6 pb-6 border-b border-gray-200">
+                                        <div className="flex items-center justify-between mb-3">
+                                            <p className="text-sm font-semibold text-gray-900">Resume/CV</p>
+                                            <span className="text-xs text-gray-500">PDF</span>
+                                        </div>
+                                        <button
+                                            onClick={handleDownloadCV}
+                                            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-semibold text-sm"
+                                        >
+                                            <Download size={18} />
+                                            Download Resume
+                                        </button>
+                                    </div>
+
+                                    {/* Social Profiles */}
+                                    <div>
+                                        <p className="text-sm font-semibold text-gray-900 mb-4">Social & Professional Profiles</p>
+                                        <div className="space-y-3">
+                                            {application.linkedinUrl && (
+                                                <a
+                                                    href={application.linkedinUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center justify-between p-4 bg-gray-50 hover:bg-blue-50 rounded-lg border border-gray-200 transition-colors group"
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <Linkedin size={20} className="text-blue-600" />
+                                                        <span className="font-medium text-gray-900">LinkedIn Profile</span>
+                                                    </div>
+                                                    <ExternalLink size={18} className="text-gray-400 group-hover:text-blue-600" />
+                                                </a>
+                                            )}
+                                            {application.githubUrl && (
+                                                <a
+                                                    href={application.githubUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors group"
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <Github size={20} className="text-gray-900" />
+                                                        <span className="font-medium text-gray-900">GitHub Profile</span>
+                                                    </div>
+                                                    <ExternalLink size={18} className="text-gray-400 group-hover:text-gray-900" />
+                                                </a>
+                                            )}
+                                            {application.portfolioUrl && (
+                                                <a
+                                                    href={application.portfolioUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center justify-between p-4 bg-gray-50 hover:bg-blue-50 rounded-lg border border-gray-200 transition-colors group"
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <Globe size={20} className="text-blue-600" />
+                                                        <span className="font-medium text-gray-900">Portfolio Website</span>
+                                                    </div>
+                                                    <ExternalLink size={18} className="text-gray-400 group-hover:text-blue-600" />
+                                                </a>
+                                            )}
+                                            {application.twitterUrl && (
+                                                <a
+                                                    href={application.twitterUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center justify-between p-4 bg-gray-50 hover:bg-blue-50 rounded-lg border border-gray-200 transition-colors group"
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <Mail size={20} className="text-blue-400" />
+                                                        <span className="font-medium text-gray-900">Twitter/X</span>
+                                                    </div>
+                                                    <ExternalLink size={18} className="text-gray-400 group-hover:text-blue-600" />
+                                                </a>
+                                            )}
+                                            {!application.linkedinUrl && !application.githubUrl && !application.portfolioUrl && !application.twitterUrl && (
+                                                <p className="text-center text-gray-500 py-8">No social profiles provided</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </div>
 
-                    {/* Sidebar */}
+                    {/* Sidebar - Quick Info */}
                     <div className="space-y-6">
-                        {/* Application Status Card */}
+                        {/* Key Metrics Card */}
                         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4">Application Status</h3>
-                            <div className="space-y-4">
+                            <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-6">Quick Facts</h3>
+                            <div className="space-y-5">
                                 <div>
-                                    <p className="text-xs text-gray-500 mb-2">Current Status</p>
-                                    <span className={`inline-block px-4 py-2 rounded-lg text-sm font-bold ${getStatusColor(application.status)}`}>
-                                        {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
-                                    </span>
+                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Application ID</p>
+                                    <p className="text-sm font-mono text-gray-900">{application.id}</p>
                                 </div>
-                                <div className="pt-4 border-t border-gray-100">
-                                    <p className="text-xs text-gray-500 mb-2">Applied Date</p>
-                                    <p className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-                                        <Calendar size={16} className="text-gray-400" />
-                                        {new Date(application.appliedDate).toLocaleDateString('en-GB', {
-                                            day: 'numeric',
-                                            month: 'long',
-                                            year: 'numeric'
-                                        })}
-                                    </p>
+                                <div>
+                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Applied</p>
+                                    <p className="text-sm text-gray-900">{formatDate(application.appliedDate)}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Experience</p>
+                                    <p className="text-sm text-gray-900 font-semibold">{application.workExperience} months</p>
+                                </div>
+                                {application.currentLocation && (
+                                    <div>
+                                        <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Location</p>
+                                        <p className="text-sm text-gray-900">{application.currentLocation}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Application Status */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                            <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">Status</h3>
+                            <div className={`inline-flex items-center gap-2 px-4 py-3 rounded-lg border font-semibold text-sm w-full justify-center ${getStatusColor(application.status)}`}>
+                                {getStatusIcon(application.status)}
+                                {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
+                            </div>
+                        </div>
+
+                        {/* About Section */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                            <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">About</h3>
+                            <div className="space-y-4 text-sm text-gray-700">
+                                <div>
+                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Position</p>
+                                    <p className="font-medium">{application.jobTitle}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Email</p>
+                                    <a href={`mailto:${application.emailAddress}`} className="text-[#004fa2] hover:underline break-all text-xs">
+                                        {application.emailAddress}
+                                    </a>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Phone</p>
+                                    <a href={`tel:${application.phoneNumber}`} className="font-medium">
+                                        {application.phoneNumber}
+                                    </a>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Available Start Date */}
-                        {application.availableStartDate && (
-                            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                                <h3 className="text-lg font-bold text-gray-900 mb-4">Availability</h3>
-                                <p className="text-xs text-gray-500 mb-2">Can Start</p>
-                                <p className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-                                    <Clock size={16} className="text-gray-400" />
-                                    {new Date(application.availableStartDate).toLocaleDateString('en-GB', {
-                                        day: 'numeric',
-                                        month: 'long',
-                                        year: 'numeric'
-                                    })}
-                                </p>
-                            </div>
-                        )}
-
-                        {/* CV & Documents */}
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4">Documents</h3>
-                            <button
-                                onClick={handleDownloadCV}
-                                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#004fa2] text-white rounded-xl hover:bg-[#003d7a] transition-colors font-medium"
-                            >
-                                <Download size={18} />
-                                Download CV
-                            </button>
-                            <p className="text-xs text-gray-500 mt-2 text-center">{application.cvFileName}</p>
-                        </div>
-
-                        {/* Social Links */}
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4">Social Profiles</h3>
-                            <div className="space-y-3">
-                                {application.linkedinUrl && (
-                                    <a
-                                        href={application.linkedinUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-3 p-3 bg-gray-50 hover:bg-blue-50 rounded-xl transition-colors group"
-                                    >
-                                        <Linkedin size={20} className="text-gray-400 group-hover:text-blue-600" />
-                                        <div className="flex-1 min-w-0">
-                                            <p className="text-xs text-gray-500">LinkedIn</p>
-                                            <p className="text-sm font-medium text-gray-900 truncate">View Profile</p>
-                                        </div>
-                                        <ExternalLink size={16} className="text-gray-400 group-hover:text-blue-600 flex-shrink-0" />
-                                    </a>
-                                )}
-                                {application.portfolioUrl && (
-                                    <a
-                                        href={application.portfolioUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-3 p-3 bg-gray-50 hover:bg-blue-50 rounded-xl transition-colors group"
-                                    >
-                                        <Briefcase size={20} className="text-gray-400 group-hover:text-blue-600" />
-                                        <div className="flex-1 min-w-0">
-                                            <p className="text-xs text-gray-500">Portfolio</p>
-                                            <p className="text-sm font-medium text-gray-900 truncate">View Portfolio</p>
-                                        </div>
-                                        <ExternalLink size={16} className="text-gray-400 group-hover:text-blue-600 flex-shrink-0" />
-                                    </a>
-                                )}
-                                {application.githubUrl && (
-                                    <a
-                                        href={application.githubUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-900/5 rounded-xl transition-colors group"
-                                    >
-                                        <Github size={20} className="text-gray-400 group-hover:text-gray-900" />
-                                        <div className="flex-1 min-w-0">
-                                            <p className="text-xs text-gray-500">GitHub</p>
-                                            <p className="text-sm font-medium text-gray-900 truncate">View Repos</p>
-                                        </div>
-                                        <ExternalLink size={16} className="text-gray-400 group-hover:text-gray-900 flex-shrink-0" />
-                                    </a>
-                                )}
-                                {application.facebookUrl && (
-                                    <a
-                                        href={application.facebookUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-3 p-3 bg-gray-50 hover:bg-blue-50 rounded-xl transition-colors group"
-                                    >
-                                        <Mail size={20} className="text-gray-400 group-hover:text-blue-600" />
-                                        <div className="flex-1 min-w-0">
-                                            <p className="text-xs text-gray-500">Facebook</p>
-                                            <p className="text-sm font-medium text-gray-900 truncate">View Profile</p>
-                                        </div>
-                                        <ExternalLink size={16} className="text-gray-400 group-hover:text-blue-600 flex-shrink-0" />
-                                    </a>
-                                )}
-                                {application.twitterUrl && (
-                                    <a
-                                        href={application.twitterUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-3 p-3 bg-gray-50 hover:bg-blue-50 rounded-xl transition-colors group"
-                                    >
-                                        <Mail size={20} className="text-gray-400 group-hover:text-blue-600" />
-                                        <div className="flex-1 min-w-0">
-                                            <p className="text-xs text-gray-500">Twitter/X</p>
-                                            <p className="text-sm font-medium text-gray-900 truncate">View Profile</p>
-                                        </div>
-                                        <ExternalLink size={16} className="text-gray-400 group-hover:text-blue-600 flex-shrink-0" />
-                                    </a>
-                                )}
-                                {!application.linkedinUrl && !application.portfolioUrl && !application.githubUrl && !application.facebookUrl && !application.twitterUrl && (
-                                    <p className="text-sm text-gray-500 text-center py-4">No social profiles provided</p>
-                                )}
+                        {/* Compliance */}
+                        <div className="bg-green-50 rounded-2xl p-6 border border-green-200">
+                            <h3 className="text-sm font-bold text-green-900 uppercase tracking-wide mb-4 flex items-center gap-2">
+                                <CheckCircle size={16} />
+                                Compliance
+                            </h3>
+                            <div className="space-y-3 text-xs">
+                                <div className="flex items-start gap-2">
+                                    <div className="w-3 h-3 rounded-full bg-green-600 flex-shrink-0 mt-1"></div>
+                                    <span className="text-green-900">Information certified</span>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                    <div className="w-3 h-3 rounded-full bg-green-600 flex-shrink-0 mt-1"></div>
+                                    <span className="text-green-900">Privacy agreement signed</span>
+                                </div>
                             </div>
                         </div>
                     </div>
