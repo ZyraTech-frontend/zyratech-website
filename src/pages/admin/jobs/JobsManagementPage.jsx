@@ -80,7 +80,8 @@ const JobsManagementPage = () => {
     // State management
     const [jobs, setJobs] = useState([]);
     const [applications, setApplications] = useState([]);
-    const [applicationCounts, setApplicationCounts] = useState({}); // NEW: Store app counts per job
+    const [applicationCounts, setApplicationCounts] = useState({}); // Store app counts per job
+    const [countsLoading, setCountsLoading] = useState(true); // Track if counts are loading
     const [loading, setLoading] = useState(true);
     const [appsLoading, setAppsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -123,28 +124,46 @@ const JobsManagementPage = () => {
     useEffect(() => {
       let isMounted = true;
       const loadApplicationCounts = async () => {
-        if (jobs.length === 0) return;
+        if (jobs.length === 0) {
+          setCountsLoading(false);
+          return;
+        }
         
         try {
+          setCountsLoading(true);
           const counts = {};
+          console.log('🔄 Starting to fetch application counts for', jobs.length, 'jobs');
           
-          // Fetch applications count for each job
-          for (const job of jobs) {
+          // Fetch applications count for each job - do it in parallel
+          const countPromises = jobs.map(async (job) => {
             try {
+              console.log(`Fetching applications for job ${job.id}...`);
               const jobApps = await jobsService.getJobApplications(job.id);
-              counts[job.id] = Array.isArray(jobApps) ? jobApps.length : 0;
+              const count = Array.isArray(jobApps) ? jobApps.length : 0;
+              console.log(`✅ Job ${job.id} (${job.title}): ${count} applications`);
+              counts[job.id] = count;
             } catch (err) {
               console.error(`Failed to fetch applications count for job ${job.id}:`, err);
               counts[job.id] = 0;
             }
-          }
+          });
+          
+          // Wait for all to complete
+          await Promise.all(countPromises);
           
           if (isMounted) {
             setApplicationCounts(counts);
-            console.log('✅ Application counts loaded:', counts);
+            console.log('✅ All application counts loaded:', counts);
           }
         } catch (err) {
           console.error('Failed to fetch application counts:', err);
+          if (isMounted) {
+            setApplicationCounts({});
+          }
+        } finally {
+          if (isMounted) {
+            setCountsLoading(false);
+          }
         }
       };
 
@@ -517,7 +536,11 @@ const JobsManagementPage = () => {
                                             <div className="flex items-center gap-2 shrink-0">
                                                 <span className="flex items-center gap-0.5 px-1.5 py-0.5 bg-purple-50 text-purple-700 rounded" title="Applications">
                                                     <Users size={10} className="text-purple-600"/>
-                                                    {applicationCounts[job.id] ?? 0}
+                                                    {countsLoading ? (
+                                                        <span className="animate-pulse">-</span>
+                                                    ) : (
+                                                        applicationCounts[job.id] ?? 0
+                                                    )}
                                                 </span>
                                                 <span className="flex items-center gap-0.5"><FileText size={10} className="text-gray-400"/> {job.responsibilities?.length || 0}</span>
                                                 <span className="flex items-center gap-0.5"><CheckCircle size={10} className="text-gray-400"/> {job.qualifications?.length || 0}</span>
