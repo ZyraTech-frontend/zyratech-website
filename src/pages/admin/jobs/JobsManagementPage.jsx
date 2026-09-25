@@ -137,26 +137,30 @@ const JobsManagementPage = () => {
           // Fetch applications count for each job - do it in parallel
           const countPromises = jobs.map(async (job) => {
             try {
-              console.log(`Fetching applications for job ${job.id}...`);
+              console.log(`📋 Fetching applications for job ${job.id} (${job.title})...`);
               const jobApps = await jobsService.getJobApplications(job.id);
+              console.log(`Response for job ${job.id}:`, jobApps);
               const count = Array.isArray(jobApps) ? jobApps.length : 0;
               console.log(`✅ Job ${job.id} (${job.title}): ${count} applications`);
               counts[job.id] = count;
+              return count;
             } catch (err) {
-              console.error(`Failed to fetch applications count for job ${job.id}:`, err);
+              console.error(`❌ Failed to fetch applications count for job ${job.id}:`, err);
               counts[job.id] = 0;
+              return 0;
             }
           });
           
           // Wait for all to complete
-          await Promise.all(countPromises);
+          const results = await Promise.all(countPromises);
+          console.log('🔄 Fetch results:', results);
           
           if (isMounted) {
             setApplicationCounts(counts);
-            console.log('✅ All application counts loaded:', counts);
+            console.log('✅ Final application counts:', counts);
           }
         } catch (err) {
-          console.error('Failed to fetch application counts:', err);
+          console.error('❌ Failed to fetch application counts:', err);
           if (isMounted) {
             setApplicationCounts({});
           }
