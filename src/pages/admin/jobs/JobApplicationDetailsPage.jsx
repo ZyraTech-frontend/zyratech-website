@@ -59,7 +59,7 @@ const JobApplicationDetailsPage = () => {
                         currentLocation: data.city,
                         educationLevel: 'Not specified',
                         status: data.status || 'pending',
-                        appliedDate: data.createdAt || new Date().toISOString(),
+                        appliedDate: data.submittedAt || data.createdAt || new Date().toISOString(),
                         cvFileName: 'Resume.pdf',
                         motivationStatement: data.message || 'No message provided',
                         linkedinUrl: data.linkedin || null,
@@ -80,15 +80,13 @@ const JobApplicationDetailsPage = () => {
                         backgroundCheck: data.backgroundCheck,
                         criminalCharges: data.criminalCharges,
                         references: data.references,
-                        resumeUrl: data.resume,
-                        additionalAttachments: data.additionalAttachments || data.additionalFiles || data.additional_attachments || data.additionalDocuments || null,
+                        resumeUrl: data.resumeUrl,
+                        additionalAttachments: data.additionalDocumentUrl || null,
                         ...data
                     };
                     
                     setApplication(mappedApp);
                     console.log('✅ Application loaded:', mappedApp);
-                    console.log('📎 Additional Attachments:', mappedApp.additionalAttachments);
-                    console.log('📋 Full backend data keys:', Object.keys(data));
                 }
             } catch (err) {
                 console.error('Failed to fetch application:', err);
