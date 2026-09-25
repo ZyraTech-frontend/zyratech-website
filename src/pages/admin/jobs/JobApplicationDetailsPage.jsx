@@ -441,9 +441,71 @@ const JobApplicationDetailsPage = () => {
                                             <p>{application.currentSalary}</p>
                                         </div>
                                     )}
+                                    {application.title && (
+                                        <div className="text-gray-600 bg-blue-50/50 p-6 rounded-xl border border-blue-100">
+                                            <p className="font-semibold mb-2">Current/Desired Title:</p>
+                                            <p>{application.title}</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         )}
+
+                        {/* How They Heard About Us */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                            <h3 className="text-lg font-bold text-gray-900 mb-4">How They Found Us</h3>
+                            <div className="space-y-4">
+                                {application.howDidYouKnowZyra && (
+                                    <div className="text-gray-600 bg-amber-50/50 p-4 rounded-xl border border-amber-100">
+                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">How They Heard About ZyraTech</p>
+                                        <p className="text-sm">{application.howDidYouKnowZyra}</p>
+                                    </div>
+                                )}
+                                {application.howDidYouKnowJob && (
+                                    <div className="text-gray-600 bg-amber-50/50 p-4 rounded-xl border border-amber-100">
+                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">How They Heard About This Job</p>
+                                        <p className="text-sm">{application.howDidYouKnowJob}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Additional Information */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                            <h3 className="text-lg font-bold text-gray-900 mb-4">Additional Information</h3>
+                            <div className="space-y-4">
+                                {application.legalAuthorization && (
+                                    <div className="text-gray-600 bg-green-50/50 p-4 rounded-xl border border-green-100">
+                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">Legal Authorization</p>
+                                        <p className="text-sm capitalize font-medium text-green-700">{application.legalAuthorization}</p>
+                                    </div>
+                                )}
+                                {application.disability && application.disability !== 'None' && (
+                                    <div className="text-gray-600 bg-purple-50/50 p-4 rounded-xl border border-purple-100">
+                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">Disability Information</p>
+                                        <p className="text-sm">{application.disability}</p>
+                                    </div>
+                                )}
+                                {application.backgroundCheck && (
+                                    <div className="text-gray-600 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
+                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">Background Check</p>
+                                        <p className="text-sm capitalize">{application.backgroundCheck}</p>
+                                    </div>
+                                )}
+                                {application.criminalCharges && (
+                                    <div className="text-gray-600 bg-red-50/50 p-4 rounded-xl border border-red-100">
+                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">Criminal Charges</p>
+                                        <p className="text-sm capitalize">{application.criminalCharges}</p>
+                                    </div>
+                                )}
+                                {application.references && (
+                                    <div className="text-gray-600 bg-teal-50/50 p-4 rounded-xl border border-teal-100">
+                                        <p className="font-semibold mb-1 text-xs text-gray-500 uppercase">References</p>
+                                        <p className="text-sm whitespace-pre-wrap">{application.references}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
 
                         {/* Rejection Reason (if applicable) */}
                         {application.status === 'rejected' && application.rejectionReason && (
