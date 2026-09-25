@@ -487,7 +487,7 @@ const JobApplicationDetailsPage = () => {
                                     <div className="mb-6 pb-6 border-b border-gray-200">
                                         <div className="flex items-center justify-between mb-3">
                                             <p className="text-sm font-semibold text-gray-900">Resume/CV</p>
-                                            <span className="text-xs text-gray-500">PDF</span>
+                                            <span className="text-xs text-gray-500">Primary Document</span>
                                         </div>
                                         <button
                                             onClick={handleDownloadCV}
@@ -497,6 +497,25 @@ const JobApplicationDetailsPage = () => {
                                             Download Resume
                                         </button>
                                     </div>
+
+                                    {/* Additional Attachments */}
+                                    {application.additionalAttachments && (
+                                        <div className="mb-6 pb-6 border-b border-gray-200">
+                                            <div className="flex items-center justify-between mb-3">
+                                                <p className="text-sm font-semibold text-gray-900">Additional Documents</p>
+                                                <span className="text-xs text-gray-500">Supplementary</span>
+                                            </div>
+                                            <a
+                                                href={application.additionalAttachments}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors font-semibold text-sm border border-gray-300"
+                                            >
+                                                <Download size={18} />
+                                                Download Additional Document
+                                            </a>
+                                        </div>
+                                    )}
 
                                     {/* Social Profiles */}
                                     <div>
