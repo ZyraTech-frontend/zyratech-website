@@ -502,7 +502,7 @@ const JobApplicationDetailsPage = () => {
                                     </div>
 
                                     {/* Additional Attachments */}
-                                    {application.additionalAttachments && (
+                                    {application.additionalAttachments ? (
                                         <div className="mb-6 pb-6 border-b border-gray-200">
                                             <div className="flex items-center justify-between mb-3">
                                                 <p className="text-sm font-semibold text-gray-900">Additional Documents</p>
@@ -517,6 +517,11 @@ const JobApplicationDetailsPage = () => {
                                                 <Download size={18} />
                                                 Download Additional Document
                                             </a>
+                                        </div>
+                                    ) : (
+                                        <div className="mb-6 pb-6 border-b border-gray-200">
+                                            <p className="text-sm font-semibold text-gray-900 mb-2">Additional Documents</p>
+                                            <p className="text-xs text-gray-500 italic">No additional documents provided</p>
                                         </div>
                                     )}
 
