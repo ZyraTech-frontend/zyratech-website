@@ -177,7 +177,7 @@ const JobsManagementPage = () => {
       return () => { isMounted = false; };
     }, [jobs]);
 
-    // Fetch applications from backend API - Load immediately on page load, not just when tab is clicked
+    // Fetch applications from backend API - Load immediately on page load in PARALLEL for speed
     useEffect(() => {
       let isMounted = true;
       const loadApplications = async () => {
@@ -185,30 +185,34 @@ const JobsManagementPage = () => {
         
         try {
           setAppsLoading(true);
-          const allApplications = [];
           
-          // Fetch applications for all jobs
-          for (const job of jobs) {
-            try {
-              const jobApps = await jobsService.getJobApplications(job.id);
-              if (Array.isArray(jobApps)) {
-                // Map backend data to match table expectations
-                const mappedApps = jobApps.map(app => ({
-                  id: app.id,
-                  jobId: job.id,
-                  name: `${app.firstName} ${app.lastName}`,
-                  email: app.email,
-                  status: app.status || 'pending',
-                  appliedAt: app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A',
-                  phone: app.phoneNumber,
-                  ...app // Include all original fields for details view
-                }));
-                allApplications.push(...mappedApps);
-              }
-            } catch (err) {
-              console.error(`Failed to fetch applications for job ${job.id}:`, err);
-            }
-          }
+          // Fetch ALL applications in parallel at same time
+          const appPromises = jobs.map(job => 
+            jobsService.getJobApplications(job.id)
+              .then(jobApps => {
+                if (Array.isArray(jobApps)) {
+                  return jobApps.map(app => ({
+                    id: app.id,
+                    jobId: job.id,
+                    name: `${app.firstName} ${app.lastName}`,
+                    email: app.email,
+                    status: app.status || 'pending',
+                    appliedAt: app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A',
+                    phone: app.phoneNumber,
+                    ...app
+                  }));
+                }
+                return [];
+              })
+              .catch(err => {
+                console.error(`Failed to fetch applications for job ${job.id}:`, err);
+                return [];
+              })
+          );
+          
+          // Wait for all to complete at once
+          const allAppArrays = await Promise.all(appPromises);
+          const allApplications = allAppArrays.flat();
           
           if (isMounted) {
             // Sort by appliedAt (newest first)
