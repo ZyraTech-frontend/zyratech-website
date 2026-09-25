@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
+import jobsService from '../../../services/jobsService';
 import {
     ChevronLeft,
     Mail,
@@ -18,10 +19,11 @@ import {
     CheckCircle,
     Calendar,
     Clock,
-    AlertCircle
+    AlertCircle,
+    Loader
 } from 'lucide-react';
 
-// Mock Applications Data
+// Mock Applications Data (fallback only)
 const MOCK_JOB_APPLICATIONS = [
     {
         id: '1',
@@ -120,19 +122,95 @@ const JobApplicationDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [application, setApplication] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // In real app, fetch from API
-    const application = MOCK_JOB_APPLICATIONS.find(app => app.id === id);
+    // Fetch application data from backend API
+    useEffect(() => {
+        let isMounted = true;
 
-    if (!application) {
+        const loadApplication = async () => {
+            try {
+                setError(null);
+                console.log('Fetching application details for ID:', id);
+                
+                const data = await jobsService.getApplication(id);
+                
+                if (isMounted) {
+                    // Map backend data to expected format
+                    const mappedApp = {
+                        id: data.id,
+                        jobId: data.jobId,
+                        jobTitle: data.jobTitle || 'Position',
+                        fullName: `${data.firstName} ${data.lastName}`,
+                        emailAddress: data.email,
+                        phoneNumber: data.phoneNumber,
+                        country: 'Ghana', // From backend if available
+                        currentLocation: data.city,
+                        educationLevel: 'Not specified', // From backend if available
+                        status: data.status || 'pending',
+                        appliedDate: data.createdAt || new Date().toISOString(),
+                        cvFileName: 'Resume.pdf', // From backend if available
+                        motivationStatement: data.message || 'No message provided',
+                        relevantExperience: `Work Experience: ${data.workExperience} months`,
+                        // Optional fields
+                        linkedinUrl: data.linkedin || null,
+                        facebookUrl: data.facebook || null,
+                        twitterUrl: data.twitter || null,
+                        portfolioUrl: data.website || null,
+                        githubUrl: data.github || null,
+                        // Additional fields from backend
+                        workExperience: data.workExperience,
+                        residence: data.residence,
+                        currentSalary: data.currentSalary,
+                        legalAuthorization: data.legalAuthorization,
+                        disability: data.disability,
+                        certifyTruth: data.certifyTruth,
+                        agreePrivacy: data.agreePrivacy,
+                        ...data // Include all original fields
+                    };
+                    
+                    setApplication(mappedApp);
+                    console.log('✅ Application loaded:', mappedApp);
+                }
+            } catch (err) {
+                console.error('Failed to fetch application:', err);
+                if (isMounted) {
+                    setError('Failed to load application details');
+                    setApplication(null);
+                }
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
+        };
+
+        loadApplication();
+        return () => { isMounted = false; };
+    }, [id]);
+
+    if (loading) {
+        return (
+            <AdminLayout>
+                <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                    <Loader size={48} className="text-[#004fa2] animate-spin mb-4" />
+                    <h2 className="text-lg font-semibold text-gray-900">Loading application details...</h2>
+                </div>
+            </AdminLayout>
+        );
+    }
+
+    if (error || !application) {
         return (
             <AdminLayout>
                 <div className="flex flex-col items-center justify-center min-h-[60vh]">
                     <AlertCircle size={48} className="text-red-500 mb-4" />
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">Application Not Found</h2>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">{error || 'Application Not Found'}</h2>
                     <button
                         onClick={() => navigate('/admin/jobs')}
-                        className="text-[#004fa2] hover:underline font-medium"
+                        className="text-[#004fa2] hover:underline font-medium mt-2"
                     >
                         Return to Jobs
                     </button>
@@ -144,10 +222,22 @@ const JobApplicationDetailsPage = () => {
     const handleApprove = () => {
         dispatch(openConfirmDialog({
             title: 'Approve Application',
-            message: `Approve ${application.fullName}'s application for ${application.jobTitle}?`,
-            onConfirm: () => {
-                console.log('Approved', application.id);
-                navigate('/admin/jobs');
+            message: `Approve ${application.fullName}'s application?`,
+            onConfirm: async () => {
+                try {
+                    await jobsService.updateApplicationStatus(application.id, 'hired');
+                    dispatch(addNotification({
+                        type: 'success',
+                        message: 'Application approved successfully'
+                    }));
+                    setApplication(prev => ({ ...prev, status: 'hired' }));
+                } catch (error) {
+                    console.error('Failed to approve application:', error);
+                    dispatch(addNotification({
+                        type: 'error',
+                        message: 'Failed to approve application'
+                    }));
+                }
             }
         }));
     };
@@ -157,15 +247,34 @@ const JobApplicationDetailsPage = () => {
             title: 'Reject Application',
             message: `Are you sure you want to reject ${application.fullName}'s application?`,
             isDangerous: true,
-            onConfirm: () => {
-                console.log('Rejected', application.id);
-                navigate('/admin/jobs');
+            onConfirm: async () => {
+                try {
+                    await jobsService.updateApplicationStatus(application.id, 'rejected');
+                    dispatch(addNotification({
+                        type: 'success',
+                        message: 'Application rejected successfully'
+                    }));
+                    setApplication(prev => ({ ...prev, status: 'rejected' }));
+                } catch (error) {
+                    console.error('Failed to reject application:', error);
+                    dispatch(addNotification({
+                        type: 'error',
+                        message: 'Failed to reject application'
+                    }));
+                }
             }
         }));
     };
 
     const handleDownloadCV = () => {
-        console.log('Downloading CV:', application.cvFileName);
+        if (application.resumeUrl) {
+            window.open(application.resumeUrl, '_blank');
+        } else {
+            dispatch(addNotification({
+                type: 'info',
+                message: 'Resume URL not available'
+            }));
+        }
     };
 
     const getStatusColor = (status) => {
@@ -313,10 +422,25 @@ const JobApplicationDetailsPage = () => {
                             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                                     <Briefcase size={20} className="text-[#004fa2]" />
-                                    Relevant Experience
+                                    Experience & Background
                                 </h3>
-                                <div className="text-gray-600 bg-blue-50/50 p-6 rounded-xl border border-blue-100">
-                                    {application.relevantExperience}
+                                <div className="space-y-4">
+                                    <div className="text-gray-600 bg-blue-50/50 p-6 rounded-xl border border-blue-100">
+                                        <p className="font-semibold mb-2">Work Experience:</p>
+                                        <p>{application.workExperience} months</p>
+                                    </div>
+                                    {application.residence && (
+                                        <div className="text-gray-600 bg-blue-50/50 p-6 rounded-xl border border-blue-100">
+                                            <p className="font-semibold mb-2">Residence:</p>
+                                            <p>{application.residence}</p>
+                                        </div>
+                                    )}
+                                    {application.currentSalary && (
+                                        <div className="text-gray-600 bg-blue-50/50 p-6 rounded-xl border border-blue-100">
+                                            <p className="font-semibold mb-2">Current Salary:</p>
+                                            <p>{application.currentSalary}</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         )}
@@ -433,6 +557,39 @@ const JobApplicationDetailsPage = () => {
                                         </div>
                                         <ExternalLink size={16} className="text-gray-400 group-hover:text-gray-900 flex-shrink-0" />
                                     </a>
+                                )}
+                                {application.facebookUrl && (
+                                    <a
+                                        href={application.facebookUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-3 p-3 bg-gray-50 hover:bg-blue-50 rounded-xl transition-colors group"
+                                    >
+                                        <Mail size={20} className="text-gray-400 group-hover:text-blue-600" />
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-xs text-gray-500">Facebook</p>
+                                            <p className="text-sm font-medium text-gray-900 truncate">View Profile</p>
+                                        </div>
+                                        <ExternalLink size={16} className="text-gray-400 group-hover:text-blue-600 flex-shrink-0" />
+                                    </a>
+                                )}
+                                {application.twitterUrl && (
+                                    <a
+                                        href={application.twitterUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-3 p-3 bg-gray-50 hover:bg-blue-50 rounded-xl transition-colors group"
+                                    >
+                                        <Mail size={20} className="text-gray-400 group-hover:text-blue-600" />
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-xs text-gray-500">Twitter/X</p>
+                                            <p className="text-sm font-medium text-gray-900 truncate">View Profile</p>
+                                        </div>
+                                        <ExternalLink size={16} className="text-gray-400 group-hover:text-blue-600 flex-shrink-0" />
+                                    </a>
+                                )}
+                                {!application.linkedinUrl && !application.portfolioUrl && !application.githubUrl && !application.facebookUrl && !application.twitterUrl && (
+                                    <p className="text-sm text-gray-500 text-center py-4">No social profiles provided</p>
                                 )}
                             </div>
                         </div>
