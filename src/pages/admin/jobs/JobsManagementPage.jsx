@@ -404,8 +404,8 @@ const JobsManagementPage = () => {
                             <Briefcase size={18} className="text-blue-600" />
                         </div>
                         <div>
-                            <h1 className="text-[11px] md:text-base font-bold text-gray-900 leading-tight">Jobs Management</h1>
-                            <p className="text-[10px] text-gray-500">Manage listings and review applications</p>
+                            <h1 className="text-[11px] md:text-base font-bold text-gray-900 leading-tight">Recruitment Hub</h1>
+                            <p className="text-[10px] text-gray-500">Post Jobs • Track Applications • Manage Candidates</p>
                         </div>
                     </div>
                     
@@ -417,7 +417,7 @@ const JobsManagementPage = () => {
                                     activeTab === 'jobs' ? 'bg-white shadow-sm text-blue-700 font-bold' : 'text-gray-500 hover:text-gray-700'
                                 }`}
                             >
-                                <Briefcase size={14} /> Jobs
+                                <Briefcase size={14} /> Job Postings
                                 <span className={`ml-1 px-1.5 py-0.5 rounded text-[9px] ${activeTab === 'jobs' ? 'bg-blue-100 text-blue-700' : 'bg-gray-200'}`}>{stats.total}</span>
                             </button>
                             <button
@@ -426,7 +426,7 @@ const JobsManagementPage = () => {
                                     activeTab === 'applications' ? 'bg-white shadow-sm text-blue-700 font-bold' : 'text-gray-500 hover:text-gray-700'
                                 }`}
                             >
-                                <FileText size={14} /> Applications
+                                <UserCheck size={14} /> Candidate Applications
                                 <span className={`ml-1 px-1.5 py-0.5 rounded text-[9px] ${activeTab === 'applications' ? 'bg-blue-100 text-blue-700' : 'bg-gray-200'}`}>{stats.totalApplications}</span>
                                 {stats.pendingApplications > 0 && <span className="w-1.5 h-1.5 bg-red-500 rounded-full shrink-0"></span>}
                             </button>
@@ -437,7 +437,7 @@ const JobsManagementPage = () => {
                             className="bg-[#004fa2] hover:bg-blue-800 text-white font-semibold py-1.5 px-3 rounded-lg flex items-center justify-center gap-1 transition-all shadow-sm shrink-0"
                         >
                             <Plus size={16} />
-                            <span className="text-xs hidden sm:inline">Post Job</span>
+                            <span className="text-xs hidden sm:inline">Post New Job</span>
                         </button>
                     </div>
                 </div>
