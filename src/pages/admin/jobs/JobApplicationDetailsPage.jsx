@@ -81,11 +81,14 @@ const JobApplicationDetailsPage = () => {
                         criminalCharges: data.criminalCharges,
                         references: data.references,
                         resumeUrl: data.resume,
+                        additionalAttachments: data.additionalAttachments || data.additionalFiles || data.additional_attachments || data.additionalDocuments || null,
                         ...data
                     };
                     
                     setApplication(mappedApp);
                     console.log('✅ Application loaded:', mappedApp);
+                    console.log('📎 Additional Attachments:', mappedApp.additionalAttachments);
+                    console.log('📋 Full backend data keys:', Object.keys(data));
                 }
             } catch (err) {
                 console.error('Failed to fetch application:', err);
