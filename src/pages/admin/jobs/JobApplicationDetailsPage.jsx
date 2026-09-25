@@ -36,6 +36,9 @@ const JobApplicationDetailsPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('overview');
+    const [previewOpen, setPreviewOpen] = useState(false);
+    const [previewUrl, setPreviewUrl] = useState(null);
+    const [previewTitle, setPreviewTitle] = useState('');
 
     useEffect(() => {
         let isMounted = true;
@@ -189,6 +192,18 @@ const JobApplicationDetailsPage = () => {
                 message: 'Resume URL not available'
             }));
         }
+    };
+
+    const handlePreviewDocument = (url, title) => {
+        setPreviewUrl(url);
+        setPreviewTitle(title);
+        setPreviewOpen(true);
+    };
+
+    const handleClosePreview = () => {
+        setPreviewOpen(false);
+        setPreviewUrl(null);
+        setPreviewTitle('');
     };
 
     const getStatusColor = (status) => {
@@ -490,13 +505,22 @@ const JobApplicationDetailsPage = () => {
                                             <p className="text-sm font-semibold text-gray-900">Resume/CV</p>
                                             <span className="text-xs text-gray-500">Primary Document</span>
                                         </div>
-                                        <button
-                                            onClick={handleDownloadCV}
-                                            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-semibold text-sm"
-                                        >
-                                            <Download size={18} />
-                                            Download Resume
-                                        </button>
+                                        <div className="flex gap-3">
+                                            <button
+                                                onClick={() => handlePreviewDocument(application.resumeUrl, 'Resume')}
+                                                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors font-semibold text-sm border border-gray-300"
+                                            >
+                                                <FileText size={18} />
+                                                Preview
+                                            </button>
+                                            <button
+                                                onClick={handleDownloadCV}
+                                                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-semibold text-sm"
+                                            >
+                                                <Download size={18} />
+                                                Download
+                                            </button>
+                                        </div>
                                     </div>
 
                                     {/* Additional Attachments */}
@@ -506,15 +530,23 @@ const JobApplicationDetailsPage = () => {
                                                 <p className="text-sm font-semibold text-gray-900">Additional Documents</p>
                                                 <span className="text-xs text-gray-500">Supplementary</span>
                                             </div>
-                                            <a
-                                                href={application.additionalAttachments}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors font-semibold text-sm border border-gray-300"
-                                            >
-                                                <Download size={18} />
-                                                Download Additional Document
-                                            </a>
+                                            <div className="flex gap-3">
+                                                <button
+                                                    onClick={() => handlePreviewDocument(application.additionalAttachments, 'Additional Document')}
+                                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors font-semibold text-sm border border-gray-300"
+                                                >
+                                                    <FileText size={18} />
+                                                    Preview
+                                                </button>
+                                                <a
+                                                    href={application.additionalAttachments}
+                                                    download
+                                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-semibold text-sm"
+                                                >
+                                                    <Download size={18} />
+                                                    Download
+                                                </a>
+                                            </div>
                                         </div>
                                     ) : (
                                         <div className="mb-6 pb-6 border-b border-gray-200">
@@ -676,6 +708,54 @@ const JobApplicationDetailsPage = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* Document Preview Modal */}
+                {previewOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                        <div className="bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+                            {/* Modal Header */}
+                            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                                <h2 className="text-xl font-bold text-gray-900">{previewTitle}</h2>
+                                <button
+                                    onClick={handleClosePreview}
+                                    className="text-gray-500 hover:text-gray-900 transition-colors"
+                                >
+                                    <XCircle size={24} />
+                                </button>
+                            </div>
+
+                            {/* Modal Content - PDF Viewer */}
+                            <div className="flex-1 overflow-auto bg-gray-50">
+                                {previewUrl && (
+                                    <iframe
+                                        src={`${previewUrl}#toolbar=1&navpanes=0&scrollbar=1`}
+                                        title={previewTitle}
+                                        className="w-full h-full border-none"
+                                        style={{ minHeight: '500px' }}
+                                    />
+                                )}
+                            </div>
+
+                            {/* Modal Footer */}
+                            <div className="flex items-center gap-3 p-6 border-t border-gray-200 bg-gray-50">
+                                <button
+                                    onClick={handleClosePreview}
+                                    className="flex-1 px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors font-semibold"
+                                >
+                                    Close
+                                </button>
+                                <a
+                                    href={previewUrl}
+                                    download
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-semibold"
+                                >
+                                    <Download size={18} />
+                                    Download
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </AdminLayout>
     );
