@@ -193,7 +193,7 @@ export const jobsService = {
   // Admin: Get job applications
   getJobApplications: async (jobId, params = {}) => {
     try {
-      const response = await api.get(`/admin/jobs/${jobId}/applications`, { params });
+      const response = await api.get('/admin/job-applications', { params: { jobId, ...params } });
       return response.data?.data?.data || response.data?.data || [];
     } catch (error) {
       console.error('Error fetching job applications:', error);

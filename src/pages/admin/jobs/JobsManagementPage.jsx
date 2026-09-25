@@ -133,6 +133,7 @@ const JobsManagementPage = () => {
           setCountsLoading(true);
           const counts = {};
           console.log('🔄 Starting to fetch application counts for', jobs.length, 'jobs');
+          console.log('First job ID:', jobs[0]?.id, 'Type:', typeof jobs[0]?.id);
           
           // Fetch applications count for each job - do it in parallel
           const countPromises = jobs.map(async (job) => {
@@ -145,7 +146,8 @@ const JobsManagementPage = () => {
               counts[job.id] = count;
               return count;
             } catch (err) {
-              console.error(`❌ Failed to fetch applications count for job ${job.id}:`, err);
+              console.error(`❌ Failed to fetch applications count for job ${job.id}:`, err.message);
+              // Fallback: default to 0 for now, data will load when user clicks Applications tab
               counts[job.id] = 0;
               return 0;
             }
