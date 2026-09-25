@@ -177,11 +177,11 @@ const JobsManagementPage = () => {
       return () => { isMounted = false; };
     }, [jobs]);
 
-    // Fetch applications from backend API
+    // Fetch applications from backend API - Load immediately on page load, not just when tab is clicked
     useEffect(() => {
       let isMounted = true;
       const loadApplications = async () => {
-        if (activeTab !== 'applications' || jobs.length === 0) return;
+        if (jobs.length === 0) return;
         
         try {
           setAppsLoading(true);
@@ -229,7 +229,7 @@ const JobsManagementPage = () => {
 
       loadApplications();
       return () => { isMounted = false; };
-    }, [activeTab, jobs]);
+    }, [jobs]);
 
     // Redirect to form when modal is opened
     useEffect(() => {
