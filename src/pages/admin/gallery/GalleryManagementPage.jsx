@@ -2,6 +2,7 @@
  * Gallery Management Page (Admin)
  * Production-ready admin interface for managing media gallery albums and images
  * Features: Album CRUD, image uploads with progress, search, filtering, pagination
+ * Updated: Drag & drop photo upload, category selector, live gallery design matching
  */
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
@@ -33,23 +34,37 @@ import {
     CheckCircle,
     ImagePlus,
     Loader,
-    RotateCw
+    RotateCw,
+    Tag
 } from 'lucide-react';
 
-// Status badge component
-const StatusBadge = ({ status }) => {
-    const statusStyles = {
-        published: 'bg-gradient-to-r from-green-500 to-emerald-500 text-white',
-        draft: 'bg-gray-100 text-gray-600 border border-gray-200',
-        archived: 'bg-gradient-to-r from-gray-500 to-slate-500 text-white'
+// Category badge component
+const CategoryBadge = ({ category }) => {
+    const categoryStyles = {
+        events: 'bg-blue-100 text-blue-800 border border-blue-200',
+        training: 'bg-purple-100 text-purple-800 border border-purple-200',
+        community: 'bg-green-100 text-green-800 border border-green-200'
+    };
+
+    const categoryLabels = {
+        events: 'Events',
+        training: 'Training',
+        community: 'Community'
     };
 
     return (
-        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${statusStyles[status] || statusStyles.draft}`}>
-            {status}
+        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${categoryStyles[category] || categoryStyles.events}`}>
+            {categoryLabels[category] || category}
         </span>
     );
 };
+
+// Photo count badge component
+const PhotoCountBadge = ({ count }) => (
+    <div className="absolute bottom-2 right-2 bg-black/60 text-white px-2 py-1 rounded-full flex items-center gap-1 text-[10px] font-bold backdrop-blur-sm">
+        <FileImage size={12} /> {count} photo{count !== 1 ? 's' : ''}
+    </div>
+);
 
 // Loading skeleton component
 const AlbumSkeleton = () => (
@@ -82,11 +97,21 @@ const GalleryManagementPage = () => {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [isUploading, setIsUploading] = useState(false);
-    const [albumFormData, setAlbumFormData] = useState({ title: '', description: '', cover: '' });
+    const [albumFormData, setAlbumFormData] = useState({ 
+        title: '', 
+        description: '', 
+        cover: '', 
+        coverFile: null,
+        coverPreview: null,
+        category: 'events'
+    });
     const [pagination, setPagination] = useState({ page: 1, limit: 12, total: 0, pages: 1 });
     const [isLoadingImages, setIsLoadingImages] = useState(false);
+    const [dragActive, setDragActive] = useState(false);
 
     const fileInputRef = useRef(null);
+    const coverImageInputRef = useRef(null);
+    const dragRef = useRef(null);
     const itemsPerPage = 12;
 
     // Load albums on component mount
@@ -189,7 +214,10 @@ const GalleryManagementPage = () => {
         setAlbumFormData({
             title: album.title,
             description: album.description,
-            cover: album.cover
+            cover: album.cover || '',
+            coverFile: null,
+            coverPreview: album.cover || null,
+            category: album.category || 'events'
         });
         setShowAlbumModal(true);
     };
@@ -197,8 +225,93 @@ const GalleryManagementPage = () => {
     // Helper to reset form
     const resetAlbumForm = () => {
         setEditingAlbum(null);
-        setAlbumFormData({ title: '', description: '', cover: '' });
+        setAlbumFormData({ 
+            title: '', 
+            description: '', 
+            cover: '', 
+            coverFile: null,
+            coverPreview: null,
+            category: 'events'
+        });
         setShowAlbumModal(false);
+    };
+
+    // Handle drag and drop for cover image
+    const handleDrag = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.type === "dragenter" || e.type === "dragover") {
+            setDragActive(true);
+        } else if (e.type === "dragleave") {
+            setDragActive(false);
+        }
+    };
+
+    const handleDropCover = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDragActive(false);
+        
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            processCoverImage(e.dataTransfer.files[0]);
+        }
+    };
+
+    // Process cover image (drag & drop or click)
+    const processCoverImage = (file) => {
+        if (!file.type.startsWith('image/')) {
+            dispatch(addNotification({
+                type: 'error',
+                message: 'Please upload an image file'
+            }));
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            setAlbumFormData(prev => ({
+                ...prev,
+                coverFile: file,
+                coverPreview: event.target?.result,
+                cover: '' // Clear URL field
+            }));
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleCoverImageSelect = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            processCoverImage(file);
+        }
+    };
+
+    const removeCoverImage = () => {
+        setAlbumFormData(prev => ({
+            ...prev,
+            coverFile: null,
+            coverPreview: null,
+            cover: ''
+        }));
+        if (coverImageInputRef.current) {
+            coverImageInputRef.current.value = '';
+        }
+    };
+
+    // Handle album cover image upload (seamless file picker)
+    const handleCoverImageSelectOld = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            // Create preview URL
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                setAlbumFormData(prev => ({
+                    ...prev,
+                    cover: event.target?.result // Store as base64 or URL for preview
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     // Handle create/update album
@@ -486,7 +599,7 @@ const GalleryManagementPage = () => {
                 ) : viewMode === 'grid' ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                         {filteredAlbums.map((album) => (
-                            <div key={album.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col hover:border-[#004fa2] transition-colors group p-2">
+                            <div key={album.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col hover:border-[#004fa2] hover:shadow-md transition-all group p-2">
                                 <div className="relative aspect-video rounded-lg overflow-hidden mb-2 bg-gray-100">
                                     {album.cover ? (
                                         <img 
@@ -501,9 +614,12 @@ const GalleryManagementPage = () => {
                                             <FolderOpen size={32} />
                                         </div>
                                     )}
-                                    <div className="absolute top-1 right-1 bg-black/60 text-white px-1.5 py-0.5 rounded flex items-center gap-1 text-[9px] font-bold backdrop-blur-sm">
-                                        <FileImage size={10} /> {album.imageCount || 0}
+                                    {/* Category Badge */}
+                                    <div className="absolute top-2 left-2">
+                                        <CategoryBadge category={album.category || 'events'} />
                                     </div>
+                                    {/* Photo Count Badge */}
+                                    <PhotoCountBadge count={album.imageCount || 0} />
                                 </div>
                                 <div className="px-1 flex flex-col flex-1">
                                     <h3 className="text-xs font-bold text-gray-900 line-clamp-1 mb-1 group-hover:text-[#004fa2] transition-colors">{album.title}</h3>
@@ -824,7 +940,8 @@ const GalleryManagementPage = () => {
                         </div>
 
                         {/* Modal Body */}
-                        <div className="p-6 space-y-4">
+                        <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                            {/* Album Title */}
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">Album Title *</label>
                                 <input
@@ -836,34 +953,96 @@ const GalleryManagementPage = () => {
                                 />
                             </div>
 
+                            {/* Description */}
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
                                 <textarea
                                     value={albumFormData.description}
                                     onChange={(e) => setAlbumFormData({...albumFormData, description: e.target.value})}
                                     placeholder="Enter album description (optional)"
-                                    rows="4"
+                                    rows="3"
                                     className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all resize-none"
                                 />
                             </div>
 
+                            {/* Category Selector */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Cover Image URL</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                    <Tag size={16} /> Album Category *
+                                </label>
+                                <div className="grid grid-cols-3 gap-3">
+                                    {[
+                                        { value: 'events', label: 'Events', desc: 'Event photos' },
+                                        { value: 'training', label: 'Training', desc: 'Training programs' },
+                                        { value: 'community', label: 'Community', desc: 'Community moments' }
+                                    ].map((cat) => (
+                                        <button
+                                            key={cat.value}
+                                            type="button"
+                                            onClick={() => setAlbumFormData({...albumFormData, category: cat.value})}
+                                            className={`p-3 rounded-lg border-2 transition-all flex flex-col items-center justify-center text-center ${
+                                                albumFormData.category === cat.value
+                                                    ? 'border-[#004fa2] bg-blue-50'
+                                                    : 'border-gray-200 bg-white hover:border-gray-300'
+                                            }`}
+                                        >
+                                            <div className="font-semibold text-sm text-gray-900">{cat.label}</div>
+                                            <div className="text-xs text-gray-500">{cat.desc}</div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Drag & Drop Cover Image */}
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                    <ImagePlus size={16} /> Cover Photo
+                                </label>
                                 <input
-                                    type="url"
-                                    value={albumFormData.cover}
-                                    onChange={(e) => setAlbumFormData({...albumFormData, cover: e.target.value})}
-                                    placeholder="https://example.com/image.jpg"
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all"
+                                    ref={coverImageInputRef}
+                                    type="file"
+                                    className="hidden"
+                                    accept="image/jpeg, image/png, image/webp, image/gif"
+                                    onChange={handleCoverImageSelect}
                                 />
-                                {albumFormData.cover && (
-                                    <div className="mt-3 w-full aspect-video rounded-lg overflow-hidden bg-gray-100">
-                                        <img 
-                                            src={albumFormData.cover} 
-                                            alt="Cover preview" 
-                                            className="w-full h-full object-cover"
-                                            onError={() => setAlbumFormData({...albumFormData, cover: ''})}
-                                        />
+                                
+                                {!albumFormData.coverPreview ? (
+                                    <div 
+                                        ref={dragRef}
+                                        onDragEnter={handleDrag}
+                                        onDragLeave={handleDrag}
+                                        onDragOver={handleDrag}
+                                        onDrop={handleDropCover}
+                                        onClick={() => coverImageInputRef.current?.click()}
+                                        className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
+                                            dragActive
+                                                ? 'border-[#004fa2] bg-blue-50'
+                                                : 'border-gray-300 bg-gray-50 hover:border-[#004fa2] hover:bg-blue-50'
+                                        }`}
+                                    >
+                                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <ImagePlus className="text-[#004fa2]" size={24} />
+                                        </div>
+                                        <p className="text-gray-900 font-medium mb-1">Drag & drop a photo here</p>
+                                        <p className="text-sm text-gray-500">or click to browse from your device</p>
+                                        <p className="text-xs text-gray-400 mt-3">JPG, PNG, WEBP, GIF • Max 10MB</p>
+                                    </div>
+                                ) : (
+                                    <div className="relative">
+                                        <div className="w-full aspect-video rounded-lg overflow-hidden bg-gray-100">
+                                            <img 
+                                                src={albumFormData.coverPreview} 
+                                                alt="Cover preview" 
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={removeCoverImage}
+                                            className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-colors flex items-center gap-1 text-xs font-semibold"
+                                        >
+                                            <X size={14} /> Change Photo
+                                        </button>
                                     </div>
                                 )}
                             </div>
@@ -901,8 +1080,8 @@ const GalleryManagementPage = () => {
                                     <Upload className="text-white" size={20} />
                                 </div>
                                 <div>
-                                    <h2 className="text-lg font-bold text-gray-900">Upload Images</h2>
-                                    <p className="text-gray-500 text-xs">Add images to: <span className="font-semibold">{viewingAlbum?.title}</span></p>
+                                    <h2 className="text-lg font-bold text-gray-900">Upload Photos</h2>
+                                    <p className="text-gray-500 text-xs">Add photos to: <span className="font-semibold">{viewingAlbum?.title}</span></p>
                                 </div>
                             </div>
                             <button
@@ -931,13 +1110,13 @@ const GalleryManagementPage = () => {
                                 <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                                     <ImagePlus className="text-[#004fa2]" size={28} />
                                 </div>
-                                <p className="text-gray-700 font-medium mb-1">Drag and drop files here</p>
-                                <p className="text-sm text-gray-500 mb-4">or click to browse</p>
+                                <p className="text-gray-700 font-medium mb-1">Drag & drop photos here</p>
+                                <p className="text-sm text-gray-500 mb-4">or click to browse your device</p>
                                 <button type="button" className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-colors text-sm font-medium shadow-sm">
-                                    Choose Files
+                                    Browse Photos
                                 </button>
                                 <p className="text-xs text-gray-400 mt-4">
-                                    Supports: JPG, PNG, WEBP, GIF (Max 10MB each)
+                                    JPG, PNG, WEBP, GIF • Max 10MB each
                                 </p>
                             </div>
 
@@ -945,7 +1124,7 @@ const GalleryManagementPage = () => {
                             {isUploading && (
                                 <div className="mt-4 space-y-2">
                                     <div className="flex items-center justify-between text-sm">
-                                        <p className="font-semibold text-gray-900">Uploading...</p>
+                                        <p className="font-semibold text-gray-900">Uploading photos...</p>
                                         <p className="text-gray-500">{uploadProgress}%</p>
                                     </div>
                                     <div className="w-full bg-gray-200 rounded-full h-2">
@@ -959,7 +1138,7 @@ const GalleryManagementPage = () => {
 
                             {uploadQueue.length > 0 && !isUploading && (
                                 <div className="mt-4 px-1">
-                                    <p className="text-sm font-semibold text-gray-900 mb-2">Selected Files ({uploadQueue.length})</p>
+                                    <p className="text-sm font-semibold text-gray-900 mb-2">Selected Photos ({uploadQueue.length})</p>
                                     <div className="max-h-[160px] overflow-y-auto space-y-2 pr-2">
                                         {uploadQueue.map((item) => (
                                             <div key={item.id} className="flex items-center justify-between bg-gray-50 p-2.5 rounded-lg border border-gray-100">
@@ -999,7 +1178,7 @@ const GalleryManagementPage = () => {
                                     className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm flex items-center gap-2"
                                 >
                                     {isUploading ? <Loader className="animate-spin" size={14} /> : <Upload size={14} />}
-                                    {isUploading ? 'Uploading...' : `Upload ${uploadQueue.length} File${uploadQueue.length !== 1 ? 's' : ''}`}
+                                    {isUploading ? 'Uploading...' : `Upload ${uploadQueue.length} Photo${uploadQueue.length !== 1 ? 's' : ''}`}
                                 </button>
                             )}
                         </div>
