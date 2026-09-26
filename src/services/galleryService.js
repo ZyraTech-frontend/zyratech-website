@@ -175,29 +175,63 @@ export const galleryService = {
   // Admin: Create new album
   createAlbum: async (albumData) => {
     try {
-      const payload = {
-        title: albumData.title || 'New Album',
-        description: albumData.description || '',
-        cover: albumData.cover || ''
-      };
-      
-      const response = await api.post('/admin/gallery/albums', payload);
-      
-      let album = response.data.data || response.data;
-      
-      if (album) {
-        album = {
-          ...album,
-          id: album.id || album._id,
-          title: album.title || 'Untitled Album',
-          description: album.description || '',
-          cover: album.cover || '',
-          images: album.images || [],
-          createdAt: album.createdAt || new Date().toISOString()
+      // If coverFile exists, send as FormData (file upload)
+      if (albumData.coverFile) {
+        const formData = new FormData();
+        formData.append('title', albumData.title || 'New Album');
+        formData.append('description', albumData.description || '');
+        formData.append('cover', albumData.coverFile); // Upload as file
+        formData.append('category', albumData.category || 'events');
+        
+        const response = await api.post('/admin/gallery/albums', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        
+        let album = response.data.data || response.data;
+        
+        if (album) {
+          album = {
+            ...album,
+            id: album.id || album._id,
+            title: album.title || 'Untitled Album',
+            description: album.description || '',
+            cover: album.cover || album.coverImage || '',
+            category: album.category || 'events',
+            images: album.images || [],
+            createdAt: album.createdAt || new Date().toISOString()
+          };
+        }
+        
+        return album;
+      } else {
+        // Send as JSON if no cover file (cover is optional)
+        const payload = {
+          title: albumData.title || 'New Album',
+          description: albumData.description || '',
+          category: albumData.category || 'events'
         };
+        
+        const response = await api.post('/admin/gallery/albums', payload);
+        
+        let album = response.data.data || response.data;
+        
+        if (album) {
+          album = {
+            ...album,
+            id: album.id || album._id,
+            title: album.title || 'Untitled Album',
+            description: album.description || '',
+            cover: album.cover || '',
+            category: album.category || 'events',
+            images: album.images || [],
+            createdAt: album.createdAt || new Date().toISOString()
+          };
+        }
+        
+        return album;
       }
-      
-      return album;
     } catch (error) {
       console.error('Error creating album:', error);
       throw error;
@@ -207,29 +241,63 @@ export const galleryService = {
   // Admin: Update album
   updateAlbum: async (albumId, albumData) => {
     try {
-      const payload = {
-        title: albumData.title,
-        description: albumData.description,
-        cover: albumData.cover
-      };
-      
-      const response = await api.put(`/admin/gallery/albums/${albumId}`, payload);
-      
-      let album = response.data.data || response.data;
-      
-      if (album) {
-        album = {
-          ...album,
-          id: album.id || album._id,
-          title: album.title || 'Untitled Album',
-          description: album.description || '',
-          cover: album.cover || '',
-          images: album.images || [],
-          updatedAt: album.updatedAt || new Date().toISOString()
+      // If coverFile exists, send as FormData (file upload)
+      if (albumData.coverFile) {
+        const formData = new FormData();
+        formData.append('title', albumData.title);
+        formData.append('description', albumData.description);
+        formData.append('cover', albumData.coverFile); // Upload as file
+        formData.append('category', albumData.category || 'events');
+        
+        const response = await api.put(`/admin/gallery/albums/${albumId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        
+        let album = response.data.data || response.data;
+        
+        if (album) {
+          album = {
+            ...album,
+            id: album.id || album._id,
+            title: album.title || 'Untitled Album',
+            description: album.description || '',
+            cover: album.cover || album.coverImage || '',
+            category: album.category || 'events',
+            images: album.images || [],
+            updatedAt: album.updatedAt || new Date().toISOString()
+          };
+        }
+        
+        return album;
+      } else {
+        // Send as JSON if no file change
+        const payload = {
+          title: albumData.title,
+          description: albumData.description,
+          category: albumData.category || 'events'
         };
+        
+        const response = await api.put(`/admin/gallery/albums/${albumId}`, payload);
+        
+        let album = response.data.data || response.data;
+        
+        if (album) {
+          album = {
+            ...album,
+            id: album.id || album._id,
+            title: album.title || 'Untitled Album',
+            description: album.description || '',
+            cover: album.cover || '',
+            category: album.category || 'events',
+            images: album.images || [],
+            updatedAt: album.updatedAt || new Date().toISOString()
+          };
+        }
+        
+        return album;
       }
-      
-      return album;
     } catch (error) {
       console.error(`Error updating album ${albumId}:`, error);
       throw error;
