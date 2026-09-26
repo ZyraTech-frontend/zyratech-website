@@ -172,132 +172,82 @@ export const galleryService = {
 
   // ===== ADMIN OPERATIONS =====
 
-  // Admin: Create new album
+  // Admin: Create new album (FormData - accepts cover photo + metadata)
   createAlbum: async (albumData) => {
     try {
-      // If coverFile exists, send as FormData (file upload)
+      const formData = new FormData();
+      formData.append('title', albumData.title || 'New Album');
+      formData.append('description', albumData.description || '');
+      formData.append('category', albumData.category || 'events');
+      
+      // Optional: include cover photo
       if (albumData.coverFile) {
-        const formData = new FormData();
-        formData.append('title', albumData.title || 'New Album');
-        formData.append('description', albumData.description || '');
-        formData.append('cover', albumData.coverFile); // Upload as file
-        formData.append('category', albumData.category || 'events');
-        
-        const response = await api.post('/admin/gallery/albums', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        
-        let album = response.data.data || response.data;
-        
-        if (album) {
-          album = {
-            ...album,
-            id: album.id || album._id,
-            title: album.title || 'Untitled Album',
-            description: album.description || '',
-            cover: album.cover || album.coverImage || '',
-            category: album.category || 'events',
-            images: album.images || [],
-            createdAt: album.createdAt || new Date().toISOString()
-          };
-        }
-        
-        return album;
-      } else {
-        // Send as JSON if no cover file (cover is optional)
-        const payload = {
-          title: albumData.title || 'New Album',
-          description: albumData.description || '',
-          category: albumData.category || 'events'
-        };
-        
-        const response = await api.post('/admin/gallery/albums', payload);
-        
-        let album = response.data.data || response.data;
-        
-        if (album) {
-          album = {
-            ...album,
-            id: album.id || album._id,
-            title: album.title || 'Untitled Album',
-            description: album.description || '',
-            cover: album.cover || '',
-            category: album.category || 'events',
-            images: album.images || [],
-            createdAt: album.createdAt || new Date().toISOString()
-          };
-        }
-        
-        return album;
+        formData.append('cover', albumData.coverFile);
       }
+      
+      const response = await api.post('/admin/gallery/albums', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      let album = response.data.data || response.data;
+      
+      if (album) {
+        album = {
+          ...album,
+          id: album.id || album._id,
+          title: album.title || 'Untitled Album',
+          description: album.description || '',
+          cover: album.cover || album.coverImage || '',
+          category: album.category || 'events',
+          images: album.images || [],
+          createdAt: album.createdAt || new Date().toISOString()
+        };
+      }
+      
+      return album;
     } catch (error) {
       console.error('Error creating album:', error);
       throw error;
     }
   },
 
-  // Admin: Update album
+  // Admin: Update album (FormData - accepts cover photo + metadata)
   updateAlbum: async (albumId, albumData) => {
     try {
-      // If coverFile exists, send as FormData (file upload)
+      const formData = new FormData();
+      formData.append('title', albumData.title);
+      formData.append('description', albumData.description);
+      formData.append('category', albumData.category || 'events');
+      
+      // Optional: include new cover photo
       if (albumData.coverFile) {
-        const formData = new FormData();
-        formData.append('title', albumData.title);
-        formData.append('description', albumData.description);
-        formData.append('cover', albumData.coverFile); // Upload as file
-        formData.append('category', albumData.category || 'events');
-        
-        const response = await api.put(`/admin/gallery/albums/${albumId}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        
-        let album = response.data.data || response.data;
-        
-        if (album) {
-          album = {
-            ...album,
-            id: album.id || album._id,
-            title: album.title || 'Untitled Album',
-            description: album.description || '',
-            cover: album.cover || album.coverImage || '',
-            category: album.category || 'events',
-            images: album.images || [],
-            updatedAt: album.updatedAt || new Date().toISOString()
-          };
-        }
-        
-        return album;
-      } else {
-        // Send as JSON if no file change
-        const payload = {
-          title: albumData.title,
-          description: albumData.description,
-          category: albumData.category || 'events'
-        };
-        
-        const response = await api.put(`/admin/gallery/albums/${albumId}`, payload);
-        
-        let album = response.data.data || response.data;
-        
-        if (album) {
-          album = {
-            ...album,
-            id: album.id || album._id,
-            title: album.title || 'Untitled Album',
-            description: album.description || '',
-            cover: album.cover || '',
-            category: album.category || 'events',
-            images: album.images || [],
-            updatedAt: album.updatedAt || new Date().toISOString()
-          };
-        }
-        
-        return album;
+        formData.append('cover', albumData.coverFile);
       }
+      
+      const response = await api.put(`/admin/gallery/albums/${albumId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      let album = response.data.data || response.data;
+      
+      if (album) {
+        album = {
+          ...album,
+          id: album.id || album._id,
+          title: album.title || 'Untitled Album',
+          description: album.description || '',
+          cover: album.cover || album.coverImage || '',
+          category: album.category || 'events',
+          images: album.images || [],
+          updatedAt: album.updatedAt || new Date().toISOString()
+        };
+      }
+      
+      return album;
     } catch (error) {
       console.error(`Error updating album ${albumId}:`, error);
       throw error;
@@ -315,12 +265,13 @@ export const galleryService = {
     }
   },
 
-  // Admin: Upload image to album
-  uploadImageToAlbum: async (albumId, imageFile, caption = '', onProgress = null) => {
+  // Admin: Upload image to album with caption and category
+  uploadImageToAlbum: async (albumId, imageFile, caption = '', category = '', onProgress = null) => {
     try {
       const formData = new FormData();
       formData.append('image', imageFile);
       formData.append('caption', caption);
+      formData.append('category', category); // NEW: Include image category
       
       const response = await api.post(
         `/admin/gallery/albums/${albumId}/images`,
@@ -348,6 +299,7 @@ export const galleryService = {
           id: image.id || image._id,
           url: image.url || image.imageUrl || image.image,
           caption: image.caption || '',
+          category: image.category || '',
           alt: image.alt || image.caption || 'Gallery image',
           uploadedAt: image.uploadedAt || image.createdAt || new Date().toISOString()
         };
@@ -360,8 +312,8 @@ export const galleryService = {
     }
   },
 
-  // Admin: Upload multiple images to album
-  uploadMultipleImagesToAlbum: async (albumId, imageFiles, onProgress = null) => {
+  // Admin: Upload multiple images to album with category
+  uploadMultipleImagesToAlbum: async (albumId, imageFiles, category = '', onProgress = null) => {
     try {
       const uploadedImages = [];
       const totalFiles = imageFiles.length;
@@ -373,6 +325,7 @@ export const galleryService = {
             albumId,
             file,
             file.name || `Image ${i + 1}`,
+            category, // Pass category to each image
             (percent) => {
               // Calculate overall progress
               const overallProgress = Math.round(
