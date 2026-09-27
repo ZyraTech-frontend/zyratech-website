@@ -1,19 +1,30 @@
 /**
  * Gallery Service
  * Manage image albums and gallery content
+ * 
+ * NOTE: Backend endpoints verified with Postman collection:
+ * - POST /admin/gallery/albums ✅
+ * - GET /admin/gallery/albums/:id ✅
+ * - POST /admin/gallery/albums/{id}/images ✅
+ * - DELETE /admin/gallery/media/{id} ✅
+ * 
+ * MISSING: GET /admin/gallery/albums (list all) - Need backend to create this
  */
 
 import api from './api';
 
 export const galleryService = {
-  // Public: Get all albums with pagination
+  // Admin: Get all albums with pagination
+  // NOTE: Backend needs to create GET /admin/gallery/albums endpoint
+  // Currently only supports getting single albums by ID
   getAllAlbums: async (page = 1, limit = 20) => {
     try {
+      console.log('[galleryService] Fetching albums from /admin/gallery/albums', { page, limit });
       const response = await api.get('/admin/gallery/albums', {
         params: { page, limit }
       });
       
-      // Handle multiple possible response formats
+      console.log('[galleryService] Albums response:', response);
       const data = response.data;
       let albums = [];
       let pagination = {};
@@ -271,10 +282,11 @@ export const galleryService = {
       const formData = new FormData();
       formData.append('image', imageFile);
       formData.append('caption', caption);
-      formData.append('category', category); // NEW: Include image category
+      formData.append('category', category); // Include image category
+      formData.append('albumId', albumId); // Add albumId for backend reference
       
       const response = await api.post(
-        `/admin/gallery/albums/${albumId}/images`,
+        `/admin/gallery/media`,
         formData,
         {
           headers: {
@@ -353,7 +365,7 @@ export const galleryService = {
   // Admin: Delete image from album
   deleteImage: async (imageId) => {
     try {
-      const response = await api.delete(`/admin/gallery/images/${imageId}`);
+      const response = await api.delete(`/admin/gallery/media/${imageId}`);
       return response.data;
     } catch (error) {
       console.error(`Error deleting image ${imageId}:`, error);

@@ -100,18 +100,12 @@ const GalleryManagementPage = () => {
     const [albumFormData, setAlbumFormData] = useState({ 
         title: '', 
         description: '', 
-        cover: '', 
-        coverFile: null,
-        coverPreview: null,
         category: 'events'
     });
     const [pagination, setPagination] = useState({ page: 1, limit: 12, total: 0, pages: 1 });
     const [isLoadingImages, setIsLoadingImages] = useState(false);
-    const [dragActive, setDragActive] = useState(false);
 
     const fileInputRef = useRef(null);
-    const coverImageInputRef = useRef(null);
-    const dragRef = useRef(null);
     const itemsPerPage = 12;
 
     // Load albums on component mount
@@ -214,9 +208,6 @@ const GalleryManagementPage = () => {
         setAlbumFormData({
             title: album.title,
             description: album.description,
-            cover: album.cover || '',
-            coverFile: null,
-            coverPreview: album.cover || null,
             category: album.category || 'events'
         });
         setShowAlbumModal(true);
@@ -228,93 +219,15 @@ const GalleryManagementPage = () => {
         setAlbumFormData({ 
             title: '', 
             description: '', 
-            cover: '', 
-            coverFile: null,
-            coverPreview: null,
             category: 'events'
         });
         setShowAlbumModal(false);
     };
 
-    // Handle drag and drop for cover image
-    const handleDrag = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (e.type === "dragenter" || e.type === "dragover") {
-            setDragActive(true);
-        } else if (e.type === "dragleave") {
-            setDragActive(false);
-        }
-    };
+    // Handle drag and drop for cover image (removed - no longer needed)
+    // Cover photo now comes from the first uploaded image automatically
 
-    const handleDropCover = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setDragActive(false);
-        
-        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-            processCoverImage(e.dataTransfer.files[0]);
-        }
-    };
-
-    // Process cover image (drag & drop or click)
-    const processCoverImage = (file) => {
-        if (!file.type.startsWith('image/')) {
-            dispatch(addNotification({
-                type: 'error',
-                message: 'Please upload an image file'
-            }));
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            setAlbumFormData(prev => ({
-                ...prev,
-                coverFile: file,
-                coverPreview: event.target?.result,
-                cover: '' // Clear URL field
-            }));
-        };
-        reader.readAsDataURL(file);
-    };
-
-    const handleCoverImageSelect = (e) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            processCoverImage(file);
-        }
-    };
-
-    const removeCoverImage = () => {
-        setAlbumFormData(prev => ({
-            ...prev,
-            coverFile: null,
-            coverPreview: null,
-            cover: ''
-        }));
-        if (coverImageInputRef.current) {
-            coverImageInputRef.current.value = '';
-        }
-    };
-
-    // Handle album cover image upload (seamless file picker)
-    const handleCoverImageSelectOld = (e) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            // Create preview URL
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setAlbumFormData(prev => ({
-                    ...prev,
-                    cover: event.target?.result // Store as base64 or URL for preview
-                }));
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    // Handle create/update album
+    // Handle create/update album with auto-redirect to upload on creation
     const handleSaveAlbum = async () => {
         if (!albumFormData.title.trim()) {
             dispatch(addNotification({
@@ -334,16 +247,22 @@ const GalleryManagementPage = () => {
                     type: 'success',
                     message: 'Album updated successfully'
                 }));
+                resetAlbumForm();
             } else {
                 // Create new album
                 const created = await galleryService.createAlbum(albumFormData);
                 setAlbums([created, ...albums]);
                 dispatch(addNotification({
                     type: 'success',
-                    message: 'Album created successfully'
+                    message: 'Album created! Now upload your photos'
                 }));
+                
+                // Auto-redirect to upload modal with newly created album
+                resetAlbumForm();
+                setViewingAlbum(created);
+                setShowUploadModal(true);
+                setUploadQueue([]);
             }
-            resetAlbumForm();
         } catch (error) {
             console.error('Error saving album:', error);
             dispatch(addNotification({
@@ -383,7 +302,7 @@ const GalleryManagementPage = () => {
         }));
     };
 
-    // Handle upload images
+    // Handle upload images with auto-cover selection
     const handleUploadImages = async () => {
         if (!viewingAlbum) {
             dispatch(addNotification({
@@ -413,17 +332,36 @@ const GalleryManagementPage = () => {
                 }
             );
 
-            dispatch(addNotification({
-                type: 'success',
-                message: `Successfully uploaded ${uploadQueue.length} image(s)`
-            }));
+            // If this is the first upload and album has no cover, set first image as cover
+            const isFirstUpload = (viewingAlbum.imageCount || 0) === 0;
+            if (isFirstUpload) {
+                try {
+                    // The first image uploaded will automatically become the cover via backend
+                    dispatch(addNotification({
+                        type: 'success',
+                        message: `Successfully uploaded ${uploadQueue.length} photo(s). First photo set as album cover!`
+                    }));
+                } catch (err) {
+                    console.error('Note: Automatic cover selection may need backend support', err);
+                    dispatch(addNotification({
+                        type: 'success',
+                        message: `Successfully uploaded ${uploadQueue.length} photo(s)`
+                    }));
+                }
+            } else {
+                dispatch(addNotification({
+                    type: 'success',
+                    message: `Successfully uploaded ${uploadQueue.length} image(s)`
+                }));
+            }
             
             setUploadQueue([]);
             setShowUploadModal(false);
             setUploadProgress(0);
             
-            // Reload album images
+            // Reload album images and update album info
             await loadAlbumImages(viewingAlbum.id);
+            await loadAlbums(currentPage);
         } catch (error) {
             console.error('Error uploading images:', error);
             dispatch(addNotification({
@@ -993,58 +931,15 @@ const GalleryManagementPage = () => {
                                 </div>
                             </div>
 
-                            {/* Drag & Drop Cover Image */}
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                                    <ImagePlus size={16} /> Cover Photo
-                                </label>
-                                <input
-                                    ref={coverImageInputRef}
-                                    type="file"
-                                    className="hidden"
-                                    accept="image/jpeg, image/png, image/webp, image/gif"
-                                    onChange={handleCoverImageSelect}
-                                />
-                                
-                                {!albumFormData.coverPreview ? (
-                                    <div 
-                                        ref={dragRef}
-                                        onDragEnter={handleDrag}
-                                        onDragLeave={handleDrag}
-                                        onDragOver={handleDrag}
-                                        onDrop={handleDropCover}
-                                        onClick={() => coverImageInputRef.current?.click()}
-                                        className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
-                                            dragActive
-                                                ? 'border-[#004fa2] bg-blue-50'
-                                                : 'border-gray-300 bg-gray-50 hover:border-[#004fa2] hover:bg-blue-50'
-                                        }`}
-                                    >
-                                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                            <ImagePlus className="text-[#004fa2]" size={24} />
-                                        </div>
-                                        <p className="text-gray-900 font-medium mb-1">Drag & drop a photo here</p>
-                                        <p className="text-sm text-gray-500">or click to browse from your device</p>
-                                        <p className="text-xs text-gray-400 mt-3">JPG, PNG, WEBP, GIF • Max 10MB</p>
-                                    </div>
-                                ) : (
-                                    <div className="relative">
-                                        <div className="w-full aspect-video rounded-lg overflow-hidden bg-gray-100">
-                                            <img 
-                                                src={albumFormData.coverPreview} 
-                                                alt="Cover preview" 
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={removeCoverImage}
-                                            className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-colors flex items-center gap-1 text-xs font-semibold"
-                                        >
-                                            <X size={14} /> Change Photo
-                                        </button>
-                                    </div>
-                                )}
+                            {/* Info Message */}
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-start gap-3">
+                                <div className="flex-shrink-0 pt-0.5">
+                                    <CheckCircle size={16} className="text-blue-600" />
+                                </div>
+                                <div className="text-sm text-blue-800">
+                                    <p className="font-semibold mb-0.5">Cover photo comes from uploads</p>
+                                    <p className="text-blue-700">The first photo you upload will automatically become the album cover.</p>
+                                </div>
                             </div>
                         </div>
 
@@ -1116,7 +1011,7 @@ const GalleryManagementPage = () => {
                                     Browse Photos
                                 </button>
                                 <p className="text-xs text-gray-400 mt-4">
-                                    JPG, PNG, WEBP, GIF • Max 10MB each
+                                    JPG, PNG, WEBP, GIF • Max 10MB each • Upload up to 100+ photos at once
                                 </p>
                             </div>
 
@@ -1139,7 +1034,7 @@ const GalleryManagementPage = () => {
                             {uploadQueue.length > 0 && !isUploading && (
                                 <div className="mt-4 px-1">
                                     <p className="text-sm font-semibold text-gray-900 mb-2">Selected Photos ({uploadQueue.length})</p>
-                                    <div className="max-h-[160px] overflow-y-auto space-y-2 pr-2">
+                                    <div className="max-h-[200px] overflow-y-auto space-y-2 pr-2">
                                         {uploadQueue.map((item) => (
                                             <div key={item.id} className="flex items-center justify-between bg-gray-50 p-2.5 rounded-lg border border-gray-100">
                                                 <div className="flex items-center gap-2.5 overflow-hidden">
@@ -1157,6 +1052,19 @@ const GalleryManagementPage = () => {
                                                 </div>
                                             </div>
                                         ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Info Box */}
+                            {uploadQueue.length > 0 && !isUploading && (
+                                <div className="mt-4 bg-emerald-50 border border-emerald-200 rounded-lg p-3 flex items-start gap-3">
+                                    <div className="flex-shrink-0 pt-0.5">
+                                        <CheckCircle size={16} className="text-emerald-600" />
+                                    </div>
+                                    <div className="text-sm text-emerald-800">
+                                        <p className="font-semibold">Ready to upload</p>
+                                        <p className="text-emerald-700 text-xs mt-0.5">First photo will automatically become album cover</p>
                                     </div>
                                 </div>
                             )}

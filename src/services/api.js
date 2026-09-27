@@ -49,6 +49,9 @@ api.interceptors.request.use(
     const token = getStoredToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('[api.interceptor] Token attached:', `Bearer ${token.substring(0, 20)}...`);
+    } else {
+      console.warn('[api.interceptor] No token found in localStorage');
     }
 
     // Let the browser set multipart/form-data boundary automatically for FormData
@@ -56,6 +59,7 @@ api.interceptors.request.use(
       delete config.headers['Content-Type'];
     }
 
+    console.log('[api.interceptor] Request to:', config.url);
     return config;
   },
   (error) => {
@@ -80,10 +84,21 @@ const processQueue = (error, token = null) => {
 
 api.interceptors.response.use(
   (response) => {
+    console.log('[api.interceptor] Response received:', {
+      status: response.status,
+      url: response.config.url,
+      dataKeys: Object.keys(response.data)
+    });
     return response;
   },
   async (error) => {
     const originalRequest = error.config;
+    
+    console.error('[api.interceptor] Error response:', {
+      status: error.response?.status,
+      url: error.config?.url,
+      error: error.response?.data?.error || error.message
+    });
 
     // Attach human-readable error message from backend
     const serverMessage =
