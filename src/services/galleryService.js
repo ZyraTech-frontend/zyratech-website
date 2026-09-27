@@ -24,25 +24,37 @@ export const galleryService = {
         params: { page, limit }
       });
       
-      console.log('[galleryService] Albums response:', response);
       const data = response.data;
+      console.log('[galleryService] Raw response data structure:', {
+        hasSuccess: !!data.success,
+        hasData: !!data.data,
+        dataKeys: Object.keys(data),
+        status: response.status
+      });
+      console.log('[galleryService] Full response:', data);
+      
       let albums = [];
       let pagination = {};
       
       // Format 1: { success: true, data: { albums: [...], pagination: {...} } }
       if (data.success && data.data) {
+        console.log('[galleryService] Using format 1 (success + data)');
         albums = data.data.albums || data.data.data || [];
         pagination = data.data.pagination || {};
       }
       // Format 2: { data: { albums: [...] } }
       else if (data.data) {
+        console.log('[galleryService] Using format 2 (data wrapper)');
         albums = data.data.albums || data.data.data || data.data;
         pagination = data.pagination || {};
       }
       // Format 3: Direct response
       else {
+        console.log('[galleryService] Using format 3 (direct response)');
         albums = data.albums || data || [];
       }
+      
+      console.log('[galleryService] Extracted albums:', { count: albums.length, sample: albums[0] });
       
       // Ensure albums is array
       if (!Array.isArray(albums)) {
