@@ -35,7 +35,9 @@ import {
     ImagePlus,
     Loader,
     RotateCw,
-    Tag
+    Tag,
+    Globe,
+    EyeOff
 } from 'lucide-react';
 
 // Category badge component
@@ -300,6 +302,38 @@ const GalleryManagementPage = () => {
                 }
             }
         }));
+    };
+
+    // Handle publish/unpublish album
+    const handleTogglePublish = async (album) => {
+        const isPublished = album.status === 'published';
+        const newStatus = isPublished ? 'draft' : 'published';
+        
+        try {
+            setIsLoading(true);
+            const updated = await galleryService.updateAlbum(album.id, {
+                title: album.title,
+                description: album.description,
+                category: album.category,
+                status: newStatus
+            });
+            setAlbums(albums.map(a => a.id === album.id ? updated : a));
+            if (viewingAlbum?.id === album.id) {
+                setViewingAlbum(updated);
+            }
+            dispatch(addNotification({
+                type: 'success',
+                message: `Album "${album.title}" ${newStatus === 'published' ? 'published' : 'unpublished'} successfully`
+            }));
+        } catch (error) {
+            console.error('Error updating album status:', error);
+            dispatch(addNotification({
+                type: 'error',
+                message: 'Failed to update album status'
+            }));
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     // Handle upload images with auto-cover selection
@@ -587,6 +621,13 @@ const GalleryManagementPage = () => {
                                                     <Edit size={12}/>
                                                 </button>
                                                 <button 
+                                                    onClick={() => handleTogglePublish(album)} 
+                                                    className={`p-1 rounded transition-colors ${album.status === 'published' ? 'text-blue-600 hover:bg-blue-50' : 'text-gray-400 hover:bg-gray-100'}`}
+                                                    title={album.status === 'published' ? 'Published (Click to unpublish)' : 'Draft (Click to publish)'}
+                                                >
+                                                    {album.status === 'published' ? <Globe size={12}/> : <EyeOff size={12}/>}
+                                                </button>
+                                                <button 
                                                     onClick={() => handleDeleteAlbum(album)} 
                                                     className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600"
                                                     title="Delete Album"
@@ -671,6 +712,13 @@ const GalleryManagementPage = () => {
                                                             title="Edit Album"
                                                         >
                                                             <Edit size={16} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleTogglePublish(album)}
+                                                            className={`p-2 rounded-lg transition-colors ${album.status === 'published' ? 'text-blue-600 hover:bg-blue-50' : 'text-gray-400 hover:bg-gray-100'}`}
+                                                            title={album.status === 'published' ? 'Published (Click to unpublish)' : 'Draft (Click to publish)'}
+                                                        >
+                                                            {album.status === 'published' ? <Globe size={16}/> : <EyeOff size={16}/>}
                                                         </button>
                                                         <button
                                                             onClick={() => handleDeleteAlbum(album)}
