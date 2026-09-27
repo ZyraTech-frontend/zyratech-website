@@ -9,7 +9,7 @@ export const galleryService = {
   // Public: Get all albums with pagination
   getAllAlbums: async (page = 1, limit = 20) => {
     try {
-      const response = await api.get('/gallery/albums', {
+      const response = await api.get('/admin/gallery/albums', {
         params: { page, limit }
       });
       
