@@ -180,9 +180,9 @@ export const galleryService = {
       formData.append('description', albumData.description || '');
       formData.append('category', albumData.category || 'events');
       
-      // Optional: include cover photo
+      // Optional: include cover photo (backend expects 'coverImage', not 'cover')
       if (albumData.coverFile) {
-        formData.append('cover', albumData.coverFile);
+        formData.append('coverImage', albumData.coverFile);
       }
       
       const response = await api.post('/admin/gallery/albums', formData, {
@@ -221,9 +221,9 @@ export const galleryService = {
       formData.append('description', albumData.description);
       formData.append('category', albumData.category || 'events');
       
-      // Optional: include new cover photo
+      // Optional: include new cover photo (backend expects 'coverImage', not 'cover')
       if (albumData.coverFile) {
-        formData.append('cover', albumData.coverFile);
+        formData.append('coverImage', albumData.coverFile);
       }
       
       const response = await api.put(`/admin/gallery/albums/${albumId}`, formData, {
