@@ -29,6 +29,7 @@ export const galleryService = {
         hasSuccess: !!data.success,
         hasData: !!data.data,
         dataKeys: Object.keys(data),
+        nestedDataKeys: Object.keys(data.data || {}),
         status: response.status
       });
       console.log('[galleryService] Full response:', data);
@@ -36,16 +37,18 @@ export const galleryService = {
       let albums = [];
       let pagination = {};
       
-      // Format 1: { success: true, data: { albums: [...], pagination: {...} } }
+      // Format 1: { success: true, data: { data: [...], pagination: {...} } }
+      // This is the ACTUAL backend format - double nested
       if (data.success && data.data) {
-        console.log('[galleryService] Using format 1 (success + data)');
-        albums = data.data.albums || data.data.data || [];
+        console.log('[galleryService] Using format 1 (success + data wrapper)');
+        // Check for double-nested: data.data.data or data.data.albums
+        albums = data.data.data || data.data.albums || [];
         pagination = data.data.pagination || {};
       }
-      // Format 2: { data: { albums: [...] } }
-      else if (data.data) {
-        console.log('[galleryService] Using format 2 (data wrapper)');
-        albums = data.data.albums || data.data.data || data.data;
+      // Format 2: Fallback to direct data.data array if no pagination
+      else if (Array.isArray(data.data)) {
+        console.log('[galleryService] Using format 2 (direct array in data)');
+        albums = data.data;
         pagination = data.pagination || {};
       }
       // Format 3: Direct response
@@ -67,7 +70,7 @@ export const galleryService = {
           id: album.id || album._id,
           title: album.title || 'Untitled Album',
           description: album.description || '',
-          cover: album.cover || album.coverImage || '',
+          cover: album.coverImageUrl || album.cover || album.coverImage || '',
           imageCount: album.imageCount || album.images?.length || 0,
           createdAt: album.createdAt || new Date().toISOString(),
           updatedAt: album.updatedAt || album.createdAt || new Date().toISOString()
@@ -98,7 +101,7 @@ export const galleryService = {
           id: album.id || album._id,
           title: album.title || 'Untitled Album',
           description: album.description || '',
-          cover: album.cover || album.coverImage || '',
+          cover: album.coverImageUrl || album.cover || album.coverImage || '',
           images: album.images || [],
           createdAt: album.createdAt || new Date().toISOString(),
           updatedAt: album.updatedAt || album.createdAt || new Date().toISOString()
