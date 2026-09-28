@@ -259,8 +259,12 @@ const GalleryManagementPage = () => {
                     message: 'Album created! Now upload your photos'
                 }));
                 
-                // Auto-redirect to upload modal with newly created album
-                resetAlbumForm();
+                // Close album form and open upload modal
+                setShowAlbumModal(false);
+                setAlbumFormData({ title: '', description: '', category: 'events' });
+                setEditingAlbum(null);
+                
+                // Set viewing album and show upload modal
                 setViewingAlbum(created);
                 setShowUploadModal(true);
                 setUploadQueue([]);
