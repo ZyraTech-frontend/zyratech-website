@@ -366,35 +366,19 @@ const GalleryManagementPage = () => {
                 }
             );
 
-            // If this is the first upload and album has no cover, set first image as cover
-            const isFirstUpload = (viewingAlbum.imageCount || 0) === 0;
-            if (isFirstUpload) {
-                try {
-                    // The first image uploaded will automatically become the cover via backend
-                    dispatch(addNotification({
-                        type: 'success',
-                        message: `Successfully uploaded ${uploadQueue.length} photo(s). First photo set as album cover!`
-                    }));
-                } catch (err) {
-                    console.error('Note: Automatic cover selection may need backend support', err);
-                    dispatch(addNotification({
-                        type: 'success',
-                        message: `Successfully uploaded ${uploadQueue.length} photo(s)`
-                    }));
-                }
-            } else {
-                dispatch(addNotification({
-                    type: 'success',
-                    message: `Successfully uploaded ${uploadQueue.length} image(s)`
-                }));
-            }
+            dispatch(addNotification({
+                type: 'success',
+                message: `Successfully uploaded ${uploadQueue.length} photo(s)`
+            }));
             
             setUploadQueue([]);
             setShowUploadModal(false);
             setUploadProgress(0);
             
-            // Reload album images and update album info
+            // Reload album data to get updated cover photo and image count
             await loadAlbumImages(viewingAlbum.id);
+            const updatedAlbum = await galleryService.getAlbum(viewingAlbum.id);
+            setViewingAlbum(updatedAlbum);
             await loadAlbums(currentPage);
         } catch (error) {
             console.error('Error uploading images:', error);
