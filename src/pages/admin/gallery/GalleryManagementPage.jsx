@@ -102,12 +102,14 @@ const GalleryManagementPage = () => {
     const [albumFormData, setAlbumFormData] = useState({ 
         title: '', 
         description: '', 
-        category: 'events'
+        category: 'events',
+        coverFile: null
     });
     const [pagination, setPagination] = useState({ page: 1, limit: 12, total: 0, pages: 1 });
     const [isLoadingImages, setIsLoadingImages] = useState(false);
 
     const fileInputRef = useRef(null);
+    const coverPhotoRef = useRef(null);
     const itemsPerPage = 12;
 
     // Load albums on component mount
@@ -221,9 +223,13 @@ const GalleryManagementPage = () => {
         setAlbumFormData({ 
             title: '', 
             description: '', 
-            category: 'events'
+            category: 'events',
+            coverFile: null
         });
         setShowAlbumModal(false);
+        if (coverPhotoRef.current) {
+            coverPhotoRef.current.value = '';
+        }
     };
 
     // Handle drag and drop for cover image (removed - no longer needed)
@@ -980,6 +986,46 @@ const GalleryManagementPage = () => {
                                 <div className="text-sm text-blue-800">
                                     <p className="font-semibold mb-0.5">Cover photo comes from uploads</p>
                                     <p className="text-blue-700">The first photo you upload will automatically become the album cover.</p>
+                                </div>
+                            </div>
+
+                            {/* Cover Photo Upload */}
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                    <Image size={16} /> Cover Photo (Optional)
+                                </label>
+                                <input
+                                    type="file"
+                                    ref={coverPhotoRef}
+                                    className="hidden"
+                                    accept="image/jpeg, image/png, image/webp"
+                                    onChange={(e) => {
+                                        if (e.target.files?.[0]) {
+                                            setAlbumFormData({...albumFormData, coverFile: e.target.files[0]});
+                                        }
+                                    }}
+                                />
+                                <div 
+                                    onClick={() => coverPhotoRef.current?.click()}
+                                    className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center hover:border-[#004fa2] hover:bg-blue-50 transition-colors cursor-pointer group"
+                                >
+                                    {albumFormData.coverFile ? (
+                                        <div className="space-y-2">
+                                            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                                                <CheckCircle className="text-green-600" size={24} />
+                                            </div>
+                                            <p className="text-sm font-semibold text-gray-900">{albumFormData.coverFile.name}</p>
+                                            <p className="text-xs text-gray-500">{(albumFormData.coverFile.size / 1024 / 1024).toFixed(2)}MB</p>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto group-hover:bg-blue-100">
+                                                <Image className="text-gray-400 group-hover:text-[#004fa2]" size={24} />
+                                            </div>
+                                            <p className="text-gray-700 font-medium">Choose cover photo</p>
+                                            <p className="text-xs text-gray-500">JPG, PNG, WEBP • Max 5MB</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
