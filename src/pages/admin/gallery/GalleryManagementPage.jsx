@@ -253,6 +253,8 @@ const GalleryManagementPage = () => {
             } else {
                 // Create new album
                 const created = await galleryService.createAlbum(albumFormData);
+                console.log('[GalleryManagementPage] Album created:', created);
+                
                 setAlbums([created, ...albums]);
                 dispatch(addNotification({
                     type: 'success',
@@ -264,10 +266,13 @@ const GalleryManagementPage = () => {
                 setAlbumFormData({ title: '', description: '', category: 'events' });
                 setEditingAlbum(null);
                 
-                // Set viewing album and show upload modal
-                setViewingAlbum(created);
-                setShowUploadModal(true);
-                setUploadQueue([]);
+                // Delay slightly to ensure state updates
+                setTimeout(() => {
+                    console.log('[GalleryManagementPage] Opening upload modal for album:', created.id);
+                    setViewingAlbum(created);
+                    setShowUploadModal(true);
+                    setUploadQueue([]);
+                }, 100);
             }
         } catch (error) {
             console.error('Error saving album:', error);
