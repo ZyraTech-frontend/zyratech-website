@@ -88,10 +88,10 @@ export const galleryService = {
     }
   },
 
-  // Public: Get single album by ID
+  // Admin: Get single album by ID (uses admin endpoint)
   getAlbum: async (albumId) => {
     try {
-      const response = await api.get(`/gallery/albums/${albumId}`);
+      const response = await api.get(`/admin/gallery/albums/${albumId}`);
       
       let album = response.data.data || response.data;
       
@@ -115,8 +115,87 @@ export const galleryService = {
     }
   },
 
-  // Public: Get all images in album
+  // Admin: Get all images in album (uses admin endpoint)
   getAlbumImages: async (albumId, page = 1, limit = 50) => {
+    try {
+      const response = await api.get(`/admin/gallery/albums/${albumId}/images`, {
+        params: { page, limit }
+      });
+      
+      const data = response.data;
+      let images = [];
+      let pagination = {};
+      
+      // Format 1: { success: true, data: { images: [...], pagination: {...} } }
+      if (data.success && data.data) {
+        images = data.data.images || data.data.data || [];
+        pagination = data.data.pagination || {};
+      }
+      // Format 2: { data: { images: [...] } }
+      else if (data.data) {
+        images = data.data.images || data.data.data || data.data;
+        pagination = data.pagination || {};
+      }
+      else {
+        images = data.images || data || [];
+      }
+      
+      if (!Array.isArray(images)) {
+        images = [];
+      }
+      
+      return {
+        images: images.map(img => ({
+          ...img,
+          id: img.id || img._id,
+          url: img.url || img.imageUrl || img.image,
+          caption: img.caption || '',
+          category: img.category || '',
+          alt: img.alt || img.caption || 'Gallery image',
+          uploadedAt: img.uploadedAt || img.createdAt || new Date().toISOString()
+        })),
+        pagination: {
+          page: pagination.page || page,
+          limit: pagination.limit || limit,
+          total: pagination.total || images.length,
+          pages: pagination.pages || Math.ceil((pagination.total || images.length) / limit)
+        }
+      };
+    } catch (error) {
+      console.error(`Error fetching album images for ${albumId}:`, error);
+      throw error;
+    }
+  },
+  
+  // Public: Get single album by ID (for public gallery)
+  getPublicAlbum: async (albumId) => {
+    try {
+      const response = await api.get(`/gallery/albums/${albumId}`);
+      
+      let album = response.data.data || response.data;
+      
+      if (album) {
+        album = {
+          ...album,
+          id: album.id || album._id,
+          title: album.title || 'Untitled Album',
+          description: album.description || '',
+          cover: album.coverImageUrl || album.cover || album.coverImage || '',
+          images: album.images || [],
+          createdAt: album.createdAt || new Date().toISOString(),
+          updatedAt: album.updatedAt || album.createdAt || new Date().toISOString()
+        };
+      }
+      
+      return album;
+    } catch (error) {
+      console.error(`Error fetching public album ${albumId}:`, error);
+      throw error;
+    }
+  },
+
+  // Public: Get all images in public album
+  getPublicAlbumImages: async (albumId, page = 1, limit = 50) => {
     try {
       const response = await api.get(`/gallery/albums/${albumId}/images`, {
         params: { page, limit }
@@ -161,7 +240,7 @@ export const galleryService = {
         }
       };
     } catch (error) {
-      console.error(`Error fetching album images for ${albumId}:`, error);
+      console.error(`Error fetching public album images for ${albumId}:`, error);
       throw error;
     }
   },
