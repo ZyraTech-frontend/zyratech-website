@@ -601,37 +601,52 @@ const GalleryManagementPage = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mt-2 flex items-center justify-between pt-2 border-t border-gray-50 px-1">
-                                    <div className="flex items-center gap-1">
+                                <div className="mt-2 flex items-center justify-between pt-2 border-t border-gray-50 px-1 gap-1">
+                                    <div className="flex items-center gap-0.5 flex-wrap">
                                         <button 
                                             onClick={() => handleViewAlbum(album)} 
-                                            className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-[#004fa2]"
-                                            title="View Album"
+                                            className="px-2 py-1 text-xs rounded bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors font-medium flex items-center gap-1"
+                                            title="View photos in this album"
                                         >
                                             <Eye size={12}/>
+                                            View
+                                        </button>
+                                        <button 
+                                            onClick={() => {
+                                                setViewingAlbum(album);
+                                                setShowUploadModal(true);
+                                            }} 
+                                            className="px-2 py-1 text-xs rounded bg-green-50 text-green-700 hover:bg-green-100 transition-colors font-medium flex items-center gap-1"
+                                            title="Upload photos to this album"
+                                        >
+                                            <ImagePlus size={12}/>
+                                            Upload
                                         </button>
                                         {isSuperAdmin && (
                                             <>
                                                 <button 
                                                     onClick={() => openEditAlbumModal(album)} 
-                                                    className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-green-600"
-                                                    title="Edit Album"
+                                                    className="px-2 py-1 text-xs rounded bg-yellow-50 text-yellow-700 hover:bg-yellow-100 transition-colors font-medium flex items-center gap-1"
+                                                    title="Edit album details"
                                                 >
                                                     <Edit size={12}/>
+                                                    Edit
                                                 </button>
                                                 <button 
                                                     onClick={() => handleTogglePublish(album)} 
-                                                    className={`p-1 rounded transition-colors ${album.status === 'published' ? 'text-blue-600 hover:bg-blue-50' : 'text-gray-400 hover:bg-gray-100'}`}
-                                                    title={album.status === 'published' ? 'Published (Click to unpublish)' : 'Draft (Click to publish)'}
+                                                    className={`px-2 py-1 text-xs rounded font-medium flex items-center gap-1 transition-colors ${album.status === 'published' ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'}`}
+                                                    title={album.status === 'published' ? 'Album is published - Click to unpublish' : 'Album is draft - Click to publish'}
                                                 >
                                                     {album.status === 'published' ? <Globe size={12}/> : <EyeOff size={12}/>}
+                                                    {album.status === 'published' ? 'Published' : 'Draft'}
                                                 </button>
                                                 <button 
                                                     onClick={() => handleDeleteAlbum(album)} 
-                                                    className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600"
-                                                    title="Delete Album"
+                                                    className="px-2 py-1 text-xs rounded bg-red-50 text-red-700 hover:bg-red-100 transition-colors font-medium flex items-center gap-1"
+                                                    title="Delete this album permanently"
                                                 >
                                                     <Trash2 size={12}/>
+                                                    Delete
                                                 </button>
                                             </>
                                         )}
@@ -819,13 +834,7 @@ const GalleryManagementPage = () => {
                                         <Image className="text-gray-400" size={32} />
                                     </div>
                                     <h3 className="text-lg font-semibold text-gray-900 mb-2">No images yet</h3>
-                                    <p className="text-sm text-gray-500 mb-4">Upload images to this album</p>
-                                    <button
-                                        onClick={() => setShowUploadModal(true)}
-                                        className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-sm"
-                                    >
-                                        <Upload size={14} className="inline mr-1" /> Upload Images
-                                    </button>
+                                    <p className="text-sm text-gray-500 mb-4">This album doesn't have any photos yet. Click the upload button on the album card to add photos.</p>
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -874,14 +883,7 @@ const GalleryManagementPage = () => {
                                             className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm flex items-center gap-1.5"
                                         >
                                             <Edit size={14} />
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => setShowUploadModal(true)}
-                                            className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-sm flex items-center gap-1.5"
-                                        >
-                                            <Upload size={14} />
-                                            Upload Images
+                                            Edit Album
                                         </button>
                                     </>
                                 )}
