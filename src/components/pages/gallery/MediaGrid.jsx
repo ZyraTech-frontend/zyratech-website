@@ -1,37 +1,63 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { Play, Grid, List, X, ChevronLeft, ChevronRight, Maximize2, Minimize2, Search } from 'lucide-react';
+import { Play, Grid, List, X, ChevronLeft, ChevronRight, Maximize2, Minimize2, Search, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { galleryAlbums } from '../../../data/galleryAlbums';
+import galleryService from '../../../services/galleryService';
 
 const MediaGrid = ({ filters = {} }) => {
   const navigate = useNavigate();
   const [viewMode, setViewMode] = useState('grid');
-  const [itemsPerPage, setItemsPerPage] = useState(6); // Reduced for better performance
+  const [itemsPerPage, setItemsPerPage] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [albums, setAlbums] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const touchStartX = useRef(null);
   const touchEndX = useRef(null);
 
-  // Optimize data transformation with useMemo
+  // Fetch public albums from backend
+  useEffect(() => {
+    const fetchPublicAlbums = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        // Fetch all published albums from backend
+        const response = await galleryService.getAllAlbums(1, 100);
+        // Filter only published albums for public display
+        const publishedAlbums = response.albums.filter(album => album.status === 'published');
+        setAlbums(publishedAlbums);
+      } catch (err) {
+        console.error('Error fetching gallery albums:', err);
+        setError('Failed to load gallery. Please try again later.');
+        setAlbums([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPublicAlbums();
+  }, []);
+
+  // Transform albums to media items
   const allMediaItems = useMemo(() => 
-    galleryAlbums.map(album => ({
+    albums.map(album => ({
       id: album.id,
       title: album.title,
-      type: "package",
-      thumbnail: album.thumbnail,
+      type: "album",
+      thumbnail: album.cover,
       category: album.category,
-      images: album.images, // Show all images
-      keywords: album.keywords
-    })), []
+      images: album.images || [],
+      description: album.description
+    })), [albums]
   );
 
   // Debug logging
   useEffect(() => {
-    console.log('Gallery albums:', galleryAlbums);
-    console.log('All media items:', allMediaItems);
-  }, [allMediaItems]);
+    console.log('[MediaGrid] Loaded albums:', albums.length);
+    console.log('[MediaGrid] Media items:', allMediaItems);
+  }, [allMediaItems, albums]);
 
   // Optimized filtering with useCallback
   const filteredItems = useMemo(() => {
@@ -128,8 +154,25 @@ const MediaGrid = ({ filters = {} }) => {
           </div>
         </div>
 
-        {/* Results Summary */}
-        {filteredItems.length === 0 ? (
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex items-center justify-center py-16">
+            <div className="text-center">
+              <Loader className="animate-spin mx-auto mb-4 text-[#004fa2]" size={40} />
+              <p className="text-gray-600 font-medium">Loading gallery...</p>
+            </div>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !isLoading && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+            <p className="text-red-700 font-medium">{error}</p>
+          </div>
+        )}
+
+        {/* Results Summary or Empty State */}
+        {!isLoading && !error && filteredItems.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-400 mb-4">
               <Search size={48} className="mx-auto" />

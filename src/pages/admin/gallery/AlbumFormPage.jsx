@@ -1,12 +1,13 @@
 /**
  * Album Form Page (Admin)
- * Form for creating and editing gallery albums
+ * Legacy form page - Use GalleryManagementPage modal for creating/editing albums instead
+ * This page is kept for backwards compatibility but uses API instead of mock data
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { galleryAlbums, getAlbumById, getCategories } from '../../../data/galleryAlbums';
+import galleryService from '../../../services/galleryService';
 import {
     ArrowLeft,
     Save,
@@ -17,30 +18,53 @@ import {
     AlertCircle,
     Upload,
     Trash2,
-    Eye
+    Eye,
+    Loader
 } from 'lucide-react';
 
 const AlbumFormPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const isEditing = id && id !== 'new';
-
-    const album = isEditing ? getAlbumById(parseInt(id)) : null;
+    const [isLoading, setIsLoading] = useState(isEditing);
+    const [error, setError] = useState(null);
 
     const [formData, setFormData] = useState({
-        title: album?.title || '',
-        category: album?.category || '',
-        description: album?.description || '',
-        keywords: album?.keywords?.join(', ') || '',
-        status: album?.status || 'draft',
-        thumbnail: album?.thumbnail || '',
-        images: album?.images || []
+        title: '',
+        category: 'events',
+        description: '',
+        status: 'draft',
+        cover: ''
     });
 
-    const categories = getCategories();
+    // Fetch album if editing
+    useEffect(() => {
+        if (isEditing) {
+            const fetchAlbum = async () => {
+                try {
+                    setIsLoading(true);
+                    const album = await galleryService.getAlbum(id);
+                    setFormData({
+                        title: album.title || '',
+                        category: album.category || 'events',
+                        description: album.description || '',
+                        status: album.status || 'draft',
+                        cover: album.cover || ''
+                    });
+                } catch (err) {
+                    console.error('Error fetching album:', err);
+                    setError('Failed to load album');
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+            fetchAlbum();
+        }
+    }, [id, isEditing]);
+
+    const categories = ['events', 'training', 'community'];
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
-    const [newImageUrl, setNewImageUrl] = useState('');
 
     const validateForm = () => {
         const newErrors = {};
@@ -48,7 +72,6 @@ const AlbumFormPage = () => {
         if (!formData.title.trim()) newErrors.title = 'Album title is required';
         if (!formData.category) newErrors.category = 'Category is required';
         if (!formData.description.trim()) newErrors.description = 'Description is required';
-        if (formData.images.length === 0) newErrors.images = 'At least one image is required';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -62,29 +85,32 @@ const AlbumFormPage = () => {
         }
 
         setSubmitting(true);
+        setError(null);
 
-        // Prepare data for submission - convert keywords back to array
-        const albumData = {
-            title: formData.title,
-            category: formData.category,
-            description: formData.description,
-            keywords: formData.keywords
-                .split(',')
-                .map(k => k.trim())
-                .filter(k => k.length > 0),
-            status: formData.status,
-            thumbnail: formData.thumbnail,
-            images: formData.images,
-            createdAt: isEditing ? album?.createdAt : new Date().toISOString().split('T')[0],
-            id: isEditing ? album?.id : Math.max(...galleryAlbums.map(a => a.id), 0) + 1
-        };
-
-        // Simulate API call
-        setTimeout(() => {
-            setSubmitting(false);
-            console.log('Saving album:', albumData);
+        try {
+            if (isEditing) {
+                // Update existing album
+                await galleryService.updateAlbum(id, {
+                    title: formData.title,
+                    category: formData.category,
+                    description: formData.description,
+                    status: formData.status
+                });
+            } else {
+                // Create new album
+                await galleryService.createAlbum({
+                    title: formData.title,
+                    category: formData.category,
+                    description: formData.description
+                });
+            }
             navigate('/admin/gallery');
-        }, 1000);
+        } catch (err) {
+            console.error('Error saving album:', err);
+            setError('Failed to save album. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const handleChange = (e) => {
@@ -156,7 +182,22 @@ const AlbumFormPage = () => {
                         </div>
                     </div>
 
+                    {/* Loading State */}
+                    {isLoading && (
+                        <div className="flex items-center justify-center py-12">
+                            <Loader className="animate-spin text-[#004fa2]" size={40} />
+                        </div>
+                    )}
+
+                    {/* Error State */}
+                    {error && (
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                            <p className="text-red-700 font-medium">{error}</p>
+                        </div>
+                    )}
+
                     {/* Form */}
+                    {!isLoading && (
                     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow">
                         <div className="p-4 md:p-8 space-y-6 md:space-y-8">
                             {/* Basic Information Section */}
@@ -433,6 +474,7 @@ const AlbumFormPage = () => {
                             </button>
                         </div>
                     </form>
+                    )}
                 </div>
             </div>
         </AdminLayout>

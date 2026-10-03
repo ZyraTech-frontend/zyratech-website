@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { getAlbumById } from '../../../data/galleryAlbums';
+import { ArrowLeft, X, ChevronLeft, ChevronRight, Loader } from 'lucide-react';
+import galleryService from '../../../services/galleryService';
 import useSEO from '../../../hooks/useSEO';
 
 // Add smooth fade-in animation
@@ -26,46 +26,16 @@ if (typeof document !== 'undefined') {
 }
 
 /**
- * AlbumDetailPage - Optimized Gallery Album Viewer
+ * AlbumDetailPage - Public Gallery Album Viewer
  * 
- * Performance Optimizations:
- * 1. PAGINATION: Shows 12 images per page instead of all 167 at once
- *    - Reduces DOM nodes from 167 to 12 per page
- *    - Instant pagination with no smooth scroll animation
- * 
- * 2. EAGER LOADING (Page 1): First page images load immediately
- *    - Loading attribute set to "eager" for current page
- *    - Users see images instantly without hovering
- *    - Smooth fade-in animation (300ms)
- * 
- * 3. LAZY LOADING (Other Pages): Subsequent pages use lazy loading
- *    - Saves bandwidth for pages user might not see
- *    - Images load as user scrolls down
- * 
- * 4. IMAGE COMPRESSION: All images reduced 94.9% (9MB → 360KB)
- *    - Massive bandwidth savings
- *    - Lightning-fast loading times
- * 
- * 5. STATIC PLACEHOLDER: Gray background during load
- *    - No expensive state tracking = no re-renders
- *    - Better UX than blank state
- * 
- * 6. SMOOTH ANIMATIONS:
- *    - Fade-in effect when image loads
- *    - Scale + brightness on hover
- *    - Responsive overlay effect
- * 
- * 7. IMAGE PRELOADING: Next/previous in lightbox
- *    - Instant navigation
- *    - No loading delay when switching images
- * 
- * 8. KEYBOARD NAVIGATION: Arrow keys + Escape
- *    - Better accessibility
- *    - Faster navigation
+ * Fetches published albums from backend API
+ * Displays album images in paginated gallery view
  */
 const AlbumDetailPage = () => {
   const { id } = useParams();
-  const album = getAlbumById(parseInt(id));
+  const [album, setAlbum] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [imageLoading, setImageLoading] = useState(true);
@@ -75,9 +45,38 @@ const AlbumDetailPage = () => {
   // Pagination settings
   const IMAGES_PER_PAGE = 12;
 
+  // Fetch album from backend
+  useEffect(() => {
+    const fetchAlbum = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const fetchedAlbum = await galleryService.getPublicAlbum(id);
+        
+        // Only allow viewing published albums
+        if (fetchedAlbum.status !== 'published') {
+          setError('This album is not available for viewing.');
+          setAlbum(null);
+        } else {
+          setAlbum(fetchedAlbum);
+        }
+      } catch (err) {
+        console.error('Error fetching album:', err);
+        setError('Album not found. Please check the URL and try again.');
+        setAlbum(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchAlbum();
+    }
+  }, [id]);
+
   useSEO({
-    title: album ? `${album.title} - Gallery` : 'Album Not Found',
-    description: album ? album.description : 'Album not found',
+    title: album ? `${album.title} - Gallery` : 'Album',
+    description: album ? album.description : 'View gallery album',
     url: `/gallery/album/${id}`,
     keywords: album ? album.keywords.join(', ') : ''
   });
@@ -110,11 +109,22 @@ const AlbumDetailPage = () => {
     }
   }, [selectedImageIndex, album.images.length]);
 
-  if (!album) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Album Not Found</h1>
+          <Loader className="animate-spin mx-auto mb-4 text-[#004fa2]" size={40} />
+          <p className="text-gray-600 font-medium">Loading album...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !album) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">{error || 'Album Not Found'}</h1>
           <p className="text-gray-600 mb-4">Album ID: {id}</p>
           <Link to="/gallery" className="text-[#004fa2] hover:underline">
             ← Back to Gallery
