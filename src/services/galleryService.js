@@ -291,9 +291,7 @@ export const galleryService = {
       }
       
       const response = await api.post('/admin/gallery/albums', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+        // DO NOT manually set Content-Type - let axios/browser handle multipart encoding
       });
       
       let album = response.data.data || response.data;
@@ -332,9 +330,7 @@ export const galleryService = {
       }
       
       const response = await api.put(`/admin/gallery/albums/${albumId}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+        // DO NOT manually set Content-Type - let axios/browser handle multipart encoding
       });
       
       let album = response.data.data || response.data;
@@ -374,17 +370,34 @@ export const galleryService = {
   uploadImageToAlbum: async (albumId, imageFile, caption = '', category = '', onProgress = null) => {
     try {
       const formData = new FormData();
+      
+      // Backend expects 'image' field - REQUIRED
       formData.append('image', imageFile);
-      formData.append('caption', caption);
-      formData.append('category', category); // Include image category
+      
+      // Optional fields according to backend spec
+      formData.append('title', caption || ''); // Use caption as title
+      formData.append('category', category || '');
+      formData.append('type', 'image'); // Default type
+      
+      // Debug logging
+      console.log('[galleryService] Uploading image:', {
+        albumId,
+        fileName: imageFile?.name || 'unknown',
+        fileSize: imageFile?.size || 0,
+        caption,
+        category,
+        formDataFields: Array.from(formData.entries()).map(([k, v]) => ({
+          field: k,
+          type: v instanceof File ? 'File' : typeof v
+        }))
+      });
       
       const response = await api.post(
         `/admin/gallery/albums/${albumId}/images`,
         formData,
         {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          },
+          // DO NOT manually set Content-Type header - let axios/browser handle it automatically
+          // Setting it manually breaks the multipart boundary encoding
           onUploadProgress: (progressEvent) => {
             if (onProgress) {
               const percentCompleted = Math.round(
