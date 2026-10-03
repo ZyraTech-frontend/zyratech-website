@@ -380,7 +380,7 @@ export const galleryService = {
       formData.append('albumId', albumId); // Add albumId for backend reference
       
       const response = await api.post(
-        `/admin/gallery/media`,
+        `/admin/gallery/albums/${albumId}/images`,
         formData,
         {
           headers: {
