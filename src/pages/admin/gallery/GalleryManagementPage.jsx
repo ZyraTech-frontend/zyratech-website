@@ -645,11 +645,24 @@ const GalleryManagementPage = () => {
                                                 </button>
                                                 <button 
                                                     onClick={() => handleTogglePublish(album)} 
-                                                    className={`px-2 py-1 text-xs rounded font-medium flex items-center gap-1 transition-colors ${album.status === 'published' ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'}`}
-                                                    title={album.status === 'published' ? 'Album is published - Click to unpublish' : 'Album is draft - Click to publish'}
+                                                    className={`px-2 py-1 text-xs rounded font-medium flex items-center gap-1 transition-colors ${
+                                                        album.status === 'published' 
+                                                            ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' 
+                                                            : 'bg-green-50 text-green-700 hover:bg-green-100'
+                                                    }`}
+                                                    title={album.status === 'published' ? 'Album is published - Click to unpublish' : 'Click to publish this album'}
                                                 >
-                                                    {album.status === 'published' ? <Globe size={12}/> : <EyeOff size={12}/>}
-                                                    {album.status === 'published' ? 'Published' : 'Draft'}
+                                                    {album.status === 'published' ? (
+                                                        <>
+                                                            <Globe size={12}/>
+                                                            Published
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Upload size={12}/>
+                                                            Publish
+                                                        </>
+                                                    )}
                                                 </button>
                                                 <button 
                                                     onClick={() => handleDeleteAlbum(album)} 
@@ -741,7 +754,7 @@ const GalleryManagementPage = () => {
                                                         <button
                                                             onClick={() => handleTogglePublish(album)}
                                                             className={`p-2 rounded-lg transition-colors ${album.status === 'published' ? 'text-blue-600 hover:bg-blue-50' : 'text-gray-400 hover:bg-gray-100'}`}
-                                                            title={album.status === 'published' ? 'Published (Click to unpublish)' : 'Draft (Click to publish)'}
+                                                            title={album.status === 'published' ? 'Published - Click to unpublish' : 'Draft - Click to publish'}
                                                         >
                                                             {album.status === 'published' ? <Globe size={16}/> : <EyeOff size={16}/>}
                                                         </button>
