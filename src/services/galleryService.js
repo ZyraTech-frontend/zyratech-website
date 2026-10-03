@@ -64,17 +64,44 @@ export const galleryService = {
         albums = [];
       }
       
+      // Fetch image counts for each album to ensure accurate counts
+      // This works around backend listAlbums not including imageCount
+      const albumsWithCounts = await Promise.all(
+        albums.map(async (album) => {
+          try {
+            // Try to get image count from the images endpoint
+            const imagesResponse = await galleryService.getAlbumImages(album.id || album._id, 1, 1);
+            const imageCount = imagesResponse.pagination?.total || 0;
+            
+            return {
+              ...album,
+              id: album.id || album._id,
+              title: album.title || 'Untitled Album',
+              description: album.description || '',
+              cover: album.coverImageUrl || album.cover || album.coverImage || '',
+              imageCount: imageCount, // Use actual count from images endpoint
+              createdAt: album.createdAt || new Date().toISOString(),
+              updatedAt: album.updatedAt || album.createdAt || new Date().toISOString()
+            };
+          } catch (err) {
+            console.warn(`[galleryService] Failed to fetch image count for album ${album.id}:`, err);
+            // Fallback to original imageCount if fetch fails
+            return {
+              ...album,
+              id: album.id || album._id,
+              title: album.title || 'Untitled Album',
+              description: album.description || '',
+              cover: album.coverImageUrl || album.cover || album.coverImage || '',
+              imageCount: album.imageCount || album.images?.length || 0,
+              createdAt: album.createdAt || new Date().toISOString(),
+              updatedAt: album.updatedAt || album.createdAt || new Date().toISOString()
+            };
+          }
+        })
+      );
+      
       return {
-        albums: albums.map(album => ({
-          ...album,
-          id: album.id || album._id,
-          title: album.title || 'Untitled Album',
-          description: album.description || '',
-          cover: album.coverImageUrl || album.cover || album.coverImage || '',
-          imageCount: album.imageCount || album.images?.length || 0,
-          createdAt: album.createdAt || new Date().toISOString(),
-          updatedAt: album.updatedAt || album.createdAt || new Date().toISOString()
-        })),
+        albums: albumsWithCounts,
         pagination: {
           page: pagination.page || page,
           limit: pagination.limit || limit,
