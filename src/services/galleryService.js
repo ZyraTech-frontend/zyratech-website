@@ -372,6 +372,7 @@ export const galleryService = {
       const formData = new FormData();
       
       // Backend expects 'image' field - REQUIRED
+      console.log('[galleryService] imageFile type:', typeof imageFile, 'isFile:', imageFile instanceof File);
       formData.append('image', imageFile);
       
       // Optional fields according to backend spec
@@ -380,24 +381,18 @@ export const galleryService = {
       formData.append('type', 'image'); // Default type
       
       // Debug logging
-      console.log('[galleryService] Uploading image:', {
-        albumId,
-        fileName: imageFile?.name || 'unknown',
-        fileSize: imageFile?.size || 0,
-        caption,
-        category,
-        formDataFields: Array.from(formData.entries()).map(([k, v]) => ({
-          field: k,
-          type: v instanceof File ? 'File' : typeof v
-        }))
-      });
+      console.log('[galleryService] FormData entries before send:', Array.from(formData.entries()).map(([k, v]) => ({
+        field: k,
+        value: v instanceof File ? `File: ${v.name} (${v.size} bytes)` : v,
+        type: v instanceof File ? 'File' : typeof v
+      })));
       
       const response = await api.post(
         `/admin/gallery/albums/${albumId}/images`,
         formData,
         {
           // DO NOT manually set Content-Type header - let axios/browser handle it automatically
-          // Setting it manually breaks the multipart boundary encoding
+          // The api.js interceptor will remove it for FormData
           onUploadProgress: (progressEvent) => {
             if (onProgress) {
               const percentCompleted = Math.round(
@@ -431,7 +426,7 @@ export const galleryService = {
   },
 
   // Admin: Upload multiple images to album with category
-  uploadMultipleImagesToAlbum: async (albumId, imageFiles, category = '', onProgress = null) => {
+  uploadMultipleImagesToAlbum: async (albumId, imageFiles, onProgress = null, category = '') => {
     try {
       const uploadedImages = [];
       const totalFiles = imageFiles.length;
