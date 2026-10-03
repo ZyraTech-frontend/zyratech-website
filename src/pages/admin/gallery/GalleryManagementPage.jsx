@@ -589,6 +589,17 @@ const GalleryManagementPage = () => {
                                     <div className="absolute top-2 left-2">
                                         <CategoryBadge category={album.category || 'events'} />
                                     </div>
+                                    {/* Status Badge (Draft/Published) - Top Right */}
+                                    <div className="absolute top-2 right-2">
+                                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold ${
+                                            album.status === 'published' 
+                                                ? 'bg-blue-100 text-blue-800' 
+                                                : 'bg-gray-100 text-gray-800'
+                                        }`}>
+                                            {album.status === 'published' ? <Globe size={10} /> : <EyeOff size={10} />}
+                                            {album.status === 'published' ? 'Published' : 'Draft'}
+                                        </span>
+                                    </div>
                                     {/* Photo Count Badge */}
                                     <PhotoCountBadge count={album.imageCount || 0} />
                                 </div>

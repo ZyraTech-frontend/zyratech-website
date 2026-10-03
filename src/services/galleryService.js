@@ -80,6 +80,7 @@ export const galleryService = {
               description: album.description || '',
               cover: album.coverImageUrl || album.cover || album.coverImage || '',
               imageCount: imageCount, // Use actual count from images endpoint
+              status: album.status || 'draft', // Ensure status is set
               createdAt: album.createdAt || new Date().toISOString(),
               updatedAt: album.updatedAt || album.createdAt || new Date().toISOString()
             };
@@ -93,6 +94,7 @@ export const galleryService = {
               description: album.description || '',
               cover: album.coverImageUrl || album.cover || album.coverImage || '',
               imageCount: album.imageCount || album.images?.length || 0,
+              status: album.status || 'draft', // Ensure status is set
               createdAt: album.createdAt || new Date().toISOString(),
               updatedAt: album.updatedAt || album.createdAt || new Date().toISOString()
             };
@@ -129,6 +131,7 @@ export const galleryService = {
           title: album.title || 'Untitled Album',
           description: album.description || '',
           cover: album.coverImageUrl || album.cover || album.coverImage || '',
+          status: album.status || 'draft', // Ensure status is set
           images: album.images || [],
           createdAt: album.createdAt || new Date().toISOString(),
           updatedAt: album.updatedAt || album.createdAt || new Date().toISOString()
@@ -208,6 +211,7 @@ export const galleryService = {
           title: album.title || 'Untitled Album',
           description: album.description || '',
           cover: album.coverImageUrl || album.cover || album.coverImage || '',
+          status: album.status || 'published', // Public albums should be published
           images: album.images || [],
           createdAt: album.createdAt || new Date().toISOString(),
           updatedAt: album.updatedAt || album.createdAt || new Date().toISOString()
@@ -331,6 +335,7 @@ export const galleryService = {
           description: album.description || '',
           cover: album.cover || album.coverImage || '',
           category: album.category || 'events',
+          status: album.status || 'draft', // New albums default to draft
           images: album.images || [],
           createdAt: album.createdAt || new Date().toISOString()
         };
