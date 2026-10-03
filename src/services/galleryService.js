@@ -356,6 +356,11 @@ export const galleryService = {
       formData.append('description', albumData.description);
       formData.append('category', albumData.category || 'events');
       
+      // Include status if provided (for publish/unpublish actions)
+      if (albumData.status) {
+        formData.append('status', albumData.status);
+      }
+      
       // Optional: include new cover photo (backend expects 'coverImage', not 'cover')
       if (albumData.coverFile) {
         formData.append('coverImage', albumData.coverFile);
@@ -375,6 +380,7 @@ export const galleryService = {
           description: album.description || '',
           cover: album.cover || album.coverImage || '',
           category: album.category || 'events',
+          status: album.status || 'draft', // Ensure status is mapped
           images: album.images || [],
           updatedAt: album.updatedAt || new Date().toISOString()
         };
