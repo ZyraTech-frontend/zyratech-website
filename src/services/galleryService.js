@@ -377,7 +377,6 @@ export const galleryService = {
       formData.append('image', imageFile);
       formData.append('caption', caption);
       formData.append('category', category); // Include image category
-      formData.append('albumId', albumId); // Add albumId for backend reference
       
       const response = await api.post(
         `/admin/gallery/albums/${albumId}/images`,
