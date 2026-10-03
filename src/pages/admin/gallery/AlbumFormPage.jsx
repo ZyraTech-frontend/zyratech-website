@@ -12,13 +12,9 @@ import {
     ArrowLeft,
     Save,
     X,
-    Images,
     Tag,
     FileText,
     AlertCircle,
-    Upload,
-    Trash2,
-    Eye,
     Loader
 } from 'lucide-react';
 
@@ -123,40 +119,6 @@ const AlbumFormPage = () => {
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
-    };
-
-    const handleAddImage = () => {
-        if (newImageUrl.trim()) {
-            setFormData(prev => ({
-                ...prev,
-                images: [...prev.images, newImageUrl],
-                // Set thumbnail if it's the first image
-                thumbnail: prev.thumbnail || newImageUrl
-            }));
-            setNewImageUrl('');
-            if (errors.images) {
-                setErrors(prev => ({ ...prev, images: '' }));
-            }
-        }
-    };
-
-    const handleRemoveImage = (index) => {
-        setFormData(prev => {
-            const newImages = prev.images.filter((_, i) => i !== index);
-            return {
-                ...prev,
-                images: newImages,
-                // Reset thumbnail if removed
-                thumbnail: prev.thumbnail === prev.images[index] ? (newImages[0] || '') : prev.thumbnail
-            };
-        });
-    };
-
-    const handleSetThumbnail = (imageUrl) => {
-        setFormData(prev => ({
-            ...prev,
-            thumbnail: imageUrl
-        }));
     };
 
     return (
@@ -279,130 +241,6 @@ const AlbumFormPage = () => {
                                             <p className="text-red-600 text-xs mt-1 flex items-center gap-1">
                                                 <AlertCircle size={14} />
                                                 {errors.description}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    {/* Keywords */}
-                                    <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                            Keywords (comma-separated)
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="keywords"
-                                            value={formData.keywords}
-                                            onChange={handleChange}
-                                            placeholder="e.g., innovation, technology, development"
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                        />
-                                        <p className="text-gray-600 text-xs mt-1">Helps with search and organization</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Images Section */}
-                            <div className="border-t border-gray-200 pt-8">
-                                <h2 className="text-base md:text-lg font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
-                                    <Images size={20} className="text-blue-600" />
-                                    Album Images
-                                </h2>
-
-                                <div className="space-y-6">
-                                    {/* Add Image */}
-                                    <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                            Add Image URL
-                                        </label>
-                                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                                            <input
-                                                type="text"
-                                                value={newImageUrl}
-                                                onChange={(e) => setNewImageUrl(e.target.value)}
-                                                onKeyPress={(e) => e.key === 'Enter' && handleAddImage()}
-                                                placeholder="e.g., /images/photo1.webp"
-                                                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={handleAddImage}
-                                                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all flex items-center gap-2"
-                                            >
-                                                <Upload size={18} />
-                                                Add
-                                            </button>
-                                        </div>
-                                        <p className="text-gray-600 text-xs mt-2">Paste image path from /public/images/ folder</p>
-                                    </div>
-
-                                    {/* Images List */}
-                                    <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-3">
-                                            Images in Album {formData.images.length > 0 && `(${formData.images.length})`}
-                                        </label>
-                                        {formData.images.length > 0 ? (
-                                            <div className="space-y-3">
-                                                {formData.images.map((image, index) => (
-                                                    <div
-                                                        key={index}
-                                                        className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-2 md:p-4 border rounded-lg transition-all ${
-                                                            formData.thumbnail === image
-                                                                ? 'bg-blue-50 border-blue-300'
-                                                                : 'bg-gray-50 border-gray-200 hover:border-gray-300'
-                                                        }`}
-                                                    >
-                                                        {/* Image Preview */}
-                                                        <img decoding="async"
-                                                            src={image}
-                                                            alt={`Album image ${index + 1}`}
-                                                            className="w-full sm:w-16 h-32 sm:h-16 rounded object-cover"
-                                                            loading="lazy"
-                                                        />
-
-                                                        {/* Image Info */}
-                                                        <div className="flex-1">
-                                                            <p className="text-sm font-semibold text-gray-900">Image {index + 1}</p>
-                                                            <p className="text-xs text-gray-600 truncate">{image}</p>
-                                                            {formData.thumbnail === image && (
-                                                                <p className="text-xs text-blue-600 font-semibold mt-1">✓ Thumbnail</p>
-                                                            )}
-                                                        </div>
-
-                                                        {/* Actions */}
-                                                        <div className="flex items-center gap-2">
-                                                            {formData.thumbnail !== image && (
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => handleSetThumbnail(image)}
-                                                                    className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
-                                                                    title="Set as thumbnail"
-                                                                >
-                                                                    <Eye size={18} />
-                                                                </button>
-                                                            )}
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => handleRemoveImage(index)}
-                                                                className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
-                                                                title="Remove image"
-                                                            >
-                                                                <Trash2 size={18} />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <div className="p-6 text-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-                                                <Images size={32} className="mx-auto text-gray-400 mb-2" />
-                                                <p className="text-gray-600 font-medium">No images added yet</p>
-                                                <p className="text-gray-500 text-sm mt-1">Add images above to create your album</p>
-                                            </div>
-                                        )}
-                                        {errors.images && (
-                                            <p className="text-red-600 text-xs mt-2 flex items-center gap-1">
-                                                <AlertCircle size={14} />
-                                                {errors.images}
                                             </p>
                                         )}
                                     </div>

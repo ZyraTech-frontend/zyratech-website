@@ -289,22 +289,10 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://zyratechhub.com/gallery/album/1</loc>
+    <loc>https://zyratechhub.com/gallery</loc>
     <lastmod>2026-10-03</lastmod>
-    <priority>0.6</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://zyratechhub.com/gallery/album/2</loc>
-    <lastmod>2026-10-03</lastmod>
-    <priority>0.6</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://zyratechhub.com/gallery/album/3</loc>
-    <lastmod>2026-10-03</lastmod>
-    <priority>0.6</priority>
-    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://zyratechhub.com/jobs/1</loc>

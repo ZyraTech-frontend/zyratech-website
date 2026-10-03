@@ -11,7 +11,6 @@ import { fileURLToPath } from 'url';
 
 // Import data files
 import { articlesData } from '../src/data/articlesData.js';
-import { galleryAlbums } from '../src/data/galleryAlbums.js';
 import { jobsData } from '../src/data/jobsData.js';
 import { trainingCourses } from '../src/data/trainingCourses.js';
 
@@ -71,13 +70,18 @@ const generateBlogRoutes = () => {
 
 /**
  * Generate gallery album routes
+ * Note: Gallery data is now fetched from the backend API
+ * We include the main gallery page but skip individual album routes
+ * as they are dynamically generated at runtime
  */
 const generateGalleryRoutes = () => {
-  return galleryAlbums.map(album => ({
-    path: `/gallery/album/${album.id}`,
-    priority: 0.6,
-    changefreq: 'monthly'
-  }));
+  return [
+    {
+      path: `/gallery`,
+      priority: 0.8,
+      changefreq: 'weekly'
+    }
+  ];
 };
 
 /**
