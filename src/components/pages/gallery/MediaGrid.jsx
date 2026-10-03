@@ -33,12 +33,15 @@ const MediaGrid = ({ filters = {} }) => {
         const data = response.data;
         let albums = [];
         
-        // Handle different response formats
-        if (data.success && data.data) {
-          albums = data.data.albums || data.data.data || [];
-        } else if (data.data) {
-          albums = Array.isArray(data.data) ? data.data : data.data.albums || [];
+        // Backend returns: { success: true, data: { data: [...albums], pagination: {...} } }
+        if (data.success && data.data && data.data.data) {
+          // Correct format from backend
+          albums = Array.isArray(data.data.data) ? data.data.data : [];
+        } else if (data.data && Array.isArray(data.data)) {
+          // Fallback: if data.data is already an array
+          albums = data.data;
         } else if (Array.isArray(data)) {
+          // Direct array response
           albums = data;
         }
         
