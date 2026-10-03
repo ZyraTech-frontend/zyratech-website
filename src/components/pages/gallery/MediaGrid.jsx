@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react'
 import { Play, Grid, List, X, ChevronLeft, ChevronRight, Maximize2, Minimize2, Search, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import galleryService from '../../../services/galleryService';
+import api from '../../../services/api';
 
 const MediaGrid = ({ filters = {} }) => {
   const navigate = useNavigate();
@@ -23,11 +24,26 @@ const MediaGrid = ({ filters = {} }) => {
       try {
         setIsLoading(true);
         setError(null);
-        // Fetch all published albums from backend
-        const response = await galleryService.getAllAlbums(1, 100);
-        // Filter only published albums for public display
-        const publishedAlbums = response.albums.filter(album => album.status === 'published');
-        setAlbums(publishedAlbums);
+        
+        // Call public gallery endpoint - no authentication required
+        const response = await api.get('/gallery/albums', {
+          params: { page: 1, limit: 100 }
+        });
+        
+        const data = response.data;
+        let albums = [];
+        
+        // Handle different response formats
+        if (data.success && data.data) {
+          albums = data.data.albums || data.data.data || [];
+        } else if (data.data) {
+          albums = Array.isArray(data.data) ? data.data : data.data.albums || [];
+        } else if (Array.isArray(data)) {
+          albums = data;
+        }
+        
+        console.log('[MediaGrid] Fetched public albums:', { count: albums.length, albums });
+        setAlbums(albums);
       } catch (err) {
         console.error('Error fetching gallery albums:', err);
         setError('Failed to load gallery. Please try again later.');
