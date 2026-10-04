@@ -7,7 +7,7 @@ import api from '../../../services/api';
 const MediaGrid = ({ filters = {} }) => {
   const navigate = useNavigate();
   const [viewMode, setViewMode] = useState('grid');
-  const [itemsPerPage, setItemsPerPage] = useState(6);
+  const [itemsPerPage, setItemsPerPage] = useState(8);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
