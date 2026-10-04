@@ -83,6 +83,8 @@ const AlbumDetailPage = () => {
 
   // Handle keyboard navigation in lightbox
   useEffect(() => {
+    if (!album) return; // Guard: don't set up listener if album hasn't loaded yet
+    
     const handleKeyDown = (e) => {
       if (selectedImageIndex === null) return;
       
@@ -107,7 +109,7 @@ const AlbumDetailPage = () => {
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [selectedImageIndex, album.media.length]);
+  }, [selectedImageIndex, album]);
 
   if (isLoading) {
     return (
