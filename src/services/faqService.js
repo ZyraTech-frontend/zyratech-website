@@ -10,6 +10,7 @@
  * - POST /admin/faq - Create FAQ (admin only)
  * - PUT /admin/faq/:id - Update FAQ (admin only)
  * - DELETE /admin/faq/:id - Delete FAQ (admin only)
+ * - PUT /admin/faq/reorder - Reorder FAQ items (admin only)
  */
 
 import api from './api';
@@ -54,131 +55,6 @@ export const FAQ_CATEGORIES = {
     }
 };
 
-// Mock FAQ data (fallback for development)
-let mockFaqData = [
-    {
-        id: 1,
-        category: 'Internship Program',
-        question: 'Who can apply for Zyra Tech Hub\'s internship program?',
-        answer: 'University students, graduates, and anyone eager to gain real-world tech experience.',
-        status: 'published',
-        order: 1,
-        views: 245,
-        helpful: 89,
-        createdAt: '2024-12-01'
-    },
-    {
-        id: 2,
-        category: 'Internship Program',
-        question: 'How much does the internship cost?',
-        answer: 'GHS 350, covering mentorship, training, and certification.',
-        status: 'published',
-        order: 2,
-        views: 312,
-        helpful: 156,
-        createdAt: '2024-12-01'
-    },
-    {
-        id: 3,
-        category: 'Internship Program',
-        question: 'Do you partner with schools outside Koforidua?',
-        answer: 'Currently we focus on Koforidua but will expand regionally and internationally.',
-        status: 'published',
-        order: 3,
-        views: 178,
-        helpful: 67,
-        createdAt: '2024-12-02'
-    },
-    {
-        id: 4,
-        category: 'Internship Program',
-        question: 'Can institutions request IT or web services?',
-        answer: 'Yes, we provide professional IT, web, and networking services for schools and organizations.',
-        status: 'published',
-        order: 4,
-        views: 134,
-        helpful: 45,
-        createdAt: '2024-12-02'
-    },
-    {
-        id: 5,
-        category: 'Internship Program',
-        question: 'How can individuals or companies support your programs?',
-        answer: 'Through sponsorships, partnerships, or donations of funds and equipment.',
-        status: 'published',
-        order: 5,
-        views: 98,
-        helpful: 34,
-        createdAt: '2024-12-03'
-    },
-    {
-        id: 6,
-        category: 'Services & Support',
-        question: 'What IT and digital services do you offer?',
-        answer: 'We provide Education Technology (EdTech), IT & Networking, Web & Software Development, and Consulting & Support services for schools and businesses.',
-        status: 'published',
-        order: 1,
-        views: 267,
-        helpful: 112,
-        createdAt: '2024-12-05'
-    },
-    {
-        id: 7,
-        category: 'Services & Support',
-        question: 'What specific IT services are available?',
-        answer: 'LAN/WAN installation, WiFi setup, server deployment, school websites, management systems, and IT consulting.',
-        status: 'published',
-        order: 2,
-        views: 189,
-        helpful: 78,
-        createdAt: '2024-12-05'
-    },
-    {
-        id: 8,
-        category: 'Services & Support',
-        question: 'Do you offer long-term support contracts?',
-        answer: 'Yes, we provide long-term maintenance contracts and ongoing system support for schools and businesses.',
-        status: 'published',
-        order: 3,
-        views: 145,
-        helpful: 56,
-        createdAt: '2024-12-06'
-    },
-    {
-        id: 9,
-        category: 'Services & Support',
-        question: 'How can I request a quote for services?',
-        answer: 'Contact us directly through our website or email info@zyratechhub.com with your project details.',
-        status: 'published',
-        order: 4,
-        views: 203,
-        helpful: 89,
-        createdAt: '2024-12-06'
-    },
-    {
-        id: 10,
-        category: 'Partnerships',
-        question: 'What types of partnerships do you offer?',
-        answer: 'We offer technology partnerships, educational collaborations, sponsorships, and joint venture opportunities.',
-        status: 'published',
-        order: 1,
-        views: 156,
-        helpful: 67,
-        createdAt: '2024-12-07'
-    },
-    {
-        id: 11,
-        category: 'Partnerships',
-        question: 'How can our organization partner with Zyra Tech Hub?',
-        answer: 'Contact us through our partnership page or email info@zyratechhub.com to discuss collaboration opportunities.',
-        status: 'published',
-        order: 2,
-        views: 189,
-        helpful: 78,
-        createdAt: '2024-12-07'
-    }
-];
-
 export const faqService = {
   // ─── PUBLIC ENDPOINTS ──────────────────────────────────────────────────────
 
@@ -187,66 +63,38 @@ export const faqService = {
    * GET /faq?page=1&limit=50&category=courses
    */
   getAllFaqs: async (params = {}) => {
-    try {
-      console.log('[faqService] Fetching all FAQs from backend', params);
-      const response = await api.get('/faq', { params });
-      const payload = response.data?.data;
-      
-      // Handle nested pagination response
-      const items = Array.isArray(payload) ? payload : (payload?.data || []);
-      const pagination = payload?.pagination || {
-        page: params.page || 1,
-        limit: params.limit || 50,
-        total: items.length,
-        totalPages: Math.ceil(items.length / (params.limit || 50))
-      };
+    const response = await api.get('/faq', { params });
+    const payload = response.data?.data;
+    
+    // Handle nested pagination response
+    const items = Array.isArray(payload) ? payload : (payload?.data || []);
+    const pagination = payload?.pagination || {
+      page: params.page || 1,
+      limit: params.limit || 50,
+      total: items.length,
+      totalPages: Math.ceil(items.length / (params.limit || 50))
+    };
 
-      console.log('[faqService] Successfully fetched FAQs:', { count: items.length });
-      return {
-        data: items,
-        pagination
-      };
-    } catch (error) {
-      console.error('[faqService] Error fetching FAQs from backend:', error.message);
-      // Fallback to mock data for development
-      console.log('[faqService] Using fallback mock data');
-      return {
-        data: mockFaqData.filter(f => f.status === 'published'),
-        pagination: {
-          page: params.page || 1,
-          limit: params.limit || 50,
-          total: mockFaqData.length,
-          totalPages: 1
-        }
-      };
-    }
+    return {
+      data: items,
+      pagination
+    };
   },
 
   /**
    * Get published FAQs (for public site)
    */
   getPublishedFaqs: async (params = {}) => {
-    try {
-      console.log('[faqService] Fetching published FAQs');
-      const response = await api.get('/faq', { 
-        params: { ...params, status: 'published' }
-      });
-      const payload = response.data?.data;
-      const items = Array.isArray(payload) ? payload : (payload?.data || []);
-      
-      return {
-        data: items.sort((a, b) => (a.order || 999) - (b.order || 999)),
-        pagination: payload?.pagination || {}
-      };
-    } catch (error) {
-      console.error('[faqService] Error fetching published FAQs:', error.message);
-      // Fallback to mock data
-      return {
-        data: mockFaqData
-          .filter(faq => faq.status === 'published')
-          .sort((a, b) => a.order - b.order)
-      };
-    }
+    const response = await api.get('/faq', { 
+      params: { ...params, status: 'published' }
+    });
+    const payload = response.data?.data;
+    const items = Array.isArray(payload) ? payload : (payload?.data || []);
+    
+    return {
+      data: items.sort((a, b) => (a.order || 999) - (b.order || 999)),
+      pagination: payload?.pagination || {}
+    };
   },
 
   /**
@@ -254,15 +102,8 @@ export const faqService = {
    * GET /faq/:id
    */
   getFaqById: async (id) => {
-    try {
-      console.log('[faqService] Fetching FAQ by ID:', id);
-      const response = await api.get(`/faq/${id}`);
-      return response.data?.data || response.data;
-    } catch (error) {
-      console.error(`[faqService] Error fetching FAQ ${id}:`, error.message);
-      // Fallback to mock data
-      return mockFaqData.find(f => f.id === parseInt(id));
-    }
+    const response = await api.get(`/faq/${id}`);
+    return response.data?.data || response.data;
   },
 
   /**
@@ -270,22 +111,11 @@ export const faqService = {
    * GET /faq/search?q=payment
    */
   searchFaqs: async (query) => {
-    try {
-      console.log('[faqService] Searching FAQs for:', query);
-      const response = await api.get('/faq/search', { 
-        params: { q: query }
-      });
-      const payload = response.data?.data;
-      return Array.isArray(payload) ? payload : (payload?.data || []);
-    } catch (error) {
-      console.error('[faqService] Error searching FAQs:', error.message);
-      // Fallback to mock search
-      const q = query.toLowerCase();
-      return mockFaqData.filter(faq =>
-        faq.question.toLowerCase().includes(q) ||
-        faq.answer.toLowerCase().includes(q)
-      );
-    }
+    const response = await api.get('/faq/search', { 
+      params: { q: query }
+    });
+    const payload = response.data?.data;
+    return Array.isArray(payload) ? payload : (payload?.data || []);
   },
 
   /**
@@ -293,16 +123,8 @@ export const faqService = {
    * GET /faq/categories
    */
   getCategories: async () => {
-    try {
-      console.log('[faqService] Fetching FAQ categories');
-      const response = await api.get('/faq/categories');
-      return response.data?.data || response.data;
-    } catch (error) {
-      console.error('[faqService] Error fetching FAQ categories:', error.message);
-      // Fallback: extract unique categories from mock data
-      const categories = [...new Set(mockFaqData.map(f => f.category))];
-      return categories;
-    }
+    const response = await api.get('/faq/categories');
+    return response.data?.data || response.data;
   },
 
   // ─── ADMIN ENDPOINTS ───────────────────────────────────────────────────────
@@ -312,30 +134,21 @@ export const faqService = {
    * GET /admin/faq?page=1&limit=50&status=draft
    */
   getAdminFaqs: async (params = {}) => {
-    try {
-      console.log('[faqService] Fetching admin FAQs', params);
-      const response = await api.get('/admin/faq', { params });
-      const payload = response.data?.data;
-      
-      const items = Array.isArray(payload) ? payload : (payload?.data || []);
-      const pagination = payload?.pagination || {
-        page: params.page || 1,
-        limit: params.limit || 50,
-        total: items.length,
-        totalPages: Math.ceil(items.length / (params.limit || 50))
-      };
+    const response = await api.get('/admin/faq', { params });
+    const payload = response.data?.data;
+    
+    const items = Array.isArray(payload) ? payload : (payload?.data || []);
+    const pagination = payload?.pagination || {
+      page: params.page || 1,
+      limit: params.limit || 50,
+      total: items.length,
+      totalPages: Math.ceil(items.length / (params.limit || 50))
+    };
 
-      return {
-        data: items,
-        pagination
-      };
-    } catch (error) {
-      console.error('[faqService] Error fetching admin FAQs:', error.message);
-      return {
-        data: mockFaqData,
-        pagination: { page: 1, limit: 50, total: mockFaqData.length, totalPages: 1 }
-      };
-    }
+    return {
+      data: items,
+      pagination
+    };
   },
 
   /**
@@ -343,15 +156,8 @@ export const faqService = {
    * POST /admin/faq
    */
   createFaq: async (data) => {
-    try {
-      console.log('[faqService] Creating FAQ:', data);
-      const response = await api.post('/admin/faq', data);
-      console.log('[faqService] FAQ created successfully');
-      return response.data?.data || response.data;
-    } catch (error) {
-      console.error('[faqService] Error creating FAQ:', error.message);
-      throw error;
-    }
+    const response = await api.post('/admin/faq', data);
+    return response.data?.data || response.data;
   },
 
   /**
@@ -359,15 +165,8 @@ export const faqService = {
    * PUT /admin/faq/:id
    */
   updateFaq: async (id, data) => {
-    try {
-      console.log('[faqService] Updating FAQ:', id, data);
-      const response = await api.put(`/admin/faq/${id}`, data);
-      console.log('[faqService] FAQ updated successfully');
-      return response.data?.data || response.data;
-    } catch (error) {
-      console.error(`[faqService] Error updating FAQ ${id}:`, error.message);
-      throw error;
-    }
+    const response = await api.put(`/admin/faq/${id}`, data);
+    return response.data?.data || response.data;
   },
 
   /**
@@ -375,55 +174,35 @@ export const faqService = {
    * DELETE /admin/faq/:id
    */
   deleteFaq: async (id) => {
-    try {
-      console.log('[faqService] Deleting FAQ:', id);
-      const response = await api.delete(`/admin/faq/${id}`);
-      console.log('[faqService] FAQ deleted successfully');
-      return response.data;
-    } catch (error) {
-      console.error(`[faqService] Error deleting FAQ ${id}:`, error.message);
-      throw error;
-    }
+    const response = await api.delete(`/admin/faq/${id}`);
+    return response.data;
+  },
+
+  /**
+   * Reorder FAQ items
+   * PUT /admin/faq/reorder
+   */
+  reorderFaqs: async (faqIds) => {
+    const response = await api.put('/admin/faq/reorder', { faqIds });
+    return response.data?.data || response.data;
   },
 
   /**
    * Increment view count for FAQ
+   * PATCH /faq/:id/views
    */
   incrementViews: async (id) => {
-    try {
-      // Try backend endpoint if it exists
-      await api.patch(`/faq/${id}/views`);
-      return { success: true };
-    } catch (error) {
-      console.warn('[faqService] Backend views endpoint not available, using fallback');
-      // Fallback: increment mock data
-      const index = mockFaqData.findIndex(f => f.id === parseInt(id));
-      if (index !== -1) {
-        mockFaqData[index].views = (mockFaqData[index].views || 0) + 1;
-        return { success: true };
-      }
-      return { success: false };
-    }
+    const response = await api.patch(`/faq/${id}/views`);
+    return response.data;
   },
 
   /**
    * Mark FAQ as helpful
+   * PATCH /faq/:id/helpful
    */
   markHelpful: async (id) => {
-    try {
-      // Try backend endpoint if it exists
-      const response = await api.patch(`/faq/${id}/helpful`);
-      return response.data;
-    } catch (error) {
-      console.warn('[faqService] Backend helpful endpoint not available, using fallback');
-      // Fallback: update mock data
-      const index = mockFaqData.findIndex(f => f.id === parseInt(id));
-      if (index !== -1) {
-        mockFaqData[index].helpful = (mockFaqData[index].helpful || 0) + 1;
-        return { success: true };
-      }
-      return { success: false };
-    }
+    const response = await api.patch(`/faq/${id}/helpful`);
+    return response.data;
   }
 };
 
