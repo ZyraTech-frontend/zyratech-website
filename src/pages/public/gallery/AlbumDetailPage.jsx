@@ -75,10 +75,10 @@ const AlbumDetailPage = () => {
   }, [id]);
 
   useSEO({
-    title: album ? `${album.title} - Gallery` : 'Album',
-    description: album ? album.description : 'View gallery album',
+    title: album ? `${album?.title} - Gallery` : 'Album',
+    description: album ? album?.description : 'View gallery album',
     url: `/gallery/album/${id}`,
-    keywords: album ? album.keywords.join(', ') : ''
+    keywords: album?.keywords?.join(', ') || ''
   });
 
   // Handle keyboard navigation in lightbox
@@ -150,14 +150,14 @@ const AlbumDetailPage = () => {
                 <ArrowLeft size={20} className="mr-2" />
                 Back to Gallery
               </Link>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{album.title}</h1>
-              <p className="text-gray-600 mt-1">{album.description}</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{album?.title || 'Album'}</h1>
+              <p className="text-gray-600 mt-1">{album?.description || ''}</p>
               <div className="flex items-center mt-2 space-x-4">
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#004fa2] text-white">
-                  {album.category}
+                  {album?.category || 'gallery'}
                 </span>
                 <span className="text-sm text-gray-500">
-                  {album.media?.length || 0} {(album.media?.length || 0) === 1 ? 'photo' : 'photos'}
+                  {album?.media?.length || 0} {(album?.media?.length || 0) === 1 ? 'photo' : 'photos'}
                 </span>
               </div>
             </div>
@@ -185,8 +185,8 @@ const AlbumDetailPage = () => {
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400 z-0" />
                   
                   <img
-                    src={image.url || image}
-                    alt={image.title || `${album.title} - Image ${actualIndex + 1}`}
+                    src={image?.url || image}
+                    alt={image?.title || `${album?.title || 'Album'} - Image ${actualIndex + 1}`}
                     className="relative w-full h-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
                     loading="lazy"
                     decoding="async"
@@ -247,9 +247,9 @@ const AlbumDetailPage = () => {
               e.stopPropagation();
               setImageLoading(true);
               if (diff > 0) {
-                setSelectedImageIndex((prev) => prev < album.media.length - 1 ? prev + 1 : 0);
+                setSelectedImageIndex((prev) => prev < (album?.media?.length || 1) - 1 ? prev + 1 : 0);
               } else {
-                setSelectedImageIndex((prev) => prev > 0 ? prev - 1 : album.media.length - 1);
+                setSelectedImageIndex((prev) => prev > 0 ? prev - 1 : (album?.media?.length || 1) - 1);
               }
             }
           }}
@@ -258,10 +258,10 @@ const AlbumDetailPage = () => {
           <div className="flex-shrink-0 bg-gradient-to-b from-black/80 to-black/20 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between border-b border-white/5">
             <div className="flex-1 min-w-0">
               <h3 className="text-white text-base sm:text-lg font-semibold truncate">
-                {album.title}
+                {album?.title || 'Album'}
               </h3>
               <p className="text-white/60 text-xs sm:text-sm mt-1">
-                Image {selectedImageIndex + 1} of {album.media?.length || 0}
+                Image {selectedImageIndex + 1} of {album?.media?.length || 0}
               </p>
             </div>
             <button
@@ -285,8 +285,8 @@ const AlbumDetailPage = () => {
             {/* Image Wrapper */}
             <div className="relative max-w-full max-h-full flex items-center justify-center">
               <img
-                src={album.media[selectedImageIndex]?.url || album.media[selectedImageIndex]}
-                alt={`${album.title} - Image ${selectedImageIndex + 1}`}
+                src={album?.media?.[selectedImageIndex]?.url || album?.media?.[selectedImageIndex] || ''}
+                alt={`${album?.title || 'Album'} - Image ${selectedImageIndex + 1}`}
                 className="w-auto h-auto max-w-[95vw] max-h-[calc(100vh-180px)] object-contain transition-opacity duration-300"
                 style={{
                   boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
@@ -304,7 +304,7 @@ const AlbumDetailPage = () => {
                   e.stopPropagation();
                   setImageLoading(true);
                   setSelectedImageIndex((prev) => 
-                    prev > 0 ? prev - 1 : album.media.length - 1
+                    prev > 0 ? prev - 1 : (album?.media?.length || 1) - 1
                   );
                 }}
                 className="absolute left-0 top-1/2 -translate-y-1/2 p-3 text-white bg-white/10 hover:bg-white/25 rounded-r-lg transition-all duration-200 group"
@@ -321,7 +321,7 @@ const AlbumDetailPage = () => {
                   e.stopPropagation();
                   setImageLoading(true);
                   setSelectedImageIndex((prev) => 
-                    prev < album.media.length - 1 ? prev + 1 : 0
+                    prev < (album?.media?.length || 1) - 1 ? prev + 1 : 0
                   );
                 }}
                 className="absolute right-0 top-1/2 -translate-y-1/2 p-3 text-white bg-white/10 hover:bg-white/25 rounded-l-lg transition-all duration-200 group"
