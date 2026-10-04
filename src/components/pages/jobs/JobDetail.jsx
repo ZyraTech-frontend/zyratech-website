@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Linkedin, Facebook, Twitter, Mail, Copy } from 'lucide-react';
+import DetailPageSkeleton from '../../common/skeletons/DetailPageSkeleton';
 import jobsService from '../../../services/jobsService';
 
 const JobDetail = () => {
@@ -58,11 +59,7 @@ const JobDetail = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex justify-center items-center py-24">
-        <div className="w-12 h-12 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin"></div>
-      </div>
-    );
+    return <DetailPageSkeleton />;
   }
 
   if (error || !job) {

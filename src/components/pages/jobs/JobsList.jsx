@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import JobCard from './JobCard';
+import JobListSkeleton from '../../common/skeletons/JobListSkeleton';
 import jobsService from '../../../services/jobsService';
 import { Search } from 'lucide-react';
 
@@ -90,9 +91,7 @@ const JobsList = () => {
 
       {/* Jobs List */}
       {loading ? (
-        <div className="flex justify-center py-12">
-          <div className="w-12 h-12 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin"></div>
-        </div>
+        <JobListSkeleton count={3} />
       ) : error ? (
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
           <p className="text-red-800 font-medium">{error}</p>

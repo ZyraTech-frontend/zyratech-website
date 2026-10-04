@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, Users, Star, Award, Check, CheckCircle, Calendar, Briefcase, TrendingUp, UsersRound, Target, BookOpen, Loader2 } from 'lucide-react';
+import { Clock, Users, Star, Award, Check, CheckCircle, Calendar, Briefcase, TrendingUp, UsersRound, Target, BookOpen } from 'lucide-react';
 import TrainingLayout from '../../../components/TrainingLayout';
 import TrainingBreadcrumb from '../../../components/pages/training/TrainingBreadcrumb';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
+import DetailPageSkeleton from '../../../components/common/skeletons/DetailPageSkeleton';
 import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import trainingService from '../../../services/trainingService.js';
 import { normalizeImageUrl } from '../../../utils/imageUrl';
@@ -86,12 +87,7 @@ const CourseDetailPage = () => {
   if (loading) {
     return (
       <TrainingLayout>
-        <div className="flex items-center justify-center px-4 py-28 min-h-[60vh]">
-          <div className="text-center">
-            <Loader2 size={40} className="animate-spin text-[#004fa2] mx-auto mb-3" />
-            <p className="text-sm font-semibold text-gray-700">Loading course curriculum & details...</p>
-          </div>
-        </div>
+        <DetailPageSkeleton />
       </TrainingLayout>
     );
   }

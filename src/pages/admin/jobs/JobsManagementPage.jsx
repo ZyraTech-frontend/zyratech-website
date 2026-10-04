@@ -45,6 +45,7 @@ import {
     Mail,
     Send
 } from 'lucide-react';
+import AdminJobCardSkeleton from '../../../components/common/skeletons/AdminJobCardSkeleton';
 
 // Job type colors and labels
 const JOB_TYPE_CONFIG = {
@@ -516,6 +517,13 @@ const JobsManagementPage = () => {
                         </div>
 
                         {/* Job Cards Grid */}
+                        {loading ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                {Array.from({ length: 6 }).map((_, i) => (
+                                    <AdminJobCardSkeleton key={i} />
+                                ))}
+                            </div>
+                        ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                             {paginatedJobs.map((job) => (
                                 <div
@@ -573,6 +581,7 @@ const JobsManagementPage = () => {
                                 </div>
                             ))}
                         </div>
+                        )}
 
                         {/* Empty State */}
                         {filteredJobs.length === 0 && (

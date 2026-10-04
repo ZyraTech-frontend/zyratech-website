@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Globe, Cpu, Server, Clock, Users, Star, ChevronRight, Target, Award, Network, Rocket, Database } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
+import CourseGridSkeleton from '../../common/skeletons/CourseGridSkeleton';
 import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
 import trainingService from '../../../services/trainingService.js';
 import { getCourseImageUrl } from '../../../utils/imageUrl';

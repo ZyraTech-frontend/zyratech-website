@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Code, Terminal, Database, Clock, Users, Star, ChevronRight, Award, BookOpen, FileCode, Target, Cloud } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
+import CourseGridSkeleton from '../../common/skeletons/CourseGridSkeleton';
 import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
 import trainingService from '../../../services/trainingService.js';
 import { getCourseImageUrl } from '../../../utils/imageUrl';
@@ -174,9 +175,7 @@ const BasicProgramsPage = () => {
 
           {/* Loading State */}
           {loading && (
-            <div className="flex justify-center py-12">
-              <div className="w-12 h-12 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin"></div>
-            </div>
+            <CourseGridSkeleton count={6} />
           )}
 
           {/* Empty State */}

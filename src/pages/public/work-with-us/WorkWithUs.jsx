@@ -7,8 +7,8 @@ import HowWeHireSection from '../../../components/pages/work-with-us/HowWeHireSe
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
 import ParallaxDivider from '../../../components/common/ParallaxDivider';
+import FullPageSkeleton from '../../../components/common/FullPageSkeleton';
 import contentService from '../../../services/contentService';
-import Loader from '../../../components/admin/shared/LoadingSpinner';
 import useSEO from '../../../hooks/useSEO';
 
 const WorkWithUs = () => {
@@ -37,11 +37,7 @@ const WorkWithUs = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Loader />
-      </div>
-    );
+    return <FullPageSkeleton />;
   }
 
   if (!data) return null;
