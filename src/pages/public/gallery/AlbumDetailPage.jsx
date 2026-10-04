@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, X, ChevronLeft, ChevronRight, Loader } from 'lucide-react';
+import ImageLoadingSkeleton from '../../../components/common/skeletons/ImageLoadingSkeleton';
+import AlbumDetailSkeleton from '../../../components/common/skeletons/AlbumDetailSkeleton';
 import galleryService from '../../../services/galleryService';
 import useSEO from '../../../hooks/useSEO';
 
@@ -112,14 +114,7 @@ const AlbumDetailPage = () => {
   }, [selectedImageIndex, album]);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <Loader className="animate-spin mx-auto mb-4 text-[#004fa2]" size={40} />
-          <p className="text-gray-600 font-medium">Loading album...</p>
-        </div>
-      </div>
-    );
+    return <AlbumDetailSkeleton />;
   }
 
   if (error || !album) {
@@ -277,8 +272,8 @@ const AlbumDetailPage = () => {
           <div className="flex-1 flex items-center justify-center relative px-4 sm:px-8 py-8 overflow-hidden">
             {/* Loading Indicator */}
             {imageLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-                <div className="w-12 h-12 border-3 border-white/20 border-t-white rounded-full animate-spin" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <ImageLoadingSkeleton width="w-[90vw]" height="h-[calc(100vh-180px)]" />
               </div>
             )}
 

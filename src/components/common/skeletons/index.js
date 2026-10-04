@@ -9,3 +9,5 @@ export { default as DetailPageSkeleton } from './DetailPageSkeleton';
 export { default as JobListSkeleton } from './JobListSkeleton';
 export { default as CourseGridSkeleton } from './CourseGridSkeleton';
 export { default as AdminJobCardSkeleton } from './AdminJobCardSkeleton';
+export { default as ImageLoadingSkeleton } from './ImageLoadingSkeleton';
+export { default as AlbumDetailSkeleton } from './AlbumDetailSkeleton';
