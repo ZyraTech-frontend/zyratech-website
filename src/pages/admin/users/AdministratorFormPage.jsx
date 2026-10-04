@@ -46,7 +46,6 @@ const DEPARTMENTS = [
   { value: 'Team Members', section: 'Content' },
   { value: 'Payments', section: 'Business' },
   { value: 'Enrollments', section: 'Business' },
-  { value: 'Messages', section: 'Business' },
   { value: 'Partnerships', section: 'Business' },
   { value: 'Contact Inquiries', section: 'Business' },
   { value: 'Impact Stories', section: 'Business' },
@@ -71,7 +70,6 @@ const DEPARTMENT_PERMISSIONS_MAP = {
   'Team Members': ['about_page', 'about_section'],
   'Payments': ['payments'],
   'Enrollments': ['enrollments', 'training_courses'],
-  'Messages': ['messages'],
   'Partnerships': ['partnership_requests', 'partnership_content'],
   'Contact Inquiries': ['contact_inquiries'],
   'Impact Stories': ['impact_stories'],
@@ -99,7 +97,6 @@ const AVAILABLE_PERMISSIONS = [
   // Business Operations
   { id: 'enrollments', label: 'Enrollments', section: 'Business' },
   { id: 'payments', label: 'Payments & Revenue', section: 'Business' },
-  { id: 'messages', label: 'Messages', section: 'Business' },
   { id: 'partnership_requests', label: 'Partnership Requests', section: 'Business' },
   { id: 'contact_inquiries', label: 'Contact Inquiries', section: 'Business' },
   { id: 'impact_stories', label: 'Impact Stories', section: 'Business' },

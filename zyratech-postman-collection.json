@@ -2100,129 +2100,7 @@
                               ]
                  },
                  {
-                     "name":  "8. Messages",
-                     "description":  "Direct messaging and conversation management",
-                     "item":  [
-                                  {
-                                      "name":  "Send Message",
-                                      "request":  {
-                                                      "method":  "POST",
-                                                      "header":  [
-                                                                     {
-                                                                         "key":  "Authorization",
-                                                                         "value":  "Bearer {{token}}"
-                                                                     },
-                                                                     {
-                                                                         "key":  "Content-Type",
-                                                                         "value":  "application/json"
-                                                                     }
-                                                                 ],
-                                                      "body":  {
-                                                                   "mode":  "raw",
-                                                                   "raw":  "{\n  \"recipientId\": \"RESOURCE_ID\",\n  \"content\": \"Hello, I wanted to discuss the project\"\n}"
-                                                               },
-                                                      "url":  {
-                                                                  "raw":  "{{base_url}}/messages",
-                                                                  "protocol":  "https",
-                                                                  "host":  [
-                                                                               "{{base_url}}"
-                                                                           ],
-                                                                  "path":  [
-                                                                               "messages"
-                                                                           ]
-                                                              },
-                                                      "description":  "Send direct message to another user. Creates conversation if not exists."
-                                                  },
-                                      "response":  [
-
-                                                   ]
-                                  },
-                                  {
-                                      "name":  "Get Conversations",
-                                      "request":  {
-                                                      "method":  "GET",
-                                                      "header":  [
-                                                                     {
-                                                                         "key":  "Authorization",
-                                                                         "value":  "Bearer {{token}}"
-                                                                     }
-                                                                 ],
-                                                      "url":  {
-                                                                  "raw":  "{{base_url}}/messages/conversations",
-                                                                  "protocol":  "https",
-                                                                  "host":  [
-                                                                               "{{base_url}}"
-                                                                           ],
-                                                                  "path":  [
-                                                                               "messages",
-                                                                               "conversations"
-                                                                           ]
-                                                              },
-                                                      "description":  "Get all active conversations for current user."
-                                                  },
-                                      "response":  [
-
-                                                   ]
-                                  },
-                                  {
-                                      "name":  "Get Conversation Messages",
-                                      "request":  {
-                                                      "method":  "GET",
-                                                      "header":  [
-                                                                     {
-                                                                         "key":  "Authorization",
-                                                                         "value":  "Bearer {{token}}"
-                                                                     }
-                                                                 ],
-                                                      "url":  {
-                                                                  "raw":  "{{base_url}}/messages/conversations/RESOURCE_ID",
-                                                                  "protocol":  "https",
-                                                                  "host":  [
-                                                                               "{{base_url}}"
-                                                                           ],
-                                                                  "path":  [
-                                                                               "messages",
-                                                                               "conversations",
-                                                                               "RESOURCE_ID"
-                                                                           ]
-                                                              },
-                                                      "description":  "Get all messages in a specific conversation with pagination."
-                                                  },
-                                      "response":  [
-
-                                                   ]
-                                  },
-                                  {
-                                      "name":  "Delete Message",
-                                      "request":  {
-                                                      "method":  "DELETE",
-                                                      "header":  [
-                                                                     {
-                                                                         "key":  "Authorization",
-                                                                         "value":  "Bearer {{token}}"
-                                                                     }
-                                                                 ],
-                                                      "url":  {
-                                                                  "raw":  "{{base_url}}/messages/RESOURCE_ID",
-                                                                  "protocol":  "https",
-                                                                  "host":  [
-                                                                               "{{base_url}}"
-                                                                           ],
-                                                                  "path":  [
-                                                                               "messages",
-                                                                               "RESOURCE_ID"
-                                                                           ]
-                                                              },
-                                                      "description":  "Delete a message from conversation (only message author can delete)."
-                                                  },
-                                      "response":  [
-
-                                                   ]
-                                  }
-                              ]
-                 },
-                 {
-                     "name":  "9. Newsletter",
+                     "name":  "8. Newsletter",
                      "description":  "Email newsletter subscription and campaign management",
                      "item":  [
                                   {
@@ -2364,7 +2242,7 @@
                               ]
                  },
                  {
-                     "name":  "10. Payments \u0026 Transactions",
+                     "name":  "9. Payments \u0026 Transactions",
                      "description":  "Payment processing and transaction management via Paystack",
                      "item":  [
                                   {
@@ -2579,7 +2457,7 @@
                               ]
                  },
                  {
-                     "name":  "11. Blog Articles",
+                     "name":  "10. Blog Articles",
                      "description":  "Blog content management and article publishing",
                      "item":  [
                                   {
@@ -2828,7 +2706,7 @@
                               ]
                  },
                  {
-                     "name":  "12. Gallery \u0026 Albums",
+                     "name":  "11. Gallery \u0026 Albums",
                      "description":  "Image gallery and album management",
                      "item":  [
                                   {
@@ -3202,7 +3080,7 @@
                               ]
                  },
                  {
-                     "name":  "13. Projects Portfolio",
+                     "name":  "12. Projects Portfolio",
                      "description":  "Portfolio projects and case studies management",
                      "item":  [
                                   {
@@ -3440,7 +3318,7 @@
                               ]
                  },
                  {
-                     "name":  "14. FAQ",
+                     "name":  "13. FAQ",
                      "description":  "Frequently Asked Questions management",
                      "item":  [
                                   {
@@ -3696,7 +3574,7 @@
                               ]
                  },
                  {
-                     "name":  "15. Testimonials",
+                     "name":  "14. Testimonials",
                      "description":  "User testimonials and reviews management",
                      "item":  [
                                   {
@@ -3925,7 +3803,7 @@
                               ]
                  },
                  {
-                     "name":  "16. CMS Content",
+                     "name":  "15. CMS Content",
                      "description":  "Content Management System for static pages and content blocks",
                      "item":  [
                                   {
@@ -4174,7 +4052,7 @@
                               ]
                  },
                  {
-                     "name":  "17. Impact Stories \u0026 Metrics",
+                     "name":  "16. Impact Stories \u0026 Metrics",
                      "description":  "Platform analytics, impact metrics, and success stories",
                      "item":  [
                                   {
@@ -4936,7 +4814,7 @@
                               ]
                  },
                  {
-                     "name":  "18. Settings",
+                     "name":  "17. Settings",
                      "description":  "User and system settings management",
                      "item":  [
                                   {
@@ -5103,7 +4981,7 @@
                  },
                  {
                      "description":  "System activity logs and audit trails (Admin only)",
-                     "name":  "20. Activity Logs",
+                     "name":  "19. Activity Logs",
                      "item":  [
                                   {
                                       "request":  {

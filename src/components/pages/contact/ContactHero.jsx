@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, MapPin, Mail, Phone, Send, User, MessageSquare } from 'lucide-react';
 import { FaLinkedinIn, FaXTwitter, FaInstagram, FaFacebookF, FaWhatsapp } from 'react-icons/fa6';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../../store/slices/uiSlice';
+import contactInquiryService from '../../../services/contactInquiryService';
 
 const ContactHero = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -13,6 +17,7 @@ const ContactHero = () => {
 
   const [isVisible, setIsVisible] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
@@ -25,10 +30,60 @@ const ContactHero = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
+    
+    // Validation
+    if (!formData.fullName.trim() || !formData.email.trim() || !formData.message.trim()) {
+      dispatch(addNotification({
+        message: 'Please fill in all required fields',
+        type: 'warning'
+      }));
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      dispatch(addNotification({
+        message: 'Please enter a valid email address',
+        type: 'warning'
+      }));
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await contactInquiryService.submitInquiry({
+        name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        subject: formData.inquiryType || 'General Inquiry',
+        message: formData.message
+      });
+
+      dispatch(addNotification({
+        message: 'Your inquiry has been submitted successfully! We will contact you soon.',
+        type: 'success'
+      }));
+
+      // Reset form
+      setFormData({
+        fullName: '',
+        email: '',
+        phone: '',
+        inquiryType: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('Failed to submit inquiry:', error);
+      dispatch(addNotification({
+        message: error.response?.data?.message || 'Failed to submit inquiry. Please try again.',
+        type: 'error'
+      }));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleFocus = (fieldName) => {
@@ -121,9 +176,22 @@ const ContactHero = () => {
               <div className="pt-3">
                 <button
                   type="submit"
-                  className="w-full bg-[#004fa2] hover:bg-[#003a7a] text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+                  disabled={isSubmitting}
+                  className="w-full bg-[#004fa2] hover:bg-[#003a7a] disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                 >
-                  Send Message
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin">
+                        <Send size={18} />
+                      </div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send size={18} />
+                      Send Message
+                    </>
+                  )}
                 </button>
               </div>
 

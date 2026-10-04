@@ -348,7 +348,6 @@ const UsersPage = () => {
                         <optgroup label="Business">
                             <option value="Payments">Payments</option>
                             <option value="Enrollments">Enrollments</option>
-                            <option value="Messages">Messages</option>
                             <option value="Partnerships">Partnerships</option>
                             <option value="Contact Inquiries">Contact Inquiries</option>
                             <option value="Impact Stories">Impact Stories</option>

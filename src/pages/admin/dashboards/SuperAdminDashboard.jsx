@@ -251,7 +251,6 @@ const SuperAdminDashboard = ({ user: propUser }) => {
                     { label: 'Enrollments', value: metrics.activeEnrollments, icon: Users, iconColor: 'text-purple-600', link: '/admin/enrollments' },
                     { label: 'Projects', value: metrics.activeProjects, icon: FolderKanban, iconColor: 'text-cyan-600', link: '/admin/projects' },
                     { label: 'Payments', value: metrics.completedPayments, icon: CreditCard, iconColor: 'text-green-600', link: '/admin/payments' },
-                    { label: 'Messages', value: metrics.unreadMessages, icon: MessageSquare, iconColor: 'text-indigo-600', link: '/admin/messages' },
                     { label: 'Partners', value: metrics.partnershipRequests, icon: Handshake, iconColor: 'text-teal-600', link: '/admin/partnerships' },
                     { label: 'Users', value: metrics.totalUsers, icon: Users, iconColor: 'text-slate-600', link: '/admin/users' }
                 ].map((stat, i) => (

@@ -258,7 +258,6 @@ const RegularAdminDashboard = ({ user: propUser }) => {
                     { label: 'Blog Posts', value: metrics.blogPosts, icon: BookOpen, iconColor: 'text-purple-600', link: '/admin/blog' },
                     { label: 'Projects', value: metrics.projects, icon: FolderKanban, iconColor: 'text-cyan-600', link: '/admin/projects' },
                     { label: 'Inquiries', value: metrics.pendingInquiries, icon: Inbox, iconColor: 'text-indigo-600', link: '/admin/contact-inquiries' },
-                    { label: 'Messages', value: metrics.unreadMessages, icon: MessageSquare, iconColor: 'text-rose-600', link: '/admin/messages' },
                     { label: 'Gallery', value: metrics.galleryImages, icon: Image, iconColor: 'text-emerald-600', link: '/admin/gallery' },
                     { label: 'Enrollments', value: metrics.activeEnrollments, icon: FileText, iconColor: 'text-slate-600', link: '/admin/enrollments' },
                 ].map((stat, i) => (
@@ -339,7 +338,7 @@ const RegularAdminDashboard = ({ user: propUser }) => {
 
                     <p className="text-gray-500 text-[10px] font-semibold uppercase tracking-wide mb-0.5">Communications</p>
                     <h3 className="text-xl font-bold text-gray-900 mb-0.5">
-                        {(metrics.pendingInquiries + metrics.unreadMessages + metrics.partnershipRequests).toLocaleString()}
+                        {(metrics.pendingInquiries + metrics.partnershipRequests).toLocaleString()}
                     </h3>
 
                     <div className="mt-2 pt-2 border-t border-gray-100 space-y-1.5">

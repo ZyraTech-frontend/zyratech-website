@@ -19,6 +19,7 @@ import {
   FileText,
   FolderKanban,
   Handshake,
+  Inbox,
   Mail,
   HelpCircle,
   MessageCircle,
@@ -30,8 +31,6 @@ import {
   CheckCircle,
   Quote,
   Layout,
-
-  Inbox,
   UserPlus,
   ShieldCheck
 } from 'lucide-react';
@@ -355,17 +354,6 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           >
             <FileText size={20} />
             <span className="font-medium">Enrollments</span>
-          </Link>
-
-          <Link
-            to="/admin/messages"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/messages')
-              ? 'bg-white/15 text-white'
-              : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
-          >
-            <MessageSquare size={20} />
-            <span className="font-medium">Messages</span>
           </Link>
 
           <Link
