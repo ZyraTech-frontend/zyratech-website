@@ -51,13 +51,15 @@ export default function FaqFormPage() {
                             category: response.data.category,
                             question: response.data.question,
                             answer: response.data.answer,
-                            status: response.data.status,
+                            status: response.data.status || 'draft',
                             order: response.data.order || 1
                         });
+                    } else {
+                        setErrors({ submit: "FAQ not found. Please ensure it's published before editing." });
                     }
                 } catch (error) {
                     console.error("Error loading FAQ:", error);
-                    setErrors({ submit: "Failed to load FAQ." });
+                    setErrors({ submit: "Failed to load FAQ. It may not be published yet. Please publish it first from the FAQ list." });
                 } finally {
                     setLoading(false);
                 }
