@@ -67,7 +67,7 @@ const MediaGrid = ({ filters = {} }) => {
       type: "album",
       thumbnail: album.coverImageUrl || (album.media && album.media[0]?.url) || '/images/image1.webp',
       category: album.category,
-      images: album.media || [], // Backend returns media array, not images
+      media: album.media || [], // Backend returns media array
       description: album.description
     })), [albums]
   );
