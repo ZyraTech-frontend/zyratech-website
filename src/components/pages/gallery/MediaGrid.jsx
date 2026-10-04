@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { Play, Grid, List, X, ChevronLeft, ChevronRight, Maximize2, Minimize2, Search, Loader } from 'lucide-react';
+import { Play, Grid, List, X, ChevronLeft, ChevronRight, Maximize2, Minimize2, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import galleryService from '../../../services/galleryService';
 import api from '../../../services/api';
@@ -175,11 +175,25 @@ const MediaGrid = ({ filters = {} }) => {
 
         {/* Loading State */}
         {isLoading && (
-          <div className="flex items-center justify-center py-16">
-            <div className="text-center">
-              <Loader className="animate-spin mx-auto mb-4 text-[#004fa2]" size={40} />
-              <p className="text-gray-600 font-medium">Loading gallery...</p>
-            </div>
+          <div className={`grid gap-6 ${
+            viewMode === 'grid' 
+              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
+              : 'grid-cols-1 lg:grid-cols-2'
+          }`}>
+            {Array(8).fill(0).map((_, i) => (
+              <div key={i} className="space-y-3">
+                {/* Skeleton Card */}
+                <div className={`relative overflow-hidden rounded-xl bg-gray-200 ${
+                  viewMode === 'list' ? 'w-full sm:w-48 h-40 sm:h-32 flex-shrink-0' : 'aspect-video'
+                } animate-pulse`} />
+                
+                {/* Skeleton Title */}
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse" />
+                  <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse" />
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
