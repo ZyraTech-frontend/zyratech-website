@@ -5,6 +5,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
 import faqService, { FAQ_CATEGORIES } from '../../../services/faqService';
@@ -28,6 +30,7 @@ const CATEGORY_KEYS = Object.keys(FAQ_CATEGORIES);
 export default function FaqFormPage() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { isSuperAdmin } = usePermissions();
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
@@ -46,13 +49,16 @@ export default function FaqFormPage() {
                 setLoading(true);
                 try {
                     const response = await faqService.getFaqById(id);
-                    if (response.data) {
+                    // Handle both nested and flat response formats
+                    const faqData = response?.data || response;
+                    
+                    if (faqData && faqData.question) {
                         setFormData({
-                            category: response.data.category,
-                            question: response.data.question,
-                            answer: response.data.answer,
-                            status: response.data.status || 'draft',
-                            order: response.data.order || 1
+                            category: faqData.category || 'General',
+                            question: faqData.question || '',
+                            answer: faqData.answer || '',
+                            status: faqData.status || 'draft',
+                            order: faqData.order || 1
                         });
                     } else {
                         setErrors({ submit: "FAQ not found. Please ensure it's published before editing." });
@@ -143,8 +149,16 @@ export default function FaqFormPage() {
         try {
             if (id) {
                 await faqService.updateFaq(id, formData);
+                dispatch(addNotification({
+                    type: 'success',
+                    message: 'FAQ updated successfully'
+                }));
             } else {
                 await faqService.createFaq(formData);
+                dispatch(addNotification({
+                    type: 'success',
+                    message: 'FAQ created successfully'
+                }));
             }
 
             // Navigate back to FAQ management
@@ -152,6 +166,10 @@ export default function FaqFormPage() {
         } catch (error) {
             console.error('Error saving FAQ:', error);
             setErrors({ submit: 'Failed to save FAQ. Please try again.' });
+            dispatch(addNotification({
+                type: 'error',
+                message: 'Failed to save FAQ'
+            }));
         } finally {
             setLoading(false);
         }

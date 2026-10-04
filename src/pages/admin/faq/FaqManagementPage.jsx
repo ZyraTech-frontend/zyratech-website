@@ -6,7 +6,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
 import faqService from '../../../services/faqService';
@@ -233,8 +233,16 @@ const FaqManagementPage = () => {
                 try {
                     await faqService.deleteFaq(faq.id);
                     setFaqs(prev => prev.filter(f => f.id !== faq.id));
+                    dispatch(addNotification({
+                        type: 'success',
+                        message: `FAQ "${faq.question}" deleted successfully`
+                    }));
                 } catch (error) {
                     console.error('Error deleting FAQ:', error);
+                    dispatch(addNotification({
+                        type: 'error',
+                        message: 'Failed to delete FAQ'
+                    }));
                 }
             }
         }));
@@ -245,8 +253,16 @@ const FaqManagementPage = () => {
             const newStatus = faq.status === 'published' ? 'draft' : 'published';
             await faqService.updateFaq(faq.id, { status: newStatus });
             setFaqs(prev => prev.map(f => f.id === faq.id ? { ...f, status: newStatus } : f));
+            dispatch(addNotification({
+                type: 'success',
+                message: `FAQ marked as ${newStatus === 'published' ? 'published' : 'draft'}`
+            }));
         } catch (error) {
             console.error('Error updating FAQ status:', error);
+            dispatch(addNotification({
+                type: 'error',
+                message: 'Failed to update FAQ status'
+            }));
         }
     };
 
