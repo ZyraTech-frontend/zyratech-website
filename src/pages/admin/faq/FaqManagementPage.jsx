@@ -126,7 +126,7 @@ const FaqManagementPage = () => {
     const fetchFaqs = async () => {
         try {
             setLoading(true);
-            const response = await faqService.getAllFaqs();
+            const response = await faqService.getAdminFaqs();
             setFaqs(response.data);
         } catch (error) {
             console.error('Error fetching FAQs:', error);

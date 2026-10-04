@@ -64,10 +64,12 @@ export const faqService = {
    */
   getAllFaqs: async (params = {}) => {
     const response = await api.get('/faq', { params });
+    console.log('[faqService.getAllFaqs] Response:', response.data);
     const payload = response.data?.data;
     
     // Handle nested pagination response
     const items = Array.isArray(payload) ? payload : (payload?.data || []);
+    console.log('[faqService.getAllFaqs] Extracted items:', items);
     const pagination = payload?.pagination || {
       page: params.page || 1,
       limit: params.limit || 50,
@@ -135,9 +137,11 @@ export const faqService = {
    */
   getAdminFaqs: async (params = {}) => {
     const response = await api.get('/admin/faq', { params });
+    console.log('[faqService.getAdminFaqs] Response:', response.data);
     const payload = response.data?.data;
     
     const items = Array.isArray(payload) ? payload : (payload?.data || []);
+    console.log('[faqService.getAdminFaqs] Extracted items:', items);
     const pagination = payload?.pagination || {
       page: params.page || 1,
       limit: params.limit || 50,
