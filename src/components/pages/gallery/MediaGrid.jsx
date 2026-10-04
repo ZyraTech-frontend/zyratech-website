@@ -65,7 +65,7 @@ const MediaGrid = ({ filters = {} }) => {
       id: album.id,
       title: album.title,
       type: "album",
-      thumbnail: album.cover || (album.media && album.media[0]?.url) || '/images/image1.webp',
+      thumbnail: album.coverImageUrl || (album.media && album.media[0]?.url) || '/images/image1.webp',
       category: album.category,
       images: album.media || [], // Backend returns media array, not images
       description: album.description

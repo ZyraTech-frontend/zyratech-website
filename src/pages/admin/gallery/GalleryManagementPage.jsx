@@ -340,6 +340,9 @@ const GalleryManagementPage = () => {
                 type: 'success',
                 message: `Album "${album.title}" ${newStatus === 'published' ? 'published' : 'unpublished'} successfully`
             }));
+            
+            // Refetch album list to get any updates from other sources
+            await loadAlbums(currentPage);
         } catch (error) {
             console.error('Error updating album status:', error);
             dispatch(addNotification({
@@ -572,10 +575,10 @@ const GalleryManagementPage = () => {
                         {filteredAlbums.map((album) => (
                             <div key={album.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col hover:border-[#004fa2] hover:shadow-md transition-all group p-2">
                                 <div className="relative aspect-video rounded-lg overflow-hidden mb-2 bg-gray-100">
-                                    {album.cover ? (
+                                    {album.coverImageUrl ? (
                                         <img 
                                             decoding="async" 
-                                            src={album.cover} 
+                                            src={album.coverImageUrl} 
                                             alt={album.title} 
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
                                             loading="lazy" 
@@ -698,10 +701,10 @@ const GalleryManagementPage = () => {
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-16 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                                                    {album.cover ? (
+                                                    {album.coverImageUrl ? (
                                                         <img 
                                                             decoding="async"
-                                                            src={album.cover}
+                                                            src={album.coverImageUrl}
                                                             alt={album.title}
                                                             className="w-full h-full object-cover"
                                                             loading="lazy"

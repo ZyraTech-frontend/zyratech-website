@@ -45,7 +45,7 @@ const AlbumFormPage = () => {
                         category: album.category || 'events',
                         description: album.description || '',
                         status: album.status || 'draft',
-                        cover: album.cover || ''
+                        cover: album.coverImageUrl || ''
                     });
                 } catch (err) {
                     console.error('Error fetching album:', err);
