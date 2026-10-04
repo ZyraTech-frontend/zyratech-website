@@ -219,13 +219,13 @@ const MediaGrid = ({ filters = {} }) => {
               >
               
               {/* Media Thumbnail */}
-              <div className={`relative overflow-hidden rounded-xl ${
+              <div className={`relative overflow-hidden rounded-xl bg-gray-200 ${
                 viewMode === 'list' ? 'w-full sm:w-48 h-40 sm:h-32 flex-shrink-0' : 'aspect-square'
               }`}>
                 <img 
                   src={item.thumbnail}
                   alt={item.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                   loading="lazy"
                   onError={(e) => {
                     console.error('❌ Failed to load image:', item.thumbnail);
