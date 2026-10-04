@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import JobCard from './JobCard';
-import jobsService from '../../../services/jobsService';
+import { jobsData } from '../../../data/jobsData';
 import { Search } from 'lucide-react';
 
 const JobsList = () => {
@@ -8,35 +8,12 @@ const JobsList = () => {
   const [selectedType, setSelectedType] = useState('all');
   const [allJobs, setAllJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    let isMounted = true;
-    const loadJobs = async () => {
-      try {
-        setError(null);
-        // Fetch jobs from backend API ONLY - no mock data fallback
-        const jobs = await jobsService.getAllJobs();
-        if (isMounted) {
-          // Only show active/published jobs on public page
-          const activeJobs = Array.isArray(jobs) ? jobs.filter(job => job.status === 'active' || job.status === 'published') : [];
-          setAllJobs(activeJobs);
-        }
-      } catch (err) {
-        console.error('Failed to fetch jobs from backend:', err);
-        if (isMounted) {
-          setError('Unable to load job listings. Please try again later.');
-          setAllJobs([]);
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    loadJobs();
-    return () => { isMounted = false; };
+    // Use mock data directly - no API calls for production
+    const activeJobs = jobsData.filter(job => job.status === 'active' || job.status === 'published' || !job.status);
+    setAllJobs(activeJobs);
+    setLoading(false);
   }, []);
 
   const types = ['all', ...new Set(allJobs.map(j => j.type))];
@@ -92,10 +69,6 @@ const JobsList = () => {
       {loading ? (
         <div className="flex justify-center py-12">
           <div className="w-12 h-12 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin"></div>
-        </div>
-      ) : error ? (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <p className="text-red-800 font-medium">{error}</p>
         </div>
       ) : allJobs.length === 0 ? (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
