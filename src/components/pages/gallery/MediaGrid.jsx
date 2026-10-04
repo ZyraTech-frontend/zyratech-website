@@ -220,7 +220,7 @@ const MediaGrid = ({ filters = {} }) => {
               
               {/* Media Thumbnail */}
               <div className={`relative overflow-hidden rounded-xl ${
-                viewMode === 'list' ? 'w-full sm:w-48 h-40 sm:h-32 flex-shrink-0' : 'aspect-video'
+                viewMode === 'list' ? 'w-full sm:w-48 h-40 sm:h-32 flex-shrink-0' : 'aspect-square'
               }`}>
                 <img 
                   src={item.thumbnail}
