@@ -88,13 +88,13 @@ const AlbumDetailPage = () => {
       
       if (e.key === 'ArrowLeft') {
         setSelectedImageIndex((prev) => 
-          prev > 0 ? prev - 1 : album.images.length - 1
+          prev > 0 ? prev - 1 : album.media.length - 1
         );
         setImageLoading(true);
         e.preventDefault();
       } else if (e.key === 'ArrowRight') {
         setSelectedImageIndex((prev) => 
-          prev < album.images.length - 1 ? prev + 1 : 0
+          prev < album.media.length - 1 ? prev + 1 : 0
         );
         setImageLoading(true);
         e.preventDefault();
@@ -107,7 +107,7 @@ const AlbumDetailPage = () => {
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [selectedImageIndex, album.images.length]);
+  }, [selectedImageIndex, album.media.length]);
 
   if (isLoading) {
     return (
@@ -155,7 +155,7 @@ const AlbumDetailPage = () => {
                   {album.category}
                 </span>
                 <span className="text-sm text-gray-500">
-                  {album.images.length} {album.images.length === 1 ? 'photo' : 'photos'}
+                  {album.media?.length || 0} {(album.media?.length || 0) === 1 ? 'photo' : 'photos'}
                 </span>
               </div>
             </div>
@@ -166,7 +166,7 @@ const AlbumDetailPage = () => {
       {/* Images Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {album.images
+          {(album.media || [])
             .slice((currentPage - 1) * IMAGES_PER_PAGE, currentPage * IMAGES_PER_PAGE)
             .map((image, index) => {
               const actualIndex = (currentPage - 1) * IMAGES_PER_PAGE + index;
@@ -183,8 +183,8 @@ const AlbumDetailPage = () => {
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400 z-0" />
                   
                   <img
-                    src={image}
-                    alt={`${album.title} - Image ${actualIndex + 1}`}
+                    src={image.url || image}
+                    alt={image.title || `${album.title} - Image ${actualIndex + 1}`}
                     className="relative w-full h-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
                     loading="lazy"
                     decoding="async"
@@ -202,7 +202,7 @@ const AlbumDetailPage = () => {
         </div>
 
         {/* Pagination */}
-        {album.images.length > IMAGES_PER_PAGE && (
+        {album.media?.length > IMAGES_PER_PAGE && (
           <div className="mt-8 flex items-center justify-center gap-2">
             <button
               onClick={() => {
@@ -215,14 +215,14 @@ const AlbumDetailPage = () => {
             </button>
             
             <span className="text-gray-600 text-sm font-medium">
-              Page {currentPage} of {Math.ceil(album.images.length / IMAGES_PER_PAGE)}
+              Page {currentPage} of {Math.ceil((album.media?.length || 0) / IMAGES_PER_PAGE)}
             </span>
             
             <button
               onClick={() => {
-                setCurrentPage(prev => Math.min(Math.ceil(album.images.length / IMAGES_PER_PAGE), prev + 1));
+                setCurrentPage(prev => Math.min(Math.ceil((album.media?.length || 0) / IMAGES_PER_PAGE), prev + 1));
               }}
-              disabled={currentPage === Math.ceil(album.images.length / IMAGES_PER_PAGE)}
+              disabled={currentPage === Math.ceil((album.media?.length || 0) / IMAGES_PER_PAGE)}
               className="px-4 py-2 bg-white rounded-lg border border-gray-300 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
             >
               Next →
@@ -245,9 +245,9 @@ const AlbumDetailPage = () => {
               e.stopPropagation();
               setImageLoading(true);
               if (diff > 0) {
-                setSelectedImageIndex((prev) => prev < album.images.length - 1 ? prev + 1 : 0);
+                setSelectedImageIndex((prev) => prev < album.media.length - 1 ? prev + 1 : 0);
               } else {
-                setSelectedImageIndex((prev) => prev > 0 ? prev - 1 : album.images.length - 1);
+                setSelectedImageIndex((prev) => prev > 0 ? prev - 1 : album.media.length - 1);
               }
             }
           }}
@@ -259,7 +259,7 @@ const AlbumDetailPage = () => {
                 {album.title}
               </h3>
               <p className="text-white/60 text-xs sm:text-sm mt-1">
-                Image {selectedImageIndex + 1} of {album.images.length}
+                Image {selectedImageIndex + 1} of {album.media?.length || 0}
               </p>
             </div>
             <button
@@ -283,7 +283,7 @@ const AlbumDetailPage = () => {
             {/* Image Wrapper */}
             <div className="relative max-w-full max-h-full flex items-center justify-center">
               <img
-                src={album.images[selectedImageIndex]}
+                src={album.media[selectedImageIndex]?.url || album.media[selectedImageIndex]}
                 alt={`${album.title} - Image ${selectedImageIndex + 1}`}
                 className="w-auto h-auto max-w-[95vw] max-h-[calc(100vh-180px)] object-contain transition-opacity duration-300"
                 style={{
@@ -296,13 +296,13 @@ const AlbumDetailPage = () => {
             </div>
 
             {/* Navigation Buttons - Left */}
-            {album.images.length > 1 && (
+            {album.media?.length > 1 && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setImageLoading(true);
                   setSelectedImageIndex((prev) => 
-                    prev > 0 ? prev - 1 : album.images.length - 1
+                    prev > 0 ? prev - 1 : album.media.length - 1
                   );
                 }}
                 className="absolute left-0 top-1/2 -translate-y-1/2 p-3 text-white bg-white/10 hover:bg-white/25 rounded-r-lg transition-all duration-200 group"
@@ -313,13 +313,13 @@ const AlbumDetailPage = () => {
             )}
 
             {/* Navigation Buttons - Right */}
-            {album.images.length > 1 && (
+            {album.media?.length > 1 && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setImageLoading(true);
                   setSelectedImageIndex((prev) => 
-                    prev < album.images.length - 1 ? prev + 1 : 0
+                    prev < album.media.length - 1 ? prev + 1 : 0
                   );
                 }}
                 className="absolute right-0 top-1/2 -translate-y-1/2 p-3 text-white bg-white/10 hover:bg-white/25 rounded-l-lg transition-all duration-200 group"
@@ -336,7 +336,7 @@ const AlbumDetailPage = () => {
               {/* Image Counter */}
               <div className="text-white/60 text-xs sm:text-sm">
                 <span className="text-white font-semibold">{selectedImageIndex + 1}</span>
-                <span> / {album.images.length}</span>
+                <span> / {album.media?.length || 0}</span>
               </div>
 
               {/* Progress Bar */}
@@ -344,7 +344,7 @@ const AlbumDetailPage = () => {
                 <div
                   className="h-full bg-white/40 transition-all duration-300"
                   style={{
-                    width: `${((selectedImageIndex + 1) / album.images.length) * 100}%`
+                    width: `${((selectedImageIndex + 1) / (album.media?.length || 1)) * 100}%`
                   }}
                 />
               </div>

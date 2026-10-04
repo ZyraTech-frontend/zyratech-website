@@ -203,7 +203,7 @@ const GalleryManagementPage = () => {
     // Statistics
     const stats = useMemo(() => ({
         total: pagination.total || albums.length,
-        totalImages: albums.reduce((acc, album) => acc + (album.imageCount || 0), 0)
+        totalImages: albums.reduce((acc, album) => acc + (album.media?.length || 0), 0)
     }), [albums, pagination]);
 
     // Helper to open edit album modal
@@ -295,7 +295,7 @@ const GalleryManagementPage = () => {
     const handleDeleteAlbum = (album) => {
         dispatch(openConfirmDialog({
             title: 'Delete Album',
-            message: `Are you sure you want to delete "${album.title}"? This will also delete all ${album.imageCount || 0} images in this album. This action cannot be undone.`,
+            message: `Are you sure you want to delete "${album.title}"? This will also delete all ${album.media?.length || 0} images in this album. This action cannot be undone.`,
             isDangerous: true,
             onConfirm: async () => {
                 try {
@@ -487,7 +487,7 @@ const GalleryManagementPage = () => {
                     {[
                         { title: 'Total Albums', count: stats.total, icon: FolderOpen, color: 'text-blue-600', bg: 'bg-blue-50' },
                         { title: 'Total Photos', count: stats.totalImages, icon: FileImage, color: 'text-purple-600', bg: 'bg-purple-50' },
-                        { title: 'Selected', count: viewingAlbum?.imageCount || 0, icon: Image, color: 'text-cyan-600', bg: 'bg-cyan-50' },
+                        { title: 'Selected', count: viewingAlbum?.media?.length || 0, icon: Image, color: 'text-cyan-600', bg: 'bg-cyan-50' },
                         { title: 'Status', count: 'Ready', icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50' }
                     ].map((stat, i) => (
                         <div key={i} className="bg-white border border-gray-100 rounded-xl p-2.5 flex items-center justify-start gap-2.5 shadow-sm">
@@ -601,7 +601,7 @@ const GalleryManagementPage = () => {
                                         </span>
                                     </div>
                                     {/* Photo Count Badge */}
-                                    <PhotoCountBadge count={album.imageCount || 0} />
+                                    <PhotoCountBadge count={album.media?.length || 0} />
                                 </div>
                                 <div className="px-1 flex flex-col flex-1">
                                     <h3 className="text-xs font-bold text-gray-900 line-clamp-1 mb-1 group-hover:text-[#004fa2] transition-colors">{album.title}</h3>
@@ -724,7 +724,7 @@ const GalleryManagementPage = () => {
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-1.5 text-sm text-gray-600">
                                                 <FileImage size={14} className="text-gray-400" />
-                                                {album.imageCount || 0}
+                                                {album.media?.length || 0}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">

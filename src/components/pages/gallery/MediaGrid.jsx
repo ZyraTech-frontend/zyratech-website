@@ -65,9 +65,9 @@ const MediaGrid = ({ filters = {} }) => {
       id: album.id,
       title: album.title,
       type: "album",
-      thumbnail: album.cover,
+      thumbnail: album.cover || (album.media && album.media[0]?.url) || '/images/image1.webp',
       category: album.category,
-      images: album.images || [],
+      images: album.media || [], // Backend returns media array, not images
       description: album.description
     })), [albums]
   );
@@ -114,9 +114,9 @@ const MediaGrid = ({ filters = {} }) => {
         setCurrentImageIndex(0);
         setIsFullscreen(false);
       } else if (e.key === 'ArrowLeft') {
-        setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : selectedItem.images.length - 1));
+        setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : selectedItem.media.length - 1));
       } else if (e.key === 'ArrowRight') {
-        setCurrentImageIndex((prev) => (prev < selectedItem.images.length - 1 ? prev + 1 : 0));
+        setCurrentImageIndex((prev) => (prev < selectedItem.media.length - 1 ? prev + 1 : 0));
       }
     };
 
@@ -254,7 +254,7 @@ const MediaGrid = ({ filters = {} }) => {
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/>
                     </svg>
-                    {item.images.length}
+                    {item.media?.length || 0}
                   </span>
                 </div>
                   
@@ -348,9 +348,9 @@ const MediaGrid = ({ filters = {} }) => {
               if (Math.abs(diff) > 50) {
                 e.stopPropagation();
                 if (diff > 0) {
-                  setCurrentImageIndex((prev) => prev < selectedItem.images.length - 1 ? prev + 1 : 0);
+                  setCurrentImageIndex((prev) => prev < selectedItem.media.length - 1 ? prev + 1 : 0);
                 } else {
-                  setCurrentImageIndex((prev) => prev > 0 ? prev - 1 : selectedItem.images.length - 1);
+                  setCurrentImageIndex((prev) => prev > 0 ? prev - 1 : selectedItem.media.length - 1);
                 }
               }
             }}
@@ -367,7 +367,7 @@ const MediaGrid = ({ filters = {} }) => {
                     {selectedItem.title}
                   </h3>
                   <p className="text-white/80 text-xs sm:text-sm mt-1 capitalize">
-                    {selectedItem.category} • {selectedItem.images.length} {selectedItem.images.length === 1 ? 'photo' : 'photos'}
+                    {selectedItem.category} • {selectedItem.media?.length || 0} {(selectedItem.media?.length || 0) === 1 ? 'photo' : 'photos'}
                   </p>
                 </div>
                 
@@ -400,24 +400,24 @@ const MediaGrid = ({ filters = {} }) => {
               {/* Main Image Area */}
               <div className="flex-1 flex items-center justify-center relative px-12 sm:px-16 py-16 sm:py-20">
                 <img 
-                  src={selectedItem.images[currentImageIndex]}
+                  src={selectedItem.media[currentImageIndex]?.url || selectedItem.media[currentImageIndex]}
                   alt={`${selectedItem.title} - Image ${currentImageIndex + 1}`}
                   className={`max-w-full max-h-full object-contain rounded-lg ${isFullscreen ? 'rounded-none' : ''}`}
                   loading="lazy"
                 />
 
                 {/* Navigation Buttons */}
-                {selectedItem.images.length > 1 && (
+                {selectedItem.media?.length > 1 && (
                   <>
                     <button
-                      onClick={() => setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : selectedItem.images.length - 1))}
+                      onClick={() => setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : selectedItem.media.length - 1))}
                       className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all"
                       aria-label="Previous image"
                     >
                       <ChevronLeft size={24} className="sm:w-7 sm:h-7" />
                     </button>
                     <button
-                      onClick={() => setCurrentImageIndex((prev) => (prev < selectedItem.images.length - 1 ? prev + 1 : 0))}
+                      onClick={() => setCurrentImageIndex((prev) => (prev < selectedItem.media.length - 1 ? prev + 1 : 0))}
                       className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all"
                       aria-label="Next image"
                     >
@@ -427,18 +427,18 @@ const MediaGrid = ({ filters = {} }) => {
                 )}
 
                 {/* Image Counter */}
-                {selectedItem.images.length > 1 && (
+                {selectedItem.media?.length > 1 && (
                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 backdrop-blur-sm text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
-                    {currentImageIndex + 1} / {selectedItem.images.length}
+                    {currentImageIndex + 1} / {selectedItem.media?.length || 0}
                   </div>
                 )}
               </div>
 
               {/* Thumbnail Strip */}
-              {selectedItem.images.length > 1 && (
+              {selectedItem.media?.length > 1 && (
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3 sm:p-4">
                   <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
-                    {selectedItem.images.map((image, index) => (
+                    {selectedItem.media?.map((image, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentImageIndex(index)}
@@ -449,7 +449,7 @@ const MediaGrid = ({ filters = {} }) => {
                         }`}
                       >
                         <img 
-                          src={image}
+                          src={image.url || image}
                           alt={`Thumbnail ${index + 1}`}
                           className="w-full h-full object-cover"
                           loading="lazy"
