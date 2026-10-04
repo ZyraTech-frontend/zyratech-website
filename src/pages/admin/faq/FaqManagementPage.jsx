@@ -18,6 +18,7 @@ import {
     Edit,
     Trash2,
     Eye,
+    EyeOff,
     Grid,
     List,
     ChevronLeft,
@@ -239,6 +240,16 @@ const FaqManagementPage = () => {
         }));
     };
 
+    const handlePublish = async (faq) => {
+        try {
+            const newStatus = faq.status === 'published' ? 'draft' : 'published';
+            await faqService.updateFaq(faq.id, { status: newStatus });
+            setFaqs(prev => prev.map(f => f.id === faq.id ? { ...f, status: newStatus } : f));
+        } catch (error) {
+            console.error('Error updating FAQ status:', error);
+        }
+    };
+
     const handleDuplicate = async (faq) => {
         try {
             const { id, createdAt, ...faqData } = faq;
@@ -457,6 +468,13 @@ const FaqManagementPage = () => {
                                                                 >
                                                                     {expandedFaqs[faq.id] ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
                                                                 </button>
+                                                                <button 
+                                                                    onClick={() => handlePublish(faq)} 
+                                                                    className={`p-1 rounded transition-colors ${faq.status === 'published' ? 'hover:bg-amber-50 text-amber-600' : 'hover:bg-green-50 text-green-600'}`}
+                                                                    title={faq.status === 'published' ? "Unpublish" : "Publish"}
+                                                                >
+                                                                    {faq.status === 'published' ? <Eye size={12} /> : <EyeOff size={12} />}
+                                                                </button>
                                                                 <button onClick={() => handleEdit(faq)} className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors">
                                                                     <Edit size={12} />
                                                                 </button>
@@ -497,6 +515,13 @@ const FaqManagementPage = () => {
                                         <span className="flex items-center gap-0.5"><Sparkles size={10} /> {faq.helpful} helpful</span>
                                     </div>
                                     <div className="flex items-center gap-0.5">
+                                        <button 
+                                            onClick={() => handlePublish(faq)} 
+                                            className={`p-1 rounded transition-colors ${faq.status === 'published' ? 'hover:bg-amber-50 text-amber-600' : 'hover:bg-green-50 text-green-600'}`}
+                                            title={faq.status === 'published' ? "Unpublish" : "Publish"}
+                                        >
+                                            {faq.status === 'published' ? <Eye size={12} /> : <EyeOff size={12} />}
+                                        </button>
                                         <button onClick={() => handleEdit(faq)} className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors"><Edit size={12} /></button>
                                         <button onClick={() => handleDuplicate(faq)} className="p-1 hover:bg-purple-50 rounded text-gray-400 hover:text-purple-600 transition-colors"><Copy size={12} /></button>
                                         <button onClick={() => handleDelete(faq)} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"><Trash2 size={12} /></button>
