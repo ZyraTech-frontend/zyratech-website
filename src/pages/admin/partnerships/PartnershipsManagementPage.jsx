@@ -38,16 +38,12 @@ import {
 // Status badge component
 const StatusBadge = ({ status }) => {
     const statusConfig = {
-        'PENDING': { label: 'Pending', color: 'bg-amber-100 text-amber-800', icon: Clock },
-        'APPROVED': { label: 'Approved', color: 'bg-green-100 text-green-800', icon: CheckCircle },
-        'REJECTED': { label: 'Rejected', color: 'bg-red-100 text-red-800', icon: AlertCircle },
-        // Legacy mappings for backwards compatibility
-        'active': { label: 'Active', color: 'bg-green-100 text-green-800', icon: CheckCircle },
         'pending': { label: 'Pending', color: 'bg-amber-100 text-amber-800', icon: Clock },
-        'inactive': { label: 'Inactive', color: 'bg-red-100 text-red-800', icon: AlertCircle }
+        'approved': { label: 'Approved', color: 'bg-green-100 text-green-800', icon: CheckCircle },
+        'rejected': { label: 'Rejected', color: 'bg-red-100 text-red-800', icon: AlertCircle }
     };
     
-    const config = statusConfig[status] || statusConfig['PENDING'];
+    const config = statusConfig[status?.toLowerCase()] || statusConfig['pending'];
     const Icon = config.icon;
 
     return (
@@ -114,7 +110,7 @@ const PartnershipsManagementPage = () => {
 
         // Status filter
         if (selectedStatus !== 'all') {
-            result = result.filter(p => p.status === selectedStatus.toUpperCase());
+            result = result.filter(p => p.status === selectedStatus.toLowerCase());
         }
 
         return result;
@@ -131,9 +127,9 @@ const PartnershipsManagementPage = () => {
     const stats = useMemo(() => {
         return {
             total: partnerships.length,
-            approved: partnerships.filter(p => p.status === 'APPROVED').length,
-            pending: partnerships.filter(p => p.status === 'PENDING').length,
-            rejected: partnerships.filter(p => p.status === 'REJECTED').length
+            approved: partnerships.filter(p => p.status === 'approved').length,
+            pending: partnerships.filter(p => p.status === 'pending').length,
+            rejected: partnerships.filter(p => p.status === 'rejected').length
         };
     }, [partnerships]);
 
@@ -442,9 +438,9 @@ const PartnershipsManagementPage = () => {
                                         onChange={(e) => handleStatusChange(partnership, e.target.value)}
                                         className="text-xs px-2 py-1 border border-gray-200 rounded bg-white focus:outline-none focus:ring-1 focus:ring-[#004fa2]"
                                     >
-                                        <option value="APPROVED">Mark as Approved</option>
-                                        <option value="PENDING">Mark as Pending</option>
-                                        <option value="REJECTED">Mark as Rejected</option>
+                                        <option value="approved">Mark as Approved</option>
+                                        <option value="pending">Mark as Pending</option>
+                                        <option value="rejected">Mark as Rejected</option>
                                     </select>
                                 </div>
                             </div>
@@ -723,9 +719,9 @@ const PartnershipsManagementPage = () => {
                                     onChange={(e) => handleStatusChange(viewingPartnership, e.target.value)}
                                     className="px-4 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#004fa2] font-medium text-sm"
                                 >
-                                    <option value="APPROVED">Mark as Approved</option>
-                                    <option value="PENDING">Mark as Pending</option>
-                                    <option value="REJECTED">Mark as Rejected</option>
+                                    <option value="approved">Mark as Approved</option>
+                                    <option value="pending">Mark as Pending</option>
+                                    <option value="rejected">Mark as Rejected</option>
                                 </select>
                             </div>
                         </div>

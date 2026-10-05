@@ -152,23 +152,14 @@ const partnersService = {
      * Update partnership application status (admin only)
      * PATCH /api/admin/partnerships/:id/status
      * @param {string} id - Partnership ID
-     * @param {string} status - New status (PENDING, APPROVED, REJECTED)
+     * @param {string} status - New status (pending, approved, rejected)
+     * @param {string} reviewNotes - Optional review notes
      * @returns {Promise} Updated partnership response
      */
-    updatePartnershipStatus: async (id, status) => {
-        // Map frontend status values to backend ApplicationStatus enum
-        const statusMap = {
-            'pending': 'PENDING',
-            'approved': 'APPROVED',
-            'rejected': 'REJECTED',
-            'active': 'APPROVED',      // Map 'active' to APPROVED
-            'inactive': 'REJECTED'      // Map 'inactive' to REJECTED
-        };
-        
-        const mappedStatus = statusMap[status?.toLowerCase()] || status;
-        
+    updatePartnershipStatus: async (id, status, reviewNotes = '') => {
         const response = await api.patch(`/admin/partnerships/${id}/status`, {
-            status: mappedStatus
+            status: status?.toLowerCase(),
+            reviewNotes: reviewNotes || undefined
         });
         return response.data?.data || response.data;
     },
