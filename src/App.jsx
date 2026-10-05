@@ -7,6 +7,7 @@ import ScrollToTop from './components/ScrollToTop';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CookieConsentBanner from './components/CookieConsentBanner';
+import NotificationSystem from './components/admin/shared/NotificationSystem';
 import ProtectedRoute from './components/admin/layout/ProtectedRoute';
 import ConfirmDialog from './components/admin/shared/ConfirmDialog';
 import FullPageSkeleton from './components/common/FullPageSkeleton';
@@ -272,6 +273,9 @@ function App() {
       <div className="flex flex-col min-h-screen">
         {/* Scroll to top on route change */}
         <ScrollToTop />
+
+        {/* Global Notification System - for all toasts/alerts */}
+        <NotificationSystem />
 
         {/* Cookie Consent Banner */}
         <CookieConsentBanner />
