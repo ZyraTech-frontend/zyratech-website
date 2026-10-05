@@ -11,6 +11,7 @@ import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlic
 import { createUser, updateUser } from '../../../store/slices/usersSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { ROLE_LABELS } from '../../../utils/constants';
+import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import {
   ChevronLeft,
   ChevronRight,
@@ -239,6 +240,12 @@ const AdministratorFormPage = () => {
       if (!formData.email.trim()) newErrors.email = 'Email address is required';
       else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Enter a valid email address';
       if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+      else {
+        const phoneValidation = validatePhoneNumber(formData.phone);
+        if (!phoneValidation.isValid) {
+          newErrors.phone = phoneValidation.error;
+        }
+      }
 
       // Check duplicate email (only for new admins or if email changed)
       if (formData.email.trim()) {
@@ -458,6 +465,7 @@ const AdministratorFormPage = () => {
                   value={formData.phone}
                   onChange={handleInputChange}
                   placeholder="+233 XX XXX XXXX"
+                  {...getPhoneInputAttributes()}
                   className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${errors.phone ? 'border-red-300 bg-red-50' : 'border-gray-200'}`}
                 />
               </div>

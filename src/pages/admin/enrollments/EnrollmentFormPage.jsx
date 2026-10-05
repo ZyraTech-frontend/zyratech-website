@@ -8,6 +8,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { trainingCourses } from '../../../data/trainingCourses';
+import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import {
     GraduationCap,
     ArrowLeft,
@@ -180,6 +181,12 @@ const EnrollmentFormPage = () => {
             errors.email = 'Invalid email format';
         }
         if (!formData.phone.trim()) errors.phone = 'Phone is required';
+        else {
+          const phoneValidation = validatePhoneNumber(formData.phone);
+          if (!phoneValidation.isValid) {
+            errors.phone = phoneValidation.error;
+          }
+        }
         // Background
         if (!formData.country.trim()) errors.country = 'Country is required';
         if (!formData.currentLocation.trim()) errors.currentLocation = 'Location is required';
@@ -351,6 +358,7 @@ const EnrollmentFormPage = () => {
                                         type="tel"
                                         value={formData.phone}
                                         onChange={(e) => handleChange('phone', e.target.value)}
+                                        {...getPhoneInputAttributes()}
                                         className={`w-full pl-10 pr-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm transition-all ${formErrors.phone ? 'border-red-300 bg-red-50' : 'border-gray-200'}`}
                                         placeholder="+233 24 123 4567"
                                     />

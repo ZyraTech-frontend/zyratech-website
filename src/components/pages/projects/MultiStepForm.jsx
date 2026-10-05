@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Check, GraduationCap, Briefcase, Building2 } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
+import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 
 const MultiStepForm = ({ onSubmit }) => {
   const [searchParams] = useSearchParams();
@@ -227,7 +228,7 @@ const MultiStepForm = ({ onSubmit }) => {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
-                    <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} placeholder="+233 XXX XXX XXX" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent" />
+                    <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} {...getPhoneInputAttributes()} placeholder="+233 XXX XXX XXX" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Institution/University *</label>

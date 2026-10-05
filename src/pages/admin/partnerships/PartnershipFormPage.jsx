@@ -25,6 +25,7 @@ import {
     FileText,
     Check
 } from 'lucide-react';
+import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 
 // Step definitions
 const STEPS = [
@@ -85,6 +86,12 @@ const PartnershipFormPage = () => {
             if (!formData.position.trim()) newErrors.position = 'Position is required';
             if (!formData.email.trim()) newErrors.email = 'Email is required';
             if (!formData.phone.trim()) newErrors.phone = 'Phone is required';
+            else {
+              const phoneValidation = validatePhoneNumber(formData.phone);
+              if (!phoneValidation.isValid) {
+                newErrors.phone = phoneValidation.error;
+              }
+            }
         }
         if (stepIdx === 2) {
             if (!formData.type.trim()) newErrors.type = 'Partnership type is required';
@@ -461,6 +468,7 @@ const PartnershipFormPage = () => {
                                                 value={formData.phone}
                                                 onChange={handleChange}
                                                 placeholder="+233 XX XXX XXXX"
+                                                {...getPhoneInputAttributes()}
                                                 className={`w-full pl-12 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${
                                                     errors.phone ? 'border-red-500' : 'border-gray-300'
                                                 }`}

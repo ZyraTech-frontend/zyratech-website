@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Check, Upload, Plus, Search } from 'lucide-react';
 import jobsService from '../../../services/jobsService';
+import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 
 const JobApplicationForm = ({ job, onSubmit }) => {
   const [step, setStep] = useState(1);
@@ -377,6 +378,7 @@ Privacy Policy Agreement: ${formData.agreePrivacy ? 'Yes' : 'No'}
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleChange}
+                      {...getPhoneInputAttributes()}
                       className="flex-1 border border-gray-300 rounded-r-lg px-3 sm:px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-[#004fa2] focus:border-transparent text-sm sm:text-base"
                       placeholder="XXX XXX XXXX"
                       required

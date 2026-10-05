@@ -6,6 +6,7 @@ import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
 import trainingApplicationService from '../../../services/trainingApplicationService';
+import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import { Upload, X, FileText, Linkedin, Globe, Loader2 } from 'lucide-react';
 
 const DRAFT_STORAGE_KEY = 'trainingApplicationDraft';
@@ -391,6 +392,7 @@ const CourseApplicationForm = () => {
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
+                    {...getPhoneInputAttributes()}
                     placeholder="+233..."
                     className="w-full px-4 py-3 text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-200"
                   />

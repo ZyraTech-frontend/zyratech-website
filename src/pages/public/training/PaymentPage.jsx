@@ -9,6 +9,7 @@ import TrainingLayout from '../../../components/TrainingLayout';
 import TrainingBreadcrumb from '../../../components/pages/training/TrainingBreadcrumb';
 import { getTrainingCourseById } from '../../../data/trainingCourses';
 import useSEO from '../../../hooks/useSEO';
+import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 
 const TrainingPaymentPage = () => {
   const { courseId } = useParams();
@@ -74,6 +75,12 @@ const TrainingPaymentPage = () => {
     if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
     if (!formData.email.trim()) newErrors.email = 'Email is required';
     if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+    else {
+      const phoneValidation = validatePhoneNumber(formData.phone);
+      if (!phoneValidation.isValid) {
+        newErrors.phone = phoneValidation.error;
+      }
+    }
 
     if (paymentMethod === 'card') {
       if (!formData.cardNumber.trim() || formData.cardNumber.replace(/\s/g, '').length < 16) {
@@ -272,6 +279,7 @@ const TrainingPaymentPage = () => {
                           value={formData.phone}
                           onChange={handleInputChange}
                           placeholder="+233 XX XXX XXXX"
+                          {...getPhoneInputAttributes()}
                           className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
                             errors.phone ? 'border-red-500' : 'border-gray-300'
                           }`}

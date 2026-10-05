@@ -10,6 +10,7 @@ import { addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import LoadingSpinner from '../../../components/admin/shared/LoadingSpinner';
 import { usePermissions } from '../../../hooks/usePermissions';
+import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import { 
   Palette, 
   CreditCard, 
@@ -329,6 +330,7 @@ const SettingsPage = () => {
                           type="tel"
                           value={formData.contactPhone || ''}
                           onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
+                          {...getPhoneInputAttributes()}
                           className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all"
                           placeholder="+233 55 955 4261"
                         />

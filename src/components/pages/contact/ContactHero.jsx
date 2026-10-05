@@ -4,6 +4,7 @@ import { FaLinkedinIn, FaXTwitter, FaInstagram, FaFacebookF, FaWhatsapp } from '
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
 import contactInquiryService from '../../../services/contactInquiryService';
+import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 
 const ContactHero = () => {
   const dispatch = useDispatch();
@@ -64,21 +65,10 @@ const ContactHero = () => {
 
     // Phone validation - if provided
     if (formData.phone.trim()) {
-      // Phone: only digits, spaces, hyphens, +, (), optional leading +
-      const phoneRegex = /^[\d\s\-+()]{1,20}$/;
-      if (!phoneRegex.test(formData.phone.trim())) {
+      const phoneValidation = validatePhoneNumber(formData.phone);
+      if (!phoneValidation.isValid) {
         dispatch(addNotification({
-          message: 'Phone number can only contain digits, spaces, hyphens, +, and parentheses',
-          type: 'warning'
-        }));
-        return;
-      }
-
-      // Extract only digits and count them
-      const digitsOnly = formData.phone.replace(/\D/g, '');
-      if (digitsOnly.length < 7 || digitsOnly.length > 15) {
-        dispatch(addNotification({
-          message: 'Phone number must contain between 7 and 15 digits',
+          message: phoneValidation.error,
           type: 'warning'
         }));
         return;
@@ -176,11 +166,9 @@ const ContactHero = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  pattern="[\d\s\-+()]{0,20}"
-                  maxLength="20"
+                  {...getPhoneInputAttributes()}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 text-sm hover:border-gray-400"
                   placeholder="Phone Number (optional)"
-                  title="Phone number can only contain digits, spaces, hyphens, +, and parentheses"
                 />
               </div>
 
