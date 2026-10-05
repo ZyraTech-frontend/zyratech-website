@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import contentService from '../../../services/contentService';
+import partnersService from '../../../services/partnersService';
 
 const CountUp = ({ end, suffix = '', duration = 2000 }) => {
   const [count, setCount] = useState(0);
@@ -57,10 +58,24 @@ const ImpactStats = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const { data } = await contentService.getImpactStats();
-        if (data) setStats(data);
+        // Fetch active partnerships count from backend
+        const { data: partnerships } = await partnersService.getAllPartnerships({ limit: 1000 });
+        const activePartnerCount = partnerships ? partnerships.length : 1;
+
+        // Fetch other stats from content service
+        const { data: contentStats } = await contentService.getImpactStats();
+        
+        // Merge: use active partners count from backend, keep other stats or use defaults
+        const mergedStats = [
+          { number: activePartnerCount.toString(), suffix: '', label: 'Active Partners' },
+          { number: contentStats?.[1]?.number || '50', suffix: contentStats?.[1]?.suffix || '+', label: 'Students Trained' },
+          { number: contentStats?.[2]?.number || '50', suffix: contentStats?.[2]?.suffix || '+', label: 'Projects Completed' }
+        ];
+        
+        setStats(mergedStats);
       } catch (error) {
         console.error('Error fetching impact stats:', error);
+        // Keep default stats on error
       }
     };
     fetchStats();
