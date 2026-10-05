@@ -32,6 +32,7 @@ const partnersService = {
             organizationName: data.organizationName,
             organizationType: data.organizationType,
             website: data.website || '',
+            logo: data.logo,
             country: data.country,
             contactName: data.contactName,
             position: data.position,

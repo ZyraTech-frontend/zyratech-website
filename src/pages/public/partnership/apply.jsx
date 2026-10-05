@@ -16,6 +16,16 @@ const PartnershipApplicationPage = () => {
     keywords: 'partnership application, apply partner, Zyra Tech Hub partnership form'
   });
 
+  // Helper function to validate URLs
+  const isValidUrl = (string) => {
+    try {
+      new URL(string);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  };
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(0);
@@ -27,6 +37,7 @@ const PartnershipApplicationPage = () => {
     organizationName: '',
     organizationType: '',
     website: '',
+    logo: '',
     country: '',
     
     // Contact Person
@@ -83,6 +94,8 @@ const PartnershipApplicationPage = () => {
       if (!formData.organizationName.trim()) newErrors.organizationName = 'Organization name is required';
       if (!formData.organizationType) newErrors.organizationType = 'Please select organization type';
       if (!formData.country.trim()) newErrors.country = 'Country is required';
+      if (!formData.logo.trim()) newErrors.logo = 'Organization logo is required';
+      else if (!isValidUrl(formData.logo)) newErrors.logo = 'Please enter a valid logo URL (e.g., https://example.com/logo.png)';
     }
 
     if (step === 1) {
@@ -271,6 +284,23 @@ const PartnershipApplicationPage = () => {
                 />
                 {errors.country && <p className={errorClasses}>{errors.country}</p>}
               </div>
+
+              <div>
+                <label htmlFor="logo" className={labelClasses}>
+                  Organization Logo URL <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="logo"
+                  type="url"
+                  name="logo"
+                  value={formData.logo}
+                  onChange={handleInputChange}
+                  placeholder="https://www.example.com/logo.png"
+                  className={inputClasses}
+                />
+                <p className="text-xs text-gray-500 mt-2">Enter the full URL to your organization's logo (PNG, JPG, or WebP recommended)</p>
+                {errors.logo && <p className={errorClasses}>{errors.logo}</p>}
+              </div>
             </div>
           )}
 
@@ -441,6 +471,14 @@ const PartnershipApplicationPage = () => {
                     <div className="break-all"><span className="text-gray-600">Website:</span> <span className="font-medium">{formData.website || 'N/A'}</span></div>
                     <div><span className="text-gray-600">Country:</span> <span className="font-medium">{formData.country}</span></div>
                   </div>
+                  {formData.logo && (
+                    <div className="mt-4 pt-4 border-t">
+                      <p className="text-gray-600 text-sm mb-2">Logo Preview:</p>
+                      <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 flex items-center justify-center">
+                        <img src={formData.logo} alt="Organization Logo" className="w-full h-full object-contain p-2" />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="border-t pt-4">

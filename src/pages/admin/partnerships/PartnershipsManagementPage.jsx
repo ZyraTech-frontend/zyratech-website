@@ -38,8 +38,8 @@ import {
 // Status badge component
 const StatusBadge = ({ status }) => {
     const statusConfig = {
-        'pending': { label: 'Pending', color: 'bg-amber-100 text-amber-800', icon: Clock },
-        'approved': { label: 'Approved', color: 'bg-green-100 text-green-800', icon: CheckCircle },
+        'pending': { label: 'Pending Review', color: 'bg-amber-100 text-amber-800', icon: Clock },
+        'approved': { label: 'Partnership Created', color: 'bg-green-100 text-green-800', icon: CheckCircle },
         'rejected': { label: 'Rejected', color: 'bg-red-100 text-red-800', icon: AlertCircle }
     };
     
@@ -280,7 +280,7 @@ const PartnershipsManagementPage = () => {
                             </div>
                         </div>
                         <p className="text-2xl font-bold text-gray-900">{stats.approved}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Approved</p>
+                        <p className="text-xs text-gray-500 mt-0.5">Partnerships Created</p>
                     </div>
 
                     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 cursor-pointer"
@@ -615,6 +615,14 @@ const PartnershipsManagementPage = () => {
                                         </p>
                                     </div>
                                 </div>
+                                {viewingPartnership.logo && (
+                                    <div className="mt-4 pt-4 border-t border-gray-100">
+                                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Organization Logo</label>
+                                        <div className="mt-3 w-32 h-32 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center overflow-hidden">
+                                            <img src={viewingPartnership.logo} alt="Organization Logo" className="w-full h-full object-contain p-2" />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Contact Person Section */}
