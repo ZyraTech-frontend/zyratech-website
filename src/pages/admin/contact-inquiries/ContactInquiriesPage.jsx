@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Eye, Trash2, RefreshCw, Filter, Mail, Phone, Calendar } from 'lucide-react';
 import { useDispatch } from 'react-redux';
-import { addNotification } from '../../../store/slices/uiSlice';
+import { addNotification, openConfirmDialog } from '../../../store/slices/uiSlice';
 import contactInquiryService, { INQUIRY_STATUS } from '../../../services/contactInquiryService';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import ConfirmDialog from '../../../components/admin/shared/ConfirmDialog';
@@ -16,7 +16,7 @@ const ContactInquiriesPage = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [deleteConfirm, setDeleteConfirm] = useState({ show: false, id: null });
+  const [deletingId, setDeletingId] = useState(null);
 
   // Fetch inquiries
   const fetchInquiries = async () => {
@@ -52,11 +52,11 @@ const ContactInquiriesPage = () => {
   );
 
   // Delete inquiry
-  const handleDelete = async () => {
-    if (!deleteConfirm.id) return;
+  const handleDeleteConfirm = async () => {
+    if (!deletingId) return;
     try {
-      await contactInquiryService.deleteInquiry(deleteConfirm.id);
-      setInquiries(inquiries.filter(i => i.id !== deleteConfirm.id));
+      await contactInquiryService.deleteInquiry(deletingId);
+      setInquiries(inquiries.filter(i => i.id !== deletingId));
       dispatch(addNotification({
         message: 'Inquiry deleted successfully',
         type: 'success'
@@ -64,12 +64,24 @@ const ContactInquiriesPage = () => {
     } catch (error) {
       console.error('Failed to delete inquiry:', error);
       dispatch(addNotification({
-        message: 'Failed to delete inquiry',
+        message: error.response?.data?.message || 'Failed to delete inquiry',
         type: 'error'
       }));
     } finally {
-      setDeleteConfirm({ show: false, id: null });
+      setDeletingId(null);
     }
+  };
+
+  // Open delete confirmation dialog
+  const openDeleteDialog = (id) => {
+    setDeletingId(id);
+    dispatch(openConfirmDialog({
+      title: 'Delete Inquiry',
+      message: 'Are you sure you want to delete this inquiry? This action cannot be undone.',
+      isDangerous: true,
+      confirmText: 'Delete',
+      onConfirm: handleDeleteConfirm
+    }));
   };
 
   // Get status badge color
@@ -215,7 +227,7 @@ const ContactInquiriesPage = () => {
                             <Eye size={18} />
                           </button>
                           <button
-                            onClick={() => setDeleteConfirm({ show: true, id: inquiry.id })}
+                            onClick={() => openDeleteDialog(inquiry.id)}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             title="Delete"
                           >
@@ -257,15 +269,8 @@ const ContactInquiriesPage = () => {
         )}
       </div>
 
-      {/* Delete Confirmation Dialog */}
-      <ConfirmDialog
-        title="Delete Inquiry"
-        message="Are you sure you want to delete this inquiry? This action cannot be undone."
-        isOpen={deleteConfirm.show}
-        onConfirm={handleDelete}
-        onCancel={() => setDeleteConfirm({ show: false, id: null })}
-        isDangerous={true}
-      />
+      {/* Confirm Dialog (handled by Redux) */}
+      <ConfirmDialog />
     </AdminLayout>
   );
 };
