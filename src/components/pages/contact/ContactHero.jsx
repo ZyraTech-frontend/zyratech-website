@@ -33,7 +33,7 @@ const ContactHero = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validation
+    // Validation - Required fields
     if (!formData.fullName.trim() || !formData.email.trim() || !formData.message.trim()) {
       dispatch(addNotification({
         message: 'Please fill in all required fields',
@@ -47,6 +47,48 @@ const ContactHero = () => {
     if (!emailRegex.test(formData.email)) {
       dispatch(addNotification({
         message: 'Please enter a valid email address',
+        type: 'warning'
+      }));
+      return;
+    }
+
+    // Full Name validation - only letters, spaces, hyphens, apostrophes
+    const nameRegex = /^[a-zA-Z\s\-']+$/;
+    if (!nameRegex.test(formData.fullName.trim())) {
+      dispatch(addNotification({
+        message: 'Full name can only contain letters, spaces, hyphens, and apostrophes',
+        type: 'warning'
+      }));
+      return;
+    }
+
+    // Phone validation - if provided
+    if (formData.phone.trim()) {
+      // Phone: only digits, spaces, hyphens, +, (), optional leading +
+      const phoneRegex = /^[\d\s\-+()]{1,20}$/;
+      if (!phoneRegex.test(formData.phone.trim())) {
+        dispatch(addNotification({
+          message: 'Phone number can only contain digits, spaces, hyphens, +, and parentheses',
+          type: 'warning'
+        }));
+        return;
+      }
+
+      // Extract only digits and count them
+      const digitsOnly = formData.phone.replace(/\D/g, '');
+      if (digitsOnly.length < 7 || digitsOnly.length > 15) {
+        dispatch(addNotification({
+          message: 'Phone number must contain between 7 and 15 digits',
+          type: 'warning'
+        }));
+        return;
+      }
+    }
+
+    // Message validation - min 10 characters
+    if (formData.message.trim().length < 10) {
+      dispatch(addNotification({
+        message: 'Message must be at least 10 characters long',
         type: 'warning'
       }));
       return;
@@ -120,9 +162,12 @@ const ContactHero = () => {
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleInputChange}
+                  pattern="[a-zA-Z\s\-']+"
+                  maxLength="100"
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 text-sm hover:border-gray-400"
                   placeholder="Full Name"
+                  title="Full name can only contain letters, spaces, hyphens, and apostrophes"
                 />
 
                 <input
@@ -131,8 +176,11 @@ const ContactHero = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
+                  pattern="[\d\s\-+()]{0,20}"
+                  maxLength="20"
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 text-sm hover:border-gray-400"
-                  placeholder="Phone Number"
+                  placeholder="Phone Number (optional)"
+                  title="Phone number can only contain digits, spaces, hyphens, +, and parentheses"
                 />
               </div>
 
