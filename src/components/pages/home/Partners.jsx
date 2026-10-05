@@ -6,21 +6,26 @@ import partnersService from '../../../services/partnersService';
 const Partners = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
   const [partners, setPartners] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchPartners = async () => {
       try {
-        const response = await partnersService.getAllPartnerships();
-        // Display active partners. You can also filter by 'featured' if desired.
+        setIsLoading(true);
+        const response = await partnersService.getAllPartnerships({ limit: 100 });
+        // Display active partners
         const activePartners = response.data.filter(p => p.status === 'active');
 
         setPartners(activePartners.map(p => ({
-          name: p.organization.name,
-          logo: p.organization.logo || 'https://via.placeholder.com/150?text=' + p.organization.name.charAt(0),
-          alt: `${p.organization.name} logo`
+          name: p.name,
+          logo: p.logo || 'https://via.placeholder.com/150?text=' + (p.name?.charAt(0) || 'P'),
+          alt: `${p.name} logo`
         })));
       } catch (error) {
         console.error('Failed to fetch partners:', error);
+        setPartners([]);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchPartners();
@@ -41,37 +46,43 @@ const Partners = () => {
         </motion.h2>
 
         {/* Grid Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {partners.map((partner, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="group"
-            >
-              <div className="bg-white rounded-xl border border-gray-200 p-8 h-40 flex items-center justify-center hover:shadow-lg hover:border-gray-300 transition-all duration-300 overflow-hidden">
-                <img decoding="async"
-                  src={partner.logo}
-                  alt={partner.alt}
-                  className="max-h-24 max-w-full w-auto object-contain group-hover:scale-110 transition-transform duration-300"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'block';
-                  }}
-                />
-                {/* Fallback text */}
-                <span
-                  className="text-gray-700 font-semibold text-center text-sm"
-                  style={{ display: 'none' }}
-                >
-                  {partner.name}
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        {partners.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {partners.map((partner, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="group"
+              >
+                <div className="bg-white rounded-xl border border-gray-200 p-8 h-40 flex items-center justify-center hover:shadow-lg hover:border-gray-300 transition-all duration-300 overflow-hidden">
+                  <img decoding="async"
+                    src={partner.logo}
+                    alt={partner.alt}
+                    className="max-h-24 max-w-full w-auto object-contain group-hover:scale-110 transition-transform duration-300"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'block';
+                    }}
+                  />
+                  {/* Fallback text */}
+                  <span
+                    className="text-gray-700 font-semibold text-center text-sm"
+                    style={{ display: 'none' }}
+                  >
+                    {partner.name}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">No active partners yet.</p>
+          </div>
+        )}
       </div>
     </section>
   );

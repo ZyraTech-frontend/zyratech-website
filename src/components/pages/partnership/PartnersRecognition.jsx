@@ -10,11 +10,9 @@ const PartnersRecognition = () => {
   useEffect(() => {
     const fetchPartners = async () => {
       try {
-        const { data } = await partnersService.getAllPartnerships();
-        // Filter for active/featured partners
-        const activePartners = data.filter(p =>
-          (p.status === 'active' || p.featured) && p.organization
-        );
+        const { data } = await partnersService.getAllPartnerships({ limit: 100 });
+        // Filter for active partners
+        const activePartners = data.filter(p => p.status === 'active');
         setPartners(activePartners);
       } catch (error) {
         console.error('Error fetching partners:', error);
@@ -67,10 +65,10 @@ const PartnersRecognition = () => {
                   whileHover={{ y: -5 }}
                   className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col items-center justify-center h-40 hover:shadow-md transition-all duration-300 group"
                 >
-                  {partner.organization.logo ? (
+                  {partner.logo ? (
                     <img decoding="async"
-                      src={partner.organization.logo}
-                      alt={partner.organization.name}
+                      src={partner.logo}
+                      alt={partner.name}
                       className="max-w-full max-h-24 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300 opacity-80 group-hover:opacity-100"
                       onError={(e) => {
                         // Fallback if image fails to load
@@ -82,11 +80,11 @@ const PartnersRecognition = () => {
 
                   {/* Fallback Text (shown if no logo or logo error) */}
                   <div
-                    className={`flex flex-col items-center justify-center text-center ${partner.organization.logo ? 'hidden' : 'flex'}`}
+                    className={`flex flex-col items-center justify-center text-center ${partner.logo ? 'hidden' : 'flex'}`}
                   >
                     <Building2 className="w-8 h-8 text-gray-300 mb-2 group-hover:text-[#004fa2] transition-colors" />
                     <span className="text-sm font-bold text-gray-600 group-hover:text-[#004fa2] transition-colors line-clamp-2">
-                      {partner.organization.name}
+                      {partner.name}
                     </span>
                   </div>
                 </motion.div>
