@@ -1,6 +1,6 @@
 /**
  * Partnerships Management Page (Admin)
- * Manage partnership applications and public partnerships
+ * Manage partnership applications and create public partnerships
  */
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -14,7 +14,6 @@ import {
     Search,
     Filter,
     Eye,
-    Edit,
     Trash2,
     ChevronLeft,
     ChevronRight,
@@ -27,7 +26,13 @@ import {
     List,
     RefreshCw,
     Mail,
-    Globe
+    Phone,
+    Building2,
+    Globe,
+    MapPin,
+    User,
+    Briefcase,
+    Calendar
 } from 'lucide-react';
 
 // Status badge component
@@ -70,7 +75,6 @@ const PartnershipsManagementPage = () => {
     const fetchPartnerships = async () => {
         try {
             setIsLoading(true);
-            // Fetch admin partnerships (all applications/partnerships)
             const response = await partnersService.getAdminPartnerships({ limit: 100 });
             setPartnerships(response.data || []);
         } catch (error) {
@@ -142,23 +146,20 @@ const PartnershipsManagementPage = () => {
         setViewingPartnership(partnership);
     };
 
-    const handleEdit = (partnership) => {
-        navigate(`/admin/partnerships/edit/${partnership.id}`);
-    };
-
     const handleDelete = (partnership) => {
         dispatch(openConfirmDialog({
             title: 'Delete Partnership',
-            message: `Are you sure you want to delete "${partnership.name || partnership.organizationName}"? This action cannot be undone.`,
+            message: `Are you sure you want to delete this application from "${partnership.name || partnership.organizationName}"? This action cannot be undone.`,
             confirmLabel: 'Delete',
             confirmClass: 'bg-red-600 hover:bg-red-700',
             onConfirm: async () => {
                 try {
                     await partnersService.deletePartnership(partnership.id);
                     setPartnerships(partnerships.filter(p => p.id !== partnership.id));
+                    setViewingPartnership(null);
                     dispatch(addNotification({
                         type: 'success',
-                        message: 'Partnership deleted successfully.',
+                        message: 'Partnership application deleted successfully.',
                         duration: 3000
                     }));
                 } catch (error) {
@@ -178,6 +179,7 @@ const PartnershipsManagementPage = () => {
             setPartnerships(partnerships.map(p =>
                 p.id === partnership.id ? { ...p, status: newStatus } : p
             ));
+            setViewingPartnership(prev => prev ? { ...prev, status: newStatus } : null);
             dispatch(addNotification({
                 type: 'success',
                 message: `Partnership status updated to ${newStatus}.`,
@@ -360,12 +362,6 @@ const PartnershipsManagementPage = () => {
                         <Handshake className="text-gray-300" size={48} />
                         <p className="text-gray-600 font-medium mt-4">No partnerships found</p>
                         <p className="text-gray-500 text-sm mt-2">Create your first partnership or applications will appear here</p>
-                        <button
-                            onClick={handleAddNew}
-                            className="mt-4 px-6 py-2.5 bg-[#004fa2] text-white rounded-xl hover:bg-[#003d7a] transition-all font-medium text-sm"
-                        >
-                            Create Partnership
-                        </button>
                     </div>
                 ) : viewMode === 'grid' ? (
                     /* Grid View */
@@ -423,22 +419,20 @@ const PartnershipsManagementPage = () => {
 
                                 {/* Card Footer */}
                                 <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between gap-2">
-                                    <div className="flex items-center gap-1">
-                                        <button
-                                            onClick={() => handleView(partnership)}
-                                            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                            title="View Details"
-                                        >
-                                            <Eye size={14} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(partnership)}
-                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                            title="Delete"
-                                        >
-                                            <Trash2 size={14} />
-                                        </button>
-                                    </div>
+                                    <button
+                                        onClick={() => handleView(partnership)}
+                                        className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                        title="View Details"
+                                    >
+                                        <Eye size={16} />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(partnership)}
+                                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                        title="Delete"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
                                     <select
                                         value={partnership.status}
                                         onChange={(e) => handleStatusChange(partnership, e.target.value)}
@@ -505,18 +499,18 @@ const PartnershipsManagementPage = () => {
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <button
-                                                        onClick={() => handleEdit(partnership)}
-                                                        className="p-1.5 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded transition-colors"
-                                                        title="Edit"
+                                                        onClick={() => handleView(partnership)}
+                                                        className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                                                        title="View Details"
                                                     >
-                                                        <Edit size={14} />
+                                                        <Eye size={16} />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(partnership)}
                                                         className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                                                         title="Delete"
                                                     >
-                                                        <Trash2 size={14} />
+                                                        <Trash2 size={16} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -567,40 +561,52 @@ const PartnershipsManagementPage = () => {
                 )}
             </div>
 
-            {/* Partnership Details Modal (Read-Only View) */}
+            {/* Partnership Details Modal (Read-Only Professional View) */}
             {viewingPartnership && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-xl shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full my-8">
                         {/* Modal Header */}
-                        <div className="sticky top-0 px-6 py-4 border-b border-gray-100 bg-white flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-gray-900">Partnership Application Details</h2>
+                        <div className="px-8 py-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white flex items-center justify-between sticky top-0">
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900">Partnership Application</h2>
+                                <p className="text-sm text-gray-500 mt-1">Review submitted application details</p>
+                            </div>
                             <button
                                 onClick={() => setViewingPartnership(null)}
-                                className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
                             >
-                                <X size={20} />
+                                <X size={24} />
                             </button>
                         </div>
 
                         {/* Modal Content */}
-                        <div className="p-6 space-y-6">
-                            {/* Organization Info */}
-                            <div className="space-y-4">
-                                <h3 className="font-semibold text-gray-900 text-lg">Organization Information</h3>
-                                <div className="grid grid-cols-2 gap-4">
+                        <div className="px-8 py-6 space-y-8 max-h-[calc(90vh-200px)] overflow-y-auto">
+                            {/* Organization Section */}
+                            <div className="space-y-5">
+                                <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+                                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <Building2 className="text-blue-600" size={20} />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-gray-900">Organization Information</h3>
+                                </div>
+                                <div className="grid grid-cols-2 gap-6">
                                     <div>
-                                        <label className="text-sm font-medium text-gray-500">Organization Name</label>
-                                        <p className="mt-1 text-gray-900 font-medium">{viewingPartnership.name || viewingPartnership.organizationName || '-'}</p>
+                                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Organization Name</label>
+                                        <p className="mt-2 text-base text-gray-900 font-medium">{viewingPartnership.organizationName || '-'}</p>
                                     </div>
                                     <div>
-                                        <label className="text-sm font-medium text-gray-500">Type</label>
-                                        <p className="mt-1 text-gray-900 font-medium">{viewingPartnership.partnershipType || '-'}</p>
+                                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Organization Type</label>
+                                        <p className="mt-2 text-base text-gray-900 font-medium">{viewingPartnership.organizationType || '-'}</p>
                                     </div>
                                     <div>
-                                        <label className="text-sm font-medium text-gray-500">Website</label>
-                                        <p className="mt-1 text-gray-900">
+                                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Country</label>
+                                        <p className="mt-2 text-base text-gray-900 font-medium">{viewingPartnership.country || '-'}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Website</label>
+                                        <p className="mt-2 text-base text-gray-900">
                                             {viewingPartnership.website ? (
-                                                <a href={viewingPartnership.website} target="_blank" rel="noopener noreferrer" className="text-[#004fa2] hover:underline">
+                                                <a href={viewingPartnership.website} target="_blank" rel="noopener noreferrer" className="text-[#004fa2] hover:underline break-all">
                                                     {viewingPartnership.website}
                                                 </a>
                                             ) : (
@@ -608,59 +614,115 @@ const PartnershipsManagementPage = () => {
                                             )}
                                         </p>
                                     </div>
+                                </div>
+                            </div>
+
+                            {/* Contact Person Section */}
+                            <div className="space-y-5">
+                                <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+                                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                        <User className="text-purple-600" size={20} />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-gray-900">Contact Person</h3>
+                                </div>
+                                <div className="grid grid-cols-2 gap-6">
                                     <div>
-                                        <label className="text-sm font-medium text-gray-500">Status</label>
-                                        <div className="mt-1">
-                                            <StatusBadge status={viewingPartnership.status} />
-                                        </div>
+                                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Full Name</label>
+                                        <p className="mt-2 text-base text-gray-900 font-medium">{viewingPartnership.contactName || '-'}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Position/Title</label>
+                                        <p className="mt-2 text-base text-gray-900 font-medium">{viewingPartnership.position || '-'}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Address</label>
+                                        <p className="mt-2 text-base text-gray-900">
+                                            <a href={`mailto:${viewingPartnership.email}`} className="text-[#004fa2] hover:underline break-all">
+                                                {viewingPartnership.email || '-'}
+                                            </a>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Phone Number</label>
+                                        <p className="mt-2 text-base text-gray-900 font-medium">{viewingPartnership.phone || '-'}</p>
                                     </div>
                                 </div>
-                                {viewingPartnership.description && (
+                            </div>
+
+                            {/* Partnership Details Section */}
+                            <div className="space-y-5">
+                                <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+                                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <Briefcase className="text-green-600" size={20} />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-gray-900">Partnership Goals</h3>
+                                </div>
+                                <div className="grid grid-cols-2 gap-6">
                                     <div>
-                                        <label className="text-sm font-medium text-gray-500">Description</label>
-                                        <p className="mt-1 text-gray-700 whitespace-pre-wrap">{viewingPartnership.description}</p>
+                                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Partnership Type</label>
+                                        <p className="mt-2 text-base text-gray-900 font-medium">{viewingPartnership.partnershipType || '-'}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Preferred Timeline</label>
+                                        <p className="mt-2 text-base text-gray-900 font-medium capitalize">{viewingPartnership.timeline || '-'}</p>
+                                    </div>
+                                </div>
+                                {viewingPartnership.interests && viewingPartnership.interests.length > 0 && (
+                                    <div>
+                                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Areas of Interest</label>
+                                        <div className="mt-2 flex flex-wrap gap-2">
+                                            {viewingPartnership.interests.map((interest, idx) => (
+                                                <span key={idx} className="px-3 py-1 bg-[#004fa2] text-white text-xs font-medium rounded-full">
+                                                    {interest}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                {viewingPartnership.message && (
+                                    <div>
+                                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Partnership Message</label>
+                                        <p className="mt-2 text-base text-gray-700 bg-gray-50 p-4 rounded-lg whitespace-pre-wrap leading-relaxed">{viewingPartnership.message}</p>
                                     </div>
                                 )}
                             </div>
 
-                            {/* Contact Information */}
-                            <div className="space-y-4 border-t pt-6">
-                                <h3 className="font-semibold text-gray-900 text-lg">Contact Information</h3>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="text-sm font-medium text-gray-500">Contact Email</label>
-                                        <p className="mt-1 text-gray-900">
-                                            <a href={`mailto:${viewingPartnership.contact}`} className="text-[#004fa2] hover:underline">
-                                                {viewingPartnership.contact || '-'}
-                                            </a>
-                                        </p>
+                            {/* Status Section */}
+                            <div className="space-y-4 bg-gray-50 -mx-8 px-8 py-6 rounded-b-2xl">
+                                <div>
+                                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Current Status</label>
+                                    <div className="mt-2">
+                                        <StatusBadge status={viewingPartnership.status} />
                                     </div>
                                 </div>
+                                <p className="text-xs text-gray-500 italic">ℹ️ Read-only view. Application data cannot be edited.</p>
                             </div>
+                        </div>
 
-                            {/* Admin Actions */}
-                            <div className="border-t pt-6 flex items-center justify-between">
-                                <p className="text-xs text-gray-500">Read-only view. Application data cannot be edited.</p>
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => setViewingPartnership(null)}
-                                        className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors font-medium text-sm"
-                                    >
-                                        Close
-                                    </button>
-                                    <select
-                                        value={viewingPartnership.status}
-                                        onChange={(e) => {
-                                            handleStatusChange(viewingPartnership, e.target.value);
-                                            setViewingPartnership(null);
-                                        }}
-                                        className="px-3 py-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm font-medium"
-                                    >
-                                        <option value="active">Mark Active</option>
-                                        <option value="pending">Mark Pending</option>
-                                        <option value="inactive">Mark Inactive</option>
-                                    </select>
-                                </div>
+                        {/* Modal Footer */}
+                        <div className="px-8 py-4 border-t border-gray-200 bg-gray-50 rounded-b-2xl flex items-center justify-between gap-4">
+                            <button
+                                onClick={() => setViewingPartnership(null)}
+                                className="px-6 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                            >
+                                Close
+                            </button>
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => handleDelete(viewingPartnership)}
+                                    className="px-4 py-2 text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors font-medium text-sm"
+                                >
+                                    Delete Application
+                                </button>
+                                <select
+                                    value={viewingPartnership.status}
+                                    onChange={(e) => handleStatusChange(viewingPartnership, e.target.value)}
+                                    className="px-4 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#004fa2] font-medium text-sm"
+                                >
+                                    <option value="active">Mark as Active</option>
+                                    <option value="pending">Mark as Pending</option>
+                                    <option value="inactive">Mark as Inactive</option>
+                                </select>
                             </div>
                         </div>
                     </div>
