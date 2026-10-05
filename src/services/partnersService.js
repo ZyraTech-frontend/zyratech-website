@@ -52,12 +52,12 @@ const partnersService = {
 
     /**
      * Submit partnership application (public)
-     * POST /partner/apply
+     * POST /partnerships
      * @param {Object} data - Partnership application data
      * @returns {Promise} Application submission response
      */
     submitPartnershipApplication: async (data) => {
-        const response = await api.post('/partner/apply', {
+        const response = await api.post('/partnerships', {
             organizationName: data.organizationName,
             organizationType: data.organizationType,
             website: data.website || '',
@@ -70,7 +70,7 @@ const partnersService = {
             interests: data.interests || [],
             timeline: data.timeline || '',
             message: data.message,
-            submittedAt: new Date().toISOString()
+            agreedToTerms: data.agreedToTerms === true
         });
         return response.data?.data || response.data;
     },
