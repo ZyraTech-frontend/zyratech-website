@@ -16,16 +16,6 @@ const PartnershipApplicationPage = () => {
     keywords: 'partnership application, apply partner, Zyra Tech Hub partnership form'
   });
 
-  // Helper function to validate URLs
-  const isValidUrl = (string) => {
-    try {
-      new URL(string);
-      return true;
-    } catch (_) {
-      return false;
-    }
-  };
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(0);
@@ -37,7 +27,7 @@ const PartnershipApplicationPage = () => {
     organizationName: '',
     organizationType: '',
     website: '',
-    logo: '',
+    logo: null,
     country: '',
     
     // Contact Person
@@ -75,6 +65,27 @@ const PartnershipApplicationPage = () => {
     }
   };
 
+  const handleLogoChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+      if (!validTypes.includes(file.type)) {
+        setErrors(prev => ({ ...prev, logo: 'Please upload a valid image (PNG, JPG, or WebP)' }));
+        return;
+      }
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setErrors(prev => ({ ...prev, logo: 'Logo file size must be less than 5MB' }));
+        return;
+      }
+      setFormData(prev => ({ ...prev, logo: file }));
+      if (errors.logo) {
+        setErrors(prev => ({ ...prev, logo: '' }));
+      }
+    }
+  };
+
   const handleInterestToggle = (interest) => {
     setFormData(prev => ({
       ...prev,
@@ -94,8 +105,7 @@ const PartnershipApplicationPage = () => {
       if (!formData.organizationName.trim()) newErrors.organizationName = 'Organization name is required';
       if (!formData.organizationType) newErrors.organizationType = 'Please select organization type';
       if (!formData.country.trim()) newErrors.country = 'Country is required';
-      if (!formData.logo.trim()) newErrors.logo = 'Organization logo is required';
-      else if (!isValidUrl(formData.logo)) newErrors.logo = 'Please enter a valid logo URL (e.g., https://example.com/logo.png)';
+      if (!formData.logo) newErrors.logo = 'Organization logo is required';
     }
 
     if (step === 1) {
@@ -142,7 +152,24 @@ const PartnershipApplicationPage = () => {
     if (validateStep(currentStep)) {
       setIsSubmitting(true);
       try {
-        await partnersService.submitPartnershipApplication(formData);
+        // Create FormData for file upload
+        const formDataToSend = new FormData();
+        formDataToSend.append('organizationName', formData.organizationName);
+        formDataToSend.append('organizationType', formData.organizationType);
+        formDataToSend.append('website', formData.website || '');
+        formDataToSend.append('logo', formData.logo);
+        formDataToSend.append('country', formData.country);
+        formDataToSend.append('contactName', formData.contactName);
+        formDataToSend.append('position', formData.position);
+        formDataToSend.append('email', formData.email);
+        formDataToSend.append('phone', formData.phone);
+        formDataToSend.append('partnershipType', formData.partnershipType);
+        formDataToSend.append('interests', JSON.stringify(formData.interests || []));
+        formDataToSend.append('timeline', formData.timeline || '');
+        formDataToSend.append('message', formData.message);
+        formDataToSend.append('agreedToTerms', formData.agreedToTerms);
+        
+        await partnersService.submitPartnershipApplicationWithFile(formDataToSend);
         
         dispatch(addNotification({
           type: 'success',
@@ -287,18 +314,21 @@ const PartnershipApplicationPage = () => {
 
               <div>
                 <label htmlFor="logo" className={labelClasses}>
-                  Organization Logo URL <span className="text-red-500">*</span>
+                  Organization Logo <span className="text-red-500">*</span>
                 </label>
-                <input
-                  id="logo"
-                  type="url"
-                  name="logo"
-                  value={formData.logo}
-                  onChange={handleInputChange}
-                  placeholder="https://www.example.com/logo.png"
-                  className={inputClasses}
-                />
-                <p className="text-xs text-gray-500 mt-2">Enter the full URL to your organization's logo (PNG, JPG, or WebP recommended)</p>
+                <div className="relative">
+                  <input
+                    id="logo"
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    onChange={handleLogoChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent transition-all duration-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#004fa2] file:text-white hover:file:bg-[#003a7a]"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-2">PNG, JPG, or WebP • Max 5MB</p>
+                {formData.logo && (
+                  <p className="text-xs text-green-600 mt-2">✓ {formData.logo.name} selected</p>
+                )}
                 {errors.logo && <p className={errorClasses}>{errors.logo}</p>}
               </div>
             </div>
@@ -474,8 +504,9 @@ const PartnershipApplicationPage = () => {
                   {formData.logo && (
                     <div className="mt-4 pt-4 border-t">
                       <p className="text-gray-600 text-sm mb-2">Logo Preview:</p>
+                      <p className="text-xs text-gray-500 mb-3">File: {formData.logo.name}</p>
                       <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 flex items-center justify-center">
-                        <img src={formData.logo} alt="Organization Logo" className="w-full h-full object-contain p-2" />
+                        <img src={URL.createObjectURL(formData.logo)} alt="Organization Logo" className="w-full h-full object-contain p-2" />
                       </div>
                     </div>
                   )}

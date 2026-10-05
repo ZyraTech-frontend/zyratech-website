@@ -52,7 +52,6 @@ const EnrollmentsManagementPage = lazy(() => import('./pages/admin/enrollments/E
 const EnrollmentFormPage = lazy(() => import('./pages/admin/enrollments/EnrollmentFormPage'));
 const EnrollmentDetailsPage = lazy(() => import('./pages/admin/enrollments/EnrollmentDetailsPage'));
 const PartnershipsManagementPage = lazy(() => import('./pages/admin/partnerships/PartnershipsManagementPage'));
-const PartnershipFormPage = lazy(() => import('./pages/admin/partnerships/PartnershipFormPage'));
 const ContactInquiriesPage = lazy(() => import('./pages/admin/contact-inquiries/ContactInquiriesPage'));
 const ContactInquiryDetailsPage = lazy(() => import('./pages/admin/contact-inquiries/ContactInquiryDetailsPage'));
 const NewsletterManagementPage = lazy(() => import('./pages/admin/newsletter/NewsletterManagementPage'));
@@ -229,8 +228,6 @@ function App() {
 
                 {/* Inquiries & Communications */}
                 <Route path="/admin/partnerships" element={<ProtectedRoute><PartnershipsManagementPage /></ProtectedRoute>} />
-                <Route path="/admin/partnerships/new" element={<ProtectedRoute><PartnershipFormPage /></ProtectedRoute>} />
-                <Route path="/admin/partnerships/edit/:id" element={<ProtectedRoute><PartnershipFormPage /></ProtectedRoute>} />
                 <Route path="/admin/contact-inquiries" element={<ProtectedRoute><ContactInquiriesPage /></ProtectedRoute>} />
                 <Route path="/admin/contact-inquiries/:id" element={<ProtectedRoute><ContactInquiryDetailsPage /></ProtectedRoute>} />
                 <Route path="/admin/newsletter" element={<ProtectedRoute><NewsletterManagementPage /></ProtectedRoute>} />

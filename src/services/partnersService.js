@@ -1,18 +1,16 @@
 /**
  * Partners Service
- * Partnership management and sponsorship tracking
+ * Partnership management - applications only, no manual creation
  * 
  * Backend Endpoints:
  * PUBLIC (No Auth):
- * - POST /api/partnerships - Submit partnership application
- * - GET /api/partnerships?page=1&limit=20 - List all active partnerships
+ * - POST /api/partnerships - Submit partnership application (with logo file)
+ * - GET /api/partnerships?page=1&limit=20 - List all approved partnerships
  * - GET /api/partnerships/:id - Get single partnership details
  * 
  * ADMIN (Auth Required):
- * - POST /api/admin/partnerships - Create partnership for public display
- * - PUT /api/admin/partnerships/:id - Update partnership
  * - GET /api/admin/partnerships - List partnership applications
- * - PATCH /api/admin/partnerships/:id/status - Update application status
+ * - PATCH /api/admin/partnerships/:id/status - Update application status (approve/reject)
  * - DELETE /api/admin/partnerships/:id - Delete application
  */
 
@@ -20,6 +18,21 @@ import api from './api';
 
 const partnersService = {
     // ============ PUBLIC ENDPOINTS ============
+
+    /**
+     * Submit partnership application with logo file (public)
+     * POST /api/partnerships
+     * @param {FormData} formData - Partnership application with logo file
+     * @returns {Promise} Application submission response
+     */
+    submitPartnershipApplicationWithFile: async (formData) => {
+        const response = await api.post('/partnerships', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return response.data?.data || response.data;
+    },
 
     /**
      * Submit partnership application (public)
@@ -85,45 +98,6 @@ const partnersService = {
     },
 
     // ============ ADMIN ENDPOINTS ============
-
-    /**
-     * Create new partnership for public display (admin only)
-     * POST /api/admin/partnerships
-     * @param {Object} data - Partnership data
-     * @returns {Promise} Created partnership response
-     */
-    createPartnership: async (data) => {
-        const response = await api.post('/admin/partnerships', {
-            name: data.name || data.organizationName,
-            description: data.description || '',
-            website: data.website || '',
-            logo: data.logo || '',
-            contact: data.contact || data.email,
-            partnershipType: data.partnershipType || data.type,
-            status: data.status || 'active'
-        });
-        return response.data?.data || response.data;
-    },
-
-    /**
-     * Update existing partnership (admin only)
-     * PUT /api/admin/partnerships/:id
-     * @param {string} id - Partnership ID
-     * @param {Object} data - Updated partnership data (all fields optional)
-     * @returns {Promise} Updated partnership response
-     */
-    updatePartnership: async (id, data) => {
-        const response = await api.put(`/admin/partnerships/${id}`, {
-            name: data.name || data.organizationName,
-            description: data.description,
-            website: data.website,
-            logo: data.logo,
-            contact: data.contact || data.email,
-            partnershipType: data.partnershipType || data.type,
-            status: data.status
-        });
-        return response.data?.data || response.data;
-    },
 
     /**
      * Get all partnership applications (admin only)

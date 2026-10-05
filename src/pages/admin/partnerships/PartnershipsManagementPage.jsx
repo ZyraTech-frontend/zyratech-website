@@ -21,7 +21,6 @@ import {
     CheckCircle,
     Clock,
     AlertCircle,
-    Plus,
     Grid3x3,
     List,
     RefreshCw,
@@ -138,10 +137,6 @@ const PartnershipsManagementPage = () => {
         fetchPartnerships();
     };
 
-    const handleAddNew = () => {
-        navigate('/admin/partnerships/new');
-    };
-
     const handleView = (partnership) => {
         setViewingPartnership(partnership);
     };
@@ -246,13 +241,6 @@ const PartnershipsManagementPage = () => {
                             className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm font-medium text-sm"
                         >
                             <RefreshCw size={16} />
-                        </button>
-                        <button
-                            onClick={handleAddNew}
-                            className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md hover:shadow-lg font-medium text-sm"
-                        >
-                            <Plus size={18} />
-                            <span className="hidden sm:inline">Add Partnership</span>
                         </button>
                     </div>
                 </div>
