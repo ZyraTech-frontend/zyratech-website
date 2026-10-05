@@ -28,6 +28,7 @@ export const validatePhoneNumber = (phone) => {
   const digitsOnly = trimmed.replace(/\D/g, '');
 
   // Phone numbers should have 7-15 digits (international standard)
+  // This includes numbers starting with 0 (like Ghana: 0537128949 = 10 digits ✓)
   if (digitsOnly.length < 7) {
     return {
       isValid: false,

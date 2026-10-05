@@ -1,16 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, MapPin, Mail, Phone, Send, User, MessageSquare } from 'lucide-react';
+import { ChevronRight, MapPin, Mail, Phone, Send, User, MessageSquare, Globe } from 'lucide-react';
 import { FaLinkedinIn, FaXTwitter, FaInstagram, FaFacebookF, FaWhatsapp } from 'react-icons/fa6';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
 import contactInquiryService from '../../../services/contactInquiryService';
 import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 
+const COUNTRIES = [
+  { code: 'GH', name: 'Ghana', flag: '🇬🇭' },
+  { code: 'NG', name: 'Nigeria', flag: '🇳🇬' },
+  { code: 'KE', name: 'Kenya', flag: '🇰🇪' },
+  { code: 'ZA', name: 'South Africa', flag: '🇿🇦' },
+  { code: 'US', name: 'United States', flag: '🇺🇸' },
+  { code: 'UK', name: 'United Kingdom', flag: '🇬🇧' },
+  { code: 'CA', name: 'Canada', flag: '🇨🇦' },
+  { code: 'IN', name: 'India', flag: '🇮🇳' },
+  { code: 'AU', name: 'Australia', flag: '🇦🇺' },
+  { code: 'OTHER', name: 'Other', flag: '🌍' }
+];
+
 const ContactHero = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
+    country: 'GH',
     phone: '',
     inquiryType: '',
     message: ''
@@ -103,6 +117,7 @@ const ContactHero = () => {
       setFormData({
         fullName: '',
         email: '',
+        country: 'GH',
         phone: '',
         inquiryType: '',
         message: ''
@@ -160,17 +175,32 @@ const ContactHero = () => {
                   title="Full name can only contain letters, spaces, hyphens, and apostrophes"
                 />
 
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
+                <select
+                  id="country"
+                  name="country"
+                  value={formData.country}
                   onChange={handleInputChange}
-                  {...getPhoneInputAttributes()}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 text-sm hover:border-gray-400"
-                  placeholder="Phone Number (optional)"
-                />
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 text-sm hover:border-gray-400 appearance-none bg-white"
+                >
+                  {COUNTRIES.map(country => (
+                    <option key={country.code} value={country.code}>
+                      {country.flag} {country.name}
+                    </option>
+                  ))}
+                </select>
               </div>
+
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                {...getPhoneInputAttributes()}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 text-sm hover:border-gray-400"
+                placeholder="Phone Number (optional)"
+              />
 
               <input
                 type="email"
