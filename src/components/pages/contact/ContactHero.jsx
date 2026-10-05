@@ -1,34 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, MapPin, Mail, Phone, Send, User, MessageSquare, Globe } from 'lucide-react';
+import { ChevronRight, MapPin, Mail, Phone, Send, User, MessageSquare, Globe, ChevronDown } from 'lucide-react';
 import { FaLinkedinIn, FaXTwitter, FaInstagram, FaFacebookF, FaWhatsapp } from 'react-icons/fa6';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
 import contactInquiryService from '../../../services/contactInquiryService';
-import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
-
-const COUNTRIES = [
-  { code: 'GH', name: 'Ghana', flag: '🇬🇭' },
-  { code: 'NG', name: 'Nigeria', flag: '🇳🇬' },
-  { code: 'KE', name: 'Kenya', flag: '🇰🇪' },
-  { code: 'ZA', name: 'South Africa', flag: '🇿🇦' },
-  { code: 'US', name: 'United States', flag: '🇺🇸' },
-  { code: 'UK', name: 'United Kingdom', flag: '🇬🇧' },
-  { code: 'CA', name: 'Canada', flag: '🇨🇦' },
-  { code: 'IN', name: 'India', flag: '🇮🇳' },
-  { code: 'AU', name: 'Australia', flag: '🇦🇺' },
-  { code: 'OTHER', name: 'Other', flag: '🌍' }
-];
+import { validatePhoneNumber, getPhoneInputAttributes, COUNTRY_CODES, formatCompletePhoneNumber } from '../../../utils/phoneValidation';
 
 const ContactHero = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
-    country: 'GH',
+    countryCode: 'GH',
     phone: '',
     inquiryType: '',
     message: ''
   });
+
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
 
   const [isVisible, setIsVisible] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
@@ -77,16 +66,22 @@ const ContactHero = () => {
       return;
     }
 
-    // Phone validation - if provided
-    if (formData.phone.trim()) {
-      const phoneValidation = validatePhoneNumber(formData.phone);
-      if (!phoneValidation.isValid) {
-        dispatch(addNotification({
-          message: phoneValidation.error,
-          type: 'warning'
-        }));
-        return;
-      }
+    // Phone validation - REQUIRED
+    if (!formData.phone.trim()) {
+      dispatch(addNotification({
+        message: 'Phone number is required',
+        type: 'warning'
+      }));
+      return;
+    }
+
+    const phoneValidation = validatePhoneNumber(formData.phone);
+    if (!phoneValidation.isValid) {
+      dispatch(addNotification({
+        message: phoneValidation.error,
+        type: 'warning'
+      }));
+      return;
     }
 
     // Message validation - min 10 characters
@@ -103,7 +98,7 @@ const ContactHero = () => {
       await contactInquiryService.submitInquiry({
         name: formData.fullName,
         email: formData.email,
-        phone: formData.phone,
+        phone: formatCompletePhoneNumber(formData.countryCode, formData.phone),
         subject: formData.inquiryType || 'General Inquiry',
         message: formData.message
       });
@@ -117,7 +112,7 @@ const ContactHero = () => {
       setFormData({
         fullName: '',
         email: '',
-        country: 'GH',
+        countryCode: 'GH',
         phone: '',
         inquiryType: '',
         message: ''
@@ -175,43 +170,75 @@ const ContactHero = () => {
                   title="Full name can only contain letters, spaces, hyphens, and apostrophes"
                 />
 
-                <select
-                  id="country"
-                  name="country"
-                  value={formData.country}
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 text-sm hover:border-gray-400 appearance-none bg-white"
-                >
-                  {COUNTRIES.map(country => (
-                    <option key={country.code} value={country.code}>
-                      {country.flag} {country.name}
-                    </option>
-                  ))}
-                </select>
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 text-sm hover:border-gray-400"
+                  placeholder="Email Address"
+                />
               </div>
 
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                {...getPhoneInputAttributes()}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 text-sm hover:border-gray-400"
-                placeholder="Phone Number (optional)"
-              />
+              {/* Professional Phone Input with Country Code Selector (Like MoMo) */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">Phone Number *</label>
+                <div className="flex gap-2 items-stretch">
+                  {/* Country Code Selector */}
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setShowCountryDropdown(!showCountryDropdown)}
+                      className="h-12 px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 hover:border-gray-400 bg-white flex items-center gap-2 min-w-fit"
+                    >
+                      <span className="text-lg">{COUNTRY_CODES.find(c => c.code === formData.countryCode)?.flag}</span>
+                      <ChevronDown size={16} className="text-gray-400" />
+                    </button>
+                    
+                    {/* Dropdown Menu */}
+                    {showCountryDropdown && (
+                      <div className="absolute top-full left-0 mt-2 bg-white border border-gray-300 rounded-xl shadow-lg z-50 w-64 max-h-64 overflow-y-auto">
+                        {COUNTRY_CODES.map(country => (
+                          <button
+                            key={country.code}
+                            type="button"
+                            onClick={() => {
+                              setFormData({ ...formData, countryCode: country.code });
+                              setShowCountryDropdown(false);
+                            }}
+                            className={`w-full px-4 py-3 text-left hover:bg-[#004fa2]/10 transition-colors flex items-center gap-3 border-b border-gray-100 last:border-b-0 ${
+                              formData.countryCode === country.code ? 'bg-[#004fa2]/5 border-l-4 border-l-[#004fa2]' : ''
+                            }`}
+                          >
+                            <span className="text-xl">{country.flag}</span>
+                            <div>
+                              <div className="font-medium text-gray-900">{country.name}</div>
+                              <div className="text-xs text-gray-500">{country.dial}</div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 text-sm hover:border-gray-400"
-                placeholder="Email Address"
-              />
+                  {/* Phone Number Input */}
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    {...getPhoneInputAttributes()}
+                    required
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 text-sm hover:border-gray-400"
+                    placeholder={COUNTRY_CODES.find(c => c.code === formData.countryCode)?.placeholder || 'Enter phone number'}
+                  />
+                </div>
+              </div>
+
+              {/* Inquiry Type */}
 
               <select
                 id="inquiryType"
