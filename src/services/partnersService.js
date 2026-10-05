@@ -41,7 +41,7 @@ const partnersService = {
             interests: data.interests || [],
             timeline: data.timeline || '',
             message: data.message,
-            agreedToTerms: data.agreddToTerms === true
+            agreedToTerms: data.agreedToTerms === true
         });
         return response.data?.data || response.data;
     },
