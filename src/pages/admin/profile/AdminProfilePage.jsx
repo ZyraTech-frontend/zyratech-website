@@ -12,6 +12,7 @@ import { updateUserProfile, changePassword, verifySession, uploadUserAvatar } fr
 import authService from '../../../services/authService';
 import activityLogService from '../../../services/activityLogService';
 import { normalizeAvatarUrl } from '../../../utils/avatar';
+import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import {
     User,
     Mail,
@@ -668,6 +669,7 @@ const AdminProfilePage = () => {
                                                 onChange={handleInputChange}
                                                 disabled={!isEditing}
                                                 placeholder="+233..."
+                                                {...getPhoneInputAttributes()}
                                                 className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                                             />
                                         </div>

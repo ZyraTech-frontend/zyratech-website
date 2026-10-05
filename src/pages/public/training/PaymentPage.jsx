@@ -91,6 +91,12 @@ const TrainingPaymentPage = () => {
     } else {
       if (!formData.mobileProvider) newErrors.mobileProvider = 'Select a provider';
       if (!formData.mobileNumber.trim()) newErrors.mobileNumber = 'Mobile money number is required';
+      else {
+        const phoneValidation = validatePhoneNumber(formData.mobileNumber);
+        if (!phoneValidation.isValid) {
+          newErrors.mobileNumber = phoneValidation.error;
+        }
+      }
     }
 
     setErrors(newErrors);
@@ -435,6 +441,7 @@ const TrainingPaymentPage = () => {
                           value={formData.mobileNumber}
                           onChange={handleInputChange}
                           placeholder="024 XXX XXXX"
+                          {...getPhoneInputAttributes()}
                           className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
                             errors.mobileNumber ? 'border-red-500' : 'border-gray-300'
                           }`}

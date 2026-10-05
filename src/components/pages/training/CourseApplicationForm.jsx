@@ -135,6 +135,12 @@ const CourseApplicationForm = () => {
       if (!formData.fullName.trim()) nextErrors.fullName = 'Full name is required.';
       if (!formData.emailAddress.trim()) nextErrors.emailAddress = 'Email is required.';
       if (!formData.phoneNumber.trim()) nextErrors.phoneNumber = 'Phone number is required.';
+      else {
+        const phoneValidation = validatePhoneNumber(formData.phoneNumber);
+        if (!phoneValidation.isValid) {
+          nextErrors.phoneNumber = phoneValidation.error;
+        }
+      }
     }
 
     if (currentStepKey === 'background') {

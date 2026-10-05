@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Building2, Mail, Phone, User, Globe, MessageSquare, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
 import { PUBLIC_PARTNERSHIP_TYPES, PARTNERSHIP_INTERESTS } from '../../../data/partnershipsData';
 import useSEO from '../../../hooks/useSEO';
+import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 
 const PartnershipApplicationPage = () => {
   useSEO({
@@ -84,6 +85,12 @@ const PartnershipApplicationPage = () => {
       if (!formData.email.trim()) newErrors.email = 'Email is required';
       else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
       if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+      else {
+        const phoneValidation = validatePhoneNumber(formData.phone);
+        if (!phoneValidation.isValid) {
+          newErrors.phone = phoneValidation.error;
+        }
+      }
       if (!formData.position.trim()) newErrors.position = 'Position is required';
     }
 
@@ -306,6 +313,7 @@ const PartnershipApplicationPage = () => {
                     value={formData.phone}
                     onChange={handleInputChange}
                     placeholder="+233 XX XXX XXXX"
+                    {...getPhoneInputAttributes()}
                     className={inputClasses}
                   />
                   {errors.phone && <p className={errorClasses}>{errors.phone}</p>}

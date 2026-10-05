@@ -90,9 +90,17 @@ const JobApplicationForm = ({ job, onSubmit }) => {
 
   const validateStep = () => {
     if (step === 1) {
-      return formData.firstName.trim() && formData.lastName.trim() && 
-             formData.email.trim() && formData.confirmEmail.trim() && 
-             formData.city.trim() && formData.phoneNumber.trim();
+      if (!formData.firstName.trim() || !formData.lastName.trim() || 
+          !formData.email.trim() || !formData.confirmEmail.trim() || 
+          !formData.city.trim() || !formData.phoneNumber.trim()) {
+        return false;
+      }
+      // Validate phone format
+      const phoneValidation = validatePhoneNumber(formData.phoneNumber);
+      if (!phoneValidation.isValid) {
+        return false;
+      }
+      return true;
     }
     if (step === 2) {
       return formData.resume && formData.message.trim();

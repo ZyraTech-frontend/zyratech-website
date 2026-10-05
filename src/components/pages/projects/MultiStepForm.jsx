@@ -137,13 +137,25 @@ const MultiStepForm = ({ onSubmit }) => {
   const validateStep = () => {
     if (config.showCompany) {
       // Business/Enterprise flow
-      if (step === 1) return formData.fullName.trim() && formData.email.trim() && formData.phone.trim();
+      if (step === 1) {
+        if (!formData.fullName.trim() || !formData.email.trim() || !formData.phone.trim()) {
+          return false;
+        }
+        const phoneValidation = validatePhoneNumber(formData.phone);
+        return phoneValidation.isValid;
+      }
       if (step === 2) return formData.companyName.trim() && formData.jobTitle.trim();
       if (step === 3) return formData.projectTitle.trim() && formData.projectDescription.trim();
       if (step === 4) return formData.budget && formData.timeline;
     } else {
       // Student flow
-      if (step === 1) return formData.fullName.trim() && formData.email.trim() && formData.phone.trim() && formData.institution.trim();
+      if (step === 1) {
+        if (!formData.fullName.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.institution.trim()) {
+          return false;
+        }
+        const phoneValidation = validatePhoneNumber(formData.phone);
+        return phoneValidation.isValid;
+      }
       if (step === 2) return formData.projectTitle.trim() && formData.projectDescription.trim();
       if (step === 3) return formData.budget && formData.deadline;
     }
@@ -327,7 +339,7 @@ const MultiStepForm = ({ onSubmit }) => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
-                  <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} placeholder="+233 XXX XXX XXX" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent" />
+                  <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} {...getPhoneInputAttributes()} placeholder="+233 XXX XXX XXX" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent" />
                 </div>
               </div>
             )}
