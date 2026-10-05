@@ -60,6 +60,7 @@ const PartnershipsManagementPage = () => {
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [viewMode, setViewMode] = useState('grid');
+    const [viewingPartnership, setViewingPartnership] = useState(null);
 
     // Fetch partnerships on component mount
     useEffect(() => {
@@ -135,6 +136,10 @@ const PartnershipsManagementPage = () => {
 
     const handleAddNew = () => {
         navigate('/admin/partnerships/new');
+    };
+
+    const handleView = (partnership) => {
+        setViewingPartnership(partnership);
     };
 
     const handleEdit = (partnership) => {
@@ -420,11 +425,11 @@ const PartnershipsManagementPage = () => {
                                 <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between gap-2">
                                     <div className="flex items-center gap-1">
                                         <button
-                                            onClick={() => handleEdit(partnership)}
-                                            className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
-                                            title="Edit"
+                                            onClick={() => handleView(partnership)}
+                                            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                            title="View Details"
                                         >
-                                            <Edit size={14} />
+                                            <Eye size={14} />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(partnership)}
@@ -561,6 +566,106 @@ const PartnershipsManagementPage = () => {
                     </div>
                 )}
             </div>
+
+            {/* Partnership Details Modal (Read-Only View) */}
+            {viewingPartnership && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                        {/* Modal Header */}
+                        <div className="sticky top-0 px-6 py-4 border-b border-gray-100 bg-white flex items-center justify-between">
+                            <h2 className="text-xl font-bold text-gray-900">Partnership Application Details</h2>
+                            <button
+                                onClick={() => setViewingPartnership(null)}
+                                className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        {/* Modal Content */}
+                        <div className="p-6 space-y-6">
+                            {/* Organization Info */}
+                            <div className="space-y-4">
+                                <h3 className="font-semibold text-gray-900 text-lg">Organization Information</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-500">Organization Name</label>
+                                        <p className="mt-1 text-gray-900 font-medium">{viewingPartnership.name || viewingPartnership.organizationName || '-'}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-500">Type</label>
+                                        <p className="mt-1 text-gray-900 font-medium">{viewingPartnership.partnershipType || '-'}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-500">Website</label>
+                                        <p className="mt-1 text-gray-900">
+                                            {viewingPartnership.website ? (
+                                                <a href={viewingPartnership.website} target="_blank" rel="noopener noreferrer" className="text-[#004fa2] hover:underline">
+                                                    {viewingPartnership.website}
+                                                </a>
+                                            ) : (
+                                                '-'
+                                            )}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-500">Status</label>
+                                        <div className="mt-1">
+                                            <StatusBadge status={viewingPartnership.status} />
+                                        </div>
+                                    </div>
+                                </div>
+                                {viewingPartnership.description && (
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-500">Description</label>
+                                        <p className="mt-1 text-gray-700 whitespace-pre-wrap">{viewingPartnership.description}</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Contact Information */}
+                            <div className="space-y-4 border-t pt-6">
+                                <h3 className="font-semibold text-gray-900 text-lg">Contact Information</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-500">Contact Email</label>
+                                        <p className="mt-1 text-gray-900">
+                                            <a href={`mailto:${viewingPartnership.contact}`} className="text-[#004fa2] hover:underline">
+                                                {viewingPartnership.contact || '-'}
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Admin Actions */}
+                            <div className="border-t pt-6 flex items-center justify-between">
+                                <p className="text-xs text-gray-500">Read-only view. Application data cannot be edited.</p>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => setViewingPartnership(null)}
+                                        className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors font-medium text-sm"
+                                    >
+                                        Close
+                                    </button>
+                                    <select
+                                        value={viewingPartnership.status}
+                                        onChange={(e) => {
+                                            handleStatusChange(viewingPartnership, e.target.value);
+                                            setViewingPartnership(null);
+                                        }}
+                                        className="px-3 py-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm font-medium"
+                                    >
+                                        <option value="active">Mark Active</option>
+                                        <option value="pending">Mark Pending</option>
+                                        <option value="inactive">Mark Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </AdminLayout>
     );
 };
