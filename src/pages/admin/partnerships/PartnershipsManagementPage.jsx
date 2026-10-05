@@ -38,12 +38,16 @@ import {
 // Status badge component
 const StatusBadge = ({ status }) => {
     const statusConfig = {
+        'PENDING': { label: 'Pending', color: 'bg-amber-100 text-amber-800', icon: Clock },
+        'APPROVED': { label: 'Approved', color: 'bg-green-100 text-green-800', icon: CheckCircle },
+        'REJECTED': { label: 'Rejected', color: 'bg-red-100 text-red-800', icon: AlertCircle },
+        // Legacy mappings for backwards compatibility
         'active': { label: 'Active', color: 'bg-green-100 text-green-800', icon: CheckCircle },
         'pending': { label: 'Pending', color: 'bg-amber-100 text-amber-800', icon: Clock },
-        'inactive': { label: 'Inactive', color: 'bg-gray-100 text-gray-800', icon: AlertCircle }
+        'inactive': { label: 'Inactive', color: 'bg-red-100 text-red-800', icon: AlertCircle }
     };
     
-    const config = statusConfig[status] || statusConfig['pending'];
+    const config = statusConfig[status] || statusConfig['PENDING'];
     const Icon = config.icon;
 
     return (
@@ -110,7 +114,7 @@ const PartnershipsManagementPage = () => {
 
         // Status filter
         if (selectedStatus !== 'all') {
-            result = result.filter(p => p.status === selectedStatus);
+            result = result.filter(p => p.status === selectedStatus.toUpperCase());
         }
 
         return result;
@@ -127,9 +131,9 @@ const PartnershipsManagementPage = () => {
     const stats = useMemo(() => {
         return {
             total: partnerships.length,
-            active: partnerships.filter(p => p.status === 'active').length,
-            pending: partnerships.filter(p => p.status === 'pending').length,
-            inactive: partnerships.filter(p => p.status === 'inactive').length
+            approved: partnerships.filter(p => p.status === 'APPROVED').length,
+            pending: partnerships.filter(p => p.status === 'PENDING').length,
+            rejected: partnerships.filter(p => p.status === 'REJECTED').length
         };
     }, [partnerships]);
 
@@ -272,15 +276,15 @@ const PartnershipsManagementPage = () => {
                     </div>
 
                     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 cursor-pointer"
-                        onClick={() => { setSelectedStatus('active'); setCurrentPage(1); }}
+                        onClick={() => { setSelectedStatus('approved'); setCurrentPage(1); }}
                     >
                         <div className="flex items-center justify-between mb-2">
                             <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center">
                                 <CheckCircle className="text-green-600" size={18} />
                             </div>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.active}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Active</p>
+                        <p className="text-2xl font-bold text-gray-900">{stats.approved}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">Approved</p>
                     </div>
 
                     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 cursor-pointer"
@@ -296,15 +300,15 @@ const PartnershipsManagementPage = () => {
                     </div>
 
                     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 cursor-pointer"
-                        onClick={() => { setSelectedStatus('inactive'); setCurrentPage(1); }}
+                        onClick={() => { setSelectedStatus('rejected'); setCurrentPage(1); }}
                     >
                         <div className="flex items-center justify-between mb-2">
                             <div className="w-9 h-9 bg-red-50 rounded-lg flex items-center justify-center">
                                 <AlertCircle className="text-red-600" size={18} />
                             </div>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{stats.inactive}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Inactive</p>
+                        <p className="text-2xl font-bold text-gray-900">{stats.rejected}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">Rejected</p>
                     </div>
                 </div>
 
@@ -332,9 +336,9 @@ const PartnershipsManagementPage = () => {
                                 className="px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm bg-white"
                             >
                                 <option value="all">All Status</option>
-                                <option value="active">Active</option>
+                                <option value="approved">Approved</option>
                                 <option value="pending">Pending</option>
-                                <option value="inactive">Inactive</option>
+                                <option value="rejected">Rejected</option>
                             </select>
                         </div>
 
@@ -438,9 +442,9 @@ const PartnershipsManagementPage = () => {
                                         onChange={(e) => handleStatusChange(partnership, e.target.value)}
                                         className="text-xs px-2 py-1 border border-gray-200 rounded bg-white focus:outline-none focus:ring-1 focus:ring-[#004fa2]"
                                     >
-                                        <option value="active">Active</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="inactive">Inactive</option>
+                                        <option value="APPROVED">Mark as Approved</option>
+                                        <option value="PENDING">Mark as Pending</option>
+                                        <option value="REJECTED">Mark as Rejected</option>
                                     </select>
                                 </div>
                             </div>
@@ -719,9 +723,9 @@ const PartnershipsManagementPage = () => {
                                     onChange={(e) => handleStatusChange(viewingPartnership, e.target.value)}
                                     className="px-4 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#004fa2] font-medium text-sm"
                                 >
-                                    <option value="active">Mark as Active</option>
-                                    <option value="pending">Mark as Pending</option>
-                                    <option value="inactive">Mark as Inactive</option>
+                                    <option value="APPROVED">Mark as Approved</option>
+                                    <option value="PENDING">Mark as Pending</option>
+                                    <option value="REJECTED">Mark as Rejected</option>
                                 </select>
                             </div>
                         </div>
