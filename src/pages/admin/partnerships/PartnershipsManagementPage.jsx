@@ -4,13 +4,13 @@
  * Features: Grid/Table view toggle, advanced filters, quick actions, detailed modals
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { PARTNERSHIP_TYPES, PARTNERSHIP_STATUSES, getPartnershipTypes, getPartnershipStatuses } from '../../../data/partnershipsData';
-// import { usePermissions } from '../../../hooks/usePermissions'; // Will be used for permission-based feature visibility
+import partnersService from '../../../services/partnersService';
 import {
     Handshake,
     Search,
@@ -72,260 +72,6 @@ const STATUS_ICONS = {
     'paused': Clock
 };
 
-// Mock partnerships data
-const mockPartnerships = [
-    {
-        id: 'PART-2024-001',
-        organization: {
-            name: 'TechVision Ltd',
-            logo: null,
-            website: 'https://techvision.com.gh',
-            industry: 'Software Development'
-        },
-        contact: {
-            name: 'Kwame Asante',
-            email: 'kwame@techvision.com.gh',
-            phone: '+233 24 123 4567',
-            role: 'CEO'
-        },
-        type: 'corporate',
-        status: 'active',
-        featured: true,
-        startDate: '2024-01-15',
-        endDate: '2025-01-15',
-        value: 'GHS 150,000',
-        description: 'Corporate training partnership for DevOps and Cloud Computing programs.',
-        benefits: ['Employee Training', 'Internship Pipeline', 'Technology Collaboration'],
-        studentsPlaced: 12,
-        projectsCompleted: 3
-    },
-    {
-        id: 'PART-2024-002',
-        organization: {
-            name: 'University of Ghana',
-            logo: null,
-            website: 'https://ug.edu.gh',
-            industry: 'Higher Education'
-        },
-        contact: {
-            name: 'Dr. Sarah Johnson',
-            email: 'sarah.johnson@ug.edu.gh',
-            phone: '+233 27 888 9999',
-            role: 'Head of Computer Science'
-        },
-        type: 'academic',
-        status: 'active',
-        featured: true,
-        startDate: '2023-09-01',
-        endDate: '2026-08-31',
-        value: 'In-Kind',
-        description: 'Academic collaboration for student internships, guest lectures, and research.',
-        benefits: ['Student Internships', 'Guest Lectures', 'Curriculum Input', 'Research Collaboration'],
-        studentsPlaced: 28,
-        projectsCompleted: 5
-    },
-    {
-        id: 'PART-2024-003',
-        organization: {
-            name: 'Ghana Digital Innovation Hub',
-            logo: null,
-            website: 'https://gdiHub.gov.gh',
-            industry: 'Government Agency'
-        },
-        contact: {
-            name: 'Michael Owusu',
-            email: 'michael.owusu@gdiHub.gov.gh',
-            phone: '+233 50 666 7777',
-            role: 'Director'
-        },
-        type: 'government',
-        status: 'negotiating',
-        featured: false,
-        startDate: null,
-        endDate: null,
-        value: 'TBD',
-        description: 'Proposed partnership for national digital skills development initiative.',
-        benefits: ['Funding Support', 'National Programs', 'Policy Advocacy'],
-        studentsPlaced: 0,
-        projectsCompleted: 0
-    },
-    {
-        id: 'PART-2024-004',
-        organization: {
-            name: 'AWS Academy',
-            logo: null,
-            website: 'https://aws.amazon.com/academy',
-            industry: 'Cloud Computing'
-        },
-        contact: {
-            name: 'Regional Team',
-            email: 'academy-africa@amazon.com',
-            phone: null,
-            role: 'Partner Relations'
-        },
-        type: 'technology',
-        status: 'active',
-        featured: true,
-        startDate: '2024-03-01',
-        endDate: '2025-02-28',
-        value: 'Certification Partnership',
-        description: 'Official AWS Academy member institution for cloud certification training.',
-        benefits: ['AWS Curriculum', 'Certification Vouchers', 'Lab Credits', 'Instructor Training'],
-        studentsPlaced: 0,
-        projectsCompleted: 0
-    },
-    {
-        id: 'PART-2024-005',
-        organization: {
-            name: 'Youth Employment Agency',
-            logo: null,
-            website: 'https://yea.gov.gh',
-            industry: 'Government Agency'
-        },
-        contact: {
-            name: 'Grace Addo',
-            email: 'grace.addo@yea.gov.gh',
-            phone: '+233 55 333 4444',
-            role: 'Program Manager'
-        },
-        type: 'ngo',
-        status: 'active',
-        featured: false,
-        startDate: '2024-06-01',
-        endDate: '2024-12-31',
-        value: 'GHS 80,000',
-        description: 'Scholarship program for underserved youth in tech training.',
-        benefits: ['Scholarship Funding', 'Youth Outreach', 'Employment Support'],
-        studentsPlaced: 45,
-        projectsCompleted: 2
-    },
-    {
-        id: 'PART-2024-006',
-        organization: {
-            name: 'FinanceHub Ghana',
-            logo: null,
-            website: 'https://financehub.com.gh',
-            industry: 'Financial Services'
-        },
-        contact: {
-            name: 'Linda Amponsah',
-            email: 'linda@financehub.com.gh',
-            phone: '+233 20 777 8888',
-            role: 'HR Director'
-        },
-        type: 'corporate',
-        status: 'pending',
-        featured: false,
-        startDate: null,
-        endDate: null,
-        value: 'GHS 75,000',
-        description: 'Proposed corporate training partnership for fintech skills development.',
-        benefits: ['Employee Training', 'Talent Pipeline'],
-        studentsPlaced: 0,
-        projectsCompleted: 0
-    },
-    {
-        id: 'PART-2024-007',
-        organization: {
-            name: 'Ashesi University',
-            logo: null,
-            website: 'https://ashesi.edu.gh',
-            industry: 'Higher Education'
-        },
-        contact: {
-            name: 'Prof. Emmanuel Osei',
-            email: 'emmanuel.osei@ashesi.edu.gh',
-            phone: '+233 23 111 2222',
-            role: 'Dean of Engineering'
-        },
-        type: 'academic',
-        status: 'active',
-        featured: true,
-        startDate: '2024-02-01',
-        endDate: '2027-01-31',
-        value: 'In-Kind + Scholarship',
-        description: 'Strategic partnership for talent development and industry-academia collaboration.',
-        benefits: ['Student Exchange', 'Joint Programs', 'Research Projects', 'Scholarships'],
-        studentsPlaced: 15,
-        projectsCompleted: 2
-    },
-    {
-        id: 'PART-2024-008',
-        organization: {
-            name: 'Microsoft Imagine Academy',
-            logo: null,
-            website: 'https://microsoft.com/learning',
-            industry: 'Technology'
-        },
-        contact: {
-            name: 'Partner Support',
-            email: 'msia-africa@microsoft.com',
-            phone: null,
-            role: 'Partner Support'
-        },
-        type: 'technology',
-        status: 'expired',
-        featured: false,
-        startDate: '2023-01-01',
-        endDate: '2023-12-31',
-        value: 'Certification Partnership',
-        description: 'Microsoft certification training partnership (needs renewal).',
-        benefits: ['Azure Curriculum', 'Certification Prep'],
-        studentsPlaced: 8,
-        projectsCompleted: 1
-    },
-    {
-        id: 'PART-2024-009',
-        organization: {
-            name: 'StartupGH Foundation',
-            logo: null,
-            website: 'https://startupgh.org',
-            industry: 'Non-Profit'
-        },
-        contact: {
-            name: 'Kofi Boateng',
-            email: 'kofi@startupgh.org',
-            phone: '+233 26 555 1234',
-            role: 'Executive Director'
-        },
-        type: 'ngo',
-        status: 'paused',
-        featured: false,
-        startDate: '2024-04-01',
-        endDate: '2024-10-31',
-        value: 'In-Kind',
-        description: 'Startup mentorship and incubation collaboration (paused due to funding).',
-        benefits: ['Mentorship Program', 'Startup Incubation', 'Networking Events'],
-        studentsPlaced: 6,
-        projectsCompleted: 1
-    },
-    {
-        id: 'PART-2024-010',
-        organization: {
-            name: 'Vodafone Ghana Foundation',
-            logo: null,
-            website: 'https://vodafone.com.gh/foundation',
-            industry: 'Telecommunications'
-        },
-        contact: {
-            name: 'Abena Yeboah',
-            email: 'abena.yeboah@vodafone.com.gh',
-            phone: '+233 26 444 5555',
-            role: 'CSR Manager'
-        },
-        type: 'corporate',
-        status: 'active',
-        featured: true,
-        startDate: '2024-07-01',
-        endDate: '2025-06-30',
-        value: 'GHS 200,000',
-        description: 'Digital skills scholarship program and connectivity support.',
-        benefits: ['Scholarship Funding', 'Internet Sponsorship', 'Device Donations'],
-        studentsPlaced: 30,
-        projectsCompleted: 1
-    }
-];
-
 // Format date
 const formatDate = (dateString) => {
     if (!dateString) return 'TBD';
@@ -356,13 +102,38 @@ const PartnershipsManagementPage = () => {
     // const { isSuperAdmin } = usePermissions(); // Will be used for permission-based feature visibility
 
     // State management
-    const [partnerships, setPartnerships] = useState(mockPartnerships);
+    const [partnerships, setPartnerships] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [selectedType, setSelectedType] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [viewingPartnership, setViewingPartnership] = useState(null);
     const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'table'
+
+    // Fetch partnerships on component mount
+    useEffect(() => {
+        const fetchPartnerships = async () => {
+            try {
+                setIsLoading(true);
+                const response = await partnersService.getAllPartnerships({ page: 1, limit: 100 });
+                setPartnerships(response.data || []);
+            } catch (error) {
+                console.error('Error fetching partnerships:', error);
+                dispatch(addNotification({
+                    type: 'error',
+                    message: error.userMessage || 'Failed to load partnerships. Please try again.',
+                    duration: 4000
+                }));
+                // Fallback to empty list
+                setPartnerships([]);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchPartnerships();
+    }, [dispatch]);
 
     const itemsPerPage = viewMode === 'table' ? 10 : 12;
 
@@ -436,20 +207,20 @@ const PartnershipsManagementPage = () => {
     };
 
     const handleDelete = (partnership) => {
-        dispatch(openConfirmDialog({
-            title: 'Delete Partnership',
-            message: `Are you sure you want to delete the partnership with "${partnership.organization.name}"? This action cannot be undone.`,
-            isDangerous: true,
-            confirmLabel: 'Delete Partnership',
-            onConfirm: () => {
-                setPartnerships(prev => prev.filter(p => p.id !== partnership.id));
-                // console.log('Deleted partnership:', partnership.id);
-            }
+        dispatch(addNotification({
+            type: 'info',
+            message: 'Delete functionality not available in current API. Coming soon.',
+            duration: 3000
         }));
     };
 
     const handleToggleFeatured = (partnership) => {
-        setPartnerships(prev => prev.map(p => p.id === partnership.id ? { ...p, featured: !p.featured } : p));
+        // toggleFeatured not available in current API
+        dispatch(addNotification({
+            type: 'info',
+            message: 'Featured toggle not yet available. Coming soon.',
+            duration: 3000
+        }));
     };
 
     // Commented out until backend integration is ready
@@ -706,7 +477,12 @@ const PartnershipsManagementPage = () => {
                 </div>
 
                 {/* Partnerships Grid/Table */}
-                {viewMode === 'grid' ? (
+                {isLoading ? (
+                    <div className="flex flex-col items-center justify-center py-16 bg-white rounded-xl border border-gray-100">
+                        <div className="w-12 h-12 rounded-full border-4 border-gray-200 border-t-[#004fa2] animate-spin mb-4" />
+                        <p className="text-gray-600 font-medium">Loading partnerships...</p>
+                    </div>
+                ) : viewMode === 'grid' ? (
                     /* Grid View */
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                         {paginatedPartnerships.map((partnership) => {

@@ -6,9 +6,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { getPartnershipTypes, getPartnershipStatuses, PARTNERSHIP_INTERESTS } from '../../../data/partnershipsData';
+import partnersService from '../../../services/partnersService';
 import {
     ChevronLeft,
     ChevronRight,
@@ -171,23 +172,33 @@ const PartnershipFormPage = () => {
             featured: formData.featured
         };
 
-        console.log('Saving partnership:', partnershipData);
+        try {
+            if (isEditing) {
+                await partnersService.updatePartnership(id, partnershipData);
+            } else {
+                await partnersService.createPartnership(partnershipData);
+            }
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+            dispatch(addNotification({
+                type: 'success',
+                message: isEditing
+                    ? `"${formData.organizationName}" partnership has been updated successfully.`
+                    : `"${formData.organizationName}" partnership has been created successfully.`,
+                duration: 4000
+            }));
 
-        setIsSaving(false);
-
-        // Show success and navigate back
-        dispatch(openConfirmDialog({
-            title: isEditing ? 'Partnership Updated' : 'Partnership Created',
-            message: isEditing
-                ? `"${formData.organizationName}" partnership has been updated successfully.`
-                : `"${formData.organizationName}" partnership has been created successfully.`,
-            confirmText: 'OK',
-            hideCancelButton: true,
-            onConfirm: () => navigate('/admin/partnerships')
-        }));
+            navigate('/admin/partnerships');
+        } catch (error) {
+            const errorMessage = error.userMessage || error.message || 'Failed to save partnership. Please try again.';
+            dispatch(addNotification({
+                type: 'error',
+                message: errorMessage,
+                duration: 4000
+            }));
+            console.error('Partnership save error:', error);
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const handleCancel = () => {

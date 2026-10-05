@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Building2, Mail, Phone, User, Globe, MessageSquare, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Building2, Mail, Phone, User, Globe, MessageSquare, CheckCircle2, ArrowRight, ArrowLeft, AlertCircle, Loader } from 'lucide-react';
 import { PUBLIC_PARTNERSHIP_TYPES, PARTNERSHIP_INTERESTS } from '../../../data/partnershipsData';
 import useSEO from '../../../hooks/useSEO';
 import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
+import partnersService from '../../../services/partnersService';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../../store/slices/uiSlice';
 
 const PartnershipApplicationPage = () => {
   useSEO({
@@ -14,8 +17,10 @@ const PartnershipApplicationPage = () => {
   });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(0);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     // Organization Info
@@ -119,12 +124,31 @@ const PartnershipApplicationPage = () => {
     setErrors({});
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateStep(currentStep)) {
-      // Handle form submission here
-      console.log('Form submitted:', formData);
-      navigate('/partner', { state: { applicationSubmitted: true } });
+      setIsSubmitting(true);
+      try {
+        await partnersService.submitPartnershipApplication(formData);
+        
+        dispatch(addNotification({
+          type: 'success',
+          message: 'Your partnership application has been received successfully. We will review it and contact you soon.',
+          duration: 4000
+        }));
+
+        navigate('/partner', { state: { applicationSubmitted: true } });
+      } catch (error) {
+        const errorMessage = error.userMessage || error.message || 'Failed to submit application. Please try again.';
+        dispatch(addNotification({
+          type: 'error',
+          message: errorMessage,
+          duration: 4000
+        }));
+        console.error('Partnership application error:', error);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -503,10 +527,24 @@ const PartnershipApplicationPage = () => {
             ) : (
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 px-5 sm:px-7 py-2.5 sm:py-3 text-sm sm:text-base bg-[#004fa2] text-white rounded-lg font-semibold hover:bg-[#003a7a] transition-colors duration-200"
+                disabled={isSubmitting}
+                className={`flex items-center justify-center gap-2 px-5 sm:px-7 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg font-semibold transition-colors duration-200 ${
+                  isSubmitting
+                    ? 'bg-gray-400 text-white cursor-not-allowed'
+                    : 'bg-[#004fa2] text-white hover:bg-[#003a7a]'
+                }`}
               >
-                <span>Submit Application</span>
-                <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                {isSubmitting ? (
+                  <>
+                    <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                    <span>Submitting...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Submit Application</span>
+                    <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </>
+                )}
               </button>
             )}
           </div>
