@@ -17,8 +17,6 @@ const ContactHero = () => {
     message: ''
   });
 
-  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
-
   const [isVisible, setIsVisible] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -186,80 +184,24 @@ const ContactHero = () => {
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700">Phone Number *</label>
                 
-                {/* Helper Text */}
+                {/* Helper Text - NO PHONE NUMBERS */}
                 <p className="text-xs text-gray-500 -mt-1">
-                  💡 Tip: Enter your number without the leading 0 (e.g., for Ghana enter <strong>537128949</strong> not 0537128949)
+                  💡 Tip: Enter your phone number without the leading 0
                 </p>
 
                 <div className="flex gap-2 items-stretch">
-                  {/* Country Code Selector with Dropdown */}
-                  <div className="relative">
-                    <button
-                      type="button"
-                      onClick={() => setShowCountryDropdown(!showCountryDropdown)}
-                      className="h-12 px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 hover:border-gray-400 bg-white flex items-center gap-2 min-w-[120px] justify-between"
-                      title={COUNTRY_CODES.find(c => c.code === formData.countryCode)?.name}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">{COUNTRY_CODES.find(c => c.code === formData.countryCode)?.flag}</span>
-                        <div className="text-left hidden sm:block">
-                          <div className="text-xs text-gray-500">
-                            {COUNTRY_CODES.find(c => c.code === formData.countryCode)?.dial}
-                          </div>
-                          <div className="text-sm font-medium text-gray-900">
-                            {COUNTRY_CODES.find(c => c.code === formData.countryCode)?.name?.split(' ')[0]}
-                          </div>
-                        </div>
-                      </div>
-                      <ChevronDown size={16} className="text-gray-400" />
-                    </button>
-                    
-                    {/* Country Dropdown Menu */}
-                    {showCountryDropdown && (
-                      <div className="absolute top-full left-0 mt-2 bg-white border border-gray-300 rounded-xl shadow-lg z-50 w-80 max-h-96 overflow-y-auto">
-                        <div className="sticky top-0 bg-white border-b border-gray-200 p-3">
-                          <input
-                            type="text"
-                            placeholder="Search countries..."
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20"
-                            onChange={(e) => {
-                              // Filter countries as user types
-                              const filtered = COUNTRY_CODES.filter(c => 
-                                c.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                                c.dial.includes(e.target.value)
-                              );
-                              // This would need state management in a real implementation
-                            }}
-                          />
-                        </div>
-                        
-                        <div className="p-0">
-                          {COUNTRY_CODES.map(country => (
-                            <button
-                              key={country.code}
-                              type="button"
-                              onClick={() => {
-                                setFormData({ ...formData, countryCode: country.code });
-                                setShowCountryDropdown(false);
-                              }}
-                              className={`w-full px-4 py-3 text-left hover:bg-[#004fa2]/10 transition-colors flex items-center gap-3 border-b border-gray-100 last:border-b-0 ${
-                                formData.countryCode === country.code ? 'bg-[#004fa2]/10 border-l-4 border-l-[#004fa2]' : ''
-                              }`}
-                            >
-                              <span className="text-2xl">{country.flag}</span>
-                              <div className="flex-1">
-                                <div className="font-semibold text-gray-900">{country.name}</div>
-                                <div className="text-xs text-gray-600">{country.dial}</div>
-                              </div>
-                              {formData.countryCode === country.code && (
-                                <div className="w-2 h-2 bg-[#004fa2] rounded-full"></div>
-                              )}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  {/* Country Code Selector - Simple Dropdown */}
+                  <select
+                    value={formData.countryCode}
+                    onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
+                    className="h-12 px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all duration-300 hover:border-gray-400 bg-white appearance-none min-w-[140px] cursor-pointer text-sm font-medium"
+                  >
+                    {COUNTRY_CODES.map(country => (
+                      <option key={country.code} value={country.code}>
+                        {country.flag} {country.name} ({country.dial})
+                      </option>
+                    ))}
+                  </select>
 
                   {/* Phone Number Input */}
                   <input
