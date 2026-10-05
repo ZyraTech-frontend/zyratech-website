@@ -167,7 +167,7 @@ const PartnershipApplicationPage = () => {
         formDataToSend.append('interests', JSON.stringify(formData.interests || []));
         formDataToSend.append('timeline', formData.timeline || '');
         formDataToSend.append('message', formData.message);
-        formDataToSend.append('agreedToTerms', formData.agreedToTerms);
+        formDataToSend.append('agreedToTerms', formData.agreedToTerms ? 'true' : 'false');
         
         await partnersService.submitPartnershipApplicationWithFile(formDataToSend);
         
