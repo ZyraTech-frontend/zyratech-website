@@ -79,13 +79,13 @@ const PartnersRecognition = () => {
                   onClick={() => partner.website && handlePartnerClick(partner)}
                 >
                   {/* Logo Container */}
-                  <div className="p-6 flex flex-col items-center justify-center h-40 bg-gray-50 group-hover:bg-gray-100 transition-colors">
+                  <div className="p-6 flex flex-col items-center justify-center h-56 bg-gray-50 group-hover:bg-gray-100 transition-colors">
                     {partner.logo ? (
                       <img
                         decoding="async"
                         src={partner.logo}
                         alt={partner.organizationName}
-                        className="max-w-full max-h-24 object-contain"
+                        className="max-w-full max-h-40 object-contain"
                         onError={(e) => {
                           e.target.style.display = 'none';
                           if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
@@ -95,7 +95,7 @@ const PartnersRecognition = () => {
 
                     {/* Fallback if no logo */}
                     <div className={`flex flex-col items-center justify-center text-center ${partner.logo ? 'hidden' : 'flex'}`}>
-                      <Building2 className="w-8 h-8 text-gray-300 mb-2 group-hover:text-[#004fa2] transition-colors" />
+                      <Building2 className="w-12 h-12 text-gray-300 mb-2 group-hover:text-[#004fa2] transition-colors" />
                       <span className="text-xs font-bold text-gray-600 group-hover:text-[#004fa2] transition-colors line-clamp-2">
                         {partner.organizationName}
                       </span>
