@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Award, Building2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Award, Building2, ExternalLink, X } from 'lucide-react';
 import partnersService from '../../../services/partnersService';
 
 const PartnersRecognition = () => {
   const [partners, setPartners] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPartner, setSelectedPartner] = useState(null);
 
   useEffect(() => {
     const fetchPartners = async () => {
@@ -22,6 +23,17 @@ const PartnersRecognition = () => {
     };
     fetchPartners();
   }, []);
+
+  const handlePartnerClick = (partner) => {
+    setSelectedPartner(partner);
+  };
+
+  const confirmVisit = () => {
+    if (selectedPartner?.website) {
+      window.open(selectedPartner.website, '_blank');
+    }
+    setSelectedPartner(null);
+  };
 
   return (
     <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
@@ -62,30 +74,45 @@ const PartnersRecognition = () => {
               {partners.map((partner) => (
                 <motion.div
                   key={partner.id}
-                  whileHover={{ y: -5 }}
-                  className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col items-center justify-center h-40 hover:shadow-md transition-all duration-300 group"
+                  whileHover={{ y: -8 }}
+                  className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group cursor-pointer flex flex-col"
+                  onClick={() => partner.website && handlePartnerClick(partner)}
                 >
-                  {partner.logo ? (
-                    <img decoding="async"
-                      src={partner.logo}
-                      alt={partner.name}
-                      className="max-w-full max-h-24 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300 opacity-80 group-hover:opacity-100"
-                      onError={(e) => {
-                        // Fallback if image fails to load
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
-                    />
-                  ) : null}
+                  {/* Logo Container */}
+                  <div className="p-6 flex flex-col items-center justify-center h-40 bg-gray-50 group-hover:bg-gray-100 transition-colors">
+                    {partner.logo ? (
+                      <img
+                        decoding="async"
+                        src={partner.logo}
+                        alt={partner.organizationName}
+                        className="max-w-full max-h-24 object-contain"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
 
-                  {/* Fallback Text (shown if no logo or logo error) */}
-                  <div
-                    className={`flex flex-col items-center justify-center text-center ${partner.logo ? 'hidden' : 'flex'}`}
-                  >
-                    <Building2 className="w-8 h-8 text-gray-300 mb-2 group-hover:text-[#004fa2] transition-colors" />
-                    <span className="text-sm font-bold text-gray-600 group-hover:text-[#004fa2] transition-colors line-clamp-2">
-                      {partner.name}
-                    </span>
+                    {/* Fallback if no logo */}
+                    <div className={`flex flex-col items-center justify-center text-center ${partner.logo ? 'hidden' : 'flex'}`}>
+                      <Building2 className="w-8 h-8 text-gray-300 mb-2 group-hover:text-[#004fa2] transition-colors" />
+                      <span className="text-xs font-bold text-gray-600 group-hover:text-[#004fa2] transition-colors line-clamp-2">
+                        {partner.organizationName}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Name and Website Info */}
+                  <div className="p-4 flex flex-col gap-2 flex-grow bg-white">
+                    <h3 className="text-sm font-bold text-gray-900 text-center line-clamp-2">
+                      {partner.organizationName}
+                    </h3>
+                    {partner.website && (
+                      <div className="flex items-center justify-center gap-1 text-xs text-[#004fa2] group-hover:text-[#003a7a] transition-colors">
+                        <ExternalLink className="w-3 h-3" />
+                        <span>Visit Website</span>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               ))}
@@ -123,6 +150,79 @@ const PartnersRecognition = () => {
           </p>
         </motion.div>
       </div>
+
+      {/* Confirmation Modal */}
+      <AnimatePresence>
+        {selectedPartner && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedPartner(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-xl shadow-2xl max-w-sm w-full overflow-hidden"
+            >
+              {/* Modal Header */}
+              <div className="bg-gradient-to-r from-[#004fa2] to-[#003a7a] px-6 py-4 flex items-center justify-between">
+                <div className="flex items-center gap-3 flex-1">
+                  {selectedPartner.logo && (
+                    <img
+                      src={selectedPartner.logo}
+                      alt={selectedPartner.organizationName}
+                      className="w-8 h-8 object-contain"
+                    />
+                  )}
+                  <h3 className="text-lg font-bold text-white truncate">
+                    {selectedPartner.organizationName}
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setSelectedPartner(null)}
+                  className="text-white hover:text-gray-200 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6">
+                <p className="text-gray-700 mb-2">
+                  You're about to visit:
+                </p>
+                <p className="text-sm text-gray-500 break-all mb-6 p-3 bg-gray-50 rounded-lg">
+                  {selectedPartner.website}
+                </p>
+                <p className="text-sm text-gray-600 mb-6">
+                  This will open in a new window. Are you sure you want to continue?
+                </p>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex gap-3">
+                <button
+                  onClick={() => setSelectedPartner(null)}
+                  className="flex-1 px-4 py-2 text-gray-700 font-semibold bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmVisit}
+                  className="flex-1 px-4 py-2 text-white font-semibold bg-[#004fa2] rounded-lg hover:bg-[#003a7a] transition-colors flex items-center justify-center gap-2"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Visit Website
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
