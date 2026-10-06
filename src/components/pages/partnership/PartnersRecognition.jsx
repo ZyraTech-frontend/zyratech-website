@@ -7,6 +7,8 @@ const PartnersRecognition = () => {
   const [partners, setPartners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPartner, setSelectedPartner] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const partnersPerPage = 10;
 
   useEffect(() => {
     const fetchPartners = async () => {
@@ -35,8 +37,22 @@ const PartnersRecognition = () => {
     setSelectedPartner(null);
   };
 
+  // Pagination logic
+  const totalPages = Math.ceil(partners.length / partnersPerPage);
+  const startIndex = (currentPage - 1) * partnersPerPage;
+  const displayedPartners = partners.slice(startIndex, startIndex + partnersPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    // Scroll to top of section
+    const section = document.querySelector('[data-partners-section]');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-20 bg-gradient-to-b from-gray-50 to-white" data-partners-section>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -64,59 +80,83 @@ const PartnersRecognition = () => {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#004fa2]"></div>
             </div>
           ) : partners.length > 0 ? (
+            <>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8"
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 sm:gap-12 place-items-center"
             >
-              {partners.map((partner) => (
+              {displayedPartners.map((partner) => (
                 <motion.div
                   key={partner.id}
-                  whileHover={{ y: -8 }}
-                  className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group cursor-pointer flex flex-col"
+                  whileHover={{ scale: 1.08 }}
+                  className="w-full h-32 flex items-center justify-center group cursor-pointer transition-all duration-300"
                   onClick={() => partner.website && handlePartnerClick(partner)}
+                  title={partner.website ? `Click to visit ${partner.organizationName}` : partner.organizationName}
                 >
-                  {/* Logo Container */}
-                  <div className="p-6 flex flex-col items-center justify-center h-56 bg-gray-50 group-hover:bg-gray-100 transition-colors">
-                    {partner.logo ? (
-                      <img
-                        decoding="async"
-                        src={partner.logo}
-                        alt={partner.organizationName}
-                        className="max-w-full max-h-40 object-contain"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
-                        }}
-                      />
-                    ) : null}
+                  {partner.logo ? (
+                    <img
+                      decoding="async"
+                      src={partner.logo}
+                      alt={partner.organizationName}
+                      className="max-w-full max-h-full object-contain filter opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
 
-                    {/* Fallback if no logo */}
-                    <div className={`flex flex-col items-center justify-center text-center ${partner.logo ? 'hidden' : 'flex'}`}>
-                      <Building2 className="w-12 h-12 text-gray-300 mb-2 group-hover:text-[#004fa2] transition-colors" />
-                      <span className="text-xs font-bold text-gray-600 group-hover:text-[#004fa2] transition-colors line-clamp-2">
-                        {partner.organizationName}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Name and Website Info */}
-                  <div className="p-4 flex flex-col gap-2 flex-grow bg-white">
-                    <h3 className="text-sm font-bold text-gray-900 text-center line-clamp-2">
+                  {/* Fallback if no logo */}
+                  <div className={`flex flex-col items-center justify-center text-center ${partner.logo ? 'hidden' : 'flex'}`}>
+                    <Building2 className="w-10 h-10 text-gray-300 mb-2 group-hover:text-[#004fa2] transition-colors" />
+                    <span className="text-xs font-bold text-gray-600 group-hover:text-[#004fa2] transition-colors line-clamp-2">
                       {partner.organizationName}
-                    </h3>
-                    {partner.website && (
-                      <div className="flex items-center justify-center gap-1 text-xs text-[#004fa2] group-hover:text-[#003a7a] transition-colors">
-                        <ExternalLink className="w-3 h-3" />
-                        <span>Visit Website</span>
-                      </div>
-                    )}
+                    </span>
                   </div>
                 </motion.div>
               ))}
             </motion.div>
+
+            {totalPages > 1 && (
+              <div className="mt-12 flex items-center justify-center gap-2 flex-wrap">
+                {/* Previous Button */}
+                <button
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-gray-200 text-gray-700 hover:bg-gray-300"
+                >
+                  Previous
+                </button>
+
+                {/* Page Numbers */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`w-10 h-10 rounded-lg font-semibold text-sm transition-all duration-200 ${
+                      currentPage === page
+                        ? 'bg-[#004fa2] text-white shadow-lg'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+
+                {/* Next Button */}
+                <button
+                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-gray-200 text-gray-700 hover:bg-gray-300"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+            </>
           ) : (
             // Keep the static image as ultimate fallback if no data
             <motion.div
