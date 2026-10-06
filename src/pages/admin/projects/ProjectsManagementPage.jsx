@@ -3,13 +3,14 @@
  * Professional admin interface for managing portfolio projects
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { projectsData as initialProjects, getProjectsByStatus, getCategories, getStatuses } from '../../../data/projectsData';
+import projectsService from '../../../services/projectsService';
+import { getProjectsByStatus, getCategories, getStatuses } from '../../../data/projectsData';
 import {
     FolderKanban,
     Plus,
@@ -107,8 +108,9 @@ const ProjectsManagementPage = () => {
     const { isSuperAdmin } = usePermissions();
 
     // State management
-    // State management
-    const [projects, setProjects] = useState(initialProjects);
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [selectedStatus, setSelectedStatus] = useState('all');
@@ -116,6 +118,29 @@ const ProjectsManagementPage = () => {
     const [viewMode, setViewMode] = useState('grid');
 
     const itemsPerPage = 6;
+
+    // Fetch projects from API on component mount
+    useEffect(() => {
+        const fetchProjects = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                const response = await projectsService.getAdminProjects({ limit: 1000 });
+                setProjects(response.projects || []);
+            } catch (err) {
+                console.error('Failed to fetch projects:', err);
+                setError(err.message || 'Failed to load projects');
+                dispatch(addNotification({
+                    type: 'error',
+                    message: 'Failed to load projects from server'
+                }));
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProjects();
+    }, [dispatch]);
 
     // Filter and search projects
     const filteredProjects = useMemo(() => {
@@ -178,12 +203,21 @@ const ProjectsManagementPage = () => {
             title: 'Delete Project',
             message: `Are you sure you want to delete "${project.title}"? This action cannot be undone.`,
             isDangerous: true,
-            onConfirm: () => {
-                setProjects(prev => prev.filter(p => p.id !== project.id));
-                dispatch(addNotification({
-                    type: 'success',
-                    message: `Project "${project.title}" deleted successfully`
-                }));
+            onConfirm: async () => {
+                try {
+                    await projectsService.deleteProject(project.id);
+                    setProjects(prev => prev.filter(p => p.id !== project.id));
+                    dispatch(addNotification({
+                        type: 'success',
+                        message: `Project "${project.title}" deleted successfully`
+                    }));
+                } catch (err) {
+                    console.error('Failed to delete project:', err);
+                    dispatch(addNotification({
+                        type: 'error',
+                        message: `Failed to delete project: ${err.message}`
+                    }));
+                }
             }
         }));
     };
@@ -210,6 +244,30 @@ const ProjectsManagementPage = () => {
     return (
         <AdminLayout>
             <div className="space-y-3 md:space-y-6 pb-8">
+                {/* Error Alert */}
+                {error && (
+                    <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+                        <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={18} />
+                        <div>
+                            <h3 className="font-semibold text-red-900">Error Loading Projects</h3>
+                            <p className="text-sm text-red-700 mt-1">{error}</p>
+                        </div>
+                    </div>
+                )}
+
+                {/* Loading State */}
+                {loading && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-3">
+                        <div className="animate-spin">
+                            <Clock className="text-blue-600" size={18} />
+                        </div>
+                        <div>
+                            <p className="font-semibold text-blue-900">Loading projects...</p>
+                            <p className="text-sm text-blue-700">Fetching your projects from the server</p>
+                        </div>
+                    </div>
+                )}
+
                 {/* Page Header */}
                 {/* Page Header & Actions */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm gap-3 mb-4">
@@ -313,7 +371,19 @@ const ProjectsManagementPage = () => {
                 </div>
 
                 {/* Projects Grid/List */}
-                {viewMode === 'grid' ? (
+                {loading || error ? (
+                    <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100">
+                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            {loading ? (
+                                <Clock className="text-gray-400 animate-spin" size={28} />
+                            ) : (
+                                <AlertCircle className="text-red-400" size={28} />
+                            )}
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">{loading ? 'Loading Projects' : 'Error Loading Projects'}</h3>
+                        <p className="text-sm text-gray-500">{loading ? 'Fetching your projects from the server...' : error}</p>
+                    </div>
+                ) : viewMode === 'grid' ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                         {paginatedProjects.map((project) => (
                             <div key={project.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col hover:border-[#004fa2] transition-colors group p-2">
@@ -470,7 +540,7 @@ const ProjectsManagementPage = () => {
                 )}
 
                 {/* Empty State */}
-                {filteredProjects.length === 0 && (
+                {!loading && !error && filteredProjects.length === 0 && (
                     <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100">
                         <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <FolderKanban className="text-gray-400" size={28} />

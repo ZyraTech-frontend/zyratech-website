@@ -6,10 +6,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { getProjectById } from '../../../data/projectsData';
+import projectsService from '../../../services/projectsService';
 import {
     ArrowLeft,
     Edit,
@@ -31,15 +31,36 @@ const ProjectDetailsPage = () => {
 
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Load project data
+    // Load project data from API
     useEffect(() => {
+        const fetchProject = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                const data = await projectsService.getProjectById(id);
+                if (data) {
+                    setProject(data);
+                } else {
+                    setError('Project not found');
+                }
+            } catch (err) {
+                console.error('Failed to fetch project:', err);
+                setError(err.message || 'Failed to load project');
+                dispatch(addNotification({
+                    type: 'error',
+                    message: 'Failed to load project from server'
+                }));
+            } finally {
+                setLoading(false);
+            }
+        };
+
         if (id) {
-            const foundProject = getProjectById(parseInt(id));
-            setProject(foundProject);
-            setLoading(false);
+            fetchProject();
         }
-    }, [id]);
+    }, [id, dispatch]);
 
     const handleEdit = () => {
         navigate(`/admin/projects/edit/${project.id}`);
@@ -50,10 +71,21 @@ const ProjectDetailsPage = () => {
             title: 'Delete Project',
             message: `Are you sure you want to delete "${project.title}"? This action cannot be undone.`,
             isDangerous: true,
-            onConfirm: () => {
-                // TODO: Implement actual delete via API
-                console.log('Deleting project:', project.id);
-                navigate('/admin/projects');
+            onConfirm: async () => {
+                try {
+                    await projectsService.deleteProject(project.id);
+                    dispatch(addNotification({
+                        type: 'success',
+                        message: `Project "${project.title}" deleted successfully`
+                    }));
+                    navigate('/admin/projects');
+                } catch (err) {
+                    console.error('Failed to delete project:', err);
+                    dispatch(addNotification({
+                        type: 'error',
+                        message: `Failed to delete project: ${err.message}`
+                    }));
+                }
             }
         }));
     };
@@ -66,19 +98,19 @@ const ProjectDetailsPage = () => {
         return (
             <AdminLayout>
                 <div className="flex items-center justify-center h-96">
-                    <p className="text-gray-600">Loading...</p>
+                    <p className="text-gray-600">Loading project...</p>
                 </div>
             </AdminLayout>
         );
     }
 
-    if (!project) {
+    if (error || !project) {
         return (
             <AdminLayout>
                 <div className="flex items-center justify-center h-96">
                     <div className="text-center">
                         <AlertCircle className="mx-auto mb-3 text-gray-400" size={40} />
-                        <p className="text-gray-600 mb-4">Project not found</p>
+                        <p className="text-gray-600 mb-4">{error || 'Project not found'}</p>
                         <button
                             onClick={() => navigate('/admin/projects')}
                             className="px-4 py-2 text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
