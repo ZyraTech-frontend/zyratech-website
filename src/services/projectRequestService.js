@@ -4,10 +4,10 @@
  * 
  * Backend Endpoints:
  * POST /api/project-requests - Submit new project request (public)
- * GET /api/project-requests - List all requests (admin only)
- * GET /api/project-requests/:id - Get specific request (admin only)
- * PATCH /api/project-requests/:id/status - Update status (admin only)
- * DELETE /api/project-requests/:id - Delete request (admin only)
+ * GET /api/admin/project-requests - List all requests (admin only)
+ * GET /api/admin/project-requests/:id - Get specific request (admin only)
+ * PATCH /api/admin/project-requests/:id/status - Update status (admin only)
+ * DELETE /api/admin/project-requests/:id - Delete request (admin only)
  */
 
 import api from './api';
@@ -85,12 +85,14 @@ const projectRequestService = {
     getAdminProjectRequests: async (params = {}) => {
         try {
             const response = await api.get('/admin/project-requests', { params });
+            // Backend returns: { success: true, data: [...], pagination: { total, page, limit, pages } }
+            const pagination = response.data?.pagination || {};
             return {
                 requests: response.data?.data || [],
-                total: response.data?.total || 0,
-                page: response.data?.page || 1,
-                limit: response.data?.limit || 20,
-                pages: response.data?.pages || 1,
+                total: pagination.total || 0,
+                page: pagination.page || 1,
+                limit: pagination.limit || 20,
+                pages: pagination.pages || 1,
                 message: response.data?.message
             };
         } catch (error) {
