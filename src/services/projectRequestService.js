@@ -85,15 +85,22 @@ const projectRequestService = {
     getAdminProjectRequests: async (params = {}) => {
         try {
             const response = await api.get('/admin/project-requests', { params });
+            console.log('[projectRequestService.getAdminProjectRequests] Response:', response.data);
+            
             // Backend returns: { success: true, data: [...], pagination: { total, page, limit, pages } }
-            const pagination = response.data?.pagination || {};
+            const responseData = response.data;
+            const pagination = responseData?.pagination || {};
+            const requests = Array.isArray(responseData?.data) ? responseData.data : [];
+            
+            console.log('[projectRequestService] Parsed requests:', requests, 'Pagination:', pagination);
+            
             return {
-                requests: response.data?.data || [],
+                requests: requests || [],
                 total: pagination.total || 0,
                 page: pagination.page || 1,
                 limit: pagination.limit || 20,
                 pages: pagination.pages || 1,
-                message: response.data?.message
+                message: responseData?.message
             };
         } catch (error) {
             console.error('Error fetching project requests:', error);

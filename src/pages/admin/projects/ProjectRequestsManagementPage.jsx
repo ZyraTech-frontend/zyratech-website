@@ -97,6 +97,7 @@ const ProjectRequestsManagementPage = () => {
             setLoading(true);
             setError(null);
             const response = await projectRequestService.getAdminProjectRequests({ limit: 1000 });
+            console.log('[ProjectRequestsManagementPage] API Response:', response);
             setRequests(response.requests || []);
         } catch (err) {
             console.error('Failed to fetch project requests:', err);
