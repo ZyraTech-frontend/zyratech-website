@@ -43,6 +43,7 @@ const AlbumFormPage = lazy(() => import('./pages/admin/gallery/AlbumFormPage'));
 const ProjectsManagementPage = lazy(() => import('./pages/admin/projects/ProjectsManagementPage'));
 const ProjectFormPage = lazy(() => import('./pages/admin/projects/ProjectFormPage'));
 const ProjectDetailsPage = lazy(() => import('./pages/admin/projects/ProjectDetailsPage'));
+const ProjectRequestsManagementPage = lazy(() => import('./pages/admin/projects/ProjectRequestsManagementPage'));
 const FaqManagementPage = lazy(() => import('./pages/admin/faq/FaqManagementPage'));
 const FaqFormPage = lazy(() => import('./pages/admin/faq/FaqFormPage'));
 const TestimonialsManagementPage = lazy(() => import('./pages/admin/testimonials/TestimonialsManagementPage'));
@@ -201,6 +202,7 @@ function App() {
                 <Route path="/admin/projects/new" element={<ProtectedRoute><ProjectFormPage /></ProtectedRoute>} />
                 <Route path="/admin/projects/edit/:id" element={<ProtectedRoute><ProjectFormPage /></ProtectedRoute>} />
                 <Route path="/admin/projects/:id" element={<ProtectedRoute><ProjectDetailsPage /></ProtectedRoute>} />
+                <Route path="/admin/project-requests" element={<ProtectedRoute><ProjectRequestsManagementPage /></ProtectedRoute>} />
 
                 {/* FAQ Management */}
                 <Route path="/admin/faq" element={<ProtectedRoute><FaqManagementPage /></ProtectedRoute>} />

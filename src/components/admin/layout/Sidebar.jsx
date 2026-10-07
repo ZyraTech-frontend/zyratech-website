@@ -306,6 +306,17 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           </Link>
 
           <Link
+            to="/admin/project-requests"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/project-requests')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <Inbox size={20} />
+            <span className="font-medium">Project Requests</span>
+          </Link>
+
+          <Link
             to="/admin/faq"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/faq')
               ? 'bg-white/15 text-white'
