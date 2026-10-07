@@ -132,7 +132,6 @@ const MultiStepForm = ({ onSubmit }) => {
         projectTitle: formData.projectTitle.trim(),
         description: formData.description.trim(),
         projectType: formData.projectType,
-        packageType: packageType, // Include the package type from URL
         budget: formData.budget || null,
         timeline: formData.timeline || null,
         technologies: technologiesArray,

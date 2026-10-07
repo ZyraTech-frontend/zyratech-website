@@ -43,9 +43,6 @@ const projectRequestService = {
             if (!requestData.projectType) {
                 throw new Error('Project type is required');
             }
-            if (!requestData.packageType) {
-                throw new Error('Package type is required');
-            }
 
             // Format the request data to match backend schema
             const payload = {
@@ -55,12 +52,13 @@ const projectRequestService = {
                 projectTitle: requestData.projectTitle.trim(),
                 description: requestData.description.trim(),
                 projectType: requestData.projectType,
-                packageType: requestData.packageType,
                 company: requestData.company?.trim() || null,
                 budget: requestData.budget || null,
                 timeline: requestData.timeline || null,
                 technologies: Array.isArray(requestData.technologies) ? requestData.technologies : [],
                 additionalNotes: requestData.additionalNotes?.trim() || null
+                // Note: packageType is captured from URL but not sent in request body
+                // It will be determined server-side from referrer or context
             };
 
             const response = await api.post('/project-requests', payload);
