@@ -73,7 +73,7 @@ const projectRequestService = {
 
     /**
      * Get all project requests (Admin Only)
-     * GET /api/project-requests
+     * GET /api/admin/project-requests
      * @param {Object} params - Query parameters
      * @param {number} params.page - Page number (default: 1)
      * @param {number} params.limit - Items per page (default: 20, max: 100)
@@ -84,7 +84,7 @@ const projectRequestService = {
      */
     getAdminProjectRequests: async (params = {}) => {
         try {
-            const response = await api.get('/project-requests', { params });
+            const response = await api.get('/admin/project-requests', { params });
             return {
                 requests: response.data?.data || [],
                 total: response.data?.total || 0,
@@ -101,13 +101,13 @@ const projectRequestService = {
 
     /**
      * Get specific project request (Admin Only)
-     * GET /api/project-requests/:id
+     * GET /api/admin/project-requests/:id
      * @param {string} id - Request ID
      * @returns {Promise} Project request object
      */
     getProjectRequestById: async (id) => {
         try {
-            const response = await api.get(`/project-requests/${id}`);
+            const response = await api.get(`/admin/project-requests/${id}`);
             return response.data?.data || response.data;
         } catch (error) {
             console.error(`Error fetching project request ${id}:`, error);
@@ -117,7 +117,7 @@ const projectRequestService = {
 
     /**
      * Update project request status (Admin Only)
-     * PATCH /api/project-requests/:id/status
+     * PATCH /api/admin/project-requests/:id/status
      * @param {string} id - Request ID
      * @param {Object} updateData - Status update data
      * @param {string} updateData.status - New status: approved|rejected
@@ -130,7 +130,7 @@ const projectRequestService = {
                 status: updateData.status,
                 reviewNotes: updateData.reviewNotes || null
             };
-            const response = await api.patch(`/project-requests/${id}/status`, payload);
+            const response = await api.patch(`/admin/project-requests/${id}/status`, payload);
             return response.data?.data || response.data;
         } catch (error) {
             console.error(`Error updating project request ${id}:`, error);
@@ -140,13 +140,13 @@ const projectRequestService = {
 
     /**
      * Delete project request (Admin Only)
-     * DELETE /api/project-requests/:id
+     * DELETE /api/admin/project-requests/:id
      * @param {string} id - Request ID
      * @returns {Promise} Deletion response
      */
     deleteProjectRequest: async (id) => {
         try {
-            const response = await api.delete(`/project-requests/${id}`);
+            const response = await api.delete(`/admin/project-requests/${id}`);
             return response.data?.data || response.data;
         } catch (error) {
             console.error(`Error deleting project request ${id}:`, error);
