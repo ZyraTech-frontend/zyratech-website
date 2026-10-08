@@ -54,13 +54,26 @@ const projectsService = {
     },
 
     /**
-     * Get single project details
-     * GET /api/projects/:id
+     * Get single project details - tries admin endpoint first, then public
+     * GET /api/admin/projects/:id (admin) or /api/projects/:id (public)
      * @param {string|number} id - Project ID
+     * @param {boolean} isAdmin - Whether to try admin endpoint first (default: true)
      * @returns {Promise} Project details
      */
-    getProjectById: async (id) => {
+    getProjectById: async (id, isAdmin = true) => {
         try {
+            // Try admin endpoint first
+            if (isAdmin) {
+                try {
+                    const response = await api.get(`/admin/projects/${id}`);
+                    return response.data?.data || response.data;
+                } catch (adminErr) {
+                    // If admin endpoint fails, fall back to public
+                    console.log('Admin endpoint failed, trying public...');
+                }
+            }
+            
+            // Try public endpoint
             const response = await api.get(`/projects/${id}`);
             return response.data?.data || response.data;
         } catch (error) {
