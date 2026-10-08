@@ -33,9 +33,12 @@ const projectRequestService = {
      */
     submitProjectRequest: async (requestData) => {
         try {
-            // Validate required fields
+            // Validate required fields - ALL are now required
             if (!requestData.fullName?.trim() || !requestData.email?.trim() || !requestData.phone?.trim()) {
                 throw new Error('Name, email, and phone are required');
+            }
+            if (!requestData.company?.trim()) {
+                throw new Error('Company name is required');
             }
             if (!requestData.projectTitle?.trim() || !requestData.description?.trim()) {
                 throw new Error('Project title and description are required');
@@ -46,6 +49,18 @@ const projectRequestService = {
             if (!requestData.packageType) {
                 throw new Error('Package type is required');
             }
+            if (!requestData.budget?.trim()) {
+                throw new Error('Budget is required');
+            }
+            if (!requestData.timeline?.trim()) {
+                throw new Error('Timeline is required');
+            }
+            if (!Array.isArray(requestData.technologies) || requestData.technologies.length === 0) {
+                throw new Error('At least one technology is required');
+            }
+            if (!requestData.additionalNotes?.trim()) {
+                throw new Error('Additional notes are required');
+            }
 
             // Format the request data to match backend schema
             const payload = {
@@ -55,12 +70,12 @@ const projectRequestService = {
                 projectTitle: requestData.projectTitle.trim(),
                 description: requestData.description.trim(),
                 projectType: requestData.projectType,
-                packageType: requestData.packageType, // REQUIRED: backend needs this to categorize the request
-                company: requestData.company?.trim() || null,
-                budget: requestData.budget || null,
-                timeline: requestData.timeline || null,
-                technologies: Array.isArray(requestData.technologies) ? requestData.technologies : [],
-                additionalNotes: requestData.additionalNotes?.trim() || null
+                packageType: requestData.packageType,
+                company: requestData.company.trim(),
+                budget: requestData.budget.trim(),
+                timeline: requestData.timeline.trim(),
+                technologies: requestData.technologies,
+                additionalNotes: requestData.additionalNotes.trim()
             };
 
             const response = await api.post('/project-requests', payload);

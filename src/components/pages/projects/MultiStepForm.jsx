@@ -72,10 +72,32 @@ const MultiStepForm = ({ onSubmit }) => {
     description: '',
     projectType: config.projectTypes[0].value,
     budget: '',
+    budgetCustom: '',
     timeline: '',
+    timelineCustom: '',
     technologies: '',
     additionalNotes: ''
   });
+
+  // Budget dropdown options
+  const budgetOptions = [
+    { value: '$1,000 - $5,000', label: '$1,000 - $5,000' },
+    { value: '$5,000 - $10,000', label: '$5,000 - $10,000' },
+    { value: '$10,000 - $25,000', label: '$10,000 - $25,000' },
+    { value: '$25,000 - $50,000', label: '$25,000 - $50,000' },
+    { value: '$50,000+', label: '$50,000+' },
+    { value: 'custom', label: 'Custom Amount' }
+  ];
+
+  // Timeline dropdown options
+  const timelineOptions = [
+    { value: '1-2 weeks', label: '1-2 weeks' },
+    { value: '2-4 weeks', label: '2-4 weeks' },
+    { value: '1-3 months', label: '1-3 months' },
+    { value: '3-6 months', label: '3-6 months' },
+    { value: '6-12 months', label: '6-12 months' },
+    { value: 'custom', label: 'Custom Timeline' }
+  ];
 
   const steps = [
     { number: 1, title: 'Contact Info' },
@@ -91,14 +113,40 @@ const MultiStepForm = ({ onSubmit }) => {
 
   const validateStep = () => {
     if (step === 1) {
-      if (!formData.fullName.trim() || !formData.email.trim() || !formData.phone.trim()) {
+      if (!formData.fullName.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.company.trim()) {
         return false;
       }
       const phoneValidation = validatePhoneNumber(formData.phone);
       return phoneValidation.isValid;
     }
     if (step === 2) {
-      return formData.projectTitle.trim() && formData.description.trim() && formData.projectType;
+      // All fields are now required
+      if (!formData.projectTitle.trim() || !formData.description.trim() || !formData.projectType) {
+        return false;
+      }
+      // Budget is required
+      const finalBudget = formData.budget === 'custom' ? formData.budgetCustom : formData.budget;
+      if (!finalBudget || !finalBudget.trim()) {
+        return false;
+      }
+      // Timeline is required
+      const finalTimeline = formData.timeline === 'custom' ? formData.timelineCustom : formData.timeline;
+      if (!finalTimeline || !finalTimeline.trim()) {
+        return false;
+      }
+      // Technologies is required (at least one)
+      const technologiesArray = formData.technologies
+        .split(',')
+        .map(t => t.trim())
+        .filter(t => t.length > 0);
+      if (technologiesArray.length === 0) {
+        return false;
+      }
+      // Additional notes is required
+      if (!formData.additionalNotes.trim()) {
+        return false;
+      }
+      return true;
     }
     return true;
   };
@@ -124,19 +172,25 @@ const MultiStepForm = ({ onSubmit }) => {
         .map(t => t.trim())
         .filter(t => t.length > 0);
 
+      // Get final budget (custom or selected)
+      const finalBudget = formData.budget === 'custom' ? formData.budgetCustom : formData.budget;
+
+      // Get final timeline (custom or selected)
+      const finalTimeline = formData.timeline === 'custom' ? formData.timelineCustom : formData.timeline;
+
       const payload = {
         fullName: formData.fullName.trim(),
         email: formData.email.trim(),
         phone: formData.phone.trim(),
-        company: formData.company?.trim() || null,
+        company: formData.company.trim(), // Now REQUIRED
         projectTitle: formData.projectTitle.trim(),
         description: formData.description.trim(),
         projectType: formData.projectType,
         packageType: packageType, // Required: student-projects, business-projects, or enterprise
-        budget: formData.budget || null,
-        timeline: formData.timeline || null,
-        technologies: technologiesArray,
-        additionalNotes: formData.additionalNotes?.trim() || null
+        budget: finalBudget.trim(), // Now REQUIRED
+        timeline: finalTimeline.trim(), // Now REQUIRED
+        technologies: technologiesArray, // Now REQUIRED (at least 1)
+        additionalNotes: formData.additionalNotes.trim() // Now REQUIRED
       };
 
       await projectRequestService.submitProjectRequest(payload);
@@ -263,13 +317,13 @@ const MultiStepForm = ({ onSubmit }) => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Company (Optional)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Company Name *</label>
                 <input 
                   type="text" 
                   name="company" 
                   value={formData.company} 
                   onChange={handleChange} 
-                  placeholder="Your company name" 
+                  placeholder="Your company or organization name" 
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent" 
                 />
               </div>
@@ -319,47 +373,74 @@ const MultiStepForm = ({ onSubmit }) => {
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Budget (Optional)</label>
-                <input 
-                  type="text" 
+                <label className="block text-sm font-medium text-gray-700 mb-2">Budget *</label>
+                <select 
                   name="budget" 
                   value={formData.budget} 
                   onChange={handleChange} 
-                  placeholder="e.g. $5,000 - $10,000" 
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent" 
-                />
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent"
+                >
+                  <option value="">Select a budget range...</option>
+                  {budgetOptions.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+                {formData.budget === 'custom' && (
+                  <input 
+                    type="text" 
+                    name="budgetCustom" 
+                    value={formData.budgetCustom} 
+                    onChange={handleChange} 
+                    placeholder="Enter your custom budget (e.g., $15,000 - $20,000)" 
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent mt-2" 
+                  />
+                )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Timeline (Optional)</label>
-                <input 
-                  type="text" 
+                <label className="block text-sm font-medium text-gray-700 mb-2">Timeline *</label>
+                <select 
                   name="timeline" 
                   value={formData.timeline} 
                   onChange={handleChange} 
-                  placeholder="e.g. 3-6 months" 
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent" 
-                />
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent"
+                >
+                  <option value="">Select a timeline...</option>
+                  {timelineOptions.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+                {formData.timeline === 'custom' && (
+                  <input 
+                    type="text" 
+                    name="timelineCustom" 
+                    value={formData.timelineCustom} 
+                    onChange={handleChange} 
+                    placeholder="Enter your custom timeline (e.g., 4 months)" 
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent mt-2" 
+                  />
+                )}
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Technologies (Optional)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Technologies *</label>
               <input 
                 type="text" 
                 name="technologies" 
                 value={formData.technologies} 
                 onChange={handleChange} 
-                placeholder="e.g. React, Node.js, MongoDB (comma-separated)" 
+                placeholder="e.g. React, Node.js, MongoDB (comma-separated, required)" 
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent" 
               />
+              <p className="text-xs text-gray-500 mt-1">At least one technology is required</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Additional Notes (Optional)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Additional Notes *</label>
               <textarea 
                 name="additionalNotes" 
                 value={formData.additionalNotes} 
                 onChange={handleChange} 
                 rows="2" 
-                placeholder="Any other details we should know..." 
+                placeholder="Tell us more about your project requirements, goals, or any special requests..." 
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent" 
               />
             </div>
@@ -374,12 +455,14 @@ const MultiStepForm = ({ onSubmit }) => {
               <div><span className="text-gray-600">Name:</span> <span className="font-medium">{formData.fullName}</span></div>
               <div><span className="text-gray-600">Email:</span> <span className="font-medium">{formData.email}</span></div>
               <div><span className="text-gray-600">Phone:</span> <span className="font-medium">{formData.phone}</span></div>
-              <div><span className="text-gray-600">Company:</span> <span className="font-medium">{formData.company || 'Not provided'}</span></div>
+              <div><span className="text-gray-600">Company:</span> <span className="font-medium">{formData.company}</span></div>
               <div><span className="text-gray-600">Project Type:</span> <span className="font-medium">{formData.projectType}</span></div>
-              <div><span className="text-gray-600">Budget:</span> <span className="font-medium">{formData.budget || 'Not specified'}</span></div>
+              <div><span className="text-gray-600">Budget:</span> <span className="font-medium">{formData.budget === 'custom' ? formData.budgetCustom : formData.budget}</span></div>
+              <div><span className="text-gray-600">Timeline:</span> <span className="font-medium">{formData.timeline === 'custom' ? formData.timelineCustom : formData.timeline}</span></div>
               <div className="md:col-span-2"><span className="text-gray-600">Title:</span> <span className="font-medium">{formData.projectTitle}</span></div>
               <div className="md:col-span-2"><span className="text-gray-600">Description:</span> <span className="font-medium">{formData.description}</span></div>
               {formData.technologies && <div className="md:col-span-2"><span className="text-gray-600">Technologies:</span> <span className="font-medium">{formData.technologies}</span></div>}
+              {formData.additionalNotes && <div className="md:col-span-2"><span className="text-gray-600">Additional Notes:</span> <span className="font-medium">{formData.additionalNotes}</span></div>}
             </div>
           </div>
         )}

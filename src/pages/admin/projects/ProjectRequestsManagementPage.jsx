@@ -293,6 +293,7 @@ const ProjectRequestsManagementPage = () => {
                         { title: 'Rejected', count: stats.rejected, icon: XCircle, color: 'text-red-600', bg: 'bg-red-50', onClick: () => { setSelectedStatus('rejected'); setCurrentPage(1); } },
                         { title: 'Student', count: stats.student, icon: FileText, color: 'text-blue-600', bg: 'bg-blue-50', onClick: () => { setSelectedPackageType('student-projects'); setCurrentPage(1); } },
                         { title: 'Business', count: stats.business, icon: Building2, color: 'text-purple-600', bg: 'bg-purple-50', onClick: () => { setSelectedPackageType('business-projects'); setCurrentPage(1); } },
+                        { title: 'Enterprise', count: stats.enterprise, icon: Building2, color: 'text-red-600', bg: 'bg-red-50', onClick: () => { setSelectedPackageType('enterprise'); setCurrentPage(1); } },
                     ].map((stat, i) => (
                         <div key={i} onClick={stat.onClick} className="bg-white border border-gray-100 rounded-xl p-2 md:p-2.5 flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-1 md:gap-2 shadow-sm hover:border-[#004fa2] transition-colors cursor-pointer text-center md:text-left group">
                             <div className={`w-6 h-6 md:w-7 md:h-7 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
