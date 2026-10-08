@@ -240,6 +240,31 @@ const ProjectsManagementPage = () => {
         navigate(`/admin/projects/edit/${project.id}`);
     };
 
+    const handleToggleStatus = async (project) => {
+        const newStatus = project.status === 'published' ? 'draft' : 'published';
+        const actionLabel = newStatus === 'published' ? 'publish' : 'unpublish';
+        
+        try {
+            await projectsService.updateProject(project.id, { status: newStatus });
+            
+            // Update local state
+            setProjects(prev => prev.map(p => 
+                p.id === project.id ? { ...p, status: newStatus } : p
+            ));
+            
+            dispatch(addNotification({
+                type: 'success',
+                message: `Project "${project.title}" ${actionLabel}ed successfully!`
+            }));
+        } catch (err) {
+            console.error(`Failed to ${actionLabel} project:`, err);
+            dispatch(addNotification({
+                type: 'error',
+                message: `Failed to ${actionLabel} project: ${err.message}`
+            }));
+        }
+    };
+
     const handleAddNew = () => {
         navigate('/admin/projects/new');
     };
@@ -410,7 +435,13 @@ const ProjectsManagementPage = () => {
                                         )}
                                     </div>
                                     <div className="absolute bottom-1 right-1">
-                                        <StatusBadge status={project.status} />
+                                        <button 
+                                            onClick={() => handleToggleStatus(project)}
+                                            title={`Click to ${project.status === 'published' ? 'unpublish' : 'publish'}`}
+                                            className="hover:opacity-80 transition-opacity cursor-pointer"
+                                        >
+                                            <StatusBadge status={project.status} />
+                                        </button>
                                     </div>
                                 </div>
                                 
@@ -500,7 +531,13 @@ const ProjectsManagementPage = () => {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <StatusBadge status={project.status} />
+                                            <button 
+                                                onClick={() => handleToggleStatus(project)}
+                                                title={`Click to ${project.status === 'published' ? 'unpublish' : 'publish'}`}
+                                                className="hover:opacity-80 transition-opacity"
+                                            >
+                                                <StatusBadge status={project.status} />
+                                            </button>
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="w-24">
