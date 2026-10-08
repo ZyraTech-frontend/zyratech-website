@@ -21,6 +21,7 @@ import NotFoundPage from './pages/public/NotFound';
 const AboutPage = lazy(() => import('./pages/public/about'));
 const ProjectsPage = lazy(() => import('./pages/public/projects'));
 const ProjectRequestPage = lazy(() => import('./pages/public/projects/request'));
+const ProjectDetailPage = lazy(() => import('./pages/public/projects/ProjectDetailPage'));
 const ContactPage = lazy(() => import('./pages/public/contact'));
 const AdminPage = lazy(() => import('./pages/admin/DashboardPage'));
 const LoginPage = lazy(() => import('./pages/admin/LoginPage'));
@@ -289,6 +290,7 @@ function App() {
               <Route path="/about" element={<Suspense fallback={<RouteSkeleton variant="about" />}><AboutPage /></Suspense>} />
               <Route path="/projects" element={<Suspense fallback={<RouteSkeleton variant="projects" />}><ProjectsPage /></Suspense>} />
               <Route path="/projects/request" element={<Suspense fallback={<RouteSkeleton variant="projects" />}><ProjectRequestPage /></Suspense>} />
+              <Route path="/projects/:id" element={<Suspense fallback={<RouteSkeleton variant="projects" />}><ProjectDetailPage /></Suspense>} />
               <Route path="/contact" element={<Suspense fallback={<RouteSkeleton variant="default" />}><ContactPage /></Suspense>} />
 
               {/* Service Pages – legacy redirects */}

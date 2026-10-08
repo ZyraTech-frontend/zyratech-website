@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '../../../components/Navbar';
 import NewProjectsHero from '../../../components/pages/projects/NewProjectsHero';
 import WhatWeBuild from '../../../components/pages/projects/WhatWeBuild';
+import PortfolioShowcase from '../../../components/pages/projects/PortfolioShowcase';
 import HowItWorks from '../../../components/pages/projects/HowItWorks';
 import PricingSection from '../../../components/pages/projects/PricingSection';
 import ProjectsFAQ from '../../../components/pages/projects/ProjectsFAQ';
@@ -23,6 +24,7 @@ const ProjectsPage = () => {
       <Navbar />
       <NewProjectsHero />
       <WhatWeBuild />
+      <PortfolioShowcase />
       <HowItWorks />
       <PricingSection />
       <ProjectsFAQ />
