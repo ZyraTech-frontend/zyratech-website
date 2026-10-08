@@ -85,21 +85,26 @@ const projectRequestService = {
     getAdminProjectRequests: async (params = {}) => {
         try {
             const response = await api.get('/admin/project-requests', { params });
-            console.log('[projectRequestService.getAdminProjectRequests] Response:', response.data);
+            console.log('[projectRequestService.getAdminProjectRequests] Full Response:', response.data);
             
-            // Backend returns: { success: true, data: [...], pagination: { total, page, limit, pages } }
+            // Backend returns: { success: true, data: { data: [...], pagination: {...} }, message: "..." }
+            // Note: Backend has NESTED data structure
             const responseData = response.data;
-            const pagination = responseData?.pagination || {};
-            const requests = Array.isArray(responseData?.data) ? responseData.data : [];
             
-            console.log('[projectRequestService] Parsed requests:', requests, 'Pagination:', pagination);
+            // Extract the nested data and pagination
+            const nestedData = responseData?.data || {};
+            const requests = Array.isArray(nestedData?.data) ? nestedData.data : [];
+            const pagination = nestedData?.pagination || {};
+            
+            console.log('[projectRequestService] Extracted requests:', requests);
+            console.log('[projectRequestService] Pagination:', pagination);
             
             return {
                 requests: requests || [],
                 total: pagination.total || 0,
                 page: pagination.page || 1,
                 limit: pagination.limit || 20,
-                pages: pagination.pages || 1,
+                pages: pagination.totalPages || 1,
                 message: responseData?.message
             };
         } catch (error) {
