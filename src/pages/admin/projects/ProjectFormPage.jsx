@@ -6,17 +6,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { projectsData, getProjectById } from '../../../data/projectsData';
+import api from '../../../services/api';
 import {
     ArrowLeft,
     Save,
     X,
     Plus,
     Trash2,
-    AlertCircle
+    AlertCircle,
+    Upload,
+    Image as ImageIcon
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -55,6 +58,8 @@ const ProjectFormPage = () => {
     const [technologiesInput, setTechnologiesInput] = useState('');
     const [errors, setErrors] = useState({});
     const [submitError, setSubmitError] = useState('');
+    const [isUploadingImage, setIsUploadingImage] = useState(false);
+    const [imageUploadError, setImageUploadError] = useState('');
 
     // Initialize form for editing
     useEffect(() => {
@@ -66,6 +71,67 @@ const ProjectFormPage = () => {
             }
         }
     }, [id]);
+
+    // Handle image upload
+    const handleImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!['image/jpeg', 'image/png', 'image/webp', 'image/jpg'].includes(file.type)) {
+            setImageUploadError('Please choose a JPG, PNG, or WebP image.');
+            return;
+        }
+
+        // Validate file size (10MB max)
+        if (file.size > 10 * 1024 * 1024) {
+            setImageUploadError('Image size must be less than 10MB.');
+            return;
+        }
+
+        setImageUploadError('');
+        setIsUploadingImage(true);
+
+        try {
+            const uploadFormData = new FormData();
+            uploadFormData.append('file', file);
+
+            // Try multiple upload endpoints in order
+            let uploadedUrl = '';
+
+            try {
+                const res = await api.post('/admin/gallery/upload', uploadFormData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                uploadedUrl = res?.data?.data?.url || res?.data?.url || res?.data?.location || '';
+            } catch (_galleryErr) {
+                try {
+                    const res = await api.post('/admin/blog/upload', uploadFormData, {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    });
+                    uploadedUrl = res?.data?.data?.url || res?.data?.url || res?.data?.location || '';
+                } catch (_blogErr) {
+                    // Silent fallback
+                }
+            }
+
+            if (uploadedUrl) {
+                setFormData(prev => ({ ...prev, image: uploadedUrl }));
+                dispatch(addNotification({
+                    type: 'success',
+                    message: 'Project image uploaded successfully!'
+                }));
+            } else {
+                throw new Error('Upload succeeded but no URL returned');
+            }
+        } catch (err) {
+            console.error('Image upload failed:', err);
+            setImageUploadError(err.response?.data?.message || err.message || 'Image upload failed. You can paste a URL directly.');
+        } finally {
+            setIsUploadingImage(false);
+            if (e.target) e.target.value = '';
+        }
+    };
 
     // Handle form input changes
     const handleChange = (e) => {
@@ -278,8 +344,48 @@ const ProjectFormPage = () => {
                             <div className="md:col-span-2 flex flex-col md:flex-row gap-4">
                                 <div className="flex-1">
                                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
-                                        Image URL *
+                                        Project Image * (Upload or Paste URL)
                                     </label>
+                                    
+                                    {/* Image Upload Area */}
+                                    {formData.image ? (
+                                        <div className="relative rounded-lg overflow-hidden border border-gray-200 bg-gray-50 shadow-sm mb-3">
+                                            <img decoding="async" src={formData.image} alt="Preview" className="w-full h-48 object-cover" loading="lazy" />
+                                            <button
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
+                                                className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                                            >
+                                                <X size={16} />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <label className="block w-full p-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#004fa2] hover:bg-[#004fa2]/5 transition-all mb-3">
+                                            <div className="flex flex-col items-center justify-center">
+                                                <Upload className="text-gray-400 mb-2" size={24} />
+                                                <p className="text-xs font-semibold text-gray-600 mb-1">
+                                                    {isUploadingImage ? 'Uploading...' : 'Click to upload or drag & drop'}
+                                                </p>
+                                                <p className="text-[10px] text-gray-500">PNG, JPG, or WebP up to 10MB</p>
+                                            </div>
+                                            <input
+                                                type="file"
+                                                accept="image/png,image/jpeg,image/webp,image/jpg"
+                                                onChange={handleImageUpload}
+                                                disabled={isUploadingImage}
+                                                className="hidden"
+                                            />
+                                        </label>
+                                    )}
+
+                                    {imageUploadError && (
+                                        <div className="flex items-center gap-2 p-2 bg-red-50 border border-red-200 rounded-lg mb-3">
+                                            <AlertCircle className="text-red-600" size={14} />
+                                            <p className="text-[10px] text-red-700">{imageUploadError}</p>
+                                        </div>
+                                    )}
+
+                                    <p className="text-[10px] text-gray-600 mb-3">Or paste image URL directly:</p>
                                     <input
                                         type="text"
                                         name="image"
@@ -293,7 +399,7 @@ const ProjectFormPage = () => {
                                     {errors.image && <p className="text-[10px] text-red-600 mt-1">{errors.image}</p>}
                                     
                                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 mt-3">
-                                        Project Link
+                                        Project Link (Optional)
                                     </label>
                                     <input
                                         type="text"
@@ -304,11 +410,6 @@ const ProjectFormPage = () => {
                                         className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all bg-gray-50 hover:bg-white focus:bg-white"
                                     />
                                 </div>
-                                {formData.image && (
-                                    <div className="w-full md:w-48 aspect-video rounded-lg overflow-hidden border border-gray-200 shrink-0 bg-gray-50">
-                                        <img decoding="async" src={formData.image} alt="Preview" className="w-full h-full object-cover" loading="lazy" />
-                                    </div>
-                                )}
                             </div>
 
                             {/* Technologies */}
