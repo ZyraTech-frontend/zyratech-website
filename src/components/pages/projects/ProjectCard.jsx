@@ -80,61 +80,61 @@ const ProjectCard = ({ project, index }) => {
           </div>
 
           {/* Content Container */}
-          <div className="p-6 flex flex-col flex-1">
+          <div className="p-5 flex flex-col flex-1">
             {/* Title */}
-            <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#004fa2] transition-colors line-clamp-2">
+            <h3 className="text-lg font-bold text-gray-900 mb-1.5 group-hover:text-[#004fa2] transition-colors line-clamp-2">
               {project.title}
             </h3>
 
             {/* Description */}
-            <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">
+            <p className="text-xs text-gray-600 mb-3 line-clamp-2 flex-1">
               {project.description}
             </p>
 
             {/* Technology Stack */}
-            <div className="mb-4">
-              <div className="flex flex-wrap gap-2">
-                {project.technologies?.slice(0, 3).map((tech, idx) => (
+            <div className="mb-3">
+              <div className="flex flex-wrap gap-1.5">
+                {project.technologies?.slice(0, 2).map((tech, idx) => (
                   <span
                     key={idx}
-                    className="text-xs bg-[#004fa2]/10 text-[#004fa2] px-2.5 py-1 rounded-lg font-medium border border-[#004fa2]/20"
+                    className="text-[10px] bg-[#004fa2]/10 text-[#004fa2] px-2 py-0.5 rounded-md font-medium border border-[#004fa2]/20"
                   >
                     {tech}
                   </span>
                 ))}
-                {project.technologies?.length > 3 && (
-                  <span className="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-lg font-medium">
-                    +{project.technologies.length - 3} more
+                {project.technologies?.length > 2 && (
+                  <span className="text-[10px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md font-medium">
+                    +{project.technologies.length - 2}
                   </span>
                 )}
               </div>
             </div>
 
             {/* Stats Row */}
-            <div className="grid grid-cols-2 gap-3 mb-4 pb-4 border-t border-gray-100 pt-4">
+            <div className="grid grid-cols-2 gap-2 mb-3 pb-3 border-t border-gray-100 pt-3">
               <div>
-                <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold mb-1">Team Size</p>
-                <div className="flex items-center gap-1 text-gray-900 font-bold">
-                  <Users size={16} className="text-[#004fa2]" />
-                  {project.team} members
+                <p className="text-[10px] text-gray-500 uppercase tracking-wide font-semibold mb-0.5">Team</p>
+                <div className="flex items-center gap-1 text-gray-900 font-bold text-sm">
+                  <Users size={14} className="text-[#004fa2]" />
+                  {project.team}
                 </div>
               </div>
               <div>
-                <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold mb-1">Progress</p>
-                <div className="flex items-center gap-1 text-gray-900 font-bold">
-                  <TrendingUp size={16} className="text-[#004fa2]" />
+                <p className="text-[10px] text-gray-500 uppercase tracking-wide font-semibold mb-0.5">Progress</p>
+                <div className="flex items-center gap-1 text-gray-900 font-bold text-sm">
+                  <TrendingUp size={14} className="text-[#004fa2]" />
                   {project.progress}%
                 </div>
               </div>
             </div>
 
             {/* CTA Button */}
-            <div className="flex items-center justify-between pt-4 border-t border-gray-100 group/btn cursor-pointer">
-              <span className="text-sm font-semibold text-[#004fa2] group-hover/btn:text-[#003d7a] transition-colors">
-                Explore Project
+            <div className="flex items-center justify-between pt-3 border-t border-gray-100 group/btn cursor-pointer">
+              <span className="text-xs font-semibold text-[#004fa2] group-hover/btn:text-[#003d7a] transition-colors">
+                View Project
               </span>
               <ArrowRight
-                size={18}
+                size={16}
                 className="text-[#004fa2] group-hover/btn:translate-x-1 transition-transform duration-300"
               />
             </div>
