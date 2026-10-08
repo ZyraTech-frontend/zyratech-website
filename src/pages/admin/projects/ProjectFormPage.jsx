@@ -34,7 +34,12 @@ const CATEGORIES = [
     'FinTech'
 ];
 
-const STATUSES = ['Active', 'In Progress', 'Completed', 'Paused', 'Archived'];
+// ⚠️ IMPORTANT: Only these 3 status values are valid for the API
+const STATUSES = [
+    { value: 'draft', label: 'Draft (In Progress)' },
+    { value: 'published', label: 'Published (Live)' },
+    { value: 'archived', label: 'Archived' }
+];
 
 const ProjectFormPage = () => {
     const navigate = useNavigate();
@@ -46,7 +51,7 @@ const ProjectFormPage = () => {
         title: '',
         category: 'Software',
         description: '',
-        status: 'Active',
+        status: 'draft', // Default: draft (In Progress)
         image: '',
         link: '',
         featured: false,
@@ -201,9 +206,10 @@ const ProjectFormPage = () => {
             newErrors.progress = 'Progress must be between 0 and 100';
         }
 
-        // Backend validation: status must be draft or published
-        if (!['draft', 'published', 'Active', 'In Progress', 'Completed', 'Paused', 'Archived'].includes(formData.status)) {
-            newErrors.status = 'Invalid status selected';
+        // ⚠️ IMPORTANT: status must ONLY be "draft", "published", or "archived"
+        const validStatuses = ['draft', 'published', 'archived'];
+        if (!validStatuses.includes(formData.status)) {
+            newErrors.status = 'Invalid status - must be draft, published, or archived';
         }
 
         setErrors(newErrors);
@@ -367,9 +373,12 @@ const ProjectFormPage = () => {
                                     className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all bg-gray-50 hover:bg-white focus:bg-white"
                                 >
                                     {STATUSES.map(status => (
-                                        <option key={status} value={status}>{status}</option>
+                                        <option key={status.value} value={status.value}>{status.label}</option>
                                     ))}
                                 </select>
+                                <p className="text-[10px] text-gray-500 mt-1">
+                                    ⚠️ Backend accepts only: draft, published, or archived
+                                </p>
                             </div>
 
                             {/* Description */}
