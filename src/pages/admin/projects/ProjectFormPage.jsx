@@ -215,9 +215,18 @@ const ProjectFormPage = () => {
         }
 
         try {
+            // Generate slug from title
+            const slug = formData.title
+                .toLowerCase()
+                .trim()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+
             // Prepare data for submission
             const projectData = {
                 title: formData.title.trim(),
+                slug: slug, // ADD: Generated slug
                 category: formData.category,
                 description: formData.description.trim(),
                 status: formData.status,
@@ -253,7 +262,7 @@ const ProjectFormPage = () => {
             }, 500);
         } catch (err) {
             console.error('Error submitting project:', err);
-            const errorMessage = err.response?.data?.message || err.message || 'Failed to save project. Please try again.';
+            const errorMessage = err.response?.data?.message || err.response?.data?.error?.message || err.message || 'Failed to save project. Please try again.';
             setSubmitError(errorMessage);
             dispatch(addNotification({
                 type: 'error',
