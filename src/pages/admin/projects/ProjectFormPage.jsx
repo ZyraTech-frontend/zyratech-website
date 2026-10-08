@@ -196,8 +196,14 @@ const ProjectFormPage = () => {
             newErrors.team = 'Team size must be at least 1';
         }
 
+        // Backend validation: progress must be 0-100
         if (formData.progress < 0 || formData.progress > 100) {
             newErrors.progress = 'Progress must be between 0 and 100';
+        }
+
+        // Backend validation: status must be draft or published
+        if (!['draft', 'published', 'Active', 'In Progress', 'Completed', 'Paused', 'Archived'].includes(formData.status)) {
+            newErrors.status = 'Invalid status selected';
         }
 
         setErrors(newErrors);
@@ -223,18 +229,18 @@ const ProjectFormPage = () => {
                 .replace(/\s+/g, '-')
                 .replace(/-+/g, '-');
 
-            // Prepare data for submission
+            // Prepare data for submission - match backend API requirements
             const projectData = {
                 title: formData.title.trim(),
-                slug: slug, // ADD: Generated slug
+                slug: slug,
                 category: formData.category,
                 description: formData.description.trim(),
-                status: formData.status,
-                image: formData.image.trim(),
-                link: formData.link.trim() || null,
+                status: formData.status, // "draft" or "published"
+                image: formData.image.trim(), // Backend maps this to coverImageUrl
+                projectLink: formData.link.trim() || null, // CHANGED: link → projectLink
                 featured: formData.featured,
                 technologies: formData.technologies,
-                team: formData.team,
+                teamSize: formData.team, // CHANGED: team → teamSize
                 startDate: formData.startDate,
                 progress: formData.progress
             };
@@ -443,7 +449,7 @@ const ProjectFormPage = () => {
                                     {errors.image && <p className="text-[10px] text-red-600 mt-1">{errors.image}</p>}
                                     
                                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 mt-3">
-                                        Project Link (Optional)
+                                        Project Link (Optional) - External URL
                                     </label>
                                     <input
                                         type="text"
