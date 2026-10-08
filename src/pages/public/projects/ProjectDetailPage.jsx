@@ -33,14 +33,18 @@ const ProjectDetailPage = () => {
         const response = await projectsService.getProjectById(id);
         
         // Normalize backend field names to frontend expectations
+        // Backend returns: coverImageUrl, teamSize, projectLink
+        // Frontend expects: image, team, link
         const normalizedProject = {
           ...response,
-          // Map backend field names to frontend field names
+          // Map backend field names to frontend field names (prioritize backend fields)
           image: response.coverImageUrl || response.image,
-          team: response.teamSize || response.team,
+          team: response.teamSize !== undefined ? response.teamSize : (response.team || 0),
           link: response.projectLink || response.link,
         };
         
+        console.log('Raw project data:', response);
+        console.log('Normalized project:', normalizedProject);
         setProject(normalizedProject);
       } catch (err) {
         console.error('Failed to fetch project:', err);

@@ -39,9 +39,28 @@ const ProjectDetailsPage = () => {
             try {
                 setLoading(true);
                 setError(null);
-                const data = await projectsService.getProjectById(id);
+                let data = await projectsService.getProjectById(id);
+                
                 if (data) {
-                    setProject(data);
+                    // Normalize backend field names to match frontend expectations
+                    // Backend returns: coverImageUrl, teamSize, projectLink
+                    // Frontend expects: image, team, link
+                    const normalizedData = {
+                        ...data,
+                        // Map backend field names to frontend expectations (prioritize backend fields)
+                        image: data.coverImageUrl || data.image || '',
+                        team: data.teamSize !== undefined ? data.teamSize : (data.team || 0),
+                        link: data.projectLink || data.link || '',
+                        // Ensure other fields exist with defaults
+                        technologies: data.technologies || [],
+                        progress: data.progress || 0,
+                        featured: data.featured || false,
+                        status: data.status || 'draft'
+                    };
+                    
+                    console.log('Raw project data from API:', data);
+                    console.log('Normalized project data:', normalizedData);
+                    setProject(normalizedData);
                 } else {
                     setError('Project not found');
                 }
