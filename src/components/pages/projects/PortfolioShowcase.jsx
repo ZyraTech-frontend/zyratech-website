@@ -25,7 +25,7 @@ const PortfolioShowcase = () => {
         setError(null);
         const response = await projectsService.getAllProjects({ limit: 100 });
         
-        // Normalize backend field names and filter to only featured/active projects
+        // Normalize backend field names
         const normalizedProjects = (response.projects || []).map(p => ({
           ...p,
           image: p.coverImageUrl || p.image,
@@ -33,8 +33,19 @@ const PortfolioShowcase = () => {
           link: p.projectLink || p.link,
         }));
         
-        const filteredProjects = normalizedProjects.filter(p => p.featured || p.status === 'published') || [];
-        setProjects(filteredProjects);
+        // Filter to featured or published projects
+        // Backend should only return published projects, but apply filter just in case
+        const filteredProjects = normalizedProjects.filter(p => 
+          p.featured === true || 
+          p.status === 'published' || 
+          p.status === 'Published'
+        );
+        
+        console.log('Raw API response:', response);
+        console.log('Normalized projects:', normalizedProjects);
+        console.log('Filtered projects:', filteredProjects);
+        
+        setProjects(filteredProjects.length > 0 ? filteredProjects : normalizedProjects);
       } catch (err) {
         console.error('Failed to fetch projects:', err);
         setError('Failed to load projects. Please try again later.');
