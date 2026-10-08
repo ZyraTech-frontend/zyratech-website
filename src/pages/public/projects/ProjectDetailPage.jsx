@@ -31,7 +31,17 @@ const ProjectDetailPage = () => {
         setLoading(true);
         setError(null);
         const response = await projectsService.getProjectById(id);
-        setProject(response);
+        
+        // Normalize backend field names to frontend expectations
+        const normalizedProject = {
+          ...response,
+          // Map backend field names to frontend field names
+          image: response.coverImageUrl || response.image,
+          team: response.teamSize || response.team,
+          link: response.projectLink || response.link,
+        };
+        
+        setProject(normalizedProject);
       } catch (err) {
         console.error('Failed to fetch project:', err);
         setError('Failed to load project details. Please try again later.');
