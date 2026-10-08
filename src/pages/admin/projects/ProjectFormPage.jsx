@@ -10,6 +10,7 @@ import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlic
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { projectsData, getProjectById } from '../../../data/projectsData';
+import projectsService from '../../../services/projectsService';
 import api from '../../../services/api';
 import {
     ArrowLeft,
@@ -204,7 +205,7 @@ const ProjectFormPage = () => {
     };
 
     // Handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitError('');
 
@@ -213,18 +214,52 @@ const ProjectFormPage = () => {
             return;
         }
 
-        // Prepare data for submission
-        const projectData = {
-            ...formData,
-            technologies: formData.technologies
-        };
+        try {
+            // Prepare data for submission
+            const projectData = {
+                title: formData.title.trim(),
+                category: formData.category,
+                description: formData.description.trim(),
+                status: formData.status,
+                image: formData.image.trim(),
+                link: formData.link.trim() || null,
+                featured: formData.featured,
+                technologies: formData.technologies,
+                team: formData.team,
+                startDate: formData.startDate,
+                progress: formData.progress
+            };
 
-        // Log the data (in a real app, this would be an API call)
-        console.log('Submitting project:', projectData);
-        
-        // Show success message
-        alert(`Project "${formData.title}" ${id ? 'updated' : 'created'} successfully!`);
-        navigate('/admin/projects');
+            // Make API call to create or update project
+            if (id) {
+                // Update existing project
+                await projectsService.updateProject(id, projectData);
+                dispatch(addNotification({
+                    type: 'success',
+                    message: `Project "${formData.title}" updated successfully!`
+                }));
+            } else {
+                // Create new project
+                await projectsService.createProject(projectData);
+                dispatch(addNotification({
+                    type: 'success',
+                    message: `Project "${formData.title}" created successfully!`
+                }));
+            }
+
+            // Navigate back to projects list
+            setTimeout(() => {
+                navigate('/admin/projects');
+            }, 500);
+        } catch (err) {
+            console.error('Error submitting project:', err);
+            const errorMessage = err.response?.data?.message || err.message || 'Failed to save project. Please try again.';
+            setSubmitError(errorMessage);
+            dispatch(addNotification({
+                type: 'error',
+                message: errorMessage
+            }));
+        }
     };
 
     const handleCancel = () => {
@@ -550,10 +585,11 @@ const ProjectFormPage = () => {
                             </button>
                             <button
                                 type="submit"
-                                className="flex items-center gap-1.5 px-4 py-1.5 bg-[#004fa2] text-white text-xs font-semibold rounded-lg hover:bg-[#003d7a] transition-all shadow-sm"
+                                disabled={isUploadingImage}
+                                className="flex items-center gap-1.5 px-4 py-1.5 bg-[#004fa2] text-white text-xs font-semibold rounded-lg hover:bg-[#003d7a] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
                             >
                                 <Save size={14} />
-                                {id ? 'Update Project' : 'Create Project'}
+                                {isUploadingImage ? 'Uploading...' : id ? 'Update Project' : 'Create Project'}
                             </button>
                         </div>
                     </form>
