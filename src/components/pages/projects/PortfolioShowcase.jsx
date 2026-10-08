@@ -24,8 +24,16 @@ const PortfolioShowcase = () => {
         setLoading(true);
         setError(null);
         const response = await projectsService.getAllProjects({ limit: 100 });
-        // Filter to only featured/active projects
-        const filteredProjects = response.projects?.filter(p => p.featured || p.status === 'Active') || [];
+        
+        // Normalize backend field names and filter to only featured/active projects
+        const normalizedProjects = (response.projects || []).map(p => ({
+          ...p,
+          image: p.coverImageUrl || p.image,
+          team: p.teamSize !== undefined ? p.teamSize : (p.team || 0),
+          link: p.projectLink || p.link,
+        }));
+        
+        const filteredProjects = normalizedProjects.filter(p => p.featured || p.status === 'published') || [];
         setProjects(filteredProjects);
       } catch (err) {
         console.error('Failed to fetch projects:', err);

@@ -126,7 +126,17 @@ const ProjectsManagementPage = () => {
                 setLoading(true);
                 setError(null);
                 const response = await projectsService.getAdminProjects({ limit: 1000 });
-                setProjects(response.projects || []);
+                
+                // Normalize backend field names for all projects
+                const normalizedProjects = (response.projects || []).map(project => ({
+                    ...project,
+                    // Map backend field names to frontend expectations
+                    image: project.coverImageUrl || project.image,
+                    team: project.teamSize !== undefined ? project.teamSize : (project.team || 0),
+                    link: project.projectLink || project.link,
+                }));
+                
+                setProjects(normalizedProjects);
             } catch (err) {
                 console.error('Failed to fetch projects:', err);
                 setError(err.message || 'Failed to load projects');
