@@ -51,29 +51,31 @@ const ProjectDetailPage = () => {
       backTo="/projects"
       skeletonVariant="project"
     >
-      {/* Back Button */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <Link to="/projects" className="flex items-center gap-2 text-[#004fa2] hover:text-[#003d7a] font-semibold transition-colors">
-          <ArrowRight size={20} className="rotate-180" />
-          Back to Projects
-        </Link>
-      </div>
+      {normalizedProject && (
+        <>
+          {/* Back Button */}
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+            <Link to="/projects" className="flex items-center gap-2 text-[#004fa2] hover:text-[#003d7a] font-semibold transition-colors">
+              <ArrowRight size={20} className="rotate-180" />
+              Back to Projects
+            </Link>
+          </div>
 
-      {/* Hero Section */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="py-12 md:py-16"
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Featured Image */}
-          <div className="relative rounded-2xl overflow-hidden mb-8 h-96 md:h-[500px] shadow-2xl">
-            <img
-              src={normalizedProject.image}
-              alt={normalizedProject.title}
-              className="w-full h-full object-cover"
-            />
+          {/* Hero Section */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="py-12 md:py-16"
+          >
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              {/* Featured Image */}
+              <div className="relative rounded-2xl overflow-hidden mb-8 h-96 md:h-[500px] shadow-2xl">
+                <img
+                  src={normalizedProject.image}
+                  alt={normalizedProject.title}
+                  className="w-full h-full object-cover"
+                />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
 
             {/* Category and Featured Badge - Overlaid */}
@@ -254,6 +256,8 @@ const ProjectDetailPage = () => {
 
       {/* Newsletter */}
       <NewsletterHero />
+        </>
+      )}
     </DetailPageLayout>
   );
 };
