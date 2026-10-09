@@ -54,8 +54,8 @@ const projectsService = {
     },
 
     /**
-     * Get single project details - tries admin endpoint first, then public
-     * GET /api/admin/projects/:id (admin) or /api/projects/:id (public)
+     * Get single project details - tries admin endpoint first, then searches in list
+     * GET /api/admin/projects/:id (admin) or filtered GET /api/projects (public fallback)
      * @param {string|number} id - Project ID
      * @param {boolean} isAdmin - Whether to try admin endpoint first (default: true)
      * @returns {Promise} Project details
@@ -68,14 +68,27 @@ const projectsService = {
                     const response = await api.get(`/admin/projects/${id}`);
                     return response.data?.data || response.data;
                 } catch (adminErr) {
-                    // If admin endpoint fails, fall back to public
-                    console.log('Admin endpoint failed, trying public...');
+                    // If admin endpoint fails, fall back to public list search
+                    console.log('Admin endpoint failed, searching in public list...');
                 }
             }
             
-            // Try public endpoint
-            const response = await api.get(`/projects/${id}`);
-            return response.data?.data || response.data;
+            // Fall back to fetching all projects and finding by ID
+            try {
+                const response = await api.get(`/projects`, { params: { limit: 1000 } });
+                const projects = response.data?.data || response.data || [];
+                const projectsList = Array.isArray(projects) ? projects : (projects.data || []);
+                
+                const found = projectsList.find(p => String(p.id) === String(id));
+                if (found) {
+                    return found;
+                }
+            } catch (listErr) {
+                console.error('Failed to search projects list:', listErr);
+            }
+            
+            // If nothing found, throw error
+            throw new Error(`Project with ID ${id} not found`);
         } catch (error) {
             console.error(`Error fetching project ${id}:`, error);
             throw error;
