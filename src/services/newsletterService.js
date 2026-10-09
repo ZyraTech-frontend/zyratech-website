@@ -28,6 +28,26 @@ const newsletterService = {
   },
 
   /**
+   * Get all newsletter subscribers (admin only)
+   * GET /api/admin/newsletter/subscribers?page=1&limit=50
+   * 
+   * @param {number} page - Page number (default: 1)
+   * @param {number} limit - Items per page (default: 50)
+   * @returns {Promise<Array>} List of subscribers
+   */
+  getSubscribers: async (page = 1, limit = 50) => {
+    try {
+      const response = await api.get('/admin/newsletter/subscribers', {
+        params: { page, limit }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching subscribers:', error);
+      throw error;
+    }
+  },
+
+  /**
    * Unsubscribe email from newsletter
    * POST /api/newsletter/unsubscribe
    * 

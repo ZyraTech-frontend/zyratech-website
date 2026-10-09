@@ -3,7 +3,7 @@
  * View and manage newsletter subscribers
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import {
     Mail,
@@ -22,72 +22,14 @@ import {
     MailCheck,
     MailX,
     UserPlus,
-    RefreshCw
+    RefreshCw,
+    Loader2
 } from 'lucide-react';
-
-// Mock subscribers data
-const mockSubscribers = [
-    {
-        id: 'SUB-001',
-        email: 'kwame.mensah@gmail.com',
-        subscribedAt: '2026-02-10T14:30:00',
-        status: 'active',
-        source: 'Homepage'
-    },
-    {
-        id: 'SUB-002',
-        email: 'ama.osei@yahoo.com',
-        subscribedAt: '2026-02-09T09:15:00',
-        status: 'active',
-        source: 'Blog'
-    },
-    {
-        id: 'SUB-003',
-        email: 'kofi.asante@outlook.com',
-        subscribedAt: '2026-02-08T16:45:00',
-        status: 'active',
-        source: 'Training Page'
-    },
-    {
-        id: 'SUB-004',
-        email: 'akua.boateng@gmail.com',
-        subscribedAt: '2026-02-07T11:20:00',
-        status: 'unsubscribed',
-        source: 'Partnership Page'
-    },
-    {
-        id: 'SUB-005',
-        email: 'yaw.darko@gmail.com',
-        subscribedAt: '2026-02-06T08:00:00',
-        status: 'active',
-        source: 'About Page'
-    },
-    {
-        id: 'SUB-006',
-        email: 'efua.mensah@gmail.com',
-        subscribedAt: '2026-02-05T13:30:00',
-        status: 'active',
-        source: 'Jobs Page'
-    },
-    {
-        id: 'SUB-007',
-        email: 'kweku.appiah@yahoo.com',
-        subscribedAt: '2026-02-04T10:15:00',
-        status: 'bounced',
-        source: 'Projects Page'
-    },
-    {
-        id: 'SUB-008',
-        email: 'abena.owusu@gmail.com',
-        subscribedAt: '2026-02-03T15:45:00',
-        status: 'active',
-        source: 'Homepage'
-    }
-];
+import newsletterService from '../../../services/newsletterService';
 
 // Status configuration
 const STATUS_CONFIG = {
-    'active': {
+    'subscribed': {
         label: 'Active',
         color: 'bg-green-100 text-green-700',
         icon: MailCheck
@@ -105,17 +47,41 @@ const STATUS_CONFIG = {
 };
 
 const NewsletterManagementPage = () => {
-    const [subscribers] = useState(mockSubscribers);
+    const [subscribers, setSubscribers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
+    // Fetch subscribers from API
+    useEffect(() => {
+        const fetchSubscribers = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                const response = await newsletterService.getSubscribers(currentPage, itemsPerPage);
+                
+                // Handle response - could be array or object with data property
+                const data = Array.isArray(response) ? response : (response?.data || response?.subscribers || []);
+                setSubscribers(data);
+            } catch (err) {
+                console.error('Error fetching subscribers:', err);
+                setError('Failed to load subscribers. Please try again.');
+                setSubscribers([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSubscribers();
+    }, [currentPage, itemsPerPage]);
+
     // Filter subscribers
     const filteredSubscribers = useMemo(() => {
         return subscribers.filter(sub => {
-            const matchesSearch = sub.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                  sub.source.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesSearch = sub.email.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesStatus = statusFilter === 'all' || sub.status === statusFilter;
             return matchesSearch && matchesStatus;
         });
@@ -131,10 +97,10 @@ const NewsletterManagementPage = () => {
     // Stats
     const stats = useMemo(() => ({
         total: subscribers.length,
-        active: subscribers.filter(s => s.status === 'active').length,
+        active: subscribers.filter(s => s.status === 'subscribed').length,
         unsubscribed: subscribers.filter(s => s.status === 'unsubscribed').length,
         thisWeek: subscribers.filter(s => {
-            const subDate = new Date(s.subscribedAt);
+            const subDate = new Date(s.createdAt || s.subscribedAt);
             const weekAgo = new Date();
             weekAgo.setDate(weekAgo.getDate() - 7);
             return subDate >= weekAgo;
@@ -152,11 +118,11 @@ const NewsletterManagementPage = () => {
     };
 
     const handleExport = () => {
-        const activeSubscribers = subscribers.filter(s => s.status === 'active');
+        const activeSubscribers = subscribers.filter(s => s.status === 'subscribed');
         const csvContent = [
-            'Email,Subscribed Date,Source',
-            ...activeSubscribers.map(s => `${s.email},${s.subscribedAt},${s.source}`)
-        ].join('n');
+            'Email,Name,Subscribed Date',
+            ...activeSubscribers.map(s => `${s.email},"${s.name || ''}",${s.createdAt || s.subscribedAt}`)
+        ].join('\n');
         
         const blob = new Blob([csvContent], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
