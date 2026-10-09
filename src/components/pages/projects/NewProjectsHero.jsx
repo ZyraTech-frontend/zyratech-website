@@ -1,25 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ImageWithSkeleton from '../../common/ImageWithSkeleton';
+import metricsService from '../../../services/metricsService';
 
 const NewProjectsHero = () => {
   const [projects, setProjects] = useState(0);
   const [success, setSuccess] = useState(0);
+  const [deliveryWeeks, setDeliveryWeeks] = useState('2-8');
+  const [loading, setLoading] = useState(true);
+  const [targetProjects, setTargetProjects] = useState(50);
+  const [targetSuccess, setTargetSuccess] = useState(100);
 
+  // Fetch metrics from API
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        const response = await metricsService.getImpactSummary();
+        const data = response.data || response;
+        
+        // Extract metrics from response
+        setTargetProjects(data.projectsDelivered || 50);
+        setTargetSuccess(data.studentSuccess || 100);
+        setDeliveryWeeks(data.deliveryWeeks || '2-8');
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch metrics:', error);
+        // Fallback to defaults if API fails
+        setTargetProjects(50);
+        setTargetSuccess(100);
+        setDeliveryWeeks('2-8');
+        setLoading(false);
+      }
+    };
+
+    fetchMetrics();
+  }, []);
+
+  // Animate metrics
   useEffect(() => {
     const projectsInterval = setInterval(() => {
-      setProjects(prev => prev < 50 ? prev + 1 : 50);
+      setProjects(prev => prev < targetProjects ? prev + Math.ceil(targetProjects / 50) : targetProjects);
     }, 30);
 
     const successInterval = setInterval(() => {
-      setSuccess(prev => prev < 100 ? prev + 1 : 100);
+      setSuccess(prev => prev < targetSuccess ? prev + Math.ceil(targetSuccess / 50) : targetSuccess);
     }, 15);
 
     return () => {
       clearInterval(projectsInterval);
       clearInterval(successInterval);
     };
-  }, []);
+  }, [targetProjects, targetSuccess]);
 
   return (
     <section className="relative text-white overflow-visible">
@@ -83,7 +114,7 @@ const NewProjectsHero = () => {
                 <div className="text-xs sm:text-base text-gray-700 font-medium">Student Success</div>
               </div>
               <div className="text-center">
-                <div className="text-xl sm:text-4xl md:text-5xl font-bold text-[#004fa2] mb-1 sm:mb-2 break-words">2-8</div>
+                <div className="text-xl sm:text-4xl md:text-5xl font-bold text-[#004fa2] mb-1 sm:mb-2 break-words">{deliveryWeeks}</div>
                 <div className="text-xs sm:text-base text-gray-700 font-medium">Weeks Delivery</div>
               </div>
             </div>
