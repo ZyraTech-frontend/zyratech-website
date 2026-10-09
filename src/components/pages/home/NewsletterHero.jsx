@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../../store/slices/uiSlice';
+import newsletterService from '../../../services/newsletterService';
 
 const NewsletterHero = () => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -24,26 +28,43 @@ const NewsletterHero = () => {
     return 'Other';
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      dispatch(addNotification({
+        message: 'Please enter a valid email address',
+        type: 'warning'
+      }));
+      return;
+    }
+
     setIsSubmitting(true);
     
-    // Mock subscription - in production this would call an API
-    setTimeout(() => {
-      // Log subscription for demo purposes
-      console.log('Newsletter subscription:', {
-        email,
-        source: getSourcePage(),
-        subscribedAt: new Date().toISOString()
-      });
+    try {
+      await newsletterService.subscribe(email, getSourcePage());
       
-      setIsSubmitting(false);
+      dispatch(addNotification({
+        message: 'Successfully subscribed! Check your email for confirmation.',
+        type: 'success'
+      }));
+      
       setIsSubscribed(true);
       setEmail('');
       
       // Reset after 5 seconds to allow another subscription
       setTimeout(() => setIsSubscribed(false), 5000);
-    }, 1000);
+    } catch (error) {
+      console.error('Subscription error:', error);
+      dispatch(addNotification({
+        message: error.response?.data?.message || 'Failed to subscribe. Please try again.',
+        type: 'error'
+      }));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
