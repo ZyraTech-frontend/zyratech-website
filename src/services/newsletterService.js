@@ -10,15 +10,15 @@ const newsletterService = {
    * Subscribe email to newsletter
    * POST /api/newsletter/subscribe
    * 
-   * @param {string} email - Email address to subscribe
-   * @param {string} source - Optional source page for tracking
+   * @param {string} email - Email address to subscribe (required)
+   * @param {string} name - Optional name of subscriber
    * @returns {Promise<Object>} Subscription response
    */
-  subscribe: async (email, source = 'Website') => {
+  subscribe: async (email, name = '') => {
     try {
       const response = await api.post('/newsletter/subscribe', {
         email,
-        source
+        ...(name && { name })
       });
       return response.data;
     } catch (error) {

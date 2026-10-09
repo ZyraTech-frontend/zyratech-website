@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
@@ -10,23 +9,6 @@ const NewsletterHero = () => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const location = useLocation();
-
-  // Determine source page for tracking
-  const getSourcePage = () => {
-    const path = location.pathname;
-    if (path === '/' || path === '/home') return 'Homepage';
-    if (path.includes('/blog')) return 'Blog';
-    if (path.includes('/training')) return 'Training Page';
-    if (path.includes('/about')) return 'About Page';
-    if (path.includes('/partner')) return 'Partnership Page';
-    if (path.includes('/jobs')) return 'Jobs Page';
-    if (path.includes('/projects')) return 'Projects Page';
-    if (path.includes('/services')) return 'Our Services';
-    if (path.includes('/quality')) return 'Quality Assurance';
-    if (path.includes('/work-with-us')) return 'Work With Us';
-    return 'Other';
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,7 +26,9 @@ const NewsletterHero = () => {
     setIsSubmitting(true);
     
     try {
-      await newsletterService.subscribe(email, getSourcePage());
+      console.log('[Newsletter] Attempting to subscribe:', email);
+      const response = await newsletterService.subscribe(email);
+      console.log('[Newsletter] Subscription response:', response);
       
       dispatch(addNotification({
         message: 'Successfully subscribed! Check your email for confirmation.',
@@ -57,11 +41,25 @@ const NewsletterHero = () => {
       // Reset after 5 seconds to allow another subscription
       setTimeout(() => setIsSubscribed(false), 5000);
     } catch (error) {
-      console.error('Subscription error:', error);
-      dispatch(addNotification({
-        message: error.response?.data?.message || 'Failed to subscribe. Please try again.',
-        type: 'error'
-      }));
+      console.error('[Newsletter] Subscription error:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+        code: error.response?.data?.code
+      });
+
+      // Handle specific error codes
+      if (error.response?.data?.code === 'ALREADY_SUBSCRIBED') {
+        dispatch(addNotification({
+          message: 'This email is already subscribed to our newsletter',
+          type: 'warning'
+        }));
+      } else {
+        dispatch(addNotification({
+          message: error.response?.data?.message || 'Failed to subscribe. Please try again.',
+          type: 'error'
+        }));
+      }
     } finally {
       setIsSubmitting(false);
     }
