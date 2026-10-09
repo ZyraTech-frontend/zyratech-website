@@ -61,14 +61,19 @@ const NewsletterManagementPage = () => {
             try {
                 setLoading(true);
                 setError(null);
+                console.log('[Admin Newsletter] Fetching subscribers...');
                 const response = await newsletterService.getSubscribers(currentPage, itemsPerPage);
+                console.log('[Admin Newsletter] Response:', response);
                 
                 // Handle response - could be array or object with data property
                 const data = Array.isArray(response) ? response : (response?.data || response?.subscribers || []);
+                console.log('[Admin Newsletter] Processed data:', data);
                 setSubscribers(data);
             } catch (err) {
-                console.error('Error fetching subscribers:', err);
-                setError('Failed to load subscribers. Please try again.');
+                console.error('[Admin Newsletter] Error:', err);
+                setError(err.response?.status === 404 
+                    ? 'Newsletter API endpoint not available. Please check with backend team.'
+                    : 'Failed to load subscribers. Please try again.');
                 setSubscribers([]);
             } finally {
                 setLoading(false);
@@ -202,53 +207,64 @@ const NewsletterManagementPage = () => {
                     </div>
                 </div>
 
-                {/* Subscribers Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                    {paginatedSubscribers.length === 0 ? (
-                        <div className="col-span-full py-12 text-center text-gray-500 bg-white rounded-xl border border-gray-100">
-                            No subscribers found
-                        </div>
-                    ) : (
-                        paginatedSubscribers.map((subscriber) => {
-                            const statusConfig = STATUS_CONFIG[subscriber.status];
-                            const StatusIcon = statusConfig.icon;
-                            
-                            return (
-                                <div key={subscriber.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 hover:border-[#004fa2] transition-colors group flex flex-col gap-3">
-                                    <div className="flex items-start justify-between gap-2">
-                                        <div className="flex items-center gap-2 min-w-0">
-                                            <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-blue-50/50 flex items-center justify-center shrink-0">
-                                                <Mail size={14} className="text-blue-500" />
-                                            </div>
-                                            <div className="min-w-0">
-                                                <h3 className="font-bold text-[11px] text-gray-900 truncate" title={subscriber.email}>
-                                                    {subscriber.email}
-                                                </h3>
-                                                <p className="text-[9px] text-gray-500 truncate">{subscriber.source}</p>
-                                            </div>
+                {/* Loading State */}
+                {loading ? (
+                    <div className="col-span-full py-12 text-center bg-white rounded-xl border border-gray-100">
+                        <Loader2 className="w-8 h-8 animate-spin text-[#004fa2] mx-auto mb-3" />
+                        <p className="text-gray-600">Loading subscribers...</p>
+                    </div>
+                ) : error ? (
+                    <div className="col-span-full py-12 text-center bg-red-50 rounded-xl border border-red-200">
+                        <XCircle className="w-8 h-8 text-red-600 mx-auto mb-3" />
+                        <p className="text-red-700 font-semibold">{error}</p>
+                        <p className="text-red-600 text-sm mt-2">
+                            Backend endpoint: GET /api/admin/newsletter/subscribers
+                        </p>
+                    </div>
+                ) : subscribers.length === 0 ? (
+                    <div className="col-span-full py-12 text-center text-gray-500 bg-white rounded-xl border border-gray-100">
+                        No subscribers found
+                    </div>
+                ) : (
+                    paginatedSubscribers.map((subscriber) => {
+                        const statusConfig = STATUS_CONFIG[subscriber.status];
+                        const StatusIcon = statusConfig?.icon;
+                        
+                        return (
+                            <div key={subscriber.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 hover:border-[#004fa2] transition-colors group flex flex-col gap-3">
+                                <div className="flex items-start justify-between gap-2">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-blue-50/50 flex items-center justify-center shrink-0">
+                                            <Mail size={14} className="text-blue-500" />
                                         </div>
-                                        <span className={`inline-flex items-center px-1.5 py-[1px] rounded text-[9px] font-bold shrink-0 ${statusConfig.color}`}>
-                                            {statusConfig.label}
-                                        </span>
-                                    </div>
-                                    
-                                    <div className="flex items-center justify-between pt-2 mt-auto border-t border-gray-50">
-                                        <div className="flex items-center gap-1.5 text-[9px] text-gray-400">
-                                            <Calendar size={10} />
-                                            {formatDate(subscriber.subscribedAt)}
+                                        <div className="min-w-0">
+                                            <h3 className="font-bold text-[11px] text-gray-900 truncate" title={subscriber.email}>
+                                                {subscriber.email}
+                                            </h3>
+                                            <p className="text-[9px] text-gray-500 truncate">{subscriber.name || 'No name'}</p>
                                         </div>
-                                        <button
-                                            className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"
-                                            title="Remove subscriber"
-                                        >
-                                            <Trash2 size={12} />
-                                        </button>
                                     </div>
+                                    <span className={`inline-flex items-center px-1.5 py-[1px] rounded text-[9px] font-bold shrink-0 ${statusConfig?.color || 'bg-gray-100 text-gray-600'}`}>
+                                        {statusConfig?.label || subscriber.status}
+                                    </span>
                                 </div>
-                            );
-                        })
-                    )}
-                </div>
+                                
+                                <div className="flex items-center justify-between pt-2 mt-auto border-t border-gray-50">
+                                    <div className="flex items-center gap-1.5 text-[9px] text-gray-400">
+                                        <Calendar size={10} />
+                                        {formatDate(subscriber.createdAt || subscriber.subscribedAt)}
+                                    </div>
+                                    <button
+                                        className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"
+                                        title="Remove subscriber"
+                                    >
+                                        <Trash2 size={12} />
+                                    </button>
+                                </div>
+                            </div>
+                        );
+                    })
+                )}
 
                 {/* Pagination Footer */}
                 <div className="flex items-center justify-between bg-white px-4 py-3 rounded-xl border border-gray-100 shadow-sm mt-4">

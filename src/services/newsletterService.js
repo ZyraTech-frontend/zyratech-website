@@ -37,12 +37,21 @@ const newsletterService = {
    */
   getSubscribers: async (page = 1, limit = 50) => {
     try {
+      console.log('[Newsletter] Fetching subscribers:', { page, limit });
       const response = await api.get('/admin/newsletter/subscribers', {
         params: { page, limit }
       });
-      return response.data;
+      console.log('[Newsletter] Subscribers response:', response.data);
+      
+      // Handle different response structures
+      const data = response.data?.data || response.data?.subscribers || response.data || [];
+      return Array.isArray(data) ? data : [];
     } catch (error) {
-      console.error('Error fetching subscribers:', error);
+      console.error('[Newsletter] Error fetching subscribers:', {
+        status: error.response?.status,
+        message: error.message,
+        data: error.response?.data
+      });
       throw error;
     }
   },
