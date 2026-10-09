@@ -26,6 +26,19 @@ const ProjectDetailPage = () => {
     id
   );
 
+  // Safe date formatter
+  const formatDate = (dateString) => {
+    if (!dateString) return null;
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return null;
+      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    } catch (err) {
+      console.error('Error formatting date:', err);
+      return null;
+    }
+  };
+
   // Normalize backend field names to frontend expectations
   // Backend returns: coverImageUrl, teamSize, projectLink
   // Frontend expects: image, team, link
@@ -221,7 +234,7 @@ const ProjectDetailPage = () => {
                   {normalizedProject.startDate && (
                     <div>
                       <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Started</p>
-                      <p className="text-gray-900 font-semibold">{new Date(normalizedProject.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                      <p className="text-gray-900 font-semibold">{formatDate(normalizedProject.startDate) || 'N/A'}</p>
                     </div>
                   )}
                 </div>
