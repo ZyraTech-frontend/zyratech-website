@@ -1,112 +1,60 @@
 /**
  * ProjectDetailPage Component
  * Individual project case study page with full details
+ * 
+ * Uses unified detail page patterns:
+ * - useDetailPageData hook for fetch logic
+ * - DetailPageLayout wrapper for consistent structure
+ * - Field normalization for backend response
  */
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ChevronLeft, AlertCircle, Clock, Users, Target, TrendingUp, ArrowRight, Github, ExternalLink } from 'lucide-react';
+import { Users, Target, TrendingUp, ArrowRight, Github, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
-import Navbar from '../../../components/Navbar';
-import Footer from '../../../components/Footer';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
+import DetailPageLayout from '../../../components/common/DetailPageLayout';
+import useDetailPageData from '../../../hooks/useDetailPageData';
 import projectsService from '../../../services/projectsService';
-import useSEO from '../../../hooks/useSEO';
 
 const ProjectDetailPage = () => {
   const { id } = useParams();
-  const [project, setProject] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  useSEO({
-    title: project?.title || 'Project Details',
-    description: project?.description || 'Explore this project case study',
-    url: `/projects/${id}`,
-  });
+  // Fetch project data using the unified hook
+  const { data: project, loading, error } = useDetailPageData(
+    projectsService.getProjectById,
+    id
+  );
 
-  useEffect(() => {
-    const fetchProject = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await projectsService.getProjectById(id);
-        
-        // Normalize backend field names to frontend expectations
-        // Backend returns: coverImageUrl, teamSize, projectLink
-        // Frontend expects: image, team, link
-        const normalizedProject = {
-          ...response,
-          // Map backend field names to frontend field names (prioritize backend fields)
-          image: response.coverImageUrl || response.image,
-          team: response.teamSize !== undefined ? response.teamSize : (response.team || 0),
-          link: response.projectLink || response.link,
-        };
-        
-        console.log('Raw project data:', response);
-        console.log('Normalized project:', normalizedProject);
-        setProject(normalizedProject);
-      } catch (err) {
-        console.error('Failed to fetch project:', err);
-        setError('Failed to load project details. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Normalize backend field names to frontend expectations
+  // Backend returns: coverImageUrl, teamSize, projectLink
+  // Frontend expects: image, team, link
+  const normalizedProject = project ? {
+    ...project,
+    image: project.coverImageUrl || project.image,
+    team: project.teamSize !== undefined ? project.teamSize : (project.team || 0),
+    link: project.projectLink || project.link,
+  } : null;
 
-    fetchProject();
-  }, [id]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Navbar />
-        <div className="flex items-center justify-center py-32">
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-[#004fa2]/10 rounded-full mb-4">
-              <Clock className="text-[#004fa2] animate-spin" size={24} />
-            </div>
-            <p className="text-gray-600 font-medium">Loading project details...</p>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (error || !project) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Navbar />
-        <div className="max-w-4xl mx-auto px-4 py-16">
-          <Link to="/projects" className="flex items-center gap-2 text-[#004fa2] hover:text-[#003d7a] mb-8 font-semibold">
-            <ChevronLeft size={20} />
-            Back to Projects
-          </Link>
-          <div className="bg-red-50 border-2 border-red-200 rounded-xl p-8 flex items-start gap-4">
-            <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={24} />
-            <div>
-              <h2 className="font-bold text-red-900 mb-2">Project Not Found</h2>
-              <p className="text-red-700 mb-4">{error || 'This project could not be loaded.'}</p>
-              <Link to="/projects" className="text-red-700 hover:text-red-900 font-semibold underline">
-                Return to Projects
-              </Link>
-            </div>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
+  console.log('Raw project data:', project);
+  console.log('Normalized project:', normalizedProject);
 
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-
+    <DetailPageLayout
+      data={normalizedProject}
+      loading={loading}
+      error={error}
+      title={normalizedProject?.title || 'Project Details'}
+      description={normalizedProject?.description || 'Explore this project case study'}
+      image={normalizedProject?.image}
+      url={`/projects/${id}`}
+      backTo="/projects"
+      skeletonVariant="project"
+    >
       {/* Back Button */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <Link to="/projects" className="flex items-center gap-2 text-[#004fa2] hover:text-[#003d7a] font-semibold transition-colors">
-          <ChevronLeft size={20} />
+          <ArrowRight size={20} className="rotate-180" />
           Back to Projects
         </Link>
       </div>
@@ -122,8 +70,8 @@ const ProjectDetailPage = () => {
           {/* Featured Image */}
           <div className="relative rounded-2xl overflow-hidden mb-8 h-96 md:h-[500px] shadow-2xl">
             <img
-              src={project.image}
-              alt={project.title}
+              src={normalizedProject.image}
+              alt={normalizedProject.title}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
@@ -131,9 +79,9 @@ const ProjectDetailPage = () => {
             {/* Category and Featured Badge - Overlaid */}
             <div className="absolute top-6 left-6 flex flex-col gap-3">
               <span className="bg-[#004fa2] text-white px-4 py-2 rounded-lg font-bold text-sm inline-w-fit">
-                {project.category}
+                {normalizedProject.category}
               </span>
-              {project.featured && (
+              {normalizedProject.featured && (
                 <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-4 py-2 rounded-lg font-bold text-sm inline-w-fit">
                   ⭐ Featured Project
                 </span>
@@ -143,19 +91,19 @@ const ProjectDetailPage = () => {
 
           {/* Title and Meta */}
           <div className="mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{project.title}</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{normalizedProject.title}</h1>
             <div className="flex flex-wrap gap-6 text-gray-600">
               <div className="flex items-center gap-2">
                 <TrendingUp size={20} className="text-[#004fa2]" />
-                <span className="font-semibold">Status: <span className="text-[#004fa2]">{project.status}</span></span>
+                <span className="font-semibold">Status: <span className="text-[#004fa2]">{normalizedProject.status}</span></span>
               </div>
               <div className="flex items-center gap-2">
                 <Users size={20} className="text-[#004fa2]" />
-                <span className="font-semibold">Team: <span className="text-[#004fa2]">{project.team} members</span></span>
+                <span className="font-semibold">Team: <span className="text-[#004fa2]">{normalizedProject.team} members</span></span>
               </div>
               <div className="flex items-center gap-2">
                 <Target size={20} className="text-[#004fa2]" />
-                <span className="font-semibold">Progress: <span className="text-[#004fa2]">{project.progress}%</span></span>
+                <span className="font-semibold">Progress: <span className="text-[#004fa2]">{normalizedProject.progress}%</span></span>
               </div>
             </div>
           </div>
@@ -179,15 +127,15 @@ const ProjectDetailPage = () => {
               {/* Overview */}
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">Project Overview</h2>
-                <p className="text-gray-700 leading-relaxed text-lg">{project.description}</p>
+                <p className="text-gray-700 leading-relaxed text-lg">{normalizedProject.description}</p>
               </div>
 
               {/* Technologies */}
-              {project.technologies && project.technologies.length > 0 && (
+              {normalizedProject.technologies && normalizedProject.technologies.length > 0 && (
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">Technologies Used</h3>
                   <div className="flex flex-wrap gap-3">
-                    {project.technologies.map((tech, idx) => (
+                    {normalizedProject.technologies.map((tech, idx) => (
                       <div
                         key={idx}
                         className="bg-[#004fa2]/10 text-[#004fa2] px-4 py-2.5 rounded-lg font-medium border border-[#004fa2]/20 hover:border-[#004fa2] transition-colors"
@@ -201,9 +149,9 @@ const ProjectDetailPage = () => {
 
               {/* Links */}
               <div className="flex flex-wrap gap-4 pt-6 border-t border-gray-100">
-                {project.link && (
+                {normalizedProject.link && (
                   <a
-                    href={project.link}
+                    href={normalizedProject.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 bg-[#004fa2] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#003d7a] transition-colors"
@@ -212,9 +160,9 @@ const ProjectDetailPage = () => {
                     View Live Project
                   </a>
                 )}
-                {project.github && (
+                {normalizedProject.github && (
                   <a
-                    href={project.github}
+                    href={normalizedProject.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 border-2 border-[#004fa2] text-[#004fa2] px-6 py-3 rounded-lg font-semibold hover:bg-[#004fa2] hover:text-white transition-colors"
@@ -237,14 +185,14 @@ const ProjectDetailPage = () => {
                     <div className="relative w-full h-3 bg-gray-200 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-[#004fa2] to-[#003d7a] transition-all duration-500"
-                        style={{ width: `${project.progress}%` }}
+                        style={{ width: `${normalizedProject.progress}%` }}
                       ></div>
                     </div>
-                    <p className="text-sm font-bold text-[#004fa2] mt-2">{project.progress}% Complete</p>
+                    <p className="text-sm font-bold text-[#004fa2] mt-2">{normalizedProject.progress}% Complete</p>
                   </div>
                   <div className="border-t border-[#004fa2]/20 pt-4 mt-4">
                     <p className="text-sm text-gray-600 font-semibold uppercase tracking-wide mb-2">Team Size</p>
-                    <p className="text-3xl font-bold text-[#004fa2]">{project.team}</p>
+                    <p className="text-3xl font-bold text-[#004fa2]">{normalizedProject.team}</p>
                     <p className="text-xs text-gray-600">dedicated members</p>
                   </div>
                 </div>
@@ -256,22 +204,22 @@ const ProjectDetailPage = () => {
                 <div className="space-y-4">
                   <div>
                     <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Category</p>
-                    <p className="text-gray-900 font-semibold">{project.category}</p>
+                    <p className="text-gray-900 font-semibold">{normalizedProject.category}</p>
                   </div>
                   <div>
                     <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Status</p>
                     <span className={`inline-block px-3 py-1 rounded-lg font-bold text-sm ${
-                      project.status === 'Active' ? 'bg-green-100 text-green-700' :
-                      project.status === 'In Progress' ? 'bg-amber-100 text-amber-700' :
+                      normalizedProject.status === 'Active' ? 'bg-green-100 text-green-700' :
+                      normalizedProject.status === 'In Progress' ? 'bg-amber-100 text-amber-700' :
                       'bg-blue-100 text-blue-700'
                     }`}>
-                      {project.status}
+                      {normalizedProject.status}
                     </span>
                   </div>
-                  {project.startDate && (
+                  {normalizedProject.startDate && (
                     <div>
                       <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Started</p>
-                      <p className="text-gray-900 font-semibold">{new Date(project.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                      <p className="text-gray-900 font-semibold">{new Date(normalizedProject.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                     </div>
                   )}
                 </div>
@@ -306,8 +254,7 @@ const ProjectDetailPage = () => {
 
       {/* Newsletter */}
       <NewsletterHero />
-      <Footer />
-    </div>
+    </DetailPageLayout>
   );
 };
 
