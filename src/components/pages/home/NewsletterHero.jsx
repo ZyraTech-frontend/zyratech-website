@@ -107,27 +107,25 @@ const NewsletterHero = () => {
         message: error.message,
         status: error.response?.status,
         data: error.response?.data,
-        code: error.response?.data?.code
+        code: error.response?.data?.error?.code || error.response?.data?.code
       });
 
       // Handle specific error codes from backend
-      const errorCode = error.response?.data?.code;
-      let errorMessage = error.response?.data?.message || 'Failed to subscribe. Please try again.';
+      // Backend sends error code in: response.data.error.code OR response.data.code
+      const errorCode = error.response?.data?.error?.code || error.response?.data?.code;
+      const errorMessage = error.response?.data?.message || 'Failed to subscribe. Please try again.';
 
       if (errorCode === 'ALREADY_SUBSCRIBED') {
-        errorMessage = "You're already subscribed!";
         dispatch(addNotification({
-          message: errorMessage,
+          message: errorMessage, // Use actual backend message: "Email is already subscribed"
           type: 'warning'
         }));
       } else if (errorCode === 'BLOCKED_PROVIDER') {
-        errorMessage = 'Please use a different email provider';
         dispatch(addNotification({
           message: errorMessage,
           type: 'warning'
         }));
       } else if (errorCode === 'INVALID_DOMAIN') {
-        errorMessage = 'Please check your email address';
         dispatch(addNotification({
           message: errorMessage,
           type: 'warning'
@@ -138,8 +136,9 @@ const NewsletterHero = () => {
           type: 'warning'
         }));
       } else {
+        // Fallback for any other error
         dispatch(addNotification({
-          message: errorMessage,
+          message: errorMessage || 'Failed to subscribe. Please try again.',
           type: 'error'
         }));
       }
