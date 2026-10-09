@@ -174,28 +174,7 @@ const ProjectDetailPage = () => {
               </div>
             )}
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 p-6 bg-gray-50 rounded-lg">
-              <div>
-                <p className="text-xs font-semibold text-gray-600 uppercase mb-2">Progress</p>
-                <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
-                  <div
-                    className="h-full bg-[#004fa2] transition-all duration-500"
-                    style={{ width: `${normalizedProject.progress}%` }}
-                  ></div>
-                </div>
-                <p className="text-sm font-bold text-[#004fa2]">{normalizedProject.progress}% Complete</p>
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-gray-600 uppercase mb-2">Team Size</p>
-                <p className="text-2xl font-bold text-gray-900">{normalizedProject.team}</p>
-                <p className="text-xs text-gray-500">dedicated members</p>
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-gray-600 uppercase mb-2">Started</p>
-                <p className="text-sm font-bold text-gray-900">{formatDate(normalizedProject.startDate) || 'N/A'}</p>
-              </div>
-            </div>
+
 
             {/* Action Links */}
             <div className="flex flex-wrap gap-4">
