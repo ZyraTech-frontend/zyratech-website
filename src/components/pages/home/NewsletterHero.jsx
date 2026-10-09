@@ -107,17 +107,18 @@ const NewsletterHero = () => {
         message: error.message,
         status: error.response?.status,
         data: error.response?.data,
-        code: error.response?.data?.error?.code || error.response?.data?.code
+        errorCode: error.response?.data?.error?.code,
+        errorMessage: error.response?.data?.error?.message
       });
 
       // Handle specific error codes from backend
-      // Backend sends error code in: response.data.error.code OR response.data.code
-      const errorCode = error.response?.data?.error?.code || error.response?.data?.code;
-      const errorMessage = error.response?.data?.message || 'Failed to subscribe. Please try again.';
+      // Backend sends error in nested structure: response.data.error.code and response.data.error.message
+      const errorCode = error.response?.data?.error?.code;
+      const errorMessage = error.response?.data?.error?.message || error.response?.data?.message || 'Failed to subscribe. Please try again.';
 
       if (errorCode === 'ALREADY_SUBSCRIBED') {
         dispatch(addNotification({
-          message: errorMessage, // Use actual backend message: "Email is already subscribed"
+          message: errorMessage, // "Email is already subscribed"
           type: 'warning'
         }));
       } else if (errorCode === 'BLOCKED_PROVIDER') {
