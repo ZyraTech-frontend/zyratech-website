@@ -54,41 +54,32 @@ const projectsService = {
     },
 
     /**
-     * Get single project details - tries admin endpoint first, then searches in list
-     * GET /api/admin/projects/:id (admin) or filtered GET /api/projects (public fallback)
+     * Get single project details - uses public list endpoint and searches by ID
+     * GET /api/projects (public - no auth needed)
      * @param {string|number} id - Project ID
-     * @param {boolean} isAdmin - Whether to try admin endpoint first (default: true)
      * @returns {Promise} Project details
      */
-    getProjectById: async (id, isAdmin = true) => {
+    getProjectById: async (id) => {
         try {
-            // Try admin endpoint first
-            if (isAdmin) {
-                try {
-                    const response = await api.get(`/admin/projects/${id}`);
-                    return response.data?.data || response.data;
-                } catch (adminErr) {
-                    // If admin endpoint fails, fall back to public list search
-                    console.log('Admin endpoint failed, searching in public list...');
-                }
+            // Fetch all public projects (no authentication needed)
+            const response = await api.get(`/projects`, { params: { limit: 1000 } });
+            
+            // Handle different response formats
+            const projects = response.data?.data || response.data || [];
+            const projectsList = Array.isArray(projects) ? projects : (projects.projects || projects.data || []);
+            
+            // Find project by ID
+            const found = projectsList.find(p => 
+                String(p.id) === String(id) || String(p.slug) === String(id)
+            );
+            
+            if (found) {
+                console.log('Found project by ID:', found);
+                return found;
             }
             
-            // Fall back to fetching all projects and finding by ID
-            try {
-                const response = await api.get(`/projects`, { params: { limit: 1000 } });
-                const projects = response.data?.data || response.data || [];
-                const projectsList = Array.isArray(projects) ? projects : (projects.data || []);
-                
-                const found = projectsList.find(p => String(p.id) === String(id));
-                if (found) {
-                    return found;
-                }
-            } catch (listErr) {
-                console.error('Failed to search projects list:', listErr);
-            }
-            
-            // If nothing found, throw error
-            throw new Error(`Project with ID ${id} not found`);
+            // If not found, throw error
+            throw new Error(`Project with ID ${id} not found in public list`);
         } catch (error) {
             console.error(`Error fetching project ${id}:`, error);
             throw error;
