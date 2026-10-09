@@ -76,13 +76,22 @@ const NewsletterManagementPage = () => {
                 );
                 console.log('[Admin Newsletter] Response:', response);
                 
-                // Handle response - could be array or object with data/subscribers property
-                const data = Array.isArray(response) 
-                    ? response 
-                    : (response?.data || response?.subscribers || response?.items || []);
+                // Extract the array from backend response
+                // Backend returns: {success: true, data: {...}, message: "..."}
+                // The data object contains: {subscribers: [...], total: X, page: X, limit: X}
+                let data = [];
+                if (Array.isArray(response)) {
+                    data = response;
+                } else if (response?.data?.subscribers && Array.isArray(response.data.subscribers)) {
+                    data = response.data.subscribers;
+                } else if (response?.subscribers && Array.isArray(response.subscribers)) {
+                    data = response.subscribers;
+                } else if (Array.isArray(response?.data)) {
+                    data = response.data;
+                }
                     
                 console.log('[Admin Newsletter] Processed data:', data);
-                setSubscribers(data);
+                setSubscribers(Array.isArray(data) ? data : []);
             } catch (err) {
                 console.error('[Admin Newsletter] Error:', err);
                 setError(err.response?.status === 404 
@@ -103,20 +112,20 @@ const NewsletterManagementPage = () => {
     }, [subscribers]);
 
     // Pagination info from backend (if available) or calculate from local data
-    const totalPages = Math.ceil(subscribers.length / itemsPerPage) || 1;
-    const paginatedSubscribers = subscribers;  // Already paginated from backend
+    const totalPages = (Array.isArray(subscribers) ? Math.ceil(subscribers.length / itemsPerPage) : 1) || 1;
+    const paginatedSubscribers = Array.isArray(subscribers) ? subscribers : [];  // Already paginated from backend
 
     // Stats
     const stats = useMemo(() => ({
-        total: subscribers.length,
-        active: subscribers.filter(s => s.status === 'subscribed').length,
-        unsubscribed: subscribers.filter(s => s.status === 'unsubscribed').length,
-        thisWeek: subscribers.filter(s => {
+        total: Array.isArray(subscribers) ? subscribers.length : 0,
+        active: Array.isArray(subscribers) ? subscribers.filter(s => s.status === 'subscribed').length : 0,
+        unsubscribed: Array.isArray(subscribers) ? subscribers.filter(s => s.status === 'unsubscribed').length : 0,
+        thisWeek: Array.isArray(subscribers) ? subscribers.filter(s => {
             const subDate = new Date(s.createdAt || s.subscribedAt);
             const weekAgo = new Date();
             weekAgo.setDate(weekAgo.getDate() - 7);
             return subDate >= weekAgo;
-        }).length
+        }).length : 0
     }), [subscribers]);
 
     const formatDate = (dateString) => {
@@ -130,6 +139,10 @@ const NewsletterManagementPage = () => {
     };
 
     const handleExport = () => {
+        if (!Array.isArray(subscribers)) {
+            console.warn('[Admin Newsletter] Cannot export: subscribers is not an array');
+            return;
+        }
         const activeSubscribers = subscribers.filter(s => s.status === 'subscribed');
         const csvContent = [
             'Email,Name,Subscribed Date',
