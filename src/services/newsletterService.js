@@ -29,23 +29,27 @@ const newsletterService = {
 
   /**
    * Get all newsletter subscribers (admin only)
-   * GET /api/admin/newsletter/subscribers?page=1&limit=50
+   * GET /api/admin/newsletter/?page=1&limit=10
    * 
    * @param {number} page - Page number (default: 1)
-   * @param {number} limit - Items per page (default: 50)
-   * @returns {Promise<Array>} List of subscribers
+   * @param {number} limit - Items per page (default: 10)
+   * @param {string} status - Filter by status: "subscribed" or "unsubscribed" (optional)
+   * @param {string} search - Search by email or name (optional)
+   * @returns {Promise<Object>} Subscribers data with pagination
    */
-  getSubscribers: async (page = 1, limit = 50) => {
+  getSubscribers: async (page = 1, limit = 10, status = null, search = null) => {
     try {
-      console.log('[Newsletter] Fetching subscribers:', { page, limit });
-      const response = await api.get('/admin/newsletter/subscribers', {
-        params: { page, limit }
-      });
+      console.log('[Newsletter] Fetching subscribers:', { page, limit, status, search });
+      
+      const params = { page, limit };
+      if (status) params.status = status;
+      if (search) params.search = search;
+      
+      const response = await api.get('/admin/newsletter/', { params });
       console.log('[Newsletter] Subscribers response:', response.data);
       
-      // Handle different response structures
-      const data = response.data?.data || response.data?.subscribers || response.data || [];
-      return Array.isArray(data) ? data : [];
+      // Backend returns data in response.data structure
+      return response.data;
     } catch (error) {
       console.error('[Newsletter] Error fetching subscribers:', {
         status: error.response?.status,

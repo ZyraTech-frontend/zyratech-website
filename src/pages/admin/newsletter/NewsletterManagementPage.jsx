@@ -61,19 +61,33 @@ const NewsletterManagementPage = () => {
             try {
                 setLoading(true);
                 setError(null);
-                console.log('[Admin Newsletter] Fetching subscribers...');
-                const response = await newsletterService.getSubscribers(currentPage, itemsPerPage);
+                console.log('[Admin Newsletter] Fetching subscribers...', { 
+                    page: currentPage, 
+                    limit: itemsPerPage,
+                    status: statusFilter !== 'all' ? statusFilter : undefined,
+                    search: searchTerm || undefined
+                });
+                
+                const response = await newsletterService.getSubscribers(
+                    currentPage, 
+                    itemsPerPage,
+                    statusFilter !== 'all' ? statusFilter : null,
+                    searchTerm || null
+                );
                 console.log('[Admin Newsletter] Response:', response);
                 
-                // Handle response - could be array or object with data property
-                const data = Array.isArray(response) ? response : (response?.data || response?.subscribers || []);
+                // Handle response - could be array or object with data/subscribers property
+                const data = Array.isArray(response) 
+                    ? response 
+                    : (response?.data || response?.subscribers || response?.items || []);
+                    
                 console.log('[Admin Newsletter] Processed data:', data);
                 setSubscribers(data);
             } catch (err) {
                 console.error('[Admin Newsletter] Error:', err);
                 setError(err.response?.status === 404 
                     ? 'Newsletter API endpoint not available. Please check with backend team.'
-                    : 'Failed to load subscribers. Please try again.');
+                    : err.message || 'Failed to load subscribers. Please try again.');
                 setSubscribers([]);
             } finally {
                 setLoading(false);
@@ -81,23 +95,16 @@ const NewsletterManagementPage = () => {
         };
 
         fetchSubscribers();
-    }, [currentPage, itemsPerPage]);
+    }, [currentPage, itemsPerPage, statusFilter, searchTerm]);
 
-    // Filter subscribers
+    // Remove local filtering since backend now handles it
     const filteredSubscribers = useMemo(() => {
-        return subscribers.filter(sub => {
-            const matchesSearch = sub.email.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesStatus = statusFilter === 'all' || sub.status === statusFilter;
-            return matchesSearch && matchesStatus;
-        });
-    }, [subscribers, searchTerm, statusFilter]);
+        return subscribers;  // Backend already filtered and paginated
+    }, [subscribers]);
 
-    // Pagination
-    const totalPages = Math.ceil(filteredSubscribers.length / itemsPerPage);
-    const paginatedSubscribers = filteredSubscribers.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
+    // Pagination info from backend (if available) or calculate from local data
+    const totalPages = Math.ceil(subscribers.length / itemsPerPage) || 1;
+    const paginatedSubscribers = subscribers;  // Already paginated from backend
 
     // Stats
     const stats = useMemo(() => ({
@@ -218,7 +225,7 @@ const NewsletterManagementPage = () => {
                         <XCircle className="w-8 h-8 text-red-600 mx-auto mb-3" />
                         <p className="text-red-700 font-semibold">{error}</p>
                         <p className="text-red-600 text-sm mt-2">
-                            Backend endpoint: GET /api/admin/newsletter/subscribers
+                            Backend endpoint: GET /api/admin/newsletter/
                         </p>
                     </div>
                 ) : subscribers.length === 0 ? (
