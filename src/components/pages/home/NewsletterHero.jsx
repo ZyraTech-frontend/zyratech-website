@@ -1,23 +1,84 @@
 import { useState } from 'react';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
 import newsletterService from '../../../services/newsletterService';
+
+// List of blocked temporary email providers (frontend warning only)
+const BLOCKED_PROVIDERS = [
+  'tempmail.com', 'temp-mail.org', 'throwaway.email', '10minutemail.com',
+  '10minutemail.de', 'yopmail.com', 'mailinator.com', 'maildrop.cc',
+  'mailnesia.com', 'sharklasers.com', 'trash-mail.com', 'trashmail.com',
+  'temp-mail.io', 'temporary-email.com', 'guerrillamail.com', 'guerrillamailblock.com',
+  'tempmail.us', 'temp-mail.us', 'throwaway.me', 'fakeinbox.com',
+  'spam4.me', 'tempmail.de', 'mailinator.net', 'mytrashmail.com'
+];
+
+const PROTONMAIL_DOMAINS = ['proton.me', 'pm.me', 'protonmail.com'];
 
 const NewsletterHero = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [emailWarning, setEmailWarning] = useState('');
+
+  // Check for blocked email providers (client-side warning)
+  const checkEmailProvider = (emailAddress) => {
+    if (!emailAddress) {
+      setEmailWarning('');
+      return;
+    }
+
+    const domain = emailAddress.split('@')[1]?.toLowerCase() || '';
+
+    // Check for ProtonMail
+    if (PROTONMAIL_DOMAINS.includes(domain)) {
+      setEmailWarning('⚠️ ProtonMail is not supported for newsletter subscriptions');
+      return;
+    }
+
+    // Check for temporary email providers
+    if (BLOCKED_PROVIDERS.includes(domain)) {
+      setEmailWarning('⚠️ Temporary email addresses are not allowed');
+      return;
+    }
+
+    setEmailWarning('');
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    checkEmailProvider(value);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate email
+    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       dispatch(addNotification({
         message: 'Please enter a valid email address',
+        type: 'warning'
+      }));
+      return;
+    }
+
+    // Check for blocked providers (final check before submit)
+    const domain = email.split('@')[1]?.toLowerCase() || '';
+    if (PROTONMAIL_DOMAINS.includes(domain)) {
+      dispatch(addNotification({
+        message: 'ProtonMail is not supported for newsletter subscriptions',
+        type: 'warning'
+      }));
+      return;
+    }
+
+    if (BLOCKED_PROVIDERS.includes(domain)) {
+      dispatch(addNotification({
+        message: 'Temporary email addresses are not allowed',
         type: 'warning'
       }));
       return;
@@ -37,6 +98,7 @@ const NewsletterHero = () => {
       
       setIsSubscribed(true);
       setEmail('');
+      setEmailWarning('');
       
       // Reset after 5 seconds to allow another subscription
       setTimeout(() => setIsSubscribed(false), 5000);
@@ -48,15 +110,36 @@ const NewsletterHero = () => {
         code: error.response?.data?.code
       });
 
-      // Handle specific error codes
-      if (error.response?.data?.code === 'ALREADY_SUBSCRIBED') {
+      // Handle specific error codes from backend
+      const errorCode = error.response?.data?.code;
+      let errorMessage = error.response?.data?.message || 'Failed to subscribe. Please try again.';
+
+      if (errorCode === 'ALREADY_SUBSCRIBED') {
+        errorMessage = "You're already subscribed!";
         dispatch(addNotification({
-          message: 'This email is already subscribed to our newsletter',
+          message: errorMessage,
+          type: 'warning'
+        }));
+      } else if (errorCode === 'BLOCKED_PROVIDER') {
+        errorMessage = 'Please use a different email provider';
+        dispatch(addNotification({
+          message: errorMessage,
+          type: 'warning'
+        }));
+      } else if (errorCode === 'INVALID_DOMAIN') {
+        errorMessage = 'Please check your email address';
+        dispatch(addNotification({
+          message: errorMessage,
+          type: 'warning'
+        }));
+      } else if (errorCode === 'VALIDATION_ERROR') {
+        dispatch(addNotification({
+          message: errorMessage,
           type: 'warning'
         }));
       } else {
         dispatch(addNotification({
-          message: error.response?.data?.message || 'Failed to subscribe. Please try again.',
+          message: errorMessage,
           type: 'error'
         }));
       }
@@ -85,28 +168,39 @@ const NewsletterHero = () => {
                 </p>
               </div>
             ) : (
-              <form className="flex flex-col sm:flex-row gap-4" onSubmit={handleSubmit}>
-                <input
-                  type="email"
-                  placeholder="Enter your email address"
-                  className="flex-grow px-4 py-3 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent text-gray-900 bg-white"
-                  required
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  disabled={isSubmitting}
-                />
-                <button
-                  type="submit"
-                  className="bg-white hover:bg-white/90 text-[#004fa2] px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#004fa2]"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Subscribing...' : 'Subscribe'}
-                </button>
-              </form>
+              <div>
+                <form className="flex flex-col sm:flex-row gap-4" onSubmit={handleSubmit}>
+                  <input
+                    type="email"
+                    placeholder="Enter your email address"
+                    className="flex-grow px-4 py-3 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent text-gray-900 bg-white"
+                    required
+                    value={email}
+                    onChange={handleEmailChange}
+                    disabled={isSubmitting}
+                  />
+                  <button
+                    type="submit"
+                    className="bg-white hover:bg-white/90 text-[#004fa2] px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#004fa2]"
+                    disabled={isSubmitting || !!emailWarning}
+                  >
+                    {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+                  </button>
+                </form>
+
+                {/* Email provider warning */}
+                {emailWarning && (
+                  <div className="mt-3 flex items-center gap-2 bg-yellow-400/20 border border-yellow-400/50 rounded-lg p-3">
+                    <AlertCircle className="w-5 h-5 text-yellow-300 flex-shrink-0" />
+                    <p className="text-sm text-yellow-200">{emailWarning}</p>
+                  </div>
+                )}
+
+                <p className="text-sm text-white/80 mt-4">
+                  By subscribing, you agree to our privacy policy. You can unsubscribe at any time.
+                </p>
+              </div>
             )}
-            <p className="text-sm text-white/80 mt-4">
-              By subscribing, you agree to our privacy policy. You can unsubscribe at any time.
-            </p>
           </div>
         </div>
       </div>
