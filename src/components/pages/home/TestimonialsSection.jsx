@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Star, Quote } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import testimonialsService from '../../../services/testimonialsService';
@@ -8,22 +8,21 @@ import testimonialsService from '../../../services/testimonialsService';
 const TestimonialsSection = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
-  const cardsAnimation = useScrollAnimation({ type: 'fadeIn', delay: 0.2 });
 
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        // Get featured testimonials (limit to 6, API will handle pagination)
-        const response = await testimonialsService.getPublicTestimonials(1, 6, true);
+        // Get published and featured testimonials
+        const response = await testimonialsService.getPublicTestimonials(1, 10, true);
         
         // API returns: { success, data: { data: [...], pagination: {} } }
-        // Axios wraps it, so array is at: response.data.data.data
-        const apiResponseData = response?.data?.data; // { data: [...], pagination: {} }
-        const testimonialsList = apiResponseData?.data || []; // The actual array
+        const apiResponseData = response?.data?.data;
+        const testimonialsList = apiResponseData?.data || [];
         
         console.log('[TestimonialsSection] Fetched testimonials:', testimonialsList?.length || 0);
-        setTestimonials(testimonialsList.slice(0, 3)); // Show 3 on homepage
+        setTestimonials(testimonialsList);
       } catch (error) {
         console.error('Failed to fetch testimonials:', error);
       } finally {
@@ -34,13 +33,34 @@ const TestimonialsSection = () => {
     fetchTestimonials();
   }, []);
 
-  // Don't render anything if we've finished loading and have no testimonials
+  const nextSlide = () => {
+    setCurrentIndex((prev) => 
+      prev + 3 >= testimonials.length ? 0 : prev + 3
+    );
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => 
+      prev === 0 ? Math.max(0, testimonials.length - 3) : Math.max(0, prev - 3)
+    );
+  };
+
+  // Don't render if no testimonials
   if (!loading && testimonials.length === 0) return null;
 
+  const visibleTestimonials = testimonials.slice(currentIndex, currentIndex + 3);
+
   return (
-    <section className="py-20 bg-[#004fa2] text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Title - always attach the ref so useInView works correctly */}
+    <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
+      {/* Subtle wave pattern background */}
+      <div className="absolute inset-0 opacity-5">
+        <svg className="w-full h-full" viewBox="0 0 1440 320" preserveAspectRatio="none">
+          <path fill="currentColor" className="text-blue-400" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Title */}
         <motion.div
           ref={titleAnimation.ref}
           initial={titleAnimation.initial}
@@ -49,69 +69,88 @@ const TestimonialsSection = () => {
           transition={titleAnimation.transition}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6">
-            What Our Community Says
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+            Testimonials
           </h2>
-          <p className="text-lg sm:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-            Hear from the tech professionals we've helped transform their careers and businesses across Ghana.
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Read what our customers have to say about our product.
           </p>
         </motion.div>
 
-        {/* Cards area - always attach the ref so useInView works correctly */}
-        <motion.div
-          ref={cardsAnimation.ref}
-          initial={cardsAnimation.initial}
-          animate={cardsAnimation.animate}
-          variants={cardsAnimation.variants}
-          transition={cardsAnimation.transition}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {loading ? (
-            // Loading skeleton - rendered INSIDE the animated wrapper
-            [1, 2, 3].map(i => (
-              <div key={i} className="animate-pulse bg-white/10 rounded-xl h-64"></div>
-            ))
-          ) : (
-            testimonials.map((testimonial, index) => (
-              <div key={testimonial.id || index} className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-[transform,shadow,opacity] duration-300 hover:-translate-y-2 hover:scale-105 cursor-pointer group flex flex-col h-full">
-                <Quote className="w-8 h-8 text-[#004fa2] mb-4 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" />
-
-                <div className="flex-grow">
-                  <p className="text-gray-700 leading-relaxed mb-6 italic group-hover:text-gray-900 transition-colors duration-300 line-clamp-4">
-                    "{testimonial.content}"
-                  </p>
-                </div>
-
-                <div className="flex items-center mt-auto pt-4 border-t border-gray-100">
-                  <div className="w-16 h-16 rounded-full overflow-hidden mr-4 shrink-0 border border-gray-100 bg-gray-200">
-                    {testimonial.avatarUrl ? (
-                      <img decoding="async"
-                        src={testimonial.avatarUrl}
-                        alt={testimonial.name}
-                        width="64"
-                        height="64"
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-300 scale-[3.0] origin-top -translate-y-2"
-                        style={{ objectPosition: 'center 5%' }}
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
-                        }}
-                      />
-                    ) : null}
-                    <div className="w-full h-full flex items-center justify-center bg-blue-100 text-[#004fa2] font-bold text-lg" style={{ display: testimonial.avatarUrl ? 'none' : 'flex' }}>
-                      {testimonial.name.charAt(0)}
+        {/* Testimonials Grid */}
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="animate-pulse bg-white rounded-2xl h-80 shadow-lg"></div>
+            ))}
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              {visibleTestimonials.map((testimonial, index) => (
+                <motion.div
+                  key={testimonial.id || index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col"
+                >
+                  {/* Avatar and Name at Top */}
+                  <div className="flex items-center mb-6">
+                    <div className="w-16 h-16 rounded-full overflow-hidden mr-4 shrink-0 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                      {testimonial.avatarUrl ? (
+                        <img
+                          src={testimonial.avatarUrl}
+                          alt={testimonial.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.parentElement.innerHTML = `<span class="text-2xl font-bold text-blue-600">${testimonial.name.charAt(0).toUpperCase()}</span>`;
+                          }}
+                        />
+                      ) : (
+                        <span className="text-2xl font-bold text-blue-600">
+                          {testimonial.name.charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 text-lg">{testimonial.name}</h3>
+                      <p className="text-sm text-gray-600">{testimonial.role || 'Customer'}</p>
                     </div>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors duration-300 truncate max-w-[150px]">{testimonial.name}</h4>
-                    <p className="text-sm text-gray-600 group-hover:text-gray-700 transition-colors duration-300 truncate max-w-[150px]">{testimonial.role || 'Professional'}</p>
-                  </div>
-                </div>
+
+                  {/* Testimonial Content */}
+                  <p className="text-gray-700 leading-relaxed flex-grow line-clamp-6">
+                    {testimonial.content}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Navigation Arrows */}
+            {testimonials.length > 3 && (
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={prevSlide}
+                  disabled={currentIndex === 0}
+                  className="w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-300 hover:scale-110 disabled:hover:scale-100"
+                  aria-label="Previous testimonials"
+                >
+                  <ChevronLeft className="w-6 h-6 text-gray-700" />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  disabled={currentIndex + 3 >= testimonials.length}
+                  className="w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-300 hover:scale-110 disabled:hover:scale-100"
+                  aria-label="Next testimonials"
+                >
+                  <ChevronRight className="w-6 h-6 text-gray-700" />
+                </button>
               </div>
-            ))
-          )}
-        </motion.div>
+            )}
+          </>
+        )}
       </div>
     </section>
   );
