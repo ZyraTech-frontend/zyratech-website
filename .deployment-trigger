@@ -1,0 +1,4 @@
+# Deployment Trigger
+# Updated: 2026-10-10
+# Reason: Force rebuild to ensure API URL is api.zyratechhub.com (not admin.zyratechhub.com)
+DEPLOYMENT_VERSION=2.0.1
