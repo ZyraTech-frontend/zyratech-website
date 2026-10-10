@@ -1,6 +1,6 @@
 /**
  * Newsletter Management Page (Admin)
- * View and manage newsletter subscribers
+ * View and manage newsletter subscribers and send campaigns
  */
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -23,7 +23,10 @@ import {
     MailX,
     UserPlus,
     RefreshCw,
-    Loader2
+    Loader2,
+    Send,
+    X,
+    AlertCircle
 } from 'lucide-react';
 import newsletterService from '../../../services/newsletterService';
 
@@ -54,6 +57,16 @@ const NewsletterManagementPage = () => {
     const [statusFilter, setStatusFilter] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
+
+    // Newsletter sending state
+    const [showSendModal, setShowSendModal] = useState(false);
+    const [newsletterForm, setNewsletterForm] = useState({
+        subject: '',
+        content: '',
+        recipientGroup: 'all'
+    });
+    const [sending, setSending] = useState(false);
+    const [sendMessage, setSendMessage] = useState(null);
 
     // Fetch subscribers from API
     useEffect(() => {
@@ -160,6 +173,50 @@ const NewsletterManagementPage = () => {
         a.click();
     };
 
+    const handleSendNewsletter = async (e) => {
+        e.preventDefault();
+        
+        if (!newsletterForm.subject.trim()) {
+            setSendMessage({ type: 'error', text: 'Please enter a subject line' });
+            return;
+        }
+        
+        if (!newsletterForm.content.trim()) {
+            setSendMessage({ type: 'error', text: 'Please enter newsletter content' });
+            return;
+        }
+
+        try {
+            setSending(true);
+            setSendMessage(null);
+            
+            console.log('[Admin Newsletter] Sending newsletter:', newsletterForm);
+            const response = await newsletterService.sendNewsletter(
+                newsletterForm.subject,
+                newsletterForm.content,
+                newsletterForm.recipientGroup
+            );
+            
+            console.log('[Admin Newsletter] Send response:', response);
+            setSendMessage({ 
+                type: 'success', 
+                text: `Newsletter sent successfully to ${response.sentCount || 'subscribers'} recipient(s)` 
+            });
+            
+            // Reset form
+            setNewsletterForm({ subject: '', content: '', recipientGroup: 'all' });
+            setTimeout(() => setShowSendModal(false), 2000);
+        } catch (err) {
+            console.error('[Admin Newsletter] Send error:', err);
+            setSendMessage({ 
+                type: 'error', 
+                text: err.response?.data?.error?.message || err.message || 'Failed to send newsletter' 
+            });
+        } finally {
+            setSending(false);
+        }
+    };
+
     return (
         <AdminLayout>
             <div className="space-y-6">
@@ -180,6 +237,13 @@ const NewsletterManagementPage = () => {
                     >
                         <Download size={14} />
                         Export Active
+                    </button>
+                    <button
+                        onClick={() => setShowSendModal(true)}
+                        className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-semibold text-[11px] shadow-sm"
+                    >
+                        <Send size={14} />
+                        Send Newsletter
                     </button>
                 </div>
 
@@ -319,17 +383,155 @@ const NewsletterManagementPage = () => {
                 <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
                     <div className="flex gap-3">
                         <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
-                            <RefreshCw className="text-blue-600" size={16} />
+                            <Mail className="text-blue-600" size={16} />
                         </div>
                         <div>
-                            <h3 className="font-semibold text-blue-900">Email Integration Coming Soon</h3>
+                            <h3 className="font-semibold text-blue-900">Send Campaigns</h3>
                             <p className="text-sm text-blue-700 mt-1">
-                                Once the backend is connected, you'll be able to send newsletters directly to your subscribers, 
-                                set up automated campaigns, and track open rates. Currently showing mock data for preview.
+                                Use the "Send Newsletter" button above to compose and send campaigns to your subscribers. 
+                                HTML content is supported for rich formatting.
                             </p>
                         </div>
                     </div>
                 </div>
+
+                {/* Send Newsletter Modal */}
+                {showSendModal && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                        <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                            {/* Modal Header */}
+                            <div className="sticky top-0 bg-white border-b border-gray-100 p-4 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
+                                        <Send className="text-green-600" size={16} />
+                                    </div>
+                                    <h2 className="font-bold text-gray-900">Send Newsletter Campaign</h2>
+                                </div>
+                                <button
+                                    onClick={() => { setShowSendModal(false); setSendMessage(null); }}
+                                    className="p-1 hover:bg-gray-100 rounded transition-colors"
+                                >
+                                    <X size={20} className="text-gray-500" />
+                                </button>
+                            </div>
+
+                            {/* Modal Body */}
+                            <form onSubmit={handleSendNewsletter} className="p-6 space-y-4">
+                                {/* Messages */}
+                                {sendMessage && (
+                                    <div className={`p-3 rounded-lg flex items-start gap-2 text-sm ${
+                                        sendMessage.type === 'error' 
+                                            ? 'bg-red-50 border border-red-200 text-red-700' 
+                                            : 'bg-green-50 border border-green-200 text-green-700'
+                                    }`}>
+                                        {sendMessage.type === 'error' ? (
+                                            <AlertCircle size={16} className="flex-shrink-0 mt-0.5" />
+                                        ) : (
+                                            <CheckCircle size={16} className="flex-shrink-0 mt-0.5" />
+                                        )}
+                                        <p>{sendMessage.text}</p>
+                                    </div>
+                                )}
+
+                                {/* Subject */}
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                        Subject Line
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={newsletterForm.subject}
+                                        onChange={(e) => setNewsletterForm({...newsletterForm, subject: e.target.value})}
+                                        placeholder="e.g., August Newsletter - New Courses Available"
+                                        className="w-full px-3 py-2 border border-gray-100 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-600 text-sm"
+                                        disabled={sending}
+                                    />
+                                </div>
+
+                                {/* Recipient Group */}
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                        Send To
+                                    </label>
+                                    <select
+                                        value={newsletterForm.recipientGroup}
+                                        onChange={(e) => setNewsletterForm({...newsletterForm, recipientGroup: e.target.value})}
+                                        className="w-full px-3 py-2 border border-gray-100 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-600 text-sm"
+                                        disabled={sending}
+                                    >
+                                        <option value="all">All Subscribers</option>
+                                        <option value="subscribed">Active Subscribers Only</option>
+                                    </select>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        {newsletterForm.recipientGroup === 'all' 
+                                            ? `Sending to ~${stats.total} subscribers`
+                                            : `Sending to ${stats.active} active subscribers`
+                                        }
+                                    </p>
+                                </div>
+
+                                {/* Content */}
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                        Content
+                                    </label>
+                                    <textarea
+                                        value={newsletterForm.content}
+                                        onChange={(e) => setNewsletterForm({...newsletterForm, content: e.target.value})}
+                                        placeholder="Write your newsletter content here... HTML is supported"
+                                        rows={8}
+                                        className="w-full px-3 py-2 border border-gray-100 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-600 text-sm font-mono resize-none"
+                                        disabled={sending}
+                                    />
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        {newsletterForm.content.length} characters
+                                    </p>
+                                </div>
+
+                                {/* Preview */}
+                                {newsletterForm.content && (
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                            Preview
+                                        </label>
+                                        <div className="p-4 bg-gray-50 border border-gray-100 rounded-lg text-sm prose prose-sm max-w-none">
+                                            <div dangerouslySetInnerHTML={{__html: newsletterForm.content}} />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Footer */}
+                                <div className="flex gap-2 pt-4 border-t border-gray-100">
+                                    <button
+                                        type="button"
+                                        onClick={() => { setShowSendModal(false); setSendMessage(null); }}
+                                        disabled={sending}
+                                        className="flex-1 px-4 py-2 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold text-sm disabled:opacity-50 transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={sending || !newsletterForm.subject || !newsletterForm.content}
+                                        className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        {sending ? (
+                                            <>
+                                                <Loader2 size={16} className="animate-spin" />
+                                                Sending...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Send size={16} />
+                                                Send Now
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </div>
         </AdminLayout>
     );

@@ -78,6 +78,37 @@ const newsletterService = {
       throw error;
     }
   },
+
+  /**
+   * Send newsletter campaign to subscribers (admin only)
+   * POST /api/admin/newsletter/send
+   * 
+   * @param {string} subject - Newsletter subject line
+   * @param {string} content - Newsletter content (HTML allowed)
+   * @param {string} recipientGroup - Recipient group: "all", "subscribed", "active" (default: "all")
+   * @returns {Promise<Object>} Send response with sent count
+   */
+  sendNewsletter: async (subject, content, recipientGroup = 'all') => {
+    try {
+      console.log('[Newsletter] Sending campaign:', { subject, recipientGroup });
+      
+      const response = await api.post('/admin/newsletter/send', {
+        subject,
+        content,
+        recipientGroup
+      });
+      
+      console.log('[Newsletter] Send response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('[Newsletter] Error sending newsletter:', {
+        status: error.response?.status,
+        message: error.message,
+        data: error.response?.data
+      });
+      throw error;
+    }
+  },
 };
 
 export default newsletterService;
