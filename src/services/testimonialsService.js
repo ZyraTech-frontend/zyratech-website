@@ -1,122 +1,115 @@
+/**
+ * Testimonials Service
+ * API Integration for Testimonials (Public + Admin)
+ * 
+ * Endpoints:
+ * - GET /api/testimonials - Public testimonials (no auth required)
+ * - GET /api/admin/testimonials - Admin list (requires auth + content permission)
+ * - GET /api/admin/testimonials/:id - Admin get single (requires auth)
+ * - POST /api/admin/testimonials - Admin create (requires auth)
+ * - PUT /api/admin/testimonials/:id - Admin update (requires auth)
+ * - DELETE /api/admin/testimonials/:id - Admin delete (requires auth)
+ * - POST /api/admin/testimonials/upload - Upload avatar image (requires auth)
+ */
 
-// Testimonials data - real testimonials added
-let mockTestimonials = [
-    {
-        id: 1,
-        name: 'AGYARE BOAS TIEKU',
-        role: 'Software Engineering Graduate',
-        quote: 'ZyraTech provided me with the bridge I needed between my academic foundation and real-world software engineering. The internship program was intensive, practical, and highly rewarding. I am now confident in building scalable web applications thanks to their mentorship.',
-        avatar: "/images/tes1.webp",
-        status: 'published',
-        featured: true,
-        date: '2025-01-20',
-        program: 'Web Development Bootcamp'
-    },
-    {
-        id: 2,
-        name: 'CHEMOGOH RHYDAL MAAOU',
-        role: 'Digital Marketing Specialist',
-        quote: 'ZyraTech’s approach to digital strategy changed everything for me. Combining technical data analytics with creative marketing gave me a unique edge. I now lead impactful digital campaigns that truly reach and engage the target audience.',
-        avatar: "/images/tes2.webp",
-        status: 'published',
-        featured: true,
-        date: '2025-01-25',
-        program: 'Digital Marketing & Strategy'
-    },
-    {
-        id: 3,
-        name: 'FRANSISCA',
-        role: 'HR Professional',
-        quote: "Partnering with ZyraTech for our talent needs has been a game-changer. Their graduates are not only technically proficient but also possess the industry-ready mindset that is rare to find. They have bridged the talent gap for our organization perfectly.",
-        avatar: "/images/test3.webp",
-        status: 'published',
-        featured: true,
-        date: '2025-02-10',
-        program: 'Corporate Partnership'
-    }
-];
+import api from './api';
 
 const testimonialsService = {
-    // Get all testimonials
-    getAllTestimonials: async () => {
-        // return api.get('/testimonials');
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({ data: [...mockTestimonials] });
-            }, 500);
-        });
+    // ========== PUBLIC ENDPOINTS ==========
+    
+    /**
+     * Get published testimonials (public - no auth required)
+     * @param {number} page - Page number (default: 1)
+     * @param {number} limit - Items per page (default: 20)
+     * @param {boolean} isFeatured - Filter by featured status (optional)
+     * @returns {Promise} - { data: { data: [], pagination: {} } }
+     */
+    getPublicTestimonials: async (page = 1, limit = 20, isFeatured = null) => {
+        let url = `/testimonials?page=${page}&limit=${limit}`;
+        if (isFeatured !== null) {
+            url += `&isFeatured=${isFeatured}`;
+        }
+        return api.get(url);
     },
 
-    // Get single testimonial
-    getTestimonialById: async (id) => {
-        // return api.get(`/testimonials/${id}`);
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                const testimonial = mockTestimonials.find(t => t.id === parseInt(id));
-                if (testimonial) resolve({ data: testimonial });
-                else reject(new Error('Testimonial not found'));
-            }, 300);
-        });
+    // ========== ADMIN ENDPOINTS ==========
+
+    /**
+     * Get all testimonials including drafts (admin only)
+     * @param {number} page - Page number (default: 1)
+     * @param {number} limit - Items per page (default: 20)
+     * @param {string} status - Filter by status: "draft" | "published" | "archived" (optional)
+     * @param {boolean} isFeatured - Filter by featured status (optional)
+     * @returns {Promise} - { data: { data: [], pagination: {} } }
+     */
+    getAdminTestimonials: async (page = 1, limit = 20, status = null, isFeatured = null) => {
+        let url = `/admin/testimonials?page=${page}&limit=${limit}`;
+        if (status) {
+            url += `&status=${status}`;
+        }
+        if (isFeatured !== null) {
+            url += `&isFeatured=${isFeatured}`;
+        }
+        return api.get(url);
     },
 
-    // Create new testimonial
-    createTestimonial: async (data) => {
-        // return api.post('/testimonials', data);
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const newTestimonial = {
-                    id: Date.now(),
-                    ...data,
-                    date: new Date().toISOString().split('T')[0],
-                    likes: 0,
-                    verified: false
-                };
-                mockTestimonials.unshift(newTestimonial);
-                resolve({ data: newTestimonial });
-            }, 600);
-        });
+    /**
+     * Get single testimonial details (admin)
+     * @param {string} id - Testimonial ID
+     * @returns {Promise} - { data: { id, name, role, organization, content, ... } }
+     */
+    getAdminTestimonialById: async (id) => {
+        return api.get(`/admin/testimonials/${id}`);
     },
 
-    // Update existing testimonial
-    updateTestimonial: async (id, data) => {
-        // return api.put(`/testimonials/${id}`, data);
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                const index = mockTestimonials.findIndex(t => t.id === parseInt(id));
-                if (index !== -1) {
-                    mockTestimonials[index] = { ...mockTestimonials[index], ...data };
-                    resolve({ data: mockTestimonials[index] });
-                } else {
-                    reject(new Error('Testimonial not found'));
-                }
-            }, 600);
-        });
+    /**
+     * Create new testimonial (admin)
+     * @param {object} data - Testimonial data:
+     *   - name (required): string
+     *   - role (optional): string
+     *   - organization (optional): string
+     *   - content (required): string
+     *   - avatarUrl (optional): string
+     *   - rating (optional): number (1-5)
+     *   - isFeatured (optional): boolean (default: false)
+     *   - status (optional): "draft" | "published" | "archived" (default: "draft")
+     * @returns {Promise} - { data: { id, name, ... } }
+     */
+    createAdminTestimonial: async (data) => {
+        return api.post('/admin/testimonials', data);
     },
 
-    // Delete testimonial
-    deleteTestimonial: async (id) => {
-        // return api.delete(`/testimonials/${id}`);
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                mockTestimonials = mockTestimonials.filter(t => t.id !== parseInt(id));
-                resolve({ success: true });
-            }, 500);
-        });
+    /**
+     * Update testimonial (admin)
+     * @param {string} id - Testimonial ID
+     * @param {object} data - Fields to update (all optional)
+     * @returns {Promise} - { data: { id, ... } }
+     */
+    updateAdminTestimonial: async (id, data) => {
+        return api.put(`/admin/testimonials/${id}`, data);
     },
 
-    // Toggle Featured Status
-    toggleFeatured: async (id) => {
-        // return api.patch(`/testimonials/${id}/toggle-featured`);
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                const index = mockTestimonials.findIndex(t => t.id === parseInt(id));
-                if (index !== -1) {
-                    mockTestimonials[index].featured = !mockTestimonials[index].featured;
-                    resolve({ data: mockTestimonials[index] });
-                } else {
-                    reject(new Error('Testimonial not found'));
-                }
-            }, 300);
+    /**
+     * Delete testimonial (admin)
+     * @param {string} id - Testimonial ID
+     * @returns {Promise} - { success: true }
+     */
+    deleteAdminTestimonial: async (id) => {
+        return api.delete(`/admin/testimonials/${id}`);
+    },
+
+    /**
+     * Upload avatar image (admin)
+     * @param {File} file - Image file (JPEG, PNG, GIF, WebP)
+     * @returns {Promise} - { data: { url: "https://..." } }
+     */
+    uploadAvatar: async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        return api.post('/admin/testimonials/upload', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
         });
     }
 };
