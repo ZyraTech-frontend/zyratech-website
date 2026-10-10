@@ -14,14 +14,13 @@ const TestimonialsSection = () => {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const response = await testimonialsService.getAllTestimonials();
-        // Show only published testimonials, prioritizing featured ones
-        const published = response.data
-          .filter(t => t.status === 'published')
-          .sort((a, b) => (b.featured === a.featured ? 0 : b.featured ? 1 : -1))
-          .slice(0, 3); // Limit to 3 for the homepage section
-
-        setTestimonials(published);
+        // Get featured testimonials (limit to 6, API will handle pagination)
+        const response = await testimonialsService.getPublicTestimonials(1, 6, true);
+        
+        // Extract testimonials from nested data structure: response.data.data
+        const testimonialsList = response.data.data || [];
+        
+        setTestimonials(testimonialsList.slice(0, 3)); // Show 3 on homepage
       } catch (error) {
         console.error('Failed to fetch testimonials:', error);
       } finally {
@@ -76,15 +75,15 @@ const TestimonialsSection = () => {
 
                 <div className="flex-grow">
                   <p className="text-gray-700 leading-relaxed mb-6 italic group-hover:text-gray-900 transition-colors duration-300 line-clamp-4">
-                    "{testimonial.quote}"
+                    "{testimonial.content}"
                   </p>
                 </div>
 
                 <div className="flex items-center mt-auto pt-4 border-t border-gray-100">
                   <div className="w-16 h-16 rounded-full overflow-hidden mr-4 shrink-0 border border-gray-100 bg-gray-200">
-                    {testimonial.avatar ? (
+                    {testimonial.avatarUrl ? (
                       <img decoding="async"
-                        src={testimonial.avatar}
+                        src={testimonial.avatarUrl}
                         alt={testimonial.name}
                         width="64"
                         height="64"
@@ -97,13 +96,13 @@ const TestimonialsSection = () => {
                         }}
                       />
                     ) : null}
-                    <div className="w-full h-full flex items-center justify-center bg-blue-100 text-[#004fa2] font-bold text-lg" style={{ display: testimonial.avatar ? 'none' : 'flex' }}>
+                    <div className="w-full h-full flex items-center justify-center bg-blue-100 text-[#004fa2] font-bold text-lg" style={{ display: testimonial.avatarUrl ? 'none' : 'flex' }}>
                       {testimonial.name.charAt(0)}
                     </div>
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors duration-300 truncate max-w-[150px]">{testimonial.name}</h4>
-                    <p className="text-sm text-gray-600 group-hover:text-gray-700 transition-colors duration-300 truncate max-w-[150px]">{testimonial.role}</p>
+                    <p className="text-sm text-gray-600 group-hover:text-gray-700 transition-colors duration-300 truncate max-w-[150px]">{testimonial.role || 'Professional'}</p>
                   </div>
                 </div>
               </div>

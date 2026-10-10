@@ -171,8 +171,9 @@ const TestimonialsManagementPage = () => {
     React.useEffect(() => {
         const fetchTestimonials = async () => {
             try {
-                const response = await testimonialsService.getAllTestimonials();
-                setTestimonials(response.data);
+                const response = await testimonialsService.getAdminTestimonials(1, 100);
+                // Extract testimonials from nested data structure: response.data.data
+                setTestimonials(response.data.data || []);
             } catch (error) {
                 console.error('Error fetching testimonials:', error);
             } finally {
@@ -198,16 +199,16 @@ const TestimonialsManagementPage = () => {
             const query = searchQuery.toLowerCase();
             result = result.filter(t =>
                 t.name.toLowerCase().includes(query) ||
-                t.quote.toLowerCase().includes(query) ||
-                t.role.toLowerCase().includes(query) ||
-                t.program?.toLowerCase().includes(query)
+                (t.content || t.quote || '').toLowerCase().includes(query) ||
+                (t.role || '').toLowerCase().includes(query) ||
+                (t.organization || '').toLowerCase().includes(query)
             );
         }
 
-        // Type filter
-        if (selectedType !== 'all') {
-            result = result.filter(t => t.type === selectedType);
-        }
+        // Type filter - removed since backend API doesn't have 'type' field
+        // if (selectedType !== 'all') {
+        //     result = result.filter(t => t.type === selectedType);
+        // }
 
         // Status filter
         if (selectedStatus !== 'all') {
@@ -215,7 +216,7 @@ const TestimonialsManagementPage = () => {
         }
 
         return result;
-    }, [testimonials, searchQuery, selectedType, selectedStatus]);
+    }, [testimonials, searchQuery, selectedStatus]);
 
     // Pagination
     const totalPages = Math.ceil(filteredTestimonials.length / itemsPerPage);
@@ -243,7 +244,7 @@ const TestimonialsManagementPage = () => {
             isDangerous: true,
             onConfirm: async () => {
                 try {
-                    await testimonialsService.deleteTestimonial(testimonial.id);
+                    await testimonialsService.deleteAdminTestimonial(testimonial.id);
                     setTestimonials(prev => prev.filter(t => t.id !== testimonial.id));
                 } catch (error) {
                     console.error('Error deleting testimonial:', error);

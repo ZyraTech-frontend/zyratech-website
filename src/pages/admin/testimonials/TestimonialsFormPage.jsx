@@ -1,6 +1,7 @@
 /**
  * Testimonials Form Page (Admin)
- * Create and edit testimonials with rating and status management
+ * Create and edit testimonials - matches backend API spec
+ * Backend expects: name, content, role, organization, avatarUrl, rating, isFeatured, status
  */
 
 import React, { useState, useEffect } from 'react';
@@ -12,97 +13,27 @@ import {
     X,
     AlertCircle,
     Star,
-    User,
-    MessageCircle,
-    GraduationCap,
-    Award,
-    Building,
-    Briefcase,
-    Heart,
-    Users,
-    Image,
-    Loader
+    Loader,
+    Upload
 } from 'lucide-react';
 import testimonialsService from '../../../services/testimonialsService';
-
-// Type configuration
-const TYPE_CONFIG = {
-    'student': {
-        label: 'Student',
-        icon: GraduationCap
-    },
-    'alumni': {
-        label: 'Alumni',
-        icon: Award
-    },
-    'partner': {
-        label: 'Partner',
-        icon: Building
-    },
-    'corporate': {
-        label: 'Corporate',
-        icon: Briefcase
-    },
-    'parent': {
-        label: 'Parent',
-        icon: Heart
-    },
-    'mentor': {
-        label: 'Mentor',
-        icon: Users
-    }
-};
-
-// Pages/Sections configuration where testimonials can be displayed
-const PAGES_CONFIG = {
-    'home': {
-        label: 'Homepage',
-        description: 'Display on home page hero/featured section',
-        icon: '🏠'
-    },
-    'about': {
-        label: 'About Us',
-        description: 'Display on about page testimonials section',
-        icon: '📋'
-    },
-    'training': {
-        label: 'Training Programs',
-        description: 'Display on training/courses page',
-        icon: '📚'
-    },
-    'impact': {
-        label: 'Impact Page',
-        description: 'Display on impact/success stories page',
-        icon: '⭐'
-    },
-    'contact': {
-        label: 'Contact Page',
-        description: 'Display on contact page testimonials section',
-        icon: '📧'
-    },
-    'services': {
-        label: 'Our Services',
-        description: 'Display on services page',
-        icon: '🛠️'
-    }
-};
 
 export default function TestimonialsFormPage() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { isSuperAdmin } = usePermissions();
     const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
-        name: '',
-        role: '',
-        type: 'student',
-        quote: '',
-        rating: 5,
-        program: '',
-        status: 'draft',
-        avatar: '',
-        pages: []  // Array of pages where this testimonial will be displayed
+        name: '',                  // Required
+        content: '',               // Required - the testimonial text
+        role: '',                  // Optional - job title
+        organization: '',          // Optional - company name
+        avatarUrl: '',             // Optional - profile image URL
+        rating: 5,                 // Optional (1-5)
+        isFeatured: false,         // Optional - show on homepage
+        status: 'draft'            // draft | published | archived
     });
 
     // Load testimonial data if editing
@@ -111,18 +42,17 @@ export default function TestimonialsFormPage() {
             const fetchTestimonial = async () => {
                 try {
                     setLoading(true);
-                    const response = await testimonialsService.getTestimonialById(id);
+                    const response = await testimonialsService.getAdminTestimonialById(id);
                     const testimonial = response.data;
                     setFormData({
-                        name: testimonial.name,
-                        role: testimonial.role,
-                        type: testimonial.type,
-                        quote: testimonial.quote,
+                        name: testimonial.name || '',
+                        content: testimonial.content || '',
+                        role: testimonial.role || '',
+                        organization: testimonial.organization || '',
+                        avatarUrl: testimonial.avatarUrl || '',
                         rating: testimonial.rating || 5,
-                        program: testimonial.program || '',
-                        status: testimonial.status || 'draft',
-                        avatar: testimonial.avatar || '',
-                        pages: testimonial.pages || []
+                        isFeatured: testimonial.isFeatured || false,
+                        status: testimonial.status || 'draft'
                     });
                 } catch (error) {
                     console.error('Error fetching testimonial:', error);
@@ -157,28 +87,14 @@ export default function TestimonialsFormPage() {
             newErrors.name = 'Name is required';
         } else if (formData.name.trim().length < 2) {
             newErrors.name = 'Name must be at least 2 characters';
-        } else if (formData.name.trim().length > 100) {
-            newErrors.name = 'Name cannot exceed 100 characters';
         }
 
-        if (!formData.role.trim()) {
-            newErrors.role = 'Role is required';
-        } else if (formData.role.trim().length < 3) {
-            newErrors.role = 'Role must be at least 3 characters';
-        } else if (formData.role.trim().length > 100) {
-            newErrors.role = 'Role cannot exceed 100 characters';
-        }
-
-        if (!formData.quote.trim()) {
-            newErrors.quote = 'Testimonial quote is required';
-        } else if (formData.quote.trim().length < 10) {
-            newErrors.quote = 'Quote must be at least 10 characters';
-        } else if (formData.quote.trim().length > 1000) {
-            newErrors.quote = 'Quote cannot exceed 1000 characters';
-        }
-
-        if (!formData.type) {
-            newErrors.type = 'Type is required';
+        if (!formData.content.trim()) {
+            newErrors.content = 'Testimonial content is required';
+        } else if (formData.content.trim().length < 10) {
+            newErrors.content = 'Content must be at least 10 characters';
+        } else if (formData.content.trim().length > 2000) {
+            newErrors.content = 'Content cannot exceed 2000 characters';
         }
 
         if (formData.rating < 1 || formData.rating > 5) {
@@ -205,13 +121,26 @@ export default function TestimonialsFormPage() {
         }
     };
 
-    const togglePage = (page) => {
-        setFormData(prev => ({
-            ...prev,
-            pages: prev.pages.includes(page)
-                ? prev.pages.filter(p => p !== page)
-                : [...prev.pages, page]
-        }));
+    const handleImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setUploading(true);
+        try {
+            const response = await testimonialsService.uploadAvatar(file);
+            setFormData(prev => ({
+                ...prev,
+                avatarUrl: response.data.url
+            }));
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            setErrors(prev => ({
+                ...prev,
+                avatar: 'Failed to upload image. Please try again.'
+            }));
+        } finally {
+            setUploading(false);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -224,16 +153,16 @@ export default function TestimonialsFormPage() {
         setLoading(true);
         try {
             if (id) {
-                await testimonialsService.updateTestimonial(id, formData);
+                await testimonialsService.updateAdminTestimonial(id, formData);
             } else {
-                await testimonialsService.createTestimonial(formData);
+                await testimonialsService.createAdminTestimonial(formData);
             }
 
             // Navigate back to testimonials management
             navigate('/admin/testimonials');
         } catch (error) {
             console.error('Error saving testimonial:', error);
-            setErrors({ submit: 'Failed to save testimonial. Please try again.' });
+            setErrors({ submit: error.response?.data?.error?.message || 'Failed to save testimonial. Please try again.' });
         } finally {
             setLoading(false);
         }
@@ -243,21 +172,17 @@ export default function TestimonialsFormPage() {
         navigate('/admin/testimonials');
     };
 
-    const types = Object.keys(TYPE_CONFIG);
-
     return (
         <AdminLayout>
-            <div className="p-8">
+            <div className="max-w-4xl mx-auto py-8 px-4">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8">
-                    <div>
-                        <h1 className="text-xl md:text-3xl font-bold text-gray-900">
-                            {id ? 'Edit Testimonial' : 'Add New Testimonial'}
-                        </h1>
-                        <p className="text-gray-600 mt-2">
-                            {id ? 'Update the testimonial content and details' : 'Create a new customer testimonial'}
-                        </p>
-                    </div>
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-gray-900">
+                        {id ? 'Edit Testimonial' : 'Add New Testimonial'}
+                    </h1>
+                    <p className="text-gray-600 mt-2">
+                        {id ? 'Update the testimonial details' : 'Create a new customer testimonial'}
+                    </p>
                 </div>
 
                 {/* Form Container */}
@@ -274,7 +199,7 @@ export default function TestimonialsFormPage() {
                             </div>
                         )}
 
-                        {/* Two Column Layout */}
+                        {/* Name and Rating - Two Column */}
                         <div className="grid md:grid-cols-2 gap-6">
                             {/* Name */}
                             <div>
@@ -299,78 +224,12 @@ export default function TestimonialsFormPage() {
                                 )}
                             </div>
 
-                            {/* Role */}
-                            <div>
-                                <label htmlFor="role" className="block text-sm font-semibold text-gray-900 mb-2">
-                                    Role / Title *
-                                </label>
-                                <input
-                                    type="text"
-                                    id="role"
-                                    name="role"
-                                    value={formData.role}
-                                    onChange={handleChange}
-                                    placeholder="e.g., Software Engineering Trainee"
-                                    className={`w-full px-4 py-2.5 rounded-lg border ${errors.role ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
-                                        } text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
-                                />
-                                {errors.role && (
-                                    <p className="text-red-600 text-sm mt-2 flex items-center gap-1">
-                                        <AlertCircle className="w-4 h-4" />
-                                        {errors.role}
-                                    </p>
-                                )}
-                            </div>
-
-                            {/* Type */}
-                            <div>
-                                <label htmlFor="type" className="block text-sm font-semibold text-gray-900 mb-2">
-                                    Type *
-                                </label>
-                                <select
-                                    id="type"
-                                    name="type"
-                                    value={formData.type}
-                                    onChange={handleChange}
-                                    className={`w-full px-4 py-2.5 rounded-lg border ${errors.type ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
-                                        } text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
-                                >
-                                    {types.map(type => (
-                                        <option key={type} value={type}>
-                                            {TYPE_CONFIG[type].label}
-                                        </option>
-                                    ))}
-                                </select>
-                                {errors.type && (
-                                    <p className="text-red-600 text-sm mt-2 flex items-center gap-1">
-                                        <AlertCircle className="w-4 h-4" />
-                                        {errors.type}
-                                    </p>
-                                )}
-                            </div>
-
-                            {/* Program */}
-                            <div>
-                                <label htmlFor="program" className="block text-sm font-semibold text-gray-900 mb-2">
-                                    Program
-                                </label>
-                                <input
-                                    type="text"
-                                    id="program"
-                                    name="program"
-                                    value={formData.program}
-                                    onChange={handleChange}
-                                    placeholder="e.g., Web Development, Internship Program"
-                                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                                />
-                            </div>
-
                             {/* Rating */}
                             <div>
                                 <label htmlFor="rating" className="block text-sm font-semibold text-gray-900 mb-2">
-                                    Rating *
+                                    Rating (1-5 stars)
                                 </label>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-3">
                                     <select
                                         id="rating"
                                         name="rating"
@@ -400,125 +259,163 @@ export default function TestimonialsFormPage() {
                                     </p>
                                 )}
                             </div>
+                        </div>
 
-                            {/* Avatar URL */}
+                        {/* Role and Organization */}
+                        <div className="grid md:grid-cols-2 gap-6">
                             <div>
-                                <label htmlFor="avatar" className="block text-sm font-semibold text-gray-900 mb-2">
-                                    Avatar URL
+                                <label htmlFor="role" className="block text-sm font-semibold text-gray-900 mb-2">
+                                    Role / Job Title (optional)
                                 </label>
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="url"
-                                        id="avatar"
-                                        name="avatar"
-                                        value={formData.avatar}
-                                        onChange={handleChange}
-                                        placeholder="/images/testimonials/avatar.webp"
-                                        className="flex-1 px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                                    />
-                                    {formData.avatar && (
-                                        <img decoding="async"
-                                            src={formData.avatar}
-                                            alt="preview"
-                                            loading="lazy"
-                                            className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-full object-cover"
-                                            onError={(e) => { e.target.style.display = 'none'; }}
-                                        />
-                                    )}
-                                </div>
+                                <input
+                                    type="text"
+                                    id="role"
+                                    name="role"
+                                    value={formData.role}
+                                    onChange={handleChange}
+                                    placeholder="e.g., Software Engineer, Product Manager"
+                                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                />
+                            </div>
+
+                            <div>
+                                <label htmlFor="organization" className="block text-sm font-semibold text-gray-900 mb-2">
+                                    Organization (optional)
+                                </label>
+                                <input
+                                    type="text"
+                                    id="organization"
+                                    name="organization"
+                                    value={formData.organization}
+                                    onChange={handleChange}
+                                    placeholder="e.g., Company Name, Tech Startup"
+                                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                />
                             </div>
                         </div>
 
-                        {/* Quote - Full Width */}
+                        {/* Content - Full Width */}
                         <div>
-                            <label htmlFor="quote" className="block text-sm font-semibold text-gray-900 mb-2">
-                                Testimonial Quote *
+                            <label htmlFor="content" className="block text-sm font-semibold text-gray-900 mb-2">
+                                Testimonial Content *
                             </label>
                             <textarea
-                                id="quote"
-                                name="quote"
-                                value={formData.quote}
+                                id="content"
+                                name="content"
+                                value={formData.content}
                                 onChange={handleChange}
-                                placeholder="Write the testimonial quote"
-                                rows={5}
-                                className={`w-full px-4 py-2.5 rounded-lg border ${errors.quote ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
+                                placeholder="Write the testimonial. What did ZyraTech help you achieve?"
+                                rows={6}
+                                className={`w-full px-4 py-2.5 rounded-lg border ${errors.content ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
                                     } text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none`}
                             />
                             <div className="flex justify-between mt-2">
-                                {errors.quote && (
+                                {errors.content && (
                                     <p className="text-red-600 text-sm flex items-center gap-1">
                                         <AlertCircle className="w-4 h-4" />
-                                        {errors.quote}
+                                        {errors.content}
                                     </p>
                                 )}
                                 <p className="text-xs text-gray-500 ml-auto">
-                                    {formData.quote.length} / 1000
+                                    {formData.content.length} / 2000
                                 </p>
                             </div>
                         </div>
 
-                        {/* Status and Pages */}
+                        {/* Avatar Upload */}
                         <div>
-                            {/* Status */}
-                            <div className="mb-6">
-                                <label className="block text-sm font-semibold text-gray-900 mb-3">
-                                    Status
-                                </label>
-                                <div className="flex gap-3">
-                                    {['draft', 'published', 'pending'].map(status => (
+                            <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                Avatar Image (optional)
+                            </label>
+                            <div className="flex items-end gap-4">
+                                <div className="flex-1">
+                                    <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition-colors">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleImageUpload}
+                                            disabled={uploading}
+                                            className="absolute inset-0 opacity-0 cursor-pointer"
+                                        />
+                                        <div className="flex flex-col items-center gap-2 py-2">
+                                            {uploading ? (
+                                                <>
+                                                    <Loader className="w-5 h-5 text-blue-600 animate-spin" />
+                                                    <p className="text-sm text-gray-600">Uploading...</p>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Upload className="w-5 h-5 text-gray-400" />
+                                                    <p className="text-sm text-gray-600">Click to upload or drag and drop</p>
+                                                    <p className="text-xs text-gray-500">PNG, JPG, GIF, WebP up to 5MB</p>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                    {errors.avatar && (
+                                        <p className="text-red-600 text-sm mt-2 flex items-center gap-1">
+                                            <AlertCircle className="w-4 h-4" />
+                                            {errors.avatar}
+                                        </p>
+                                    )}
+                                </div>
+
+                                {formData.avatarUrl && (
+                                    <div className="flex flex-col items-center">
+                                        <img
+                                            src={formData.avatarUrl}
+                                            alt="Avatar preview"
+                                            className="w-16 h-16 rounded-full object-cover border-2 border-blue-300"
+                                        />
                                         <button
-                                            key={status}
                                             type="button"
-                                            onClick={() => setFormData(prev => ({ ...prev, status }))}
-                                            className={`flex-1 px-4 py-2.5 rounded-lg border-2 font-medium transition-all duration-200 ${formData.status === status
-                                                ? status === 'published'
-                                                    ? 'border-green-500 bg-green-50 text-green-700'
-                                                    : status === 'pending'
-                                                        ? 'border-amber-500 bg-amber-50 text-amber-700'
-                                                        : 'border-blue-500 bg-blue-50 text-blue-700'
-                                                : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-                                                }`}
+                                            onClick={() => setFormData(prev => ({ ...prev, avatarUrl: '' }))}
+                                            className="text-xs text-red-600 hover:text-red-700 mt-2"
                                         >
-                                            {status.charAt(0).toUpperCase() + status.slice(1)}
+                                            Remove
                                         </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Status and Featured */}
+                        <div className="grid md:grid-cols-2 gap-6 pt-6 border-t border-gray-200">
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                                    Publication Status
+                                </label>
+                                <div className="flex flex-col gap-2">
+                                    {['draft', 'published', 'archived'].map(status => (
+                                        <label key={status} className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-gray-50 transition-colors">
+                                            <input
+                                                type="radio"
+                                                name="status"
+                                                value={status}
+                                                checked={formData.status === status}
+                                                onChange={handleChange}
+                                                className="w-4 h-4"
+                                            />
+                                            <span className="text-sm text-gray-700 capitalize font-medium">{status}</span>
+                                        </label>
                                     ))}
                                 </div>
                             </div>
 
-                            {/* Pages/Sections Selection */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-900 mb-3">
-                                    Display on Pages
+                                <label className="flex items-center gap-3 cursor-pointer p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors h-full">
+                                    <input
+                                        type="checkbox"
+                                        name="isFeatured"
+                                        checked={formData.isFeatured}
+                                        onChange={handleChange}
+                                        className="w-5 h-5 rounded text-blue-600"
+                                    />
+                                    <div>
+                                        <p className="text-sm font-semibold text-gray-900">Featured on Homepage</p>
+                                        <p className="text-xs text-gray-600">Display this testimonial on the homepage</p>
+                                    </div>
                                 </label>
-                                <p className="text-xs text-gray-600 mb-3">Select which pages/sections this testimonial should appear on</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    {Object.entries(PAGES_CONFIG).map(([pageKey, pageConfig]) => (
-                                        <button
-                                            key={pageKey}
-                                            type="button"
-                                            onClick={() => togglePage(pageKey)}
-                                            className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${formData.pages.includes(pageKey)
-                                                ? 'border-blue-500 bg-blue-50'
-                                                : 'border-gray-200 bg-white hover:border-gray-300'
-                                                }`}
-                                        >
-                                            <div className="flex items-start gap-3">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={formData.pages.includes(pageKey)}
-                                                    readOnly
-                                                    className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer mt-0.5"
-                                                />
-                                                <div>
-                                                    <p className={`font-medium ${formData.pages.includes(pageKey) ? 'text-blue-700' : 'text-gray-900'}`}>
-                                                        {pageConfig.label}
-                                                    </p>
-                                                    <p className="text-xs text-gray-600 mt-1">{pageConfig.description}</p>
-                                                </div>
-                                            </div>
-                                        </button>
-                                    ))}
-                                </div>
                             </div>
                         </div>
 
@@ -526,8 +423,8 @@ export default function TestimonialsFormPage() {
                         <div className="flex gap-3 pt-6 border-t border-gray-200">
                             <button
                                 type="submit"
-                                disabled={loading}
-                                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                                disabled={loading || uploading}
+                                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                             >
                                 <Save className="w-5 h-5" />
                                 {loading ? 'Saving...' : 'Save Testimonial'}
@@ -535,7 +432,7 @@ export default function TestimonialsFormPage() {
                             <button
                                 type="button"
                                 onClick={handleCancel}
-                                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                             >
                                 <X className="w-5 h-5" />
                                 Cancel
