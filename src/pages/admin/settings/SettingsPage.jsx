@@ -23,7 +23,15 @@ import {
   Share2,
   BarChart3,
   Search,
-  Settings
+  Settings,
+  Menu,
+  LayoutList,
+  Plus,
+  Trash2,
+  GripVertical,
+  Edit2,
+  ChevronDown,
+  ExternalLink
 } from 'lucide-react';
 
 const SettingsPage = () => {
@@ -99,6 +107,8 @@ const SettingsPage = () => {
     { id: 'branding', label: 'Branding', icon: Palette },
     { id: 'contact', label: 'Contact Info', icon: Phone },
     { id: 'social', label: 'Social Media', icon: Share2 },
+    { id: 'navigation', label: 'Navigation Menu', icon: Menu },
+    { id: 'footer', label: 'Footer Links', icon: LayoutList },
     { id: 'analytics', label: 'Analytics & SEO', icon: BarChart3 },
     { id: 'payments', label: 'Payments', icon: CreditCard },
     { id: 'email', label: 'Email', icon: Mail },
@@ -543,6 +553,185 @@ const SettingsPage = () => {
                       <Save size={18} />
                       {saving ? 'Saving Changes...' : 'Save Social Links'}
                     </button>
+                </div>
+              </div>
+            )}
+
+            {/* Navigation Menu Tab */}
+            {activeTab === 'navigation' && (
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                <div className="bg-blue-50/80 border border-blue-200/50 rounded-2xl p-5 flex gap-4">
+                  <div className="mt-0.5"><Menu className="text-blue-500" size={20} /></div>
+                  <div>
+                    <h4 className="text-sm font-bold text-blue-900">Navigation Menu Editor</h4>
+                    <p className="text-xs text-blue-800 mt-1 leading-relaxed">
+                      Manage your site's main navigation menu. Drag to reorder, add dropdowns, and configure mega menus. Changes apply immediately after save.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+                        <Menu size={16} />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-gray-900">Menu Items</h3>
+                        <p className="text-[11px] text-gray-500 font-medium tracking-wide mt-0.5">Configure navigation structure</p>
+                      </div>
+                    </div>
+                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 text-sm font-semibold">
+                      <Plus size={16} />
+                      Add Menu Item
+                    </button>
+                  </div>
+                  
+                  <div className="p-6">
+                    <div className="space-y-3">
+                      {/* Example Menu Item */}
+                      <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 hover:border-blue-300 transition-colors">
+                        <div className="flex items-center gap-3">
+                          <GripVertical className="text-gray-400 cursor-move" size={20} />
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <input
+                                type="text"
+                                placeholder="Menu Label"
+                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                                value="Home"
+                              />
+                              <input
+                                type="text"
+                                placeholder="Path (e.g., /about)"
+                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                                value="/"
+                              />
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <label className="flex items-center gap-2 text-xs text-gray-600">
+                                <input type="checkbox" className="rounded" />
+                                Has Dropdown
+                              </label>
+                              <label className="flex items-center gap-2 text-xs text-gray-600">
+                                <input type="checkbox" className="rounded" />
+                                Mega Menu
+                              </label>
+                              <label className="flex items-center gap-2 text-xs text-gray-600">
+                                <input type="checkbox" className="rounded" />
+                                Highlight (Button Style)
+                              </label>
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <button className="p-2 text-gray-600 hover:bg-gray-200 rounded-lg">
+                              <Edit2 size={16} />
+                            </button>
+                            <button className="p-2 text-red-600 hover:bg-red-100 rounded-lg">
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Coming Soon Message */}
+                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 text-center">
+                        <Settings className="mx-auto text-blue-600 mb-3" size={32} />
+                        <h4 className="text-lg font-bold text-gray-900 mb-2">Navigation Editor Coming Soon</h4>
+                        <p className="text-sm text-gray-600">
+                          Full drag-and-drop navigation editor with dropdown and mega menu support will be available once backend API is ready.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <button className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2">
+                    <Save size={18} />
+                    Save Navigation
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Footer Links Tab */}
+            {activeTab === 'footer' && (
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                <div className="bg-purple-50/80 border border-purple-200/50 rounded-2xl p-5 flex gap-4">
+                  <div className="mt-0.5"><LayoutList className="text-purple-500" size={20} /></div>
+                  <div>
+                    <h4 className="text-sm font-bold text-purple-900">Footer Configuration</h4>
+                    <p className="text-xs text-purple-800 mt-1 leading-relaxed">
+                      Manage footer columns and links. Organize your footer sections, add/remove links, and control what appears at the bottom of every page.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600">
+                        <LayoutList size={16} />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-gray-900">Footer Columns</h3>
+                        <p className="text-[11px] text-gray-500 font-medium tracking-wide mt-0.5">Organize footer link sections</p>
+                      </div>
+                    </div>
+                    <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 text-sm font-semibold">
+                      <Plus size={16} />
+                      Add Column
+                    </button>
+                  </div>
+                  
+                  <div className="p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Example Footer Column */}
+                      <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <GripVertical className="text-gray-400 cursor-move" size={18} />
+                            <input
+                              type="text"
+                              placeholder="Column Title"
+                              className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500"
+                              value="About"
+                            />
+                          </div>
+                          <button className="p-1.5 text-red-600 hover:bg-red-100 rounded-lg">
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                        <div className="space-y-2 pl-6">
+                          <div className="flex items-center gap-2">
+                            <input type="text" placeholder="Link Label" className="flex-1 px-2 py-1 border border-gray-300 rounded text-xs" value="Our Story" />
+                            <input type="text" placeholder="Path" className="flex-1 px-2 py-1 border border-gray-300 rounded text-xs" value="/about" />
+                          </div>
+                          <button className="text-xs text-purple-600 hover:text-purple-700 flex items-center gap-1">
+                            <Plus size={12} />
+                            Add Link
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Coming Soon Message */}
+                      <div className="md:col-span-2 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-6 text-center">
+                        <LayoutList className="mx-auto text-purple-600 mb-3" size={32} />
+                        <h4 className="text-lg font-bold text-gray-900 mb-2">Footer Editor Coming Soon</h4>
+                        <p className="text-sm text-gray-600">
+                          Full footer management system with column organization and link editing will be available once backend API is ready.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <button className="px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition-colors flex items-center gap-2">
+                    <Save size={18} />
+                    Save Footer
+                  </button>
                 </div>
               </div>
             )}
