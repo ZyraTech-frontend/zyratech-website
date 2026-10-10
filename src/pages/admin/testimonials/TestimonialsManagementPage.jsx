@@ -44,42 +44,6 @@ import {
     StarHalf
 } from 'lucide-react';
 
-// Type/Source configuration
-const TYPE_CONFIG = {
-    'student': {
-        label: 'Student',
-        color: 'bg-blue-100 text-blue-700 border-blue-200',
-        icon: GraduationCap
-    },
-    'alumni': {
-        label: 'Alumni',
-        color: 'bg-purple-100 text-purple-700 border-purple-200',
-        icon: Award
-    },
-    'partner': {
-        label: 'Partner',
-        color: 'bg-green-100 text-green-700 border-green-200',
-        icon: Building
-    },
-    'corporate': {
-        label: 'Corporate',
-        color: 'bg-cyan-100 text-cyan-700 border-cyan-200',
-        icon: Briefcase
-    },
-    'parent': {
-        label: 'Parent',
-        color: 'bg-pink-100 text-pink-700 border-pink-200',
-        icon: Heart
-    },
-    'mentor': {
-        label: 'Mentor',
-        color: 'bg-amber-100 text-amber-700 border-amber-200',
-        icon: Users
-    }
-};
-
-
-
 // Status badge component
 const StatusBadge = ({ status }) => {
     const statusStyles = {
@@ -157,7 +121,6 @@ const TestimonialsManagementPage = () => {
     const [testimonials, setTestimonials] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedType, setSelectedType] = useState('all');
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [viewMode, setViewMode] = useState('grid');
@@ -204,12 +167,6 @@ const TestimonialsManagementPage = () => {
     }, []);
 
 
-
-    // Get unique types - with Array guard
-    const uniqueTypes = useMemo(() => {
-        if (!Array.isArray(testimonials)) return [];
-        return [...new Set(testimonials.map(t => t.type))].filter(Boolean);
-    }, [testimonials]);
 
     // Filter and search testimonials - with Array guard
     const filteredTestimonials = useMemo(() => {
@@ -306,7 +263,6 @@ const TestimonialsManagementPage = () => {
 
     const resetFilters = () => {
         setSearchQuery('');
-        setSelectedType('all');
         setSelectedStatus('all');
         setCurrentPage(1);
     };
@@ -367,20 +323,6 @@ const TestimonialsManagementPage = () => {
                             onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
                             className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all"
                         />
-                    </div>
-
-                    <div className="col-span-1 md:col-span-3 relative">
-                        <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                        <select
-                            value={selectedType}
-                            onChange={(e) => { setSelectedType(e.target.value); setCurrentPage(1); }}
-                            className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none appearance-none transition-all"
-                        >
-                            <option value="all">All Types</option>
-                            {uniqueTypes.map((type, idx) => (
-                                <option key={`type-${type}-${idx}`} value={type}>{TYPE_CONFIG[type]?.label || type}</option>
-                            ))}
-                        </select>
                     </div>
 
                     <div className="col-span-1 md:col-span-3 relative">
@@ -592,10 +534,10 @@ const TestimonialsManagementPage = () => {
                                             )}
                                         </div>
                                         <p className="text-gray-500">{viewingTestimonial.role}</p>
+                                        {viewingTestimonial.organization && (
+                                            <p className="text-sm text-gray-600 mt-1">{viewingTestimonial.organization}</p>
+                                        )}
                                         <div className="flex items-center gap-2 mt-2">
-                                            <span className={`px-2.5 py-1 rounded-lg text-xs font-medium border ${TYPE_CONFIG[viewingTestimonial.type]?.color}`}>
-                                                {TYPE_CONFIG[viewingTestimonial.type]?.label}
-                                            </span>
                                             <StatusBadge status={viewingTestimonial.status} />
                                         </div>
                                     </div>
