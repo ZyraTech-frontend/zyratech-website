@@ -26,14 +26,14 @@ export default function TestimonialsFormPage() {
     const [uploading, setUploading] = useState(false);
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
-        name: '',                  // Required
-        content: '',               // Required - the testimonial text
-        role: '',                  // Optional - job title
-        organization: '',          // Optional - company name
-        avatarUrl: '',             // Optional - profile image URL
-        rating: 5,                 // Optional (1-5)
-        isFeatured: false,         // Optional - show on homepage
-        status: 'draft'            // draft | published | archived
+        name: '',
+        content: '',
+        role: '',
+        organization: '',
+        avatarUrl: '',
+        rating: 5,
+        isFeatured: false,
+        status: 'draft'
     });
 
     // Load testimonial data if editing
@@ -152,17 +152,32 @@ export default function TestimonialsFormPage() {
 
         setLoading(true);
         try {
+            // Prepare clean data - only send fields that backend expects
+            const submitData = {
+                name: formData.name.trim(),
+                content: formData.content.trim(),
+                role: formData.role.trim() || null,
+                organization: formData.organization.trim() || null,
+                avatarUrl: formData.avatarUrl || null,
+                rating: formData.rating,
+                isFeatured: formData.isFeatured,
+                status: formData.status
+            };
+
             if (id) {
-                await testimonialsService.updateAdminTestimonial(id, formData);
+                await testimonialsService.updateAdminTestimonial(id, submitData);
             } else {
-                await testimonialsService.createAdminTestimonial(formData);
+                await testimonialsService.createAdminTestimonial(submitData);
             }
 
             // Navigate back to testimonials management
             navigate('/admin/testimonials');
         } catch (error) {
             console.error('Error saving testimonial:', error);
-            setErrors({ submit: error.response?.data?.error?.message || 'Failed to save testimonial. Please try again.' });
+            const errorMsg = error?.response?.data?.error?.message || 
+                           error?.message || 
+                           'Failed to save testimonial. Please try again.';
+            setErrors({ submit: errorMsg });
         } finally {
             setLoading(false);
         }
