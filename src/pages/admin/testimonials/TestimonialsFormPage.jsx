@@ -43,7 +43,18 @@ export default function TestimonialsFormPage() {
                 try {
                     setLoading(true);
                     const response = await testimonialsService.getAdminTestimonialById(id);
-                    const testimonial = response.data;
+                    
+                    // Debug logging
+                    console.log('[Form] Full response:', response);
+                    console.log('[Form] response.data:', response?.data);
+                    console.log('[Form] response.data.data:', response?.data?.data);
+                    
+                    // API returns: { success, data: {...testimonial}, message }
+                    // Axios wraps it, so testimonial is at: response.data.data
+                    const testimonial = response?.data?.data || response?.data || {};
+                    
+                    console.log('[Form] Extracted testimonial:', testimonial);
+                    
                     setFormData({
                         name: testimonial.name || '',
                         content: testimonial.content || '',
@@ -55,7 +66,7 @@ export default function TestimonialsFormPage() {
                         status: testimonial.status || 'draft'
                     });
                 } catch (error) {
-                    console.error('Error fetching testimonial:', error);
+                    console.error('[Form] Error fetching testimonial:', error);
                     setErrors({ submit: 'Failed to load testimonial. Please try again.' });
                 } finally {
                     setLoading(false);
