@@ -172,8 +172,14 @@ const TestimonialsManagementPage = () => {
         const fetchTestimonials = async () => {
             try {
                 const response = await testimonialsService.getAdminTestimonials(1, 100);
-                // Extract testimonials from nested data structure: response.data.data
-                setTestimonials(response.data.data || []);
+                // ✅ CORRECT: Extract testimonials from nested data structure
+                // response.data.data is the actual array
+                // response.data.pagination has pagination info
+                const testimonialsList = response.data.data || [];
+                const paginationInfo = response.data.pagination || {};
+                
+                console.log('[TestimonialsManagement] Fetched testimonials:', testimonialsList.length);
+                setTestimonials(testimonialsList);
             } catch (error) {
                 console.error('Error fetching testimonials:', error);
             } finally {
