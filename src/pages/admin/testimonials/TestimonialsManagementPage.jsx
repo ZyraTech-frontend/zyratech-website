@@ -61,7 +61,7 @@ const StatusBadge = ({ status }) => {
     );
 };
 
-// Star rating component
+// Star rating component - GOLD STARS
 const StarRating = ({ rating, size = 14 }) => {
     return (
         <div className="flex items-center gap-0.5">
@@ -69,7 +69,7 @@ const StarRating = ({ rating, size = 14 }) => {
                 <Star
                     key={star}
                     size={size}
-                    className={star <= rating ? 'text-amber-400 fill-amber-400' : 'text-gray-300'}
+                    className={star <= rating ? 'text-[#FFD700] fill-[#FFD700]' : 'text-gray-300'}
                 />
             ))}
         </div>
@@ -372,58 +372,99 @@ const TestimonialsManagementPage = () => {
 
                 {/* Testimonials Grid/List */}
                 {viewMode === 'grid' ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {(Array.isArray(paginatedTestimonials) ? paginatedTestimonials : []).map((testimonial) => {
                             return (
-                                <div key={testimonial.id} className={`bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-md border-2 flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 p-4 ${testimonial.isFeatured ? 'border-amber-300 ring-2 ring-amber-200' : 'border-gray-200 hover:border-[#004fa2]'}`}>
-                                    {/* Header with Avatar and Info */}
-                                    <div className="flex items-start gap-3 mb-4">
-                                        <AvatarDisplay name={testimonial.name} avatarUrl={testimonial.avatarUrl} size="md" />
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-1.5 mb-1">
-                                                <h3 className="text-sm font-bold text-gray-900 truncate">{testimonial.name}</h3>
-                                                {testimonial.isFeatured && <Star className="text-amber-500 fill-amber-500 flex-shrink-0" size={14} />}
+                                <div 
+                                    key={testimonial.id} 
+                                    className="bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 hover:border-blue-200 flex flex-col h-full"
+                                >
+                                    {/* Header with Avatar, Name, and Status */}
+                                    <div className="p-5 pb-4 bg-gradient-to-br from-gray-50 to-white border-b border-gray-100">
+                                        <div className="flex items-start gap-3 mb-3">
+                                            <AvatarDisplay name={testimonial.name} avatarUrl={testimonial.avatarUrl} size="md" />
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <h3 className="text-base font-bold text-gray-900 truncate">{testimonial.name}</h3>
+                                                    {testimonial.isFeatured && (
+                                                        <div className="flex-shrink-0 w-5 h-5 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full flex items-center justify-center" title="Featured">
+                                                            <Star className="text-white fill-white" size={12} />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <p className="text-sm text-gray-600 truncate font-medium">{testimonial.role}</p>
+                                                {testimonial.organization && (
+                                                    <p className="text-xs text-gray-500 truncate mt-0.5">{testimonial.organization}</p>
+                                                )}
                                             </div>
-                                            <p className="text-xs text-gray-600 truncate mb-0.5">{testimonial.role}</p>
-                                            {testimonial.organization && (
-                                                <p className="text-[10px] text-gray-500 truncate">{testimonial.organization}</p>
-                                            )}
+                                            <StatusBadge status={testimonial.status} />
                                         </div>
-                                        <StatusBadge status={testimonial.status} />
+                                        
+                                        {/* Star Rating */}
+                                        <div className="flex items-center gap-2">
+                                            <StarRating rating={testimonial.rating} size={16} />
+                                            <span className="text-sm font-bold text-gray-700">{testimonial.rating}.0</span>
+                                        </div>
                                     </div>
                                     
                                     {/* Quote Content */}
-                                    <div className="relative mb-4 flex-1 bg-white rounded-xl p-3 border border-gray-100">
-                                        <Quote className="absolute -top-2 -left-2 text-blue-100" size={24} />
-                                        <p className="text-xs text-gray-700 leading-relaxed line-clamp-4 relative z-10 italic">
-                                            {testimonial.content}
-                                        </p>
+                                    <div className="p-5 flex-1 bg-white">
+                                        <div className="relative">
+                                            <Quote className="absolute -top-1 -left-1 text-blue-100" size={28} />
+                                            <p className="text-sm text-gray-700 leading-relaxed line-clamp-4 relative z-10 pl-6">
+                                                {testimonial.content}
+                                            </p>
+                                        </div>
                                     </div>
                                     
-                                    {/* Footer with Rating and Actions */}
-                                    <div className="flex items-center justify-between pt-3 border-t border-gray-200">
-                                        <div className="flex items-center gap-1.5">
-                                            <StarRating rating={testimonial.rating} size={12} />
-                                            <span className="text-xs font-bold text-gray-700 ml-1">{testimonial.rating}</span>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <button onClick={() => handleView(testimonial)} className="p-1.5 hover:bg-blue-100 rounded-lg text-gray-500 hover:text-[#004fa2] transition-all" title="View">
-                                                <Eye size={14} />
-                                            </button>
-                                            <button onClick={() => handleEdit(testimonial)} className="p-1.5 hover:bg-green-100 rounded-lg text-gray-500 hover:text-green-600 transition-all" title="Edit">
-                                                <Edit size={14} />
-                                            </button>
-                                            {testimonial.status !== 'published' && (
-                                                <button onClick={() => handlePublish(testimonial)} className="p-1.5 rounded-lg text-gray-500 hover:bg-emerald-100 hover:text-emerald-600 transition-all" title="Publish">
-                                                    <Send size={14} />
+                                    {/* Action Buttons Footer */}
+                                    <div className="p-4 bg-gradient-to-br from-gray-50 to-white border-t border-gray-100">
+                                        <div className="flex items-center justify-between gap-2">
+                                            <div className="flex items-center gap-1">
+                                                <button 
+                                                    onClick={() => handleView(testimonial)} 
+                                                    className="p-2 hover:bg-blue-100 rounded-lg text-gray-500 hover:text-blue-600 transition-all group/btn"
+                                                    title="View Details"
+                                                >
+                                                    <Eye size={16} className="group-hover/btn:scale-110 transition-transform" />
                                                 </button>
-                                            )}
-                                            <button onClick={() => handleToggleFeatured(testimonial)} className="p-1.5 rounded-lg text-gray-500 hover:bg-amber-100 hover:text-amber-500 transition-all" title="Toggle Featured">
-                                                <Star size={14} className={testimonial.isFeatured ? "fill-amber-500 text-amber-500" : ""} />
-                                            </button>
-                                            <button onClick={() => handleDelete(testimonial)} className="p-1.5 hover:bg-red-100 rounded-lg text-gray-500 hover:text-red-600 transition-all" title="Delete">
-                                                <Trash2 size={14} />
-                                            </button>
+                                                <button 
+                                                    onClick={() => handleEdit(testimonial)} 
+                                                    className="p-2 hover:bg-green-100 rounded-lg text-gray-500 hover:text-green-600 transition-all group/btn"
+                                                    title="Edit"
+                                                >
+                                                    <Edit size={16} className="group-hover/btn:scale-110 transition-transform" />
+                                                </button>
+                                                {testimonial.status !== 'published' && (
+                                                    <button 
+                                                        onClick={() => handlePublish(testimonial)} 
+                                                        className="p-2 rounded-lg text-gray-500 hover:bg-emerald-100 hover:text-emerald-600 transition-all group/btn"
+                                                        title="Publish"
+                                                    >
+                                                        <Send size={16} className="group-hover/btn:scale-110 transition-transform" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                            <div className="flex items-center gap-1 border-l border-gray-200 pl-2">
+                                                <button 
+                                                    onClick={() => handleToggleFeatured(testimonial)} 
+                                                    className={`p-2 rounded-lg transition-all group/btn ${
+                                                        testimonial.isFeatured 
+                                                            ? 'bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-600 hover:from-amber-200 hover:to-yellow-200' 
+                                                            : 'text-gray-500 hover:bg-amber-50 hover:text-amber-500'
+                                                    }`}
+                                                    title={testimonial.isFeatured ? "Remove Featured" : "Mark as Featured"}
+                                                >
+                                                    <Star size={16} className={`${testimonial.isFeatured ? "fill-amber-500" : ""} group-hover/btn:scale-110 transition-transform`} />
+                                                </button>
+                                                <button 
+                                                    onClick={() => handleDelete(testimonial)} 
+                                                    className="p-2 hover:bg-red-100 rounded-lg text-gray-500 hover:text-red-600 transition-all group/btn"
+                                                    title="Delete"
+                                                >
+                                                    <Trash2 size={16} className="group-hover/btn:scale-110 transition-transform" />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
