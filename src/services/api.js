@@ -14,6 +14,10 @@ const api = axios.create({
   },
 });
 
+// Debug log to verify correct API URL is being used
+console.log('[API Config] Using baseURL:', baseURL);
+console.log('[API Config] Environment VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL);
+
 // Helper to get active access token
 export const getStoredToken = () => {
   return localStorage.getItem('adminToken') || localStorage.getItem('token') || null;
