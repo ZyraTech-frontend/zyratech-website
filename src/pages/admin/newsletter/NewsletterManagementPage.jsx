@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import {
     Mail,
@@ -29,6 +30,7 @@ import {
     AlertCircle
 } from 'lucide-react';
 import newsletterService from '../../../services/newsletterService';
+import { ALL_TEMPLATES } from '../../../components/admin/newsletter/NewsletterTemplates';
 
 // Status configuration
 const STATUS_CONFIG = {
@@ -60,6 +62,8 @@ const NewsletterManagementPage = () => {
 
     // Newsletter sending state
     const [showSendModal, setShowSendModal] = useState(false);
+    const [templateStep, setTemplateStep] = useState(true); // Show template selection first
+    const [selectedTemplate, setSelectedTemplate] = useState(null);
     const [newsletterForm, setNewsletterForm] = useState({
         subject: '',
         content: '',
@@ -245,6 +249,13 @@ const NewsletterManagementPage = () => {
                         <Send size={14} />
                         Send Newsletter
                     </button>
+                    <Link
+                        to="/admin/newsletter/templates"
+                        className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all font-semibold text-[11px] shadow-sm"
+                    >
+                        <Mail size={14} />
+                        Email Templates
+                    </Link>
                 </div>
 
                 {/* Stats Cards */}

@@ -57,6 +57,7 @@ const PartnershipsManagementPage = lazy(() => import('./pages/admin/partnerships
 const ContactInquiriesPage = lazy(() => import('./pages/admin/contact-inquiries/ContactInquiriesPage'));
 const ContactInquiryDetailsPage = lazy(() => import('./pages/admin/contact-inquiries/ContactInquiryDetailsPage'));
 const NewsletterManagementPage = lazy(() => import('./pages/admin/newsletter/NewsletterManagementPage'));
+const NewsletterTemplatesPage = lazy(() => import('./pages/admin/newsletter/NewsletterTemplatesPage'));
 const ImpactManagementPage = lazy(() => import('./pages/admin/impact/ImpactManagementPage'));
 const ImpactMetricFormPage = lazy(() => import('./pages/admin/impact/ImpactMetricFormPage'));
 const ImpactStoryFormPage = lazy(() => import('./pages/admin/impact/ImpactStoryFormPage'));
@@ -234,6 +235,7 @@ function App() {
                 <Route path="/admin/contact-inquiries" element={<ProtectedRoute><ContactInquiriesPage /></ProtectedRoute>} />
                 <Route path="/admin/contact-inquiries/:id" element={<ProtectedRoute><ContactInquiryDetailsPage /></ProtectedRoute>} />
                 <Route path="/admin/newsletter" element={<ProtectedRoute><NewsletterManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/newsletter/templates" element={<ProtectedRoute><NewsletterTemplatesPage /></ProtectedRoute>} />
 
                 {/* Activity & Reports */}
                 <Route path="/admin/activity-logs" element={<ProtectedRoute><ActivityLogsPage /></ProtectedRoute>} />
