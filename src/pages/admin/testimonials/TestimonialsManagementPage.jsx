@@ -372,45 +372,58 @@ const TestimonialsManagementPage = () => {
 
                 {/* Testimonials Grid/List */}
                 {viewMode === 'grid' ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {(Array.isArray(paginatedTestimonials) ? paginatedTestimonials : []).map((testimonial) => {
                             return (
-                                <div key={testimonial.id} className={`bg-white rounded-xl shadow-sm border flex flex-col overflow-hidden hover:border-[#004fa2] transition-colors group p-3 ${testimonial.isFeatured ? 'border-amber-200 ring-1 ring-amber-100' : 'border-gray-100'}`}>
-                                    <div className="flex items-start justify-between gap-2 mb-3">
-                                        <div className="flex items-center gap-2 min-w-0">
-                                            <AvatarDisplay name={testimonial.name} avatarUrl={testimonial.avatarUrl} size="sm" />
-                                            <div className="min-w-0">
-                                                <div className="flex items-center gap-1">
-                                                    <h3 className="text-[11px] font-bold text-gray-900 truncate">{testimonial.name}</h3>
-                                                    {testimonial.verified && <CheckCircle className="text-blue-500" size={10} />}
-                                                    {testimonial.isFeatured && <Star className="text-amber-500 fill-amber-500" size={10} />}
-                                                </div>
-                                                <p className="text-[9px] text-gray-500 truncate">{testimonial.role}</p>
+                                <div key={testimonial.id} className={`bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-md border-2 flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 p-4 ${testimonial.isFeatured ? 'border-amber-300 ring-2 ring-amber-200' : 'border-gray-200 hover:border-[#004fa2]'}`}>
+                                    {/* Header with Avatar and Info */}
+                                    <div className="flex items-start gap-3 mb-4">
+                                        <AvatarDisplay name={testimonial.name} avatarUrl={testimonial.avatarUrl} size="md" />
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-1.5 mb-1">
+                                                <h3 className="text-sm font-bold text-gray-900 truncate">{testimonial.name}</h3>
+                                                {testimonial.isFeatured && <Star className="text-amber-500 fill-amber-500 flex-shrink-0" size={14} />}
                                             </div>
+                                            <p className="text-xs text-gray-600 truncate mb-0.5">{testimonial.role}</p>
+                                            {testimonial.organization && (
+                                                <p className="text-[10px] text-gray-500 truncate">{testimonial.organization}</p>
+                                            )}
                                         </div>
                                         <StatusBadge status={testimonial.status} />
                                     </div>
                                     
-                                    <div className="relative mb-3 flex-1">
-                                        <Quote className="absolute -top-1 -left-1 text-gray-100" size={20} />
-                                        <p className="text-[10px] text-gray-600 leading-relaxed pl-4 line-clamp-3 relative z-10">{testimonial.content}</p>
+                                    {/* Quote Content */}
+                                    <div className="relative mb-4 flex-1 bg-white rounded-xl p-3 border border-gray-100">
+                                        <Quote className="absolute -top-2 -left-2 text-blue-100" size={24} />
+                                        <p className="text-xs text-gray-700 leading-relaxed line-clamp-4 relative z-10 italic">
+                                            {testimonial.content}
+                                        </p>
                                     </div>
                                     
-                                    <div className="flex items-center justify-between pt-2 border-t border-gray-50">
-                                        <div className="flex items-center gap-2">
-                                            <StarRating rating={testimonial.rating} size={10} />
-                                            {testimonial.organization && (
-                                                <span className="text-[8px] text-gray-500 truncate max-w-[100px]">{testimonial.organization}</span>
-                                            )}
+                                    {/* Footer with Rating and Actions */}
+                                    <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+                                        <div className="flex items-center gap-1.5">
+                                            <StarRating rating={testimonial.rating} size={12} />
+                                            <span className="text-xs font-bold text-gray-700 ml-1">{testimonial.rating}</span>
                                         </div>
-                                        <div className="flex items-center gap-0.5">
-                                            <button onClick={() => handleView(testimonial)} className="p-1 hover:bg-blue-50 rounded text-gray-400 hover:text-[#004fa2] transition-colors" title="View"><Eye size={12} /></button>
-                                            <button onClick={() => handleEdit(testimonial)} className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors" title="Edit"><Edit size={12} /></button>
+                                        <div className="flex items-center gap-1">
+                                            <button onClick={() => handleView(testimonial)} className="p-1.5 hover:bg-blue-100 rounded-lg text-gray-500 hover:text-[#004fa2] transition-all" title="View">
+                                                <Eye size={14} />
+                                            </button>
+                                            <button onClick={() => handleEdit(testimonial)} className="p-1.5 hover:bg-green-100 rounded-lg text-gray-500 hover:text-green-600 transition-all" title="Edit">
+                                                <Edit size={14} />
+                                            </button>
                                             {testimonial.status !== 'published' && (
-                                                <button onClick={() => handlePublish(testimonial)} className="p-1 rounded text-gray-400 hover:bg-emerald-50 hover:text-emerald-600 transition-colors" title="Publish"><Send size={12} /></button>
+                                                <button onClick={() => handlePublish(testimonial)} className="p-1.5 rounded-lg text-gray-500 hover:bg-emerald-100 hover:text-emerald-600 transition-all" title="Publish">
+                                                    <Send size={14} />
+                                                </button>
                                             )}
-                                            <button onClick={() => handleToggleFeatured(testimonial)} className="p-1 rounded text-gray-400 hover:bg-amber-50 hover:text-amber-500 transition-colors" title="Toggle Featured"><Star size={12} className={testimonial.isFeatured ? "fill-amber-500 text-amber-500" : ""} /></button>
-                                            <button onClick={() => handleDelete(testimonial)} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors" title="Delete"><Trash2 size={12} /></button>
+                                            <button onClick={() => handleToggleFeatured(testimonial)} className="p-1.5 rounded-lg text-gray-500 hover:bg-amber-100 hover:text-amber-500 transition-all" title="Toggle Featured">
+                                                <Star size={14} className={testimonial.isFeatured ? "fill-amber-500 text-amber-500" : ""} />
+                                            </button>
+                                            <button onClick={() => handleDelete(testimonial)} className="p-1.5 hover:bg-red-100 rounded-lg text-gray-500 hover:text-red-600 transition-all" title="Delete">
+                                                <Trash2 size={14} />
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
