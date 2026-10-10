@@ -362,7 +362,7 @@ const TestimonialsManagementPage = () => {
                                 <List size={14} />
                             </button>
                         </div>
-                        {(searchQuery || selectedType !== 'all' || selectedStatus !== 'all') && (
+                        {(searchQuery || selectedStatus !== 'all') && (
                             <button onClick={resetFilters} className="bg-white border border-gray-100 hover:bg-gray-50 text-gray-600 h-[34px] w-[34px] rounded-xl transition-colors shadow-sm flex items-center justify-center shrink-0">
                                 <X size={14} />
                             </button>
