@@ -37,9 +37,9 @@ const TestimonialsSection = () => {
     fetchTestimonials();
   }, []);
 
-  // Auto-play carousel
+  // Auto-play carousel - works with any number of testimonials
   useEffect(() => {
-    if (loading || testimonials.length <= 3 || isPaused) return;
+    if (loading || testimonials.length === 0 || isPaused) return;
 
     autoPlayRef.current = setInterval(() => {
       setCurrentIndex((prev) => {
@@ -194,8 +194,8 @@ const TestimonialsSection = () => {
           )}
         </motion.div>
 
-        {/* Navigation Arrows - Only show if more than 3 testimonials */}
-        {!loading && testimonials.length > 3 && (
+        {/* Navigation Arrows - Always show for testing/demo */}
+        {!loading && testimonials.length > 0 && (
           <div className="flex justify-center gap-4">
             <button
               onClick={handlePrev}
