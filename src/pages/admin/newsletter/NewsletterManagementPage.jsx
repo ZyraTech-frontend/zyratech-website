@@ -77,11 +77,14 @@ const NewsletterManagementPage = () => {
                 console.log('[Admin Newsletter] Response:', response);
                 
                 // Extract the array from backend response
-                // Backend returns: {success: true, data: {...}, message: "..."}
-                // The data object contains: {subscribers: [...], total: X, page: X, limit: X}
+                // Backend returns: {success: true, data: {data: [...], pagination: {...}}, message: "..."}
+                // Double-nested: response.data.data is the actual array
                 let data = [];
                 if (Array.isArray(response)) {
                     data = response;
+                } else if (response?.data?.data && Array.isArray(response.data.data)) {
+                    // ✅ Correct path: response.data.data (double-nested)
+                    data = response.data.data;
                 } else if (response?.data?.subscribers && Array.isArray(response.data.subscribers)) {
                     data = response.data.subscribers;
                 } else if (response?.subscribers && Array.isArray(response.subscribers)) {
