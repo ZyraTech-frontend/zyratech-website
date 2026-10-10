@@ -56,7 +56,7 @@ const Testimonials = () => {
               <div className="relative z-10">
                 {/* Quote */}
                 <blockquote className="text-base font-medium text-gray-800 leading-relaxed mb-8 relative">
-                  "{testimonial.quote}"
+                  "{testimonial.content}"
                 </blockquote>
 
                 {/* Author Info */}
@@ -64,7 +64,7 @@ const Testimonials = () => {
                   {/* Avatar with Letter */}
                   <div className="relative">
                     <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:scale-110 transition-transform duration-300">
-                      {testimonial.avatar}
+                      {testimonial.name?.charAt(0)?.toUpperCase()}
                     </div>
                     {/* Pulse ring */}
                     <div className="absolute inset-0 rounded-full bg-[#004fa2] opacity-0 group-hover:opacity-20 group-hover:scale-150 transition-all duration-500"></div>
