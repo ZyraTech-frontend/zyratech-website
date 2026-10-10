@@ -17,9 +17,12 @@ const TestimonialsSection = () => {
         // Get featured testimonials (limit to 6, API will handle pagination)
         const response = await testimonialsService.getPublicTestimonials(1, 6, true);
         
-        // Extract testimonials from nested data structure: response.data.data
-        const testimonialsList = response.data.data || [];
+        // API returns: { success, data: { data: [...], pagination: {} } }
+        // Axios wraps it, so array is at: response.data.data.data
+        const apiResponseData = response?.data?.data; // { data: [...], pagination: {} }
+        const testimonialsList = apiResponseData?.data || []; // The actual array
         
+        console.log('[TestimonialsSection] Fetched testimonials:', testimonialsList?.length || 0);
         setTestimonials(testimonialsList.slice(0, 3)); // Show 3 on homepage
       } catch (error) {
         console.error('Failed to fetch testimonials:', error);

@@ -153,7 +153,7 @@ const TestimonialsManagementPage = () => {
     const navigate = useNavigate();
     const { isSuperAdmin } = usePermissions();
 
-    // State management
+    // State management - Initialize as empty array to prevent undefined errors
     const [testimonials, setTestimonials] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -172,16 +172,30 @@ const TestimonialsManagementPage = () => {
         const fetchTestimonials = async () => {
             try {
                 const response = await testimonialsService.getAdminTestimonials(1, 100);
-                // ✅ CORRECT: Extract testimonials from nested data structure
-                // response.data.data is the actual array
-                // response.data.pagination has pagination info
-                const testimonialsList = response.data.data || [];
-                const paginationInfo = response.data.pagination || {};
                 
-                console.log('[TestimonialsManagement] Fetched testimonials:', testimonialsList.length);
-                setTestimonials(testimonialsList);
+                // DEBUG: Log the FULL response structure to verify nesting levels
+                console.log('[TestimonialsManagement] Full axios response:', response);
+                console.log('[TestimonialsManagement] response.data:', response?.data);
+                console.log('[TestimonialsManagement] response.data.data:', response?.data?.data);
+                console.log('[TestimonialsManagement] response.data.data.data:', response?.data?.data?.data);
+                
+                // API returns: { success, data: { data: [...], pagination: {} } }
+                // Axios wraps it: response.data = { success, data: { data: [...], pagination: {} } }
+                // So testimonials array is at: response.data.data.data
+                const apiResponseData = response?.data?.data; // This is { data: [...], pagination: {} }
+                const testimonialsList = apiResponseData?.data ?? []; // This is the actual array
+                const paginationInfo = apiResponseData?.pagination ?? {};
+                
+                console.log('[TestimonialsManagement] Extracted testimonials array:', testimonialsList);
+                console.log('[TestimonialsManagement] Is array?', Array.isArray(testimonialsList));
+                console.log('[TestimonialsManagement] Count:', Array.isArray(testimonialsList) ? testimonialsList.length : 'NOT AN ARRAY');
+                
+                // Ensure we always set an array, even if API returns unexpected structure
+                setTestimonials(Array.isArray(testimonialsList) ? testimonialsList : []);
             } catch (error) {
-                console.error('Error fetching testimonials:', error);
+                console.error('[TestimonialsManagement] Error fetching testimonials:', error);
+                // Set empty array on error to prevent crashes
+                setTestimonials([]);
             } finally {
                 setLoading(false);
             }
@@ -191,20 +205,23 @@ const TestimonialsManagementPage = () => {
 
 
 
-    // Get unique types
+    // Get unique types - with Array guard
     const uniqueTypes = useMemo(() => {
-        return [...new Set(testimonials.map(t => t.type))];
+        if (!Array.isArray(testimonials)) return [];
+        return [...new Set(testimonials.map(t => t.type))].filter(Boolean);
     }, [testimonials]);
 
-    // Filter and search testimonials
+    // Filter and search testimonials - with Array guard
     const filteredTestimonials = useMemo(() => {
-        let result = [...testimonials];
+        // Safety check: ensure testimonials is always an array
+        const safeTestimonials = Array.isArray(testimonials) ? testimonials : [];
+        let result = [...safeTestimonials];
 
         // Search filter
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
             result = result.filter(t =>
-                t.name.toLowerCase().includes(query) ||
+                t.name?.toLowerCase().includes(query) ||
                 (t.content || '').toLowerCase().includes(query) ||
                 (t.role || '').toLowerCase().includes(query) ||
                 (t.organization || '').toLowerCase().includes(query)
@@ -231,15 +248,18 @@ const TestimonialsManagementPage = () => {
         currentPage * itemsPerPage
     );
 
-    // Statistics
-    const stats = useMemo(() => ({
-        total: testimonials.length,
-        published: testimonials.filter(t => t.status === 'published').length,
-        pending: testimonials.filter(t => t.status === 'pending').length,
-        drafts: testimonials.filter(t => t.status === 'draft').length,
-        featured: testimonials.filter(t => t.isFeatured).length,
-        avgRating: testimonials.length > 0 ? (testimonials.reduce((acc, t) => acc + (t.rating || 0), 0) / testimonials.length).toFixed(1) : 0
-    }), [testimonials]);
+    // Statistics - with Array guard
+    const stats = useMemo(() => {
+        const safeTestimonials = Array.isArray(testimonials) ? testimonials : [];
+        return {
+            total: safeTestimonials.length,
+            published: safeTestimonials.filter(t => t.status === 'published').length,
+            pending: safeTestimonials.filter(t => t.status === 'pending').length,
+            drafts: safeTestimonials.filter(t => t.status === 'draft').length,
+            featured: safeTestimonials.filter(t => t.isFeatured).length,
+            avgRating: safeTestimonials.length > 0 ? (safeTestimonials.reduce((acc, t) => acc + (t.rating || 0), 0) / safeTestimonials.length).toFixed(1) : 0
+        };
+    }, [testimonials]);
 
     // Handlers
     const handleDelete = (testimonial) => {
@@ -396,7 +416,7 @@ const TestimonialsManagementPage = () => {
                 {/* Testimonials Grid/List */}
                 {viewMode === 'grid' ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {paginatedTestimonials.map((testimonial) => {
+                        {(Array.isArray(paginatedTestimonials) ? paginatedTestimonials : []).map((testimonial) => {
                             const typeConfig = TYPE_CONFIG[testimonial.type] || TYPE_CONFIG['student'];
                             const TypeIcon = typeConfig.icon;
 
@@ -443,7 +463,7 @@ const TestimonialsManagementPage = () => {
                 ) : (
                     /* List View */
                     <div className="flex flex-col gap-2">
-                        {paginatedTestimonials.map((testimonial) => {
+                        {(Array.isArray(paginatedTestimonials) ? paginatedTestimonials : []).map((testimonial) => {
                             const typeConfig = TYPE_CONFIG[testimonial.type] || TYPE_CONFIG['student'];
                             return (
                                 <div key={testimonial.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center p-3 gap-3 hover:border-[#004fa2] transition-colors group">
