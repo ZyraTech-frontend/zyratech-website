@@ -112,7 +112,7 @@ const StarRating = ({ rating, size = 14 }) => {
 };
 
 // Avatar component
-const AvatarDisplay = ({ name, avatar, size = 'md' }) => {
+const AvatarDisplay = ({ name, avatarUrl, size = 'md' }) => {
     const sizeClasses = {
         sm: 'w-6 h-6 md:w-8 md:h-8 text-xs',
         md: 'w-12 h-12 text-sm',
@@ -126,10 +126,10 @@ const AvatarDisplay = ({ name, avatar, size = 'md' }) => {
         .toUpperCase()
         .slice(0, 2);
 
-    if (avatar) {
+    if (avatarUrl) {
         return (
             <img decoding="async"
-                src={avatar}
+                src={avatarUrl}
                 alt={name}
                 loading="lazy"
                 className={`${sizeClasses[size]} rounded-full object-cover ring-2 ring-white shadow-md`}
@@ -205,7 +205,7 @@ const TestimonialsManagementPage = () => {
             const query = searchQuery.toLowerCase();
             result = result.filter(t =>
                 t.name.toLowerCase().includes(query) ||
-                (t.content || t.quote || '').toLowerCase().includes(query) ||
+                (t.content || '').toLowerCase().includes(query) ||
                 (t.role || '').toLowerCase().includes(query) ||
                 (t.organization || '').toLowerCase().includes(query)
             );
@@ -237,9 +237,8 @@ const TestimonialsManagementPage = () => {
         published: testimonials.filter(t => t.status === 'published').length,
         pending: testimonials.filter(t => t.status === 'pending').length,
         drafts: testimonials.filter(t => t.status === 'draft').length,
-        featured: testimonials.filter(t => t.featured).length,
-        avgRating: testimonials.length > 0 ? (testimonials.reduce((acc, t) => acc + (t.rating || 0), 0) / testimonials.length).toFixed(1) : 0,
-        totalLikes: testimonials.reduce((acc, t) => acc + (t.likes || 0), 0)
+        featured: testimonials.filter(t => t.isFeatured).length,
+        avgRating: testimonials.length > 0 ? (testimonials.reduce((acc, t) => acc + (t.rating || 0), 0) / testimonials.length).toFixed(1) : 0
     }), [testimonials]);
 
     // Handlers
@@ -273,9 +272,12 @@ const TestimonialsManagementPage = () => {
 
     const handleToggleFeatured = async (testimonial) => {
         try {
-            await testimonialsService.toggleFeatured(testimonial.id);
+            // Update the isFeatured status
+            await testimonialsService.updateAdminTestimonial(testimonial.id, {
+                isFeatured: !testimonial.isFeatured
+            });
             setTestimonials(prev => prev.map(t =>
-                t.id === testimonial.id ? { ...t, featured: !t.featured } : t
+                t.id === testimonial.id ? { ...t, isFeatured: !t.isFeatured } : t
             ));
         } catch (error) {
             console.error('Error toggling featured status:', error);
@@ -313,15 +315,14 @@ const TestimonialsManagementPage = () => {
                 </div>
 
                 {/* Statistics Cards */}
-                <div className="grid grid-cols-3 md:grid-cols-7 gap-2 md:gap-3 mb-4">
+                <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3 mb-4">
                     {[
                         { title: 'Total', count: stats.total, icon: MessageCircle, color: 'text-blue-600', bg: 'bg-blue-50', onClick: () => { setSelectedStatus('all'); setCurrentPage(1); } },
                         { title: 'Published', count: stats.published, icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-50', onClick: () => { setSelectedStatus('published'); setCurrentPage(1); } },
                         { title: 'Pending', count: stats.pending, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50', onClick: () => { setSelectedStatus('pending'); setCurrentPage(1); } },
                         { title: 'Drafts', count: stats.drafts, icon: AlertCircle, color: 'text-gray-600', bg: 'bg-gray-100', onClick: () => { setSelectedStatus('draft'); setCurrentPage(1); } },
                         { title: 'Featured', count: stats.featured, icon: Sparkles, color: 'text-purple-600', bg: 'bg-purple-50', onClick: () => {} },
-                        { title: 'Avg Rating', count: stats.avgRating, icon: Star, color: 'text-amber-600', bg: 'bg-amber-50', onClick: () => {} },
-                        { title: 'Likes', count: stats.totalLikes, icon: ThumbsUp, color: 'text-pink-600', bg: 'bg-pink-50', onClick: () => {} }
+                        { title: 'Avg Rating', count: stats.avgRating, icon: Star, color: 'text-amber-600', bg: 'bg-amber-50', onClick: () => {} }
                     ].map((stat, i) => (
                         <div key={i} onClick={stat.onClick} className={`bg-white border border-gray-100 rounded-xl p-2 md:p-2.5 flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-1 md:gap-2 shadow-sm hover:border-[#004fa2] transition-colors text-center md:text-left ${stat.onClick ? 'cursor-pointer' : ''} group`}>
                             <div className={`w-6 h-6 md:w-7 md:h-7 rounded-md shrink-0 flex items-center justify-center ${stat.bg}`}>
@@ -341,7 +342,7 @@ const TestimonialsManagementPage = () => {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
                         <input
                             type="text"
-                            placeholder="Search by name, quote, role..."
+                            placeholder="Search by name, content, role..."
                             value={searchQuery}
                             onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
                             className="w-full pl-8 pr-3 py-2 text-[11px] bg-white border border-gray-100 shadow-sm rounded-xl focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all"
@@ -400,15 +401,15 @@ const TestimonialsManagementPage = () => {
                             const TypeIcon = typeConfig.icon;
 
                             return (
-                                <div key={testimonial.id} className={`bg-white rounded-xl shadow-sm border flex flex-col overflow-hidden hover:border-[#004fa2] transition-colors group p-3 ${testimonial.featured ? 'border-amber-200 ring-1 ring-amber-100' : 'border-gray-100'}`}>
+                                <div key={testimonial.id} className={`bg-white rounded-xl shadow-sm border flex flex-col overflow-hidden hover:border-[#004fa2] transition-colors group p-3 ${testimonial.isFeatured ? 'border-amber-200 ring-1 ring-amber-100' : 'border-gray-100'}`}>
                                     <div className="flex items-start justify-between gap-2 mb-3">
                                         <div className="flex items-center gap-2 min-w-0">
-                                            <AvatarDisplay name={testimonial.name} avatar={testimonial.avatar} size="sm" />
+                                            <AvatarDisplay name={testimonial.name} avatarUrl={testimonial.avatarUrl} size="sm" />
                                             <div className="min-w-0">
                                                 <div className="flex items-center gap-1">
                                                     <h3 className="text-[11px] font-bold text-gray-900 truncate">{testimonial.name}</h3>
                                                     {testimonial.verified && <CheckCircle className="text-blue-500" size={10} />}
-                                                    {testimonial.featured && <Star className="text-amber-500 fill-amber-500" size={10} />}
+                                                    {testimonial.isFeatured && <Star className="text-amber-500 fill-amber-500" size={10} />}
                                                 </div>
                                                 <p className="text-[9px] text-gray-500 truncate">{testimonial.role}</p>
                                             </div>
@@ -418,7 +419,7 @@ const TestimonialsManagementPage = () => {
                                     
                                     <div className="relative mb-3 flex-1">
                                         <Quote className="absolute -top-1 -left-1 text-gray-100" size={20} />
-                                        <p className="text-[10px] text-gray-600 leading-relaxed pl-4 line-clamp-3 relative z-10">{testimonial.quote}</p>
+                                        <p className="text-[10px] text-gray-600 leading-relaxed pl-4 line-clamp-3 relative z-10">{testimonial.content}</p>
                                     </div>
                                     
                                     <div className="flex items-center justify-between pt-2 border-t border-gray-50">
@@ -431,7 +432,7 @@ const TestimonialsManagementPage = () => {
                                         <div className="flex items-center gap-0.5">
                                             <button onClick={() => handleView(testimonial)} className="p-1 hover:bg-blue-50 rounded text-gray-400 hover:text-[#004fa2] transition-colors"><Eye size={12} /></button>
                                             <button onClick={() => handleEdit(testimonial)} className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors"><Edit size={12} /></button>
-                                            <button onClick={() => handleToggleFeatured(testimonial)} className="p-1 rounded text-gray-400 hover:bg-amber-50 hover:text-amber-500 transition-colors"><Star size={12} className={testimonial.featured ? "fill-amber-500 text-amber-500" : ""} /></button>
+                                            <button onClick={() => handleToggleFeatured(testimonial)} className="p-1 rounded text-gray-400 hover:bg-amber-50 hover:text-amber-500 transition-colors"><Star size={12} className={testimonial.isFeatured ? "fill-amber-500 text-amber-500" : ""} /></button>
                                             <button onClick={() => handleDelete(testimonial)} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"><Trash2 size={12} /></button>
                                         </div>
                                     </div>
@@ -447,17 +448,17 @@ const TestimonialsManagementPage = () => {
                             return (
                                 <div key={testimonial.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center p-3 gap-3 hover:border-[#004fa2] transition-colors group">
                                     <div className="flex items-center gap-3 md:w-1/4 shrink-0">
-                                        <AvatarDisplay name={testimonial.name} avatar={testimonial.avatar} size="sm" />
+                                        <AvatarDisplay name={testimonial.name} avatarUrl={testimonial.avatarUrl} size="sm" />
                                         <div className="min-w-0">
                                             <div className="flex items-center gap-1">
                                                 <h3 className="text-xs font-bold text-gray-900 truncate">{testimonial.name}</h3>
-                                                {testimonial.featured && <Star className="text-amber-500 fill-amber-500" size={10} />}
+                                                {testimonial.isFeatured && <Star className="text-amber-500 fill-amber-500" size={10} />}
                                             </div>
                                             <p className="text-[10px] text-gray-500 truncate">{testimonial.role}</p>
                                         </div>
                                     </div>
                                     <p className="text-[11px] text-gray-600 line-clamp-2 md:w-2/5 flex-1 italic relative">
-                                        "{testimonial.quote}"
+                                        "{testimonial.content}"
                                     </p>
                                     <div className="flex items-center justify-between md:justify-end gap-3 md:w-1/3 shrink-0">
                                         <StarRating rating={testimonial.rating} size={10} />
@@ -563,14 +564,14 @@ const TestimonialsManagementPage = () => {
                             <div className="space-y-5">
                                 {/* Author Info */}
                                 <div className="flex items-center gap-4 pb-4 border-b border-gray-100">
-                                    <AvatarDisplay name={viewingTestimonial.name} avatar={viewingTestimonial.avatar} size="lg" />
+                                    <AvatarDisplay name={viewingTestimonial.name} avatarUrl={viewingTestimonial.avatarUrl} size="lg" />
                                     <div>
                                         <div className="flex items-center gap-2">
                                             <h3 className="text-xl font-bold text-gray-900">{viewingTestimonial.name}</h3>
                                             {viewingTestimonial.verified && (
                                                 <CheckCircle className="text-blue-500" size={18} />
                                             )}
-                                            {viewingTestimonial.featured && (
+                                            {viewingTestimonial.isFeatured && (
                                                 <Star className="text-amber-500 fill-amber-500" size={18} />
                                             )}
                                         </div>
@@ -588,7 +589,7 @@ const TestimonialsManagementPage = () => {
                                 <div className="bg-gray-50 rounded-xl p-5 relative">
                                     <Quote className="absolute top-4 left-4 text-gray-200" size={32} />
                                     <p className="text-lg text-gray-700 leading-relaxed pl-8 italic">
-                                        "{viewingTestimonial.quote}"
+                                        "{viewingTestimonial.content}"
                                     </p>
                                 </div>
 
@@ -599,12 +600,7 @@ const TestimonialsManagementPage = () => {
                                 </div>
 
                                 {/* Stats Grid */}
-                                <div className="grid grid-cols-3 gap-4">
-                                    <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                        <ThumbsUp className="mx-auto text-gray-400 mb-2" size={20} />
-                                        <p className="text-lg font-bold text-gray-900">{viewingTestimonial.likes}</p>
-                                        <p className="text-xs text-gray-500">Likes</p>
-                                    </div>
+                                <div className="grid grid-cols-2 gap-4">
                                     <div className="bg-gray-50 rounded-xl p-4 text-center">
                                         <Calendar className="mx-auto text-gray-400 mb-2" size={20} />
                                         <p className="text-lg font-bold text-gray-900">{viewingTestimonial.date}</p>
@@ -642,8 +638,8 @@ const TestimonialsManagementPage = () => {
                                     onClick={() => handleToggleFeatured(viewingTestimonial)}
                                     className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors font-medium text-sm flex items-center gap-1.5"
                                 >
-                                    <Star size={14} className={viewingTestimonial.featured ? 'fill-white' : ''} />
-                                    {viewingTestimonial.featured ? 'Unfeature' : 'Feature'}
+                                    <Star size={14} className={viewingTestimonial.isFeatured ? 'fill-white' : ''} />
+                                    {viewingTestimonial.isFeatured ? 'Unfeature' : 'Feature'}
                                 </button>
                             </div>
                         </div>
