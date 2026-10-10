@@ -123,17 +123,22 @@ export default function TestimonialsFormPage() {
 
     const handleImageUpload = async (e) => {
         const file = e.target.files?.[0];
-        if (!file) return;
+        if (!file) {
+            console.log('[Form] No file selected');
+            return;
+        }
 
+        console.log('[Form] Uploading avatar:', file.name, file.type, file.size);
         setUploading(true);
         try {
             const response = await testimonialsService.uploadAvatar(file);
+            console.log('[Form] Avatar uploaded successfully:', response.data.url);
             setFormData(prev => ({
                 ...prev,
                 avatarUrl: response.data.url
             }));
         } catch (error) {
-            console.error('Error uploading image:', error);
+            console.error('[Form] Error uploading image:', error);
             setErrors(prev => ({
                 ...prev,
                 avatar: 'Failed to upload image. Please try again.'
@@ -147,6 +152,7 @@ export default function TestimonialsFormPage() {
         e.preventDefault();
 
         if (!validateForm()) {
+            console.warn('[Form] Validation failed:', errors);
             return;
         }
 
@@ -159,24 +165,31 @@ export default function TestimonialsFormPage() {
                 role: formData.role.trim() || null,
                 organization: formData.organization.trim() || null,
                 avatarUrl: formData.avatarUrl || null,
-                rating: formData.rating,
-                isFeatured: formData.isFeatured,
+                rating: Number(formData.rating),
+                isFeatured: Boolean(formData.isFeatured),
                 status: formData.status
             };
 
+            console.log('[Form] Submitting testimonial:', submitData);
+
             if (id) {
+                console.log('[Form] Updating testimonial:', id);
                 await testimonialsService.updateAdminTestimonial(id, submitData);
             } else {
+                console.log('[Form] Creating new testimonial');
                 await testimonialsService.createAdminTestimonial(submitData);
             }
 
+            console.log('[Form] Success! Navigating back...');
             // Navigate back to testimonials management
             navigate('/admin/testimonials');
         } catch (error) {
-            console.error('Error saving testimonial:', error);
+            console.error('[Form] Error saving testimonial:', error);
             const errorMsg = error?.response?.data?.error?.message || 
+                           error?.userMessage ||
                            error?.message || 
                            'Failed to save testimonial. Please try again.';
+            console.error('[Form] Error message extracted:', errorMsg);
             setErrors({ submit: errorMsg });
         } finally {
             setLoading(false);
