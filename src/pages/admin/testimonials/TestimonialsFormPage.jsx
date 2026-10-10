@@ -132,11 +132,27 @@ export default function TestimonialsFormPage() {
         setUploading(true);
         try {
             const response = await testimonialsService.uploadAvatar(file);
-            console.log('[Form] Avatar uploaded successfully:', response.data.url);
-            setFormData(prev => ({
-                ...prev,
-                avatarUrl: response.data.url
-            }));
+            console.log('[Form] Upload response:', response);
+            console.log('[Form] response.data:', response?.data);
+            
+            // Try multiple possible response structures
+            const uploadedUrl = 
+                response?.data?.data?.url ||      // Nested: response.data.data.url
+                response?.data?.url ||            // Direct: response.data.url
+                response?.data?.data?.avatarUrl || // Alternative field name
+                response?.data?.avatarUrl ||      // Alternative direct
+                null;
+            
+            console.log('[Form] Extracted avatar URL:', uploadedUrl);
+            
+            if (uploadedUrl) {
+                setFormData(prev => ({
+                    ...prev,
+                    avatarUrl: uploadedUrl
+                }));
+            } else {
+                throw new Error('No URL returned from upload');
+            }
         } catch (error) {
             console.error('[Form] Error uploading image:', error);
             setErrors(prev => ({
