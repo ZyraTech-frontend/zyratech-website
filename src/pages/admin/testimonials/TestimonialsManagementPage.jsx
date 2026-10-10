@@ -417,9 +417,6 @@ const TestimonialsManagementPage = () => {
                 {viewMode === 'grid' ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {(Array.isArray(paginatedTestimonials) ? paginatedTestimonials : []).map((testimonial) => {
-                            const typeConfig = TYPE_CONFIG[testimonial.type] || TYPE_CONFIG['student'];
-                            const TypeIcon = typeConfig.icon;
-
                             return (
                                 <div key={testimonial.id} className={`bg-white rounded-xl shadow-sm border flex flex-col overflow-hidden hover:border-[#004fa2] transition-colors group p-3 ${testimonial.isFeatured ? 'border-amber-200 ring-1 ring-amber-100' : 'border-gray-100'}`}>
                                     <div className="flex items-start justify-between gap-2 mb-3">
@@ -445,9 +442,9 @@ const TestimonialsManagementPage = () => {
                                     <div className="flex items-center justify-between pt-2 border-t border-gray-50">
                                         <div className="flex items-center gap-2">
                                             <StarRating rating={testimonial.rating} size={10} />
-                                            <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider border ${typeConfig.color}`}>
-                                                <TypeIcon size={8} /> {typeConfig.label}
-                                            </span>
+                                            {testimonial.organization && (
+                                                <span className="text-[8px] text-gray-500 truncate max-w-[100px]">{testimonial.organization}</span>
+                                            )}
                                         </div>
                                         <div className="flex items-center gap-0.5">
                                             <button onClick={() => handleView(testimonial)} className="p-1 hover:bg-blue-50 rounded text-gray-400 hover:text-[#004fa2] transition-colors"><Eye size={12} /></button>
@@ -464,7 +461,6 @@ const TestimonialsManagementPage = () => {
                     /* List View */
                     <div className="flex flex-col gap-2">
                         {(Array.isArray(paginatedTestimonials) ? paginatedTestimonials : []).map((testimonial) => {
-                            const typeConfig = TYPE_CONFIG[testimonial.type] || TYPE_CONFIG['student'];
                             return (
                                 <div key={testimonial.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center p-3 gap-3 hover:border-[#004fa2] transition-colors group">
                                     <div className="flex items-center gap-3 md:w-1/4 shrink-0">
