@@ -41,7 +41,8 @@ import {
     Building,
     Users,
     Heart,
-    StarHalf
+    StarHalf,
+    Send
 } from 'lucide-react';
 
 // Status badge component
@@ -261,6 +262,20 @@ const TestimonialsManagementPage = () => {
         }
     };
 
+    const handlePublish = async (testimonial) => {
+        try {
+            // Update status to published
+            await testimonialsService.updateAdminTestimonial(testimonial.id, {
+                status: 'published'
+            });
+            setTestimonials(prev => prev.map(t =>
+                t.id === testimonial.id ? { ...t, status: 'published' } : t
+            ));
+        } catch (error) {
+            console.error('Error publishing testimonial:', error);
+        }
+    };
+
     const resetFilters = () => {
         setSearchQuery('');
         setSelectedStatus('all');
@@ -389,10 +404,13 @@ const TestimonialsManagementPage = () => {
                                             )}
                                         </div>
                                         <div className="flex items-center gap-0.5">
-                                            <button onClick={() => handleView(testimonial)} className="p-1 hover:bg-blue-50 rounded text-gray-400 hover:text-[#004fa2] transition-colors"><Eye size={12} /></button>
-                                            <button onClick={() => handleEdit(testimonial)} className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors"><Edit size={12} /></button>
-                                            <button onClick={() => handleToggleFeatured(testimonial)} className="p-1 rounded text-gray-400 hover:bg-amber-50 hover:text-amber-500 transition-colors"><Star size={12} className={testimonial.isFeatured ? "fill-amber-500 text-amber-500" : ""} /></button>
-                                            <button onClick={() => handleDelete(testimonial)} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"><Trash2 size={12} /></button>
+                                            <button onClick={() => handleView(testimonial)} className="p-1 hover:bg-blue-50 rounded text-gray-400 hover:text-[#004fa2] transition-colors" title="View"><Eye size={12} /></button>
+                                            <button onClick={() => handleEdit(testimonial)} className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors" title="Edit"><Edit size={12} /></button>
+                                            {testimonial.status !== 'published' && (
+                                                <button onClick={() => handlePublish(testimonial)} className="p-1 rounded text-gray-400 hover:bg-emerald-50 hover:text-emerald-600 transition-colors" title="Publish"><Send size={12} /></button>
+                                            )}
+                                            <button onClick={() => handleToggleFeatured(testimonial)} className="p-1 rounded text-gray-400 hover:bg-amber-50 hover:text-amber-500 transition-colors" title="Toggle Featured"><Star size={12} className={testimonial.isFeatured ? "fill-amber-500 text-amber-500" : ""} /></button>
+                                            <button onClick={() => handleDelete(testimonial)} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors" title="Delete"><Trash2 size={12} /></button>
                                         </div>
                                     </div>
                                 </div>
@@ -422,9 +440,12 @@ const TestimonialsManagementPage = () => {
                                         <StarRating rating={testimonial.rating} size={10} />
                                         <StatusBadge status={testimonial.status} />
                                         <div className="flex items-center gap-0.5 border-l border-gray-100 pl-2">
-                                            <button onClick={() => handleView(testimonial)} className="p-1.5 hover:bg-blue-50 rounded text-gray-400 hover:text-[#004fa2] transition-colors"><Eye size={14} /></button>
-                                            <button onClick={() => handleEdit(testimonial)} className="p-1.5 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors"><Edit size={14} /></button>
-                                            <button onClick={() => handleDelete(testimonial)} className="p-1.5 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"><Trash2 size={14} /></button>
+                                            <button onClick={() => handleView(testimonial)} className="p-1.5 hover:bg-blue-50 rounded text-gray-400 hover:text-[#004fa2] transition-colors" title="View"><Eye size={14} /></button>
+                                            <button onClick={() => handleEdit(testimonial)} className="p-1.5 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors" title="Edit"><Edit size={14} /></button>
+                                            {testimonial.status !== 'published' && (
+                                                <button onClick={() => handlePublish(testimonial)} className="p-1.5 hover:bg-emerald-50 rounded text-gray-400 hover:text-emerald-600 transition-colors" title="Publish"><Send size={14} /></button>
+                                            )}
+                                            <button onClick={() => handleDelete(testimonial)} className="p-1.5 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors" title="Delete"><Trash2 size={14} /></button>
                                         </div>
                                     </div>
                                 </div>
