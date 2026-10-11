@@ -5,6 +5,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {
     Plus,
@@ -13,14 +14,8 @@ import {
     Trash2,
     Eye,
     EyeOff,
-    MoreVertical,
-    Move,
-    Save,
-    X,
     Image as ImageIcon,
     ExternalLink,
-    ChevronUp,
-    ChevronDown,
     Loader
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
@@ -28,28 +23,11 @@ import heroService from '../../../services/heroService';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 
 const HeroSlidesManagementPage = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [slides, setSlides] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentSlide, setCurrentSlide] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const [saving, setSaving] = useState(false);
-
-    // Initial form state
-    const initialFormState = {
-        title: '',
-        description: '',
-        pillar: '',
-        backgroundImage: '',
-        cta1Text: '',
-        cta1Link: '',
-        cta2Text: '',
-        cta2Link: '',
-        isVisible: true
-    };
-
-    const [formData, setFormData] = useState(initialFormState);
 
     // Fetch slides on mount
     useEffect(() => {
@@ -63,64 +41,8 @@ const HeroSlidesManagementPage = () => {
             setSlides(response.data);
         } catch (error) {
             console.error('Error fetching slides:', error);
-            // Could add toast notification here
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleOpenModal = (slide = null) => {
-        if (slide) {
-            setCurrentSlide(slide);
-            setFormData({
-                title: slide.title,
-                description: slide.description,
-                pillar: slide.pillar,
-                backgroundImage: slide.backgroundImage,
-                cta1Text: slide.cta1Text,
-                cta1Link: slide.cta1Link,
-                cta2Text: slide.cta2Text || '',
-                cta2Link: slide.cta2Link || '',
-                isVisible: slide.isVisible
-            });
-        } else {
-            setCurrentSlide(null);
-            setFormData(initialFormState);
-        }
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setCurrentSlide(null);
-        setFormData(initialFormState);
-    };
-
-    const calculateInputChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            setSaving(true);
-            if (currentSlide) {
-                // Update existing
-                await heroService.updateSlide(currentSlide.id, formData);
-            } else {
-                // Create new
-                await heroService.createSlide(formData);
-            }
-            await fetchSlides(); // Refresh list
-            handleCloseModal();
-        } catch (error) {
-            console.error('Error saving slide:', error);
-        } finally {
-            setSaving(false);
         }
     };
 
@@ -152,6 +74,14 @@ const HeroSlidesManagementPage = () => {
         }
     };
 
+    const handleAddClick = () => {
+        navigate('/admin/content/hero/add');
+    };
+
+    const handleEditClick = (slide) => {
+        navigate(`/admin/content/hero/edit/${slide.id}`);
+    };
+
     // Filter slides based on search
     const filteredSlides = slides.filter(slide =>
         slide.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -176,7 +106,7 @@ const HeroSlidesManagementPage = () => {
                     </div>
 
                     <button
-                        onClick={() => handleOpenModal()}
+                        onClick={handleAddClick}
                         className="flex items-center gap-2 bg-[#004fa2] text-white px-4 py-2 rounded-lg hover:bg-[#003d7a] transition-colors shadow-sm"
                     >
                         <Plus size={18} />
@@ -197,7 +127,7 @@ const HeroSlidesManagementPage = () => {
                         <h3 className="text-lg font-semibold text-gray-900 mb-2">No slides found</h3>
                         <p className="text-gray-500 mb-6">Get started by creating your first hero slide.</p>
                         <button
-                            onClick={() => handleOpenModal()}
+                            onClick={handleAddClick}
                             className="inline-flex items-center gap-2 text-[#004fa2] font-medium hover:underline"
                         >
                             <Plus size={16} />
@@ -249,7 +179,7 @@ const HeroSlidesManagementPage = () => {
                                                         {slide.isVisible ? <Eye size={18} /> : <EyeOff size={18} />}
                                                     </button>
                                                     <button
-                                                        onClick={() => handleOpenModal(slide)}
+                                                        onClick={() => handleEditClick(slide)}
                                                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                                         title="Edit Slide"
                                                     >
@@ -288,218 +218,6 @@ const HeroSlidesManagementPage = () => {
                                 </div>
                             </div>
                         ))}
-                    </div>
-                )}
-
-                {/* Edit/Create Modal */}
-                {isModalOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                        <div className="bg-white rounded-2xl w-full max-w-2xl shadow-xl transform transition-all max-h-[85vh] flex flex-col">
-                            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-2xl">
-                                <h3 className="text-xl font-bold text-gray-900">
-                                    {currentSlide ? 'Edit Hero Slide' : 'Create New Slide'}
-                                </h3>
-                                <button
-                                    onClick={handleCloseModal}
-                                    className="text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded-full p-1"
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
-
-                            <form onSubmit={handleSubmit} className="p-6 space-y-6 overflow-y-auto">
-
-                                {/* Basic Info */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Headline Title <span className="text-red-500">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="title"
-                                            value={formData.title}
-                                            onChange={calculateInputChange}
-                                            required
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]"
-                                            placeholder="e.g. EDUCATION & INTERNSHIP"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Pillar / Category <span className="text-red-500">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="pillar"
-                                            value={formData.pillar}
-                                            onChange={calculateInputChange}
-                                            required
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]"
-                                            placeholder="e.g. Education"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Background Image URL <span className="text-red-500">*</span>
-                                        </label>
-                                        <div className="flex gap-2">
-                                            <input
-                                                type="text"
-                                                name="backgroundImage"
-                                                value={formData.backgroundImage}
-                                                onChange={calculateInputChange}
-                                                required
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]"
-                                                placeholder="/images/hero2.webp"
-                                            />
-                                            <button
-                                                type="button"
-                                                className="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-200 transition-colors"
-                                                title="Upload Image"
-                                                onClick={() => document.getElementById('image-upload').click()}
-                                            >
-                                                <ImageIcon size={18} />
-                                            </button>
-                                            <input
-                                                id="image-upload"
-                                                type="file"
-                                                className="hidden"
-                                                accept="image/*"
-                                                onChange={(e) => {
-                                                    // Handle file selection (mock)
-                                                    if (e.target.files[0]) {
-                                                        const fakeUrl = URL.createObjectURL(e.target.files[0]);
-                                                        setFormData(prev => ({ ...prev, backgroundImage: fakeUrl }));
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Description <span className="text-red-500">*</span>
-                                        </label>
-                                        <textarea
-                                            name="description"
-                                            value={formData.description}
-                                            onChange={calculateInputChange}
-                                            required
-                                            rows={3}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] resize-none"
-                                            placeholder="Enter the slide description text..."
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="border-t border-gray-100 pt-4">
-                                    <h4 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                                        <ExternalLink size={16} className="text-[#004fa2]" />
-                                        Call to Action Buttons
-                                    </h4>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        {/* Primary CTA */}
-                                        <div className="space-y-3 p-4 bg-blue-50 rounded-lg border border-blue-100">
-                                            <div className="text-xs font-semibold text-blue-800 uppercase">Primary Button</div>
-                                            <div>
-                                                <label className="block text-xs text-gray-600 mb-1">Labl Text</label>
-                                                <input
-                                                    type="text"
-                                                    name="cta1Text"
-                                                    value={formData.cta1Text}
-                                                    onChange={calculateInputChange}
-                                                    className="w-full px-3 py-1.5 border border-blue-200 rounded text-sm focus:outline-none focus:border-blue-500"
-                                                    placeholder="e.g. Apply Now"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-xs text-gray-600 mb-1">Link URL</label>
-                                                <input
-                                                    type="text"
-                                                    name="cta1Link"
-                                                    value={formData.cta1Link}
-                                                    onChange={calculateInputChange}
-                                                    className="w-full px-3 py-1.5 border border-blue-200 rounded text-sm focus:outline-none focus:border-blue-500"
-                                                    placeholder="e.g. /apply"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        {/* Secondary CTA */}
-                                        <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                                            <div className="text-xs font-semibold text-gray-700 uppercase">Secondary Button</div>
-                                            <div>
-                                                <label className="block text-xs text-gray-600 mb-1">Label Text</label>
-                                                <input
-                                                    type="text"
-                                                    name="cta2Text"
-                                                    value={formData.cta2Text}
-                                                    onChange={calculateInputChange}
-                                                    className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:border-gray-500"
-                                                    placeholder="e.g. Learn More"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-xs text-gray-600 mb-1">Link URL</label>
-                                                <input
-                                                    type="text"
-                                                    name="cta2Link"
-                                                    value={formData.cta2Link}
-                                                    onChange={calculateInputChange}
-                                                    className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:border-gray-500"
-                                                    placeholder="e.g. /about"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="border-t border-gray-100 pt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            name="isVisible"
-                                            checked={formData.isVisible}
-                                            onChange={calculateInputChange}
-                                            className="w-4 h-4 text-[#004fa2] rounded border-gray-300 focus:ring-[#004fa2]"
-                                        />
-                                        <span className="text-sm font-medium text-gray-700">Slide Visible on Homepage</span>
-                                    </label>
-
-                                    <div className="flex gap-3">
-                                        <button
-                                            type="button"
-                                            onClick={handleCloseModal}
-                                            className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors font-medium"
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            disabled={saving}
-                                            className="flex items-center gap-2 bg-[#004fa2] text-white px-6 py-2 rounded-lg hover:bg-[#003d7a] transition-colors font-medium shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
-                                        >
-                                            {saving ? (
-                                                <>
-                                                    <Loader size={18} className="animate-spin" />
-                                                    Saving...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Save size={18} />
-                                                    Save Slide
-                                                </>
-                                            )}
-                                        </button>
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
                     </div>
                 )}
             </div>

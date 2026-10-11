@@ -68,6 +68,7 @@ const ActivityLogsPage = lazy(() => import('./pages/admin/activity-logs/Activity
 const ReportsPage = lazy(() => import('./pages/admin/reports/ReportsPage'));
 const AdminProfilePage = lazy(() => import('./pages/admin/profile/AdminProfilePage'));
 const HeroSlidesManagementPage = lazy(() => import('./pages/admin/content/HeroSlidesManagementPage'));
+const HeroSlideFormPage = lazy(() => import('./pages/admin/content/HeroSlideFormPage'));
 const ServicesManagementPage = lazy(() => import('./pages/admin/content/ServicesManagementPage'));
 const ServiceFormPage = lazy(() => import('./pages/admin/content/ServiceFormPage'));
 const BenefitsManagementPage = lazy(() => import('./pages/admin/content/BenefitsManagementPage'));
@@ -175,6 +176,8 @@ function App() {
 
                 {/* CMS Content Management */}
                 <Route path="/admin/content/hero" element={<ProtectedRoute><HeroSlidesManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/content/hero/add" element={<ProtectedRoute><HeroSlideFormPage /></ProtectedRoute>} />
+                <Route path="/admin/content/hero/edit/:id" element={<ProtectedRoute><HeroSlideFormPage /></ProtectedRoute>} />
                 <Route path="/admin/content/services" element={<ProtectedRoute><ServicesManagementPage /></ProtectedRoute>} />
                 <Route path="/admin/content/services/add" element={<ProtectedRoute><ServiceFormPage /></ProtectedRoute>} />
                 <Route path="/admin/content/services/edit/:id" element={<ProtectedRoute><ServiceFormPage /></ProtectedRoute>} />
