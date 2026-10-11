@@ -260,11 +260,11 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           <CollapsibleMenu 
             title="Home Page" 
             icon={Home}
-            defaultOpen={location.pathname.includes('/content/home')}
+            defaultOpen={location.pathname.includes('/content/hero')}
           >
             <SubMenuLink 
-              to="/admin/content/home/hero"
-              isActive={location.pathname === '/admin/content/home/hero'}
+              to="/admin/content/hero"
+              isActive={location.pathname === '/admin/content/hero'}
             >
               Hero Slides
             </SubMenuLink>
@@ -277,34 +277,10 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
             defaultOpen={location.pathname.includes('/content/about')}
           >
             <SubMenuLink 
-              to="/admin/content/about?tab=hero"
-              isActive={location.pathname === '/admin/content/about' && location.search.includes('hero')}
+              to="/admin/content/about"
+              isActive={location.pathname === '/admin/content/about'}
             >
-              Hero Section
-            </SubMenuLink>
-            <SubMenuLink 
-              to="/admin/content/about?tab=mission"
-              isActive={location.pathname === '/admin/content/about' && location.search.includes('mission')}
-            >
-              Mission
-            </SubMenuLink>
-            <SubMenuLink 
-              to="/admin/content/about?tab=why-ghana"
-              isActive={location.pathname === '/admin/content/about' && location.search.includes('why-ghana')}
-            >
-              Why Ghana
-            </SubMenuLink>
-            <SubMenuLink 
-              to="/admin/content/about?tab=milestones"
-              isActive={location.pathname === '/admin/content/about' && location.search.includes('milestones')}
-            >
-              Milestones
-            </SubMenuLink>
-            <SubMenuLink 
-              to="/admin/content/about?tab=timeline"
-              isActive={location.pathname === '/admin/content/about' && location.search.includes('timeline')}
-            >
-              Timeline
+              All Sections
             </SubMenuLink>
           </CollapsibleMenu>
 
@@ -335,22 +311,10 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
             defaultOpen={location.pathname.includes('/content/partnership')}
           >
             <SubMenuLink 
-              to="/admin/content/partnership?tab=hero"
-              isActive={location.pathname === '/admin/content/partnership' && location.search.includes('hero')}
+              to="/admin/content/partnership"
+              isActive={location.pathname === '/admin/content/partnership'}
             >
-              Hero & Stats
-            </SubMenuLink>
-            <SubMenuLink 
-              to="/admin/content/partnership?tab=why-partner"
-              isActive={location.pathname === '/admin/content/partnership' && location.search.includes('why-partner')}
-            >
-              Why Partner
-            </SubMenuLink>
-            <SubMenuLink 
-              to="/admin/content/partnership?tab=stories"
-              isActive={location.pathname === '/admin/content/partnership' && location.search.includes('stories')}
-            >
-              Stories & Logos
+              All Sections
             </SubMenuLink>
           </CollapsibleMenu>
 
