@@ -303,12 +303,6 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
               Our Services
             </SubMenuLink>
             <SubMenuLink 
-              to="/admin/content/services#quality-assurance"
-              isActive={location.pathname === '/admin/content/services'}
-            >
-              Quality Assurance
-            </SubMenuLink>
-            <SubMenuLink 
               to="/admin/content/services#work-with-us"
               isActive={location.pathname === '/admin/content/services'}
             >
