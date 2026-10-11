@@ -1,78 +1,56 @@
 
-/**
- * About Page Management
- * Manage Hero, Mission, Why Ghana, Milestones, and Timeline
- */
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-    Save, Loader, Plus, Edit, Trash2, X,
+    Save, Loader, Plus, Edit2, Trash2,
     Layout, Target, MapPin, Flag, Clock,
-    Users, TrendingUp, CheckCircle, Globe, Edit2
+    Users, TrendingUp, CheckCircle, Globe
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
-// --- Icon Maps ---
-const TIMELINE_ICONS = {
-    'Users': Users,
-    'MapPin': MapPin,
-    'TrendingUp': TrendingUp,
-    'Globe': Globe,
-    'Target': Target,
-    'Flag': Flag
-};
-
-const MILESTONE_ICONS = {
-    'CheckCircle': CheckCircle,
-    'Flag': Flag,
-    'Target': Target
-};
-
-// --- Sub-components ---
+// --- Sub-components (inline forms for unchanging sections) ---
 
 const HeroForm = ({ data, onSubmit, onChange, saving }) => (
     <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
         <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Hero Section</h3>
-        <div><label className="block text-sm font-medium mb-1">Title</label><input className="w-full px-4 py-2 border rounded-lg" name="title" value={data.title || ''} onChange={onChange} /></div>
-        <div><label className="block text-sm font-medium mb-1">Highlight (Blue)</label><input className="w-full px-4 py-2 border rounded-lg" name="highlight" value={data.highlight || ''} onChange={onChange} /></div>
-        <div><label className="block text-sm font-medium mb-1">Description</label><textarea className="w-full px-4 py-2 border rounded-lg" name="description" value={data.description || ''} onChange={onChange} rows={3} /></div>
-        <div><label className="block text-sm font-medium mb-1">Image URL</label><input className="w-full px-4 py-2 border rounded-lg" name="backgroundImage" value={data.backgroundImage || ''} onChange={onChange} /></div>
-        <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a]">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Hero</button>
+        <div><label className="block text-sm font-medium mb-1">Title</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="title" value={data.title || ''} onChange={onChange} /></div>
+        <div><label className="block text-sm font-medium mb-1">Highlight (Blue)</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="highlight" value={data.highlight || ''} onChange={onChange} /></div>
+        <div><label className="block text-sm font-medium mb-1">Description</label><textarea className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="description" value={data.description || ''} onChange={onChange} rows={3} /></div>
+        <div><label className="block text-sm font-medium mb-1">Image URL</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="backgroundImage" value={data.backgroundImage || ''} onChange={onChange} /></div>
+        <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Hero</button>
     </form>
 );
 
 const MissionForm = ({ data, onSubmit, onChange, saving }) => (
     <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
         <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Mission Section</h3>
-        <div><label className="block text-sm font-medium mb-1">Title</label><input className="w-full px-4 py-2 border rounded-lg" name="title" value={data.title || ''} onChange={onChange} /></div>
-        <div><label className="block text-sm font-medium mb-1">Content</label><textarea className="w-full px-4 py-2 border rounded-lg" name="content" value={data.content || ''} onChange={onChange} rows={4} /></div>
-        <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a]">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Mission</button>
+        <div><label className="block text-sm font-medium mb-1">Title</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="title" value={data.title || ''} onChange={onChange} /></div>
+        <div><label className="block text-sm font-medium mb-1">Content</label><textarea className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="content" value={data.content || ''} onChange={onChange} rows={4} /></div>
+        <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Mission</button>
     </form>
 );
 
 const WhyGhanaForm = ({ data, onSubmit, onChange, saving }) => (
     <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
         <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Why Ghana Section</h3>
-        <div><label className="block text-sm font-medium mb-1">Title</label><input className="w-full px-4 py-2 border rounded-lg" name="title" value={data.title || ''} onChange={onChange} /></div>
-        <div><label className="block text-sm font-medium mb-1">Paragraph 1</label><textarea className="w-full px-4 py-2 border rounded-lg" name="content1" value={data.content1 || ''} onChange={onChange} rows={3} /></div>
-        <div><label className="block text-sm font-medium mb-1">Paragraph 2</label><textarea className="w-full px-4 py-2 border rounded-lg" name="content2" value={data.content2 || ''} onChange={onChange} rows={3} /></div>
+        <div><label className="block text-sm font-medium mb-1">Title</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="title" value={data.title || ''} onChange={onChange} /></div>
+        <div><label className="block text-sm font-medium mb-1">Paragraph 1</label><textarea className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="content1" value={data.content1 || ''} onChange={onChange} rows={3} /></div>
+        <div><label className="block text-sm font-medium mb-1">Paragraph 2</label><textarea className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="content2" value={data.content2 || ''} onChange={onChange} rows={3} /></div>
         <div className="grid grid-cols-2 gap-4">
-            <div><label className="block text-sm font-medium mb-1">Link Text</label><input className="w-full px-4 py-2 border rounded-lg" name="linkText" value={data.linkText || ''} onChange={onChange} /></div>
-            <div><label className="block text-sm font-medium mb-1">Link URL</label><input className="w-full px-4 py-2 border rounded-lg" name="linkUrl" value={data.linkUrl || ''} onChange={onChange} /></div>
+            <div><label className="block text-sm font-medium mb-1">Link Text</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="linkText" value={data.linkText || ''} onChange={onChange} /></div>
+            <div><label className="block text-sm font-medium mb-1">Link URL</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="linkUrl" value={data.linkUrl || ''} onChange={onChange} /></div>
         </div>
-        <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a]">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Why Ghana</button>
+        <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Why Ghana</button>
     </form>
 );
 
-const MilestonesManager = ({ milestones, setMilestones, dispatch }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentItem, setCurrentItem] = useState(null);
-    const [saving, setSaving] = useState(false);
-
-    const handleEdit = (item) => { setCurrentItem(item); setIsModalOpen(true); };
-    const handleAdd = () => { setCurrentItem(null); setIsModalOpen(true); };
+// Simple Milestone Manager Component (removed modal, uses navigation)
+const MilestonesManager = ({ milestones, setMilestones, dispatch, navigate }) => {
+    const { logAction } = useActivityLogger();
 
     const handleDelete = (item) => {
         dispatch(openConfirmDialog({
@@ -84,88 +62,63 @@ const MilestonesManager = ({ milestones, setMilestones, dispatch }) => {
                 try {
                     await contentService.deleteMilestone(item.id);
                     setMilestones(prev => prev.filter(m => m.id !== item.id));
+                    logAction({
+                        type: 'content_deleted',
+                        severity: 'warning',
+                        description: `Deleted milestone: "${item.title}"`,
+                        details: { contentType: 'Milestone', contentId: item.id }
+                    });
                 } catch (e) { console.error(e); }
             }
         }));
-    };
-
-    const handleSave = async (e) => {
-        e.preventDefault();
-        setSaving(true);
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
-
-        try {
-            if (currentItem) {
-                await contentService.updateMilestone(currentItem.id, data);
-            } else {
-                await contentService.createMilestone(data);
-            }
-            const res = await contentService.getMilestones();
-            setMilestones(res.data);
-            setIsModalOpen(false);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setSaving(false);
-        }
     };
 
     return (
         <div className="space-y-4">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold text-gray-800">Milestones List</h3>
-                <button onClick={handleAdd} className="flex items-center gap-2 bg-[#004fa2] text-white px-4 py-2 rounded-lg hover:bg-[#003d7a] transition-colors"><Plus size={16} /> Add Milestone</button>
+                <button 
+                    onClick={() => navigate('/admin/content/about-page/milestone/add')}
+                    className="flex items-center gap-2 bg-[#004fa2] text-white px-4 py-2 rounded-lg hover:bg-[#003d7a] transition-colors"
+                >
+                    <Plus size={16} /> Add Milestone
+                </button>
             </div>
             <div className="space-y-4">
-                {milestones.length === 0 ? <p className="text-gray-500 italic">No milestones found.</p> : milestones.map(m => (
-                    <div key={m.id} className="bg-white p-4 rounded-xl border flex justify-between items-center shadow-sm">
-                        <div className="flex-1 pr-4">
-                            <h4 className="font-bold text-gray-900">{m.title}</h4>
-                            <p className="text-sm text-gray-600 line-clamp-2">{m.description}</p>
+                {milestones.length === 0 ? (
+                    <p className="text-gray-500 italic">No milestones found.</p>
+                ) : (
+                    milestones.map(m => (
+                        <div key={m.id} className="bg-white p-4 rounded-xl border flex justify-between items-center shadow-sm">
+                            <div className="flex-1 pr-4">
+                                <h4 className="font-bold text-gray-900">{m.title}</h4>
+                                <p className="text-sm text-gray-600 line-clamp-2">{m.description}</p>
+                            </div>
+                            <div className="flex gap-2">
+                                <button 
+                                    onClick={() => navigate(`/admin/content/about-page/milestone/edit/${m.id}`)}
+                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                                >
+                                    <Edit2 size={18} />
+                                </button>
+                                <button 
+                                    onClick={() => handleDelete(m)}
+                                    className="p-2 text-red-600 hover:bg-red-50 rounded"
+                                >
+                                    <Trash2 size={18} />
+                                </button>
+                            </div>
                         </div>
-                        <div className="flex gap-2">
-                            <button onClick={() => handleEdit(m)} className="p-2 text-blue-600 hover:bg-blue-50 rounded"><Edit2 size={18} /></button>
-                            <button onClick={() => handleDelete(m)} className="p-2 text-red-600 hover:bg-red-50 rounded"><Trash2 size={18} /></button>
-                        </div>
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
-
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl w-full max-w-lg p-6 shadow-xl">
-                        <div className="flex justify-between items-center mb-4 border-b pb-2">
-                            <h3 className="text-xl font-bold">{currentItem ? 'Edit' : 'Add'} Milestone</h3>
-                            <button onClick={() => setIsModalOpen(false)}><X className="text-gray-400 hover:text-gray-600" /></button>
-                        </div>
-                        <form onSubmit={handleSave} className="space-y-4">
-                            <div><label className="block text-sm font-medium mb-1">Title</label><input type="text" name="title" defaultValue={currentItem?.title} required className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20" /></div>
-                            <div><label className="block text-sm font-medium mb-1">Description</label><textarea name="description" defaultValue={currentItem?.description} required rows={3} className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20" /></div>
-                            <div><label className="block text-sm font-medium mb-1">Icon</label>
-                                <select name="icon" defaultValue={currentItem?.icon || 'CheckCircle'} className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20">
-                                    {Object.keys(MILESTONE_ICONS).map(k => <option key={k} value={k}>{k}</option>)}
-                                </select>
-                            </div>
-                            <div className="flex justify-end gap-3 pt-4 border-t">
-                                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
-                                <button type="submit" disabled={saving} className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] flex items-center gap-2">{saving && <Loader size={16} className="animate-spin" />} Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
 
-const TimelineManager = ({ timeline, setTimeline, dispatch }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentItem, setCurrentItem] = useState(null);
-    const [saving, setSaving] = useState(false);
-
-    const handleEdit = (item) => { setCurrentItem(item); setIsModalOpen(true); };
-    const handleAdd = () => { setCurrentItem(null); setIsModalOpen(true); };
+// Simple Timeline Manager Component (removed modal, uses navigation)
+const TimelineManager = ({ timeline, setTimeline, dispatch, navigate }) => {
+    const { logAction } = useActivityLogger();
 
     const handleDelete = (item) => {
         dispatch(openConfirmDialog({
@@ -177,89 +130,66 @@ const TimelineManager = ({ timeline, setTimeline, dispatch }) => {
                 try {
                     await contentService.deleteTimelineItem(item.id);
                     setTimeline(prev => prev.filter(t => t.id !== item.id));
+                    logAction({
+                        type: 'content_deleted',
+                        severity: 'warning',
+                        description: `Deleted timeline item: "${item.title}"`,
+                        details: { contentType: 'TimelineItem', contentId: item.id }
+                    });
                 } catch (e) { console.error(e); }
             }
         }));
-    };
-
-    const handleSave = async (e) => {
-        e.preventDefault();
-        setSaving(true);
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
-
-        try {
-            if (currentItem) {
-                await contentService.updateTimelineItem(currentItem.id, data);
-            } else {
-                await contentService.createTimelineItem(data);
-            }
-            const res = await contentService.getTimeline();
-            setTimeline(res.data);
-            setIsModalOpen(false);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setSaving(false);
-        }
     };
 
     return (
         <div className="space-y-4">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold text-gray-800">Timeline Items</h3>
-                <button onClick={handleAdd} className="flex items-center gap-2 bg-[#004fa2] text-white px-4 py-2 rounded-lg hover:bg-[#003d7a] transition-colors"><Plus size={16} /> Add Item</button>
+                <button 
+                    onClick={() => navigate('/admin/content/about-page/timeline/add')}
+                    className="flex items-center gap-2 bg-[#004fa2] text-white px-4 py-2 rounded-lg hover:bg-[#003d7a] transition-colors"
+                >
+                    <Plus size={16} /> Add Item
+                </button>
             </div>
             <div className="space-y-4">
-                {timeline.length === 0 ? <p className="text-gray-500 italic">No timeline items found.</p> : timeline.map(t => (
-                    <div key={t.id} className="bg-white p-4 rounded-xl border flex justify-between items-center shadow-sm">
-                        <div className="flex-1 pr-4">
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className="bg-blue-100 text-[#004fa2] text-xs font-bold px-2 py-0.5 rounded">{t.year}</span>
-                                <h4 className="font-bold text-gray-900">{t.title}</h4>
-                            </div>
-                            <p className="text-sm text-gray-600 line-clamp-1">{t.desc}</p>
-                        </div>
-                        <div className="flex gap-2">
-                            <button onClick={() => handleEdit(t)} className="p-2 text-blue-600 hover:bg-blue-50 rounded"><Edit2 size={18} /></button>
-                            <button onClick={() => handleDelete(t)} className="p-2 text-red-600 hover:bg-red-50 rounded"><Trash2 size={18} /></button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl w-full max-w-lg p-6 shadow-xl">
-                        <div className="flex justify-between items-center mb-4 border-b pb-2">
-                            <h3 className="text-xl font-bold">{currentItem ? 'Edit' : 'Add'} Timeline Item</h3>
-                            <button onClick={() => setIsModalOpen(false)}><X className="text-gray-400 hover:text-gray-600" /></button>
-                        </div>
-                        <form onSubmit={handleSave} className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div><label className="block text-sm font-medium mb-1">Year</label><input type="text" name="year" defaultValue={currentItem?.year} required className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20" /></div>
-                                <div><label className="block text-sm font-medium mb-1">Icon</label>
-                                    <select name="icon" defaultValue={currentItem?.icon || 'Users'} className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20">
-                                        {Object.keys(TIMELINE_ICONS).map(k => <option key={k} value={k}>{k}</option>)}
-                                    </select>
+                {timeline.length === 0 ? (
+                    <p className="text-gray-500 italic">No timeline items found.</p>
+                ) : (
+                    timeline.map(t => (
+                        <div key={t.id} className="bg-white p-4 rounded-xl border flex justify-between items-center shadow-sm">
+                            <div className="flex-1 pr-4">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="bg-blue-100 text-[#004fa2] text-xs font-bold px-2 py-0.5 rounded">{t.year}</span>
+                                    <h4 className="font-bold text-gray-900">{t.title}</h4>
                                 </div>
+                                <p className="text-sm text-gray-600 line-clamp-1">{t.desc}</p>
                             </div>
-                            <div><label className="block text-sm font-medium mb-1">Title</label><input type="text" name="title" defaultValue={currentItem?.title} required className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20" /></div>
-                            <div><label className="block text-sm font-medium mb-1">Description</label><textarea name="desc" defaultValue={currentItem?.desc} required rows={3} className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20" /></div>
-                            <div className="flex justify-end gap-3 pt-4 border-t">
-                                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
-                                <button type="submit" disabled={saving} className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] flex items-center gap-2">{saving && <Loader size={16} className="animate-spin" />} Save</button>
+                            <div className="flex gap-2">
+                                <button 
+                                    onClick={() => navigate(`/admin/content/about-page/timeline/edit/${t.id}`)}
+                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                                >
+                                    <Edit2 size={18} />
+                                </button>
+                                <button 
+                                    onClick={() => handleDelete(t)}
+                                    className="p-2 text-red-600 hover:bg-red-50 rounded"
+                                >
+                                    <Trash2 size={18} />
+                                </button>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+                        </div>
+                    ))
+                )}
+            </div>
         </div>
     );
 };
 
 // --- Main Page Component ---
 const AboutPageManagementPage = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [activeTab, setActiveTab] = useState('hero');
     const [loading, setLoading] = useState(true);
@@ -385,8 +315,8 @@ const AboutPageManagementPage = () => {
                     {activeTab === 'hero' && <HeroForm data={heroData} onChange={handleHeroChange} onSubmit={handleHeroSubmit} saving={savingHero} />}
                     {activeTab === 'mission' && <MissionForm data={missionData} onChange={handleMissionChange} onSubmit={handleMissionSubmit} saving={savingMission} />}
                     {activeTab === 'why' && <WhyGhanaForm data={whyGhanaData} onChange={handleWhyGhanaChange} onSubmit={handleWhyGhanaSubmit} saving={savingWhyGhana} />}
-                    {activeTab === 'milestones' && <MilestonesManager milestones={milestones} setMilestones={setMilestones} dispatch={dispatch} />}
-                    {activeTab === 'timeline' && <TimelineManager timeline={timeline} setTimeline={setTimeline} dispatch={dispatch} />}
+                    {activeTab === 'milestones' && <MilestonesManager milestones={milestones} setMilestones={setMilestones} dispatch={dispatch} navigate={navigate} />}
+                    {activeTab === 'timeline' && <TimelineManager timeline={timeline} setTimeline={setTimeline} dispatch={dispatch} navigate={navigate} />}
                 </div>
             </div>
         </AdminLayout>
