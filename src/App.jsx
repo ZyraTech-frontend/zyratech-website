@@ -73,6 +73,9 @@ const ServicesManagementPage = lazy(() => import('./pages/admin/content/Services
 const ServiceFormPage = lazy(() => import('./pages/admin/content/ServiceFormPage'));
 const BenefitsManagementPage = lazy(() => import('./pages/admin/content/BenefitsManagementPage'));
 const BenefitFormPage = lazy(() => import('./pages/admin/content/BenefitFormPage'));
+const MilestoneFormPage = lazy(() => import('./pages/admin/content/MilestoneFormPage'));
+const TimelineItemFormPage = lazy(() => import('./pages/admin/content/TimelineItemFormPage'));
+const PartnershipStoryFormPage = lazy(() => import('./pages/admin/content/PartnershipStoryFormPage'));
 const AboutQuoteManagementPage = lazy(() => import('./pages/admin/content/AboutQuoteManagementPage'));
 const AboutPageManagementPage = lazy(() => import('./pages/admin/content/AboutPageManagementPage'));
 const PartnershipContentManagementPage = lazy(() => import('./pages/admin/content/PartnershipContentManagementPage'));
@@ -186,7 +189,13 @@ function App() {
                 <Route path="/admin/content/benefits/edit/:id" element={<ProtectedRoute><BenefitFormPage /></ProtectedRoute>} />
                 <Route path="/admin/content/about" element={<ProtectedRoute><AboutQuoteManagementPage /></ProtectedRoute>} />
                 <Route path="/admin/content/about-page" element={<ProtectedRoute><AboutPageManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/content/about-page/milestone/add" element={<ProtectedRoute><MilestoneFormPage /></ProtectedRoute>} />
+                <Route path="/admin/content/about-page/milestone/edit/:id" element={<ProtectedRoute><MilestoneFormPage /></ProtectedRoute>} />
+                <Route path="/admin/content/about-page/timeline/add" element={<ProtectedRoute><TimelineItemFormPage /></ProtectedRoute>} />
+                <Route path="/admin/content/about-page/timeline/edit/:id" element={<ProtectedRoute><TimelineItemFormPage /></ProtectedRoute>} />
                 <Route path="/admin/content/partnership" element={<ProtectedRoute><PartnershipContentManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/content/partnership/story/add" element={<ProtectedRoute><PartnershipStoryFormPage /></ProtectedRoute>} />
+                <Route path="/admin/content/partnership/story/edit/:id" element={<ProtectedRoute><PartnershipStoryFormPage /></ProtectedRoute>} />
                 <Route path="/admin/content/work-with-us" element={<ProtectedRoute><WorkWithUsManagementPage /></ProtectedRoute>} />
                 <Route path="/admin/content/quality-assurance" element={<ProtectedRoute><QAManagementPage /></ProtectedRoute>} />
 
