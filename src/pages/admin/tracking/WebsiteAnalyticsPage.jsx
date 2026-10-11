@@ -1,5 +1,5 @@
 /**
- * Website Analytics Page
+ * Website Analytics Page - Premium UI Redesign
  * Internal website traffic and engagement analytics dashboard
  */
 
@@ -15,10 +15,19 @@ import {
   BarChart3,
   Activity,
   Download,
-  Calendar,
   ArrowUp,
   ArrowDown,
-  ExternalLink
+  ExternalLink,
+  Info,
+  HelpCircle,
+  Smartphone,
+  Monitor,
+  Tablet,
+  Filter,
+  CalendarDays,
+  Search,
+  ChevronRight,
+  Circle
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 
@@ -54,17 +63,17 @@ const WebsiteAnalyticsPage = () => {
   ];
 
   const trafficSources = [
-    { source: 'Direct', visitors: 4523, percentage: 35.2, change: 12.3 },
-    { source: 'Organic Search', visitors: 3845, percentage: 29.9, change: 18.7 },
-    { source: 'Social Media', visitors: 2345, percentage: 18.3, change: -5.2 },
-    { source: 'Referral', visitors: 1234, percentage: 9.6, change: 8.4 },
-    { source: 'Email', visitors: 900, percentage: 7.0, change: 15.6 }
+    { source: 'Direct', visitors: 4523, percentage: 35.2, change: 12.3, color: 'bg-blue-500' },
+    { source: 'Organic Search', visitors: 3845, percentage: 29.9, change: 18.7, color: 'bg-green-500' },
+    { source: 'Social Media', visitors: 2345, percentage: 18.3, change: -5.2, color: 'bg-purple-500' },
+    { source: 'Referral', visitors: 1234, percentage: 9.6, change: 8.4, color: 'bg-orange-500' },
+    { source: 'Email', visitors: 900, percentage: 7.0, change: 15.6, color: 'bg-blue-400' }
   ];
 
   const deviceBreakdown = [
-    { device: 'Desktop', visitors: 7234, percentage: 56.3, avgSession: '5m 23s' },
-    { device: 'Mobile', visitors: 4523, percentage: 35.2, avgSession: '3m 45s' },
-    { device: 'Tablet', visitors: 1090, percentage: 8.5, avgSession: '4m 12s' }
+    { device: 'Desktop', icon: Monitor, visitors: 7234, percentage: 56.3, avgSession: '5m 23s', color: 'bg-blue-500' },
+    { device: 'Mobile', icon: Smartphone, visitors: 4523, percentage: 35.2, avgSession: '3m 45s', color: 'bg-blue-500' },
+    { device: 'Tablet', icon: Tablet, visitors: 1090, percentage: 8.5, avgSession: '4m 12s', color: 'bg-purple-500' }
   ];
 
   const locationData = [
@@ -76,289 +85,289 @@ const WebsiteAnalyticsPage = () => {
   ];
 
   const engagementMetrics = [
-    { metric: 'Avg Pages/Session', value: '3.52', change: 8.2 },
-    { metric: 'New vs Returning', value: '65% / 35%', change: null },
-    { metric: 'Conversion Rate', value: '3.29%', change: 12.4 },
-    { metric: 'Exit Rate', value: '42.1%', change: -6.3 }
+    { metric: 'Avg Pages/Session', value: '3.52', change: 8.2, color: 'bg-blue-500' },
+    { metric: 'New vs Returning', value: '65% / 35%', change: null, color: 'bg-purple-500' },
+    { metric: 'Conversion Rate', value: '3.29%', change: 12.4, color: 'bg-green-500' },
+    { metric: 'Exit Rate', value: '42.1%', change: -6.3, color: 'bg-orange-500' }
+  ];
+
+  const metrics = [
+    { label: 'Total Visitors', value: stats.totalVisitors.toLocaleString(), change: stats.visitorsChange, icon: Users, color: 'bg-blue-500' },
+    { label: 'Page Views', value: stats.pageViews.toLocaleString(), change: stats.pageViewsChange, icon: Eye, color: 'bg-blue-400' },
+    { label: 'Avg Session', value: stats.avgSessionDuration, change: stats.sessionChange, icon: Clock, color: 'bg-purple-500' },
+    { label: 'Bounce Rate', value: `${stats.bounceRate}%`, change: stats.bounceChange, icon: MousePointerClick, color: 'bg-orange-500' },
+    { label: 'Unique Users', value: stats.uniqueUsers.toLocaleString(), change: stats.usersChange, icon: Users, color: 'bg-green-500' },
+    { label: 'Conversions', value: stats.conversions, change: stats.conversionsChange, icon: TrendingUp, color: 'bg-green-500' }
   ];
 
   return (
     <AdminLayout>
       <div className="space-y-6 pb-8">
-        {/* Header */}
-        <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 rounded-2xl p-6 text-white shadow-lg border border-blue-500/30">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Globe size={14} className="text-blue-200" />
-                <span className="text-blue-200 text-xs font-bold uppercase tracking-wider">Internal Website Analytics</span>
+        {/* Premium Header with ZyraTech Brand Colors */}
+        <div className="bg-gradient-to-br from-[#004fa2] via-[#003d7a] to-[#0066cc] rounded-2xl p-6 text-white relative overflow-hidden shadow-xl border border-blue-500/30">
+          {/* Decorative elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-3xl -ml-12 -mb-12 pointer-events-none"></div>
+          
+          <div className="relative z-10">
+            <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Globe size={16} className="text-blue-200" />
+                  <span className="text-blue-200 text-xs font-bold uppercase tracking-wider">Website Analytics</span>
+                </div>
+                <h1 className="text-2xl font-bold mb-1">Traffic & Engagement Dashboard</h1>
+                <p className="text-blue-100 text-sm">Monitor your website's performance and user behavior</p>
               </div>
-              <h1 className="text-2xl font-bold mb-1">Traffic & Engagement Dashboard</h1>
-              <p className="text-blue-200 text-sm">Real-time website performance and user behavior insights</p>
+              
+              <div className="flex items-center gap-2">
+                <select
+                  value={dateRange}
+                  onChange={(e) => setDateRange(e.target.value)}
+                  className="px-3 py-2 bg-white/10 border border-white/20 text-white rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-white/50"
+                >
+                  <option value="today" className="text-gray-900">Today</option>
+                  <option value="7days" className="text-gray-900">Last 7 Days</option>
+                  <option value="30days" className="text-gray-900">Last 30 Days</option>
+                  <option value="90days" className="text-gray-900">Last 90 Days</option>
+                </select>
+                <button className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium border border-white/20 flex items-center gap-2 transition-colors">
+                  <Download size={16} />
+                  Export CSV
+                </button>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
+
+            {/* Key Metrics */}
+            <div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
+              {metrics.map((metric, index) => (
+                <div key={index} className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${metric.color} bg-opacity-90`}>
+                      <metric.icon size={16} className="text-white" />
+                    </div>
+                    <div className="text-right">
+                      <span className={`text-xs font-bold flex items-center justify-end gap-1 ${
+                        metric.change > 0 ? 'text-green-300' : metric.change < 0 ? 'text-red-300' : 'text-blue-200'
+                      }`}>
+                        {metric.change !== undefined && (
+                          <>
+                            {metric.change > 0 ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
+                            {Math.abs(metric.change)}%
+                          </>
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-blue-200 mb-1">{metric.label}</p>
+                  <h3 className="text-lg font-bold">{metric.value}</h3>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Sidebar - Filters & Quick Stats */}
+          <div className="space-y-6">
+            {/* Date Range Filter */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+              <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                <CalendarDays size={16} />
+                Date Range
+              </h3>
               <select
                 value={dateRange}
                 onChange={(e) => setDateRange(e.target.value)}
-                className="px-3 py-2 bg-white/10 border border-white/20 text-white rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="today">Today</option>
                 <option value="7days">Last 7 Days</option>
                 <option value="30days">Last 30 Days</option>
                 <option value="90days">Last 90 Days</option>
               </select>
-              <button className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium border border-white/20 flex items-center gap-2 transition-colors">
-                <Download size={16} />
-                Export
-              </button>
             </div>
-          </div>
-        </div>
 
-        {/* Key Metrics Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-          <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
-                <Users size={16} />
+            {/* Traffic Sources */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+              <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                <BarChart3 size={16} />
+                Traffic Sources
+              </h3>
+              <div className="space-y-3">
+                {trafficSources.map((source, index) => (
+                  <div key={index} className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${source.color}`} />
+                        <span className="text-sm font-medium text-gray-700">{source.source}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-bold text-gray-900">{source.visitors.toLocaleString()}</span>
+                        <span className={`text-xs font-bold ${source.change > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {source.change > 0 ? '+' : ''}{source.change}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                        <div className={`h-full ${source.color}`} style={{ width: `${source.percentage}%` }} />
+                      </div>
+                      <span className="text-xs text-gray-500 w-10 text-right">{source.percentage}%</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-            <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Total Visitors</p>
-            <h3 className="text-xl font-bold text-gray-900 mb-1">{stats.totalVisitors.toLocaleString()}</h3>
-            <div className="flex items-center gap-1 text-xs">
-              {stats.visitorsChange > 0 ? (
-                <>
-                  <ArrowUp size={12} className="text-green-600" />
-                  <span className="text-green-600 font-semibold">+{stats.visitorsChange}%</span>
-                </>
-              ) : (
-                <>
-                  <ArrowDown size={12} className="text-red-600" />
-                  <span className="text-red-600 font-semibold">{stats.visitorsChange}%</span>
-                </>
-              )}
-            </div>
-          </div>
 
-          <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center text-cyan-600">
-                <Eye size={16} />
+            {/* Device Breakdown */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+              <h3 className="text-sm font-bold text-gray-900 mb-3">Device Types</h3>
+              <div className="space-y-3">
+                {deviceBreakdown.map((device, index) => {
+                  const Icon = device.icon;
+                  return (
+                    <div key={index}>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center text-gray-600">
+                            <Icon size={16} />
+                          </div>
+                          <span className="text-sm font-semibold text-gray-700">{device.device}</span>
+                        </div>
+                        <span className="text-sm font-bold text-gray-900">{device.visitors.toLocaleString()}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                          <div className={`h-full ${device.color}`} style={{ width: `${device.percentage}%` }} />
+                        </div>
+                        <span className="text-xs text-gray-500 w-10 text-right">{device.percentage}%</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-0.5">Avg session: {device.avgSession}</p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-            <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Page Views</p>
-            <h3 className="text-xl font-bold text-gray-900 mb-1">{stats.pageViews.toLocaleString()}</h3>
-            <div className="flex items-center gap-1 text-xs">
-              <ArrowUp size={12} className="text-green-600" />
-              <span className="text-green-600 font-semibold">+{stats.pageViewsChange}%</span>
-            </div>
           </div>
 
-          <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">
-                <Clock size={16} />
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Avg Session</p>
-            <h3 className="text-xl font-bold text-gray-900 mb-1">{stats.avgSessionDuration}</h3>
-            <div className="flex items-center gap-1 text-xs">
-              <ArrowDown size={12} className="text-red-600" />
-              <span className="text-red-600 font-semibold">{stats.sessionChange}%</span>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600">
-                <MousePointerClick size={16} />
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Bounce Rate</p>
-            <h3 className="text-xl font-bold text-gray-900 mb-1">{stats.bounceRate}%</h3>
-            <div className="flex items-center gap-1 text-xs">
-              <ArrowDown size={12} className="text-green-600" />
-              <span className="text-green-600 font-semibold">{stats.bounceChange}%</span>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600">
-                <Activity size={16} />
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Unique Users</p>
-            <h3 className="text-xl font-bold text-gray-900 mb-1">{stats.uniqueUsers.toLocaleString()}</h3>
-            <div className="flex items-center gap-1 text-xs">
-              <ArrowUp size={12} className="text-green-600" />
-              <span className="text-green-600 font-semibold">+{stats.usersChange}%</span>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center text-green-600">
-                <TrendingUp size={16} />
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 font-semibold uppercase mb-1">Conversions</p>
-            <h3 className="text-xl font-bold text-gray-900 mb-1">{stats.conversions}</h3>
-            <div className="flex items-center gap-1 text-xs">
-              <ArrowUp size={12} className="text-green-600" />
-              <span className="text-green-600 font-semibold">+{stats.conversionsChange}%</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Two Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Top Pages */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
-            <div className="p-4 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold text-gray-900">Top Pages</h2>
-                <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
-              </div>
-            </div>
-            <div className="divide-y divide-gray-200">
-              {topPages.map((page, index) => (
-                <div key={index} className="p-4 hover:bg-gray-50 transition-colors">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 truncate">{page.title}</p>
-                      <p className="text-xs text-gray-500 truncate">{page.path}</p>
-                    </div>
-                    <ExternalLink size={14} className="text-gray-400 shrink-0 ml-2" />
+          {/* Main Content - Top Pages */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              {/* Table Header */}
+              <div className="p-4 border-b border-gray-200 bg-gray-50">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-gray-900">Most Visited Pages</h2>
+                    <p className="text-sm text-gray-600">Top performing pages on your website</p>
                   </div>
-                  <div className="grid grid-cols-4 gap-2 text-xs">
-                    <div>
-                      <p className="text-gray-500 mb-0.5">Views</p>
-                      <p className="font-semibold text-gray-900">{page.views.toLocaleString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-500 mb-0.5">Visitors</p>
-                      <p className="font-semibold text-gray-900">{page.uniqueVisitors.toLocaleString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-500 mb-0.5">Avg Time</p>
-                      <p className="font-semibold text-gray-900">{page.avgTime}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-500 mb-0.5">Bounce</p>
-                      <p className="font-semibold text-gray-900">{page.bounceRate}%</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Traffic Sources */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
-            <div className="p-4 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-900">Traffic Sources</h2>
-            </div>
-            <div className="p-4 space-y-4">
-              {trafficSources.map((source, index) => (
-                <div key={index}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-gray-900">{source.source}</span>
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm font-bold text-gray-900">{source.visitors.toLocaleString()}</span>
-                      <span className={`text-xs font-semibold ${source.change > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {source.change > 0 ? '+' : ''}{source.change}%
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-blue-500 rounded-full"
-                        style={{ width: `${source.percentage}%` }}
-                      />
-                    </div>
-                    <span className="text-xs font-semibold text-gray-600 w-12 text-right">
-                      {source.percentage}%
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Three Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Device Breakdown */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
-            <div className="p-4 border-b border-gray-200">
-              <h2 className="text-base font-bold text-gray-900">Device Breakdown</h2>
-            </div>
-            <div className="p-4 space-y-4">
-              {deviceBreakdown.map((item, index) => (
-                <div key={index}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-gray-900">{item.device}</span>
-                    <span className="text-sm font-bold text-gray-900">{item.visitors.toLocaleString()}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-cyan-500 rounded-full"
-                        style={{ width: `${item.percentage}%` }}
-                      />
-                    </div>
-                    <span className="text-xs font-semibold text-gray-600 w-12 text-right">
-                      {item.percentage}%
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">Avg Session: {item.avgSession}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Geographic Data */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
-            <div className="p-4 border-b border-gray-200">
-              <h2 className="text-base font-bold text-gray-900">Top Locations</h2>
-            </div>
-            <div className="p-4 space-y-3">
-              {locationData.map((location, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <span className="text-2xl shrink-0">{location.flag}</span>
-                    <span className="text-sm font-medium text-gray-900 truncate">{location.country}</span>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-sm font-semibold text-gray-900">{location.visitors.toLocaleString()}</span>
-                    <span className="text-xs text-gray-500">({location.percentage}%)</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Engagement Metrics */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
-            <div className="p-4 border-b border-gray-200">
-              <h2 className="text-base font-bold text-gray-900">Engagement</h2>
-            </div>
-            <div className="p-4 space-y-4">
-              {engagementMetrics.map((item, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">{item.metric}</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-gray-900">{item.value}</span>
-                    {item.change !== null && (
-                      <span className={`text-xs font-semibold ${item.change > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {item.change > 0 ? '+' : ''}{item.change}%
-                      </span>
-                    )}
+                    <div className="relative">
+                      <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search pages..."
+                        className="pl-10 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
                   </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Pages List */}
+              <div className="divide-y divide-gray-200 max-h-[600px] overflow-y-auto">
+                {topPages.map((page, index) => (
+                  <div key={index} className="p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-6 h-6 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-xs font-bold shrink-0">
+                            {index + 1}
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-sm font-bold text-gray-900 mb-0.5">{page.title}</h3>
+                            <p className="text-xs text-gray-500 truncate">{page.path}</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <ExternalLink size={16} className="text-gray-400 hover:text-gray-600 transition-colors" />
+                    </div>
+
+                    {/* Stats */}
+                    <div className="ml-9 grid grid-cols-4 gap-2">
+                      <div className="bg-blue-50 rounded p-2">
+                        <p className="text-xs text-gray-500 mb-0.5">Views</p>
+                        <p className="text-sm font-bold text-gray-900">{page.views.toLocaleString()}</p>
+                      </div>
+                      <div className="bg-blue-50 rounded p-2">
+                        <p className="text-xs text-gray-500 mb-0.5">Visitors</p>
+                        <p className="text-sm font-bold text-gray-900">{page.uniqueVisitors.toLocaleString()}</p>
+                      </div>
+                      <div className="bg-purple-50 rounded p-2">
+                        <p className="text-xs text-gray-500 mb-0.5">Avg Time</p>
+                        <p className="text-sm font-bold text-gray-900">{page.avgTime}</p>
+                      </div>
+                      <div className="bg-orange-50 rounded p-2">
+                        <p className="text-xs text-gray-500 mb-0.5">Bounce Rate</p>
+                        <p className="text-sm font-bold text-gray-900">{page.bounceRate}%</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              {/* Locations */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-bold text-gray-900">Top Locations</h3>
+                  <Globe size={16} className="text-gray-500" />
+                </div>
+                <div className="space-y-2">
+                  {locationData.map((location, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{location.flag}</span>
+                        <span className="text-sm font-medium text-gray-700">{location.country}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-bold text-gray-900">{location.visitors.toLocaleString()}</span>
+                        <span className="text-xs text-gray-500">({location.percentage}%)</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Engagement Metrics */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-bold text-gray-900">Engagement Metrics</h3>
+                  <Activity size={16} className="text-gray-500" />
+                </div>
+                <div className="space-y-3">
+                  {engagementMetrics.map((item, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${item.color}`} />
+                        <span className="text-sm font-medium text-gray-700">{item.metric}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-bold text-gray-900">{item.value}</span>
+                        {item.change !== null && (
+                          <span className={`text-xs font-bold ${item.change > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {item.change > 0 ? '+' : ''}{item.change}%
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
