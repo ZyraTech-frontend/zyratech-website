@@ -69,7 +69,9 @@ const ReportsPage = lazy(() => import('./pages/admin/reports/ReportsPage'));
 const AdminProfilePage = lazy(() => import('./pages/admin/profile/AdminProfilePage'));
 const HeroSlidesManagementPage = lazy(() => import('./pages/admin/content/HeroSlidesManagementPage'));
 const ServicesManagementPage = lazy(() => import('./pages/admin/content/ServicesManagementPage'));
+const ServiceFormPage = lazy(() => import('./pages/admin/content/ServiceFormPage'));
 const BenefitsManagementPage = lazy(() => import('./pages/admin/content/BenefitsManagementPage'));
+const BenefitFormPage = lazy(() => import('./pages/admin/content/BenefitFormPage'));
 const AboutQuoteManagementPage = lazy(() => import('./pages/admin/content/AboutQuoteManagementPage'));
 const AboutPageManagementPage = lazy(() => import('./pages/admin/content/AboutPageManagementPage'));
 const PartnershipContentManagementPage = lazy(() => import('./pages/admin/content/PartnershipContentManagementPage'));
@@ -174,7 +176,11 @@ function App() {
                 {/* CMS Content Management */}
                 <Route path="/admin/content/hero" element={<ProtectedRoute><HeroSlidesManagementPage /></ProtectedRoute>} />
                 <Route path="/admin/content/services" element={<ProtectedRoute><ServicesManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/content/services/add" element={<ProtectedRoute><ServiceFormPage /></ProtectedRoute>} />
+                <Route path="/admin/content/services/edit/:id" element={<ProtectedRoute><ServiceFormPage /></ProtectedRoute>} />
                 <Route path="/admin/content/benefits" element={<ProtectedRoute><BenefitsManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/content/benefits/add" element={<ProtectedRoute><BenefitFormPage /></ProtectedRoute>} />
+                <Route path="/admin/content/benefits/edit/:id" element={<ProtectedRoute><BenefitFormPage /></ProtectedRoute>} />
                 <Route path="/admin/content/about" element={<ProtectedRoute><AboutQuoteManagementPage /></ProtectedRoute>} />
                 <Route path="/admin/content/about-page" element={<ProtectedRoute><AboutPageManagementPage /></ProtectedRoute>} />
                 <Route path="/admin/content/partnership" element={<ProtectedRoute><PartnershipContentManagementPage /></ProtectedRoute>} />

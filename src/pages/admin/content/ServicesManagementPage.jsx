@@ -4,13 +4,12 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     Plus,
     Search,
     Edit2,
     Trash2,
-    Save,
-    X,
     Loader,
     Briefcase,
     CheckCircle
@@ -22,30 +21,16 @@ import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 const ServicesManagementPage = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { logAction } = useActivityLogger();
     const [activeTab, setActiveTab] = useState('services'); // 'services' or 'benefits'
     const [services, setServices] = useState([]);
     const [benefits, setBenefits] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentItem, setCurrentItem] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const [saving, setSaving] = useState(false);
 
-    // Initial form state
-    const initialFormState = activeTab === 'services' ? {
-        title: '',
-        description: '',
-        icon: 'Code2',
-        highlights: ''
-    } : {
-        icon: 'ShieldCheck',
-        title: '',
-        description: ''
-    };
 
-    const [formData, setFormData] = useState(initialFormState);
 
     // Fetch services and benefits on mount
     useEffect(() => {
@@ -68,101 +53,7 @@ const ServicesManagementPage = () => {
         }
     };
 
-    const handleOpenModal = (item = null) => {
-        if (item) {
-            setCurrentItem(item);
-            if (activeTab === 'services') {
-                setFormData({
-                    title: item.title,
-                    description: item.description || '',
-                    icon: item.icon || 'Code2',
-                    highlights: Array.isArray(item.highlights) ? item.highlights.join('\n') : ''
-                });
-            } else {
-                setFormData({
-                    icon: item.icon || 'ShieldCheck',
-                    title: item.title,
-                    description: item.description || ''
-                });
-            }
-        } else {
-            setCurrentItem(null);
-            setFormData(initialFormState);
-        }
-        setIsModalOpen(true);
-    };
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setCurrentItem(null);
-        setFormData(initialFormState);
-    };
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            setSaving(true);
-            
-            if (activeTab === 'services') {
-                const apiData = {
-                    ...formData,
-                    highlights: formData.highlights.split('\n').filter(line => line.trim() !== '')
-                };
-
-                if (currentItem) {
-                    await contentService.updateService(currentItem.id, apiData);
-                    logAction({
-                        type: 'content_updated',
-                        severity: 'info',
-                        description: `Updated service: "${apiData.title}"`,
-                        details: { contentType: 'Service', contentId: currentItem.id }
-                    });
-                } else {
-                    await contentService.createService(apiData);
-                    logAction({
-                        type: 'content_created',
-                        severity: 'success',
-                        description: `Created new service: "${apiData.title}"`,
-                        details: { contentType: 'Service' }
-                    });
-                }
-            } else {
-                // Benefits
-                if (currentItem) {
-                    await contentService.updateBenefit(currentItem.id, formData);
-                    logAction({
-                        type: 'content_updated',
-                        severity: 'info',
-                        description: `Updated benefit: "${formData.title}"`,
-                        details: { contentType: 'Benefit', contentId: currentItem.id }
-                    });
-                } else {
-                    await contentService.createBenefit(formData);
-                    logAction({
-                        type: 'content_created',
-                        severity: 'success',
-                        description: `Created new benefit: "${formData.title}"`,
-                        details: { contentType: 'Benefit' }
-                    });
-                }
-            }
-            
-            await fetchData();
-            handleCloseModal();
-        } catch (error) {
-            console.error('Error saving:', error);
-        } finally {
-            setSaving(false);
-        }
-    };
 
     const handleDelete = (item) => {
         const isService = activeTab === 'services';
@@ -199,6 +90,22 @@ const ServicesManagementPage = () => {
         }));
     };
 
+    const handleAddClick = () => {
+        if (activeTab === 'services') {
+            navigate('/admin/content/services/add');
+        } else {
+            navigate('/admin/content/benefits/add');
+        }
+    };
+
+    const handleEditClick = (item) => {
+        if (activeTab === 'services') {
+            navigate(`/admin/content/services/edit/${item.id}`);
+        } else {
+            navigate(`/admin/content/benefits/edit/${item.id}`);
+        }
+    };
+
     const currentData = activeTab === 'services' ? services : benefits;
     const filteredData = currentData.filter(item =>
         item.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -224,7 +131,7 @@ const ServicesManagementPage = () => {
                     </div>
 
                     <button
-                        onClick={() => handleOpenModal()}
+                        onClick={handleAddClick}
                         className="flex items-center gap-2 bg-[#004fa2] text-white px-4 py-2 rounded-lg hover:bg-[#003d7a] transition-colors shadow-sm"
                     >
                         <Plus size={18} />
@@ -299,7 +206,7 @@ const ServicesManagementPage = () => {
                         </h3>
                         <p className="text-gray-500 mb-6">Get started by adding your first item.</p>
                         <button
-                            onClick={() => handleOpenModal()}
+                            onClick={handleAddClick}
                             className="inline-flex items-center gap-2 text-[#004fa2] font-medium hover:underline"
                         >
                             <Plus size={16} />
@@ -332,7 +239,7 @@ const ServicesManagementPage = () => {
                                 </div>
                                 <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-gray-100">
                                     <button
-                                        onClick={() => handleOpenModal(item)}
+                                        onClick={() => handleEditClick(item)}
                                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                         title={`Edit ${activeTab === 'services' ? 'Service' : 'Benefit'}`}
                                     >
@@ -348,125 +255,6 @@ const ServicesManagementPage = () => {
                                 </div>
                             </div>
                         ))}
-                    </div>
-                )}
-
-                {/* Edit/Create Modal */}
-                {isModalOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 overflow-y-auto">
-                        <div className="bg-white rounded-2xl w-full max-w-2xl shadow-xl transform transition-all max-h-[85vh] flex flex-col">
-                            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-2xl sticky top-0 z-10">
-                                <h3 className="text-xl font-bold text-gray-900">
-                                    {currentItem ? 'Edit' : 'Add'} {activeTab === 'services' ? 'Service' : 'Benefit'}
-                                </h3>
-                                <button
-                                    onClick={handleCloseModal}
-                                    className="text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded-full p-1 transition-colors"
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
-
-                            <form onSubmit={handleSubmit} className="p-6 space-y-6 overflow-y-auto">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="col-span-1 md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Title <span className="text-red-500">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="title"
-                                            value={formData.title}
-                                            onChange={handleInputChange}
-                                            required
-                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
-                                            placeholder={activeTab === 'services' 
-                                                ? 'e.g. SOFTWARE ENGINEERING' 
-                                                : 'e.g. Low Risk'}
-                                        />
-                                    </div>
-
-                                    <div className="col-span-1 md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Description <span className="text-red-500">*</span>
-                                        </label>
-                                        <textarea
-                                            name="description"
-                                            value={formData.description}
-                                            onChange={handleInputChange}
-                                            required
-                                            rows={3}
-                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] resize-none transition-all"
-                                            placeholder="Brief description..."
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Icon
-                                        </label>
-                                        <select
-                                            name="icon"
-                                            value={formData.icon}
-                                            onChange={handleInputChange}
-                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] bg-white transition-all"
-                                        >
-                                            <option value="Code2">Code / Development</option>
-                                            <option value="ServerCog">Server / Infrastructure</option>
-                                            <option value="BookOpen">Learning / Research</option>
-                                            <option value="GraduationCap">Education / Training</option>
-                                            <option value="Shield">Security / Managed Services</option>
-                                            <option value="ShieldCheck">Shield Check</option>
-                                            <option value="Briefcase">Business / General</option>
-                                            <option value="Globe">Web / Global</option>
-                                            <option value="Smartphone">Mobile / Apps</option>
-                                            <option value="Database">Data / Storage</option>
-                                            <option value="Layout">Design / UI/UX</option>
-                                            <option value="Cpu">Hardware / IoT</option>
-                                            <option value="Cog">Cog</option>
-                                            <option value="TrendingUp">TrendingUp</option>
-                                            <option value="DollarSign">DollarSign</option>
-                                            <option value="Users">Users</option>
-                                        </select>
-                                    </div>
-
-                                    {activeTab === 'services' && (
-                                        <div className="col-span-1 md:col-span-2">
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Highlights (One per line)
-                                            </label>
-                                            <textarea
-                                                name="highlights"
-                                                value={formData.highlights}
-                                                onChange={handleInputChange}
-                                                rows={4}
-                                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] resize-none transition-all font-mono text-sm"
-                                                placeholder="Example:&#10;Web & mobile app development&#10;API integration&#10;Cloud deployment"
-                                            />
-                                            <p className="text-xs text-gray-500 mt-1">Key features, one per line.</p>
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="flex gap-3 justify-end pt-4 border-t border-gray-100">
-                                    <button
-                                        type="button"
-                                        onClick={handleCloseModal}
-                                        className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors font-medium border border-gray-200"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        disabled={saving}
-                                        className="px-6 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-colors font-medium"
-                                    >
-                                        {saving && <Loader size={16} className="animate-spin" />}
-                                        {currentItem ? 'Update' : 'Create'}
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
                     </div>
                 )}
             </div>
