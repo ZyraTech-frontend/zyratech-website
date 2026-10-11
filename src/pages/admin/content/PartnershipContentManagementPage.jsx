@@ -3,14 +3,16 @@
  * Partnership Page Content Management
  */
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-    Save, Loader, Plus, Edit2, Trash2, X,
+    Save, Loader, Plus, Edit2, Trash2,
     Layout, PieChart, Info, BookOpen, Star, Handshake
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 // --- Sub-components (defined outside to preserve focus) ---
 
@@ -61,13 +63,9 @@ const WhyPartnerForm = ({ data, onChange, onSubmit, saving }) => (
     </form>
 );
 
-const StoriesManager = ({ stories, setStories, dispatch }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentItem, setCurrentItem] = useState(null);
-    const [saving, setSaving] = useState(false);
-
-    const handleEdit = (item) => { setCurrentItem(item); setIsModalOpen(true); };
-    const handleAdd = () => { setCurrentItem(null); setIsModalOpen(true); };
+// Simple Stories Manager Component (removed modal, uses navigation)
+const StoriesManager = ({ stories, setStories, dispatch, navigate }) => {
+    const { logAction } = useActivityLogger();
 
     const handleDelete = (item) => {
         dispatch(openConfirmDialog({
@@ -78,80 +76,55 @@ const StoriesManager = ({ stories, setStories, dispatch }) => {
             onConfirm: async () => {
                 await contentService.deletePartnershipStory(item.id);
                 setStories(prev => prev.filter(s => s.id !== item.id));
+                logAction({
+                    type: 'content_deleted',
+                    severity: 'warning',
+                    description: `Deleted partnership story: "${item.title}"`,
+                    details: { contentType: 'PartnershipStory', contentId: item.id }
+                });
             }
         }));
-    };
-
-    const handleSave = async (e) => {
-        e.preventDefault();
-        setSaving(true);
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
-
-        try {
-            if (currentItem) {
-                await contentService.updatePartnershipStory(currentItem.id, data);
-            } else {
-                await contentService.createPartnershipStory(data);
-            }
-            const res = await contentService.getPartnershipStories();
-            setStories(res.data);
-            setIsModalOpen(false);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setSaving(false);
-        }
     };
 
     return (
         <div className="space-y-4">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold text-gray-800">Partnership Stories</h3>
-                <button onClick={handleAdd} className="flex items-center gap-2 bg-[#004fa2] text-white px-4 py-2 rounded-lg hover:bg-[#003d7a] transition-colors"><Plus size={16} /> Add Story</button>
+                <button 
+                    onClick={() => navigate('/admin/content/partnership/story/add')}
+                    className="flex items-center gap-2 bg-[#004fa2] text-white px-4 py-2 rounded-lg hover:bg-[#003d7a] transition-colors"
+                >
+                    <Plus size={16} /> Add Story
+                </button>
             </div>
             <div className="space-y-4">
-                {stories.length === 0 ? <p className="text-gray-500 italic">No stories found.</p> : stories.map(s => (
-                    <div key={s.id} className="bg-white p-4 rounded-xl border flex justify-between items-start shadow-sm">
-                        <div className="flex gap-4">
-                            <img decoding="async" src={s.image} alt="" className="w-16 h-16 object-cover rounded bg-gray-100" loading="lazy" />
-                            <div>
+                {stories.length === 0 ? (
+                    <p className="text-gray-500 italic">No stories found.</p>
+                ) : (
+                    stories.map(s => (
+                        <div key={s.id} className="bg-white p-4 rounded-xl border flex justify-between items-center shadow-sm">
+                            <div className="flex-1 pr-4">
                                 <h4 className="font-bold text-gray-900">{s.title}</h4>
-                                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">{s.category}</span>
-                                <p className="text-sm text-gray-600 mt-1 line-clamp-2">{s.story}</p>
+                                <p className="text-sm text-gray-600 line-clamp-2">{s.description}</p>
+                            </div>
+                            <div className="flex gap-2">
+                                <button 
+                                    onClick={() => navigate(`/admin/content/partnership/story/edit/${s.id}`)}
+                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                                >
+                                    <Edit2 size={18} />
+                                </button>
+                                <button 
+                                    onClick={() => handleDelete(s)}
+                                    className="p-2 text-red-600 hover:bg-red-50 rounded"
+                                >
+                                    <Trash2 size={18} />
+                                </button>
                             </div>
                         </div>
-                        <div className="flex gap-2">
-                            <button onClick={() => handleEdit(s)} className="p-2 text-blue-600 hover:bg-blue-50 rounded"><Edit2 size={18} /></button>
-                            <button onClick={() => handleDelete(s)} className="p-2 text-red-600 hover:bg-red-50 rounded"><Trash2 size={18} /></button>
-                        </div>
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
-
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl w-full max-w-lg p-6 shadow-xl max-h-[85vh] overflow-y-auto">
-                        <div className="flex justify-between items-center mb-4 border-b pb-2">
-                            <h3 className="text-xl font-bold">{currentItem ? 'Edit' : 'Add'} Story</h3>
-                            <button onClick={() => setIsModalOpen(false)}><X className="text-gray-400 hover:text-gray-600" /></button>
-                        </div>
-                        <form onSubmit={handleSave} className="space-y-4">
-                            <div><label className="block text-sm font-medium mb-1">Title (Partner Name)</label><input type="text" name="title" defaultValue={currentItem?.title} required className="w-full border px-3 py-2 rounded-lg" /></div>
-                            <div><label className="block text-sm font-medium mb-1">Category</label><input type="text" name="category" defaultValue={currentItem?.category} placeholder="e.g. Corporate Partner" className="w-full border px-3 py-2 rounded-lg" /></div>
-                            <div><label className="block text-sm font-medium mb-1">Story Quote</label><textarea name="story" defaultValue={currentItem?.story} required rows={3} className="w-full border px-3 py-2 rounded-lg" /></div>
-                            <div><label className="block text-sm font-medium mb-1">Impact Stat</label><input type="text" name="impact" defaultValue={currentItem?.impact} placeholder="e.g. 500+ trained" className="w-full border px-3 py-2 rounded-lg" /></div>
-                            <div><label className="block text-sm font-medium mb-1">Image URL</label><input type="text" name="image" defaultValue={currentItem?.image} className="w-full border px-3 py-2 rounded-lg" /></div>
-                            <div><label className="block text-sm font-medium mb-1">Fallback Image URL</label><input type="text" name="fallbackImage" defaultValue={currentItem?.fallbackImage} className="w-full border px-3 py-2 rounded-lg" /></div>
-
-                            <div className="flex justify-end gap-3 pt-4 border-t">
-                                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
-                                <button type="submit" disabled={saving} className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] flex items-center gap-2">{saving && <Loader size={16} className="animate-spin" />} Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
@@ -267,6 +240,7 @@ const RecognitionManager = ({ recognition, setRecognition, dispatch }) => {
 };
 
 const PartnershipContentManagementPage = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [activeTab, setActiveTab] = useState('hero');
     const [loading, setLoading] = useState(true);
@@ -371,7 +345,7 @@ const PartnershipContentManagementPage = () => {
                     {activeTab === 'hero' && <HeroForm data={heroData} onChange={(e) => setHeroData({ ...heroData, [e.target.name]: e.target.value })} onSubmit={handleHeroSubmit} saving={savingHero} />}
                     {activeTab === 'stats' && <ImpactStatsManager stats={impactStats} setStats={setImpactStats} />}
                     {activeTab === 'why' && <WhyPartnerForm data={whyPartner} onChange={(e) => setWhyPartner({ ...whyPartner, [e.target.name]: e.target.value })} onSubmit={handleWhySubmit} saving={savingWhy} />}
-                    {activeTab === 'stories' && <StoriesManager stories={stories} setStories={setStories} dispatch={dispatch} />}
+                    {activeTab === 'stories' && <StoriesManager stories={stories} setStories={setStories} dispatch={dispatch} navigate={navigate} />}
                     {activeTab === 'recognition' && <RecognitionManager recognition={recognition} setRecognition={setRecognition} dispatch={dispatch} />}
                 </div>
             </div>
