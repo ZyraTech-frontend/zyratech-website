@@ -1,6 +1,6 @@
 /**
  * Admin Sidebar Navigation Component
- * Modern purple-themed sidebar with expandable menus
+ * Modern blue-themed sidebar with collapsible menus for organized content
  */
 
 import React, { useState } from 'react';
@@ -35,13 +35,62 @@ import {
   ShieldCheck,
   MousePointerClick,
   FileX,
-  Globe
+  Globe,
+  Home,
+  Info,
+  ChevronDown,
+  Layers
 } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { logoutUser } from '../../../store/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { normalizeAvatarUrl } from '../../../utils/avatar';
+
+/**
+ * Collapsible Menu Component
+ * Groups related content items in the sidebar
+ */
+const CollapsibleMenu = ({ title, icon: Icon, children, defaultOpen = false }) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  
+  return (
+    <div className="space-y-1">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between gap-3 px-4 py-2.5 text-blue-200 hover:bg-white/5 hover:text-white rounded-lg transition-all"
+      >
+        <div className="flex items-center gap-3">
+          <Icon size={20} />
+          <span className="font-medium">{title}</span>
+        </div>
+        <ChevronDown size={16} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      
+      {isOpen && (
+        <div className="pl-2 space-y-1 border-l border-blue-400/20 ml-4">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
+
+/**
+ * Sub-menu link component for use within CollapsibleMenu
+ */
+const SubMenuLink = ({ to, children, isActive }) => (
+  <Link
+    to={to}
+    className={`block px-4 py-1.5 text-sm rounded-lg transition-all ${
+      isActive
+        ? 'bg-white/15 text-white font-medium'
+        : 'text-blue-200 hover:bg-white/5 hover:text-white'
+    }`}
+  >
+    • {children}
+  </Link>
+);
 
 const Sidebar = ({ isOpen, onClose, isMobile }) => {
   const location = useLocation();
@@ -129,20 +178,18 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto py-3 px-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        <div className="space-y-0.5">
-          {/* Dashboard Section */}
-          <div>
-            <Link
-              to="/admin/dashboard"
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/dashboard')
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/5 hover:text-white'
-                }`}
-            >
-              <LayoutDashboard size={20} />
-              <span className="font-medium">Dashboard</span>
-            </Link>
-          </div>
+        <div className="space-y-1">
+          {/* Dashboard */}
+          <Link
+            to="/admin/dashboard"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/dashboard')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <LayoutDashboard size={20} />
+            <span className="font-medium">Dashboard</span>
+          </Link>
 
           {/* Analytics (Super Admin Only) */}
           {isSuperAdmin && (
@@ -202,100 +249,145 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
             </>
           )}
 
-          {/* Content Management Section */}
-          <div className="pt-3 pb-1.5">
+          {/* ===== CONTENT PAGES SECTION ===== */}
+          <div className="pt-4 pb-1.5">
             <p className="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">
-              Content
+              Content Pages
             </p>
           </div>
 
-          <Link
-            to="/admin/content/hero"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/hero')
-              ? 'bg-white/15 text-white'
-              : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
+          {/* Home Page */}
+          <CollapsibleMenu 
+            title="Home Page" 
+            icon={Home}
+            defaultOpen={location.pathname.includes('/content/home')}
           >
-            <Image size={20} />
-            <span className="font-medium">Hero Slides</span>
-          </Link>
+            <SubMenuLink 
+              to="/admin/content/home/hero"
+              isActive={location.pathname === '/admin/content/home/hero'}
+            >
+              Hero Slides
+            </SubMenuLink>
+          </CollapsibleMenu>
 
-          <Link
-            to="/admin/content/services"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/services')
-              ? 'bg-white/15 text-white'
-              : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
+          {/* About Page */}
+          <CollapsibleMenu 
+            title="About Page" 
+            icon={Info}
+            defaultOpen={location.pathname.includes('/content/about')}
           >
-            <Briefcase size={20} />
-            <span className="font-medium">Services</span>
-          </Link>
+            <SubMenuLink 
+              to="/admin/content/about?tab=hero"
+              isActive={location.pathname === '/admin/content/about' && location.search.includes('hero')}
+            >
+              Hero Section
+            </SubMenuLink>
+            <SubMenuLink 
+              to="/admin/content/about?tab=mission"
+              isActive={location.pathname === '/admin/content/about' && location.search.includes('mission')}
+            >
+              Mission
+            </SubMenuLink>
+            <SubMenuLink 
+              to="/admin/content/about?tab=why-ghana"
+              isActive={location.pathname === '/admin/content/about' && location.search.includes('why-ghana')}
+            >
+              Why Ghana
+            </SubMenuLink>
+            <SubMenuLink 
+              to="/admin/content/about?tab=milestones"
+              isActive={location.pathname === '/admin/content/about' && location.search.includes('milestones')}
+            >
+              Milestones
+            </SubMenuLink>
+            <SubMenuLink 
+              to="/admin/content/about?tab=timeline"
+              isActive={location.pathname === '/admin/content/about' && location.search.includes('timeline')}
+            >
+              Timeline
+            </SubMenuLink>
+          </CollapsibleMenu>
 
-          <Link
-            to="/admin/content/benefits"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/benefits')
-              ? 'bg-white/15 text-white'
-              : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
+          {/* Services & Benefits Page */}
+          <CollapsibleMenu 
+            title="Services Page" 
+            icon={Briefcase}
+            defaultOpen={location.pathname.includes('/content/services') || location.pathname.includes('/content/benefits')}
           >
-            <CheckCircle size={20} />
-            <span className="font-medium">Why Choose Us</span>
-          </Link>
+            <SubMenuLink 
+              to="/admin/content/services"
+              isActive={location.pathname === '/admin/content/services'}
+            >
+              Services
+            </SubMenuLink>
+            <SubMenuLink 
+              to="/admin/content/benefits"
+              isActive={location.pathname === '/admin/content/benefits'}
+            >
+              Why Choose Us
+            </SubMenuLink>
+          </CollapsibleMenu>
 
-          <Link
-            to="/admin/content/about"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/about')
-              ? 'bg-white/15 text-white'
-              : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
+          {/* Partnership Page */}
+          <CollapsibleMenu 
+            title="Partnership Page" 
+            icon={Handshake}
+            defaultOpen={location.pathname.includes('/content/partnership')}
           >
-            <Quote size={20} />
-            <span className="font-medium">About Section</span>
-          </Link>
+            <SubMenuLink 
+              to="/admin/content/partnership?tab=hero"
+              isActive={location.pathname === '/admin/content/partnership' && location.search.includes('hero')}
+            >
+              Hero & Stats
+            </SubMenuLink>
+            <SubMenuLink 
+              to="/admin/content/partnership?tab=why-partner"
+              isActive={location.pathname === '/admin/content/partnership' && location.search.includes('why-partner')}
+            >
+              Why Partner
+            </SubMenuLink>
+            <SubMenuLink 
+              to="/admin/content/partnership?tab=stories"
+              isActive={location.pathname === '/admin/content/partnership' && location.search.includes('stories')}
+            >
+              Stories & Logos
+            </SubMenuLink>
+          </CollapsibleMenu>
 
-          <Link
-            to="/admin/content/about-page"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/about-page')
-              ? 'bg-white/15 text-white'
-              : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
+          {/* Work With Us Page */}
+          <CollapsibleMenu 
+            title="Work With Us" 
+            icon={UserPlus}
+            defaultOpen={location.pathname.includes('/content/work-with-us')}
           >
-            <Layout size={20} />
-            <span className="font-medium">About Page</span>
-          </Link>
+            <SubMenuLink 
+              to="/admin/content/work-with-us"
+              isActive={location.pathname === '/admin/content/work-with-us'}
+            >
+              All Sections
+            </SubMenuLink>
+          </CollapsibleMenu>
 
-          <Link
-            to="/admin/content/work-with-us"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/work-with-us')
-              ? 'bg-white/15 text-white'
-              : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
+          {/* Quality Assurance Page */}
+          <CollapsibleMenu 
+            title="Quality Assurance" 
+            icon={ShieldCheck}
+            defaultOpen={location.pathname.includes('/content/quality-assurance')}
           >
-            <UserPlus size={20} />
-            <span className="font-medium">Work With Us</span>
-          </Link>
+            <SubMenuLink 
+              to="/admin/content/quality-assurance"
+              isActive={location.pathname === '/admin/content/quality-assurance'}
+            >
+              All Sections
+            </SubMenuLink>
+          </CollapsibleMenu>
 
-          <Link
-            to="/admin/content/quality-assurance"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/quality-assurance')
-              ? 'bg-white/15 text-white'
-              : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
-          >
-            <ShieldCheck size={20} />
-            <span className="font-medium">Quality Assurance</span>
-          </Link>
-
-          <Link
-            to="/admin/content/partnership"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/content/partnership')
-              ? 'bg-white/15 text-white'
-              : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
-          >
-            <Handshake size={20} />
-            <span className="font-medium">Partnership Content</span>
-          </Link>
+          {/* ===== OTHER CONTENT SECTION ===== */}
+          <div className="pt-4 pb-1.5">
+            <p className="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">
+              Content Management
+            </p>
+          </div>
 
           <Link
             to="/admin/training"
@@ -386,7 +478,7 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           </Link>
 
           {/* Business Operations Section */}
-          <div className="pt-3 pb-1.5">
+          <div className="pt-4 pb-1.5">
             <p className="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">
               Business
             </p>
@@ -472,7 +564,7 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           {/* System Section (Super Admin Only) */}
           {isSuperAdmin && (
             <>
-              <div className="pt-3 pb-1.5">
+              <div className="pt-4 pb-1.5">
                 <p className="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">
                   System
                 </p>
