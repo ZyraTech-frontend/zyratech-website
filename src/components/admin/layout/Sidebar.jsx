@@ -32,7 +32,10 @@ import {
   Quote,
   Layout,
   UserPlus,
-  ShieldCheck
+  ShieldCheck,
+  MousePointerClick,
+  FileX,
+  Globe
 } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
 import { usePermissions } from '../../../hooks/usePermissions';
@@ -153,6 +156,50 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
               <BarChart3 size={20} />
               <span className="font-medium">Analytics</span>
             </Link>
+          )}
+
+          {/* Analytics & Tracking Section (Super Admin Only) */}
+          {isSuperAdmin && (
+            <>
+              <div className="pt-3 pb-1.5">
+                <p className="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">
+                  Analytics & Tracking
+                </p>
+              </div>
+
+              <Link
+                to="/admin/tracking/website-analytics"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/tracking/website-analytics')
+                  ? 'bg-white/15 text-white'
+                  : 'text-blue-200 hover:bg-white/5 hover:text-white'
+                  }`}
+              >
+                <Globe size={20} />
+                <span className="font-medium">Website Analytics</span>
+              </Link>
+
+              <Link
+                to="/admin/tracking/user-journeys"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/tracking/user-journeys')
+                  ? 'bg-white/15 text-white'
+                  : 'text-blue-200 hover:bg-white/5 hover:text-white'
+                  }`}
+              >
+                <MousePointerClick size={20} />
+                <span className="font-medium">User Journeys</span>
+              </Link>
+
+              <Link
+                to="/admin/tracking/abandoned-forms"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/tracking/abandoned-forms')
+                  ? 'bg-white/15 text-white'
+                  : 'text-blue-200 hover:bg-white/5 hover:text-white'
+                  }`}
+              >
+                <FileX size={20} />
+                <span className="font-medium">Abandoned Forms</span>
+              </Link>
+            </>
           )}
 
           {/* Content Management Section */}

@@ -97,7 +97,7 @@ const SettingsPage = () => {
     if (['siteName', 'siteDescription', 'tagline', 'logoLight', 'logoDark', 'favicon', 'primaryColor', 'secondaryColor'].includes(key)) return 'branding';
     if (['contactEmail', 'contactPhone', 'contactWhatsApp', 'contactAddress', 'hrName', 'hrEmail', 'hrTitle', 'hrPhone', 'trainingTeamName', 'trainingTeamEmail', 'trainingTeamPhone', 'businessHoursWeekday', 'businessHoursWeekend'].includes(key)) return 'contact';
     if (['socialLinkedIn', 'socialTwitter', 'socialInstagram', 'socialFacebook', 'socialYouTube', 'socialTikTok', 'socialGitHub', 'socialWhatsApp'].includes(key)) return 'social';
-    if (['googleAnalyticsId', 'metaPixelId', 'enableVisitorTracking', 'seoTitle', 'seoDescription', 'seoKeywords', 'siteUrl'].includes(key)) return 'analytics';
+    if (['googleAnalyticsId', 'googleTagManagerId', 'metaPixelId', 'hotjarSiteId', 'enableInternalAnalytics', 'trackUserJourneys', 'saveAbandonedForms', 'abandonedFormEmailEnabled', 'abandonedFormEmailDelay', 'abandonedFormMaxAttempts', 'abandonedFormEmailSubject', 'abandonedFormEmailTemplate', 'seoTitle', 'seoDescription', 'seoKeywords', 'siteUrl'].includes(key)) return 'analytics';
     if (['paystackPublicKey', 'paystackSecretKey', 'stripePublicKey', 'stripeSecretKey', 'currency'].includes(key)) return 'payments';
     if (['smtpHost', 'smtpPort', 'smtpUser', 'smtpPassword', 'fromEmail', 'fromName', 'supportEmail'].includes(key)) return 'email';
     return 'general';
@@ -864,15 +864,26 @@ const SettingsPage = () => {
             {/* Analytics & SEO Tab */}
             {activeTab === 'analytics' && (
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-                {/* Analytics Tracking Card */}
+                {/* Info Banner */}
+                <div className="bg-blue-50/80 border border-blue-200/50 rounded-2xl p-5 flex gap-4">
+                  <div className="mt-0.5"><BarChart3 className="text-blue-500" size={20} /></div>
+                  <div>
+                    <h4 className="text-sm font-bold text-blue-900">Analytics & User Journey Tracking</h4>
+                    <p className="text-xs text-blue-800 mt-1 leading-relaxed">
+                      Track website traffic, user behavior, and abandoned forms. Enable internal analytics to see visitor insights directly on your dashboard without leaving the admin panel. Set up automated recovery emails for users who abandon course applications or contact forms.
+                    </p>
+                  </div>
+                </div>
+
+                {/* External Analytics Tracking Card */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
-                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-cyan-100 flex items-center justify-center text-cyan-600">
                         <BarChart3 size={16} />
                     </div>
                     <div>
-                        <h3 className="text-base font-bold text-gray-900">Analytics Tracking</h3>
-                        <p className="text-[11px] text-gray-500 font-medium tracking-wide mt-0.5">Configure tracking IDs for visitor analytics</p>
+                        <h3 className="text-base font-bold text-gray-900">External Analytics</h3>
+                        <p className="text-[11px] text-gray-500 font-medium tracking-wide mt-0.5">Third-party tracking tools (Google Analytics, Meta Pixel, etc.)</p>
                     </div>
                   </div>
                   <div className="p-6">
@@ -888,6 +899,18 @@ const SettingsPage = () => {
                         />
                       </div>
                       <div className="space-y-2">
+                        <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Google Tag Manager ID</label>
+                        <input
+                          type="text"
+                          value={formData.googleTagManagerId || ''}
+                          onChange={(e) => setFormData({ ...formData, googleTagManagerId: e.target.value })}
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm font-mono text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400"
+                          placeholder="GTM-XXXXXXX"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                      <div className="space-y-2">
                         <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Meta Pixel ID</label>
                         <input
                           type="text"
@@ -897,14 +920,40 @@ const SettingsPage = () => {
                           placeholder="1234567890"
                         />
                       </div>
+                      <div className="space-y-2">
+                        <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Hotjar Site ID</label>
+                        <input
+                          type="text"
+                          value={formData.hotjarSiteId || ''}
+                          onChange={(e) => setFormData({ ...formData, hotjarSiteId: e.target.value })}
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm font-mono text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400"
+                          placeholder="1234567"
+                        />
+                        <p className="text-[10px] text-gray-500 font-medium">For heatmaps and user recordings</p>
+                      </div>
                     </div>
-                    <div className="mt-6 pt-6 border-t border-gray-50">
+                  </div>
+                </div>
+
+                {/* Internal Analytics Card */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+                        <BarChart3 size={16} />
+                    </div>
+                    <div>
+                        <h3 className="text-base font-bold text-gray-900">Internal Analytics & Tracking</h3>
+                        <p className="text-[11px] text-gray-500 font-medium tracking-wide mt-0.5">Track visitor behavior directly in your admin dashboard</p>
+                    </div>
+                  </div>
+                  <div className="p-6 space-y-6">
+                    <div className="space-y-4">
                       <label className="flex items-start gap-3 cursor-pointer group">
                         <div className="relative flex items-center justify-center w-5 h-5 mt-0.5">
                             <input
                             type="checkbox"
-                            checked={formData.enableVisitorTracking || false}
-                            onChange={(e) => setFormData({ ...formData, enableVisitorTracking: e.target.checked })}
+                            checked={formData.enableInternalAnalytics || false}
+                            onChange={(e) => setFormData({ ...formData, enableInternalAnalytics: e.target.checked })}
                             className="appearance-none w-5 h-5 border-2 border-gray-300 rounded-md checked:bg-[#004fa2] checked:border-[#004fa2] transition-colors peer cursor-pointer"
                             />
                             <svg className="absolute w-3 h-3 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 14 10" fill="none">
@@ -912,10 +961,131 @@ const SettingsPage = () => {
                             </svg>
                         </div>
                         <div>
-                            <span className="text-sm font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors">Enable Internal Tracking</span>
-                            <p className="text-[11px] text-gray-500 mt-0.5">Collect anonymous usage data to improve user experience directly on the dashboard</p>
+                            <span className="text-sm font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors">Enable Internal Analytics</span>
+                            <p className="text-[11px] text-gray-500 mt-0.5">Track page views, visitor count, popular content in your admin dashboard</p>
                         </div>
                       </label>
+
+                      <label className="flex items-start gap-3 cursor-pointer group">
+                        <div className="relative flex items-center justify-center w-5 h-5 mt-0.5">
+                            <input
+                            type="checkbox"
+                            checked={formData.trackUserJourneys || false}
+                            onChange={(e) => setFormData({ ...formData, trackUserJourneys: e.target.checked })}
+                            className="appearance-none w-5 h-5 border-2 border-gray-300 rounded-md checked:bg-[#004fa2] checked:border-[#004fa2] transition-colors peer cursor-pointer"
+                            />
+                            <svg className="absolute w-3 h-3 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 14 10" fill="none">
+                                <path d="M1 5L4.5 8.5L13 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span className="text-sm font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors">Track User Journeys</span>
+                            <p className="text-[11px] text-gray-500 mt-0.5">Record every click, page visit, and user action to understand behavior patterns</p>
+                        </div>
+                      </label>
+
+                      <label className="flex items-start gap-3 cursor-pointer group">
+                        <div className="relative flex items-center justify-center w-5 h-5 mt-0.5">
+                            <input
+                            type="checkbox"
+                            checked={formData.saveAbandonedForms || false}
+                            onChange={(e) => setFormData({ ...formData, saveAbandonedForms: e.target.checked })}
+                            className="appearance-none w-5 h-5 border-2 border-gray-300 rounded-md checked:bg-[#004fa2] checked:border-[#004fa2] transition-colors peer cursor-pointer"
+                            />
+                            <svg className="absolute w-3 h-3 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 14 10" fill="none">
+                                <path d="M1 5L4.5 8.5L13 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span className="text-sm font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors">Save Abandoned Forms</span>
+                            <p className="text-[11px] text-gray-500 mt-0.5">Capture partial form submissions when users leave before completing (course applications, contact forms, etc.)</p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Abandoned Form Recovery Card */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+                        <Mail size={16} />
+                    </div>
+                    <div>
+                        <h3 className="text-base font-bold text-gray-900">Abandoned Form Recovery</h3>
+                        <p className="text-[11px] text-gray-500 font-medium tracking-wide mt-0.5">Automatically follow up with users who didn't complete forms</p>
+                    </div>
+                  </div>
+                  <div className="p-6 space-y-6">
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                      <div className="relative flex items-center justify-center w-5 h-5 mt-0.5">
+                          <input
+                          type="checkbox"
+                          checked={formData.abandonedFormEmailEnabled || false}
+                          onChange={(e) => setFormData({ ...formData, abandonedFormEmailEnabled: e.target.checked })}
+                          className="appearance-none w-5 h-5 border-2 border-gray-300 rounded-md checked:bg-[#004fa2] checked:border-[#004fa2] transition-colors peer cursor-pointer"
+                          />
+                          <svg className="absolute w-3 h-3 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 14 10" fill="none">
+                              <path d="M1 5L4.5 8.5L13 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                      </div>
+                      <div>
+                          <span className="text-sm font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors">Enable Abandoned Form Emails</span>
+                          <p className="text-[11px] text-gray-500 mt-0.5">Send automated recovery emails to users who abandoned applications or forms</p>
+                      </div>
+                    </label>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Email Delay (Hours)</label>
+                        <input
+                          type="number"
+                          min="1"
+                          max="168"
+                          value={formData.abandonedFormEmailDelay || 24}
+                          onChange={(e) => setFormData({ ...formData, abandonedFormEmailDelay: parseInt(e.target.value) })}
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all"
+                          placeholder="24"
+                        />
+                        <p className="text-[10px] text-gray-500 font-medium">Hours to wait before sending recovery email</p>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Max Recovery Attempts</label>
+                        <input
+                          type="number"
+                          min="1"
+                          max="5"
+                          value={formData.abandonedFormMaxAttempts || 2}
+                          onChange={(e) => setFormData({ ...formData, abandonedFormMaxAttempts: parseInt(e.target.value) })}
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all"
+                          placeholder="2"
+                        />
+                        <p className="text-[10px] text-gray-500 font-medium">Number of follow-up emails to send</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Email Subject Template</label>
+                      <input
+                        type="text"
+                        value={formData.abandonedFormEmailSubject || ''}
+                        onChange={(e) => setFormData({ ...formData, abandonedFormEmailSubject: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400"
+                        placeholder="Complete your {formType} at ZyraTech"
+                      />
+                      <p className="text-[10px] text-gray-500 font-medium">Use {'{formType}'} for dynamic form name, {'{userName}'} for user's name</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Email Message Template</label>
+                      <textarea
+                        value={formData.abandonedFormEmailTemplate || ''}
+                        onChange={(e) => setFormData({ ...formData, abandonedFormEmailTemplate: e.target.value })}
+                        rows={6}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400 resize-none"
+                        placeholder="Hi {userName},&#10;&#10;We noticed you started your {formType} but didn't finish. We're here to help!&#10;&#10;Click here to complete: {completionLink}&#10;&#10;Need assistance? Reply to this email."
+                      />
+                      <p className="text-[10px] text-gray-500 font-medium">Available variables: {'{userName}'}, {'{formType}'}, {'{completionLink}'}, {'{courseName}'}</p>
                     </div>
                   </div>
                 </div>

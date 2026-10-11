@@ -26,6 +26,9 @@ const ContactPage = lazy(() => import('./pages/public/contact'));
 const AdminPage = lazy(() => import('./pages/admin/DashboardPage'));
 const LoginPage = lazy(() => import('./pages/admin/LoginPage'));
 const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
+const UserJourneysPage = lazy(() => import('./pages/admin/tracking/UserJourneysPage'));
+const AbandonedFormsPage = lazy(() => import('./pages/admin/tracking/AbandonedFormsPage'));
+const WebsiteAnalyticsPage = lazy(() => import('./pages/admin/tracking/WebsiteAnalyticsPage'));
 const UsersPage = lazy(() => import('./pages/admin/users/UsersPage'));
 const AdministratorFormPage = lazy(() => import('./pages/admin/users/AdministratorFormPage'));
 const SettingsPage = lazy(() => import('./pages/admin/settings/SettingsPage'));
@@ -163,6 +166,9 @@ function App() {
                 <Route path="/admin/users/new" element={<ProtectedRoute requiredRole="super_admin"><AdministratorFormPage /></ProtectedRoute>} />
                 <Route path="/admin/users/edit/:id" element={<ProtectedRoute requiredRole="super_admin"><AdministratorFormPage /></ProtectedRoute>} />
                 <Route path="/admin/analytics" element={<ProtectedRoute requiredRole="super_admin"><AnalyticsPage /></ProtectedRoute>} />
+                <Route path="/admin/tracking/user-journeys" element={<ProtectedRoute requiredRole="super_admin"><UserJourneysPage /></ProtectedRoute>} />
+                <Route path="/admin/tracking/abandoned-forms" element={<ProtectedRoute requiredRole="super_admin"><AbandonedFormsPage /></ProtectedRoute>} />
+                <Route path="/admin/tracking/website-analytics" element={<ProtectedRoute requiredRole="super_admin"><WebsiteAnalyticsPage /></ProtectedRoute>} />
                 <Route path="/admin/settings" element={<ProtectedRoute requiredRole="super_admin"><SettingsPage /></ProtectedRoute>} />
 
                 {/* CMS Content Management */}
