@@ -1,7 +1,6 @@
 /**
  * Services & Benefits Management Page
- * Admin interface to manage services by category and "Why Choose Us" benefits
- * Services grouped by: Our Engagement Models, Our Services, Quality Assurance, Work With Us
+ * Admin interface to manage services and "Why Choose Us" benefits
  */
 
 import React, { useState, useEffect } from 'react';
@@ -10,14 +9,11 @@ import {
     Search,
     Edit2,
     Trash2,
+    Save,
     X,
     Loader,
     Briefcase,
-    CheckCircle,
-    Handshake,
-    Zap,
-    Shield,
-    Users
+    CheckCircle
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
@@ -25,19 +21,10 @@ import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
-// Service categories - matching public website dropdown
-const SERVICE_CATEGORIES = [
-    { id: 'engagement-models', label: 'Our Engagement Models', icon: Handshake },
-    { id: 'our-services', label: 'Our Services', icon: Zap },
-    { id: 'quality-assurance', label: 'Quality Assurance', icon: Shield },
-    { id: 'work-with-us', label: 'Work With Us', icon: Users }
-];
-
 const ServicesManagementPage = () => {
     const dispatch = useDispatch();
     const { logAction } = useActivityLogger();
     const [activeTab, setActiveTab] = useState('services'); // 'services' or 'benefits'
-    const [activeCategory, setActiveCategory] = useState('our-services');
     const [services, setServices] = useState([]);
     const [benefits, setBenefits] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -46,12 +33,12 @@ const ServicesManagementPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [saving, setSaving] = useState(false);
 
+    // Initial form state
     const initialFormState = activeTab === 'services' ? {
         title: '',
         description: '',
         icon: 'Code2',
-        highlights: '',
-        category: activeCategory
+        highlights: ''
     } : {
         icon: 'ShieldCheck',
         title: '',
@@ -60,6 +47,7 @@ const ServicesManagementPage = () => {
 
     const [formData, setFormData] = useState(initialFormState);
 
+    // Fetch services and benefits on mount
     useEffect(() => {
         fetchData();
     }, []);
@@ -80,12 +68,6 @@ const ServicesManagementPage = () => {
         }
     };
 
-    const getServicesByCategory = (categoryId) => {
-        return services.filter(s => s.category === categoryId);
-    };
-
-    const currentCategoryServices = getServicesByCategory(activeCategory);
-
     const handleOpenModal = (item = null) => {
         if (item) {
             setCurrentItem(item);
@@ -94,8 +76,7 @@ const ServicesManagementPage = () => {
                     title: item.title,
                     description: item.description || '',
                     icon: item.icon || 'Code2',
-                    highlights: Array.isArray(item.highlights) ? item.highlights.join('\n') : '',
-                    category: item.category || activeCategory
+                    highlights: Array.isArray(item.highlights) ? item.highlights.join('\n') : ''
                 });
             } else {
                 setFormData({
@@ -154,6 +135,7 @@ const ServicesManagementPage = () => {
                     });
                 }
             } else {
+                // Benefits
                 if (currentItem) {
                     await contentService.updateBenefit(currentItem.id, formData);
                     logAction({
@@ -217,7 +199,7 @@ const ServicesManagementPage = () => {
         }));
     };
 
-    const currentData = activeTab === 'services' ? currentCategoryServices : benefits;
+    const currentData = activeTab === 'services' ? services : benefits;
     const filteredData = currentData.filter(item =>
         item.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -236,7 +218,7 @@ const ServicesManagementPage = () => {
                         </h1>
                         <p className="text-sm text-gray-500 mt-1 ml-14">
                             {activeTab === 'services' 
-                                ? `Manage services - Currently: ${SERVICE_CATEGORIES.find(c => c.id === activeCategory)?.label}` 
+                                ? 'Manage services shown on the homepage' 
                                 : 'Manage "Why Choose Us" benefits'}
                         </p>
                     </div>
@@ -286,127 +268,88 @@ const ServicesManagementPage = () => {
                     </button>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                    {/* Sidebar - Service Categories */}
-                    {activeTab === 'services' && (
-                        <div className="lg:col-span-1">
-                            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 sticky top-20 space-y-2">
-                                <h3 className="font-semibold text-gray-900 text-sm px-2 mb-4">Service Categories</h3>
-                                {SERVICE_CATEGORIES.map(category => {
-                                    const Icon = category.icon;
-                                    const count = getServicesByCategory(category.id).length;
-                                    return (
-                                        <button
-                                            key={category.id}
-                                            onClick={() => setActiveCategory(category.id)}
-                                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all text-sm font-medium ${
-                                                activeCategory === category.id
-                                                    ? 'bg-[#004fa2] text-white shadow-md'
-                                                    : 'text-gray-600 hover:bg-gray-50'
-                                            }`}
-                                        >
-                                            <Icon size={18} />
-                                            <span className="flex-1">{category.label}</span>
-                                            <span className={`text-xs px-2 py-0.5 rounded ${
-                                                activeCategory === category.id
-                                                    ? 'bg-white/20'
-                                                    : 'bg-gray-100'
-                                            }`}>
-                                                {count}
-                                            </span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    )}
+                {/* Search */}
+                <div className="relative max-w-md">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                    <input
+                        type="text"
+                        placeholder={`Search ${activeTab === 'services' ? 'services' : 'benefits'}...`}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]"
+                    />
+                </div>
 
-                    {/* Main Content */}
-                    <div className={activeTab === 'services' ? 'lg:col-span-3' : 'lg:col-span-4'}>
-                        {/* Search */}
-                        <div className="relative max-w-md mb-6">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-                            <input
-                                type="text"
-                                placeholder={`Search ${activeTab === 'services' ? 'services' : 'benefits'}...`}
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]"
-                            />
+                {/* Content List */}
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <Loader className="animate-spin text-[#004fa2]" size={32} />
+                    </div>
+                ) : filteredData.length === 0 ? (
+                    <div className="bg-white rounded-xl border border-gray-100 p-12 text-center">
+                        <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                            {activeTab === 'services' ? (
+                                <Briefcase className="text-gray-400" size={32} />
+                            ) : (
+                                <CheckCircle className="text-gray-400" size={32} />
+                            )}
                         </div>
-
-                        {/* Content List */}
-                        {loading ? (
-                            <div className="flex justify-center items-center h-64">
-                                <Loader className="animate-spin text-[#004fa2]" size={32} />
-                            </div>
-                        ) : filteredData.length === 0 ? (
-                            <div className="bg-white rounded-xl border border-gray-100 p-12 text-center">
-                                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    {activeTab === 'services' ? (
-                                        <Briefcase className="text-gray-400" size={32} />
-                                    ) : (
-                                        <CheckCircle className="text-gray-400" size={32} />
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                            No {activeTab === 'services' ? 'services' : 'benefits'} found
+                        </h3>
+                        <p className="text-gray-500 mb-6">Get started by adding your first item.</p>
+                        <button
+                            onClick={() => handleOpenModal()}
+                            className="inline-flex items-center gap-2 text-[#004fa2] font-medium hover:underline"
+                        >
+                            <Plus size={16} />
+                            Add {activeTab === 'services' ? 'Service' : 'Benefit'}
+                        </button>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {filteredData.map((item) => (
+                            <div
+                                key={item.id}
+                                className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between h-full"
+                            >
+                                <div>
+                                    <h3 className="text-lg font-bold text-gray-900 mb-2">
+                                        {item.title}
+                                    </h3>
+                                    {item.description && (
+                                        <p className="text-gray-600 text-sm line-clamp-3 mb-4">
+                                            {item.description}
+                                        </p>
+                                    )}
+                                    {activeTab === 'services' && item.highlights && (
+                                        <div className="text-xs text-gray-500 space-y-1">
+                                            {Array.isArray(item.highlights) && item.highlights.map((h, idx) => (
+                                                <div key={idx}>• {h}</div>
+                                            ))}
+                                        </div>
                                     )}
                                 </div>
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                    No {activeTab === 'services' ? `services in ${SERVICE_CATEGORIES.find(c => c.id === activeCategory)?.label}` : 'benefits'} found
-                                </h3>
-                                <p className="text-gray-500 mb-6">Get started by adding your first item.</p>
-                                <button
-                                    onClick={() => handleOpenModal()}
-                                    className="inline-flex items-center gap-2 text-[#004fa2] font-medium hover:underline"
-                                >
-                                    <Plus size={16} />
-                                    Add {activeTab === 'services' ? 'Service' : 'Benefit'}
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {filteredData.map((item) => (
-                                    <div
-                                        key={item.id}
-                                        className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between h-full"
+                                <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-gray-100">
+                                    <button
+                                        onClick={() => handleOpenModal(item)}
+                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                        title={`Edit ${activeTab === 'services' ? 'Service' : 'Benefit'}`}
                                     >
-                                        <div>
-                                            <h3 className="text-lg font-bold text-gray-900 mb-2">
-                                                {item.title}
-                                            </h3>
-                                            {item.description && (
-                                                <p className="text-gray-600 text-sm line-clamp-3 mb-4">
-                                                    {item.description}
-                                                </p>
-                                            )}
-                                            {activeTab === 'services' && item.highlights && (
-                                                <div className="text-xs text-gray-500 space-y-1">
-                                                    {Array.isArray(item.highlights) && item.highlights.map((h, idx) => (
-                                                        <div key={idx}>• {h}</div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-gray-100">
-                                            <button
-                                                onClick={() => handleOpenModal(item)}
-                                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                title={`Edit ${activeTab === 'services' ? 'Service' : 'Benefit'}`}
-                                            >
-                                                <Edit2 size={18} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(item)}
-                                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                title={`Delete ${activeTab === 'services' ? 'Service' : 'Benefit'}`}
-                                            >
-                                                <Trash2 size={18} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
+                                        <Edit2 size={18} />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(item)}
+                                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                        title={`Delete ${activeTab === 'services' ? 'Service' : 'Benefit'}`}
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
+                                </div>
                             </div>
-                        )}
+                        ))}
                     </div>
-                </div>
+                )}
 
                 {/* Edit/Create Modal */}
                 {isModalOpen && (
@@ -426,26 +369,6 @@ const ServicesManagementPage = () => {
 
                             <form onSubmit={handleSubmit} className="p-6 space-y-6 overflow-y-auto">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {activeTab === 'services' && (
-                                        <div className="col-span-1 md:col-span-2">
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Category <span className="text-red-500">*</span>
-                                            </label>
-                                            <select
-                                                name="category"
-                                                value={formData.category}
-                                                onChange={handleInputChange}
-                                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] bg-white"
-                                            >
-                                                {SERVICE_CATEGORIES.map(cat => (
-                                                    <option key={cat.id} value={cat.id}>
-                                                        {cat.label}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    )}
-
                                     <div className="col-span-1 md:col-span-2">
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
                                             Title <span className="text-red-500">*</span>
@@ -456,8 +379,10 @@ const ServicesManagementPage = () => {
                                             value={formData.title}
                                             onChange={handleInputChange}
                                             required
-                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]"
-                                            placeholder={activeTab === 'services' ? 'e.g. SOFTWARE ENGINEERING' : 'e.g. Low Risk'}
+                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                            placeholder={activeTab === 'services' 
+                                                ? 'e.g. SOFTWARE ENGINEERING' 
+                                                : 'e.g. Low Risk'}
                                         />
                                     </div>
 
@@ -471,18 +396,20 @@ const ServicesManagementPage = () => {
                                             onChange={handleInputChange}
                                             required
                                             rows={3}
-                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] resize-none"
+                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] resize-none transition-all"
                                             placeholder="Brief description..."
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Icon</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Icon
+                                        </label>
                                         <select
                                             name="icon"
                                             value={formData.icon}
                                             onChange={handleInputChange}
-                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] bg-white"
+                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] bg-white transition-all"
                                         >
                                             <option value="Code2">Code / Development</option>
                                             <option value="ServerCog">Server / Infrastructure</option>
@@ -492,8 +419,14 @@ const ServicesManagementPage = () => {
                                             <option value="ShieldCheck">Shield Check</option>
                                             <option value="Briefcase">Business / General</option>
                                             <option value="Globe">Web / Global</option>
-                                            <option value="Zap">Lightning / Speed</option>
-                                            <option value="Users">Team / People</option>
+                                            <option value="Smartphone">Mobile / Apps</option>
+                                            <option value="Database">Data / Storage</option>
+                                            <option value="Layout">Design / UI/UX</option>
+                                            <option value="Cpu">Hardware / IoT</option>
+                                            <option value="Cog">Cog</option>
+                                            <option value="TrendingUp">TrendingUp</option>
+                                            <option value="DollarSign">DollarSign</option>
+                                            <option value="Users">Users</option>
                                         </select>
                                     </div>
 
@@ -507,8 +440,8 @@ const ServicesManagementPage = () => {
                                                 value={formData.highlights}
                                                 onChange={handleInputChange}
                                                 rows={4}
-                                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] resize-none font-mono text-sm"
-                                                placeholder="Web & mobile app development&#10;API integration&#10;Cloud deployment"
+                                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] resize-none transition-all font-mono text-sm"
+                                                placeholder="Example:&#10;Web & mobile app development&#10;API integration&#10;Cloud deployment"
                                             />
                                             <p className="text-xs text-gray-500 mt-1">Key features, one per line.</p>
                                         </div>

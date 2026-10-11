@@ -291,22 +291,10 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
             defaultOpen={location.pathname.includes('/content/services') || location.pathname.includes('/content/benefits')}
           >
             <SubMenuLink 
-              to="/admin/content/services#engagement-models"
+              to="/admin/content/services"
               isActive={location.pathname === '/admin/content/services'}
             >
-              Our Engagement Models
-            </SubMenuLink>
-            <SubMenuLink 
-              to="/admin/content/services#our-services"
-              isActive={location.pathname === '/admin/content/services'}
-            >
-              Our Services
-            </SubMenuLink>
-            <SubMenuLink 
-              to="/admin/content/services#work-with-us"
-              isActive={location.pathname === '/admin/content/services'}
-            >
-              Work With Us
+              Services
             </SubMenuLink>
             <SubMenuLink 
               to="/admin/content/benefits"
