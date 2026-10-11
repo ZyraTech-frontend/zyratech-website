@@ -19,6 +19,11 @@ const contentService = {
     return response.data?.data || response.data;
   },
 
+  getService: async (id) => {
+    const response = await api.get(`/content/services/${id}`);
+    return response.data?.data || response.data;
+  },
+
   updateService: async (id, data) => {
     const response = await api.put(`/content/services/${id}`, data);
     return response.data?.data || response.data;
@@ -38,6 +43,11 @@ const contentService = {
 
   createBenefit: async (data) => {
     const response = await api.post('/content/benefits', data);
+    return response.data?.data || response.data;
+  },
+
+  getBenefit: async (id) => {
+    const response = await api.get(`/content/benefits/${id}`);
     return response.data?.data || response.data;
   },
 
@@ -103,6 +113,11 @@ const contentService = {
     return response.data?.data || response.data;
   },
 
+  getMilestone: async (id) => {
+    const response = await api.get(`/content/about/milestones/${id}`);
+    return response.data?.data || response.data;
+  },
+
   createMilestone: async (data) => {
     const response = await api.post('/content/about/milestones', data);
     return response.data?.data || response.data;
@@ -121,6 +136,11 @@ const contentService = {
   // Timeline
   getTimeline: async () => {
     const response = await api.get('/content/about/timeline');
+    return response.data?.data || response.data;
+  },
+
+  getTimelineItem: async (id) => {
+    const response = await api.get(`/content/about/timeline/${id}`);
     return response.data?.data || response.data;
   },
 
@@ -177,6 +197,11 @@ const contentService = {
   // Partnership Stories
   getPartnershipStories: async () => {
     const response = await api.get('/content/partnership/stories');
+    return response.data?.data || response.data;
+  },
+
+  getPartnershipStory: async (id) => {
+    const response = await api.get(`/content/partnership/stories/${id}`);
     return response.data?.data || response.data;
   },
 
