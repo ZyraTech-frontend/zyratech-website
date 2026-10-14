@@ -23,6 +23,7 @@ const ProjectsPage = lazy(() => import('./pages/public/projects'));
 const ProjectRequestPage = lazy(() => import('./pages/public/projects/request'));
 const ProjectDetailPage = lazy(() => import('./pages/public/projects/ProjectDetailPage'));
 const ContactPage = lazy(() => import('./pages/public/contact'));
+const ResetPasswordPage = lazy(() => import('./pages/public/ResetPasswordPage'));
 const AdminPage = lazy(() => import('./pages/admin/DashboardPage'));
 const LoginPage = lazy(() => import('./pages/admin/LoginPage'));
 const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
@@ -318,6 +319,7 @@ function App() {
               <Route path="/projects/request" element={<Suspense fallback={<RouteSkeleton variant="projects" />}><ProjectRequestPage /></Suspense>} />
               <Route path="/projects/:id" element={<Suspense fallback={<RouteSkeleton variant="projects" />}><ProjectDetailPage /></Suspense>} />
               <Route path="/contact" element={<Suspense fallback={<RouteSkeleton variant="default" />}><ContactPage /></Suspense>} />
+              <Route path="/reset-password" element={<Suspense fallback={<RouteSkeleton variant="default" />}><ResetPasswordPage /></Suspense>} />
 
               {/* Service Pages – legacy redirects */}
               <Route path="/services/education" element={<Navigate to="/training" replace />} />
