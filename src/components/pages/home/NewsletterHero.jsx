@@ -3,6 +3,7 @@ import { CheckCircle, AlertCircle } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
 import newsletterService from '../../../services/newsletterService';
+import emailNotificationService from '../../../services/emailNotificationService';
 
 // List of blocked temporary email providers (frontend warning only)
 const BLOCKED_PROVIDERS = [
@@ -90,6 +91,17 @@ const NewsletterHero = () => {
       console.log('[Newsletter] Attempting to subscribe:', email);
       const response = await newsletterService.subscribe(email);
       console.log('[Newsletter] Subscription response:', response);
+      
+      // Send subscription confirmation email
+      try {
+        await emailNotificationService.sendNewsletterSubscriptionConfirmation({
+          email: email,
+          name: '' // Newsletter subscription doesn't require name
+        });
+      } catch (emailError) {
+        console.error('Failed to send newsletter confirmation email:', emailError);
+        // Don't fail if email fails
+      }
       
       dispatch(addNotification({
         message: 'Successfully subscribed! Check your email for confirmation.',

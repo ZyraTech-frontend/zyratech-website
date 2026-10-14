@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
 import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import projectRequestService from '../../../services/projectRequestService';
+import emailNotificationService from '../../../services/emailNotificationService';
 
 const MultiStepForm = ({ onSubmit }) => {
   const [searchParams] = useSearchParams();
@@ -194,6 +195,19 @@ const MultiStepForm = ({ onSubmit }) => {
       };
 
       await projectRequestService.submitProjectRequest(payload);
+      
+      // Send confirmation email
+      try {
+        await emailNotificationService.sendProjectRequestConfirmation({
+          email: formData.email,
+          fullName: formData.fullName,
+          projectTitle: formData.projectTitle,
+          requestId: Date.now().toString()
+        });
+      } catch (emailError) {
+        console.error('Failed to send project request confirmation email:', emailError);
+        // Don't fail if email fails
+      }
       
       // Show success notification
       dispatch(addNotification({

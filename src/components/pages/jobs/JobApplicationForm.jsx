@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Check, Upload, Plus, Search } from 'lucide-react';
 import jobsService from '../../../services/jobsService';
+import emailNotificationService from '../../../services/emailNotificationService';
 import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 
 const JobApplicationForm = ({ job, onSubmit }) => {
@@ -238,6 +239,19 @@ Privacy Policy Agreement: ${formData.agreePrivacy ? 'Yes' : 'No'}
       const response = await jobsService.submitJobApplication(job.id, submitData);
       
       console.log('✅ Application submitted successfully:', response);
+
+      // Send confirmation email to applicant
+      try {
+        await emailNotificationService.sendJobApplicationConfirmation({
+          email: formData.email,
+          firstName: formData.firstName,
+          jobTitle: job.title,
+          applicationId: response.id
+        });
+      } catch (emailError) {
+        console.error('Failed to send application confirmation email:', emailError);
+        // Don't fail the submission if email fails
+      }
       
       // Show success message
       setSubmitted(true);

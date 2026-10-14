@@ -6,6 +6,7 @@ import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
 import trainingApplicationService from '../../../services/trainingApplicationService';
+import emailNotificationService from '../../../services/emailNotificationService';
 import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import { Upload, X, FileText, Linkedin, Globe, Loader2 } from 'lucide-react';
 
@@ -205,6 +206,19 @@ const CourseApplicationForm = () => {
 
       // Submit to backend
       const result = await trainingApplicationService.submitApplication(applicationData);
+      
+      // Send confirmation email
+      try {
+        await emailNotificationService.sendTrainingApplicationConfirmation({
+          email: formData.emailAddress,
+          fullName: formData.fullName,
+          courseName: getTrainingCourseById(courseId)?.title || 'Training Course',
+          applicationId: result?.id || Date.now().toString()
+        });
+      } catch (emailError) {
+        console.error('Failed to send training application confirmation email:', emailError);
+        // Don't fail if email fails
+      }
       
       // Clear draft on successful submission
       clearDraft();

@@ -5,6 +5,7 @@ import { PUBLIC_PARTNERSHIP_TYPES, PARTNERSHIP_INTERESTS } from '../../../data/p
 import useSEO from '../../../hooks/useSEO';
 import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import partnersService from '../../../services/partnersService';
+import emailNotificationService from '../../../services/emailNotificationService';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
 
@@ -170,6 +171,19 @@ const PartnershipApplicationPage = () => {
         formDataToSend.append('agreedToTerms', formData.agreedToTerms ? 'true' : 'false');
         
         await partnersService.submitPartnershipApplicationWithFile(formDataToSend);
+        
+        // Send confirmation email
+        try {
+          await emailNotificationService.sendPartnershipApplicationConfirmation({
+            email: formData.email,
+            fullName: formData.contactName,
+            organizationName: formData.organizationName,
+            applicationId: Date.now().toString() // Use timestamp as ID since response might not have it
+          });
+        } catch (emailError) {
+          console.error('Failed to send partnership confirmation email:', emailError);
+          // Don't fail if email fails
+        }
         
         dispatch(addNotification({
           type: 'success',

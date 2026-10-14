@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
 import { fetchSettings } from '../../../store/slices/settingsSlice';
 import contactInquiryService from '../../../services/contactInquiryService';
+import emailNotificationService from '../../../services/emailNotificationService';
 import { validatePhoneNumber, getPhoneInputAttributes, COUNTRY_CODES, formatCompletePhoneNumber } from '../../../utils/phoneValidation';
 
 const ContactHero = () => {
@@ -96,7 +97,8 @@ const ContactHero = () => {
 
     setIsSubmitting(true);
     try {
-      await contactInquiryService.submitInquiry({
+      // Submit inquiry to backend
+      const inquiry = await contactInquiryService.submitInquiry({
         name: formData.fullName,
         email: formData.email,
         phone: formatCompletePhoneNumber(formData.countryCode, formData.phone),
@@ -104,8 +106,21 @@ const ContactHero = () => {
         message: formData.message
       });
 
+      // Send confirmation email to user
+      try {
+        await emailNotificationService.sendContactConfirmation({
+          email: formData.email,
+          name: formData.fullName,
+          subject: formData.inquiryType || 'General Inquiry',
+          inquiryId: inquiry.id
+        });
+      } catch (emailError) {
+        console.error('Failed to send confirmation email:', emailError);
+        // Don't fail the submission if email fails
+      }
+
       dispatch(addNotification({
-        message: 'Your inquiry has been submitted successfully! We will contact you soon.',
+        message: 'Your inquiry has been submitted successfully! We will contact you soon. A confirmation email has been sent to your inbox.',
         type: 'success'
       }));
 

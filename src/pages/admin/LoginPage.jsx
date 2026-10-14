@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, changePassword, submitKyc, verify2FACode, clearError } from '../../store/slices/authSlice';
 import authService from '../../services/authService';
+import emailNotificationService from '../../services/emailNotificationService';
 import {
   Eye,
   EyeOff,
@@ -966,6 +967,15 @@ const LoginPage = () => {
     setForgotError(null);
     try {
       await authService.forgotPassword(forgotEmail);
+      
+      // Send password reset email confirmation
+      try {
+        await emailNotificationService.sendPasswordResetEmail(forgotEmail);
+      } catch (emailError) {
+        console.error('Failed to send password reset email:', emailError);
+        // Don't fail if email fails
+      }
+
       setForgotSent(true);
     } catch (err) {
       setForgotError(err.userMessage || 'Failed to send reset instructions. Please check your email and try again.');

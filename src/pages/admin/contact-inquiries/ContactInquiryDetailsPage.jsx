@@ -4,6 +4,7 @@ import { ArrowLeft, Mail, Phone, Calendar, Send, RefreshCw, Copy, Check } from '
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
 import contactInquiryService, { INQUIRY_STATUS } from '../../../services/contactInquiryService';
+import emailNotificationService from '../../../services/emailNotificationService';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 
 const ContactInquiryDetailsPage = () => {
@@ -58,8 +59,22 @@ const ContactInquiryDetailsPage = () => {
         response
       });
       setInquiry(updated);
+
+      // Send response email via AWS SES
+      try {
+        await emailNotificationService.sendContactResponse({
+          email: inquiry.email,
+          name: inquiry.name,
+          response: response,
+          subject: inquiry.subject
+        });
+      } catch (emailError) {
+        console.error('Failed to send response email:', emailError);
+        // Don't fail the update if email fails
+      }
+
       dispatch(addNotification({
-        message: 'Inquiry updated and response email sent',
+        message: 'Inquiry updated and response email sent successfully',
         type: 'success'
       }));
     } catch (error) {
