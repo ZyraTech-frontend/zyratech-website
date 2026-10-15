@@ -3,23 +3,27 @@ import { Link } from 'react-router-dom';
 import contentService from '../../../services/contentService';
 
 const ServicesShowcase = () => {
-  const [services, setServices] = useState([
-    'SOFTWARE ENGINEERING',
-    'INFRASTRUCTURE & CLOUD SERVICES',
-    'ACADEMIC RESEARCH SUPPORT',
-    'IT EDUCATION & TRAINING',
-    'MANAGED SERVICES'
-  ]);
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const { data } = await contentService.getAllServices();
-        if (data && data.length > 0) {
-          setServices(data.map(s => s.title));
+        setLoading(true);
+        // Use public endpoint (no authentication required)
+        const response = await contentService.getPublicServices();
+        // getPublicServices already returns array directly
+        const servicesData = Array.isArray(response) ? response : [];
+        if (servicesData && servicesData.length > 0) {
+          setServices(servicesData.map(s => s.title));
+        } else {
+          setServices([]); // No fallback - empty array
         }
       } catch (error) {
         console.error('Failed to fetch services:', error);
+        setServices([]); // No fallback on error
+      } finally {
+        setLoading(false);
       }
     };
     fetchServices();
@@ -33,21 +37,35 @@ const ServicesShowcase = () => {
           Comprehensive technology solutions tailored to drive your digital transformation
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {services.slice(0, 3).map((service, index) => (
-            <div key={index} className="bg-white rounded-xl p-8 h-32 flex items-center justify-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
-              <h3 className="text-lg font-semibold text-gray-900 group-hover:text-[#004fa2] transition-colors">{service}</h3>
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+          </div>
+        ) : services.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-white/70">No services available</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+              {services.slice(0, 3).map((service, index) => (
+                <div key={index} className="bg-white rounded-xl p-8 h-32 flex items-center justify-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+                  <h3 className="text-lg font-semibold text-gray-900 group-hover:text-[#004fa2] transition-colors">{service}</h3>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto mb-12">
-          {services.slice(3).map((service, index) => (
-            <div key={index} className="bg-white rounded-xl p-8 h-32 flex items-center justify-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
-              <h3 className="text-lg font-semibold text-gray-900 group-hover:text-[#004fa2] transition-colors">{service}</h3>
-            </div>
-          ))}
-        </div>
+            {services.length > 3 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto mb-12">
+                {services.slice(3).map((service, index) => (
+                  <div key={index} className="bg-white rounded-xl p-8 h-32 flex items-center justify-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-[#004fa2] transition-colors">{service}</h3>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
 
         <Link
           to="/our-services"

@@ -18,51 +18,28 @@ const BenefitsShowcase = () => {
   const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
   const cardsAnimation = useScrollAnimation({ type: 'fadeIn', delay: 0.2 });
 
-  const [benefitsList, setBenefitsList] = useState([
-    {
-      icon: ShieldCheck,
-      title: 'Low Risk',
-      description: 'Commit-as-you-go model, coupled with globally recognized standards'
-    },
-    {
-      icon: Cog,
-      title: 'Client-Individual Set Up',
-      description: 'Tailored competencies and cooperation models, adapted to your needs'
-    },
-    {
-      icon: TrendingUp,
-      title: 'Scalable',
-      description: 'Build and grow teams: on-demand and adaptable'
-    },
-    {
-      icon: DollarSign,
-      title: 'Cost Efficiency',
-      description: 'Commercial models more attractive than traditional off-shore options'
-    },
-    {
-      icon: Users,
-      title: 'Seamless Collaboration',
-      description: 'Minimal time difference to entire teams with English as their native language'
-    },
-    {
-      icon: Globe,
-      title: 'Social Impact',
-      description: 'Projects help fund initiatives closing the gender IT gap, coding for kids and our IT training academy'
-    }
-  ]);
+  const [benefitsList, setBenefitsList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBenefits = async () => {
       try {
-        const { data } = await contentService.getAllBenefits();
-        if (data && data.length > 0) {
-          setBenefitsList(data.map(benefit => ({
+        setLoading(true);
+        // Use public endpoint (no authentication required)
+        const response = await contentService.getPublicBenefits();
+        // getPublicBenefits already returns array directly
+        const benefitsData = Array.isArray(response) ? response : [];
+        if (benefitsData && benefitsData.length > 0) {
+          setBenefitsList(benefitsData.map(benefit => ({
             ...benefit,
             icon: ICON_MAP[benefit.icon] || ShieldCheck
           })));
         }
       } catch (error) {
         console.error('Error fetching benefits:', error);
+        setBenefitsList([]); // Empty array on error, no fallback
+      } finally {
+        setLoading(false);
       }
     };
     fetchBenefits();
@@ -98,20 +75,30 @@ const BenefitsShowcase = () => {
           transition={cardsAnimation.transition}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
         >
-          {benefitsList.map((benefit, index) => {
-            const IconComponent = benefit.icon;
-            return (
-              <div key={index} className="group bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-100">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <IconComponent className="w-5 h-5 text-white" />
+          {loading ? (
+            <div className="col-span-full flex justify-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#004fa2]"></div>
+            </div>
+          ) : benefitsList.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-500">No benefits available</p>
+            </div>
+          ) : (
+            benefitsList.map((benefit, index) => {
+              const IconComponent = benefit.icon;
+              return (
+                <div key={index} className="group bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-100">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-[#004fa2] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <IconComponent className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors">{benefit.title}</h3>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors">{benefit.title}</h3>
+                  <p className="text-gray-600 leading-relaxed text-sm">{benefit.description}</p>
                 </div>
-                <p className="text-gray-600 leading-relaxed text-sm">{benefit.description}</p>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </motion.div>
 
         <div className="text-center">

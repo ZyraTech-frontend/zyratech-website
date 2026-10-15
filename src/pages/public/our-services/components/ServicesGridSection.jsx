@@ -34,8 +34,10 @@ const ServicesGridSection = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await contentService.getAllServices();
-        setServices(response.data);
+        // Use public endpoint (no authentication required)
+        const response = await contentService.getPublicServices();
+        // getPublicServices already returns array directly
+        setServices(Array.isArray(response) ? response : []);
       } catch (error) {
         console.error("Failed to fetch services:", error);
       } finally {
