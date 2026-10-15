@@ -285,6 +285,33 @@ const contentService = {
       section: 'qa'
     });
     return response.data?.data || response.data;
+  },
+
+  // Backward compatible methods for pages using old names
+  getWorkWithUs: async () => {
+    const response = await api.get('/admin/content/items/section/work-with-us');
+    return response.data?.data || response.data;
+  },
+
+  updateWorkWithUs: async (section, data) => {
+    const response = await api.put(`/admin/content/items`, {
+      ...data,
+      section: 'work-with-us'
+    });
+    return response.data?.data || response.data;
+  },
+
+  getQA: async () => {
+    const response = await api.get('/admin/content/items/section/qa');
+    return response.data?.data || response.data;
+  },
+
+  updateQA: async (section, data) => {
+    const response = await api.put(`/admin/content/items`, {
+      ...data,
+      section: 'qa'
+    });
+    return response.data?.data || response.data;
   }
 };
 

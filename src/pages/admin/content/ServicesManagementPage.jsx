@@ -44,8 +44,9 @@ const ServicesManagementPage = () => {
                 contentService.getAllServices(),
                 contentService.getAllBenefits()
             ]);
-            setServices(servicesRes.data || []);
-            setBenefits(benefitsRes.data || []);
+            // contentService already extracts response.data.data, so responses are arrays
+            setServices(Array.isArray(servicesRes) ? servicesRes : []);
+            setBenefits(Array.isArray(benefitsRes) ? benefitsRes : []);
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {

@@ -38,7 +38,8 @@ const HeroSlidesManagementPage = () => {
         try {
             setLoading(true);
             const response = await heroService.getAllSlides();
-            setSlides(response.data);
+            // heroService returns { data: [...] }, so extract it
+            setSlides(response.data || []);
         } catch (error) {
             console.error('Error fetching slides:', error);
         } finally {

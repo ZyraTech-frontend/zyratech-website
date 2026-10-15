@@ -26,7 +26,14 @@ const WorkWithUsManagementPage = () => {
     const fetchData = async () => {
         try {
             const response = await contentService.getWorkWithUs();
-            setData(response.data);
+            // contentService already extracts response.data.data, so response is data object or array
+            setData(response || {
+                hero: {},
+                setup: [],
+                projectSteps: [],
+                collaboration: { points: [] },
+                hiring: []
+            });
             setLoading(false);
         } catch (error) {
             console.error("Failed to fetch Work With Us data:", error);

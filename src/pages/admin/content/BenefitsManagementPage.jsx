@@ -36,7 +36,8 @@ const BenefitsManagementPage = () => {
         try {
             setLoading(true);
             const response = await contentService.getAllBenefits();
-            setBenefits(response.data || []);
+            // contentService already extracts response.data.data, so response is an array
+            setBenefits(Array.isArray(response) ? response : []);
         } catch (error) {
             console.error('Error fetching benefits:', error);
         } finally {

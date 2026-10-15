@@ -28,7 +28,14 @@ const QAManagementPage = () => {
     const fetchData = async () => {
         try {
             const response = await contentService.getQA();
-            setData(response.data);
+            // contentService already extracts response.data.data, so response is data object or array
+            setData(response || {
+                hero: {},
+                intro: { howItWorks: {}, standards: { items: [] } },
+                tools: [],
+                features: [],
+                faq: []
+            });
             setLoading(false);
         } catch (error) {
             console.error("Failed to fetch QA data:", error);
