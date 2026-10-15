@@ -53,8 +53,8 @@ const TimelineItemFormPage = () => {
     const fetchTimelineItem = async () => {
         try {
             setLoading(true);
-            const response = await contentService.getTimelineItem(id);
-            const item = response.data;
+            // contentService.getTimelineItem already returns the item object directly
+            const item = await contentService.getTimelineItem(id);
             setFormData({
                 year: item.year || new Date().getFullYear().toString(),
                 title: item.title || '',

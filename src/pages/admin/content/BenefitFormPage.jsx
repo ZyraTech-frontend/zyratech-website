@@ -74,8 +74,8 @@ const BenefitFormPage = () => {
     const fetchBenefit = async () => {
         try {
             setLoading(true);
-            const response = await contentService.getBenefit(id);
-            const benefit = response.data;
+            // contentService.getBenefit already returns the benefit object directly
+            const benefit = await contentService.getBenefit(id);
             setFormData({
                 title: benefit.title || '',
                 description: benefit.description || '',

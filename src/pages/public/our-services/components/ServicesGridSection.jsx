@@ -3,19 +3,20 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   BadgeCheck, Globe, Layers, Code2, ServerCog, Shield, Users, BookOpen, GraduationCap,
-  Smartphone, Database, Layout, Cpu, Briefcase
+  Smartphone, Database, Layout, Cpu, Briefcase, ShieldCheck, Cog, TrendingUp, DollarSign
 } from 'lucide-react';
 
 import contentService from '../../../../services/contentService';
 import { containerVariants, itemVariants } from '../motionVariants';
 
-// Icon mapping
+// Icon mapping - MUST match ServiceFormPage ICON_OPTIONS
 const ICON_MAP = {
   'Code2': Code2,
   'ServerCog': ServerCog,
   'BookOpen': BookOpen,
   'GraduationCap': GraduationCap,
   'Shield': Shield,
+  'ShieldCheck': ShieldCheck,
   'Briefcase': Briefcase,
   'Globe': Globe,
   'Smartphone': Smartphone,
@@ -24,7 +25,10 @@ const ICON_MAP = {
   'Cpu': Cpu,
   'Users': Users,
   'Layers': Layers,
-  'BadgeCheck': BadgeCheck
+  'BadgeCheck': BadgeCheck,
+  'Cog': Cog,
+  'TrendingUp': TrendingUp,
+  'DollarSign': DollarSign
 };
 
 const ServicesGridSection = () => {

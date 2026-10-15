@@ -38,8 +38,8 @@ const PartnershipStoryFormPage = () => {
     const fetchStory = async () => {
         try {
             setLoading(true);
-            const response = await contentService.getPartnershipStory(id);
-            const story = response.data;
+            // contentService.getPartnershipStory already returns the story object directly
+            const story = await contentService.getPartnershipStory(id);
             setFormData({
                 title: story.title || '',
                 description: story.description || '',

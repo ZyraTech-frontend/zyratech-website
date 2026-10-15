@@ -46,8 +46,9 @@ const HeroSlideFormPage = () => {
     const fetchSlide = async () => {
         try {
             setLoading(true);
+            // heroService.getSlide returns { data: slide }, so extract data
             const response = await heroService.getSlide(id);
-            const slide = response.data;
+            const slide = response.data || response;
             setFormData({
                 title: slide.title || '',
                 description: slide.description || '',

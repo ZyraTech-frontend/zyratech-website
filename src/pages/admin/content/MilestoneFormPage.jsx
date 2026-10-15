@@ -46,8 +46,8 @@ const MilestoneFormPage = () => {
     const fetchMilestone = async () => {
         try {
             setLoading(true);
-            const response = await contentService.getMilestone(id);
-            const milestone = response.data;
+            // contentService.getMilestone already returns the milestone object directly
+            const milestone = await contentService.getMilestone(id);
             setFormData({
                 title: milestone.title || '',
                 description: milestone.description || '',

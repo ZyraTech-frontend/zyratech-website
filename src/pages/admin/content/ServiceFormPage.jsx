@@ -73,8 +73,8 @@ const ServiceFormPage = () => {
     const fetchService = async () => {
         try {
             setLoading(true);
-            const response = await contentService.getService(id);
-            const service = response.data;
+            // contentService.getService already returns the service object directly
+            const service = await contentService.getService(id);
             setFormData({
                 title: service.title || '',
                 description: service.description || '',
