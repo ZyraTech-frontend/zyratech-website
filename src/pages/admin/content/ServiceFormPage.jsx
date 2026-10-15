@@ -24,7 +24,9 @@ import {
     Cog,
     TrendingUp,
     DollarSign,
-    Users
+    Users,
+    Layers,
+    BadgeCheck
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
@@ -43,10 +45,12 @@ const ICON_OPTIONS = [
     { value: 'Database', label: 'Data / Storage', icon: Database },
     { value: 'Layout', label: 'Design / UI/UX', icon: Layout },
     { value: 'Cpu', label: 'Hardware / IoT', icon: Cpu },
+    { value: 'Users', label: 'Users', icon: Users },
+    { value: 'Layers', label: 'Layers', icon: Layers },
+    { value: 'BadgeCheck', label: 'Badge Check', icon: BadgeCheck },
     { value: 'Cog', label: 'Cog', icon: Cog },
-    { value: 'TrendingUp', label: 'TrendingUp', icon: TrendingUp },
-    { value: 'DollarSign', label: 'DollarSign', icon: DollarSign },
-    { value: 'Users', label: 'Users', icon: Users }
+    { value: 'TrendingUp', label: 'Trending Up', icon: TrendingUp },
+    { value: 'DollarSign', label: 'Dollar Sign', icon: DollarSign }
 ];
 
 const ServiceFormPage = () => {
