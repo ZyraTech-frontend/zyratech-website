@@ -193,48 +193,43 @@ const HeroSlideFormPage = () => {
                             {/* Background Image - File Upload */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Background Image <span className="text-red-500">*</span>
+                                    Background Image URL
                                 </label>
-                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#004fa2] transition-colors cursor-pointer"
-                                    onDragOver={(e) => e.preventDefault()}
-                                    onDrop={(e) => {
-                                        e.preventDefault();
-                                        const files = e.dataTransfer.files;
-                                        if (files[0]) {
-                                            const reader = new FileReader();
-                                            reader.onload = (event) => {
-                                                setFormData(prev => ({
-                                                    ...prev,
-                                                    backgroundImage: event.target.result
-                                                }));
-                                            };
-                                            reader.readAsDataURL(files[0]);
-                                        }
-                                    }}
-                                >
+                                <p className="text-xs text-gray-500 mb-3">Enter the URL of the image or upload from public/images folder:</p>
+                                <div className="flex gap-2 mb-3">
                                     <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => {
-                                            const file = e.target.files[0];
-                                            if (file) {
-                                                const reader = new FileReader();
-                                                reader.onload = (event) => {
-                                                    setFormData(prev => ({
-                                                        ...prev,
-                                                        backgroundImage: event.target.result
-                                                    }));
-                                                };
-                                                reader.readAsDataURL(file);
-                                            }
-                                        }}
-                                        className="hidden"
-                                        id="image-upload"
+                                        type="text"
+                                        name="backgroundImage"
+                                        value={formData.backgroundImage}
+                                        onChange={handleInputChange}
+                                        placeholder="/images/hero1.webp or https://example.com/image.jpg"
+                                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
                                     />
-                                    <label htmlFor="image-upload" className="cursor-pointer">
-                                        <p className="text-gray-600 font-medium">Drag and drop your image here or click to select</p>
-                                        <p className="text-sm text-gray-500 mt-1">Supported formats: JPG, PNG, WebP</p>
-                                    </label>
+                                </div>
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#004fa2] transition-colors">
+                                    <p className="text-xs text-gray-500 mb-2">Or select from existing images:</p>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {[
+                                            '/images/hero1.webp',
+                                            '/images/hero2.webp',
+                                            '/images/hero3.webp',
+                                            '/images/hero4.webp',
+                                            '/images/hero5.webp',
+                                            '/images/image1.webp',
+                                            '/images/image2.webp',
+                                            '/images/image3.webp',
+                                        ].map(img => (
+                                            <button
+                                                key={img}
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, backgroundImage: img }))}
+                                                className={`p-2 rounded border-2 transition-all ${formData.backgroundImage === img ? 'border-[#004fa2] bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}
+                                            >
+                                                <img src={img} alt={img} className="w-full h-16 object-cover rounded" />
+                                                <p className="text-xs mt-1 truncate">{img.split('/').pop()}</p>
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                                 {formData.backgroundImage && (
                                     <div className="mt-3 relative overflow-hidden rounded-lg border border-gray-200 max-h-48">
@@ -242,6 +237,7 @@ const HeroSlideFormPage = () => {
                                             src={formData.backgroundImage} 
                                             alt="Preview" 
                                             className="w-full h-auto object-cover"
+                                            onError={(e) => { e.target.style.display = 'none'; }}
                                         />
                                     </div>
                                 )}
