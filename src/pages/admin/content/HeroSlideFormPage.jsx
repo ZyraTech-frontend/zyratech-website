@@ -15,13 +15,18 @@ import {
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import heroService from '../../../services/heroService';
+import contentService from '../../../services/contentService';
 
 const HeroSlideFormPage = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     
+    // Create abort controller for upload cancellation
+    const abortControllerRef = React.useRef(null);
+    
     const [loading, setLoading] = useState(!!id);
     const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -41,6 +46,13 @@ const HeroSlideFormPage = () => {
         if (id) {
             fetchSlide();
         }
+        
+        // Cleanup: abort upload if component unmounts
+        return () => {
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+        };
     }, [id]);
 
     const fetchSlide = async () => {
@@ -81,6 +93,11 @@ const HeroSlideFormPage = () => {
         
         if (!formData.title.trim() || !formData.description.trim()) {
             setError('Title and description are required');
+            return;
+        }
+
+        if (!formData.backgroundImage) {
+            setError('Background image is required');
             return;
         }
 
@@ -193,52 +210,87 @@ const HeroSlideFormPage = () => {
                             {/* Background Image - File Upload */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Background Image URL
+                                    Background Image <span className="text-red-500">*</span>
                                 </label>
-                                <p className="text-xs text-gray-500 mb-3">Enter the URL of the image or upload from public/images folder:</p>
-                                <div className="flex gap-2 mb-3">
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[#004fa2] transition-colors cursor-pointer group"
+                                    onClick={() => !uploading && document.getElementById('image-upload').click()}
+                                    style={{ opacity: uploading ? 0.6 : 1, pointerEvents: uploading ? 'none' : 'auto' }}>
                                     <input
-                                        type="text"
-                                        name="backgroundImage"
-                                        value={formData.backgroundImage}
-                                        onChange={handleInputChange}
-                                        placeholder="/images/hero1.webp or https://example.com/image.jpg"
-                                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                        id="image-upload"
+                                        type="file"
+                                        accept="image/*"
+                                        disabled={uploading}
+                                        onChange={async (e) => {
+                                            const file = e.target.files?.[0];
+                                            if (!file) return;
+                                            
+                                            // Prevent concurrent uploads
+                                            if (uploading) {
+                                                setError('Another upload is in progress');
+                                                return;
+                                            }
+                                            
+                                            // Frontend file size check (5MB max)
+                                            if (file.size > 5 * 1024 * 1024) {
+                                                setError('File must be smaller than 5MB');
+                                                return;
+                                            }
+                                            
+                                            try {
+                                                setUploading(true);
+                                                setError(null);
+                                                
+                                                // Create abort controller for this upload
+                                                abortControllerRef.current = new AbortController();
+                                                
+                                                // Use the new upload endpoint instead of base64
+                                                const imageUrl = await contentService.uploadImage(file);
+                                                
+                                                // Only update if component still mounted (check uploading state)
+                                                setFormData(prev => ({
+                                                    ...prev,
+                                                    backgroundImage: imageUrl
+                                                }));
+                                            } catch (err) {
+                                                console.error('Error uploading image:', err);
+                                                // Show more specific error message
+                                                const errorMsg = err.message || 'Failed to upload image. Please try again.';
+                                                setError(errorMsg);
+                                            } finally {
+                                                setUploading(false);
+                                                abortControllerRef.current = null;
+                                            }
+                                        }}
+                                        className="hidden"
                                     />
-                                </div>
-                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#004fa2] transition-colors">
-                                    <p className="text-xs text-gray-500 mb-2">Or select from existing images:</p>
-                                    <div className="grid grid-cols-3 gap-2">
-                                        {[
-                                            '/images/hero1.webp',
-                                            '/images/hero2.webp',
-                                            '/images/hero3.webp',
-                                            '/images/hero4.webp',
-                                            '/images/hero5.webp',
-                                            '/images/image1.webp',
-                                            '/images/image2.webp',
-                                            '/images/image3.webp',
-                                        ].map(img => (
-                                            <button
-                                                key={img}
-                                                type="button"
-                                                onClick={() => setFormData(prev => ({ ...prev, backgroundImage: img }))}
-                                                className={`p-2 rounded border-2 transition-all ${formData.backgroundImage === img ? 'border-[#004fa2] bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}
-                                            >
-                                                <img src={img} alt={img} className="w-full h-16 object-cover rounded" />
-                                                <p className="text-xs mt-1 truncate">{img.split('/').pop()}</p>
-                                            </button>
-                                        ))}
+                                    <div className="flex flex-col items-center justify-center">
+                                        {uploading ? (
+                                            <>
+                                                <Loader className="w-12 h-12 text-[#004fa2] mb-2 animate-spin" />
+                                                <p className="text-sm font-medium text-gray-700">Uploading image...</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <svg className="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                                </svg>
+                                                <p className="text-sm font-medium text-gray-700">Click or drag to upload image</p>
+                                                <p className="text-xs text-gray-500 mt-1">PNG, JPG, WEBP up to 5MB</p>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                                 {formData.backgroundImage && (
-                                    <div className="mt-3 relative overflow-hidden rounded-lg border border-gray-200 max-h-48">
-                                        <img 
-                                            src={formData.backgroundImage} 
-                                            alt="Preview" 
-                                            className="w-full h-auto object-cover"
-                                            onError={(e) => { e.target.style.display = 'none'; }}
-                                        />
+                                    <div className="mt-4">
+                                        <p className="text-xs text-gray-500 mb-2">Preview:</p>
+                                        <div className="relative overflow-hidden rounded-lg border border-gray-200 max-h-48">
+                                            <img 
+                                                src={formData.backgroundImage} 
+                                                alt="Preview" 
+                                                className="w-full h-auto object-cover"
+                                                onError={(e) => { e.target.style.display = 'none'; }}
+                                            />
+                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -350,7 +402,7 @@ const HeroSlideFormPage = () => {
                             </button>
                             <button
                                 type="submit"
-                                disabled={saving}
+                                disabled={saving || uploading}
                                 className="px-6 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-colors font-medium"
                             >
                                 {saving && <Loader size={16} className="animate-spin" />}

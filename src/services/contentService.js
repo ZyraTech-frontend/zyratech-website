@@ -16,6 +16,34 @@
 import api from './api';
 
 const contentService = {
+  // ===== IMAGE UPLOAD (REQUIRED FOR ALL SECTIONS) =====
+  uploadImage: async (file) => {
+    // Validate file before upload
+    if (!file) throw new Error('No file provided');
+    if (file.size > 5 * 1024 * 1024) throw new Error('File must be less than 5MB');
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    // DO NOT set Content-Type header - axios will set it automatically with boundary
+    const response = await api.post('/admin/upload', formData);
+    
+    // Backend returns { success: true, data: { url, size, mimeType }, message }
+    const imageUrl = response.data?.data?.url || response.data?.imageUrl;
+    
+    // Validate URL was returned
+    if (!imageUrl || typeof imageUrl !== 'string') {
+      throw new Error('Server did not return a valid image URL');
+    }
+    
+    // Validate URL is an actual URL (starts with http or /)
+    if (!imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
+      throw new Error('Server returned an invalid image URL format');
+    }
+    
+    return imageUrl;
+  },
+
   // ===== SERVICES (5 endpoints) =====
   
   // ADMIN: Get all services (authenticated)
@@ -326,10 +354,80 @@ const contentService = {
   },
 
   updateAboutQuote: async (data) => {
-    const response = await api.put('/admin/content/items', {
-      ...data,
-      section: 'about-quote'
-    });
+    // About quote is a single-item section stored in the database
+    try {
+      // Try to get existing about-quote
+      const existing = await api.get('/admin/content/items/section/about-quote');
+      let items = existing.data?.data || existing.data || [];
+      
+      // Handle both array and single object responses
+      if (!Array.isArray(items)) {
+        items = items ? [items] : [];
+      }
+      
+      const item = items.length > 0 ? items[0] : null;
+      
+      if (item && item.id) {
+        // Update existing
+        const response = await api.put(`/admin/content/items/${item.id}`, {
+          ...data,
+          section: 'about-quote'
+        });
+        return response.data?.data || response.data;
+      } else {
+        // Create new if doesn't exist
+        const response = await api.post('/admin/content/items', {
+          ...data,
+          section: 'about-quote'
+        });
+        return response.data?.data || response.data;
+      }
+    } catch (err) {
+      console.error('Error in updateAboutQuote:', err);
+      // Fallback: try to create
+      const response = await api.post('/admin/content/items', {
+        ...data,
+        section: 'about-quote'
+      });
+      return response.data?.data || response.data;
+    }
+  },
+
+  // ===== PUBLIC ENDPOINTS (No authentication required) =====
+
+  // PUBLIC: Get published hero slides
+  getPublicHeroSlides: async () => {
+    const response = await api.get('/content/items/hero');
+    return response.data?.data || response.data;
+  },
+
+  // PUBLIC: Get published milestones
+  getPublicMilestones: async () => {
+    const response = await api.get('/content/items/milestones');
+    return response.data?.data || response.data;
+  },
+
+  // PUBLIC: Get published timeline
+  getPublicTimeline: async () => {
+    const response = await api.get('/content/items/timeline');
+    return response.data?.data || response.data;
+  },
+
+  // PUBLIC: Get published partnerships
+  getPublicPartnerships: async () => {
+    const response = await api.get('/content/items/partnerships');
+    return response.data?.data || response.data;
+  },
+
+  // PUBLIC: Get published about quote
+  getPublicAboutQuote: async () => {
+    const response = await api.get('/content/items/about-quote');
+    return { data: response.data?.data || response.data };
+  },
+
+  // PUBLIC: Get published QA page
+  getPublicQA: async () => {
+    const response = await api.get('/content/items/qa');
     return response.data?.data || response.data;
   }
 };
