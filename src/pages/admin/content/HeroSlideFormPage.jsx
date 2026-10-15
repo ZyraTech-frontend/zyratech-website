@@ -190,28 +190,58 @@ const HeroSlideFormPage = () => {
                                 />
                             </div>
 
-                            {/* Background Image URL */}
+                            {/* Background Image - File Upload */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Background Image URL
+                                    Background Image <span className="text-red-500">*</span>
                                 </label>
-                                <input
-                                    type="url"
-                                    name="backgroundImage"
-                                    value={formData.backgroundImage}
-                                    onChange={handleInputChange}
-                                    placeholder="https://example.com/image.jpg"
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
-                                />
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#004fa2] transition-colors cursor-pointer"
+                                    onDragOver={(e) => e.preventDefault()}
+                                    onDrop={(e) => {
+                                        e.preventDefault();
+                                        const files = e.dataTransfer.files;
+                                        if (files[0]) {
+                                            const reader = new FileReader();
+                                            reader.onload = (event) => {
+                                                setFormData(prev => ({
+                                                    ...prev,
+                                                    backgroundImage: event.target.result
+                                                }));
+                                            };
+                                            reader.readAsDataURL(files[0]);
+                                        }
+                                    }}
+                                >
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                            const file = e.target.files[0];
+                                            if (file) {
+                                                const reader = new FileReader();
+                                                reader.onload = (event) => {
+                                                    setFormData(prev => ({
+                                                        ...prev,
+                                                        backgroundImage: event.target.result
+                                                    }));
+                                                };
+                                                reader.readAsDataURL(file);
+                                            }
+                                        }}
+                                        className="hidden"
+                                        id="image-upload"
+                                    />
+                                    <label htmlFor="image-upload" className="cursor-pointer">
+                                        <p className="text-gray-600 font-medium">Drag and drop your image here or click to select</p>
+                                        <p className="text-sm text-gray-500 mt-1">Supported formats: JPG, PNG, WebP</p>
+                                    </label>
+                                </div>
                                 {formData.backgroundImage && (
                                     <div className="mt-3 relative overflow-hidden rounded-lg border border-gray-200 max-h-48">
                                         <img 
                                             src={formData.backgroundImage} 
                                             alt="Preview" 
                                             className="w-full h-auto object-cover"
-                                            onError={(e) => {
-                                                e.target.style.display = 'none';
-                                            }}
                                         />
                                     </div>
                                 )}

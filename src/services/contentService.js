@@ -231,6 +231,11 @@ const contentService = {
     return response.data;
   },
 
+  getHeroSlide: async (id) => {
+    const response = await api.get(`/admin/content/items/${id}`);
+    return response.data?.data || response.data;
+  },
+
   // ===== WORK WITH US PAGE (4 endpoints) =====
 
   getWorkWithUsHero: async () => {
