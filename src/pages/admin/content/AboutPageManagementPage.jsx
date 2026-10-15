@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import {
     Save, Loader, Plus, Edit2, Trash2,
     Layout, Target, MapPin, Flag, Clock,
-    Users, TrendingUp, CheckCircle, Globe
+    Users, TrendingUp, CheckCircle, Globe, Quote
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
@@ -45,6 +45,56 @@ const WhyGhanaForm = ({ data, onSubmit, onChange, saving }) => (
             <div><label className="block text-sm font-medium mb-1">Link URL</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="linkUrl" value={data.linkUrl || ''} onChange={onChange} /></div>
         </div>
         <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Why Ghana</button>
+    </form>
+);
+
+const AboutQuoteForm = ({ data, onSubmit, onChange, saving }) => (
+    <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
+        <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Mission & About Quote</h3>
+        <div><label className="block text-sm font-medium mb-1">Mission Quote</label><textarea className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="quote" value={data.quote || ''} onChange={onChange} rows={4} /></div>
+        
+        <div className="grid grid-cols-2 gap-4">
+            <div><label className="block text-sm font-medium mb-1">Author Name</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="authorName" value={data.authorName || ''} onChange={onChange} /></div>
+            <div><label className="block text-sm font-medium mb-1">Author Title</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="authorTitle" value={data.authorTitle || ''} onChange={onChange} /></div>
+        </div>
+
+        <div><label className="block text-sm font-medium mb-1">Author Image URL</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="authorImage" value={data.authorImage || ''} onChange={onChange} placeholder="/images/..." /></div>
+
+        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <h4 className="font-bold text-gray-800 mb-4">Key Statistics</h4>
+            <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-sm font-medium mb-1">Statistic 1 Value</label>
+                    <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat1Value" value={data.stat1Value || ''} onChange={onChange} placeholder="e.g. 2024" />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium mb-1">Statistic 1 Label</label>
+                    <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat1Label" value={data.stat1Label || ''} onChange={onChange} placeholder="e.g. Founded" />
+                </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <label className="block text-sm font-medium mb-1">Statistic 2 Value</label>
+                    <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat2Value" value={data.stat2Value || ''} onChange={onChange} placeholder="e.g. 50+" />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium mb-1">Statistic 2 Label</label>
+                    <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat2Label" value={data.stat2Label || ''} onChange={onChange} placeholder="e.g. Trainees" />
+                </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <label className="block text-sm font-medium mb-1">Statistic 3 Value</label>
+                    <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat3Value" value={data.stat3Value || ''} onChange={onChange} placeholder="e.g. 1" />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium mb-1">Statistic 3 Label</label>
+                    <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat3Label" value={data.stat3Label || ''} onChange={onChange} placeholder="e.g. Location" />
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Quote & Statistics</button>
     </form>
 );
 
@@ -198,6 +248,7 @@ const AboutPageManagementPage = () => {
     const [heroData, setHeroData] = useState({});
     const [missionData, setMissionData] = useState({});
     const [whyGhanaData, setWhyGhanaData] = useState({});
+    const [quoteData, setQuoteData] = useState({});
     const [milestones, setMilestones] = useState([]);
     const [timeline, setTimeline] = useState([]);
 
@@ -205,6 +256,7 @@ const AboutPageManagementPage = () => {
     const [savingHero, setSavingHero] = useState(false);
     const [savingMission, setSavingMission] = useState(false);
     const [savingWhyGhana, setSavingWhyGhana] = useState(false);
+    const [savingQuote, setSavingQuote] = useState(false);
 
     useEffect(() => {
         fetchAllData();
@@ -213,10 +265,11 @@ const AboutPageManagementPage = () => {
     const fetchAllData = async () => {
         try {
             setLoading(true);
-            const [hero, mission, why, milestonesRes, timelineRes] = await Promise.all([
+            const [hero, mission, why, quote, milestonesRes, timelineRes] = await Promise.all([
                 contentService.getAboutHero(),
                 contentService.getMission(),
                 contentService.getWhyGhana(),
+                contentService.getAboutQuote(),
                 contentService.getMilestones(),
                 contentService.getTimeline()
             ]);
@@ -224,6 +277,7 @@ const AboutPageManagementPage = () => {
             setHeroData(hero.data);
             setMissionData(mission.data);
             setWhyGhanaData(why.data);
+            setQuoteData(quote.data);
             setMilestones(milestonesRes.data);
             setTimeline(timelineRes.data);
         } catch (error) {
@@ -261,6 +315,21 @@ const AboutPageManagementPage = () => {
         dispatch(openConfirmDialog({ title: 'Success', message: 'Why Ghana section saved.', confirmText: 'OK', hideCancelButton: true }));
     };
 
+    const handleQuoteChange = (e) => setQuoteData({ ...quoteData, [e.target.name]: e.target.value });
+    const handleQuoteSubmit = async (e) => {
+        e.preventDefault();
+        setSavingQuote(true);
+        try {
+            await contentService.updateAboutQuote(quoteData);
+            dispatch(openConfirmDialog({ title: 'Success', message: 'Mission & statistics saved.', confirmText: 'OK', hideCancelButton: true }));
+        } catch (error) {
+            console.error('Error saving quote:', error);
+            dispatch(openConfirmDialog({ title: 'Error', message: 'Failed to save quote', confirmText: 'OK', hideCancelButton: true }));
+        } finally {
+            setSavingQuote(false);
+        }
+    };
+
     if (loading) return (
         <AdminLayout>
             <div className="h-64 flex items-center justify-center">
@@ -288,6 +357,7 @@ const AboutPageManagementPage = () => {
                         {[
                             { id: 'hero', label: 'Hero Section', icon: Layout },
                             { id: 'mission', label: 'Mission', icon: Target },
+                            { id: 'quote', label: 'About Quote', icon: Quote },
                             { id: 'why', label: 'Why Ghana', icon: Globe },
                             { id: 'milestones', label: 'Milestones', icon: Flag },
                             { id: 'timeline', label: 'Timeline', icon: Clock },
@@ -314,6 +384,7 @@ const AboutPageManagementPage = () => {
                 <div className="flex-1 min-w-0">
                     {activeTab === 'hero' && <HeroForm data={heroData} onChange={handleHeroChange} onSubmit={handleHeroSubmit} saving={savingHero} />}
                     {activeTab === 'mission' && <MissionForm data={missionData} onChange={handleMissionChange} onSubmit={handleMissionSubmit} saving={savingMission} />}
+                    {activeTab === 'quote' && <AboutQuoteForm data={quoteData} onChange={handleQuoteChange} onSubmit={handleQuoteSubmit} saving={savingQuote} />}
                     {activeTab === 'why' && <WhyGhanaForm data={whyGhanaData} onChange={handleWhyGhanaChange} onSubmit={handleWhyGhanaSubmit} saving={savingWhyGhana} />}
                     {activeTab === 'milestones' && <MilestonesManager milestones={milestones} setMilestones={setMilestones} dispatch={dispatch} navigate={navigate} />}
                     {activeTab === 'timeline' && <TimelineManager timeline={timeline} setTimeline={setTimeline} dispatch={dispatch} navigate={navigate} />}

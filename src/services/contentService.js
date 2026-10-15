@@ -312,6 +312,20 @@ const contentService = {
       section: 'qa'
     });
     return response.data?.data || response.data;
+  },
+
+  // ===== ABOUT QUOTE (MISSION + STATISTICS) =====
+  getAboutQuote: async () => {
+    const response = await api.get('/admin/content/items/section/about-quote');
+    return { data: response.data?.data || response.data };
+  },
+
+  updateAboutQuote: async (data) => {
+    const response = await api.put('/admin/content/items', {
+      ...data,
+      section: 'about-quote'
+    });
+    return response.data?.data || response.data;
   }
 };
 
