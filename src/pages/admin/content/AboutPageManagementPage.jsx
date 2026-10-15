@@ -48,55 +48,117 @@ const WhyGhanaForm = ({ data, onSubmit, onChange, saving }) => (
     </form>
 );
 
-const AboutQuoteForm = ({ data, onSubmit, onChange, saving }) => (
-    <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-        <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Mission & About Quote</h3>
-        <div><label className="block text-sm font-medium mb-1">Mission Quote</label><textarea className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="quote" value={data.quote || ''} onChange={onChange} rows={4} /></div>
-        
-        <div className="grid grid-cols-2 gap-4">
-            <div><label className="block text-sm font-medium mb-1">Author Name</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="authorName" value={data.authorName || ''} onChange={onChange} /></div>
-            <div><label className="block text-sm font-medium mb-1">Author Title</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="authorTitle" value={data.authorTitle || ''} onChange={onChange} /></div>
-        </div>
+const AboutQuoteForm = ({ data, onSubmit, onChange, saving }) => {
+    // Available images from public/images folder
+    const AVAILABLE_IMAGES = [
+        '/images/Dalene.webp',
+        '/images/kal.webp',
+        '/images/masco.webp',
+        '/images/hero1.webp',
+        '/images/hero2.webp',
+        '/images/hero3.webp',
+        '/images/hero4.webp',
+        '/images/hero5.webp',
+        '/images/image1.webp',
+        '/images/image2.webp',
+        '/images/image3.webp',
+    ];
 
-        <div><label className="block text-sm font-medium mb-1">Author Image URL</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="authorImage" value={data.authorImage || ''} onChange={onChange} placeholder="/images/..." /></div>
+    // Available statistic labels (common ones)
+    const STATISTIC_LABELS = [
+        'Founded',
+        'Trainees',
+        'Location',
+        'Team Members',
+        'Projects',
+        'Years',
+        'Clients',
+        'Offices',
+        'Partners',
+        'Students',
+        'Courses',
+        'Countries'
+    ];
 
-        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <h4 className="font-bold text-gray-800 mb-4">Key Statistics</h4>
+    return (
+        <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
+            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Mission & About Quote</h3>
+            <div><label className="block text-sm font-medium mb-1">Mission Quote</label><textarea className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="quote" value={data.quote || ''} onChange={onChange} rows={4} /></div>
+            
             <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="block text-sm font-medium mb-1">Statistic 1 Value</label>
-                    <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat1Value" value={data.stat1Value || ''} onChange={onChange} placeholder="e.g. 2024" />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium mb-1">Statistic 1 Label</label>
-                    <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat1Label" value={data.stat1Label || ''} onChange={onChange} placeholder="e.g. Founded" />
-                </div>
+                <div><label className="block text-sm font-medium mb-1">Author Name</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="authorName" value={data.authorName || ''} onChange={onChange} /></div>
+                <div><label className="block text-sm font-medium mb-1">Author Title</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="authorTitle" value={data.authorTitle || ''} onChange={onChange} /></div>
             </div>
-            <div className="grid grid-cols-2 gap-4 mt-4">
-                <div>
-                    <label className="block text-sm font-medium mb-1">Statistic 2 Value</label>
-                    <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat2Value" value={data.stat2Value || ''} onChange={onChange} placeholder="e.g. 50+" />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium mb-1">Statistic 2 Label</label>
-                    <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat2Label" value={data.stat2Label || ''} onChange={onChange} placeholder="e.g. Trainees" />
-                </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 mt-4">
-                <div>
-                    <label className="block text-sm font-medium mb-1">Statistic 3 Value</label>
-                    <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat3Value" value={data.stat3Value || ''} onChange={onChange} placeholder="e.g. 1" />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium mb-1">Statistic 3 Label</label>
-                    <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat3Label" value={data.stat3Label || ''} onChange={onChange} placeholder="e.g. Location" />
-                </div>
-            </div>
-        </div>
 
-        <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Quote & Statistics</button>
-    </form>
-);
+            <div>
+                <label className="block text-sm font-medium mb-1">Author Image (Select from available images)</label>
+                <select className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="authorImage" value={data.authorImage || ''} onChange={onChange}>
+                    <option value="">-- Choose an image --</option>
+                    {AVAILABLE_IMAGES.map(img => (
+                        <option key={img} value={img}>{img.split('/').pop()}</option>
+                    ))}
+                </select>
+                {data.authorImage && (
+                    <div className="mt-2 p-2 border rounded-lg bg-gray-50">
+                        <p className="text-xs text-gray-600 mb-2">Preview:</p>
+                        <img src={data.authorImage} alt="Author preview" className="w-20 h-20 rounded-lg object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/80'; }} />
+                    </div>
+                )}
+            </div>
+
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h4 className="font-bold text-gray-800 mb-4">Key Statistics</h4>
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Statistic 1 Value</label>
+                        <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat1Value" value={data.stat1Value || ''} onChange={onChange} placeholder="e.g. 2024" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Statistic 1 Label</label>
+                        <select className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat1Label" value={data.stat1Label || ''} onChange={onChange}>
+                            <option value="">-- Select label --</option>
+                            {STATISTIC_LABELS.map(label => (
+                                <option key={label} value={label}>{label}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Statistic 2 Value</label>
+                        <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat2Value" value={data.stat2Value || ''} onChange={onChange} placeholder="e.g. 50+" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Statistic 2 Label</label>
+                        <select className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat2Label" value={data.stat2Label || ''} onChange={onChange}>
+                            <option value="">-- Select label --</option>
+                            {STATISTIC_LABELS.map(label => (
+                                <option key={label} value={label}>{label}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Statistic 3 Value</label>
+                        <input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat3Value" value={data.stat3Value || ''} onChange={onChange} placeholder="e.g. 1" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Statistic 3 Label</label>
+                        <select className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="stat3Label" value={data.stat3Label || ''} onChange={onChange}>
+                            <option value="">-- Select label --</option>
+                            {STATISTIC_LABELS.map(label => (
+                                <option key={label} value={label}>{label}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Quote & Statistics</button>
+        </form>
+    );
+};
 
 // Simple Milestone Manager Component (removed modal, uses navigation)
 const MilestonesManager = ({ milestones, setMilestones, dispatch, navigate }) => {
