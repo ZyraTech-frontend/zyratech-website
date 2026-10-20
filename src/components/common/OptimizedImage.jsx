@@ -12,6 +12,11 @@ const OptimizedImage = ({
   onError,
   ...props
 }) => {
+  // Guard against null or empty src
+  if (!src) {
+    return null;
+  }
+
   const loading = priority ? 'eager' : props.loading || 'lazy';
   const decoding = props.decoding || 'async';
   const fetchPriority = priority ? 'high' : props.fetchPriority || 'auto';

@@ -7,6 +7,7 @@ import ServicesShowcase from '../../../components/pages/home/ServicesShowcase';
 import BenefitsShowcase from '../../../components/pages/home/BenefitsShowcase';
 import TestimonialsSection from '../../../components/pages/home/TestimonialsSection';
 import ParallaxDivider from '../../../components/common/ParallaxDivider';
+import ErrorBoundary from '../../../components/common/ErrorBoundary';
 import useSEO from '../../../hooks/useSEO';
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
@@ -21,24 +22,48 @@ const HomePage = () => {
 
   return (
     <div>
-      <Hero />
-      <AboutQuote />
+      <ErrorBoundary>
+        <Hero />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <AboutQuote />
+      </ErrorBoundary>
 
-      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax1.webp" />
+      <ErrorBoundary>
+        <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax1.webp" />
+      </ErrorBoundary>
 
-      <PartnersShowcase />
-      <AboutShowcase />
+      <ErrorBoundary>
+        <PartnersShowcase />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <AboutShowcase />
+      </ErrorBoundary>
 
-      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax2.webp" />
+      <ErrorBoundary>
+        <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax2.webp" />
+      </ErrorBoundary>
 
-      <ServicesShowcase />
-      <BenefitsShowcase />
+      <ErrorBoundary>
+        <ServicesShowcase />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <BenefitsShowcase />
+      </ErrorBoundary>
 
-      <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax3.webp" />
+      <ErrorBoundary>
+        <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax3.webp" />
+      </ErrorBoundary>
 
-      <TestimonialsSection />
-      <HrContactSection />
-      <NewsletterHero />
+      <ErrorBoundary>
+        <TestimonialsSection />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <HrContactSection />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <NewsletterHero />
+      </ErrorBoundary>
     </div>
   );
 };

@@ -52,12 +52,10 @@ const Hero = () => {
     return () => clearInterval(timer);
   }, [slides.length, currentSlide]);
 
-  // Fallback if no slides are returned
-  if (slides.length === 0) {
+  // Fallback if no slides are returned or all have null backgroundImage
+  if (slides.length === 0 || !slide?.backgroundImage) {
     return null;
   }
-
-  const slide = slides[currentSlide];
 
   // Helper to convert ALL CAPS to Title Case (and keep IT uppercase)
   const formatTitle = (title) => {

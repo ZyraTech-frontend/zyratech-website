@@ -33,7 +33,7 @@ const AboutShowcase = () => {
           <div className="relative order-1 lg:order-2">
             <div className="absolute -right-2 sm:-right-4 -top-2 sm:-top-4 w-full h-full bg-[#004fa2] rounded-lg"></div>
             <OptimizedImage
-              src="/images/team-collaboration.webp"
+              src="/images/hero1.webp"
               alt="ZyraTech team member working"
               width={600}
               height={480}
