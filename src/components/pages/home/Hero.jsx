@@ -98,20 +98,17 @@ const Hero = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlide}
-            initial={{ opacity: 0.8 }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0.8 }}
-            transition={{ duration: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
             className="absolute inset-0 w-full h-full"
-            style={{
-              filter: 'brightness(1.1) contrast(1.05)'
-            }}
           >
             <img
               decoding="async"
               src={slide.backgroundImage}
               alt={slide.pillar}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover object-center"
               loading="eager"
               onError={(e) => {
                 e.target.src = "/images/hero2.webp";
@@ -120,7 +117,7 @@ const Hero = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Overlay - Gradient from left to dark (lighter so image shows) */}
+        {/* Overlay - Gradient from left to dark */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent"></div>
       </div>
 
