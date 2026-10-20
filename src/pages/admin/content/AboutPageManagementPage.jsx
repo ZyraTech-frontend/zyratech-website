@@ -14,14 +14,42 @@ import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 // --- Sub-components (inline forms for unchanging sections) ---
 
-const HeroForm = ({ data, onSubmit, onChange, saving }) => (
+const HeroForm = ({ data, onSubmit, onChange, saving, onImageUpload, uploading }) => (
     <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
         <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Hero Section</h3>
         <div><label className="block text-sm font-medium mb-1">Title</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="title" value={data.title || ''} onChange={onChange} /></div>
         <div><label className="block text-sm font-medium mb-1">Highlight (Blue)</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="highlight" value={data.highlight || ''} onChange={onChange} /></div>
         <div><label className="block text-sm font-medium mb-1">Description</label><textarea className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="description" value={data.description || ''} onChange={onChange} rows={3} /></div>
-        <div><label className="block text-sm font-medium mb-1">Image URL</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="backgroundImage" value={data.backgroundImage || ''} onChange={onChange} /></div>
-        <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Hero</button>
+        
+        {/* Image Upload */}
+        <div>
+            <label className="block text-sm font-medium mb-2">Background Image</label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#004fa2] transition-colors cursor-pointer" onClick={() => !uploading && document.getElementById('hero-image-upload').click()} style={{ opacity: uploading ? 0.6 : 1, pointerEvents: uploading ? 'none' : 'auto' }}>
+                <input id="hero-image-upload" type="file" accept="image/*" onChange={onImageUpload} disabled={uploading} className="hidden" />
+                <div className="flex flex-col items-center justify-center">
+                    {uploading ? (
+                        <>
+                            <Loader className="w-8 h-8 text-[#004fa2] mb-2 animate-spin" />
+                            <p className="text-sm font-medium text-gray-700">Uploading...</p>
+                        </>
+                    ) : (
+                        <>
+                            <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                            <p className="text-sm font-medium text-gray-700">Click to upload image</p>
+                            <p className="text-xs text-gray-500 mt-1">PNG, JPG, WEBP up to 5MB</p>
+                        </>
+                    )}
+                </div>
+            </div>
+            {data.backgroundImage && (
+                <div className="mt-3 p-2 border rounded-lg bg-gray-50">
+                    <p className="text-xs text-gray-600 mb-2">Preview:</p>
+                    <img src={data.backgroundImage} alt="Background preview" className="w-full h-40 rounded-lg object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
+                </div>
+            )}
+        </div>
+
+        <button type="submit" disabled={saving || uploading} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Hero</button>
     </form>
 );
 
@@ -319,6 +347,7 @@ const AboutPageManagementPage = () => {
     const [savingMission, setSavingMission] = useState(false);
     const [savingWhyGhana, setSavingWhyGhana] = useState(false);
     const [savingQuote, setSavingQuote] = useState(false);
+    const [uploadingHero, setUploadingHero] = useState(false);
 
     useEffect(() => {
         fetchAllData();
@@ -375,6 +404,32 @@ const AboutPageManagementPage = () => {
         await contentService.updateWhyGhana(whyGhanaData);
         setSavingWhyGhana(false);
         dispatch(openConfirmDialog({ title: 'Success', message: 'Why Ghana section saved.', confirmText: 'OK', hideCancelButton: true }));
+    };
+
+    // Image Upload Handler for Hero Background
+    const handleHeroImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // File validation
+        if (file.size > 5 * 1024 * 1024) {
+            dispatch(openConfirmDialog({ title: 'Error', message: 'File must be smaller than 5MB', confirmText: 'OK', hideCancelButton: true }));
+            return;
+        }
+
+        try {
+            setUploadingHero(true);
+            const imageUrl = await contentService.uploadImage(file);
+            setHeroData(prev => ({
+                ...prev,
+                backgroundImage: imageUrl
+            }));
+        } catch (err) {
+            console.error('Error uploading image:', err);
+            dispatch(openConfirmDialog({ title: 'Error', message: err.message || 'Failed to upload image', confirmText: 'OK', hideCancelButton: true }));
+        } finally {
+            setUploadingHero(false);
+        }
     };
 
     const handleQuoteChange = (e) => setQuoteData({ ...quoteData, [e.target.name]: e.target.value });
@@ -444,7 +499,7 @@ const AboutPageManagementPage = () => {
 
                 {/* Content Area */}
                 <div className="flex-1 min-w-0">
-                    {activeTab === 'hero' && <HeroForm data={heroData} onChange={handleHeroChange} onSubmit={handleHeroSubmit} saving={savingHero} />}
+                    {activeTab === 'hero' && <HeroForm data={heroData} onChange={handleHeroChange} onSubmit={handleHeroSubmit} saving={savingHero} onImageUpload={handleHeroImageUpload} uploading={uploadingHero} />}
                     {activeTab === 'mission' && <MissionForm data={missionData} onChange={handleMissionChange} onSubmit={handleMissionSubmit} saving={savingMission} />}
                     {activeTab === 'quote' && <AboutQuoteForm data={quoteData} onChange={handleQuoteChange} onSubmit={handleQuoteSubmit} saving={savingQuote} />}
                     {activeTab === 'why' && <WhyGhanaForm data={whyGhanaData} onChange={handleWhyGhanaChange} onSubmit={handleWhyGhanaSubmit} saving={savingWhyGhana} />}
