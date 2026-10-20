@@ -52,8 +52,15 @@ const Hero = () => {
     return () => clearInterval(timer);
   }, [slides.length, currentSlide]);
 
-  // Fallback if no slides are returned or all have null backgroundImage
-  if (slides.length === 0 || !slide?.backgroundImage) {
+  // Fallback if no slides are returned
+  if (slides.length === 0) {
+    return null;
+  }
+
+  const slide = slides[currentSlide];
+
+  // Guard against null backgroundImage
+  if (!slide?.backgroundImage) {
     return null;
   }
 
