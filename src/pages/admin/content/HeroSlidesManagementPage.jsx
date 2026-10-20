@@ -160,18 +160,18 @@ const HeroSlidesManagementPage = () => {
                                     </div>
 
                                     {/* Slide Details */}
-                                    <div className="flex-1 flex flex-col justify-between">
-                                        <div>
-                                            <div className="flex justify-between items-start mb-2">
-                                                <div>
-                                                    <span className="text-xs font-semibold text-[#004fa2] uppercase tracking-wide mb-1 block">
+                                    <div className="flex-1 min-w-0 flex flex-col justify-between">
+                                        <div className="min-w-0">
+                                            <div className="flex justify-between items-start mb-2 gap-4">
+                                                <div className="min-w-0 flex-1">
+                                                    <span className="text-xs font-semibold text-[#004fa2] uppercase tracking-wide mb-1 block truncate">
                                                         {slide.pillar}
                                                     </span>
-                                                    <h3 className={`text-lg font-bold ${slide.isVisible ? 'text-gray-900' : 'text-gray-500'}`}>
+                                                    <h3 className={`text-lg font-bold truncate ${slide.isVisible ? 'text-gray-900' : 'text-gray-500'}`}>
                                                         {slide.title}
                                                     </h3>
                                                 </div>
-                                                <div className="flex items-center gap-1">
+                                                <div className="flex items-center gap-1 flex-shrink-0">
                                                     <button
                                                         onClick={() => handleToggleVisibility(slide)}
                                                         className={`p-2 rounded-lg transition-colors ${slide.isVisible ? 'text-green-600 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-100'}`}
@@ -200,15 +200,15 @@ const HeroSlidesManagementPage = () => {
                                                 {slide.description}
                                             </p>
 
-                                            <div className="flex flex-wrap gap-2">
+                                            <div className="flex flex-wrap gap-2 min-w-0">
                                                 {slide.cta1Text && (
-                                                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded border border-blue-200 bg-blue-50 text-blue-700 text-xs max-w-full overflow-hidden">
+                                                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded border border-blue-200 bg-blue-50 text-blue-700 text-xs min-w-0">
                                                         <ExternalLink size={10} className="flex-shrink-0" />
                                                         <span className="truncate">{slide.cta1Text} ({slide.cta1Link})</span>
                                                     </span>
                                                 )}
                                                 {slide.cta2Text && (
-                                                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded border border-gray-200 bg-gray-50 text-gray-600 text-xs max-w-full overflow-hidden">
+                                                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded border border-gray-200 bg-gray-50 text-gray-600 text-xs min-w-0">
                                                         <ExternalLink size={10} className="flex-shrink-0" />
                                                         <span className="truncate">{slide.cta2Text} ({slide.cta2Link})</span>
                                                     </span>
