@@ -402,12 +402,6 @@ const contentService = {
 
   // ===== PUBLIC ENDPOINTS (No authentication required) =====
 
-  // PUBLIC: Get published hero slides
-  getPublicHeroSlides: async () => {
-    const response = await api.get('/content/items/hero');
-    return response.data?.data || response.data;
-  },
-
   // PUBLIC: Get published milestones
   getPublicMilestones: async () => {
     const response = await api.get('/content/items/milestones');
