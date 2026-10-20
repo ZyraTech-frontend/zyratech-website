@@ -26,7 +26,8 @@ const contentService = {
     formData.append('file', file);
     
     // DO NOT set Content-Type header - axios will set it automatically with boundary
-    const response = await api.post('/admin/upload', formData);
+    // ✅ CORRECT ENDPOINT: /api/admin/content/upload (NOT /api/admin/upload)
+    const response = await api.post('/admin/content/upload', formData);
     
     // Backend returns { success: true, data: { url, size, mimeType }, message }
     const imageUrl = response.data?.data?.url || response.data?.imageUrl;
