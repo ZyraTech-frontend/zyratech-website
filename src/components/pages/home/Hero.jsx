@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import heroService from '../../../services/heroService';
 
 const Hero = () => {
@@ -111,41 +112,62 @@ const Hero = () => {
 
       {/* Content with animations - Left aligned */}
       <div className="relative z-10 w-full h-full flex items-center justify-start px-6 md:px-16 lg:px-24 pt-20 pb-20">
-        <div className="max-w-5xl w-full">
+        {/* Motion container with key to re-trigger animation on slide change */}
+        <motion.div
+          key={currentSlide}
+          className="max-w-5xl w-full"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+        >
           {/* Main Headline */}
-          <h1
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0 }}
             className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 tracking-tight text-white"
             style={{
               textShadow: '2px 2px 8px rgba(0,0,0,0.5)',
             }}
           >
             {formatTitle(slide.title)}
-          </h1>
+          </motion.h1>
 
           {/* Pillar (Sub-heading) */}
           {slide.pillar && (
-            <h3
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
               className="text-lg md:text-xl font-bold text-white mb-3"
               style={{
                 textShadow: '1px 1px 4px rgba(0,0,0,0.5)',
               }}
             >
               {formatTitle(slide.pillar)}
-            </h3>
+            </motion.h3>
           )}
 
           {/* Description */}
-          <p
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             className="text-base md:text-lg lg:text-xl font-normal text-gray-200 mb-8 leading-relaxed max-w-2xl"
             style={{
               textShadow: '1px 1px 4px rgba(0,0,0,0.5)',
             }}
           >
             {formatDescription(slide.description)}
-          </p>
+          </motion.p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 md:gap-6 mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-4 md:gap-6 mb-8"
+          >
             {slide.cta1Text && (
               <Link
                 to={slide.cta1Link || '#'}
@@ -163,8 +185,8 @@ const Hero = () => {
                 {slide.cta2Text}
               </Link>
             )}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Slideshow Controls (Dots) - Bottom left */}
