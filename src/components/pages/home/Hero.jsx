@@ -107,26 +107,21 @@ const Hero = () => {
               filter: 'brightness(1.1) contrast(1.05)'
             }}
           >
-            <OptimizedImage
+            <img
+              decoding="async"
               src={slide.backgroundImage}
               alt={slide.pillar}
-              width={1920}
-              height={1080}
-              priority={currentSlide === 0}
               className="absolute inset-0 w-full h-full object-cover"
-              containerClassName="absolute inset-0 w-full h-full"
+              loading="eager"
               onError={(e) => {
-                if (e.target) {
-                  e.target.src = "/images/hero2.webp";
-                }
+                e.target.src = "/images/hero2.webp";
               }}
             />
           </motion.div>
         </AnimatePresence>
 
-        {/* Overlay - Gradient from left to dark, similar to AmaliTech */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
-        <div className="absolute inset-0 bg-black/20"></div>
+        {/* Overlay - Gradient from left to dark (lighter so image shows) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent"></div>
       </div>
 
       {/* Content with animations - Left aligned */}
@@ -188,18 +183,18 @@ const Hero = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              {slide.cta1Text && slide.cta1Link && (
+              {slide.cta1Text && (
                 <Link
-                  to={slide.cta1Link}
+                  to={slide.cta1Link || '#'}
                   className="bg-[#004fa2] hover:bg-[#003b7a] text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center shadow-lg"
                 >
                   {slide.cta1Text}
                 </Link>
               )}
 
-              {slide.cta2Text && slide.cta2Link && (
+              {slide.cta2Text && (
                 <Link
-                  to={slide.cta2Link}
+                  to={slide.cta2Link || '#'}
                   className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center"
                 >
                   {slide.cta2Text}
