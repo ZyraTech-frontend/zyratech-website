@@ -98,7 +98,7 @@ const Hero = () => {
           decoding="async"
           src={slide.backgroundImage}
           alt={slide.pillar}
-          className="absolute inset-0 w-full h-full object-contain"
+          className="absolute inset-0 w-full h-full object-cover object-center"
           loading="eager"
           onError={(e) => {
             e.target.src = "/images/hero2.webp";
