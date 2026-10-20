@@ -140,7 +140,7 @@ const HeroSlidesManagementPage = () => {
                         {filteredSlides.map((slide, index) => (
                             <div
                                 key={slide.id}
-                                className={`bg-white rounded-xl border ${slide.isVisible ? 'border-blue-100' : 'border-gray-200 bg-gray-50'} p-4 shadow-sm hover:shadow-md transition-all duration-200`}
+                                className={`bg-white rounded-xl border ${slide.isVisible ? 'border-blue-100' : 'border-gray-200 bg-gray-50'} p-4 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden`}
                             >
                                 <div className="flex flex-col md:flex-row gap-6">
                                     {/* Slide Preview Image */}
@@ -202,15 +202,15 @@ const HeroSlidesManagementPage = () => {
 
                                             <div className="flex flex-wrap gap-2">
                                                 {slide.cta1Text && (
-                                                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded border border-blue-200 bg-blue-50 text-blue-700 text-xs">
-                                                        <ExternalLink size={10} />
-                                                        {slide.cta1Text} ({slide.cta1Link})
+                                                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded border border-blue-200 bg-blue-50 text-blue-700 text-xs max-w-full overflow-hidden">
+                                                        <ExternalLink size={10} className="flex-shrink-0" />
+                                                        <span className="truncate">{slide.cta1Text} ({slide.cta1Link})</span>
                                                     </span>
                                                 )}
                                                 {slide.cta2Text && (
-                                                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded border border-gray-200 bg-gray-50 text-gray-600 text-xs">
-                                                        <ExternalLink size={10} />
-                                                        {slide.cta2Text} ({slide.cta2Link})
+                                                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded border border-gray-200 bg-gray-50 text-gray-600 text-xs max-w-full overflow-hidden">
+                                                        <ExternalLink size={10} className="flex-shrink-0" />
+                                                        <span className="truncate">{slide.cta2Text} ({slide.cta2Link})</span>
                                                     </span>
                                                 )}
                                             </div>
