@@ -14,6 +14,7 @@ import {
     ExternalLink
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
+import LinkPicker from '../../../components/admin/common/LinkPicker';
 import heroService from '../../../services/heroService';
 import contentService from '../../../services/contentService';
 
@@ -298,64 +299,59 @@ const HeroSlideFormPage = () => {
                             {/* CTA 1 */}
                             <div className="border-t border-gray-100 pt-6">
                                 <h3 className="text-sm font-semibold text-gray-900 mb-4">Primary Call-to-Action</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Text
+                                            Button Text
                                         </label>
                                         <input
                                             type="text"
                                             name="cta1Text"
                                             value={formData.cta1Text}
                                             onChange={handleInputChange}
-                                            placeholder="Button text"
+                                            placeholder="e.g. Learn More, Get Started"
                                             className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
                                         />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Link
+                                            Where should it go?
                                         </label>
-                                        <input
-                                            type="url"
-                                            name="cta1Link"
+                                        <LinkPicker
                                             value={formData.cta1Link}
-                                            onChange={handleInputChange}
-                                            placeholder="https://example.com"
-                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                            onChange={(link) => setFormData(prev => ({ ...prev, cta1Link: link }))}
+                                            placeholder="Select a page or paste external link"
                                         />
                                     </div>
                                 </div>
                             </div>
 
                             {/* CTA 2 */}
-                            <div>
+                            <div className="border-t border-gray-100 pt-6">
                                 <h3 className="text-sm font-semibold text-gray-900 mb-4">Secondary Call-to-Action</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <p className="text-xs text-gray-500 mb-4">(Optional - leave blank to hide this button)</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Text
+                                            Button Text
                                         </label>
                                         <input
                                             type="text"
                                             name="cta2Text"
                                             value={formData.cta2Text}
                                             onChange={handleInputChange}
-                                            placeholder="Button text (optional)"
+                                            placeholder="e.g. Watch Demo, Contact Us"
                                             className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
                                         />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Link
+                                            Where should it go?
                                         </label>
-                                        <input
-                                            type="url"
-                                            name="cta2Link"
+                                        <LinkPicker
                                             value={formData.cta2Link}
-                                            onChange={handleInputChange}
-                                            placeholder="https://example.com (optional)"
-                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                            onChange={(link) => setFormData(prev => ({ ...prev, cta2Link: link }))}
+                                            placeholder="Select a page or paste external link"
                                         />
                                     </div>
                                 </div>
