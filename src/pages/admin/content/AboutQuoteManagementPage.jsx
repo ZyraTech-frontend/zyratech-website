@@ -20,6 +20,7 @@ const AboutQuoteManagementPage = () => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     const [formData, setFormData] = useState({
         quote: '',
@@ -74,6 +75,41 @@ const AboutQuoteManagementPage = () => {
             console.error('Error updating about quote:', error);
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // File validation
+        if (file.size > 5 * 1024 * 1024) {
+            dispatch(openConfirmDialog({
+                title: 'Error',
+                message: 'File must be smaller than 5MB',
+                confirmText: 'OK',
+                hideCancelButton: true
+            }));
+            return;
+        }
+
+        try {
+            setUploading(true);
+            const imageUrl = await contentService.uploadImage(file);
+            setFormData(prev => ({
+                ...prev,
+                authorImage: imageUrl
+            }));
+        } catch (err) {
+            console.error('Error uploading image:', err);
+            dispatch(openConfirmDialog({
+                title: 'Error',
+                message: err.message || 'Failed to upload image',
+                confirmText: 'OK',
+                hideCancelButton: true
+            }));
+        } finally {
+            setUploading(false);
         }
     };
 
@@ -153,20 +189,35 @@ const AboutQuoteManagementPage = () => {
                             </div>
 
                             <div className="md:col-span-2">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Image URL
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Author Image (Upload)
                                 </label>
-                                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start sm:items-center">
-                                    <input
-                                        type="text"
-                                        name="authorImage"
-                                        value={formData.authorImage}
-                                        onChange={handleChange}
-                                        className="w-full sm:flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]"
-                                        placeholder="/images/tex1.webp"
-                                    />
-                                    {formData.authorImage && (
-                                        <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200 bg-gray-50 flex-shrink-0">
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#004fa2] transition-colors cursor-pointer" onClick={() => !uploading && document.getElementById('author-image-upload').click()} style={{ opacity: uploading ? 0.6 : 1, pointerEvents: uploading ? 'none' : 'auto' }}>
+                                    <input id="author-image-upload" type="file" accept="image/*" onChange={handleImageUpload} disabled={uploading} className="hidden" />
+                                    <div className="flex flex-col items-center justify-center">
+                                        {uploading ? (
+                                            <>
+                                                <div className="w-8 h-8 text-[#004fa2] mb-2 animate-spin">
+                                                    <svg className="animate-spin h-8 w-8 text-[#004fa2]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                    </svg>
+                                                </div>
+                                                <p className="text-sm font-medium text-gray-700">Uploading...</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                                <p className="text-sm font-medium text-gray-700">Click to upload image</p>
+                                                <p className="text-xs text-gray-500 mt-1">PNG, JPG, WEBP up to 5MB</p>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                                {formData.authorImage && (
+                                    <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                        <p className="text-xs text-gray-600 mb-2">Preview:</p>
+                                        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#004fa2]">
                                             <img decoding="async"
                                                 src={formData.authorImage}
                                                 alt="Preview"
@@ -175,8 +226,8 @@ const AboutQuoteManagementPage = () => {
                                                 onError={(e) => e.target.style.display = 'none'}
                                             />
                                         </div>
-                                    )}
-                                </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
