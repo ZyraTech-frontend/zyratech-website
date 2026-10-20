@@ -265,6 +265,12 @@ const contentService = {
     return response.data?.data || response.data;
   },
 
+  // PUBLIC: Get published hero slides (no authentication)
+  getPublicHeroSlides: async () => {
+    const response = await api.get('/content/items/hero');
+    return response.data?.data || response.data;
+  },
+
   // ===== WORK WITH US PAGE (4 endpoints) =====
 
   getWorkWithUsHero: async () => {
@@ -430,7 +436,19 @@ const contentService = {
   getPublicQA: async () => {
     const response = await api.get('/content/items/qa');
     return response.data?.data || response.data;
-  }
+  },
+
+  // PUBLIC: Get published work with us
+  getPublicWorkWithUs: async () => {
+    const response = await api.get('/content/items/work-with-us');
+    return response.data?.data || response.data;
+  },
+
+  // PUBLIC: Get published impact
+  getPublicImpact: async () => {
+    const response = await api.get('/content/items/impact');
+    return response.data?.data || response.data;
+  },
 };
 
 export default contentService;

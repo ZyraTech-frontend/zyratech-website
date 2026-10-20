@@ -26,7 +26,8 @@ const AboutQuote = () => {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const { data } = await contentService.getAboutQuote();
+        // ✅ Use PUBLIC endpoint (no authentication required)
+        const { data } = await contentService.getPublicAboutQuote();
         if (data) {
           setContent(data);
         }

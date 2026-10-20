@@ -1,7 +1,18 @@
 import contentService from './contentService';
 
 const heroService = {
-    // Get all slides - use contentService to fetch from backend
+    // PUBLIC: Get published slides for public site (no authentication)
+    getPublicSlides: async () => {
+        try {
+            const response = await contentService.getPublicHeroSlides();
+            return { data: response || [] };
+        } catch (error) {
+            console.error('Error fetching public hero slides:', error);
+            return { data: [] };
+        }
+    },
+
+    // ADMIN: Get all slides (authenticated) - use contentService to fetch from backend
     getAllSlides: async () => {
         try {
             const response = await contentService.getAllHeroSlides();

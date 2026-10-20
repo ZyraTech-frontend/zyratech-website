@@ -27,12 +27,12 @@ const ImpactPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [metricsRes, storiesRes] = await Promise.all([
-          contentService.getImpactMetrics(),
-          contentService.getImpactStories()
-        ]);
-        setMetrics(metricsRes.data || []);
-        setStories(storiesRes.data || []);
+        // ✅ Use PUBLIC endpoint (no authentication required)
+        const response = await contentService.getPublicImpact();
+        // Return the array as-is (metrics + stories combined)
+        const allData = Array.isArray(response) ? response : [];
+        setMetrics(allData);
+        setStories(allData);
       } catch (error) {
         console.error("Failed to fetch impact data:", error);
       } finally {

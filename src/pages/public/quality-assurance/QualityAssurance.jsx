@@ -24,7 +24,8 @@ const QualityAssurance = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await contentService.getQA();
+        // ✅ Use PUBLIC endpoint (no authentication required)
+        const response = await contentService.getPublicQA();
         setData(response.data);
       } catch (error) {
         console.error("Failed to fetch QA data:", error);

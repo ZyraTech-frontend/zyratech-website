@@ -25,7 +25,8 @@ const WorkWithUs = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await contentService.getWorkWithUs();
+        // ✅ Use PUBLIC endpoint (no authentication required)
+        const response = await contentService.getPublicWorkWithUs();
         setData(response.data);
       } catch (error) {
         console.error("Failed to fetch Work With Us data:", error);

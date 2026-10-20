@@ -37,7 +37,8 @@ const Hero = () => {
   useEffect(() => {
     const fetchSlides = async () => {
       try {
-        const response = await heroService.getAllSlides();
+        // ✅ Use PUBLIC endpoint for public site (no authentication)
+        const response = await heroService.getPublicSlides();
         const visibleSlides = response.data.filter(s => s.isVisible);
         if (visibleSlides.length > 0) {
           setSlides(visibleSlides);
