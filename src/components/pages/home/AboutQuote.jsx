@@ -10,18 +10,8 @@ const AboutQuote = () => {
   const quoteAnimation = useScrollAnimation({ type: 'fadeIn', delay: 0.2 });
   const statsAnimation = useScrollAnimation({ type: 'slideUp', delay: 0.4 });
 
-  const [content, setContent] = useState({
-    quote: "Our mission is to lead Ghana’s technological transformation through world-class Software Engineering, robust Infrastructure & Cloud services, and impactful IT Education. We are building an ecosystem where innovation meets academic excellence",
-    authorName: "ZyraTech Leadership",
-    authorTitle: "Empowering Ghana's Tech Future",
-    authorImage: "/images/tex1.webp",
-    stat1Value: "2024",
-    stat1Label: "Founded",
-    stat2Value: "50+",
-    stat2Label: "Trainees",
-    stat3Value: "1",
-    stat3Label: "Location"
-  });
+  const [content, setContent] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -33,10 +23,17 @@ const AboutQuote = () => {
         }
       } catch (error) {
         console.error('Error fetching about content:', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchContent();
   }, []);
+
+  // Don't render until content is loaded
+  if (loading || !content) {
+    return null;
+  }
 
   return (
     <section className="py-12 sm:py-16 bg-white text-gray-900">

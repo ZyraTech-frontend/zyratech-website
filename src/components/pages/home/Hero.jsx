@@ -5,24 +5,8 @@ import heroService from '../../../services/heroService';
 import OptimizedImage from '../../common/OptimizedImage';
 
 const Hero = () => {
-  // Default initial slides to show something immediately (LCP optimization)
-  const defaultSlides = [
-    {
-      id: 'initial',
-      title: 'Empowering Ghana\'s Future Through Technology',
-      description: 'Zyra Tech Hub provides world-class digital training, internships, and professional IT services to build the next generation of tech leaders.',
-      backgroundImage: "/images/hero1.webp",
-      pillar: 'Innovation',
-      cta1Text: 'Explore Programs',
-      cta1Link: '/training',
-      cta2Text: 'Partner With Us',
-      cta2Link: '/partner',
-      isVisible: true
-    }
-  ];
-
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [slides, setSlides] = useState(defaultSlides);
+  const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const preloadImage = (src) => {
