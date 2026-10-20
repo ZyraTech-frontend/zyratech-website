@@ -39,6 +39,13 @@ const AboutQuote = () => {
     return null;
   }
 
+  // Guard against missing required fields
+  const hasRequiredContent = content.quote || content.authorName || content.stat1Value;
+  
+  if (!hasRequiredContent) {
+    return null;
+  }
+
   return (
     <section className="py-12 sm:py-16 bg-white text-gray-900">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -64,7 +71,7 @@ const AboutQuote = () => {
           >
             <Quote className="hidden sm:block absolute -top-4 -left-4 w-8 sm:w-12 h-8 sm:h-12 text-[#004fa2] opacity-50" />
             <blockquote className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-6 sm:mb-8 px-2 sm:px-0">
-              {content.quote}
+              {content.quote || 'Our mission is to empower through technology and innovation.'}
             </blockquote>
           </motion.div>
 
@@ -96,18 +103,24 @@ const AboutQuote = () => {
             transition={statsAnimation.transition}
             className="grid grid-cols-3 gap-4 sm:gap-8 mb-8 sm:mb-12"
           >
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">{content.stat1Value}</div>
-              <div className="text-xs sm:text-base text-gray-600">{content.stat1Label}</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">{content.stat2Value}</div>
-              <div className="text-xs sm:text-base text-gray-600">{content.stat2Label}</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">{content.stat3Value}</div>
-              <div className="text-xs sm:text-base text-gray-600">{content.stat3Label}</div>
-            </div>
+            {content.stat1Value && (
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">{content.stat1Value}</div>
+                <div className="text-xs sm:text-base text-gray-600">{content.stat1Label || 'Statistic'}</div>
+              </div>
+            )}
+            {content.stat2Value && (
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">{content.stat2Value}</div>
+                <div className="text-xs sm:text-base text-gray-600">{content.stat2Label || 'Statistic'}</div>
+              </div>
+            )}
+            {content.stat3Value && (
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-[#004fa2] mb-1 sm:mb-2">{content.stat3Value}</div>
+                <div className="text-xs sm:text-base text-gray-600">{content.stat3Label || 'Statistic'}</div>
+              </div>
+            )}
           </motion.div>
 
           <Link
