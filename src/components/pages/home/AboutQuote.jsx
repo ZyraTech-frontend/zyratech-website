@@ -18,7 +18,11 @@ const AboutQuote = () => {
       try {
         // ✅ Use PUBLIC endpoint (no authentication required)
         const { data } = await contentService.getPublicAboutQuote();
-        if (data) {
+        // API returns array, extract first item
+        if (data && Array.isArray(data) && data.length > 0) {
+          setContent(data[0]);
+        } else if (data && !Array.isArray(data)) {
+          // Fallback: if data is already an object
           setContent(data);
         }
       } catch (error) {
