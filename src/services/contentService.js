@@ -201,6 +201,88 @@ const contentService = {
 
   // ===== PARTNERSHIP PAGE (5 endpoints) =====
 
+  getPartnershipHero: async () => {
+    const response = await api.get('/admin/content/items/section/partnership-hero');
+    return { data: response.data?.data?.[0] || response.data };
+  },
+
+  updatePartnershipHero: async (data) => {
+    try {
+      // Try to get existing partnership-hero
+      const existing = await api.get('/admin/content/items/section/partnership-hero');
+      let items = existing.data?.data || existing.data || [];
+      
+      if (Array.isArray(items) && items.length > 0) {
+        // Update existing
+        const response = await api.put(`/admin/content/items/${items[0].id}`, {
+          ...data,
+          section: 'partnership-hero'
+        });
+        return response.data;
+      } else {
+        // Create new
+        const response = await api.post('/admin/content/items', {
+          ...data,
+          section: 'partnership-hero'
+        });
+        return response.data;
+      }
+    } catch (err) {
+      console.error('Error updating partnership hero:', err);
+      throw err;
+    }
+  },
+
+  getImpactStats: async () => {
+    const response = await api.get('/admin/content/items/section/impact-stats');
+    return { data: response.data?.data || [] };
+  },
+
+  updateImpactStat: async (id, data) => {
+    const response = await api.put(`/admin/content/items/${id}`, {
+      ...data,
+      section: 'impact-stats'
+    });
+    return response.data;
+  },
+
+  getWhyPartner: async () => {
+    const response = await api.get('/admin/content/items/section/why-partner');
+    return { data: response.data?.data?.[0] || response.data };
+  },
+
+  updateWhyPartner: async (data) => {
+    try {
+      // Try to get existing why-partner
+      const existing = await api.get('/admin/content/items/section/why-partner');
+      let items = existing.data?.data || existing.data || [];
+      
+      if (Array.isArray(items) && items.length > 0) {
+        // Update existing
+        const response = await api.put(`/admin/content/items/${items[0].id}`, {
+          ...data,
+          section: 'why-partner'
+        });
+        return response.data;
+      } else {
+        // Create new
+        const response = await api.post('/admin/content/items', {
+          ...data,
+          section: 'why-partner'
+        });
+        return response.data;
+      }
+    } catch (err) {
+      console.error('Error updating why partner:', err);
+      throw err;
+    }
+  },
+
+  getRecognition: async () => {
+    const response = await api.get('/admin/content/items/section/recognition');
+    return { data: response.data?.data || [] };
+  },
+
   getPartnershipStories: async () => {
     const response = await api.get('/admin/content/items/section/partnerships');
     return response.data?.data || response.data;
