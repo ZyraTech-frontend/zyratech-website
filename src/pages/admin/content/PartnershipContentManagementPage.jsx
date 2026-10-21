@@ -16,15 +16,81 @@ import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 // --- Sub-components (defined outside to preserve focus) ---
 
-const HeroForm = ({ data, onChange, onSubmit, saving }) => (
-    <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-        <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Partnership Hero</h3>
-        <div><label className="block text-sm font-medium mb-1">Title</label><input className="w-full px-4 py-2 border rounded-lg" name="title" value={data.title || ''} onChange={onChange} /></div>
-        <div><label className="block text-sm font-medium mb-1">Subtitle</label><input className="w-full px-4 py-2 border rounded-lg" name="subtitle" value={data.subtitle || ''} onChange={onChange} /></div>
-        <div><label className="block text-sm font-medium mb-1">Background Image URL</label><input className="w-full px-4 py-2 border rounded-lg" name="backgroundImage" value={data.backgroundImage || ''} onChange={onChange} /></div>
-        <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Hero</button>
-    </form>
-);
+const HeroForm = ({ data, onChange, onSubmit, saving, onImageUpload, uploading }) => {
+    const handleFileClick = () => {
+        document.getElementById('partnership-hero-upload').click();
+    };
+
+    return (
+        <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
+            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Partnership Hero</h3>
+            <div>
+                <label className="block text-sm font-medium mb-1">Title</label>
+                <input className="w-full px-4 py-2 border rounded-lg" name="title" value={data.title || ''} onChange={onChange} />
+            </div>
+            <div>
+                <label className="block text-sm font-medium mb-1">Subtitle</label>
+                <input className="w-full px-4 py-2 border rounded-lg" name="subtitle" value={data.subtitle || ''} onChange={onChange} />
+            </div>
+            
+            {/* File Upload for Background Image */}
+            <div>
+                <label className="block text-sm font-medium mb-2">Background Image (Upload)</label>
+                <div 
+                    className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#004fa2] transition-colors cursor-pointer"
+                    onClick={handleFileClick}
+                    style={{ opacity: uploading ? 0.6 : 1, pointerEvents: uploading ? 'none' : 'auto' }}
+                >
+                    <input 
+                        id="partnership-hero-upload"
+                        type="file" 
+                        accept="image/*" 
+                        onChange={onImageUpload}
+                        disabled={uploading}
+                        className="hidden" 
+                    />
+                    <div className="flex flex-col items-center justify-center">
+                        {uploading ? (
+                            <>
+                                <div className="w-8 h-8 text-[#004fa2] mb-2 animate-spin">
+                                    <svg className="animate-spin h-8 w-8 text-[#004fa2]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                </div>
+                                <p className="text-sm font-medium text-gray-700">Uploading...</p>
+                            </>
+                        ) : (
+                            <>
+                                <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                <p className="text-sm font-medium text-gray-700">Click to upload image</p>
+                                <p className="text-xs text-gray-500 mt-1">PNG, JPG, WEBP up to 5MB</p>
+                            </>
+                        )}
+                    </div>
+                </div>
+                {data.backgroundImage && (
+                    <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <p className="text-xs text-gray-600 mb-2">Preview:</p>
+                        <img 
+                            decoding="async"
+                            src={data.backgroundImage} 
+                            alt="Preview" 
+                            loading="lazy"
+                            className="w-full h-48 object-cover rounded"
+                            onError={(e) => e.target.style.display = 'none'}
+                        />
+                    </div>
+                )}
+            </div>
+            
+            <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4">
+                {saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} 
+                Save Hero
+            </button>
+        </form>
+    );
+};
 
 const ImpactStatsManager = ({ stats, setStats }) => {
     const handleStatChange = (id, field, value) => {
@@ -244,6 +310,7 @@ const PartnershipContentManagementPage = () => {
     const dispatch = useDispatch();
     const [activeTab, setActiveTab] = useState('hero');
     const [loading, setLoading] = useState(true);
+    const [uploadingHero, setUploadingHero] = useState(false);
 
     // Data States
     const [heroData, setHeroData] = useState({});
@@ -278,6 +345,41 @@ const PartnershipContentManagementPage = () => {
             console.error(e);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleHeroImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // File validation
+        if (file.size > 5 * 1024 * 1024) {
+            dispatch(openConfirmDialog({
+                title: 'Error',
+                message: 'File must be smaller than 5MB',
+                confirmText: 'OK',
+                hideCancelButton: true
+            }));
+            return;
+        }
+
+        try {
+            setUploadingHero(true);
+            const imageUrl = await contentService.uploadImage(file);
+            setHeroData(prev => ({
+                ...prev,
+                backgroundImage: imageUrl
+            }));
+        } catch (err) {
+            console.error('Error uploading image:', err);
+            dispatch(openConfirmDialog({
+                title: 'Error',
+                message: err.message || 'Failed to upload image',
+                confirmText: 'OK',
+                hideCancelButton: true
+            }));
+        } finally {
+            setUploadingHero(false);
         }
     };
 
@@ -342,7 +444,7 @@ const PartnershipContentManagementPage = () => {
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                    {activeTab === 'hero' && <HeroForm data={heroData} onChange={(e) => setHeroData({ ...heroData, [e.target.name]: e.target.value })} onSubmit={handleHeroSubmit} saving={savingHero} />}
+                    {activeTab === 'hero' && <HeroForm data={heroData} onChange={(e) => setHeroData({ ...heroData, [e.target.name]: e.target.value })} onSubmit={handleHeroSubmit} saving={savingHero} onImageUpload={handleHeroImageUpload} uploading={uploadingHero} />}
                     {activeTab === 'stats' && <ImpactStatsManager stats={impactStats} setStats={setImpactStats} />}
                     {activeTab === 'why' && <WhyPartnerForm data={whyPartner} onChange={(e) => setWhyPartner({ ...whyPartner, [e.target.name]: e.target.value })} onSubmit={handleWhySubmit} saving={savingWhy} />}
                     {activeTab === 'stories' && <StoriesManager stories={stories} setStories={setStories} dispatch={dispatch} navigate={navigate} />}
