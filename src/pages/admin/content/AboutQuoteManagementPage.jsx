@@ -40,7 +40,15 @@ const AboutQuoteManagementPage = () => {
             try {
                 setLoading(true);
                 const { data } = await contentService.getAboutQuote();
-                if (data) {
+                console.log('📊 AboutQuoteManagementPage - API response:', data); // DEBUG
+                
+                // API returns array, extract first item
+                if (data && Array.isArray(data) && data.length > 0) {
+                    console.log('✅ Setting form from array:', data[0]); // DEBUG
+                    setFormData(data[0]);
+                } else if (data && !Array.isArray(data)) {
+                    // Fallback: if data is already an object
+                    console.log('✅ Setting form from object:', data); // DEBUG
                     setFormData(data);
                 }
             } catch (error) {
