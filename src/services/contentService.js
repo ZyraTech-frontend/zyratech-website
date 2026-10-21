@@ -520,10 +520,11 @@ const contentService = {
     return { data: response.data?.data || [] };
   },
 
-  // PUBLIC: Get published why partner
+  // PUBLIC: Get published why partner (all items for list display)
   getPublicWhyPartner: async () => {
     const response = await api.get('/content/items/why-partner');
-    return { data: response.data?.data?.[0] || response.data };
+    // Return array of all items (not just first one)
+    return response.data?.data || [];
   },
 
   // PUBLIC: Get published partner recognition

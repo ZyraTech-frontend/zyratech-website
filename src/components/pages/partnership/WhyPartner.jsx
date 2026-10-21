@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import contentService from '../../../services/contentService';
 
 const WhyPartner = () => {
+  const [reasons, setReasons] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
     title: 'Why Partner With ZyraTech?',
     content: 'Join a network of forward-thinking organizations committed to driving technological innovation and sustainable development across Africa.'
@@ -12,42 +14,53 @@ const WhyPartner = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         // ✅ Use PUBLIC endpoint (no authentication required)
-        const { data: resData } = await contentService.getPublicWhyPartner();
-        console.log('📊 WhyPartner - API response:', resData); // DEBUG
-        if (resData && resData.title) {
-          console.log('✅ Setting why partner data:', resData); // DEBUG
-          setData(resData);
+        const reasonsData = await contentService.getPublicWhyPartner();
+        console.log('📊 WhyPartner - API response:', reasonsData); // DEBUG
+        
+        if (Array.isArray(reasonsData) && reasonsData.length > 0) {
+          console.log('✅ Setting why partner reasons:', reasonsData); // DEBUG
+          setReasons(reasonsData);
         }
       } catch (error) {
         console.error('❌ Error fetching why partner data:', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
 
-  const reasons = [
-    {
-      icon: <Heart className="w-5 h-5" />,
-      title: 'Mission Alignment',
-      description: 'Work with an organization dedicated to solving real community challenges through technology and innovation.'
-    },
-    {
-      icon: <Users className="w-5 h-5" />,
-      title: 'Community Impact',
-      description: 'Directly contribute to empowering thousands of students and entrepreneurs across Africa.'
-    },
-    {
-      icon: <Rocket className="w-5 h-5" />,
-      title: 'Business Growth',
-      description: 'Expand your reach, build brand reputation, and create new business opportunities in emerging markets.'
-    },
-    {
-      icon: <Handshake className="w-5 h-5" />,
-      title: 'Global Network',
-      description: 'Connect with like-minded organizations and leaders transforming Africa\'s tech ecosystem.'
+  
+  // Map icons based on title or order
+  const getIcon = (title) => {
+    const iconMap = {
+      'mission': <Heart className="w-5 h-5" />,
+      'community': <Users className="w-5 h-5" />,
+      'business': <Rocket className="w-5 h-5" />,
+      'network': <Handshake className="w-5 h-5" />,
+    };
+    
+    const titleLower = title?.toLowerCase() || '';
+    for (const [key, icon] of Object.entries(iconMap)) {
+      if (titleLower.includes(key)) return icon;
     }
-  ];
+    return <Heart className="w-5 h-5" />;
+  };
+
+  if (loading) {
+    return (
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-gray-500">Loading...</p>
+        </div>
+      </section>
+    );
+  }
+
+  // Use fetched reasons from backend
+  const displayReasons = reasons.length > 0 ? reasons : [];
 
   return (
     <section className="py-20 bg-white relative overflow-hidden">
@@ -75,7 +88,7 @@ const WhyPartner = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {reasons.map((reason, index) => (
+          {displayReasons.map((reason, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
@@ -89,7 +102,7 @@ const WhyPartner = () => {
                 <span className="block">
                   <span className="text-[#004fa2] mb-6 flex justify-center items-center gap-4 group-hover:scale-110 transition-transform duration-300">
                     <span className="p-4 bg-[#004fa2]/10 rounded-2xl">
-                      {reason.icon}
+                      {getIcon(reason.title)}
                     </span>
                     <span className="text-xl font-bold text-gray-900 group-hover:text-[#004fa2] transition-colors duration-300">
                       {reason.title}
