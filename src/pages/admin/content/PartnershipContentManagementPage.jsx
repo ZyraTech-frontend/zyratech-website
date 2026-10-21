@@ -511,7 +511,7 @@ const PartnershipContentManagementPage = () => {
     // Data States
     const [heroData, setHeroData] = useState({});
     const [impactStats, setImpactStats] = useState([]);
-    const [whyPartner, setWhyPartner] = useState({});
+    const [whyPartner, setWhyPartner] = useState([]);
     const [stories, setStories] = useState([]);
     const [recognition, setRecognition] = useState([]);
 
