@@ -2,14 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import contentService from '../../../services/contentService';
 
 const AboutQuote = () => {
-  const titleAnimation = useScrollAnimation({ type: 'slideUp', delay: 0 });
-  const quoteAnimation = useScrollAnimation({ type: 'fadeIn', delay: 0.2 });
-  const statsAnimation = useScrollAnimation({ type: 'slideUp', delay: 0.4 });
-
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -18,15 +13,19 @@ const AboutQuote = () => {
       try {
         // ✅ Use PUBLIC endpoint (no authentication required)
         const { data } = await contentService.getPublicAboutQuote();
+        console.log('📊 AboutQuote - API response:', data); // DEBUG
+        
         // API returns array, extract first item
         if (data && Array.isArray(data) && data.length > 0) {
+          console.log('✅ AboutQuote - Setting content from array:', data[0]); // DEBUG
           setContent(data[0]);
         } else if (data && !Array.isArray(data)) {
           // Fallback: if data is already an object
+          console.log('✅ AboutQuote - Setting content from object:', data); // DEBUG
           setContent(data);
         }
       } catch (error) {
-        console.error('Error fetching about content:', error);
+        console.error('❌ AboutQuote - Error fetching content:', error);
       } finally {
         setLoading(false);
       }
@@ -36,6 +35,7 @@ const AboutQuote = () => {
 
   // Don't render until content is loaded
   if (loading || !content) {
+    console.log('⏳ AboutQuote - Loading or no content:', { loading, hasContent: !!content }); // DEBUG
     return null;
   }
 
@@ -43,30 +43,29 @@ const AboutQuote = () => {
   const hasRequiredContent = content.quote || content.authorName || content.stat1Value;
   
   if (!hasRequiredContent) {
+    console.log('⚠️ AboutQuote - Missing required content'); // DEBUG
     return null;
   }
+
+  console.log('🎨 AboutQuote - Rendering with content:', content); // DEBUG
 
   return (
     <section className="py-12 sm:py-16 bg-white text-gray-900">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-12">
           <motion.h2
-            ref={titleAnimation.ref}
-            initial={titleAnimation.initial}
-            animate={titleAnimation.animate}
-            variants={titleAnimation.variants}
-            transition={titleAnimation.transition}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0 }}
             className="text-xs sm:text-sm font-semibold tracking-wider uppercase mb-6 sm:mb-8 text-gray-600"
           >
             ABOUT ZYRATECH
           </motion.h2>
 
           <motion.div
-            ref={quoteAnimation.ref}
-            initial={quoteAnimation.initial}
-            animate={quoteAnimation.animate}
-            variants={quoteAnimation.variants}
-            transition={quoteAnimation.transition}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             className="relative max-w-4xl mx-auto"
           >
             <Quote className="hidden sm:block absolute -top-4 -left-4 w-8 sm:w-12 h-8 sm:h-12 text-[#004fa2] opacity-50" />
@@ -96,11 +95,9 @@ const AboutQuote = () => {
           </div>
 
           <motion.div
-            ref={statsAnimation.ref}
-            initial={statsAnimation.initial}
-            animate={statsAnimation.animate}
-            variants={statsAnimation.variants}
-            transition={statsAnimation.transition}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
             className="grid grid-cols-3 gap-4 sm:gap-8 mb-8 sm:mb-12"
           >
             {content.stat1Value && (
