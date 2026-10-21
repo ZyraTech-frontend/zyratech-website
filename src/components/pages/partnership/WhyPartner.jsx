@@ -12,10 +12,15 @@ const WhyPartner = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: resData } = await contentService.getWhyPartner();
-        if (resData) setData(resData);
+        // ✅ Use PUBLIC endpoint (no authentication required)
+        const { data: resData } = await contentService.getPublicWhyPartner();
+        console.log('📊 WhyPartner - API response:', resData); // DEBUG
+        if (resData && resData.title) {
+          console.log('✅ Setting why partner data:', resData); // DEBUG
+          setData(resData);
+        }
       } catch (error) {
-        console.error('Error fetching why partner data:', error);
+        console.error('❌ Error fetching why partner data:', error);
       }
     };
     fetchData();

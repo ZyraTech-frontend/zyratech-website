@@ -14,10 +14,15 @@ const PartnershipHero = () => {
   useEffect(() => {
     const fetchHero = async () => {
       try {
-        const { data } = await contentService.getPartnershipHero();
-        if (data && data.title) setHeroData(data);
+        // ✅ Use PUBLIC endpoint (no authentication required)
+        const { data } = await contentService.getPublicPartnershipHero();
+        console.log('📊 PartnershipHero - API response:', data); // DEBUG
+        if (data && data.title) {
+          console.log('✅ Setting hero data:', data); // DEBUG
+          setHeroData(data);
+        }
       } catch (error) {
-        console.error("Error fetching partnership hero:", error);
+        console.error("❌ Error fetching partnership hero:", error);
       }
     };
     fetchHero();

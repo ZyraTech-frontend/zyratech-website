@@ -22,12 +22,15 @@ const PartnershipStories = () => {
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const { data } = await contentService.getPartnershipStories();
+        // ✅ Use PUBLIC endpoint (no authentication required)
+        const data = await contentService.getPublicPartnerships();
+        console.log('📊 PartnershipStories - API response:', data); // DEBUG
         if (data && data.length > 0) {
+          console.log('✅ Setting partnership stories:', data); // DEBUG
           setStories(data);
         }
       } catch (error) {
-        console.error('Error fetching partnership stories:', error);
+        console.error('❌ Error fetching partnership stories:', error);
       }
     };
     fetchStories();

@@ -508,6 +508,30 @@ const contentService = {
     return { data: response.data?.data || response.data };
   },
 
+  // PUBLIC: Get published partnership hero
+  getPublicPartnershipHero: async () => {
+    const response = await api.get('/content/items/partnership-hero');
+    return { data: response.data?.data?.[0] || response.data };
+  },
+
+  // PUBLIC: Get published impact stats
+  getPublicImpactStats: async () => {
+    const response = await api.get('/content/items/impact-stats');
+    return { data: response.data?.data || [] };
+  },
+
+  // PUBLIC: Get published why partner
+  getPublicWhyPartner: async () => {
+    const response = await api.get('/content/items/why-partner');
+    return { data: response.data?.data?.[0] || response.data };
+  },
+
+  // PUBLIC: Get published partner recognition
+  getPublicRecognition: async () => {
+    const response = await api.get('/content/items/recognition');
+    return { data: response.data?.data || [] };
+  },
+
   // PUBLIC: Get published QA page
   getPublicQA: async () => {
     const response = await api.get('/content/items/qa');
