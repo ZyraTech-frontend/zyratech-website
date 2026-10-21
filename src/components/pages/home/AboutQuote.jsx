@@ -75,16 +75,16 @@ const AboutQuote = () => {
           </motion.div>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 sm:gap-8 mb-8 sm:mb-12">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border border-gray-100 shrink-0">
+            <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-[#004fa2] shrink-0 shadow-lg">
               <img decoding="async"
-                src={content.authorImage || 'https://via.placeholder.com/150'}
+                src={content.authorImage || 'https://via.placeholder.com/300'}
                 alt={content.authorName}
-                width="150"
-                height="150"
+                width="300"
+                height="300"
                 loading="lazy"
-                className="w-full h-full object-cover object-top scale-[3.0] origin-top -translate-y-4"
+                className="w-full h-full object-cover object-center"
                 onError={(e) => {
-                  e.target.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face';
+                  e.target.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face';
                 }}
               />
             </div>

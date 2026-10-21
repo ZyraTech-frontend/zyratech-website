@@ -219,7 +219,7 @@ const ServicesManagementPage = () => {
                         {filteredData.map((item) => (
                             <div
                                 key={item.id}
-                                className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between h-full"
+                                className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between h-full overflow-hidden"
                             >
                                 <div>
                                     <h3 className="text-lg font-bold text-gray-900 mb-2">
