@@ -252,39 +252,24 @@ const contentService = {
     return response.data?.data || [];
   },
 
-  updateWhyPartner: async (data) => {
-    try {
-      // Try to get existing why-partner
-      const existing = await api.get('/admin/content/items/section/why-partner');
-      let items = existing.data?.data || existing.data || [];
-      
-      if (Array.isArray(items) && items.length > 0) {
-        // Update existing
-        const response = await api.put(`/admin/content/items/${items[0].id}`, {
-          ...data,
-          section: 'why-partner'
-        });
-        return response.data;
-      } else {
-        // Create new
-        const response = await api.post('/admin/content/items', {
-          ...data,
-          section: 'why-partner'
-        });
-        return response.data;
-      }
-    } catch (err) {
-      console.error('Error updating why partner:', err);
-      throw err;
-    }
+  updateWhyPartner: async (id, data) => {
+    const payload = {
+      title: data.title,
+      description: data.description,
+      section: 'why-partner'
+    };
+    const response = await api.put(`/admin/content/items/${id}`, payload);
+    return response.data?.data || response.data;
   },
 
   createWhyPartner: async (data) => {
-    const response = await api.post('/admin/content/items', {
-      ...data,
+    const payload = {
+      title: data.title,
+      description: data.description,
       section: 'why-partner'
-    });
-    return response.data;
+    };
+    const response = await api.post('/admin/content/items', payload);
+    return response.data?.data || response.data;
   },
 
   deleteWhyPartner: async (id) => {

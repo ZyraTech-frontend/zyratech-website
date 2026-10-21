@@ -192,11 +192,8 @@ const WhyPartnerManager = ({ whyPartners, setWhyPartners, dispatch, navigate }) 
         setSaving(true);
         try {
             if (editingId) {
-                // Update existing
-                await contentService.updateWhyPartner(editingId, { 
-                    ...formData,
-                    section: 'why-partner'
-                });
+                // Update existing - pass id and data separately
+                await contentService.updateWhyPartner(editingId, formData);
                 setWhyPartners(prev => prev.map(p => p.id === editingId ? { ...p, ...formData } : p));
                 logAction({
                     type: 'content_updated',
@@ -206,12 +203,9 @@ const WhyPartnerManager = ({ whyPartners, setWhyPartners, dispatch, navigate }) 
                 });
             } else {
                 // Create new
-                await contentService.createWhyPartner({ 
-                    ...formData,
-                    section: 'why-partner'
-                });
+                await contentService.createWhyPartner(formData);
                 const res = await contentService.getWhyPartner();
-                setWhyPartners(res.data || []);
+                setWhyPartners(res || []);
                 logAction({
                     type: 'content_created',
                     severity: 'success',
