@@ -74,23 +74,23 @@ const AboutQuote = () => {
             </blockquote>
           </motion.div>
 
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 sm:gap-8 mb-8 sm:mb-12">
-            <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-[#004fa2] shrink-0 shadow-lg">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-10 mb-8 sm:mb-12">
+            <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-[#004fa2] shrink-0 shadow-xl flex-shrink-0">
               <img decoding="async"
-                src={content.authorImage || 'https://via.placeholder.com/300'}
+                src={content.authorImage || 'https://via.placeholder.com/400'}
                 alt={content.authorName}
-                width="300"
-                height="300"
+                width="400"
+                height="400"
                 loading="lazy"
                 className="w-full h-full object-cover object-center"
                 onError={(e) => {
-                  e.target.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face';
+                  e.target.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face';
                 }}
               />
             </div>
             <div className="text-center md:text-left">
-              <div className="text-base sm:text-lg font-semibold text-gray-900">{content.authorName}</div>
-              <div className="text-sm sm:text-base text-gray-600">{content.authorTitle}</div>
+              <div className="text-lg sm:text-xl font-semibold text-gray-900">{content.authorName}</div>
+              <div className="text-base sm:text-lg text-gray-600">{content.authorTitle}</div>
             </div>
           </div>
 
