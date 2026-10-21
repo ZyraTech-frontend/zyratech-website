@@ -248,7 +248,8 @@ const contentService = {
 
   getWhyPartner: async () => {
     const response = await api.get('/admin/content/items/section/why-partner');
-    return { data: response.data?.data?.[0] || response.data };
+    // Return array of all items
+    return response.data?.data || [];
   },
 
   updateWhyPartner: async (data) => {
