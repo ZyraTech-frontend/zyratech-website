@@ -83,6 +83,59 @@ const HeroForm = ({ data, onChange, onSubmit, saving, onImageUpload, uploading }
                     </div>
                 )}
             </div>
+
+            {/* CTA Section */}
+            <div className="border-t pt-4">
+                <h4 className="text-md font-semibold text-gray-800 mb-4">Call-to-Action Buttons</h4>
+                
+                {/* CTA 1 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Button 1 Text</label>
+                        <input 
+                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#004fa2]/20"
+                            name="cta1Text"
+                            placeholder="e.g. Become a Partner"
+                            value={data.cta1Text || ''}
+                            onChange={onChange}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Button 1 Link</label>
+                        <input 
+                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#004fa2]/20"
+                            name="cta1Link"
+                            placeholder="e.g. /partner/apply"
+                            value={data.cta1Link || ''}
+                            onChange={onChange}
+                        />
+                    </div>
+                </div>
+
+                {/* CTA 2 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Button 2 Text</label>
+                        <input 
+                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#004fa2]/20"
+                            name="cta2Text"
+                            placeholder="e.g. Learn More"
+                            value={data.cta2Text || ''}
+                            onChange={onChange}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Button 2 Link</label>
+                        <input 
+                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#004fa2]/20"
+                            name="cta2Link"
+                            placeholder="e.g. /contact"
+                            value={data.cta2Link || ''}
+                            onChange={onChange}
+                        />
+                    </div>
+                </div>
+            </div>
             
             <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4">
                 {saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} 
