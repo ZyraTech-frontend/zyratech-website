@@ -51,9 +51,45 @@ const Hero = () => {
     return () => clearInterval(timer);
   }, [slides.length, currentSlide]);
 
-  // Fallback if no slides are returned
-  if (slides.length === 0) {
-    return null;
+  // Show skeleton while loading
+  if (loading || slides.length === 0) {
+    return (
+      <section className="relative w-full text-white overflow-hidden" style={{ height: 'calc(100vh - 88px)' }}>
+        {/* Skeleton Background */}
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 animate-pulse"></div>
+        
+        {/* Skeleton Content */}
+        <div className="relative z-10 w-full h-full flex items-center justify-start px-6 md:px-16 lg:px-24 pt-20 pb-20">
+          <div className="max-w-5xl w-full space-y-6">
+            {/* Skeleton Title */}
+            <div className="space-y-4">
+              <div className="h-16 md:h-20 bg-gray-400 rounded-lg animate-pulse w-3/4"></div>
+              <div className="h-6 md:h-8 bg-gray-400 rounded-lg animate-pulse w-2/3"></div>
+            </div>
+            
+            {/* Skeleton Description */}
+            <div className="space-y-3 max-w-2xl">
+              <div className="h-4 bg-gray-400 rounded animate-pulse"></div>
+              <div className="h-4 bg-gray-400 rounded animate-pulse"></div>
+              <div className="h-4 bg-gray-400 rounded animate-pulse w-4/5"></div>
+            </div>
+            
+            {/* Skeleton Buttons */}
+            <div className="flex gap-4 pt-4">
+              <div className="h-12 bg-gray-400 rounded-lg animate-pulse w-40"></div>
+              <div className="h-12 bg-gray-400 rounded-lg animate-pulse w-40"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Skeleton Dots */}
+        <div className="absolute bottom-12 left-6 md:left-16 lg:left-24 z-20 flex gap-2">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-1.5 bg-gray-400 rounded-full animate-pulse" style={{ width: i === 0 ? '32px' : '16px' }}></div>
+          ))}
+        </div>
+      </section>
+    );
   }
 
   const slide = slides[currentSlide];
