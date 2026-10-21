@@ -278,6 +278,19 @@ const contentService = {
     }
   },
 
+  createWhyPartner: async (data) => {
+    const response = await api.post('/admin/content/items', {
+      ...data,
+      section: 'why-partner'
+    });
+    return response.data;
+  },
+
+  deleteWhyPartner: async (id) => {
+    const response = await api.delete(`/admin/content/items/${id}`);
+    return response.data;
+  },
+
   getRecognition: async () => {
     const response = await api.get('/admin/content/items/section/recognition');
     return { data: response.data?.data || [] };

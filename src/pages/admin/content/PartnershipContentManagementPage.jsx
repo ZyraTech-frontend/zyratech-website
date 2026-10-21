@@ -170,14 +170,166 @@ const ImpactStatsManager = ({ stats, setStats }) => {
     );
 };
 
-const WhyPartnerForm = ({ data, onChange, onSubmit, saving }) => (
-    <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-        <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Why Partner With Us</h3>
-        <div><label className="block text-sm font-medium mb-1">Title</label><input className="w-full px-4 py-2 border rounded-lg" name="title" value={data.title || ''} onChange={onChange} /></div>
-        <div><label className="block text-sm font-medium mb-1">Content</label><textarea className="w-full px-4 py-2 border rounded-lg" name="content" value={data.content || ''} onChange={onChange} rows={4} /></div>
-        <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Section</button>
-    </form>
-);
+const WhyPartnerManager = ({ whyPartners, setWhyPartners, dispatch, navigate }) => {
+    const [formData, setFormData] = useState({ title: '', description: '' });
+    const [editingId, setEditingId] = useState(null);
+    const [saving, setSaving] = useState(false);
+    const { logAction } = useActivityLogger();
+
+    const handleAdd = () => {
+        setFormData({ title: '', description: '' });
+        setEditingId(null);
+    };
+
+    const handleEdit = (item) => {
+        setFormData({ title: item.title, description: item.description });
+        setEditingId(item.id);
+    };
+
+    const handleSave = async () => {
+        if (!formData.title || !formData.description) return;
+        
+        setSaving(true);
+        try {
+            if (editingId) {
+                // Update existing
+                await contentService.updateWhyPartner(editingId, { 
+                    ...formData,
+                    section: 'why-partner'
+                });
+                setWhyPartners(prev => prev.map(p => p.id === editingId ? { ...p, ...formData } : p));
+                logAction({
+                    type: 'content_updated',
+                    severity: 'info',
+                    description: `Updated why partner reason: "${formData.title}"`,
+                    details: { contentType: 'WhyPartner', contentId: editingId }
+                });
+            } else {
+                // Create new
+                await contentService.createWhyPartner({ 
+                    ...formData,
+                    section: 'why-partner'
+                });
+                const res = await contentService.getWhyPartner();
+                setWhyPartners(res.data || []);
+                logAction({
+                    type: 'content_created',
+                    severity: 'success',
+                    description: `Created new why partner reason: "${formData.title}"`,
+                    details: { contentType: 'WhyPartner' }
+                });
+            }
+            setFormData({ title: '', description: '' });
+            setEditingId(null);
+        } catch (error) {
+            console.error('Error saving why partner:', error);
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleDelete = (item) => {
+        dispatch(openConfirmDialog({
+            title: 'Delete Reason',
+            message: `Remove "${item.title}" from why partner reasons?`,
+            isDangerous: true,
+            confirmLabel: 'Delete',
+            onConfirm: async () => {
+                try {
+                    await contentService.deleteWhyPartner(item.id);
+                    setWhyPartners(prev => prev.filter(p => p.id !== item.id));
+                    logAction({
+                        type: 'content_deleted',
+                        severity: 'warning',
+                        description: `Deleted why partner reason: "${item.title}"`,
+                        details: { contentType: 'WhyPartner', contentId: item.id }
+                    });
+                } catch (error) {
+                    console.error('Error deleting:', error);
+                }
+            }
+        }));
+    };
+
+    return (
+        <div className="space-y-6">
+            {/* Add/Edit Form */}
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
+                <h3 className="text-lg font-bold text-gray-800">{editingId ? 'Edit' : 'Add New'} Why Partner Reason</h3>
+                <div>
+                    <label className="block text-sm font-medium mb-1">Title</label>
+                    <input 
+                        className="w-full px-4 py-2 border rounded-lg"
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        placeholder="e.g. Mission Alignment"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium mb-1">Description</label>
+                    <textarea 
+                        className="w-full px-4 py-2 border rounded-lg"
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        placeholder="Describe this partnership benefit..."
+                        rows={4}
+                    />
+                </div>
+                <div className="flex gap-2">
+                    <button 
+                        onClick={handleSave}
+                        disabled={saving || !formData.title || !formData.description}
+                        className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 disabled:opacity-50"
+                    >
+                        {saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />}
+                        {editingId ? 'Update' : 'Add'}
+                    </button>
+                    {editingId && (
+                        <button 
+                            onClick={() => { setFormData({ title: '', description: '' }); setEditingId(null); }}
+                            className="px-6 py-2 border border-gray-300 rounded-lg"
+                        >
+                            Cancel
+                        </button>
+                    )}
+                </div>
+            </div>
+
+            {/* List of Reasons */}
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <h3 className="text-lg font-bold text-gray-800 mb-4">Why Partner Reasons</h3>
+                {whyPartners.length === 0 ? (
+                    <p className="text-gray-500 italic">No reasons added yet.</p>
+                ) : (
+                    <div className="space-y-3">
+                        {whyPartners.map(partner => (
+                            <div key={partner.id} className="flex justify-between items-start p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                                <div className="flex-1">
+                                    <h4 className="font-bold text-gray-900">{partner.title}</h4>
+                                    <p className="text-sm text-gray-600 mt-1">{partner.description}</p>
+                                </div>
+                                <div className="flex gap-2 ml-4 shrink-0">
+                                    <button 
+                                        onClick={() => handleEdit(partner)}
+                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                                    >
+                                        <Edit2 size={18} />
+                                    </button>
+                                    <button 
+                                        onClick={() => handleDelete(partner)}
+                                        className="p-2 text-red-600 hover:bg-red-50 rounded"
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
 
 // Simple Stories Manager Component (removed modal, uses navigation)
 const StoriesManager = ({ stories, setStories, dispatch, navigate }) => {
@@ -496,7 +648,7 @@ const PartnershipContentManagementPage = () => {
                 <div className="flex-1 min-w-0">
                     {activeTab === 'hero' && <HeroForm data={heroData} onChange={(e) => setHeroData({ ...heroData, [e.target.name]: e.target.value })} onSubmit={handleHeroSubmit} saving={savingHero} onImageUpload={handleHeroImageUpload} uploading={uploadingHero} />}
                     {activeTab === 'stats' && <ImpactStatsManager stats={impactStats} setStats={setImpactStats} />}
-                    {activeTab === 'why' && <WhyPartnerForm data={whyPartner} onChange={(e) => setWhyPartner({ ...whyPartner, [e.target.name]: e.target.value })} onSubmit={handleWhySubmit} saving={savingWhy} />}
+                    {activeTab === 'why' && <WhyPartnerManager whyPartners={whyPartner} setWhyPartners={setWhyPartner} dispatch={dispatch} navigate={navigate} />}
                     {activeTab === 'stories' && <StoriesManager stories={stories} setStories={setStories} dispatch={dispatch} navigate={navigate} />}
                     {activeTab === 'recognition' && <RecognitionManager recognition={recognition} setRecognition={setRecognition} dispatch={dispatch} />}
                 </div>
