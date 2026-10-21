@@ -8,7 +8,11 @@ const PartnershipHero = () => {
   const [heroData, setHeroData] = useState({
     title: "",
     subtitle: "",
-    backgroundImage: "/images/patner.jpg"
+    backgroundImage: "/images/patner.jpg",
+    cta1Text: "Become a Partner",
+    cta1Link: "/partner/apply",
+    cta2Text: "Learn More",
+    cta2Link: "/contact"
   });
 
   useEffect(() => {
@@ -80,22 +84,26 @@ const PartnershipHero = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="flex flex-col sm:flex-row gap-4 md:gap-6"
             >
-              <Link
-                to="/partner/apply"
-                className="bg-[#004fa2] hover:bg-[#003b7a] text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center shadow-lg gap-2"
-              >
-                <span>Become a Partner</span>
-                <ArrowRight className="w-5 h-5" />
-              </Link>
+              {heroData.cta1Text && heroData.cta1Link && (
+                <Link
+                  to={heroData.cta1Link}
+                  className="bg-[#004fa2] hover:bg-[#003b7a] text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center shadow-lg gap-2"
+                >
+                  <span>{heroData.cta1Text}</span>
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              )}
 
-              <Link
-                to="/contact"
-                state={{ from: 'partnership' }}
-                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center gap-2"
-              >
-                <span>Learn More</span>
-                <ArrowRight className="w-5 h-5" />
-              </Link>
+              {heroData.cta2Text && heroData.cta2Link && (
+                <Link
+                  to={heroData.cta2Link}
+                  state={{ from: 'partnership' }}
+                  className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-3.5 rounded text-base md:text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center gap-2"
+                >
+                  <span>{heroData.cta2Text}</span>
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              )}
             </motion.div>
           </motion.div>
         )}

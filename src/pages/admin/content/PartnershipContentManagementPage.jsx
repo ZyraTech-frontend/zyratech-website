@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
+import LinkPicker from '../../../components/admin/common/LinkPicker';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import { useActivityLogger } from '../../../hooks/useActivityLogger';
@@ -102,12 +103,10 @@ const HeroForm = ({ data, onChange, onSubmit, saving, onImageUpload, uploading }
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Button 1 Link</label>
-                        <input 
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#004fa2]/20"
-                            name="cta1Link"
-                            placeholder="e.g. /partner/apply"
+                        <LinkPicker 
                             value={data.cta1Link || ''}
-                            onChange={onChange}
+                            onChange={(link) => onChange({ target: { name: 'cta1Link', value: link } })}
+                            placeholder="Select or paste a link"
                         />
                     </div>
                 </div>
@@ -126,12 +125,10 @@ const HeroForm = ({ data, onChange, onSubmit, saving, onImageUpload, uploading }
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Button 2 Link</label>
-                        <input 
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#004fa2]/20"
-                            name="cta2Link"
-                            placeholder="e.g. /contact"
+                        <LinkPicker 
                             value={data.cta2Link || ''}
-                            onChange={onChange}
+                            onChange={(link) => onChange({ target: { name: 'cta2Link', value: link } })}
+                            placeholder="Select or paste a link"
                         />
                     </div>
                 </div>
