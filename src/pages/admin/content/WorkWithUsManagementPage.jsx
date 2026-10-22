@@ -39,12 +39,33 @@ const WorkWithUsManagementPage = () => {
                 workWithUsData = response.data;
             }
             
-            // If it's an array, parse it into the structure we need
-            if (Array.isArray(workWithUsData)) {
-                // Backend returns all items in a flat array
-                // We need to organize them by section based on some criteria
-                // For now, we'll parse what we have
+            // Check if it's a single object (new backend format)
+            if (workWithUsData && !Array.isArray(workWithUsData) && workWithUsData.id) {
+                // New format: single object with content field
+                const contentData = typeof workWithUsData.content === 'string' 
+                    ? JSON.parse(workWithUsData.content) 
+                    : workWithUsData.content || {};
                 
+                setData({
+                    hero: {
+                        title: workWithUsData.title || '',
+                        subtitle: workWithUsData.subtitle || '',
+                        description: workWithUsData.description || '',
+                        image: workWithUsData.image || workWithUsData.imageUrl || ''
+                    },
+                    setup: contentData.setup || [],
+                    projectSteps: contentData.projectSteps || [],
+                    collaboration: contentData.collaboration || { 
+                        title: '',
+                        description: '',
+                        image: '',
+                        points: [] 
+                    },
+                    hiring: contentData.hiring || []
+                });
+            } 
+            // If it's an array (old backend format)
+            else if (Array.isArray(workWithUsData)) {
                 const structuredData = {
                     hero: {},
                     setup: [],
@@ -58,9 +79,8 @@ const WorkWithUsManagementPage = () => {
                     hiring: []
                 };
 
-                // Parse each item based on section or other identifiers
                 workWithUsData.forEach(item => {
-                    // Hero section (usually order: 0 or specific identifier)
+                    // Hero section
                     if (item.order === 0 || workWithUsData.indexOf(item) === 0) {
                         structuredData.hero = {
                             title: item.title || '',
@@ -70,14 +90,12 @@ const WorkWithUsManagementPage = () => {
                         };
                     }
                     
-                    // If item has specific fields that indicate it belongs to a section
-                    // You might need to adjust this based on how backend structures the data
-                    // For now, let's check if the item has content that could be parsed
-                    
                     // Try to parse content as JSON if it exists
                     if (item.content) {
                         try {
-                            const parsedContent = JSON.parse(item.content);
+                            const parsedContent = typeof item.content === 'string' 
+                                ? JSON.parse(item.content) 
+                                : item.content;
                             
                             if (parsedContent.setup) {
                                 structuredData.setup = parsedContent.setup;
@@ -98,8 +116,9 @@ const WorkWithUsManagementPage = () => {
                 });
                 
                 setData(structuredData);
-            } else if (workWithUsData && !Array.isArray(workWithUsData)) {
-                // It's an object with proper structure
+            } 
+            // Object with proper structure (legacy format)
+            else if (workWithUsData && !Array.isArray(workWithUsData)) {
                 setData({
                     hero: workWithUsData.hero || {},
                     setup: workWithUsData.setup || [],
@@ -107,8 +126,9 @@ const WorkWithUsManagementPage = () => {
                     collaboration: workWithUsData.collaboration || { points: [] },
                     hiring: workWithUsData.hiring || []
                 });
-            } else {
-                // No data, set empty structure
+            } 
+            // No data
+            else {
                 setData({
                     hero: {},
                     setup: [],
