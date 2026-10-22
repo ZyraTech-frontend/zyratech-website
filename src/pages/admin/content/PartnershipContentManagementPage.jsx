@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Save, Loader, Plus, Edit2, Trash2, X,
-    Layout, PieChart, Info, BookOpen, Star, Handshake
+    Layout, PieChart, Info, BookOpen, Handshake
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
@@ -391,116 +391,6 @@ const StoriesManager = ({ stories, setStories, dispatch, navigate }) => {
     );
 };
 
-const RecognitionManager = ({ recognition, setRecognition, dispatch }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [saving, setSaving] = useState(false);
-
-    const handleAdd = () => { setIsModalOpen(true); };
-
-    const handleDelete = (item) => {
-        dispatch(openConfirmDialog({
-            title: 'Delete Partner Logo',
-            message: `Remove ${item.name} from the recognition strip?`,
-            isDangerous: true,
-            confirmLabel: 'Delete',
-            onConfirm: async () => {
-                try {
-                    await contentService.deleteRecognition(item.id);
-                    setRecognition(prev => prev.filter(r => r.id !== item.id));
-                } catch (e) {
-                    console.error(e);
-                }
-            }
-        }));
-    };
-
-    const handleSave = async (e) => {
-        e.preventDefault();
-        setSaving(true);
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
-
-        try {
-            // Create only (no edit for simple logos usually, just delete and add)
-            await contentService.createRecognition(data);
-            const res = await contentService.getRecognition();
-            setRecognition(res.data);
-            setIsModalOpen(false);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setSaving(false);
-        }
-    };
-
-    return (
-        <div className="space-y-4">
-            <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-bold text-gray-800">Partner Recognition Logostrip</h3>
-                <button onClick={handleAdd} className="flex items-center gap-2 bg-[#004fa2] text-white px-4 py-2 rounded-lg hover:bg-[#003d7a] transition-colors">
-                    <Plus size={16} /> Add Partner Logo
-                </button>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {recognition.length === 0 ? (
-                    <div className="col-span-full text-gray-500 italic py-4">No partner logos added yet.</div>
-                ) : (
-                    recognition.map(item => (
-                        <div key={item.id} className="group relative bg-white border rounded-lg p-4 flex items-center justify-center h-32 hover:shadow-md transition-all">
-                            <img decoding="async"
-                                src={item.logo}
-                                alt={item.name}
-                                className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
-                                onError={(e) => { e.target.src = "/images/placeholder-logo.webp"; }}
-                            />
-                            <button
-                                onClick={() => handleDelete(item)}
-                                className="absolute top-2 right-2 p-1.5 bg-red-100 text-red-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-200"
-                                title="Remove Logo"
-                            >
-                                <X size={14} />
-                            </button>
-                            <div className="absolute bottom-2 left-0 w-full text-center px-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span className="text-xs bg-gray-900/80 text-white px-2 py-1 rounded truncate max-w-full inline-block">
-                                    {item.name}
-                                </span>
-                            </div>
-                        </div>
-                    ))
-                )}
-            </div>
-
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl w-full max-w-sm p-6 shadow-xl">
-                        <div className="flex justify-between items-center mb-4 border-b pb-2">
-                            <h3 className="text-xl font-bold">Add Partner Logo</h3>
-                            <button onClick={() => setIsModalOpen(false)}><X className="text-gray-400 hover:text-gray-600" /></button>
-                        </div>
-                        <form onSubmit={handleSave} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Partner Name</label>
-                                <input type="text" name="name" required className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20" placeholder="e.g. Google" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Logo URL</label>
-                                <input type="text" name="logo" required className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20" placeholder="/images/logos/google.webp" />
-                            </div>
-                            <div className="flex justify-end gap-3 pt-4 border-t">
-                                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
-                                <button type="submit" disabled={saving} className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] flex items-center gap-2">
-                                    {saving && <Loader size={16} className="animate-spin" />} Add
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-};
-
 const PartnershipContentManagementPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -513,7 +403,6 @@ const PartnershipContentManagementPage = () => {
     const [impactStats, setImpactStats] = useState([]);
     const [whyPartner, setWhyPartner] = useState([]);
     const [stories, setStories] = useState([]);
-    const [recognition, setRecognition] = useState([]);
 
     const [savingHero, setSavingHero] = useState(false);
     const [savingWhy, setSavingWhy] = useState(false);
@@ -525,18 +414,16 @@ const PartnershipContentManagementPage = () => {
     const fetchAll = async () => {
         try {
             setLoading(true);
-            const [hero, stats, why, storiesRes, recRes] = await Promise.all([
+            const [hero, stats, why, storiesRes] = await Promise.all([
                 contentService.getPartnershipHero(),
                 contentService.getImpactStats(),
                 contentService.getWhyPartner(),
-                contentService.getPartnershipStories(),
-                contentService.getRecognition()
+                contentService.getPartnershipStories()
             ]);
             setHeroData(hero.data);
             setImpactStats(stats.data);
             setWhyPartner(why.data);
             setStories(storiesRes.data);
-            setRecognition(recRes.data);
         } catch (e) {
             console.error(e);
         } finally {
@@ -618,7 +505,6 @@ const PartnershipContentManagementPage = () => {
                             { id: 'stats', label: 'Impact Stats', icon: PieChart },
                             { id: 'why', label: 'Why Partner', icon: Info },
                             { id: 'stories', label: 'Success Stories', icon: BookOpen },
-                            { id: 'recognition', label: 'Recognition', icon: Star },
                         ].map(tab => {
                             const Icon = tab.icon;
                             return (
@@ -644,7 +530,6 @@ const PartnershipContentManagementPage = () => {
                     {activeTab === 'stats' && <ImpactStatsManager stats={impactStats} setStats={setImpactStats} />}
                     {activeTab === 'why' && <WhyPartnerManager whyPartners={whyPartner} setWhyPartners={setWhyPartner} dispatch={dispatch} navigate={navigate} />}
                     {activeTab === 'stories' && <StoriesManager stories={stories} setStories={setStories} dispatch={dispatch} navigate={navigate} />}
-                    {activeTab === 'recognition' && <RecognitionManager recognition={recognition} setRecognition={setRecognition} dispatch={dispatch} />}
                 </div>
             </div>
         </AdminLayout>
