@@ -430,23 +430,41 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
             <span className="font-medium">Testimonials</span>
           </Link>
 
-          {/* Business Operations Section */}
+          {/* Training Section */}
           <div className="pt-4 pb-1.5">
             <p className="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">
-              Inquiries & Communications
+              Training
             </p>
           </div>
 
           <Link
             to="/admin/training"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${location.pathname.startsWith('/admin/training')
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/training')
               ? 'bg-white/15 text-white'
               : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
             <GraduationCap size={20} />
+            <span className="font-medium">Training Courses</span>
+          </Link>
+
+          <Link
+            to="/admin/training/applications"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${location.pathname.startsWith('/admin/training/applications')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <Layers size={20} />
             <span className="font-medium">Course Applications</span>
           </Link>
+
+          {/* Inquiries & Communications Section */}
+          <div className="pt-4 pb-1.5">
+            <p className="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">
+              Inquiries & Communications
+            </p>
+          </div>
 
           <Link
             to="/admin/partnerships"

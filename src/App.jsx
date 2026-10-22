@@ -34,6 +34,7 @@ const UsersPage = lazy(() => import('./pages/admin/users/UsersPage'));
 const AdministratorFormPage = lazy(() => import('./pages/admin/users/AdministratorFormPage'));
 const SettingsPage = lazy(() => import('./pages/admin/settings/SettingsPage'));
 const TrainingCoursesPage = lazy(() => import('./pages/admin/training/TrainingCoursesPage'));
+const CourseApplicationsPage = lazy(() => import('./pages/admin/training/CourseApplicationsPage'));
 const ApplicationDetailsPage = lazy(() => import('./pages/admin/training/ApplicationDetailsPage'));
 const CourseFormPage = lazy(() => import('./pages/admin/training/CourseFormPage'));
 const JobsManagementPage = lazy(() => import('./pages/admin/jobs/JobsManagementPage'));
@@ -202,6 +203,7 @@ function App() {
                 <Route path="/admin/training" element={<ProtectedRoute><TrainingCoursesPage /></ProtectedRoute>} />
                 <Route path="/admin/training/new" element={<ProtectedRoute><CourseFormPage /></ProtectedRoute>} />
                 <Route path="/admin/training/edit/:id" element={<ProtectedRoute><CourseFormPage /></ProtectedRoute>} />
+                <Route path="/admin/training/applications" element={<ProtectedRoute><CourseApplicationsPage /></ProtectedRoute>} />
                 <Route path="/admin/training/applications/:id" element={<ProtectedRoute><ApplicationDetailsPage /></ProtectedRoute>} />
 
                 {/* Jobs Management */}
