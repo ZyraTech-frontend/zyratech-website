@@ -27,7 +27,6 @@ const PartnershipStories = () => {
             story: story.description, // Backend uses 'description', component uses 'story'
             impact: story.impact,
             image: story.image,
-            fallbackImage: story.fallbackImage || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200',
             link: story.link
           }));
           setStories(mappedStories);
@@ -81,7 +80,6 @@ const PartnershipStories = () => {
                       alt={story.title}
                       className="w-full h-full object-cover object-center"
                       style={{ objectPosition: 'center 30%' }}
-                      onError={(e) => { e.target.src = story.fallbackImage; }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-l from-[#004fa2]/10 to-transparent" />
                   </motion.div>

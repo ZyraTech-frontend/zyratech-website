@@ -31,7 +31,6 @@ const PartnershipStoryFormPage = () => {
         description: '',
         impact: '',
         image: '',
-        fallbackImage: '',
         link: ''
     });
     const [error, setError] = useState(null);
@@ -53,7 +52,6 @@ const PartnershipStoryFormPage = () => {
                 description: story.description || '',
                 impact: story.impact || '',
                 image: story.image || '',
-                fallbackImage: story.fallbackImage || '',
                 link: story.link || ''
             });
         } catch (err) {
@@ -308,22 +306,6 @@ const PartnershipStoryFormPage = () => {
                                         </button>
                                     </div>
                                 )}
-                            </div>
-
-                            {/* Fallback Image URL */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Fallback Image URL (Optional)
-                                </label>
-                                <input
-                                    type="url"
-                                    name="fallbackImage"
-                                    value={formData.fallbackImage}
-                                    onChange={handleInputChange}
-                                    placeholder="https://images.unsplash.com/photo-..."
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
-                                />
-                                <p className="mt-1 text-xs text-gray-500">Backup image to display if main image fails to load</p>
                             </div>
 
                             {/* Link Picker */}
