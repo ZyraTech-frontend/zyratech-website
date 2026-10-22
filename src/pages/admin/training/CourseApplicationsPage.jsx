@@ -7,7 +7,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
-import trainingApplicationService from '../../../services/trainingApplicationService';
+import trainingService from '../../../services/trainingService';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import {
     Users,
@@ -69,8 +69,9 @@ const CourseApplicationsPage = () => {
     const loadApplications = async () => {
         try {
             setLoading(true);
-            const data = await trainingApplicationService.getAllApplications();
-            const list = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.applications || []));
+            // Use the correct backend endpoint: /admin/enrollments
+            const data = await trainingService.getAllEnrollments();
+            const list = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.enrollments || []));
             setApplications(list);
         } catch (error) {
             console.error('Failed to load applications:', error);
@@ -158,7 +159,7 @@ const CourseApplicationsPage = () => {
             onConfirm: async () => {
                 try {
                     const appId = application.id || application.applicationId;
-                    await trainingApplicationService.updateApplicationStatus(appId, 'approved');
+                    await trainingService.updateEnrollmentStatus(appId, 'approved');
                     await loadApplications();
                     dispatch(addNotification({
                         type: 'success',
@@ -183,7 +184,7 @@ const CourseApplicationsPage = () => {
             onConfirm: async () => {
                 try {
                     const appId = application.id || application.applicationId;
-                    await trainingApplicationService.updateApplicationStatus(appId, 'rejected');
+                    await trainingService.updateEnrollmentStatus(appId, 'rejected');
                     await loadApplications();
                     dispatch(addNotification({
                         type: 'success',
