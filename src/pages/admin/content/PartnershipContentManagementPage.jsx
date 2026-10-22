@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Save, Loader, Plus, Edit2, Trash2, X,
-    Layout, PieChart, Info, BookOpen, Handshake
+    Layout, Info, BookOpen, Handshake
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
@@ -400,9 +400,9 @@ const PartnershipContentManagementPage = () => {
 
     // Data States
     const [heroData, setHeroData] = useState({});
-    const [impactStats, setImpactStats] = useState([]);
     const [whyPartner, setWhyPartner] = useState([]);
     const [stories, setStories] = useState([]);
+    const [recognition, setRecognition] = useState([]);
 
     const [savingHero, setSavingHero] = useState(false);
     const [savingWhy, setSavingWhy] = useState(false);
@@ -414,14 +414,12 @@ const PartnershipContentManagementPage = () => {
     const fetchAll = async () => {
         try {
             setLoading(true);
-            const [hero, stats, why, storiesRes] = await Promise.all([
+            const [hero, why, storiesRes] = await Promise.all([
                 contentService.getPartnershipHero(),
-                contentService.getImpactStats(),
                 contentService.getWhyPartner(),
                 contentService.getPartnershipStories()
             ]);
             setHeroData(hero.data);
-            setImpactStats(stats.data);
             setWhyPartner(why.data);
             setStories(storiesRes.data);
         } catch (e) {
@@ -502,7 +500,6 @@ const PartnershipContentManagementPage = () => {
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-3 space-y-1">
                         {[
                             { id: 'hero', label: 'Hero Section', icon: Layout },
-                            { id: 'stats', label: 'Impact Stats', icon: PieChart },
                             { id: 'why', label: 'Why Partner', icon: Info },
                             { id: 'stories', label: 'Success Stories', icon: BookOpen },
                         ].map(tab => {
@@ -527,7 +524,6 @@ const PartnershipContentManagementPage = () => {
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                     {activeTab === 'hero' && <HeroForm data={heroData} onChange={(e) => setHeroData({ ...heroData, [e.target.name]: e.target.value })} onSubmit={handleHeroSubmit} saving={savingHero} onImageUpload={handleHeroImageUpload} uploading={uploadingHero} />}
-                    {activeTab === 'stats' && <ImpactStatsManager stats={impactStats} setStats={setImpactStats} />}
                     {activeTab === 'why' && <WhyPartnerManager whyPartners={whyPartner} setWhyPartners={setWhyPartner} dispatch={dispatch} navigate={navigate} />}
                     {activeTab === 'stories' && <StoriesManager stories={stories} setStories={setStories} dispatch={dispatch} navigate={navigate} />}
                 </div>

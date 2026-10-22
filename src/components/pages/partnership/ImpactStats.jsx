@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import contentService from '../../../services/contentService';
+import { fetchMetricsByLocation } from '../../../services/impactService';
 
 const CountUp = ({ end, suffix = '', duration = 2000 }) => {
   const [count, setCount] = useState(0);
@@ -48,44 +48,68 @@ const CountUp = ({ end, suffix = '', duration = 2000 }) => {
 };
 
 const ImpactStats = () => {
-  const [stats, setStats] = useState([
-    { number: '1', suffix: '', label: 'Active Partners' },
-    { number: '50', suffix: '+', label: 'Students Trained' },
-    { number: '50', suffix: '+', label: 'Projects Completed' }
-  ]);
+  const [stats, setStats] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // ✅ Use PUBLIC endpoint (no authentication required)
-        const { data: contentStats } = await contentService.getPublicImpactStats();
-        console.log('📊 ImpactStats - API response:', contentStats); // DEBUG
+        setLoading(true);
+        // ✅ Fetch real-time metrics from the impact service
+        const metrics = await fetchMetricsByLocation('partnership');
+        console.log('📊 ImpactStats - Real metrics from backend:', metrics);
         
-        // Use stats from backend or fallback to defaults
-        if (contentStats && contentStats.length >= 3) {
-          const mergedStats = [
-            { number: contentStats[0]?.number || '1', suffix: contentStats[0]?.suffix || '', label: contentStats[0]?.label || 'Active Partners' },
-            { number: contentStats[1]?.number || '50', suffix: contentStats[1]?.suffix || '+', label: contentStats[1]?.label || 'Students Trained' },
-            { number: contentStats[2]?.number || '50', suffix: contentStats[2]?.suffix || '+', label: contentStats[2]?.label || 'Projects Completed' }
-          ];
-          console.log('✅ Setting stats:', mergedStats); // DEBUG
-          setStats(mergedStats);
+        // Transform metrics to display format
+        if (metrics && metrics.length > 0) {
+          const displayStats = metrics.map(metric => ({
+            number: metric.value.toString(),
+            suffix: metric.suffix || '',
+            prefix: metric.prefix || '',
+            label: metric.title,
+            category: metric.category
+          }));
+          setStats(displayStats);
         }
       } catch (error) {
         console.error('❌ Error fetching impact stats:', error);
-        // Keep default stats on error
+        // Fallback to default stats on error
+        setStats([
+          { number: '1', suffix: '', label: 'Active Partners' },
+          { number: '50', suffix: '+', label: 'Students Trained' },
+          { number: '50', suffix: '+', label: 'Projects Completed' }
+        ]);
+      } finally {
+        setLoading(false);
       }
     };
     fetchStats();
   }, []);
 
+  if (loading) {
+    return (
+      <section className="py-12 sm:py-16 bg-gray-50">
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-3 gap-4 sm:gap-8 lg:gap-10">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="text-center animate-pulse">
+                <div className="h-12 bg-gray-300 rounded mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-12 sm:py-16 bg-gray-50">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-3 gap-4 sm:gap-8 lg:gap-10">
+        <div className={`grid gap-4 sm:gap-8 lg:gap-10 ${stats.length === 3 ? 'grid-cols-3' : stats.length === 4 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-3'}`}>
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
               <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#004fa2] mb-1 sm:mb-2 lg:mb-3">
+                {stat.prefix}
                 <CountUp
                   end={stat.number}
                   suffix={stat.suffix}
