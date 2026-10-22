@@ -248,8 +248,8 @@ const contentService = {
 
   getWhyPartner: async () => {
     const response = await api.get('/admin/content/items/section/why-partner');
-    // Return array of all items
-    return response.data?.data || [];
+    // Return array of all items wrapped in data object (consistent with other methods)
+    return { data: response.data?.data || [] };
   },
 
   updateWhyPartner: async (id, data) => {
@@ -522,8 +522,8 @@ const contentService = {
   // PUBLIC: Get published why partner (all items for list display)
   getPublicWhyPartner: async () => {
     const response = await api.get('/content/items/why-partner');
-    // Return array of all items (not just first one)
-    return response.data?.data || [];
+    // Return array of all items wrapped in data object (consistent with other methods)
+    return { data: response.data?.data || [] };
   },
 
   // PUBLIC: Get published partner recognition

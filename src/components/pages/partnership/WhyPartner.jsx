@@ -19,9 +19,9 @@ const WhyPartner = () => {
         const reasonsData = await contentService.getPublicWhyPartner();
         console.log('📊 WhyPartner - API response:', reasonsData); // DEBUG
         
-        if (Array.isArray(reasonsData) && reasonsData.length > 0) {
-          console.log('✅ Setting why partner reasons:', reasonsData); // DEBUG
-          setReasons(reasonsData);
+        if (Array.isArray(reasonsData.data) && reasonsData.data.length > 0) {
+          console.log('✅ Setting why partner reasons:', reasonsData.data); // DEBUG
+          setReasons(reasonsData.data);
         }
       } catch (error) {
         console.error('❌ Error fetching why partner data:', error);

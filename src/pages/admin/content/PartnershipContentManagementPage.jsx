@@ -205,7 +205,7 @@ const WhyPartnerManager = ({ whyPartners, setWhyPartners, dispatch, navigate }) 
                 // Create new
                 await contentService.createWhyPartner(formData);
                 const res = await contentService.getWhyPartner();
-                setWhyPartners(res || []);
+                setWhyPartners(res.data);
                 logAction({
                     type: 'content_created',
                     severity: 'success',
