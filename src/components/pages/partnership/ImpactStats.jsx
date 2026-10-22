@@ -58,22 +58,22 @@ const ImpactStats = () => {
       try {
         setLoading(true);
         
-        // ✅ Fetch data from existing endpoints and count them
+        // ✅ Fetch data from existing endpoints with proper filters
         const [partnershipsResponse, enrollmentsResponse, projectsResponse] = await Promise.all([
-          partnersService.getAllPartnerships({ limit: 1000 }).catch(() => ({ data: [] })),
-          trainingService.getAllEnrollments({ limit: 1000 }).catch(() => ({ data: [] })),
+          partnersService.getAllPartnerships({ limit: 1000, status: 'approved' }).catch(() => ({ data: [] })),
+          trainingService.getAllEnrollments({ limit: 1000, status: 'approved' }).catch(() => ({ data: [] })),
           projectsService.getAllProjects({ limit: 1000, status: 'completed' }).catch(() => ({ projects: [] }))
         ]);
 
         // Count approved partnerships
         const activePartners = Array.isArray(partnershipsResponse.data) 
-          ? partnershipsResponse.data.filter(p => p.status?.toLowerCase() === 'approved').length 
+          ? partnershipsResponse.data.length 
           : 0;
 
         // Count approved enrollments (students trained)
         const studentsTrained = Array.isArray(enrollmentsResponse.data)
-          ? enrollmentsResponse.data.filter(e => e.status?.toLowerCase() === 'approved').length
-          : (enrollmentsResponse.data?.length || 0);
+          ? enrollmentsResponse.data.length
+          : 0;
 
         // Count completed projects
         const projectsCompleted = Array.isArray(projectsResponse.projects)
