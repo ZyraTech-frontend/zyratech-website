@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-    Save, Loader, Plus, Edit2, Trash2,
+    Save, Loader, Plus, Edit2, Trash2, X,
     Layout, PieChart, Info, BookOpen, Star, Handshake
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
