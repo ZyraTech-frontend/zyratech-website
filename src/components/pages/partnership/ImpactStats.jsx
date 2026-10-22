@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import partnersService from '../../../services/partnersService';
-import trainingService from '../../../services/trainingService';
+import trainingApplicationService from '../../../services/trainingApplicationService';
 import projectsService from '../../../services/projectsService';
 
 const CountUp = ({ end, suffix = '', duration = 2000 }) => {
@@ -59,9 +59,9 @@ const ImpactStats = () => {
         setLoading(true);
         
         // ✅ Fetch data from existing endpoints with proper filters
-        const [partnershipsResponse, enrollmentsResponse, projectsResponse] = await Promise.all([
+        const [partnershipsResponse, applicationsResponse, projectsResponse] = await Promise.all([
           partnersService.getAllPartnerships({ limit: 1000, status: 'approved' }).catch(() => ({ data: [] })),
-          trainingService.getAllEnrollments({ limit: 1000, status: 'approved' }).catch(() => ({ data: [] })),
+          trainingApplicationService.getAllApplications({ limit: 1000 }).catch(() => ([])),
           projectsService.getAllProjects({ limit: 1000, status: 'completed' }).catch(() => ({ projects: [] }))
         ]);
 
@@ -70,10 +70,9 @@ const ImpactStats = () => {
           ? partnershipsResponse.data.length 
           : 0;
 
-        // Count approved enrollments (students trained)
-        const studentsTrained = Array.isArray(enrollmentsResponse.data)
-          ? enrollmentsResponse.data.length
-          : 0;
+        // Count completed applications (students trained = those who finished the course)
+        const applicationsData = Array.isArray(applicationsResponse) ? applicationsResponse : (applicationsResponse.data || []);
+        const studentsTrained = applicationsData.filter(app => app.status?.toLowerCase() === 'completed').length;
 
         // Count completed projects
         const projectsCompleted = Array.isArray(projectsResponse.projects)

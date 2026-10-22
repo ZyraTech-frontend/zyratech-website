@@ -354,17 +354,6 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           </div>
 
           <Link
-            to="/admin/training"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/training')
-              ? 'bg-white/15 text-white'
-              : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
-          >
-            <GraduationCap size={20} />
-            <span className="font-medium">Training Courses</span>
-          </Link>
-
-          <Link
             to="/admin/blog"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/blog')
               ? 'bg-white/15 text-white'
@@ -444,30 +433,19 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           {/* Business Operations Section */}
           <div className="pt-4 pb-1.5">
             <p className="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">
-              Business
+              Inquiries & Communications
             </p>
           </div>
 
           <Link
-            to="/admin/payments"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/payments')
+            to="/admin/training"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${location.pathname.startsWith('/admin/training')
               ? 'bg-white/15 text-white'
               : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}
           >
-            <CreditCard size={20} />
-            <span className="font-medium">Payments</span>
-          </Link>
-
-          <Link
-            to="/admin/enrollments"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/enrollments')
-              ? 'bg-white/15 text-white'
-              : 'text-blue-200 hover:bg-white/5 hover:text-white'
-              }`}
-          >
-            <FileText size={20} />
-            <span className="font-medium">Enrollments</span>
+            <GraduationCap size={20} />
+            <span className="font-medium">Course Applications</span>
           </Link>
 
           <Link
@@ -490,6 +468,24 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           >
             <Inbox size={20} />
             <span className="font-medium">Contact Inquiries</span>
+          </Link>
+
+          {/* Business Operations Section */}
+          <div className="pt-4 pb-1.5">
+            <p className="px-4 text-xs font-semibold text-blue-300 uppercase tracking-wider">
+              Business
+            </p>
+          </div>
+
+          <Link
+            to="/admin/payments"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/payments')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <CreditCard size={20} />
+            <span className="font-medium">Payments</span>
           </Link>
 
           <Link

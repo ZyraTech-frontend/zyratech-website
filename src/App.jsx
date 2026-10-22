@@ -54,9 +54,6 @@ const FaqFormPage = lazy(() => import('./pages/admin/faq/FaqFormPage'));
 const TestimonialsManagementPage = lazy(() => import('./pages/admin/testimonials/TestimonialsManagementPage'));
 const TestimonialsFormPage = lazy(() => import('./pages/admin/testimonials/TestimonialsFormPage'));
 const PaymentsManagementPage = lazy(() => import('./pages/admin/payments/PaymentsManagementPage'));
-const EnrollmentsManagementPage = lazy(() => import('./pages/admin/enrollments/EnrollmentsManagementPage'));
-const EnrollmentFormPage = lazy(() => import('./pages/admin/enrollments/EnrollmentFormPage'));
-const EnrollmentDetailsPage = lazy(() => import('./pages/admin/enrollments/EnrollmentDetailsPage'));
 const PartnershipsManagementPage = lazy(() => import('./pages/admin/partnerships/PartnershipsManagementPage'));
 const ContactInquiriesPage = lazy(() => import('./pages/admin/contact-inquiries/ContactInquiriesPage'));
 const ContactInquiryDetailsPage = lazy(() => import('./pages/admin/contact-inquiries/ContactInquiryDetailsPage'));
@@ -242,12 +239,8 @@ function App() {
                 <Route path="/admin/testimonials/new" element={<ProtectedRoute><TestimonialsFormPage /></ProtectedRoute>} />
                 <Route path="/admin/testimonials/edit/:id" element={<ProtectedRoute><TestimonialsFormPage /></ProtectedRoute>} />
 
-                {/* Payments & Enrollments */}
+                {/* Payments */}
                 <Route path="/admin/payments" element={<ProtectedRoute><PaymentsManagementPage /></ProtectedRoute>} />
-                <Route path="/admin/enrollments" element={<ProtectedRoute><EnrollmentsManagementPage /></ProtectedRoute>} />
-                <Route path="/admin/enrollments/new" element={<ProtectedRoute><EnrollmentFormPage /></ProtectedRoute>} />
-                <Route path="/admin/enrollments/edit/:id" element={<ProtectedRoute><EnrollmentFormPage /></ProtectedRoute>} />
-                <Route path="/admin/enrollments/:id" element={<ProtectedRoute><EnrollmentDetailsPage /></ProtectedRoute>} />
 
                 {/* Impact Management */}
                 <Route path="/admin/impact" element={<ProtectedRoute><ImpactManagementPage /></ProtectedRoute>} />
