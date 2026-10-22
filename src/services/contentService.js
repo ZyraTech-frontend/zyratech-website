@@ -416,11 +416,42 @@ const contentService = {
   },
 
   updateWorkWithUs: async (section, data) => {
-    const response = await api.put(`/admin/content/items`, {
-      ...data,
-      section: 'work-with-us'
-    });
-    return response.data?.data || response.data;
+    try {
+      // Get existing work-with-us items
+      const existing = await api.get('/admin/content/items/section/work-with-us');
+      let items = existing.data?.data || existing.data || [];
+      
+      // Handle both array and single object responses
+      if (!Array.isArray(items)) {
+        items = items ? [items] : [];
+      }
+      
+      const item = items.length > 0 ? items[0] : null;
+      
+      if (item && item.id) {
+        // Update existing item
+        const response = await api.put(`/admin/content/items/${item.id}`, {
+          ...data,
+          section: 'work-with-us'
+        });
+        return response.data?.data || response.data;
+      } else {
+        // Create new item
+        const response = await api.post('/admin/content/items', {
+          ...data,
+          section: 'work-with-us'
+        });
+        return response.data?.data || response.data;
+      }
+    } catch (err) {
+      console.error('Error in updateWorkWithUs:', err);
+      // Fallback: try to create
+      const response = await api.post('/admin/content/items', {
+        ...data,
+        section: 'work-with-us'
+      });
+      return response.data?.data || response.data;
+    }
   },
 
   getQA: async () => {
