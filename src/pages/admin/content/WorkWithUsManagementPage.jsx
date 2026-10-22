@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
+import api from '../../../services/api';
 import Loader from '../../../components/admin/shared/LoadingSpinner';
 import { Save, Plus, Trash2, HelpCircle } from 'lucide-react';
 
@@ -39,16 +40,13 @@ const WorkWithUsManagementPage = () => {
             }
             
             // If it's an array, parse it into the structure we need
-            if (Array.isArray(workWithUsData) && workWithUsData.length > 0) {
-                const heroItem = workWithUsData.find(item => item.order === 0) || workWithUsData[0];
+            if (Array.isArray(workWithUsData)) {
+                // Backend returns all items in a flat array
+                // We need to organize them by section based on some criteria
+                // For now, we'll parse what we have
                 
-                setData({
-                    hero: {
-                        title: heroItem.title || '',
-                        subtitle: heroItem.subtitle || '',
-                        description: heroItem.description || '',
-                        image: heroItem.image || heroItem.imageUrl || ''
-                    },
+                const structuredData = {
+                    hero: {},
                     setup: [],
                     projectSteps: [],
                     collaboration: { 
@@ -58,10 +56,57 @@ const WorkWithUsManagementPage = () => {
                         points: [] 
                     },
                     hiring: []
+                };
+
+                // Parse each item based on section or other identifiers
+                workWithUsData.forEach(item => {
+                    // Hero section (usually order: 0 or specific identifier)
+                    if (item.order === 0 || workWithUsData.indexOf(item) === 0) {
+                        structuredData.hero = {
+                            title: item.title || '',
+                            subtitle: item.subtitle || '',
+                            description: item.description || '',
+                            image: item.image || item.imageUrl || ''
+                        };
+                    }
+                    
+                    // If item has specific fields that indicate it belongs to a section
+                    // You might need to adjust this based on how backend structures the data
+                    // For now, let's check if the item has content that could be parsed
+                    
+                    // Try to parse content as JSON if it exists
+                    if (item.content) {
+                        try {
+                            const parsedContent = JSON.parse(item.content);
+                            
+                            if (parsedContent.setup) {
+                                structuredData.setup = parsedContent.setup;
+                            }
+                            if (parsedContent.projectSteps) {
+                                structuredData.projectSteps = parsedContent.projectSteps;
+                            }
+                            if (parsedContent.collaboration) {
+                                structuredData.collaboration = parsedContent.collaboration;
+                            }
+                            if (parsedContent.hiring) {
+                                structuredData.hiring = parsedContent.hiring;
+                            }
+                        } catch (e) {
+                            // content is not JSON, skip
+                        }
+                    }
                 });
+                
+                setData(structuredData);
             } else if (workWithUsData && !Array.isArray(workWithUsData)) {
                 // It's an object with proper structure
-                setData(workWithUsData);
+                setData({
+                    hero: workWithUsData.hero || {},
+                    setup: workWithUsData.setup || [],
+                    projectSteps: workWithUsData.projectSteps || [],
+                    collaboration: workWithUsData.collaboration || { points: [] },
+                    hiring: workWithUsData.hiring || []
+                });
             } else {
                 // No data, set empty structure
                 setData({
@@ -89,12 +134,53 @@ const WorkWithUsManagementPage = () => {
     const handleSave = async (section) => {
         setSaving(true);
         try {
-            await contentService.updateWorkWithUs(section, data[section]);
+            // Get existing items to preserve the ID
+            const existing = await contentService.getWorkWithUs();
+            let items = existing?.data || existing || [];
+            if (!Array.isArray(items)) {
+                items = items ? [items] : [];
+            }
+            
+            const existingItem = items.length > 0 ? items[0] : null;
+            
+            // Prepare the full data structure to save
+            // Store setup, projectSteps, collaboration, hiring in the content field as JSON
+            const contentData = {
+                setup: data.setup,
+                projectSteps: data.projectSteps,
+                collaboration: data.collaboration,
+                hiring: data.hiring
+            };
+            
+            const payload = {
+                section: 'work-with-us',
+                title: data.hero?.title || '',
+                subtitle: data.hero?.subtitle || '',
+                description: data.hero?.description || '',
+                image: data.hero?.image || null,
+                content: JSON.stringify(contentData), // Store all other sections as JSON
+                status: 'published',
+                isVisible: true,
+                order: 0
+            };
+            
+            let response;
+            if (existingItem && existingItem.id) {
+                // Update existing
+                response = await contentService.updateWorkWithUsItem(existingItem.id, payload);
+            } else {
+                // Create new
+                response = await api.post('/admin/content/items', payload);
+            }
+            
             dispatch(openConfirmDialog({
                 title: 'Success',
                 message: 'Section updated successfully',
                 hideCancelButton: true
             }));
+            
+            // Refresh data after save
+            await fetchData();
         } catch (error) {
             console.error(`Failed to save ${section}:`, error);
             dispatch(openConfirmDialog({
