@@ -8,11 +8,11 @@ const PartnershipHero = () => {
   const [heroData, setHeroData] = useState({
     title: "",
     subtitle: "",
-    backgroundImage: "/images/patner.jpg",
-    cta1Text: "Become a Partner",
-    cta1Link: "/partner/apply",
-    cta2Text: "Learn More",
-    cta2Link: "/contact"
+    backgroundImage: "",
+    cta1Text: "",
+    cta1Link: "",
+    cta2Text: "",
+    cta2Link: ""
   });
 
   useEffect(() => {
@@ -40,9 +40,6 @@ const PartnershipHero = () => {
             src={heroData.backgroundImage}
             alt="Partnership banner"
             className="h-full w-full object-cover object-center brightness-110"
-            onError={(e) => {
-              e.target.src = "/images/patner.jpg";
-            }}
           />
         )}
         {/* Consistent Gradient from left to dark */}
