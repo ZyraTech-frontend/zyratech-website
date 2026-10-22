@@ -50,7 +50,7 @@ const PartnershipHero = () => {
         <div className="absolute inset-0 bg-black/20"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 md:px-16 lg:px-24 py-24 md:py-32 h-[75vh] min-h-[500px] max-h-[700px] flex items-center justify-start">
+      <div className="relative max-w-7xl mx-auto px-6 md:px-16 lg:px-24 py-24 md:py-32 h-screen min-h-[600px] flex items-center justify-start">
         {heroData.title && (
           <motion.div 
             className="max-w-5xl w-full"
