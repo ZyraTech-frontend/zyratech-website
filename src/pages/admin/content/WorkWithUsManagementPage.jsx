@@ -29,9 +29,8 @@ const WorkWithUsManagementPage = () => {
         try {
             setLoading(true);
             const response = await contentService.getWorkWithUs();
-            console.log('Work With Us Response:', response); // DEBUG
+            console.log('Work With Us Response:', response);
             
-            // Handle response - could be array or object
             let workWithUsData = response;
             
             // If response is wrapped in data property
@@ -39,20 +38,33 @@ const WorkWithUsManagementPage = () => {
                 workWithUsData = response.data;
             }
             
-            // If it's an array, we need to structure it properly
-            if (Array.isArray(workWithUsData)) {
-                // TODO: Backend should return structured data, not array
-                // For now, set empty structure
+            // If it's an array, parse it into the structure we need
+            if (Array.isArray(workWithUsData) && workWithUsData.length > 0) {
+                const heroItem = workWithUsData.find(item => item.order === 0) || workWithUsData[0];
+                
                 setData({
-                    hero: {},
+                    hero: {
+                        title: heroItem.title || '',
+                        subtitle: heroItem.subtitle || '',
+                        description: heroItem.description || '',
+                        image: heroItem.image || heroItem.imageUrl || ''
+                    },
                     setup: [],
                     projectSteps: [],
-                    collaboration: { points: [] },
+                    collaboration: { 
+                        title: '',
+                        description: '',
+                        image: '',
+                        points: [] 
+                    },
                     hiring: []
                 });
-            } else {
+            } else if (workWithUsData && !Array.isArray(workWithUsData)) {
                 // It's an object with proper structure
-                setData(workWithUsData || {
+                setData(workWithUsData);
+            } else {
+                // No data, set empty structure
+                setData({
                     hero: {},
                     setup: [],
                     projectSteps: [],
@@ -62,7 +74,6 @@ const WorkWithUsManagementPage = () => {
             }
         } catch (error) {
             console.error("Failed to fetch Work With Us data:", error);
-            // Set empty data structure to prevent crashes
             setData({
                 hero: {},
                 setup: [],
