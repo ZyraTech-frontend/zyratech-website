@@ -449,8 +449,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           </Link>
 
           <Link
-            to="/admin/training/applications"
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${location.pathname.startsWith('/admin/training/applications')
+            to="/admin/course-applications"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${location.pathname.startsWith('/admin/course-applications')
               ? 'bg-white/15 text-white'
               : 'text-blue-200 hover:bg-white/5 hover:text-white'
               }`}

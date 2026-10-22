@@ -203,7 +203,7 @@ function App() {
                 <Route path="/admin/training" element={<ProtectedRoute><TrainingCoursesPage /></ProtectedRoute>} />
                 <Route path="/admin/training/new" element={<ProtectedRoute><CourseFormPage /></ProtectedRoute>} />
                 <Route path="/admin/training/edit/:id" element={<ProtectedRoute><CourseFormPage /></ProtectedRoute>} />
-                <Route path="/admin/training/applications" element={<ProtectedRoute><CourseApplicationsPage /></ProtectedRoute>} />
+                <Route path="/admin/course-applications" element={<ProtectedRoute><CourseApplicationsPage /></ProtectedRoute>} />
                 <Route path="/admin/training/applications/:id" element={<ProtectedRoute><ApplicationDetailsPage /></ProtectedRoute>} />
 
                 {/* Jobs Management */}
