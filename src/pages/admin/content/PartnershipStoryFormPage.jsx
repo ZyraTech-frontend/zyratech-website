@@ -8,11 +8,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
     ArrowLeft,
     Save,
-    Loader
+    Loader,
+    Upload,
+    X
 } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
 import { useActivityLogger } from '../../../hooks/useActivityLogger';
+import LinkPicker from '../../../components/admin/common/LinkPicker';
 
 const PartnershipStoryFormPage = () => {
     const navigate = useNavigate();
@@ -21,6 +24,7 @@ const PartnershipStoryFormPage = () => {
     
     const [loading, setLoading] = useState(!!id);
     const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -60,6 +64,39 @@ const PartnershipStoryFormPage = () => {
             ...prev,
             [name]: value
         }));
+    };
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            setError('Please upload an image file');
+            return;
+        }
+
+        // Validate file size (5MB max)
+        if (file.size > 5 * 1024 * 1024) {
+            setError('Image must be less than 5MB');
+            return;
+        }
+
+        try {
+            setUploading(true);
+            setError(null);
+            const imageUrl = await contentService.uploadImage(file);
+            setFormData(prev => ({ ...prev, image: imageUrl }));
+        } catch (err) {
+            console.error('Upload error:', err);
+            setError(err.message || 'Failed to upload image');
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const removeImage = () => {
+        setFormData(prev => ({ ...prev, image: '' }));
     };
 
     const handleSubmit = async (e) => {
@@ -173,46 +210,78 @@ const PartnershipStoryFormPage = () => {
                                 />
                             </div>
 
-                            {/* Image URL */}
+                            {/* Image Upload */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Image URL
+                                    Story Image
                                 </label>
-                                <input
-                                    type="url"
-                                    name="image"
-                                    value={formData.image}
-                                    onChange={handleInputChange}
-                                    placeholder="https://example.com/image.jpg"
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
-                                />
-                                {formData.image && (
-                                    <div className="mt-3 relative overflow-hidden rounded-lg border border-gray-200 max-h-48">
+                                
+                                {!formData.image ? (
+                                    <div className="relative">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleImageUpload}
+                                            disabled={uploading}
+                                            className="hidden"
+                                            id="image-upload"
+                                        />
+                                        <label
+                                            htmlFor="image-upload"
+                                            className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+                                                uploading 
+                                                    ? 'border-gray-300 bg-gray-50 cursor-not-allowed'
+                                                    : 'border-gray-300 hover:border-[#004fa2] hover:bg-[#004fa2]/5'
+                                            }`}
+                                        >
+                                            {uploading ? (
+                                                <div className="flex flex-col items-center gap-2">
+                                                    <Loader className="animate-spin text-[#004fa2]" size={32} />
+                                                    <p className="text-sm text-gray-500">Uploading...</p>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <Upload className="mb-2 text-gray-400" size={40} />
+                                                    <p className="text-sm text-gray-600 font-medium">Click to upload image</p>
+                                                    <p className="text-xs text-gray-400 mt-1">PNG, JPG, WEBP (max 5MB)</p>
+                                                </>
+                                            )}
+                                        </label>
+                                    </div>
+                                ) : (
+                                    <div className="relative">
                                         <img 
                                             src={formData.image} 
                                             alt="Preview" 
-                                            className="w-full h-auto object-cover"
-                                            onError={(e) => {
-                                                e.target.style.display = 'none';
-                                            }}
+                                            className="w-full h-48 object-cover rounded-lg border border-gray-200"
                                         />
+                                        <button
+                                            type="button"
+                                            onClick={removeImage}
+                                            className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors shadow-lg"
+                                            title="Remove image"
+                                        >
+                                            <X size={16} />
+                                        </button>
                                     </div>
                                 )}
                             </div>
 
-                            {/* Link */}
+                            {/* Link Picker */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Link URL
+                                    Story Link
                                 </label>
-                                <input
-                                    type="url"
-                                    name="link"
+                                <LinkPicker
                                     value={formData.link}
-                                    onChange={handleInputChange}
-                                    placeholder="https://example.com"
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                    onChange={(value) => setFormData(prev => ({ ...prev, link: value }))}
+                                    placeholder="Select a page or enter custom URL"
                                 />
+                                {formData.link && (
+                                    <p className="mt-2 text-sm text-gray-500">
+                                        Selected: <span className="font-medium text-[#004fa2]">{formData.link}</span>
+                                    </p>
+                                )}
                             </div>
                         </div>
 
