@@ -4,18 +4,17 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
 const WorkWithUsHeroSection = ({ title, subtitle, description, image }) => {
+  if (!title && !description && !image) return null;
+
   return (
     <section className="relative text-white overflow-hidden">
       <div className="absolute inset-0">
         <img decoding="async"
-          src={image || "/images/work-with-us-hero.webp"}
+          src={image}
           alt="Work with us"
           className="h-full w-full object-cover"
           loading="eager"
           fetchPriority="high"
-          onError={(e) => {
-            e.target.src = 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200';
-          }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/30" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#003d7a]/35 to-transparent" />
@@ -29,7 +28,7 @@ const WorkWithUsHeroSection = ({ title, subtitle, description, image }) => {
             transition={{ duration: 0.5 }}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight"
           >
-            {title || "Work With Us"}
+            {title}
           </motion.h1>
 
           {subtitle && (
@@ -49,7 +48,7 @@ const WorkWithUsHeroSection = ({ title, subtitle, description, image }) => {
             transition={{ duration: 0.5, delay: 0.06 }}
             className="mt-4 sm:mt-5 text-sm sm:text-base md:text-lg text-white/90 max-w-2xl leading-relaxed"
           >
-            {description || "Join a team building impactful technology solutions across African, European and US markets."}
+            {description}
           </motion.p>
 
           <motion.div

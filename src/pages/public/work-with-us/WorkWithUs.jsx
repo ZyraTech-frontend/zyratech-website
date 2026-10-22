@@ -32,14 +32,7 @@ const WorkWithUs = () => {
         setData(workWithUsData);
       } catch (error) {
         console.error("Failed to fetch Work With Us data:", error);
-        // Set empty data structure to prevent errors
-        setData({
-          hero: {},
-          setup: [],
-          projectSteps: [],
-          collaboration: {},
-          hiring: []
-        });
+        setData(null);
       } finally {
         setLoading(false);
       }
