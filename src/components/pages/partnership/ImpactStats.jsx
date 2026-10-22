@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import statisticsService from '../../../services/statisticsService';
+import partnersService from '../../../services/partnersService';
+import trainingService from '../../../services/trainingService';
+import projectsService from '../../../services/projectsService';
 
 const CountUp = ({ end, suffix = '', duration = 2000 }) => {
   const [count, setCount] = useState(0);
@@ -55,33 +57,40 @@ const ImpactStats = () => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        // ✅ Fetch REAL counts from database
-        const data = await statisticsService.getPartnershipStats();
-        console.log('📊 Real Partnership Stats from DB:', data);
         
-        // Transform API response to display format
+        // ✅ Fetch data from existing endpoints and count them
+        const [partnershipsResponse, enrollmentsResponse, projectsResponse] = await Promise.all([
+          partnersService.getAllPartnerships({ limit: 1000 }).catch(() => ({ data: [] })),
+          trainingService.getAllEnrollments({ limit: 1000 }).catch(() => ({ data: [] })),
+          projectsService.getAllProjects({ limit: 1000, status: 'completed' }).catch(() => ({ projects: [] }))
+        ]);
+
+        // Count approved partnerships
+        const activePartners = Array.isArray(partnershipsResponse.data) 
+          ? partnershipsResponse.data.filter(p => p.status?.toLowerCase() === 'approved').length 
+          : 0;
+
+        // Count approved enrollments (students trained)
+        const studentsTrained = Array.isArray(enrollmentsResponse.data)
+          ? enrollmentsResponse.data.filter(e => e.status?.toLowerCase() === 'approved').length
+          : (enrollmentsResponse.data?.length || 0);
+
+        // Count completed projects
+        const projectsCompleted = Array.isArray(projectsResponse.projects)
+          ? projectsResponse.projects.length
+          : 0;
+
+        console.log('📊 Real counts:', { activePartners, studentsTrained, projectsCompleted });
+
         const displayStats = [
-          { 
-            number: data.activePartners?.toString() || '0', 
-            suffix: '+', 
-            label: 'Active Partners' 
-          },
-          { 
-            number: data.studentsTrained?.toString() || '0', 
-            suffix: '+', 
-            label: 'Students Trained' 
-          },
-          { 
-            number: data.projectsCompleted?.toString() || '0', 
-            suffix: '+', 
-            label: 'Projects Completed' 
-          }
+          { number: activePartners.toString(), suffix: '+', label: 'Active Partners' },
+          { number: studentsTrained.toString(), suffix: '+', label: 'Students Trained' },
+          { number: projectsCompleted.toString(), suffix: '+', label: 'Projects Completed' }
         ];
         
         setStats(displayStats);
       } catch (error) {
-        console.error('❌ Error fetching partnership stats:', error);
-        // Fallback to zero on error
+        console.error('❌ Error fetching stats:', error);
         setStats([
           { number: '0', suffix: '+', label: 'Active Partners' },
           { number: '0', suffix: '+', label: 'Students Trained' },
