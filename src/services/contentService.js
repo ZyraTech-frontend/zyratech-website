@@ -541,7 +541,7 @@ const contentService = {
 
   // PUBLIC: Get published work with us
   getPublicWorkWithUs: async () => {
-    const response = await api.get('/content/items/work-with-us');
+    const response = await api.get('/content/work-with-us');
     return response.data?.data || response.data;
   },
 

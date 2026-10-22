@@ -27,9 +27,19 @@ const WorkWithUs = () => {
       try {
         // ✅ Use PUBLIC endpoint (no authentication required)
         const response = await contentService.getPublicWorkWithUs();
-        setData(response.data);
+        // Handle different response formats
+        const workWithUsData = response?.data || response;
+        setData(workWithUsData);
       } catch (error) {
         console.error("Failed to fetch Work With Us data:", error);
+        // Set empty data structure to prevent errors
+        setData({
+          hero: {},
+          setup: [],
+          projectSteps: [],
+          collaboration: {},
+          hiring: []
+        });
       } finally {
         setLoading(false);
       }
