@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { fetchMetricsByLocation } from '../../../services/impactService';
+import statisticsService from '../../../services/statisticsService';
 
 const CountUp = ({ end, suffix = '', duration = 2000 }) => {
   const [count, setCount] = useState(0);
@@ -55,28 +55,37 @@ const ImpactStats = () => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        // ✅ Fetch real-time metrics from the impact service
-        const metrics = await fetchMetricsByLocation('partnership');
-        console.log('📊 ImpactStats - Real metrics from backend:', metrics);
+        // ✅ Fetch REAL counts from database
+        const data = await statisticsService.getPartnershipStats();
+        console.log('📊 Real Partnership Stats from DB:', data);
         
-        // Transform metrics to display format
-        if (metrics && metrics.length > 0) {
-          const displayStats = metrics.map(metric => ({
-            number: metric.value.toString(),
-            suffix: metric.suffix || '',
-            prefix: metric.prefix || '',
-            label: metric.title,
-            category: metric.category
-          }));
-          setStats(displayStats);
-        }
+        // Transform API response to display format
+        const displayStats = [
+          { 
+            number: data.activePartners?.toString() || '0', 
+            suffix: '+', 
+            label: 'Active Partners' 
+          },
+          { 
+            number: data.studentsTrained?.toString() || '0', 
+            suffix: '+', 
+            label: 'Students Trained' 
+          },
+          { 
+            number: data.projectsCompleted?.toString() || '0', 
+            suffix: '+', 
+            label: 'Projects Completed' 
+          }
+        ];
+        
+        setStats(displayStats);
       } catch (error) {
-        console.error('❌ Error fetching impact stats:', error);
-        // Fallback to default stats on error
+        console.error('❌ Error fetching partnership stats:', error);
+        // Fallback to zero on error
         setStats([
-          { number: '1', suffix: '', label: 'Active Partners' },
-          { number: '50', suffix: '+', label: 'Students Trained' },
-          { number: '50', suffix: '+', label: 'Projects Completed' }
+          { number: '0', suffix: '+', label: 'Active Partners' },
+          { number: '0', suffix: '+', label: 'Students Trained' },
+          { number: '0', suffix: '+', label: 'Projects Completed' }
         ]);
       } finally {
         setLoading(false);
@@ -105,11 +114,10 @@ const ImpactStats = () => {
   return (
     <section className="py-12 sm:py-16 bg-gray-50">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`grid gap-4 sm:gap-8 lg:gap-10 ${stats.length === 3 ? 'grid-cols-3' : stats.length === 4 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-3'}`}>
+        <div className="grid grid-cols-3 gap-4 sm:gap-8 lg:gap-10">
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
               <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#004fa2] mb-1 sm:mb-2 lg:mb-3">
-                {stat.prefix}
                 <CountUp
                   end={stat.number}
                   suffix={stat.suffix}
