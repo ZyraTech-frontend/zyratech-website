@@ -10,6 +10,8 @@ const WorkWithUsManagementPage = () => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const [uploadingField, setUploadingField] = useState(null); // Track which field is uploading
     const [activeTab, setActiveTab] = useState('hero');
     const [data, setData] = useState({
         hero: {},
@@ -140,6 +142,66 @@ const WorkWithUsManagementPage = () => {
         }));
     };
 
+    // Image upload handler for hero
+    const handleHeroImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            dispatch(openConfirmDialog({
+                title: 'Invalid File',
+                message: 'Please upload an image file',
+                hideCancelButton: true
+            }));
+            return;
+        }
+
+        try {
+            setUploadingField('hero-image');
+            const imageUrl = await contentService.uploadImage(file);
+            handleNestedChange('hero', 'image', imageUrl);
+        } catch (error) {
+            console.error('Image upload failed:', error);
+            dispatch(openConfirmDialog({
+                title: 'Upload Failed',
+                message: error.message || 'Failed to upload image',
+                hideCancelButton: true
+            }));
+        } finally {
+            setUploadingField(null);
+        }
+    };
+
+    // Image upload handler for collaboration
+    const handleCollaborationImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            dispatch(openConfirmDialog({
+                title: 'Invalid File',
+                message: 'Please upload an image file',
+                hideCancelButton: true
+            }));
+            return;
+        }
+
+        try {
+            setUploadingField('collaboration-image');
+            const imageUrl = await contentService.uploadImage(file);
+            handleCollaborationChange('image', imageUrl);
+        } catch (error) {
+            console.error('Image upload failed:', error);
+            dispatch(openConfirmDialog({
+                title: 'Upload Failed',
+                message: error.message || 'Failed to upload image',
+                hideCancelButton: true
+            }));
+        } finally {
+            setUploadingField(null);
+        }
+    };
+
     if (loading) return <AdminLayout><Loader /></AdminLayout>;
 
     return (
@@ -169,7 +231,59 @@ const WorkWithUsManagementPage = () => {
                         <Input label="Title" value={data.hero.title} onChange={(e) => handleNestedChange('hero', 'title', e.target.value)} />
                         <Input label="Subtitle" value={data.hero.subtitle} onChange={(e) => handleNestedChange('hero', 'subtitle', e.target.value)} />
                         <TextArea label="Description" value={data.hero.description} onChange={(e) => handleNestedChange('hero', 'description', e.target.value)} />
-                        <Input label="Image URL" value={data.hero.image} onChange={(e) => handleNestedChange('hero', 'image', e.target.value)} />
+                        
+                        {/* Image Upload */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Hero Image</label>
+                            {data.hero.image ? (
+                                <div className="relative">
+                                    <img 
+                                        src={data.hero.image} 
+                                        alt="Hero" 
+                                        className="w-full max-w-md h-48 object-cover rounded-lg border border-gray-200"
+                                    />
+                                    <button
+                                        onClick={() => handleNestedChange('hero', 'image', '')}
+                                        className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                        title="Remove image"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="relative">
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleHeroImageUpload}
+                                        disabled={uploadingField === 'hero-image'}
+                                        className="hidden"
+                                        id="hero-image-upload"
+                                    />
+                                    <label
+                                        htmlFor="hero-image-upload"
+                                        className={`flex flex-col items-center justify-center w-full max-w-md h-48 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+                                            uploadingField === 'hero-image'
+                                                ? 'border-gray-300 bg-gray-50 cursor-not-allowed'
+                                                : 'border-gray-300 hover:border-[#004fa2] hover:bg-[#004fa2]/5'
+                                        }`}
+                                    >
+                                        {uploadingField === 'hero-image' ? (
+                                            <div className="flex flex-col items-center gap-2">
+                                                <div className="w-8 h-8 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin" />
+                                                <p className="text-sm text-gray-500">Uploading...</p>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <Plus className="mb-2 text-gray-400" size={40} />
+                                                <p className="text-sm text-gray-600 font-medium">Click to upload image</p>
+                                                <p className="text-xs text-gray-400 mt-1">PNG, JPG, WEBP (max 5MB)</p>
+                                            </>
+                                        )}
+                                    </label>
+                                </div>
+                            )}
+                        </div>
 
                         <SaveButton onClick={() => handleSave('hero')} saving={saving} />
                     </div>
@@ -231,7 +345,59 @@ const WorkWithUsManagementPage = () => {
                             <h3 className="font-semibold text-lg">Main Content</h3>
                             <Input label="Title" value={data.collaboration.title} onChange={(e) => handleCollaborationChange('title', e.target.value)} />
                             <TextArea label="Description" value={data.collaboration.description} onChange={(e) => handleCollaborationChange('description', e.target.value)} />
-                            <Input label="Image URL" value={data.collaboration.image} onChange={(e) => handleCollaborationChange('image', e.target.value)} />
+                            
+                            {/* Image Upload */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Collaboration Image</label>
+                                {data.collaboration.image ? (
+                                    <div className="relative">
+                                        <img 
+                                            src={data.collaboration.image} 
+                                            alt="Collaboration" 
+                                            className="w-full max-w-md h-48 object-cover rounded-lg border border-gray-200"
+                                        />
+                                        <button
+                                            onClick={() => handleCollaborationChange('image', '')}
+                                            className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                            title="Remove image"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="relative">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleCollaborationImageUpload}
+                                            disabled={uploadingField === 'collaboration-image'}
+                                            className="hidden"
+                                            id="collaboration-image-upload"
+                                        />
+                                        <label
+                                            htmlFor="collaboration-image-upload"
+                                            className={`flex flex-col items-center justify-center w-full max-w-md h-48 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+                                                uploadingField === 'collaboration-image'
+                                                    ? 'border-gray-300 bg-gray-50 cursor-not-allowed'
+                                                    : 'border-gray-300 hover:border-[#004fa2] hover:bg-[#004fa2]/5'
+                                            }`}
+                                        >
+                                            {uploadingField === 'collaboration-image' ? (
+                                                <div className="flex flex-col items-center gap-2">
+                                                    <div className="w-8 h-8 border-4 border-[#004fa2]/20 border-t-[#004fa2] rounded-full animate-spin" />
+                                                    <p className="text-sm text-gray-500">Uploading...</p>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <Plus className="mb-2 text-gray-400" size={40} />
+                                                    <p className="text-sm text-gray-600 font-medium">Click to upload image</p>
+                                                    <p className="text-xs text-gray-400 mt-1">PNG, JPG, WEBP (max 5MB)</p>
+                                                </>
+                                            )}
+                                        </label>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <div className="space-y-4">
