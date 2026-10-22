@@ -8,29 +8,34 @@ const storyVariants = {
 };
 
 const PartnershipStories = () => {
-  const [stories, setStories] = useState([
-    {
-      title: 'Royal Klast Group',
-      category: 'Strategic Partner',
-      story: 'Through our collaboration with ZyraTech, we have successfully integrated cutting-edge technical expertise with our media reach, creating a unique platform for innovation and community impact across Africa.',
-      impact: 'Strategic Brand Integration, High-Impact Media Production',
-      image: "/images/partnershiplogo.webp",
-      fallbackImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200'
-    }
-  ]);
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStories = async () => {
       try {
+        setLoading(true);
         // ✅ Use PUBLIC endpoint (no authentication required)
         const data = await contentService.getPublicPartnerships();
         console.log('📊 PartnershipStories - API response:', data); // DEBUG
         if (data && data.length > 0) {
           console.log('✅ Setting partnership stories:', data); // DEBUG
-          setStories(data);
+          // Map backend fields to component fields
+          const mappedStories = data.map(story => ({
+            title: story.title,
+            category: story.category,
+            story: story.description, // Backend uses 'description', component uses 'story'
+            impact: story.impact,
+            image: story.image,
+            fallbackImage: story.fallbackImage || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200',
+            link: story.link
+          }));
+          setStories(mappedStories);
         }
       } catch (error) {
         console.error('❌ Error fetching partnership stories:', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchStories();
@@ -44,66 +49,76 @@ const PartnershipStories = () => {
           <p className="text-gray-600 max-w-4xl mx-auto">See how our partners are creating real impact</p>
         </div>
 
-        <div className="space-y-8 md:space-y-12">
-          {stories.map((story, index) => (
-              <motion.div
-                key={index}
-                variants={storyVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="w-screen -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden shadow-lg md:flex md:items-stretch"
-              >
-                {/* Image - alternates left/right */}
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#004fa2] border-t-transparent"></div>
+          </div>
+        ) : stories.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-500 text-lg">No partnership stories available yet.</p>
+          </div>
+        ) : (
+          <div className="space-y-8 md:space-y-12">
+            {stories.map((story, index) => (
                 <motion.div
+                  key={index}
                   variants={storyVariants}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  className={`md:w-1/2 ${index % 2 === 0 ? 'order-1 md:order-2' : 'order-1 md:order-1'} h-48 md:h-[360px] relative overflow-hidden`}
+                  className="w-screen -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden shadow-lg md:flex md:items-stretch"
                 >
-                  <img decoding="async"
-                    src={story.image}
-                    alt={story.title}
-                    className="w-full h-full object-cover object-center"
-                    style={{ objectPosition: 'center 30%' }}
-                    onError={(e) => { e.target.src = story.fallbackImage; }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-l from-[#004fa2]/10 to-transparent" />
-                </motion.div>
+                  {/* Image - alternates left/right */}
+                  <motion.div
+                    variants={storyVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    className={`md:w-1/2 ${index % 2 === 0 ? 'order-1 md:order-2' : 'order-1 md:order-1'} h-48 md:h-[360px] relative overflow-hidden`}
+                  >
+                    <img decoding="async"
+                      src={story.image}
+                      alt={story.title}
+                      className="w-full h-full object-cover object-center"
+                      style={{ objectPosition: 'center 30%' }}
+                      onError={(e) => { e.target.src = story.fallbackImage; }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-l from-[#004fa2]/10 to-transparent" />
+                  </motion.div>
 
-                {/* Content */}
-                <motion.div
-                  variants={storyVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  className={`md:w-1/2 bg-[#004fa2] text-white px-6 sm:px-8 md:px-12 py-6 md:py-10 flex flex-col justify-center ${index % 2 === 0 ? 'order-2 md:order-1' : 'order-2 md:order-2'}`}
-                >
-                  <div className="max-w-xl mx-auto">
-                    <div className="text-[#004fa2] text-5xl leading-none font-extrabold mb-3">"</div>
-                    <h3 className="text-2xl md:text-3xl font-extrabold mb-3">{story.title}</h3>
+                  {/* Content */}
+                  <motion.div
+                    variants={storyVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    className={`md:w-1/2 bg-[#004fa2] text-white px-6 sm:px-8 md:px-12 py-6 md:py-10 flex flex-col justify-center ${index % 2 === 0 ? 'order-2 md:order-1' : 'order-2 md:order-2'}`}
+                  >
+                    <div className="max-w-xl mx-auto">
+                      <div className="text-[#004fa2] text-5xl leading-none font-extrabold mb-3">"</div>
+                      <h3 className="text-2xl md:text-3xl font-extrabold mb-3">{story.title}</h3>
 
-                    <p className="text-white/90 text-base leading-relaxed mb-5">
-                      "{story.story}"
-                    </p>
+                      <p className="text-white/90 text-base leading-relaxed mb-5">
+                        "{story.story}"
+                      </p>
 
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-[#004fa2] font-bold">—</span>
-                      <div>
-                        <div className="font-semibold">{story.title}</div>
-                        <div className="text-sm text-white/80">{story.category}</div>
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-[#004fa2] font-bold">—</span>
+                        <div>
+                          <div className="font-semibold">{story.title}</div>
+                          <div className="text-sm text-white/80">{story.category}</div>
+                        </div>
+                      </div>
+
+                      <div className="pt-4 border-t border-white/20">
+                        <p className="text-sm text-white/90"><strong>Impact:</strong> {story.impact}</p>
                       </div>
                     </div>
-
-                    <div className="pt-4 border-t border-white/20">
-                      <p className="text-sm text-white/90"><strong>Impact:</strong> {story.impact}</p>
-                    </div>
-                  </div>
+                  </motion.div>
                 </motion.div>
-              </motion.div>
-            ))}
-        </div>
+              ))}
+          </div>
+        )}
       </div>
     </section>
   );

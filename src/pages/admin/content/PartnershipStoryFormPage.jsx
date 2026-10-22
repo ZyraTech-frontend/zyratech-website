@@ -27,8 +27,11 @@ const PartnershipStoryFormPage = () => {
     const [uploading, setUploading] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
+        category: '',
         description: '',
+        impact: '',
         image: '',
+        fallbackImage: '',
         link: ''
     });
     const [error, setError] = useState(null);
@@ -46,8 +49,11 @@ const PartnershipStoryFormPage = () => {
             const story = await contentService.getPartnershipStory(id);
             setFormData({
                 title: story.title || '',
+                category: story.category || '',
                 description: story.description || '',
+                impact: story.impact || '',
                 image: story.image || '',
+                fallbackImage: story.fallbackImage || '',
                 link: story.link || ''
             });
         } catch (err) {
@@ -102,8 +108,13 @@ const PartnershipStoryFormPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        if (!formData.title.trim() || !formData.description.trim()) {
-            setError('Title and description are required');
+        if (!formData.title.trim() || !formData.category.trim() || !formData.description.trim() || !formData.impact.trim()) {
+            setError('Title, category, story, and impact are required');
+            return;
+        }
+
+        if (!formData.image) {
+            setError('Please upload a story image');
             return;
         }
 
@@ -181,7 +192,7 @@ const PartnershipStoryFormPage = () => {
                             {/* Title */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Title <span className="text-red-500">*</span>
+                                    Partner Title <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -189,31 +200,63 @@ const PartnershipStoryFormPage = () => {
                                     value={formData.title}
                                     onChange={handleInputChange}
                                     required
-                                    placeholder="Story title..."
+                                    placeholder="e.g. Royal Klast Group"
                                     className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
                                 />
                             </div>
 
-                            {/* Description */}
+                            {/* Category (Partner Name) */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Description <span className="text-red-500">*</span>
+                                    Partner Category <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="category"
+                                    value={formData.category}
+                                    onChange={handleInputChange}
+                                    required
+                                    placeholder="e.g. Strategic Partner, Technology Partner"
+                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                />
+                            </div>
+
+                            {/* Description (Story) */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Partnership Story <span className="text-red-500">*</span>
                                 </label>
                                 <textarea
                                     name="description"
                                     value={formData.description}
                                     onChange={handleInputChange}
                                     required
-                                    rows={4}
-                                    placeholder="Story description..."
+                                    rows={5}
+                                    placeholder="Describe the partnership story and collaboration..."
                                     className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] resize-none transition-all"
+                                />
+                            </div>
+
+                            {/* Impact */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Impact <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="impact"
+                                    value={formData.impact}
+                                    onChange={handleInputChange}
+                                    required
+                                    placeholder="e.g. Strategic Brand Integration, High-Impact Media Production"
+                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
                                 />
                             </div>
 
                             {/* Image Upload */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Story Image
+                                    Story Image <span className="text-red-500">*</span>
                                 </label>
                                 
                                 {!formData.image ? (
@@ -265,6 +308,22 @@ const PartnershipStoryFormPage = () => {
                                         </button>
                                     </div>
                                 )}
+                            </div>
+
+                            {/* Fallback Image URL */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Fallback Image URL (Optional)
+                                </label>
+                                <input
+                                    type="url"
+                                    name="fallbackImage"
+                                    value={formData.fallbackImage}
+                                    onChange={handleInputChange}
+                                    placeholder="https://images.unsplash.com/photo-..."
+                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                />
+                                <p className="mt-1 text-xs text-gray-500">Backup image to display if main image fails to load</p>
                             </div>
 
                             {/* Link Picker */}
