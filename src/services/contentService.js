@@ -284,7 +284,8 @@ const contentService = {
 
   getPartnershipStories: async () => {
     const response = await api.get('/admin/content/items/section/partnerships');
-    return response.data?.data || response.data;
+    // Return array wrapped in data object (consistent with other methods)
+    return { data: response.data?.data || [] };
   },
 
   getPartnershipStory: async (id) => {
