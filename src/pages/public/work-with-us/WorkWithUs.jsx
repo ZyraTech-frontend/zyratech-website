@@ -25,11 +25,25 @@ const WorkWithUs = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // ✅ Use PUBLIC endpoint (no authentication required)
         const response = await contentService.getPublicWorkWithUs();
-        // Handle different response formats
-        const workWithUsData = response?.data || response;
-        setData(workWithUsData);
+        const items = response?.data || response;
+        
+        // Backend returns an array of items, transform it to the structure components expect
+        if (Array.isArray(items) && items.length > 0) {
+          // Find the hero item (first item or one with order: 0)
+          const heroItem = items[0];
+          
+          setData({
+            hero: {
+              title: heroItem.title,
+              subtitle: heroItem.subtitle,
+              description: heroItem.description,
+              image: heroItem.image || heroItem.imageUrl
+            }
+          });
+        } else {
+          setData(null);
+        }
       } catch (error) {
         console.error("Failed to fetch Work With Us data:", error);
         setData(null);
@@ -44,7 +58,7 @@ const WorkWithUs = () => {
     return <FullPageSkeleton />;
   }
 
-  if (!data) return null;
+  if (!data || !data.hero) return null;
 
   return (
     <div className="bg-white">
