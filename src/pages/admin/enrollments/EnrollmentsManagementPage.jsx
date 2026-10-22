@@ -3,12 +3,13 @@
  * Professional admin interface for managing course enrollments
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
+import trainingService from '../../../services/trainingService';
 import {
     GraduationCap,
     Search,
@@ -87,240 +88,6 @@ const COURSE_CATEGORIES = {
     'matured': { label: 'Career Transition', color: 'bg-cyan-100 text-cyan-700' }
 };
 
-// Mock enrollments data
-const mockEnrollments = [
-    {
-        id: 'ENR-2024-001',
-        student: {
-            name: 'Robert Kojo',
-            email: 'kwame.asante@example.com',
-            phone: '+233 24 123 4567',
-            avatar: null,
-            city: 'Accra'
-        },
-        course: {
-            id: 1,
-            title: 'DevOps Engineering',
-            category: 'intermediate',
-            duration: '8 weeks',
-            price: 'GHS 3,500'
-        },
-        status: 'approved',
-        enrolledDate: '2024-12-15T10:30:00Z',
-        startDate: '2024-01-15',
-        progress: 65,
-        paymentStatus: 'paid',
-        notes: 'Strong technical background'
-    },
-    {
-        id: 'ENR-2024-002',
-        student: {
-            name: 'Sarah Owusu',
-            email: 'ama.mensah@example.com',
-            phone: '+233 20 987 6543',
-            avatar: null,
-            city: 'Kumasi'
-        },
-        course: {
-            id: 3,
-            title: 'Full Stack Web Development',
-            category: 'basic',
-            duration: '16 weeks',
-            price: 'GHS 3,800'
-        },
-        status: 'in_progress',
-        enrolledDate: '2024-12-10T14:15:00Z',
-        startDate: '2024-01-08',
-        progress: 42,
-        paymentStatus: 'paid',
-        notes: 'Motivated self-learner'
-    },
-    {
-        id: 'ENR-2024-003',
-        student: {
-            name: 'Kofi Boateng',
-            email: 'kofi.b@example.com',
-            phone: '+233 26 555 1234',
-            avatar: null,
-            city: 'Takoradi'
-        },
-        course: {
-            id: 5,
-            title: 'Data Science & Analytics',
-            category: 'intermediate',
-            duration: '10 weeks',
-            price: 'GHS 4,000'
-        },
-        status: 'pending',
-        enrolledDate: '2024-12-18T09:45:00Z',
-        startDate: null,
-        progress: 0,
-        paymentStatus: 'pending',
-        notes: 'Background in statistics'
-    },
-    {
-        id: 'ENR-2024-004',
-        student: {
-            name: 'Daniel Antwi',
-            email: 'fatima.i@example.com',
-            phone: '+233 27 888 9999',
-            avatar: null,
-            city: 'Tema'
-        },
-        course: {
-            id: 7,
-            title: 'AI & Machine Learning',
-            category: 'advanced',
-            duration: '12 weeks',
-            price: 'GHS 5,500'
-        },
-        status: 'approved',
-        enrolledDate: '2024-12-12T11:00:00Z',
-        startDate: '2024-01-20',
-        progress: 0,
-        paymentStatus: 'paid',
-        notes: 'Python experience required - verified'
-    },
-    {
-        id: 'ENR-2024-005',
-        student: {
-            name: 'Emmanuel Osei',
-            email: 'emmanuel.o@example.com',
-            phone: '+233 23 111 2222',
-            avatar: null,
-            city: 'Accra'
-        },
-        course: {
-            id: 11,
-            title: 'Software Development Internship',
-            category: 'internship',
-            duration: '3 months',
-            price: 'GHS 3,200'
-        },
-        status: 'completed',
-        enrolledDate: '2024-08-01T08:00:00Z',
-        startDate: '2024-08-15',
-        progress: 100,
-        paymentStatus: 'paid',
-        notes: 'Excellent performance, hired by partner company'
-    },
-    {
-        id: 'ENR-2024-006',
-        student: {
-            name: 'Grace Addo',
-            email: 'grace.addo@example.com',
-            phone: '+233 55 333 4444',
-            avatar: null,
-            city: 'Cape Coast'
-        },
-        course: {
-            id: 10,
-            title: 'Career Transition to Tech Program',
-            category: 'matured',
-            duration: '12 weeks',
-            price: 'GHS 4,500'
-        },
-        status: 'in_progress',
-        enrolledDate: '2024-11-20T16:30:00Z',
-        startDate: '2024-12-01',
-        progress: 35,
-        paymentStatus: 'paid',
-        notes: 'Previous career in accounting'
-    },
-    {
-        id: 'ENR-2024-007',
-        student: {
-            name: 'Daniel Mensah',
-            email: 'daniel.m@example.com',
-            phone: '+233 50 666 7777',
-            avatar: null,
-            city: 'Accra'
-        },
-        course: {
-            id: 2,
-            title: 'Cloud Computing (AWS/Azure)',
-            category: 'basic',
-            duration: '12 weeks',
-            price: 'GHS 4,200'
-        },
-        status: 'rejected',
-        enrolledDate: '2024-12-05T13:20:00Z',
-        startDate: null,
-        progress: 0,
-        paymentStatus: 'refunded',
-        notes: 'Prerequisites not met'
-    },
-    {
-        id: 'ENR-2024-008',
-        student: {
-            name: 'Abena Osei',
-            email: 'abena.o@example.com',
-            phone: '+233 24 444 5555',
-            avatar: null,
-            city: 'Kumasi'
-        },
-        course: {
-            id: 6,
-            title: 'Cloud Architecture',
-            category: 'advanced',
-            duration: '8 weeks',
-            price: 'GHS 4,200'
-        },
-        status: 'pending',
-        enrolledDate: '2024-12-19T10:00:00Z',
-        startDate: null,
-        progress: 0,
-        paymentStatus: 'pending',
-        notes: 'Awaiting interview'
-    },
-    {
-        id: 'ENR-2024-009',
-        student: {
-            name: 'Samuel Adjei',
-            email: 'samuel.a@example.com',
-            phone: '+233 26 999 0000',
-            avatar: null,
-            city: 'Ho'
-        },
-        course: {
-            id: 13,
-            title: 'Digital Marketing Internship',
-            category: 'internship',
-            duration: '2 months',
-            price: 'GHS 2,200'
-        },
-        status: 'withdrawn',
-        enrolledDate: '2024-11-15T09:30:00Z',
-        startDate: '2024-12-01',
-        progress: 15,
-        paymentStatus: 'partial_refund',
-        notes: 'Personal reasons'
-    },
-    {
-        id: 'ENR-2024-010',
-        student: {
-            name: 'Linda Amponsah',
-            email: 'linda.amp@example.com',
-            phone: '+233 20 777 8888',
-            avatar: null,
-            city: 'Accra'
-        },
-        course: {
-            id: 8,
-            title: 'IT Fundamentals for Professionals',
-            category: 'matured',
-            duration: '6 weeks',
-            price: 'GHS 2,800'
-        },
-        status: 'in_progress',
-        enrolledDate: '2024-12-01T14:45:00Z',
-        startDate: '2024-12-10',
-        progress: 58,
-        paymentStatus: 'paid',
-        notes: 'Corporate sponsor'
-    }
-];
-
 // Format date
 const formatDate = (dateString) => {
     if (!dateString) return 'Not scheduled';
@@ -376,6 +143,8 @@ const EnrollmentsManagementPage = () => {
     const { isSuperAdmin } = usePermissions();
 
     // State management
+    const [enrollments, setEnrollments] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [selectedCategory, setSelectedCategory] = useState('all');
@@ -383,18 +152,36 @@ const EnrollmentsManagementPage = () => {
 
     const itemsPerPage = 10;
 
+    // ✅ Fetch real enrollments from API
+    useEffect(() => {
+        const fetchEnrollments = async () => {
+            try {
+                setLoading(true);
+                const response = await trainingService.getAllEnrollments({ limit: 1000 });
+                const data = Array.isArray(response) ? response : (response.data || []);
+                setEnrollments(data);
+            } catch (error) {
+                console.error('Error fetching enrollments:', error);
+                setEnrollments([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchEnrollments();
+    }, []);
+
     // Filter enrollments
     const filteredEnrollments = useMemo(() => {
-        let result = [...mockEnrollments];
+        let result = [...enrollments];
 
         // Search filter
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
             result = result.filter(e =>
-                e.id.toLowerCase().includes(query) ||
-                e.student.name.toLowerCase().includes(query) ||
-                e.student.email.toLowerCase().includes(query) ||
-                e.course.title.toLowerCase().includes(query)
+                e.id?.toLowerCase().includes(query) ||
+                e.student?.name?.toLowerCase().includes(query) ||
+                e.student?.email?.toLowerCase().includes(query) ||
+                e.course?.title?.toLowerCase().includes(query)
             );
         }
 
@@ -405,11 +192,11 @@ const EnrollmentsManagementPage = () => {
 
         // Category filter
         if (selectedCategory !== 'all') {
-            result = result.filter(e => e.course.category === selectedCategory);
+            result = result.filter(e => e.course?.category === selectedCategory);
         }
 
         return result;
-    }, [searchQuery, selectedStatus, selectedCategory]);
+    }, [enrollments, searchQuery, selectedStatus, selectedCategory]);
 
     // Pagination
     const totalPages = Math.ceil(filteredEnrollments.length / itemsPerPage);
@@ -421,19 +208,19 @@ const EnrollmentsManagementPage = () => {
     // Statistics
     const stats = useMemo(() => {
         return {
-            totalEnrollments: mockEnrollments.length,
-            pending: mockEnrollments.filter(e => e.status === 'pending').length,
-            approved: mockEnrollments.filter(e => e.status === 'approved').length,
-            inProgress: mockEnrollments.filter(e => e.status === 'in_progress').length,
-            completed: mockEnrollments.filter(e => e.status === 'completed').length,
-            rejected: mockEnrollments.filter(e => e.status === 'rejected').length,
+            totalEnrollments: enrollments.length,
+            pending: enrollments.filter(e => e.status === 'pending').length,
+            approved: enrollments.filter(e => e.status === 'approved').length,
+            inProgress: enrollments.filter(e => e.status === 'in_progress').length,
+            completed: enrollments.filter(e => e.status === 'completed').length,
+            rejected: enrollments.filter(e => e.status === 'rejected').length,
             avgProgress: Math.round(
-                mockEnrollments.filter(e => e.status === 'in_progress' || e.status === 'completed')
-                    .reduce((acc, e) => acc + e.progress, 0) /
-                mockEnrollments.filter(e => e.status === 'in_progress' || e.status === 'completed').length || 0
+                enrollments.filter(e => e.status === 'in_progress' || e.status === 'completed')
+                    .reduce((acc, e) => acc + (e.progress || 0), 0) /
+                enrollments.filter(e => e.status === 'in_progress' || e.status === 'completed').length || 0
             )
         };
-    }, []);
+    }, [enrollments]);
 
     const handleEdit = (enrollment) => {
         navigate(`/admin/enrollments/edit/${enrollment.id}`);
