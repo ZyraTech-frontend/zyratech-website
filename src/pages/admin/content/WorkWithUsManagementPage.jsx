@@ -25,18 +25,50 @@ const WorkWithUsManagementPage = () => {
 
     const fetchData = async () => {
         try {
+            setLoading(true);
             const response = await contentService.getWorkWithUs();
-            // contentService already extracts response.data.data, so response is data object or array
-            setData(response || {
+            console.log('Work With Us Response:', response); // DEBUG
+            
+            // Handle response - could be array or object
+            let workWithUsData = response;
+            
+            // If response is wrapped in data property
+            if (response && response.data) {
+                workWithUsData = response.data;
+            }
+            
+            // If it's an array, we need to structure it properly
+            if (Array.isArray(workWithUsData)) {
+                // TODO: Backend should return structured data, not array
+                // For now, set empty structure
+                setData({
+                    hero: {},
+                    setup: [],
+                    projectSteps: [],
+                    collaboration: { points: [] },
+                    hiring: []
+                });
+            } else {
+                // It's an object with proper structure
+                setData(workWithUsData || {
+                    hero: {},
+                    setup: [],
+                    projectSteps: [],
+                    collaboration: { points: [] },
+                    hiring: []
+                });
+            }
+        } catch (error) {
+            console.error("Failed to fetch Work With Us data:", error);
+            // Set empty data structure to prevent crashes
+            setData({
                 hero: {},
                 setup: [],
                 projectSteps: [],
                 collaboration: { points: [] },
                 hiring: []
             });
-            setLoading(false);
-        } catch (error) {
-            console.error("Failed to fetch Work With Us data:", error);
+        } finally {
             setLoading(false);
         }
     };
