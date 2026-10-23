@@ -50,17 +50,14 @@ const CourseApplicationForm = () => {
 
   const resolvedCourseTitle = useMemo(() => {
     if (location.state?.courseTitle) return location.state.courseTitle;
-    const course = getTrainingCourseById(courseId);
-    if (course) return course.title;
     if (!courseId) return '';
     return `Course #${courseId}`;
   }, [courseId, location.state]);
 
-  // Get course category to determine if extra fields are needed
+  // Get course category from location state to determine if extra fields are needed
   const courseCategory = useMemo(() => {
-    const course = getTrainingCourseById(courseId);
-    return course?.category || 'basic';
-  }, [courseId]);
+    return location.state?.category || 'basic';
+  }, [location.state]);
 
   // Check if this is a non-basic program (requires CV, motivation, etc.)
   const requiresExtraFields = useMemo(() => {
