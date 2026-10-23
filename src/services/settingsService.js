@@ -4,11 +4,15 @@
  * 
  * Backend Endpoints:
  * PUBLIC:
- * - GET /api/settings - Get public site settings
+ * - GET /api/settings/public - Get public site settings (no auth)
  * 
  * ADMIN:
- * - PUT /api/admin/settings - Update site settings (admin only)
+ * - GET /api/admin/settings - List all settings (admin only)
+ * - PUT /api/admin/settings - Update single setting (admin only)
  * - POST /api/admin/settings/bulk - Bulk update multiple settings (admin only)
+ * - GET /api/admin/settings/payment?environment=test|live - Get payment settings (admin only)
+ * - PUT /api/admin/settings/payment - Update payment settings (admin only)
+ * - POST /api/admin/settings/payment/test - Test Paystack connection (admin only)
  * 
  * USER:
  * - GET /api/users/settings - Get user account settings
@@ -24,12 +28,12 @@ const settingsService = {
 
   /**
    * Get public site settings
-   * GET /api/settings
+   * GET /api/settings/public
    * @returns {Promise} Site settings object
    */
   getSettings: async () => {
     try {
-      const response = await api.get('/settings');
+      const response = await api.get('/settings/public');
       console.log('[SettingsService] Fetched public settings:', response.data);
       
       // Backend returns: { success, data: {...settings} }
