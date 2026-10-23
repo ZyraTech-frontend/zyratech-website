@@ -33,6 +33,7 @@ import {
   ChevronDown,
   ExternalLink
 } from 'lucide-react';
+import PaymentSettingsTab from '../../../components/admin/settings/PaymentSettingsTab';
 
 const SettingsPage = () => {
   const dispatch = useDispatch();
@@ -1160,113 +1161,7 @@ const SettingsPage = () => {
             )}
 
             {/* Payment Settings Tab */}
-            {activeTab === 'payments' && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-                <div className="bg-amber-50/80 border border-amber-200/50 rounded-2xl p-5 flex gap-4">
-                  <div className="mt-0.5"><Shield className="text-amber-500" size={20} /></div>
-                  <div>
-                    <h4 className="text-sm font-bold text-amber-900">Security Warning</h4>
-                    <p className="text-xs text-amber-800 mt-1 leading-relaxed">
-                        API keys grant full access to your payment gateways. Keep these keys secure and never share them publicly. Changes here apply immediately to live checkouts.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Gateway Cards Container */}
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                    {/* Paystack Card */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                        <div className="px-6 py-5 border-b border-gray-50 bg-[#0BA4DB]/5 flex items-center justify-between">
-                            <h3 className="text-base font-bold text-[#0BA4DB]">Paystack Integration</h3>
-                            <div className="px-2 py-1 bg-[#0BA4DB]/10 text-[#0BA4DB] rounded text-[10px] font-bold uppercase tracking-wider">Active</div>
-                        </div>
-                        <div className="p-6 space-y-5 flex-1">
-                            <div className="space-y-2">
-                                <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Public Key</label>
-                                <input
-                                    type="text"
-                                    value={formData.paystackPublicKey || ''}
-                                    onChange={(e) => setFormData({ ...formData, paystackPublicKey: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm font-mono text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400"
-                                    placeholder="pk_live_..."
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Secret Key</label>
-                                <input
-                                    type="password"
-                                    value={formData.paystackSecretKey || ''}
-                                    onChange={(e) => setFormData({ ...formData, paystackSecretKey: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm font-mono text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400 tracking-[0.2em]"
-                                    placeholder="sk_live_..."
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Stripe Card */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                        <div className="px-6 py-5 border-b border-gray-50 bg-[#635BFF]/5 flex items-center justify-between">
-                            <h3 className="text-base font-bold text-[#635BFF]">Stripe Integration</h3>
-                            <div className="px-2 py-1 bg-gray-100 text-gray-500 rounded text-[10px] font-bold uppercase tracking-wider">Inactive</div>
-                        </div>
-                        <div className="p-6 space-y-5 flex-1">
-                            <div className="space-y-2">
-                                <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Public Key</label>
-                                <input
-                                    type="text"
-                                    value={formData.stripePublicKey || ''}
-                                    onChange={(e) => setFormData({ ...formData, stripePublicKey: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#635BFF]/20 focus:border-[#635BFF] text-sm font-mono text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400"
-                                    placeholder="pk_live_..."
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Secret Key</label>
-                                <input
-                                    type="password"
-                                    value={formData.stripeSecretKey || ''}
-                                    onChange={(e) => setFormData({ ...formData, stripeSecretKey: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#635BFF]/20 focus:border-[#635BFF] text-sm font-mono text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400 tracking-[0.2em]"
-                                    placeholder="sk_live_..."
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Base Currency */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div>
-                            <h3 className="text-sm font-bold text-gray-900">Store Base Currency</h3>
-                            <p className="text-[11px] text-gray-500 mt-1">Default currency for all transactions</p>
-                        </div>
-                        <select
-                            value={formData.currency || 'GHS'}
-                            onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                            className="w-full sm:w-64 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm font-bold text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all"
-                        >
-                            <option value="GHS">GHS - Ghanaian Cedi</option>
-                            <option value="USD">USD - US Dollar</option>
-                            <option value="EUR">EUR - Euro</option>
-                            <option value="GBP">GBP - British Pound</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div className="flex justify-end pt-2">
-                    <button
-                      onClick={() => handleSave('payments')}
-                      disabled={saving}
-                      className="flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl shadow-md hover:shadow-blue-500/25 hover:-translate-y-0.5 transition-all font-bold text-sm disabled:opacity-50"
-                    >
-                      <Save size={18} />
-                      {saving ? 'Saving Changes...' : 'Save Payment Settings'}
-                    </button>
-                </div>
-              </div>
-            )}
+            {activeTab === 'payments' && <PaymentSettingsTab />}
 
             {/* Email Settings Tab */}
             {activeTab === 'email' && (
