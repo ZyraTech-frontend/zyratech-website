@@ -137,16 +137,19 @@ const TrainingPaymentPage = () => {
     try {
       // Initialize payment with backend
       const paymentData = {
+        // Required top-level fields
+        courseId: courseId,
+        studentName: formData.fullName,
+        studentEmail: formData.email,
         amount: parseFloat(course.price.replace(/[^\d.]/g, '')),
-        email: formData.email,
+        // Optional field
+        applicationId: applicationId || undefined,
+        // Additional metadata for Paystack
         metadata: {
-          courseId: course.id,
           courseName: course.title,
-          applicantName: formData.fullName,
           applicantPhone: formData.phone,
           level: course.level,
-          paymentMethod: paymentMethod === 'card' ? 'card' : 'mobile_money',
-          applicationId: applicationId // Link payment to application
+          paymentMethod: paymentMethod === 'card' ? 'card' : 'mobile_money'
         }
       };
 
