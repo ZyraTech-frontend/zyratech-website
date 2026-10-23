@@ -156,13 +156,13 @@ const TrainingPaymentPage = () => {
       const response = await paymentService.initializePayment(paymentData);
       
       // Redirect to Paystack checkout page
-      if (response.authorization_url) {
+      if (response.authorizationUrl) {
         // Store payment reference in sessionStorage for verification after redirect
         sessionStorage.setItem('payment_reference', response.reference);
         sessionStorage.setItem('payment_course_id', courseId);
         
         // Redirect to Paystack
-        window.location.href = response.authorization_url;
+        window.location.href = response.authorizationUrl;
       } else {
         throw new Error('No payment URL received');
       }
