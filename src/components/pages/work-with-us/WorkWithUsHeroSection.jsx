@@ -20,7 +20,7 @@ const WorkWithUsHeroSection = ({ title, subtitle, description, image }) => {
         <div className="absolute inset-0 bg-gradient-to-r from-[#003d7a]/35 to-transparent" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24 min-h-[450px] sm:min-h-[520px] flex items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24 min-h-[calc(100vh-80px)] flex items-center">
         <div className="max-w-3xl w-full">
           <motion.h1
             initial={{ opacity: 0, y: 12 }}
