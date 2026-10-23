@@ -128,8 +128,6 @@ const WorkWithUs = () => {
 
       <HrContactSection />
 
-      <ParallaxDivider heightClassName="h-32 sm:h-40 md:h-48" imageUrl="/images/parallax7.webp" />
-
       <NewsletterHero />
     </div>
   );
