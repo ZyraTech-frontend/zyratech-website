@@ -2,7 +2,6 @@ import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
-import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
 import trainingApplicationService from '../../../services/trainingApplicationService';

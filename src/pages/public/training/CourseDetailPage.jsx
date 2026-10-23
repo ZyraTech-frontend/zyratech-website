@@ -7,7 +7,6 @@ import TrainingBreadcrumb from '../../../components/pages/training/TrainingBread
 import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 import HrContactSection from '../../../components/common/HrContactSection';
 import DetailPageSkeleton from '../../../components/common/skeletons/DetailPageSkeleton';
-import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import trainingService from '../../../services/trainingService.js';
 import { normalizeImageUrl } from '../../../utils/imageUrl';
 import useSEO from '../../../hooks/useSEO';
@@ -18,9 +17,9 @@ const CourseDetailPage = () => {
 
   const _motion = motion;
 
-  const initialMock = getTrainingCourseById(courseId);
-  const [course, setCourse] = useState(initialMock || null);
-  const [loading, setLoading] = useState(!initialMock);
+  // Fetch course from API only (no mock data)
+  const [course, setCourse] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Fetch course from live backend API
   useEffect(() => {
