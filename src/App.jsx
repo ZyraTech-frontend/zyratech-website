@@ -373,6 +373,8 @@ function App() {
               <Route path="/labs" element={<Navigate to="/contact" replace />} />
               <Route path="/enroll" element={<Navigate to="/training" replace />} />
               <Route path="/programs" element={<Navigate to="/training/programs" replace />} />
+              {/* Paystack callback redirect - preserve query params */}
+              <Route path="/payment/verify" element={<Navigate to={`/training/payment/verify${window.location.search}`} replace />} />
 
               {/* 404 Catch-all — also catches /admin/* on the public domain */}
               <Route path="*" element={<NotFoundPage />} />
