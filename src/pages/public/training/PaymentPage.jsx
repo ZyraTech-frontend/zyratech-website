@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Lock, Shield, CheckCircle, CreditCard, Smartphone, 
@@ -7,10 +7,11 @@ import {
 } from 'lucide-react';
 import TrainingLayout from '../../../components/TrainingLayout';
 import TrainingBreadcrumb from '../../../components/pages/training/TrainingBreadcrumb';
-import { getTrainingCourseById } from '../../../data/trainingCourses';
+import trainingService from '../../../services/trainingService';
 import useSEO from '../../../hooks/useSEO';
 import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import paymentService from '../../../services/paymentService';
+import LoadingSpinner from '../../../components/admin/shared/LoadingSpinner';
 
 const TrainingPaymentPage = () => {
   const { courseId } = useParams();
@@ -22,8 +23,27 @@ const TrainingPaymentPage = () => {
   const applicantEmail = location.state?.email || '';
   const applicantPhone = location.state?.phone || '';
   const applicationId = location.state?.applicationId || '';
+  const courseTitle = location.state?.courseTitle || '';
 
-  const course = getTrainingCourseById(courseId);
+  // Fetch course from API only (no mock data)
+  const [course, setCourse] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const response = await trainingService.getCourse(courseId);
+        const apiCourse = response?.course || response?.data || response;
+        setCourse(apiCourse);
+      } catch (error) {
+        console.error('Error fetching course:', error);
+        setCourse(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCourse();
+  }, [courseId]);
 
   useSEO({
     title: course ? `Payment - ${course.title}` : 'Complete Payment',
@@ -151,6 +171,15 @@ const TrainingPaymentPage = () => {
       alert(error.response?.data?.message || 'Failed to initialize payment. Please try again.');
     }
   };
+
+  // Show loading spinner while fetching course
+  if (loading) {
+    return (
+      <TrainingLayout>
+        <LoadingSpinner text="Loading payment details..." />
+      </TrainingLayout>
+    );
+  }
 
   if (!course) {
     return (
