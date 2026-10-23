@@ -251,7 +251,6 @@ const ProgramsPage = () => {
           <div className="sm:hidden space-y-3">
             {programCategories.map((category, index) => {
               const IconComponent = category.icon;
-              const programCount = getTrainingCoursesByCategory(category.id).length;
 
               return (
                 <motion.div
@@ -273,7 +272,7 @@ const ProgramsPage = () => {
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <h3 className="text-sm font-bold text-gray-900 truncate">{category.title}</h3>
-                      <p className="text-xs text-gray-500">{programCount} programme{programCount === 1 ? '' : 's'}</p>
+                      <p className="text-xs text-gray-500">View programmes</p>
                     </div>
 
                     {/* Arrow */}
@@ -290,7 +289,6 @@ const ProgramsPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               {programCategories.slice(0, 3).map((category, index) => {
                 const IconComponent = category.icon;
-                const programCount = getTrainingCoursesByCategory(category.id).length;
 
                 return (
                   <motion.div
@@ -311,13 +309,9 @@ const ProgramsPage = () => {
                     {/* Title */}
                     <h3 className="text-xl font-bold text-gray-900 mb-6 pr-16">{category.title}</h3>
 
-                    <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                    <p className="text-sm text-gray-600 mb-10 leading-relaxed">
                       {category.description}
                     </p>
-
-                    <div className="text-xs font-semibold text-gray-500 mb-5">
-                      {programCount} programme{programCount === 1 ? '' : 's'}
-                    </div>
 
                     {/* Button */}
                     <Link
@@ -336,7 +330,6 @@ const ProgramsPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
               {programCategories.slice(3, 5).map((category, index) => {
                 const IconComponent = category.icon;
-                const programCount = getTrainingCoursesByCategory(category.id).length;
 
                 return (
                   <motion.div
@@ -357,13 +350,9 @@ const ProgramsPage = () => {
                     {/* Title */}
                     <h3 className="text-xl font-bold text-gray-900 mb-6 pr-16">{category.title}</h3>
 
-                    <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                    <p className="text-sm text-gray-600 mb-10 leading-relaxed">
                       {category.description}
                     </p>
-
-                    <div className="text-xs font-semibold text-gray-500 mb-5">
-                      {programCount} programme{programCount === 1 ? '' : 's'}
-                    </div>
 
                     {/* Button */}
                     <Link
