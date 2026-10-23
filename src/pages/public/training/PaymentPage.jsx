@@ -591,21 +591,25 @@ const TrainingPaymentPage = () => {
                 </div>
 
                 {/* Course Details */}
-                <div className="space-y-3 mb-6 pb-6 border-b border-gray-100">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600 flex items-center gap-2">
-                      <Clock size={16} />
-                      Duration
-                    </span>
-                    <span className="font-medium text-gray-900">{course.duration}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600 flex items-center gap-2">
-                      <Users size={16} />
-                      Cohort Size
-                    </span>
-                    <span className="font-medium text-gray-900">{course.participants}</span>
-                  </div>
+                <div className="space-y-3 mb-6 pb-6 border-t border-gray-100 pt-4">
+                  {course.duration && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600 flex items-center gap-2">
+                        <Clock size={16} />
+                        Duration
+                      </span>
+                      <span className="font-medium text-gray-900">{course.duration}</span>
+                    </div>
+                  )}
+                  {course.category && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600 flex items-center gap-2">
+                        <Award size={16} />
+                        Level
+                      </span>
+                      <span className="font-medium text-gray-900 capitalize">{course.category}</span>
+                    </div>
+                  )}
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600 flex items-center gap-2">
                       <Award size={16} />
@@ -617,18 +621,6 @@ const TrainingPaymentPage = () => {
 
                 {/* Pricing */}
                 <div className="space-y-2 mb-6">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Program Fee</span>
-                    <span className="text-gray-900">{course.price}</span>
-                  </div>
-                  {course.originalPrice && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600">Discount</span>
-                      <span className="text-green-600 font-medium">
-                        - {course.originalPrice.replace(/[^\d]/g, '') - course.price.replace(/[^\d]/g, '')} GHS
-                      </span>
-                    </div>
-                  )}
                   <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                     <span className="text-lg font-bold text-gray-900">Total</span>
                     <span className="text-2xl font-bold text-[#004fa2]">{course.price}</span>
