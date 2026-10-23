@@ -94,12 +94,16 @@ const TrainingPaymentPage = () => {
 
     try {
       // Initialize payment with backend
+      const courseAmount = parseFloat(course.price.replace(/[^\d.]/g, ''));
+      const processingFee = (courseAmount * 0.015) + 0.50;
+      const totalAmount = courseAmount + processingFee;
+      
       const paymentData = {
         // Required top-level fields
         courseId: courseId,
         studentName: formData.fullName,
         studentEmail: formData.email,
-        amount: parseFloat(course.price.replace(/[^\d.]/g, '')),
+        amount: totalAmount, // Include processing fee
         // Optional field
         applicationId: applicationId || undefined
       };
@@ -416,11 +420,35 @@ const TrainingPaymentPage = () => {
                 </div>
 
                 {/* Pricing */}
-                <div className="space-y-2 mb-6">
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                    <span className="text-lg font-bold text-gray-900">Total</span>
-                    <span className="text-2xl font-bold text-[#004fa2]">{course.price}</span>
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Course Fee</span>
+                    <span className="text-gray-900 font-medium">{course.price}</span>
                   </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Processing Fee</span>
+                    <span className="text-gray-900 font-medium">
+                      {(() => {
+                        const courseAmount = parseFloat(course.price.replace(/[^\d.]/g, ''));
+                        const processingFee = (courseAmount * 0.015) + 0.50;
+                        return `GHS ${processingFee.toFixed(2)}`;
+                      })()}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between pt-3 border-t-2 border-gray-200">
+                    <span className="text-lg font-bold text-gray-900">Total Amount</span>
+                    <span className="text-2xl font-bold text-[#004fa2]">
+                      {(() => {
+                        const courseAmount = parseFloat(course.price.replace(/[^\d.]/g, ''));
+                        const processingFee = (courseAmount * 0.015) + 0.50;
+                        const total = courseAmount + processingFee;
+                        return `GHS ${total.toFixed(2)}`;
+                      })()}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500 text-center pt-2">
+                    Processing fee covers payment gateway charges (1.5% + GHS 0.50)
+                  </p>
                 </div>
 
                 {/* Trust Message */}
