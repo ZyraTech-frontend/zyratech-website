@@ -51,46 +51,21 @@ const TrainingPaymentPage = () => {
     url: courseId ? `/training/payment/${courseId}` : '/training'
   });
 
-  const [paymentMethod, setPaymentMethod] = useState('card');
   const [isProcessing, setIsProcessing] = useState(false);
   const [formData, setFormData] = useState({
     fullName: applicantName,
     email: applicantEmail,
-    phone: applicantPhone,
-    // Card fields
-    cardNumber: '',
-    expiry: '',
-    cvv: '',
-    // Mobile money fields
-    mobileProvider: '',
-    mobileNumber: ''
+    phone: applicantPhone
   });
 
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error when user types
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const formatCardNumber = (value) => {
-    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    const matches = v.match(/\d{4,16}/g);
-    const match = (matches && matches[0]) || '';
-    const parts = [];
-    for (let i = 0, len = match.length; i < len; i += 4) {
-      parts.push(match.substring(i, i + 4));
-    }
-    return parts.length ? parts.join(' ') : value;
-  };
-
-  const handleCardNumberChange = (e) => {
-    const formatted = formatCardNumber(e.target.value);
-    setFormData(prev => ({ ...prev, cardNumber: formatted }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const validateForm = () => {
@@ -103,23 +78,6 @@ const TrainingPaymentPage = () => {
       const phoneValidation = validatePhoneNumber(formData.phone);
       if (!phoneValidation.isValid) {
         newErrors.phone = phoneValidation.error;
-      }
-    }
-
-    if (paymentMethod === 'card') {
-      if (!formData.cardNumber.trim() || formData.cardNumber.replace(/\s/g, '').length < 16) {
-        newErrors.cardNumber = 'Valid card number is required';
-      }
-      if (!formData.expiry.trim()) newErrors.expiry = 'Expiry date is required';
-      if (!formData.cvv.trim() || formData.cvv.length < 3) newErrors.cvv = 'Valid CVV is required';
-    } else {
-      if (!formData.mobileProvider) newErrors.mobileProvider = 'Select a provider';
-      if (!formData.mobileNumber.trim()) newErrors.mobileNumber = 'Mobile money number is required';
-      else {
-        const phoneValidation = validatePhoneNumber(formData.mobileNumber);
-        if (!phoneValidation.isValid) {
-          newErrors.mobileNumber = phoneValidation.error;
-        }
       }
     }
 
@@ -143,14 +101,7 @@ const TrainingPaymentPage = () => {
         studentEmail: formData.email,
         amount: parseFloat(course.price.replace(/[^\d.]/g, '')),
         // Optional field
-        applicationId: applicationId || undefined,
-        // Additional metadata for Paystack
-        metadata: {
-          courseName: course.title,
-          applicantPhone: formData.phone,
-          level: course.level,
-          paymentMethod: paymentMethod === 'card' ? 'card' : 'mobile_money'
-        }
+        applicationId: applicationId || undefined
       };
 
       const response = await paymentService.initializePayment(paymentData);
@@ -300,6 +251,7 @@ const TrainingPaymentPage = () => {
                   {/* Contact Information */}
                   <div className="mb-8">
                     <h3 className="text-lg font-bold text-gray-900 mb-4">Contact Information</h3>
+                    <p className="text-sm text-gray-600 mb-4">We'll send your payment receipt and course confirmation to these details.</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -353,174 +305,18 @@ const TrainingPaymentPage = () => {
                     </div>
                   </div>
 
-                  {/* Payment Method Selection */}
-                  <div className="mb-8">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Payment Method</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <button
-                        type="button"
-                        onClick={() => setPaymentMethod('card')}
-                        className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
-                          paymentMethod === 'card'
-                            ? 'border-[#004fa2] bg-[#004fa2]/5'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          paymentMethod === 'card' ? 'bg-[#004fa2] text-white' : 'bg-gray-100 text-gray-600'
-                        }`}>
-                          <CreditCard size={20} />
-                        </div>
-                        <div className="text-left">
-                          <p className={`font-semibold ${paymentMethod === 'card' ? 'text-[#004fa2]' : 'text-gray-900'}`}>
-                            Card Payment
-                          </p>
-                          <p className="text-xs text-gray-500">Visa, Mastercard</p>
-                        </div>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setPaymentMethod('mobile')}
-                        className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
-                          paymentMethod === 'mobile'
-                            ? 'border-[#004fa2] bg-[#004fa2]/5'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          paymentMethod === 'mobile' ? 'bg-[#004fa2] text-white' : 'bg-gray-100 text-gray-600'
-                        }`}>
-                          <Smartphone size={20} />
-                        </div>
-                        <div className="text-left">
-                          <p className={`font-semibold ${paymentMethod === 'mobile' ? 'text-[#004fa2]' : 'text-gray-900'}`}>
-                            Mobile Money
-                          </p>
-                          <p className="text-xs text-gray-500">MTN, Vodafone, AirtelTigo</p>
-                        </div>
-                      </button>
+                  {/* Payment Info Notice */}
+                  <div className="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
+                    <div className="flex items-start gap-3">
+                      <Shield size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-blue-900">Secure Payment via Paystack</p>
+                        <p className="text-xs text-blue-700 mt-1">
+                          After clicking "Proceed to Payment", you'll be redirected to Paystack's secure checkout where you can choose your preferred payment method (Mobile Money, Card, or Bank Transfer).
+                        </p>
+                      </div>
                     </div>
                   </div>
-
-                  {/* Card Payment Fields */}
-                  {paymentMethod === 'card' && (
-                    <div className="mb-8 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                      <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Card Number <span className="text-red-500">*</span>
-                        </label>
-                        <div className="relative">
-                          <input
-                            type="text"
-                            name="cardNumber"
-                            value={formData.cardNumber}
-                            onChange={handleCardNumberChange}
-                            placeholder="1234 5678 9012 3456"
-                            maxLength="19"
-                            className={`w-full px-4 py-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                              errors.cardNumber ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                          />
-                          <CreditCard size={20} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                        </div>
-                        {errors.cardNumber && <p className="text-sm text-red-500 mt-1">{errors.cardNumber}</p>}
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Expiry Date <span className="text-red-500">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            name="expiry"
-                            value={formData.expiry}
-                            onChange={handleInputChange}
-                            placeholder="MM/YY"
-                            maxLength="5"
-                            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                              errors.expiry ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                          />
-                          {errors.expiry && <p className="text-sm text-red-500 mt-1">{errors.expiry}</p>}
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            CVV <span className="text-red-500">*</span>
-                          </label>
-                          <input
-                            type="password"
-                            name="cvv"
-                            value={formData.cvv}
-                            onChange={handleInputChange}
-                            placeholder="•••"
-                            maxLength="4"
-                            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                              errors.cvv ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                          />
-                          {errors.cvv && <p className="text-sm text-red-500 mt-1">{errors.cvv}</p>}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Mobile Money Fields */}
-                  {paymentMethod === 'mobile' && (
-                    <div className="mb-8 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                      <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Mobile Money Provider <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          name="mobileProvider"
-                          value={formData.mobileProvider}
-                          onChange={handleInputChange}
-                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all bg-white ${
-                            errors.mobileProvider ? 'border-red-500' : 'border-gray-300'
-                          }`}
-                        >
-                          <option value="">Select your provider</option>
-                          <option value="mtn">MTN Mobile Money</option>
-                          <option value="vodafone">Vodafone Cash</option>
-                          <option value="airteltigo">AirtelTigo Money</option>
-                        </select>
-                        {errors.mobileProvider && <p className="text-sm text-red-500 mt-1">{errors.mobileProvider}</p>}
-                      </div>
-
-                      <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Mobile Money Number <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="tel"
-                          name="mobileNumber"
-                          value={formData.mobileNumber}
-                          onChange={handleInputChange}
-                          placeholder="024 XXX XXXX"
-                          {...getPhoneInputAttributes()}
-                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                            errors.mobileNumber ? 'border-red-500' : 'border-gray-300'
-                          }`}
-                        />
-                        {errors.mobileNumber && <p className="text-sm text-red-500 mt-1">{errors.mobileNumber}</p>}
-                      </div>
-
-                      {/* Mobile Money Instructions */}
-                      <div className="p-4 bg-blue-50 border border-blue-100 rounded-lg">
-                        <p className="text-sm text-blue-900">
-                          <span className="font-semibold">📱 How it works:</span>
-                        </p>
-                        <ol className="text-sm text-blue-800 mt-2 space-y-1 list-decimal list-inside">
-                          <li>Click "Complete Payment" below</li>
-                          <li>You'll receive a prompt on your phone</li>
-                          <li>Enter your Mobile Money PIN to authorize</li>
-                          <li>You'll receive confirmation via SMS</li>
-                        </ol>
-                      </div>
-                    </div>
-                  )}
 
                   {/* Submit Buttons */}
                   <div className="flex flex-col sm:flex-row gap-4">
@@ -541,7 +337,7 @@ const TrainingPaymentPage = () => {
                       ) : (
                         <>
                           <Lock size={18} />
-                          Pay {course.price}
+                          Proceed to Payment
                         </>
                       )}
                     </button>
@@ -567,7 +363,7 @@ const TrainingPaymentPage = () => {
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <Lock size={18} className="text-green-600" />
-                      <span>Trusted Provider</span>
+                      <span>Powered by Paystack</span>
                     </div>
                   </div>
                 </form>
