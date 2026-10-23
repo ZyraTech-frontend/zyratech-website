@@ -122,13 +122,9 @@ const WorkWithUs = () => {
         points={data.collaboration?.points}
       />
 
-      <ParallaxDivider heightClassName="h-32 sm:h-40 md:h-48" imageUrl="/images/parallax5.webp" />
-
       {/* <OpportunitiesSection /> */}
 
       <HowWeHireSection steps={data.hiring} />
-
-      <ParallaxDivider heightClassName="h-32 sm:h-40 md:h-48" imageUrl="/images/parallax6.webp" />
 
       <HrContactSection />
 
