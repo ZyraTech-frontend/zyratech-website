@@ -10,6 +10,7 @@ import TrainingBreadcrumb from '../../../components/pages/training/TrainingBread
 import { getTrainingCourseById } from '../../../data/trainingCourses';
 import useSEO from '../../../hooks/useSEO';
 import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
+import paymentService from '../../../services/paymentService';
 
 const TrainingPaymentPage = () => {
   const { courseId } = useParams();
@@ -110,20 +111,41 @@ const TrainingPaymentPage = () => {
 
     setIsProcessing(true);
 
-    // Simulate payment processing (will be replaced with Paystack/Stripe)
-    setTimeout(() => {
-      setIsProcessing(false);
-      navigate('/training/payment-success', {
-        state: {
-          courseTitle: course?.title,
-          amount: course?.price,
-          paymentMethod: paymentMethod === 'card' ? 'Credit/Debit Card' : 'Mobile Money',
-          transactionId: 'TXN-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+    try {
+      // Initialize payment with backend
+      const paymentData = {
+        amount: parseFloat(course.price.replace(/[^\d.]/g, '')),
+        email: formData.email,
+        metadata: {
+          courseId: course.id,
+          courseName: course.title,
           applicantName: formData.fullName,
-          applicantEmail: formData.email
+          applicantPhone: formData.phone,
+          level: course.level,
+          paymentMethod: paymentMethod === 'card' ? 'card' : 'mobile_money'
         }
-      });
-    }, 2000);
+      };
+
+      const response = await paymentService.initializePayment(paymentData);
+      
+      // Redirect to Paystack checkout page
+      if (response.authorization_url) {
+        // Store payment reference in sessionStorage for verification after redirect
+        sessionStorage.setItem('payment_reference', response.reference);
+        sessionStorage.setItem('payment_course_id', courseId);
+        
+        // Redirect to Paystack
+        window.location.href = response.authorization_url;
+      } else {
+        throw new Error('No payment URL received');
+      }
+    } catch (error) {
+      console.error('Payment initialization failed:', error);
+      setIsProcessing(false);
+      
+      // Show error notification
+      alert(error.response?.data?.message || 'Failed to initialize payment. Please try again.');
+    }
   };
 
   if (!course) {

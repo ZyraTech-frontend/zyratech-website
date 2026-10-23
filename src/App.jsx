@@ -93,6 +93,7 @@ const CourseDetailPage = lazy(() => import('./pages/public/training/CourseDetail
 const CourseApplicationPage = lazy(() => import('./pages/public/training/CourseApplicationPage'));
 const ApplicationSuccessPage = lazy(() => import('./pages/public/training/ApplicationSuccessPage'));
 const TrainingPaymentPage = lazy(() => import('./pages/public/training/PaymentPage'));
+const TrainingPaymentVerificationPage = lazy(() => import('./pages/public/training/PaymentVerificationPage'));
 const TrainingPaymentSuccessPage = lazy(() => import('./pages/public/training/PaymentSuccessPage'));
 const TrainingContactPage = lazy(() => import('./pages/public/training/contact'));
 const TrainingProgramsPage = lazy(() => import('./pages/public/training/programs'));
@@ -352,6 +353,7 @@ function App() {
               <Route path="/training/course/:courseId/apply" element={<CourseApplicationPage />} />
               <Route path="/training/application-success" element={<ApplicationSuccessPage />} />
               <Route path="/training/payment/:courseId" element={<TrainingPaymentPage />} />
+              <Route path="/training/payment/verify" element={<TrainingPaymentVerificationPage />} />
               <Route path="/training/payment-success" element={<TrainingPaymentSuccessPage />} />
 
               {/* Gallery */}
