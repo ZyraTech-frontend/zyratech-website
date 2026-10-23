@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { BookOpen, Award, Rocket, Briefcase, Users, ChevronRight, Check } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
-import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
 import useSEO from '../../../hooks/useSEO';
 
 const ProgramsPage = () => {

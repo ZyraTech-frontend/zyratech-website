@@ -5,7 +5,6 @@ import { Briefcase, Users, Clock, Star, Award, Target, BookOpen, Building, Rocke
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
 import HrContactSection from '../../common/HrContactSection.jsx';
 import CourseGridSkeleton from '../../common/skeletons/CourseGridSkeleton';
-import { getTrainingCoursesByCategory } from '../../../data/trainingCourses.js';
 import trainingService from '../../../services/trainingService.js';
 import { getCourseImageUrl } from '../../../utils/imageUrl';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
