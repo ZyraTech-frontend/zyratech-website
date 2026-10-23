@@ -17,6 +17,12 @@ import RouteSkeleton from './components/common/RouteSkeleton';
 import HomePage from './pages/public/home';
 import NotFoundPage from './pages/public/NotFound';
 
+// Redirect component that preserves query parameters
+const RedirectWithQuery = ({ to }) => {
+  const location = useLocation();
+  return <Navigate to={`${to}${location.search}`} replace />;
+};
+
 // Lazy load other pages for better performance
 const AboutPage = lazy(() => import('./pages/public/about'));
 const ProjectsPage = lazy(() => import('./pages/public/projects'));
@@ -374,7 +380,7 @@ function App() {
               <Route path="/enroll" element={<Navigate to="/training" replace />} />
               <Route path="/programs" element={<Navigate to="/training/programs" replace />} />
               {/* Paystack callback redirect - preserve query params */}
-              <Route path="/payment/verify" element={<Navigate to={`/training/payment/verify${window.location.search}`} replace />} />
+              <Route path="/payment/verify" element={<RedirectWithQuery to="/training/payment/verify" />} />
 
               {/* 404 Catch-all — also catches /admin/* on the public domain */}
               <Route path="*" element={<NotFoundPage />} />
