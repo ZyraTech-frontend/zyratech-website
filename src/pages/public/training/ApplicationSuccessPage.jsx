@@ -63,13 +63,13 @@ const ApplicationSuccessPage = () => {
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black mb-4">
-            {applicantName ? `Thank You, ${applicantName}!` : 'Thank You for Applying!'}
+            {applicantName ? `Thank You, ${applicantName}!` : 'Application Submitted Successfully!'}
           </h1>
 
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             {courseTitle
-              ? `Your application for ${courseTitle} has been submitted successfully.`
-              : 'Your training application has been submitted successfully.'}
+              ? `Your application for ${courseTitle} has been successfully submitted and confirmed.`
+              : 'Your training application has been successfully submitted and confirmed.'}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">

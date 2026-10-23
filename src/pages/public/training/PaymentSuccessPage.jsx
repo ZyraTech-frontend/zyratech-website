@@ -75,10 +75,25 @@ const TrainingPaymentSuccessPage = () => {
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4">
             Payment Successful!
           </h1>
-          <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto">
-            Congratulations, <span className="font-semibold">{applicantName}</span>! Your enrollment in{' '}
-            <span className="font-semibold">{courseTitle}</span> is now complete.
+          <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto mb-8">
+            Thank you, <span className="font-semibold">{applicantName}</span>! Your payment of <span className="font-semibold">{amount}</span> has been confirmed.
           </p>
+          
+          {/* View Application Button */}
+          <button
+            onClick={() => navigate('/training/application-success', {
+              state: {
+                courseTitle,
+                applicantName,
+                amount,
+                transactionId
+              }
+            })}
+            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#004fa2] font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+          >
+            View Your Application Status
+            <ArrowRight size={20} />
+          </button>
         </div>
       </section>
 

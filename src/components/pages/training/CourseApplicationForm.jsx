@@ -207,35 +207,18 @@ const CourseApplicationForm = () => {
       // Submit to backend
       const result = await trainingApplicationService.submitApplication(applicationData);
       
-      // Send confirmation email
-      try {
-        await emailNotificationService.sendTrainingApplicationConfirmation({
-          email: formData.emailAddress,
-          fullName: formData.fullName,
-          courseName: getTrainingCourseById(courseId)?.title || 'Training Course',
-          applicationId: result?.id || Date.now().toString()
-        });
-      } catch (emailError) {
-        console.error('Failed to send training application confirmation email:', emailError);
-        // Don't fail if email fails
-      }
-      
       // Clear draft on successful submission
       clearDraft();
       
-      // Show success notification
-      dispatch(addNotification({
-        type: 'success',
-        message: result?.message || 'Application submitted successfully!'
-      }));
-      
-      // Navigate to success page
-      navigate('/training/application-success', {
+      // NO success notification or "application received" message
+      // Redirect directly to payment page - they'll see confirmation AFTER payment
+      navigate(`/training/payment/${courseId}`, {
         state: {
-          courseId,
-          courseTitle: resolvedCourseTitle,
-          applicantName: formData.fullName,
-          applicationId: result?.applicationId
+          name: formData.fullName,
+          email: formData.emailAddress,
+          phone: formData.phoneNumber,
+          applicationId: result?.id || result?.applicationId,
+          courseTitle: resolvedCourseTitle
         }
       });
     } catch (error) {

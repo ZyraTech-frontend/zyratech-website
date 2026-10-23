@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Lock, Shield, CheckCircle, CreditCard, Smartphone, 
   GraduationCap, Clock, Users, Award, ChevronRight,
@@ -14,11 +14,14 @@ import paymentService from '../../../services/paymentService';
 
 const TrainingPaymentPage = () => {
   const { courseId } = useParams();
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
   const navigate = useNavigate();
   
-  const applicantName = searchParams.get('name') || '';
-  const applicantEmail = searchParams.get('email') || '';
+  // Get applicant data from location state (passed from application form)
+  const applicantName = location.state?.name || '';
+  const applicantEmail = location.state?.email || '';
+  const applicantPhone = location.state?.phone || '';
+  const applicationId = location.state?.applicationId || '';
 
   const course = getTrainingCourseById(courseId);
 
@@ -33,7 +36,7 @@ const TrainingPaymentPage = () => {
   const [formData, setFormData] = useState({
     fullName: applicantName,
     email: applicantEmail,
-    phone: '',
+    phone: applicantPhone,
     // Card fields
     cardNumber: '',
     expiry: '',
@@ -122,7 +125,8 @@ const TrainingPaymentPage = () => {
           applicantName: formData.fullName,
           applicantPhone: formData.phone,
           level: course.level,
-          paymentMethod: paymentMethod === 'card' ? 'card' : 'mobile_money'
+          paymentMethod: paymentMethod === 'card' ? 'card' : 'mobile_money',
+          applicationId: applicationId // Link payment to application
         }
       };
 
