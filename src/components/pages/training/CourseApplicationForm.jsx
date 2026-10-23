@@ -6,7 +6,6 @@ import { getTrainingCourseById } from '../../../data/trainingCourses.js';
 import TrainingBreadcrumb from './TrainingBreadcrumb';
 import useSEO from '../../../hooks/useSEO';
 import trainingApplicationService from '../../../services/trainingApplicationService';
-import emailNotificationService from '../../../services/emailNotificationService';
 import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import { Upload, X, FileText, Linkedin, Globe, Loader2 } from 'lucide-react';
 
