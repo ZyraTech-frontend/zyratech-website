@@ -521,16 +521,50 @@ const WorkWithUsManagementPage = () => {
                             <h3 className="font-semibold text-lg px-2">Collaboration Points</h3>
                             {data.collaboration.points.map((point, index) => (
                                 <div key={point.id || index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 relative group">
+                                    <button 
+                                        onClick={() => {
+                                            const newPoints = [...data.collaboration.points];
+                                            newPoints.splice(index, 1);
+                                            setData(prev => ({
+                                                ...prev,
+                                                collaboration: { ...prev.collaboration, points: newPoints }
+                                            }));
+                                        }} 
+                                        className="absolute top-4 right-4 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <Input label="Number" value={point.number} onChange={(e) => handleCollaborationPointChange(index, 'number', e.target.value)} />
                                         <Input label="Title" value={point.title} onChange={(e) => handleCollaborationPointChange(index, 'title', e.target.value)} />
-                                        <Input label="Icon" value={point.icon} onChange={(e) => handleCollaborationPointChange(index, 'icon', e.target.value)} />
+                                        <Input label="Icon (Users, Target, or Handshake)" value={point.icon} onChange={(e) => handleCollaborationPointChange(index, 'icon', e.target.value)} />
                                         <div className="md:col-span-2">
                                             <TextArea label="Description" value={point.description} onChange={(e) => handleCollaborationPointChange(index, 'description', e.target.value)} />
                                         </div>
                                     </div>
                                 </div>
                             ))}
+                            <button 
+                                onClick={() => {
+                                    const newPoint = {
+                                        id: Date.now(),
+                                        number: String(data.collaboration.points.length + 1),
+                                        title: 'New Point',
+                                        icon: 'Users',
+                                        description: ''
+                                    };
+                                    setData(prev => ({
+                                        ...prev,
+                                        collaboration: {
+                                            ...prev.collaboration,
+                                            points: [...prev.collaboration.points, newPoint]
+                                        }
+                                    }));
+                                }}
+                                className="flex items-center gap-2 text-[#004fa2] font-medium hover:underline"
+                            >
+                                <Plus size={18} /> Add Collaboration Point
+                            </button>
                         </div>
                         <div className="flex justify-end">
                             <SaveButton onClick={() => handleSave('collaboration')} saving={saving} />
