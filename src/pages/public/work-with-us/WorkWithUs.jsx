@@ -26,12 +26,41 @@ const WorkWithUs = () => {
     const fetchData = async () => {
       try {
         const response = await contentService.getPublicWorkWithUs();
-        const items = response?.data || response;
+        let workWithUsData = response?.data || response;
         
-        // Backend returns an array of items, transform it to the structure components expect
-        if (Array.isArray(items) && items.length > 0) {
-          // Find the hero item (first item or one with order: 0)
-          const heroItem = items[0];
+        // Handle single object response (new format)
+        if (workWithUsData && !Array.isArray(workWithUsData) && workWithUsData.id) {
+          // Parse content field which contains setup, projectSteps, collaboration, hiring
+          const contentData = typeof workWithUsData.content === 'string' 
+            ? JSON.parse(workWithUsData.content) 
+            : workWithUsData.content || {};
+          
+          setData({
+            hero: {
+              title: workWithUsData.title,
+              subtitle: workWithUsData.subtitle,
+              description: workWithUsData.description,
+              image: workWithUsData.image || workWithUsData.imageUrl
+            },
+            setup: contentData.setup || [],
+            projectSteps: contentData.projectSteps || [],
+            collaboration: contentData.collaboration || { 
+              title: '',
+              description: '',
+              image: '',
+              points: [] 
+            },
+            hiring: contentData.hiring || []
+          });
+        }
+        // Handle array response (old format)
+        else if (Array.isArray(workWithUsData) && workWithUsData.length > 0) {
+          const heroItem = workWithUsData[0];
+          
+          // Try to parse content if it exists
+          const contentData = heroItem.content 
+            ? (typeof heroItem.content === 'string' ? JSON.parse(heroItem.content) : heroItem.content)
+            : {};
           
           setData({
             hero: {
@@ -39,7 +68,16 @@ const WorkWithUs = () => {
               subtitle: heroItem.subtitle,
               description: heroItem.description,
               image: heroItem.image || heroItem.imageUrl
-            }
+            },
+            setup: contentData.setup || [],
+            projectSteps: contentData.projectSteps || [],
+            collaboration: contentData.collaboration || { 
+              title: '',
+              description: '',
+              image: '',
+              points: [] 
+            },
+            hiring: contentData.hiring || []
           });
         } else {
           setData(null);
@@ -58,7 +96,7 @@ const WorkWithUs = () => {
     return <FullPageSkeleton />;
   }
 
-  if (!data || !data.hero) return null;
+  if (!data) return null;
 
   return (
     <div className="bg-white">
