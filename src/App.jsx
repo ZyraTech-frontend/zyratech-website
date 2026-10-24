@@ -379,9 +379,9 @@ function App() {
               <Route path="/labs" element={<Navigate to="/contact" replace />} />
               <Route path="/enroll" element={<Navigate to="/training" replace />} />
               <Route path="/programs" element={<Navigate to="/training/programs" replace />} />
-              {/* Paystack callback redirect - preserve query params, handle with/without trailing slash */}
-              <Route path="/payment/verify" element={<RedirectWithQuery to="/training/payment/verify" />} />
-              <Route path="/payment/verify/" element={<RedirectWithQuery to="/training/payment/verify" />} />
+              {/* Paystack callback - direct route (NOT redirect) */}
+              <Route path="/payment/verify" element={<TrainingPaymentVerificationPage />} />
+              <Route path="/payment/verify/" element={<TrainingPaymentVerificationPage />} />
 
               {/* 404 Catch-all — also catches /admin/* on the public domain */}
               <Route path="*" element={<NotFoundPage />} />
