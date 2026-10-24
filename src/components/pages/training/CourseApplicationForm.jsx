@@ -175,9 +175,16 @@ const CourseApplicationForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateStep(steps.length - 1)) return;
+    console.log('🔵 FORM SUBMIT STARTED');
     
+    if (!validateStep(steps.length - 1)) {
+      console.log('❌ VALIDATION FAILED');
+      return;
+    }
+    
+    console.log('✅ VALIDATION PASSED');
     setIsSubmitting(true);
+    
     try {
       // Prepare application data
       const applicationData = {
@@ -199,25 +206,34 @@ const CourseApplicationForm = () => {
         })
       };
 
+      console.log('📤 SUBMITTING APPLICATION:', { courseId, email: formData.emailAddress });
+
       // Submit to backend
       const result = await trainingApplicationService.submitApplication(applicationData);
+      
+      console.log('✅ APPLICATION SUBMITTED SUCCESSFULLY:', result);
       
       // Clear draft on successful submission
       clearDraft();
       
+      const paymentPath = `/training/payment/${courseId}`;
+      const paymentState = {
+        name: formData.fullName,
+        email: formData.emailAddress,
+        phone: formData.phoneNumber,
+        applicationId: result?.id || result?.applicationId,
+        courseTitle: resolvedCourseTitle
+      };
+      
+      console.log('🚀 NAVIGATING TO PAYMENT PAGE:', paymentPath, paymentState);
+      
       // NO success notification or "application received" message
       // Redirect directly to payment page - they'll see confirmation AFTER payment
-      navigate(`/training/payment/${courseId}`, {
-        state: {
-          name: formData.fullName,
-          email: formData.emailAddress,
-          phone: formData.phoneNumber,
-          applicationId: result?.id || result?.applicationId,
-          courseTitle: resolvedCourseTitle
-        }
-      });
+      navigate(paymentPath, { state: paymentState });
+      
+      console.log('✅ NAVIGATE CALLED');
     } catch (error) {
-      console.error('Application submission failed:', error);
+      console.error('❌ APPLICATION SUBMISSION FAILED:', error);
       const errorMessage = error.response?.data?.error?.message || 
                           error.message || 
                           'Failed to submit application. Please try again.';
@@ -227,6 +243,7 @@ const CourseApplicationForm = () => {
       }));
     } finally {
       setIsSubmitting(false);
+      console.log('🔵 FORM SUBMIT ENDED');
     }
   };
 

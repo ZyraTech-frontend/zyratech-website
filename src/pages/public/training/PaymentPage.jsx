@@ -14,9 +14,14 @@ import paymentService from '../../../services/paymentService';
 import LoadingSpinner from '../../../components/admin/shared/LoadingSpinner';
 
 const TrainingPaymentPage = () => {
+  console.log('💳 PAYMENT PAGE LOADED');
+  
   const { courseId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  
+  console.log('💳 PAYMENT PAGE - courseId:', courseId);
+  console.log('💳 PAYMENT PAGE - location.state:', location.state);
   
   // Get applicant data from location state (passed from application form)
   const applicantName = location.state?.name || '';
@@ -24,6 +29,8 @@ const TrainingPaymentPage = () => {
   const applicantPhone = location.state?.phone || '';
   const applicationId = location.state?.applicationId || '';
   const courseTitle = location.state?.courseTitle || '';
+  
+  console.log('💳 PAYMENT PAGE - Applicant Data:', { applicantName, applicantEmail, applicantPhone, applicationId, courseTitle });
 
   // Fetch course from API only (no mock data)
   const [course, setCourse] = useState(null);
