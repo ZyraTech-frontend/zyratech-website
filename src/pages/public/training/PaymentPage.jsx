@@ -105,15 +105,26 @@ const TrainingPaymentPage = () => {
       const processingFee = (courseAmount * 0.015) + 0.50;
       const totalAmount = courseAmount + processingFee;
       
+      // Get the current app URL from environment
+      const appUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+      const callbackUrl = `${appUrl}/payment/verify`;
+      
+      console.log('💳 Payment initialization - App URL:', appUrl);
+      console.log('💳 Payment initialization - Callback URL:', callbackUrl);
+      
       const paymentData = {
         // Required top-level fields
         courseId: courseId,
         studentName: formData.fullName,
         studentEmail: formData.email,
         amount: totalAmount, // Include processing fee
+        // Callback URL for this specific branch/environment
+        callbackUrl: callbackUrl,
         // Optional field
         applicationId: applicationId || undefined
       };
+
+      console.log('💳 Sending payment data:', paymentData);
 
       const response = await paymentService.initializePayment(paymentData);
       

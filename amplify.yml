@@ -9,7 +9,12 @@ frontend:
         - echo "VITE_API_BASE_URL=https://api.zyratechhub.com/api" > .env
         - echo "VITE_ENABLE_DYNAMIC_API=true" >> .env
         - echo "VITE_APP_NAME=Zyra Tech Hub" >> .env
-        - echo "VITE_APP_URL=https://zyratechhub.com" >> .env
+        - |
+          if [ "${AWS_BRANCH}" = "main" ]; then
+            echo "VITE_APP_URL=https://zyratechhub.com" >> .env
+          else
+            echo "VITE_APP_URL=https://${AWS_BRANCH}.${AWS_APP_ID}.amplifyapp.com" >> .env
+          fi
         - npm run build
   artifacts:
     baseDirectory: dist
