@@ -42,10 +42,20 @@ const PaymentVerificationPage = () => {
       // Verify payment with backend
       const response = await paymentService.verifyPayment(paymentRef);
       
-      if (response.status === 'success' || response.status === 'completed') {
+      console.log('💳 Payment verification response:', response);
+      
+      // Check for success in multiple possible formats
+      const isSuccess = 
+        response.status === 'success' || 
+        response.status === 'completed' ||
+        response.data?.status === 'success' ||
+        response.data?.status === 'completed' ||
+        response.success === true;
+      
+      if (isSuccess) {
         setStatus('success');
         setMessage('Payment successful! Your enrollment has been confirmed.');
-        setPaymentDetails(response);
+        setPaymentDetails(response.data || response);
         
         // Clear stored reference
         sessionStorage.removeItem('payment_reference');
@@ -53,21 +63,22 @@ const PaymentVerificationPage = () => {
         
         // Redirect to success page after 2 seconds
         setTimeout(() => {
+          const details = response.data || response;
           navigate('/training/payment-success', {
             state: {
-              courseTitle: response.metadata?.courseName || 'Training Course',
-              amount: response.amount,
-              paymentMethod: response.channel || 'Card',
-              transactionId: response.reference,
-              applicantName: response.metadata?.applicantName,
-              applicantEmail: response.customer?.email
+              courseTitle: details.courseTitle || details.metadata?.courseName || 'Training Course',
+              amount: details.amount,
+              paymentMethod: details.paymentMethod || details.channel || 'Card',
+              transactionId: details.reference,
+              applicantName: details.studentName || details.metadata?.applicantName,
+              applicantEmail: details.studentEmail || details.customer?.email
             }
           });
         }, 2000);
       } else {
         setStatus('failed');
         setMessage('Payment verification failed. Please contact support if amount was deducted.');
-        setPaymentDetails(response);
+        setPaymentDetails(response.data || response);
       }
     } catch (error) {
       console.error('Payment verification error:', error);
