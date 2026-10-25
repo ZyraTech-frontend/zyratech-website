@@ -111,7 +111,6 @@ const TrainingPaymentPage = () => {
       
       console.log('💳 Payment initialization - App URL:', appUrl);
       console.log('💳 Payment initialization - Callback URL:', callbackUrl);
-      console.log('💳 Full payment data being sent:', JSON.stringify(paymentData, null, 2));
       
       const paymentData = {
         // Required top-level fields
