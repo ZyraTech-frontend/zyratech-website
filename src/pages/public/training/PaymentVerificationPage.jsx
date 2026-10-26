@@ -39,6 +39,10 @@ const PaymentVerificationPage = () => {
 
       const paymentRef = reference || sessionStorage.getItem('payment_reference');
       
+      // Check if this is a project payment or training payment
+      const isProjectPayment = sessionStorage.getItem('payment_project_id');
+      const isCoursePayment = sessionStorage.getItem('payment_course_id');
+      
       // Verify payment with backend
       const response = await paymentService.verifyPayment(paymentRef);
       
@@ -60,20 +64,38 @@ const PaymentVerificationPage = () => {
         // Clear stored reference
         sessionStorage.removeItem('payment_reference');
         sessionStorage.removeItem('payment_course_id');
+        sessionStorage.removeItem('payment_project_id');
         
-        // Redirect to success page after 2 seconds
+        // Redirect to appropriate success page based on payment type
         setTimeout(() => {
           const details = response.data || response;
-          navigate('/training/payment-success', {
-            state: {
-              courseTitle: details.courseTitle || details.metadata?.courseName || 'Training Course',
-              amount: details.amount,
-              paymentMethod: details.paymentMethod || details.channel || 'Card',
-              transactionId: details.reference,
-              applicantName: details.studentName || details.metadata?.applicantName,
-              applicantEmail: details.studentEmail || details.customer?.email
-            }
-          });
+          
+          if (isProjectPayment) {
+            // Redirect to project payment success
+            navigate('/projects/payment-success', {
+              state: {
+                projectTitle: details.projectTitle || 'Your Project',
+                amount: details.amount,
+                paymentMethod: details.paymentMethod || details.channel || 'Card',
+                transactionId: details.reference,
+                applicantName: details.studentName,
+                applicantEmail: details.studentEmail,
+                projectType: details.projectType || 'business-projects'
+              }
+            });
+          } else {
+            // Redirect to training payment success (default)
+            navigate('/training/payment-success', {
+              state: {
+                courseTitle: details.courseTitle || details.metadata?.courseName || 'Training Course',
+                amount: details.amount,
+                paymentMethod: details.paymentMethod || details.channel || 'Card',
+                transactionId: details.reference,
+                applicantName: details.studentName || details.metadata?.applicantName,
+                applicantEmail: details.studentEmail || details.customer?.email
+              }
+            });
+          }
         }, 2000);
       } else {
         setStatus('failed');

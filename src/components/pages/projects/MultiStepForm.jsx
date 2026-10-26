@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Check, GraduationCap, Briefcase, Building2, AlertCircle } from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
 import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import projectRequestService from '../../../services/projectRequestService';
-import emailNotificationService from '../../../services/emailNotificationService';
 
 const MultiStepForm = ({ onSubmit }) => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   // Get packageType from URL or default to student-projects
   const packageType = searchParams.get('package') || 'student-projects';
 
   const [step, setStep] = useState(1);
-  const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
@@ -194,31 +193,30 @@ const MultiStepForm = ({ onSubmit }) => {
         additionalNotes: formData.additionalNotes.trim() // Now REQUIRED
       };
 
-      await projectRequestService.submitProjectRequest(payload);
+      const result = await projectRequestService.submitProjectRequest(payload);
       
-      // Send confirmation email
-      try {
-        await emailNotificationService.sendProjectRequestConfirmation({
+      console.log('✅ PROJECT REQUEST SUBMITTED:', result);
+      
+      // NO success notification or confirmation email yet
+      // Redirect directly to payment page - they'll see confirmation AFTER payment
+      const projectRequestId = result?.id || result?.projectRequestId || result?.data?.id;
+      
+      if (!projectRequestId) {
+        throw new Error('No project request ID received from server');
+      }
+      
+      // Navigate to payment page with project data
+      navigate(`/projects/payment/${projectRequestId}`, {
+        state: {
+          projectData: result,
+          name: formData.fullName,
           email: formData.email,
-          fullName: formData.fullName,
+          phone: formData.phone,
           projectTitle: formData.projectTitle,
-          requestId: Date.now().toString()
-        });
-      } catch (emailError) {
-        console.error('Failed to send project request confirmation email:', emailError);
-        // Don't fail if email fails
-      }
-      
-      // Show success notification
-      dispatch(addNotification({
-        type: 'success',
-        message: 'Project request submitted successfully! Our team will contact you soon.'
-      }));
-
-      setSubmitted(true);
-      if (onSubmit) {
-        setTimeout(() => onSubmit(), 1500);
-      }
+          projectType: packageType,
+          budget: finalBudget
+        }
+      });
     } catch (err) {
       console.error('Error submitting project request:', err);
       const errorMessage = err.response?.data?.message || err.message || 'Failed to submit project request. Please try again.';
@@ -232,24 +230,6 @@ const MultiStepForm = ({ onSubmit }) => {
       setIsSubmitting(false);
     }
   };
-
-  if (submitted) {
-    return (
-      <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 text-center">
-        <div className="mb-4">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Check className="w-8 h-8 text-green-600" />
-          </div>
-        </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Request Submitted!</h2>
-        <p className="text-gray-600 mb-6">Thank you for your project inquiry. Our team will review and contact you within 24 hours.</p>
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-          <p><strong>Confirmation Email:</strong> Sent to {formData.email}</p>
-          <p className="mt-2 text-xs text-blue-600">Check your email for next steps</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
