@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import trainingApplicationService from '../../../services/trainingApplicationService';
+import api from '../../../services/api';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import {
     Users,
@@ -90,19 +91,15 @@ const CourseApplicationsPage = () => {
     
     const calculateTotalRevenue = async () => {
         try {
-            // Fetch ALL completed transactions (not just training, not filtered by email)
-            const response = await fetch('/api/admin/transactions?status=completed&limit=1000', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+            // Use api service instead of raw fetch to avoid URL issues
+            const response = await api.get('/admin/transactions', {
+                params: {
+                    status: 'completed',
+                    limit: 1000
                 }
             });
             
-            if (!response.ok) {
-                throw new Error('Failed to fetch transactions');
-            }
-            
-            const result = await response.json();
-            const transactions = result.data || [];
+            const transactions = response.data?.data || response.data || [];
             
             // Filter only training payments and sum them up
             const trainingPayments = transactions.filter(t => t.paymentType === 'training');
