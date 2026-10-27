@@ -99,13 +99,21 @@ const CourseApplicationsPage = () => {
                 }
             });
             
-            const transactions = response.data?.data || response.data || [];
+            // Handle nested data structure: response.data.data
+            const transactions = response.data?.data?.data || response.data?.data || [];
+            
+            console.log('💰 Fetched transactions:', transactions);
+            console.log('📊 Response structure:', response.data);
             
             // Filter only training payments and sum them up
             const trainingPayments = transactions.filter(t => t.paymentType === 'training');
+            console.log('🎓 Training payments:', trainingPayments.length);
+            
             const total = trainingPayments.reduce((sum, payment) => {
                 return sum + (parseFloat(payment.amount) || 0);
             }, 0);
+            
+            console.log('💵 Total revenue calculated:', total);
             
             setTotalRevenue(total);
         } catch (error) {
