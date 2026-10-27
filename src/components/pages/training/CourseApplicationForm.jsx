@@ -108,17 +108,14 @@ const CourseApplicationForm = () => {
       const baseSteps = [
         { key: 'personal', title: 'Personal Details' },
         { key: 'background', title: 'Background' },
-        { key: 'preferences', title: 'Preferences' }
+        { key: 'preferences', title: 'Preferences' },
+        { key: 'professional', title: 'Professional Info' },
+        { key: 'review', title: 'Review & Submit' }
       ];
       
-      if (requiresExtraFields) {
-        baseSteps.push({ key: 'professional', title: 'Professional Info' });
-      }
-      
-      baseSteps.push({ key: 'review', title: 'Review & Submit' });
       return baseSteps;
     },
-    [requiresExtraFields]
+    []
   );
 
   const [errors, setErrors] = useState({});
@@ -150,9 +147,15 @@ const CourseApplicationForm = () => {
       if (!formData.learningMode) nextErrors.learningMode = 'Select a learning mode.';
     }
 
-    if (currentStepKey === 'professional' && requiresExtraFields) {
-      if (!formData.cvFile && !formData.cvFileName) nextErrors.cvFile = 'Please upload your CV/Resume.';
-      if (!formData.motivationStatement.trim()) nextErrors.motivationStatement = 'Please tell us why you want to join this course.';
+    if (currentStepKey === 'professional') {
+      // CV is required only for advanced programs
+      if (requiresExtraFields && !formData.cvFile && !formData.cvFileName) {
+        nextErrors.cvFile = 'Please upload your CV/Resume.';
+      }
+      // Motivation statement is optional for basic, required for advanced
+      if (requiresExtraFields && !formData.motivationStatement.trim()) {
+        nextErrors.motivationStatement = 'Please tell us why you want to join this course.';
+      }
     }
 
     if (currentStepKey === 'review') {
@@ -186,7 +189,7 @@ const CourseApplicationForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Prepare application data
+      // Prepare application data - always include all fields
       const applicationData = {
         courseId,
         fullName: formData.fullName,
@@ -198,12 +201,10 @@ const CourseApplicationForm = () => {
         preferredCohort: formData.preferredCohort,
         learningMode: formData.learningMode,
         message: formData.message,
-        ...(requiresExtraFields && {
-          cvFile: formData.cvFile,
-          motivationStatement: formData.motivationStatement,
-          linkedinUrl: formData.linkedinUrl,
-          websiteUrl: formData.websiteUrl
-        })
+        cvFile: formData.cvFile,
+        motivationStatement: formData.motivationStatement,
+        linkedinUrl: formData.linkedinUrl,
+        websiteUrl: formData.websiteUrl
       };
 
       console.log('📤 SUBMITTING APPLICATION:', { courseId, email: formData.emailAddress });
@@ -516,13 +517,13 @@ const CourseApplicationForm = () => {
               </div>
             )}
 
-            {/* Professional Info Step - Only for non-basic programs */}
-            {steps[stepIndex]?.key === 'professional' && requiresExtraFields && (
+            {/* Professional Info Step - For ALL courses */}
+            {steps[stepIndex]?.key === 'professional' && (
               <div className="space-y-6">
-                {/* CV Upload */}
+                {/* CV Upload - Required for advanced, optional for basic */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    CV / Resume <span className="text-red-500">*</span>
+                    CV / Resume {requiresExtraFields ? <span className="text-red-500">*</span> : <span className="text-gray-400">(optional)</span>}
                   </label>
                   <div className="relative">
                     {formData.cvFileName ? (
@@ -563,10 +564,10 @@ const CourseApplicationForm = () => {
                   {errors.cvFile && <div className="text-sm text-red-600 mt-1">{errors.cvFile}</div>}
                 </div>
 
-                {/* Motivation Statement */}
+                {/* Motivation Statement - Required for advanced, optional for basic */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Why do you want to join this course? <span className="text-red-500">*</span>
+                    Why do you want to join this course? {requiresExtraFields ? <span className="text-red-500">*</span> : <span className="text-gray-400">(optional)</span>}
                   </label>
                   <textarea
                     name="motivationStatement"
@@ -579,7 +580,7 @@ const CourseApplicationForm = () => {
                   {errors.motivationStatement && <div className="text-sm text-red-600 mt-1">{errors.motivationStatement}</div>}
                 </div>
 
-                {/* LinkedIn & Website - Optional */}
+                {/* LinkedIn & Website - Always optional */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -653,49 +654,45 @@ const CourseApplicationForm = () => {
                       <div className="font-semibold text-gray-900 break-words">{formData.preferredCohort || '-'} / {formData.learningMode || '-'}</div>
                     </div>
                     
-                    {/* Professional Info - Only show for non-basic programs */}
-                    {requiresExtraFields && (
-                      <>
-                        <div className="md:col-span-2 pt-4 border-t border-gray-200 mt-2">
-                          <div className="text-xs text-gray-500 font-semibold text-[#004fa2] mb-1">Professional Information</div>
-                        </div>
-                        <div>
-                          <div className="text-xs text-gray-500">CV/Resume</div>
-                          <div className="font-semibold text-gray-900 break-words flex items-center gap-2">
-                            {formData.cvFileName ? (
-                              <>
-                                <FileText size={16} className="text-green-600" />
-                                {formData.cvFileName}
-                              </>
-                            ) : '-'}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-xs text-gray-500">LinkedIn</div>
-                          <div className="font-semibold text-gray-900 break-words">
-                            {formData.linkedinUrl ? (
-                              <a href={formData.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-[#0077B5] hover:underline">
-                                {formData.linkedinUrl}
-                              </a>
-                            ) : '-'}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-xs text-gray-500">Website/Portfolio</div>
-                          <div className="font-semibold text-gray-900 break-words">
-                            {formData.websiteUrl ? (
-                              <a href={formData.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-[#004fa2] hover:underline">
-                                {formData.websiteUrl}
-                              </a>
-                            ) : '-'}
-                          </div>
-                        </div>
-                        <div className="md:col-span-2">
-                          <div className="text-xs text-gray-500">Motivation Statement</div>
-                          <div className="font-semibold text-gray-900 break-words whitespace-pre-wrap">{formData.motivationStatement?.trim() || '-'}</div>
-                        </div>
-                      </>
-                    )}
+                    {/* Professional Info - Always show */}
+                    <div className="md:col-span-2 pt-4 border-t border-gray-200 mt-2">
+                      <div className="text-xs text-gray-500 font-semibold text-[#004fa2] mb-1">Professional Information</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500">CV/Resume</div>
+                      <div className="font-semibold text-gray-900 break-words flex items-center gap-2">
+                        {formData.cvFileName ? (
+                          <>
+                            <FileText size={16} className="text-green-600" />
+                            {formData.cvFileName}
+                          </>
+                        ) : '-'}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500">LinkedIn</div>
+                      <div className="font-semibold text-gray-900 break-words">
+                        {formData.linkedinUrl ? (
+                          <a href={formData.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-[#0077B5] hover:underline">
+                            {formData.linkedinUrl}
+                          </a>
+                        ) : '-'}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500">Website/Portfolio</div>
+                      <div className="font-semibold text-gray-900 break-words">
+                        {formData.websiteUrl ? (
+                          <a href={formData.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-[#004fa2] hover:underline">
+                            {formData.websiteUrl}
+                          </a>
+                        ) : '-'}
+                      </div>
+                    </div>
+                    <div className="md:col-span-2">
+                      <div className="text-xs text-gray-500">Motivation Statement</div>
+                      <div className="font-semibold text-gray-900 break-words whitespace-pre-wrap">{formData.motivationStatement?.trim() || '-'}</div>
+                    </div>
                     
                     <div className="md:col-span-2">
                       <div className="text-xs text-gray-500">Additional Message</div>
