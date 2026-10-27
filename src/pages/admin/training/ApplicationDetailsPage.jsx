@@ -265,16 +265,18 @@ const ApplicationDetailsPage = () => {
                             </div>
                         </div>
 
-                        {/* Motivation Statement */}
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <FileText size={20} className="text-[#004fa2]" />
-                                Motivation Statement
-                            </h3>
-                            <div className="prose prose-sm max-w-none text-gray-600 bg-gray-50 p-6 rounded-xl border border-gray-100">
-                                {application.motivationStatement}
+                        {/* Motivation Statement - Only show if it exists */}
+                        {application.motivationStatement && (
+                            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                    <FileText size={20} className="text-[#004fa2]" />
+                                    Motivation Statement
+                                </h3>
+                                <div className="prose prose-sm max-w-none text-gray-600 bg-gray-50 p-6 rounded-xl border border-gray-100">
+                                    {application.motivationStatement}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         {/* Additional Message */}
                         {application.message && (
@@ -402,10 +404,10 @@ const ApplicationDetailsPage = () => {
                             </div>
                         </div>
 
-                        {/* Attachments Card */}
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4">Attachments</h3>
-                            {application.cvFileName && (
+                        {/* Attachments Card - Only show if CV exists */}
+                        {application.cvFileName && (
+                            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                                <h3 className="text-lg font-bold text-gray-900 mb-4">Attachments</h3>
                                 <div className="border border-gray-200 rounded-xl p-4 hover:border-[#004fa2] transition-colors group cursor-pointer" onClick={handleDownloadCV}>
                                     <div className="flex items-center gap-3">
                                         <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-red-50 rounded-lg flex items-center justify-center text-red-500">
@@ -420,8 +422,8 @@ const ApplicationDetailsPage = () => {
                                         <Download size={18} className="text-gray-400 group-hover:text-[#004fa2]" />
                                     </div>
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
 
                         {/* Social Links */}
                         {(application.linkedinUrl || application.websiteUrl) && (
