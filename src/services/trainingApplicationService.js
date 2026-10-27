@@ -62,7 +62,7 @@ export const trainingApplicationService = {
   // Get all applications (admin only)
   getAllApplications: async (params = {}) => {
     try {
-      const response = await api.get('/admin/training/applications', { params });
+      const response = await api.get('/admin/enrollments', { params });
       return response.data?.data || response.data;
     } catch (error) {
       console.error('Failed to fetch applications:', error);
@@ -73,7 +73,7 @@ export const trainingApplicationService = {
   // Get single application details (admin only)
   getApplication: async (applicationId) => {
     try {
-      const response = await api.get(`/admin/training/applications/${applicationId}`);
+      const response = await api.get(`/admin/enrollments/${applicationId}`);
       return response.data?.data || response.data;
     } catch (error) {
       console.error('Failed to fetch application:', error);
@@ -84,7 +84,7 @@ export const trainingApplicationService = {
   // Update application status (admin only)
   updateApplicationStatus: async (applicationId, status, notes = '') => {
     try {
-      const response = await api.patch(`/admin/training/applications/${applicationId}`, {
+      const response = await api.put(`/admin/enrollments/${applicationId}/status`, {
         status,
         notes
       });
