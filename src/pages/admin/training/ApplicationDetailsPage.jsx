@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
+import trainingApplicationService from '../../../services/trainingApplicationService';
+import LoadingSpinner from '../../../components/admin/shared/LoadingSpinner';
 import {
     Users,
     ChevronLeft,
@@ -21,135 +23,47 @@ import {
     Clock
 } from 'lucide-react';
 
-// Mock Applications Data (Should be shared or fetched via API)
-// In a real app, this would be fetched by ID
-const MOCK_APPLICATIONS = [
-    {
-        id: 'APP001',
-        courseId: 1,
-        courseTitle: 'Full Stack Web Development',
-        fullName: 'Kwame Mensah',
-        emailAddress: 'kwame.mensah@email.com',
-        phoneNumber: '+233 24 123 4567',
-        country: 'Ghana',
-        currentLocation: 'Accra',
-        educationLevel: 'Undergraduate',
-        preferredCohort: 'April to July',
-        learningMode: 'Hybrid',
-        status: 'pending',
-        appliedDate: '2026-02-05',
-        cvFileName: 'Kwame_Mensah_CV.pdf',
-        motivationStatement: 'I am passionate about web development and have been self-learning for 2 years. This program will help me transition into a full-time developer role.',
-        message: 'I have a laptop but it is a bit old (i3 processor). Will that be enough?',
-        linkedinUrl: 'https://linkedin.com/in/kwamemensah',
-        websiteUrl: 'https://kwamemensah.dev'
-    },
-    {
-        id: 'APP002',
-        courseId: 2,
-        courseTitle: 'Software Development Internship',
-        fullName: 'Ama Osei',
-        emailAddress: 'ama.osei@email.com',
-        phoneNumber: '+233 27 987 6543',
-        country: 'Ghana',
-        currentLocation: 'Kumasi',
-        educationLevel: 'Graduate',
-        preferredCohort: 'January to April',
-        learningMode: 'Onsite',
-        status: 'approved',
-        appliedDate: '2026-02-03',
-        cvFileName: 'Ama_Osei_Resume.pdf',
-        motivationStatement: 'Recent CS graduate eager to gain hands-on industry experience. I have strong foundation in Java and Python.',
-        linkedinUrl: 'https://linkedin.com/in/amaosei'
-    },
-    {
-        id: 'APP003',
-        courseId: 3,
-        courseTitle: 'AI & Machine Learning',
-        fullName: 'Ebenezer Lartey',
-        emailAddress: 'kofi.asante@email.com',
-        phoneNumber: '+233 20 555 8888',
-        country: 'Ghana',
-        currentLocation: 'Takoradi',
-        educationLevel: 'Graduate',
-        preferredCohort: 'July to October',
-        learningMode: 'Online',
-        status: 'pending',
-        appliedDate: '2026-02-07',
-        cvFileName: 'Kofi_Asante_CV.pdf',
-        motivationStatement: 'Data scientist looking to expand skills in AI/ML. Have experience with TensorFlow and want to work on real-world projects.',
-        linkedinUrl: 'https://linkedin.com/in/kofiasante',
-        websiteUrl: 'https://github.com/kofiasante'
-    },
-    {
-        id: 'APP004',
-        courseId: 1,
-        courseTitle: 'Full Stack Web Development',
-        fullName: 'Abena Frimpong',
-        emailAddress: 'abena.frimpong@email.com',
-        phoneNumber: '+233 24 777 3333',
-        country: 'Ghana',
-        currentLocation: 'Koforidua',
-        educationLevel: 'Diploma',
-        preferredCohort: 'April to July',
-        learningMode: 'Hybrid',
-        status: 'rejected',
-        appliedDate: '2026-02-01',
-        cvFileName: 'Abena_Frimpong_CV.pdf',
-        motivationStatement: 'Career changer from marketing to tech. Completed online HTML/CSS courses and ready for intensive training.',
-        rejectionReason: 'Insufficient technical background for this advanced program'
-    },
-    {
-        id: 'APP005',
-        courseId: 4,
-        courseTitle: 'DevOps Engineering',
-        fullName: 'Yaw Boateng',
-        emailAddress: 'yaw.boateng@email.com',
-        phoneNumber: '+233 55 444 2222',
-        country: 'Ghana',
-        currentLocation: 'Accra',
-        educationLevel: 'Undergraduate',
-        preferredCohort: 'April to July',
-        learningMode: 'Online',
-        status: 'approved',
-        appliedDate: '2026-02-06',
-        cvFileName: 'Yaw_Boateng_Resume.pdf',
-        motivationStatement: 'Systems administrator with 3 years experience. Want to learn modern DevOps practices, CI/CD, and cloud infrastructure.',
-        linkedinUrl: 'https://linkedin.com/in/yawboateng'
-    },
-    {
-        id: 'APP006',
-        courseId: 5,
-        courseTitle: 'Career Transition to Tech Program',
-        fullName: 'Efua Darko',
-        emailAddress: 'efua.darko@email.com',
-        phoneNumber: '+233 26 111 9999',
-        country: 'Ghana',
-        currentLocation: 'Tema',
-        educationLevel: 'JHS / SHS',
-        preferredCohort: 'January to April',
-        learningMode: 'Onsite',
-        status: 'pending',
-        appliedDate: '2026-02-08',
-        cvFileName: 'Efua_Darko_CV.pdf',
-        motivationStatement: 'Teacher looking to transition into tech industry. Fascinated by technology and eager to learn coding from scratch.',
-        message: 'Do you offer flexible payment plans?'
-    }
-];
-
 const ApplicationDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    
+    const [application, setApplication] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // In real app, fetch from API
-    const application = MOCK_APPLICATIONS.find(app => app.id === id);
+    useEffect(() => {
+        fetchApplication();
+    }, [id]);
 
-    if (!application) {
+    const fetchApplication = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const response = await trainingApplicationService.getApplicationById(id);
+            setApplication(response.data || response);
+        } catch (err) {
+            console.error('Failed to fetch application:', err);
+            setError(err.response?.data?.message || 'Failed to load application details');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <AdminLayout>
+                <LoadingSpinner text="Loading application details..." />
+            </AdminLayout>
+        );
+    }
+
+    if (error || !application) {
         return (
             <AdminLayout>
                 <div className="flex flex-col items-center justify-center min-h-[60vh]">
                     <h2 className="text-xl font-bold text-gray-900 mb-2">Application Not Found</h2>
+                    <p className="text-gray-500 mb-4">{error || 'The application you are looking for does not exist.'}</p>
                     <button
                         onClick={() => navigate('/admin/training')}
                         className="text-[#004fa2] hover:underline"
@@ -164,11 +78,21 @@ const ApplicationDetailsPage = () => {
     const handleApprove = () => {
         dispatch(openConfirmDialog({
             title: 'Approve Application',
-            message: `Approve ${application.fullName}'s application for ${application.courseTitle}?`,
-            onConfirm: () => {
-                console.log('Approved', application.id);
-                // In real app, update state/API here
-                navigate('/admin/training');
+            message: `Approve ${application.fullName}'s application for ${application.courseTitle || application.course?.title || 'this course'}?`,
+            onConfirm: async () => {
+                try {
+                    await trainingApplicationService.updateApplicationStatus(application.id, 'approved');
+                    dispatch(addNotification({
+                        type: 'success',
+                        message: 'Application approved successfully'
+                    }));
+                    navigate('/admin/training');
+                } catch (error) {
+                    dispatch(addNotification({
+                        type: 'error',
+                        message: error.response?.data?.message || 'Failed to approve application'
+                    }));
+                }
             }
         }));
     };
@@ -178,10 +102,20 @@ const ApplicationDetailsPage = () => {
             title: 'Reject Application',
             message: `Are you sure you want to reject ${application.fullName}'s application?`,
             isDangerous: true,
-            onConfirm: () => {
-                console.log('Rejected', application.id);
-                // In real app, update state/API here
-                navigate('/admin/training');
+            onConfirm: async () => {
+                try {
+                    await trainingApplicationService.updateApplicationStatus(application.id, 'rejected');
+                    dispatch(addNotification({
+                        type: 'success',
+                        message: 'Application rejected'
+                    }));
+                    navigate('/admin/training');
+                } catch (error) {
+                    dispatch(addNotification({
+                        type: 'error',
+                        message: error.response?.data?.message || 'Failed to reject application'
+                    }));
+                }
             }
         }));
     };
