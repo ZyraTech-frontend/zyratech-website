@@ -93,7 +93,7 @@ const ApplicationDetailsPage = () => {
     const handleApprove = () => {
         dispatch(openConfirmDialog({
             title: 'Approve Application',
-            message: `Approve ${application.fullName}'s application for ${application.courseTitle || application.course?.title || 'this course'}?`,
+            message: `Approve ${application.applicantName}'s application for ${application.courseTitle || application.course?.title || 'this course'}?`,
             onConfirm: async () => {
                 try {
                     await trainingApplicationService.updateApplicationStatus(application.id, 'approved');
@@ -115,7 +115,7 @@ const ApplicationDetailsPage = () => {
     const handleReject = () => {
         dispatch(openConfirmDialog({
             title: 'Reject Application',
-            message: `Are you sure you want to reject ${application.fullName}'s application?`,
+            message: `Are you sure you want to reject ${application.applicantName}'s application?`,
             isDangerous: true,
             onConfirm: async () => {
                 try {
@@ -203,10 +203,10 @@ const ApplicationDetailsPage = () => {
                             <div className="flex items-start justify-between mb-6">
                                 <div className="flex items-center gap-4">
                                     <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-md">
-                                        {application.fullName ? application.fullName.charAt(0).toUpperCase() : '?'}
+                                        {application.applicantName ? application.applicantName.charAt(0).toUpperCase() : '?'}
                                     </div>
                                     <div>
-                                        <h2 className="text-xl font-bold text-gray-900">{application.fullName}</h2>
+                                        <h2 className="text-xl font-bold text-gray-900">{application.applicantName}</h2>
                                         <p className="text-sm text-gray-500">{application.educationLevel}</p>
                                         {/* Display payment amount here if available */}
                                         {payment && payment.amount && (
