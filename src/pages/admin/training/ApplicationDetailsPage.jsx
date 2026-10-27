@@ -50,7 +50,6 @@ const ApplicationDetailsPage = () => {
             console.log('📋 Full application data from backend:', applicationData);
             
             setApplication(applicationData);
-            setPayment(null); // We'll check if payment data is in application
         } catch (err) {
             console.error('Failed to fetch application:', err);
             setError(err.response?.data?.message || 'Failed to load application details');
