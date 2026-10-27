@@ -101,13 +101,19 @@ export const trainingApplicationService = {
         }
       });
       
-      const transactions = response.data?.data || response.data || [];
+      // Handle nested data structure: response.data.data.data
+      const transactions = response.data?.data?.data || response.data?.data || response.data || [];
+      
+      console.log('📦 Transactions response:', response.data);
+      console.log('📋 Transactions array:', transactions);
       
       // Filter to find payment matching this application's course
       const payment = transactions.find(t => 
         t.paymentType === 'training' && 
         (t.courseTitle === application.courseTitle || t.courseId === application.courseId)
       );
+      
+      console.log('💰 Found payment:', payment);
       
       return payment || null;
     } catch (error) {
