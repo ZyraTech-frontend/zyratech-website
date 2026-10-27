@@ -75,8 +75,8 @@ const CourseApplicationsPage = () => {
             const list = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.enrollments || []));
             setApplications(list);
             
-            // Calculate total revenue from approved applications
-            await calculateTotalRevenue(list);
+            // Calculate total revenue from completed payments
+            await calculateTotalRevenue();
         } catch (error) {
             console.error('Failed to load applications:', error);
             dispatch(addNotification({
@@ -88,13 +88,10 @@ const CourseApplicationsPage = () => {
         }
     };
     
-    const calculateTotalRevenue = async (applicationsList) => {
+    const calculateTotalRevenue = async () => {
         try {
-            // Get approved applications only
-            const approvedApps = applicationsList.filter(app => app.status === 'approved');
-            
-            // Fetch all training transactions
-            const response = await fetch('/api/admin/transactions?paymentType=training&status=completed&limit=1000', {
+            // Fetch ALL completed transactions (not just training, not filtered by email)
+            const response = await fetch('/api/admin/transactions?status=completed&limit=1000', {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -105,20 +102,13 @@ const CourseApplicationsPage = () => {
             }
             
             const result = await response.json();
-            const transactions = result.data?.data || result.data || [];
+            const transactions = result.data || [];
             
-            // Calculate total from approved applications
-            let total = 0;
-            approvedApps.forEach(app => {
-                // Find matching payment by email
-                const payment = transactions.find(t => 
-                    t.studentEmail === app.emailAddress && 
-                    t.courseTitle === app.courseTitle
-                );
-                if (payment && payment.amount) {
-                    total += parseFloat(payment.amount);
-                }
-            });
+            // Filter only training payments and sum them up
+            const trainingPayments = transactions.filter(t => t.paymentType === 'training');
+            const total = trainingPayments.reduce((sum, payment) => {
+                return sum + (parseFloat(payment.amount) || 0);
+            }, 0);
             
             setTotalRevenue(total);
         } catch (error) {
@@ -262,11 +252,12 @@ const CourseApplicationsPage = () => {
                 </div>
 
                 {/* Statistics Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                     {[
                         { label: 'Total Applications', value: stats.total, color: 'bg-blue-50 text-blue-700 border-blue-200' },
                         { label: 'Pending Review', value: stats.pending, color: 'bg-amber-50 text-amber-700 border-amber-200' },
                         { label: 'Approved', value: stats.approved, color: 'bg-green-50 text-green-700 border-green-200' },
+                        { label: 'Completed', value: stats.completed, color: 'bg-purple-50 text-purple-700 border-purple-200' },
                         { label: 'Rejected', value: stats.rejected, color: 'bg-red-50 text-red-700 border-red-200' },
                         { 
                             label: 'Total Revenue', 
