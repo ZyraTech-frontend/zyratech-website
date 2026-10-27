@@ -22,7 +22,8 @@ import {
     Calendar,
     Clock,
     CreditCard,
-    DollarSign
+    DollarSign,
+    Eye
 } from 'lucide-react';
 
 const ApplicationDetailsPage = () => {
@@ -136,7 +137,15 @@ const ApplicationDetailsPage = () => {
     };
 
     const handleDownloadCV = () => {
-        console.log('Downloading CV:', application.cvFileName);
+        if (application.cvFileUrl) {
+            window.open(application.cvFileUrl, '_blank');
+        }
+    };
+    
+    const handlePreviewCV = () => {
+        if (application.cvFileUrl) {
+            window.open(application.cvFileUrl, '_blank');
+        }
     };
 
     return (
@@ -391,22 +400,37 @@ const ApplicationDetailsPage = () => {
                             </div>
                         )}
 
-                        {/* Attachments Card - Only show if CV exists */}
-                        {application.cvFileName && (
+                        {/* Attachments Card - Show if CV exists */}
+                        {application.cvFileUrl && (
                             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                                 <h3 className="text-lg font-bold text-gray-900 mb-4">Attachments</h3>
-                                <div className="border border-gray-200 rounded-xl p-4 hover:border-[#004fa2] transition-colors group cursor-pointer" onClick={handleDownloadCV}>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-red-50 rounded-lg flex items-center justify-center text-red-500">
+                                <div className="border border-gray-200 rounded-xl p-4 hover:border-[#004fa2] transition-colors group">
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center text-red-500">
                                             <FileText size={20} />
                                         </div>
                                         <div className="flex-1 overflow-hidden">
-                                            <p className="text-sm font-semibold text-gray-900 truncate group-hover:text-[#004fa2] transition-colors">
-                                                {application.cvFileName}
+                                            <p className="text-sm font-semibold text-gray-900">
+                                                CV / Resume
                                             </p>
                                             <p className="text-xs text-gray-500">PDF Document</p>
                                         </div>
-                                        <Download size={18} className="text-gray-400 group-hover:text-[#004fa2]" />
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={handlePreviewCV}
+                                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors font-medium text-sm"
+                                        >
+                                            <Eye size={16} />
+                                            Preview
+                                        </button>
+                                        <button
+                                            onClick={handleDownloadCV}
+                                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-medium text-sm"
+                                        >
+                                            <Download size={16} />
+                                            Download
+                                        </button>
                                     </div>
                                 </div>
                             </div>
