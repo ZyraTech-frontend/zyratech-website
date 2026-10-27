@@ -81,6 +81,18 @@ export const trainingApplicationService = {
     }
   },
 
+  // Get payment details for an application (admin only)
+  getApplicationPayment: async (applicationId) => {
+    try {
+      const response = await api.get(`/admin/enrollments/${applicationId}/payment`);
+      return response.data?.data || response.data;
+    } catch (error) {
+      // Payment might not exist yet - don't throw error
+      console.log('No payment found for application:', applicationId);
+      return null;
+    }
+  },
+
   // Update application status (admin only)
   updateApplicationStatus: async (applicationId, status, notes = '') => {
     try {
