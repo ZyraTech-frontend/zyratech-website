@@ -81,20 +81,37 @@ export const trainingApplicationService = {
     }
   },
 
-  // Get payment for an application by searching transactions
+  // Get payment for an application by searching transactions with student email
   getApplicationPayment: async (applicationId) => {
     try {
-      // Search payments/transactions filtered by applicationId
-      const response = await api.get(`/payments/transactions`, {
+      // First get the application to get student email
+      const appResponse = await api.get(`/admin/enrollments/${applicationId}`);
+      const application = appResponse.data?.data || appResponse.data;
+      
+      if (!application || !application.emailAddress) {
+        return null;
+      }
+      
+      // Search transactions by student email with completed status
+      const response = await api.get(`/admin/transactions`, {
         params: {
-          applicationId: applicationId,
-          limit: 1
+          search: application.emailAddress,
+          status: 'completed',
+          limit: 10
         }
       });
-      const transactions = response.data?.data?.transactions || response.data?.transactions || [];
-      return transactions.length > 0 ? transactions[0] : null;
+      
+      const transactions = response.data?.data || response.data || [];
+      
+      // Filter to find payment matching this application's course
+      const payment = transactions.find(t => 
+        t.paymentType === 'training' && 
+        (t.courseTitle === application.courseTitle || t.courseId === application.courseId)
+      );
+      
+      return payment || null;
     } catch (error) {
-      console.log('No payment found for application:', applicationId);
+      console.log('No payment found for application:', applicationId, error);
       return null;
     }
   },
