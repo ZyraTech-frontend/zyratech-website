@@ -136,9 +136,25 @@ const ApplicationDetailsPage = () => {
         }));
     };
 
-    const handleDownloadCV = () => {
+    const handleDownloadCV = async () => {
         if (application.cvFileUrl) {
-            window.open(application.cvFileUrl, '_blank');
+            try {
+                // Fetch the file and trigger download
+                const response = await fetch(application.cvFileUrl);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${application.applicantName}_CV.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('Download failed:', error);
+                // Fallback to opening in new tab
+                window.open(application.cvFileUrl, '_blank');
+            }
         }
     };
     
