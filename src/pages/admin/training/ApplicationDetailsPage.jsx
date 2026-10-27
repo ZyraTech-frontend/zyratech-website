@@ -285,7 +285,7 @@ const ApplicationDetailsPage = () => {
                                     <Mail size={20} className="text-[#004fa2]" />
                                     Additional Message
                                 </h3>
-                                <div className="text-gray-600 bg-blue-50/50 p-6 rounded-xl border border-blue-100 italic">
+                                <div className="text-gray-600 bg-blue-50/50 p-6 rounded-xl border border-blue-100 italic break-words overflow-wrap-anywhere">
                                     "{application.message}"
                                 </div>
                             </div>
