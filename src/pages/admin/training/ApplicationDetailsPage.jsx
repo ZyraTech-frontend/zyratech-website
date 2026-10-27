@@ -40,7 +40,7 @@ const ApplicationDetailsPage = () => {
         try {
             setLoading(true);
             setError(null);
-            const response = await trainingApplicationService.getApplicationById(id);
+            const response = await trainingApplicationService.getApplication(id);
             setApplication(response.data || response);
         } catch (err) {
             console.error('Failed to fetch application:', err);
