@@ -24,7 +24,8 @@ import {
     Phone,
     BookOpen,
     Calendar,
-    Loader
+    Loader,
+    DollarSign
 } from 'lucide-react';
 
 // Status configuration
@@ -54,6 +55,7 @@ const CourseApplicationsPage = () => {
     
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [totalRevenue, setTotalRevenue] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [selectedCourse, setSelectedCourse] = useState('all');
@@ -73,6 +75,9 @@ const CourseApplicationsPage = () => {
             const data = await trainingService.getAllEnrollments();
             const list = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.enrollments || []));
             setApplications(list);
+            
+            // Calculate total revenue from approved applications
+            await calculateTotalRevenue(list);
         } catch (error) {
             console.error('Failed to load applications:', error);
             dispatch(addNotification({
@@ -81,6 +86,45 @@ const CourseApplicationsPage = () => {
             }));
         } finally {
             setLoading(false);
+        }
+    };
+    
+    const calculateTotalRevenue = async (applicationsList) => {
+        try {
+            // Get approved applications only
+            const approvedApps = applicationsList.filter(app => app.status === 'approved');
+            
+            // Fetch all training transactions
+            const response = await fetch('/api/admin/transactions?paymentType=training&status=completed&limit=1000', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch transactions');
+            }
+            
+            const result = await response.json();
+            const transactions = result.data?.data || result.data || [];
+            
+            // Calculate total from approved applications
+            let total = 0;
+            approvedApps.forEach(app => {
+                // Find matching payment by email
+                const payment = transactions.find(t => 
+                    t.studentEmail === app.emailAddress && 
+                    t.courseTitle === app.courseTitle
+                );
+                if (payment && payment.amount) {
+                    total += parseFloat(payment.amount);
+                }
+            });
+            
+            setTotalRevenue(total);
+        } catch (error) {
+            console.error('Failed to calculate revenue:', error);
+            setTotalRevenue(0);
         }
     };
     
@@ -219,16 +263,26 @@ const CourseApplicationsPage = () => {
                 </div>
 
                 {/* Statistics Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                     {[
-                        { label: 'Total', value: stats.total, color: 'from-blue-500 to-cyan-500' },
-                        { label: 'Pending', value: stats.pending, color: 'from-amber-500 to-orange-500' },
-                        { label: 'Approved', value: stats.approved, color: 'from-green-500 to-emerald-500' },
-                        { label: 'Completed', value: stats.completed, color: 'from-purple-500 to-violet-500' },
-                        { label: 'Rejected', value: stats.rejected, color: 'from-red-500 to-rose-500' }
+                        { label: 'Total', value: stats.total, color: 'from-blue-500 to-cyan-500', icon: null },
+                        { label: 'Pending', value: stats.pending, color: 'from-amber-500 to-orange-500', icon: null },
+                        { label: 'Approved', value: stats.approved, color: 'from-green-500 to-emerald-500', icon: null },
+                        { label: 'Completed', value: stats.completed, color: 'from-purple-500 to-violet-500', icon: null },
+                        { label: 'Rejected', value: stats.rejected, color: 'from-red-500 to-rose-500', icon: null },
+                        { 
+                            label: 'Total Revenue', 
+                            value: `GHS ${totalRevenue.toFixed(2)}`, 
+                            color: 'from-teal-500 to-cyan-600',
+                            icon: <DollarSign size={20} className="mb-1" />,
+                            fullWidth: true
+                        }
                     ].map((stat, idx) => (
-                        <div key={idx} className={`bg-gradient-to-br ${stat.color} rounded-xl p-4 text-white shadow-sm`}>
-                            <div className="text-2xl font-bold">{stat.value}</div>
+                        <div key={idx} className={`bg-gradient-to-br ${stat.color} rounded-xl p-4 text-white shadow-sm ${stat.fullWidth ? 'md:col-span-3 lg:col-span-2' : ''}`}>
+                            {stat.icon && <div className="mb-1">{stat.icon}</div>}
+                            <div className={`${typeof stat.value === 'string' && stat.value.includes('GHS') ? 'text-xl' : 'text-2xl'} font-bold`}>
+                                {stat.value}
+                            </div>
                             <div className="text-xs opacity-90 mt-1">{stat.label}</div>
                         </div>
                     ))}
