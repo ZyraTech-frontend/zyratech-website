@@ -402,33 +402,33 @@ const ApplicationDetailsPage = () => {
 
                         {/* Attachments Card - Show if CV exists */}
                         {application.cvFileUrl && (
-                            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                                <h3 className="text-lg font-bold text-gray-900 mb-4">Attachments</h3>
-                                <div className="border border-gray-200 rounded-xl p-4 hover:border-[#004fa2] transition-colors group">
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center text-red-500">
-                                            <FileText size={20} />
+                            <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
+                                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">Attachments</h3>
+                                <div className="border border-gray-200 rounded-xl p-3 sm:p-4 hover:border-[#004fa2] transition-colors group">
+                                    <div className="flex items-center gap-2 sm:gap-3 mb-3">
+                                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-50 rounded-lg flex items-center justify-center text-red-500 flex-shrink-0">
+                                            <FileText size={18} className="sm:w-5 sm:h-5" />
                                         </div>
-                                        <div className="flex-1 overflow-hidden">
-                                            <p className="text-sm font-semibold text-gray-900">
+                                        <div className="flex-1 overflow-hidden min-w-0">
+                                            <p className="text-xs sm:text-sm font-semibold text-gray-900 truncate">
                                                 CV / Resume
                                             </p>
                                             <p className="text-xs text-gray-500">PDF Document</p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-2">
                                         <button
                                             onClick={handlePreviewCV}
-                                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors font-medium text-sm"
+                                            className="flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors font-medium text-xs sm:text-sm"
                                         >
-                                            <Eye size={16} />
+                                            <Eye size={14} className="sm:w-4 sm:h-4" />
                                             Preview
                                         </button>
                                         <button
                                             onClick={handleDownloadCV}
-                                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-medium text-sm"
+                                            className="flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-medium text-xs sm:text-sm"
                                         >
-                                            <Download size={16} />
+                                            <Download size={14} className="sm:w-4 sm:h-4" />
                                             Download
                                         </button>
                                     </div>
