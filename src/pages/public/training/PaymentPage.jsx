@@ -113,12 +113,12 @@ const TrainingPaymentPage = () => {
       console.log('💳 Payment initialization - Callback URL:', callbackUrl);
       
       const paymentData = {
-        // Required top-level fields
+        // Required fields (per backend spec)
         courseId: courseId,
+        amount: totalAmount, // Include processing fee
+        currency: 'GHS', // Currency for Ghana
         studentName: formData.fullName,
         studentEmail: formData.email,
-        amount: totalAmount, // Include processing fee
-        // Callback URL for this specific branch/environment
         callbackUrl: callbackUrl,
         // Optional field
         applicationId: applicationId || undefined

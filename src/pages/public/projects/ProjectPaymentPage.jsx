@@ -109,17 +109,31 @@ const ProjectPaymentPage = () => {
       console.log('💼 Payment initialization - App URL:', appUrl);
       console.log('💼 Payment initialization - Callback URL:', callbackUrl);
       
+      // Calculate budget midpoint for totalProjectBudget
+      const budgetNumbers = budgetRange.match(/[\d,]+/g);
+      const budgetMin = parseFloat(budgetNumbers[0].replace(/,/g, ''));
+      const budgetMax = parseFloat(budgetNumbers[1].replace(/,/g, ''));
+      const totalProjectBudget = (budgetMin + budgetMax) / 2;
+      const balanceDue = totalProjectBudget - depositAmount;
+
       const paymentData = {
-        // Required fields
+        // Required fields (per backend spec)
         projectRequestId: projectRequestId,
+        amount: totalAmount, // Total including processing fee
+        currency: 'GHS', // Currency (was NGN, but your payment shows GHS)
+        totalProjectBudget: totalProjectBudget, // REQUIRED for project payments
+        paymentPhase: 'deposit', // REQUIRED: "deposit" | "milestone" | "balance" | "final"
         studentName: formData.fullName,
         studentEmail: formData.email,
-        amount: totalAmount, // Include processing fee
-        // Callback URL for this specific branch/environment
         callbackUrl: callbackUrl,
-        // Project metadata
-        projectTitle: projectTitle,
-        projectType: projectType
+        
+        // Optional deposit tracking fields (backend saves these)
+        depositAmount: depositAmount, // Actual deposit excluding fees
+        depositPercentage: 30, // Deposit percentage
+        processingFee: processingFee, // Payment gateway fee
+        balanceDue: balanceDue, // Remaining balance after deposit
+        projectTitle: projectTitle, // Project name
+        projectType: projectType // Project category
       };
 
       console.log('💼 Sending payment data:', paymentData);
