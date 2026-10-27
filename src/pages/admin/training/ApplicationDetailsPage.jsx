@@ -174,7 +174,7 @@ const ApplicationDetailsPage = () => {
                                 : 'bg-red-100 text-red-700 border border-red-200'
                                 }`}>
                                 {application.status === 'approved' ? <CheckCircle size={18} /> : <XCircle size={18} />}
-                                {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
+                                {application.status ? application.status.charAt(0).toUpperCase() + application.status.slice(1) : 'Unknown'}
                             </span>
                         )}
                     </div>
@@ -188,7 +188,7 @@ const ApplicationDetailsPage = () => {
                             <div className="flex items-start justify-between mb-6">
                                 <div className="flex items-center gap-4">
                                     <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-md">
-                                        {application.fullName.charAt(0)}
+                                        {application.fullName ? application.fullName.charAt(0).toUpperCase() : '?'}
                                     </div>
                                     <div>
                                         <h2 className="text-xl font-bold text-gray-900">{application.fullName}</h2>
