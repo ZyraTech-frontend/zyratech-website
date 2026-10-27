@@ -81,6 +81,24 @@ export const trainingApplicationService = {
     }
   },
 
+  // Get payment for an application by searching transactions
+  getApplicationPayment: async (applicationId) => {
+    try {
+      // Search payments/transactions filtered by applicationId
+      const response = await api.get(`/payments/transactions`, {
+        params: {
+          applicationId: applicationId,
+          limit: 1
+        }
+      });
+      const transactions = response.data?.data?.transactions || response.data?.transactions || [];
+      return transactions.length > 0 ? transactions[0] : null;
+    } catch (error) {
+      console.log('No payment found for application:', applicationId);
+      return null;
+    }
+  },
+
   // Update application status (admin only)
   updateApplicationStatus: async (applicationId, status, notes = '') => {
     try {

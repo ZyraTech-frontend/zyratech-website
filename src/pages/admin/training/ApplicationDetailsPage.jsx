@@ -31,6 +31,7 @@ const ApplicationDetailsPage = () => {
     const dispatch = useDispatch();
     
     const [application, setApplication] = useState(null);
+    const [payment, setPayment] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -43,13 +44,19 @@ const ApplicationDetailsPage = () => {
             setLoading(true);
             setError(null);
             
-            // Fetch application details (should include payment if it exists)
+            // Fetch application details
             const response = await trainingApplicationService.getApplication(id);
             const applicationData = response.data || response;
             
             console.log('📋 Full application data from backend:', applicationData);
             
             setApplication(applicationData);
+            
+            // Fetch payment separately using transactions endpoint
+            const paymentData = await trainingApplicationService.getApplicationPayment(id);
+            console.log('💰 Payment data from backend:', paymentData);
+            
+            setPayment(paymentData);
         } catch (err) {
             console.error('Failed to fetch application:', err);
             setError(err.response?.data?.message || 'Failed to load application details');
@@ -202,11 +209,11 @@ const ApplicationDetailsPage = () => {
                                         <h2 className="text-xl font-bold text-gray-900">{application.fullName}</h2>
                                         <p className="text-sm text-gray-500">{application.educationLevel}</p>
                                         {/* Display payment amount here if available */}
-                                        {application.payment && application.payment.amount && (
+                                        {payment && payment.amount && (
                                             <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-green-50 border border-green-200 rounded-lg">
                                                 <DollarSign size={14} className="text-green-600" />
                                                 <span className="text-sm font-bold text-green-700">
-                                                    GHS {parseFloat(application.payment.amount).toFixed(2)} paid
+                                                    GHS {parseFloat(payment.amount).toFixed(2)} paid
                                                 </span>
                                             </div>
                                         )}
@@ -285,7 +292,7 @@ const ApplicationDetailsPage = () => {
                         )}
 
                         {/* Payment Information */}
-                        {application.payment && application.payment.amount && (
+                        {payment && payment.amount && (
                             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                                     <CreditCard size={20} className="text-[#004fa2]" />
@@ -301,43 +308,43 @@ const ApplicationDetailsPage = () => {
                                             <div>
                                                 <p className="text-xs text-green-600 font-medium">Amount Paid</p>
                                                 <p className="text-2xl font-bold text-green-700">
-                                                    {application.payment.currency || 'GHS'} {parseFloat(application.payment.amount).toFixed(2)}
+                                                    {payment.currency || 'GHS'} {parseFloat(payment.amount).toFixed(2)}
                                                 </p>
                                             </div>
                                         </div>
-                                        {application.payment.status && (
+                                        {payment.status && (
                                             <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                                application.payment.status === 'completed' || application.payment.status === 'success'
+                                                payment.status === 'completed' || payment.status === 'success'
                                                     ? 'bg-green-100 text-green-700'
-                                                    : application.payment.status === 'pending'
+                                                    : payment.status === 'pending'
                                                     ? 'bg-yellow-100 text-yellow-700'
                                                     : 'bg-red-100 text-red-700'
                                             }`}>
-                                                {application.payment.status.charAt(0).toUpperCase() + application.payment.status.slice(1)}
+                                                {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
                                             </div>
                                         )}
                                     </div>
 
                                     {/* Payment Details Grid */}
-                                    {(application.payment.paymentMethod || application.payment.reference || application.payment.paidAt || application.payment.createdAt) && (
+                                    {(payment.paymentMethod || payment.reference || payment.paidAt || payment.createdAt) && (
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            {application.payment.paymentMethod && (
+                                            {payment.paymentMethod && (
                                                 <div className="p-3 bg-gray-50 rounded-lg">
                                                     <p className="text-xs text-gray-500 mb-1">Payment Method</p>
-                                                    <p className="text-sm font-semibold text-gray-900 capitalize">{application.payment.paymentMethod.replace('_', ' ')}</p>
+                                                    <p className="text-sm font-semibold text-gray-900 capitalize">{payment.paymentMethod.replace('_', ' ')}</p>
                                                 </div>
                                             )}
-                                            {application.payment.reference && (
+                                            {payment.reference && (
                                                 <div className="p-3 bg-gray-50 rounded-lg">
                                                     <p className="text-xs text-gray-500 mb-1">Transaction Reference</p>
-                                                    <p className="text-sm font-mono text-gray-900">{application.payment.reference}</p>
+                                                    <p className="text-sm font-mono text-gray-900">{payment.reference}</p>
                                                 </div>
                                             )}
-                                            {application.payment.paidAt && (
+                                            {payment.paidAt && (
                                                 <div className="p-3 bg-gray-50 rounded-lg">
                                                     <p className="text-xs text-gray-500 mb-1">Payment Date</p>
                                                     <p className="text-sm font-semibold text-gray-900">
-                                                        {new Date(application.payment.paidAt).toLocaleDateString('en-US', {
+                                                        {new Date(payment.paidAt).toLocaleDateString('en-US', {
                                                             year: 'numeric',
                                                             month: 'long',
                                                             day: 'numeric',
@@ -347,11 +354,11 @@ const ApplicationDetailsPage = () => {
                                                     </p>
                                                 </div>
                                             )}
-                                            {application.payment.createdAt && (
+                                            {payment.createdAt && (
                                                 <div className="p-3 bg-gray-50 rounded-lg">
                                                     <p className="text-xs text-gray-500 mb-1">Payment Created</p>
                                                     <p className="text-sm font-semibold text-gray-900">
-                                                        {new Date(application.payment.createdAt).toLocaleDateString('en-US', {
+                                                        {new Date(payment.createdAt).toLocaleDateString('en-US', {
                                                             year: 'numeric',
                                                             month: 'long',
                                                             day: 'numeric',
