@@ -291,132 +291,6 @@ const ApplicationDetailsPage = () => {
                             </div>
                         )}
 
-                        {/* Payment Information */}
-                        {payment && payment.amount && (
-                            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 md:p-8 shadow-sm border border-green-200">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                                        <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center">
-                                            <CreditCard size={20} className="text-white" />
-                                        </div>
-                                        Payment Information
-                                    </h3>
-                                    {payment.status && (
-                                        <div className={`px-4 py-2 rounded-full text-sm font-bold shadow-sm ${
-                                            payment.status === 'completed' || payment.status === 'success'
-                                                ? 'bg-green-600 text-white'
-                                                : payment.status === 'pending'
-                                                ? 'bg-yellow-500 text-white'
-                                                : 'bg-red-600 text-white'
-                                        }`}>
-                                            {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Amount Card - Large and Prominent */}
-                                <div className="bg-white rounded-xl p-6 mb-6 shadow-md border border-green-100">
-                                    <div className="text-center">
-                                        <p className="text-sm font-medium text-gray-500 mb-2">Total Amount Paid</p>
-                                        <div className="flex items-center justify-center gap-2">
-                                            <DollarSign size={32} className="text-green-600" />
-                                            <p className="text-5xl font-black text-green-600">
-                                                {parseFloat(payment.amount).toFixed(2)}
-                                            </p>
-                                        </div>
-                                        <p className="text-lg font-semibold text-gray-600 mt-2">{payment.currency || 'GHS'}</p>
-                                    </div>
-                                </div>
-
-                                {/* Payment Details - Clean Grid */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {payment.paymentMethod && (
-                                        <div className="bg-white rounded-xl p-4 border border-gray-200">
-                                            <div className="flex items-start gap-3">
-                                                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <CreditCard size={18} className="text-blue-600" />
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-xs font-medium text-gray-500 mb-1">Payment Method</p>
-                                                    <p className="text-base font-bold text-gray-900 capitalize truncate">
-                                                        {payment.paymentMethod.replace('_', ' ')}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {payment.reference && (
-                                        <div className="bg-white rounded-xl p-4 border border-gray-200">
-                                            <div className="flex items-start gap-3">
-                                                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <FileText size={18} className="text-purple-600" />
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-xs font-medium text-gray-500 mb-1">Transaction Reference</p>
-                                                    <p className="text-sm font-mono font-bold text-gray-900 truncate">
-                                                        {payment.reference}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {payment.paidAt && (
-                                        <div className="bg-white rounded-xl p-4 border border-gray-200">
-                                            <div className="flex items-start gap-3">
-                                                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <CheckCircle size={18} className="text-green-600" />
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-xs font-medium text-gray-500 mb-1">Payment Date</p>
-                                                    <p className="text-sm font-bold text-gray-900">
-                                                        {new Date(payment.paidAt).toLocaleDateString('en-US', {
-                                                            month: 'short',
-                                                            day: 'numeric',
-                                                            year: 'numeric'
-                                                        })}
-                                                    </p>
-                                                    <p className="text-xs text-gray-500 mt-0.5">
-                                                        {new Date(payment.paidAt).toLocaleTimeString('en-US', {
-                                                            hour: '2-digit',
-                                                            minute: '2-digit'
-                                                        })}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {payment.createdAt && (
-                                        <div className="bg-white rounded-xl p-4 border border-gray-200">
-                                            <div className="flex items-start gap-3">
-                                                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <Clock size={18} className="text-gray-600" />
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-xs font-medium text-gray-500 mb-1">Payment Initiated</p>
-                                                    <p className="text-sm font-bold text-gray-900">
-                                                        {new Date(payment.createdAt).toLocaleDateString('en-US', {
-                                                            month: 'short',
-                                                            day: 'numeric',
-                                                            year: 'numeric'
-                                                        })}
-                                                    </p>
-                                                    <p className="text-xs text-gray-500 mt-0.5">
-                                                        {new Date(payment.createdAt).toLocaleTimeString('en-US', {
-                                                            hour: '2-digit',
-                                                            minute: '2-digit'
-                                                        })}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-
                         {/* Rejection Reason (if applicable) */}
                         {application.status === 'rejected' && application.rejectionReason && (
                             <div className="bg-red-50 rounded-2xl p-6 border border-red-100">
@@ -448,6 +322,74 @@ const ApplicationDetailsPage = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Payment Information Card - In Sidebar */}
+                        {payment && payment.amount && (
+                            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                    <CreditCard size={20} className="text-green-600" />
+                                    Payment Info
+                                </h3>
+                                <div className="space-y-4">
+                                    {/* Amount - Compact */}
+                                    <div className="bg-green-50 rounded-xl p-4 border border-green-200">
+                                        <p className="text-xs text-green-600 font-medium mb-1">Amount Paid</p>
+                                        <p className="text-2xl font-black text-green-700">
+                                            {payment.currency || 'GHS'} {parseFloat(payment.amount).toFixed(2)}
+                                        </p>
+                                        {payment.status && (
+                                            <div className={`mt-2 inline-flex px-2 py-1 rounded-full text-xs font-bold ${
+                                                payment.status === 'completed' || payment.status === 'success'
+                                                    ? 'bg-green-600 text-white'
+                                                    : payment.status === 'pending'
+                                                    ? 'bg-yellow-500 text-white'
+                                                    : 'bg-red-600 text-white'
+                                            }`}>
+                                                {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Details - Compact Stack */}
+                                    <div className="space-y-3">
+                                        {payment.paymentMethod && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 mb-1">Method</p>
+                                                <p className="text-sm font-bold text-gray-900 capitalize">
+                                                    {payment.paymentMethod.replace('_', ' ')}
+                                                </p>
+                                            </div>
+                                        )}
+                                        {payment.reference && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 mb-1">Reference</p>
+                                                <p className="text-xs font-mono font-bold text-gray-900 break-all">
+                                                    {payment.reference}
+                                                </p>
+                                            </div>
+                                        )}
+                                        {payment.paidAt && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 mb-1">Paid On</p>
+                                                <p className="text-sm font-bold text-gray-900">
+                                                    {new Date(payment.paidAt).toLocaleDateString('en-US', {
+                                                        month: 'short',
+                                                        day: 'numeric',
+                                                        year: 'numeric'
+                                                    })}
+                                                </p>
+                                                <p className="text-xs text-gray-500">
+                                                    {new Date(payment.paidAt).toLocaleTimeString('en-US', {
+                                                        hour: '2-digit',
+                                                        minute: '2-digit'
+                                                    })}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Attachments Card - Only show if CV exists */}
                         {application.cvFileName && (
