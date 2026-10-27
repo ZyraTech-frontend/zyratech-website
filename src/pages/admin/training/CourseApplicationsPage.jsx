@@ -7,7 +7,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
-import trainingService from '../../../services/trainingService';
+import trainingApplicationService from '../../../services/trainingApplicationService';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import {
     Users,
@@ -71,7 +71,7 @@ const CourseApplicationsPage = () => {
         try {
             setLoading(true);
             // Use the correct backend endpoint: /admin/enrollments
-            const data = await trainingService.getAllEnrollments();
+            const data = await trainingApplicationService.getAllApplications();
             const list = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.enrollments || []));
             setApplications(list);
             
@@ -202,7 +202,7 @@ const CourseApplicationsPage = () => {
             onConfirm: async () => {
                 try {
                     const appId = application.id || application.applicationId;
-                    await trainingService.updateEnrollmentStatus(appId, 'approved');
+                    await trainingApplicationService.updateApplicationStatus(appId, 'approved');
                     await loadApplications();
                     dispatch(addNotification({
                         type: 'success',
@@ -227,7 +227,7 @@ const CourseApplicationsPage = () => {
             onConfirm: async () => {
                 try {
                     const appId = application.id || application.applicationId;
-                    await trainingService.updateEnrollmentStatus(appId, 'rejected');
+                    await trainingApplicationService.updateApplicationStatus(appId, 'rejected');
                     await loadApplications();
                     dispatch(addNotification({
                         type: 'success',
