@@ -43,7 +43,19 @@ const ApplicationDetailsPage = () => {
             setLoading(true);
             setError(null);
             const response = await trainingApplicationService.getApplication(id);
-            setApplication(response.data || response);
+            const applicationData = response.data || response;
+            
+            console.log('📋 Application data from backend:', applicationData);
+            console.log('💰 Payment fields:', {
+                amount: applicationData.amount,
+                paymentStatus: applicationData.paymentStatus,
+                paymentMethod: applicationData.paymentMethod,
+                transactionReference: applicationData.transactionReference,
+                paymentDate: applicationData.paymentDate,
+                paystackReference: applicationData.paystackReference
+            });
+            
+            setApplication(applicationData);
         } catch (err) {
             console.error('Failed to fetch application:', err);
             setError(err.response?.data?.message || 'Failed to load application details');
@@ -268,7 +280,7 @@ const ApplicationDetailsPage = () => {
                         )}
 
                         {/* Payment Information */}
-                        {application.paymentStatus && (
+                        {(application.amount || application.paymentStatus) && (
                             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                                     <CreditCard size={20} className="text-[#004fa2]" />
@@ -276,64 +288,70 @@ const ApplicationDetailsPage = () => {
                                 </h3>
                                 <div className="space-y-4">
                                     {/* Payment Amount */}
-                                    <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-100">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600">
-                                                <DollarSign size={20} />
+                                    {application.amount && (
+                                        <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-100">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600">
+                                                    <DollarSign size={20} />
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-green-600 font-medium">Amount Paid</p>
+                                                    <p className="text-2xl font-bold text-green-700">
+                                                        GHS {parseFloat(application.amount).toFixed(2)}
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p className="text-xs text-green-600 font-medium">Amount Paid</p>
-                                                <p className="text-2xl font-bold text-green-700">
-                                                    GHS {application.amountPaid ? parseFloat(application.amountPaid).toFixed(2) : '0.00'}
-                                                </p>
-                                            </div>
+                                            {application.paymentStatus && (
+                                                <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                                    application.paymentStatus === 'completed' || application.paymentStatus === 'success'
+                                                        ? 'bg-green-100 text-green-700'
+                                                        : application.paymentStatus === 'pending'
+                                                        ? 'bg-yellow-100 text-yellow-700'
+                                                        : 'bg-red-100 text-red-700'
+                                                }`}>
+                                                    {application.paymentStatus.charAt(0).toUpperCase() + application.paymentStatus.slice(1)}
+                                                </div>
+                                            )}
                                         </div>
-                                        <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                            application.paymentStatus === 'completed' 
-                                                ? 'bg-green-100 text-green-700'
-                                                : application.paymentStatus === 'pending'
-                                                ? 'bg-yellow-100 text-yellow-700'
-                                                : 'bg-red-100 text-red-700'
-                                        }`}>
-                                            {application.paymentStatus ? application.paymentStatus.charAt(0).toUpperCase() + application.paymentStatus.slice(1) : 'Unknown'}
-                                        </div>
-                                    </div>
+                                    )}
 
-                                    {/* Payment Details Grid */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        {application.paymentMethod && (
-                                            <div className="p-3 bg-gray-50 rounded-lg">
-                                                <p className="text-xs text-gray-500 mb-1">Payment Method</p>
-                                                <p className="text-sm font-semibold text-gray-900">{application.paymentMethod}</p>
-                                            </div>
-                                        )}
-                                        {application.transactionReference && (
-                                            <div className="p-3 bg-gray-50 rounded-lg">
-                                                <p className="text-xs text-gray-500 mb-1">Transaction Reference</p>
-                                                <p className="text-sm font-mono text-gray-900">{application.transactionReference}</p>
-                                            </div>
-                                        )}
-                                        {application.paymentDate && (
-                                            <div className="p-3 bg-gray-50 rounded-lg">
-                                                <p className="text-xs text-gray-500 mb-1">Payment Date</p>
-                                                <p className="text-sm font-semibold text-gray-900">
-                                                    {new Date(application.paymentDate).toLocaleDateString('en-US', {
-                                                        year: 'numeric',
-                                                        month: 'long',
-                                                        day: 'numeric',
-                                                        hour: '2-digit',
-                                                        minute: '2-digit'
-                                                    })}
-                                                </p>
-                                            </div>
-                                        )}
-                                        {application.paystackReference && (
-                                            <div className="p-3 bg-gray-50 rounded-lg">
-                                                <p className="text-xs text-gray-500 mb-1">Paystack Reference</p>
-                                                <p className="text-sm font-mono text-gray-900">{application.paystackReference}</p>
-                                            </div>
-                                        )}
-                                    </div>
+                                    {/* Payment Details Grid - Only show if we have any details */}
+                                    {(application.paymentMethod || application.transactionReference || application.paymentDate || application.paystackReference) && (
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {application.paymentMethod && (
+                                                <div className="p-3 bg-gray-50 rounded-lg">
+                                                    <p className="text-xs text-gray-500 mb-1">Payment Method</p>
+                                                    <p className="text-sm font-semibold text-gray-900">{application.paymentMethod}</p>
+                                                </div>
+                                            )}
+                                            {application.transactionReference && (
+                                                <div className="p-3 bg-gray-50 rounded-lg">
+                                                    <p className="text-xs text-gray-500 mb-1">Transaction Reference</p>
+                                                    <p className="text-sm font-mono text-gray-900">{application.transactionReference}</p>
+                                                </div>
+                                            )}
+                                            {application.paymentDate && (
+                                                <div className="p-3 bg-gray-50 rounded-lg">
+                                                    <p className="text-xs text-gray-500 mb-1">Payment Date</p>
+                                                    <p className="text-sm font-semibold text-gray-900">
+                                                        {new Date(application.paymentDate).toLocaleDateString('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: 'numeric',
+                                                            hour: '2-digit',
+                                                            minute: '2-digit'
+                                                        })}
+                                                    </p>
+                                                </div>
+                                            )}
+                                            {application.paystackReference && (
+                                                <div className="p-3 bg-gray-50 rounded-lg">
+                                                    <p className="text-xs text-gray-500 mb-1">Paystack Reference</p>
+                                                    <p className="text-sm font-mono text-gray-900">{application.paystackReference}</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         )}
