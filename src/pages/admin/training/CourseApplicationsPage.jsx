@@ -24,8 +24,7 @@ import {
     Phone,
     BookOpen,
     Calendar,
-    Loader,
-    DollarSign
+    Loader
 } from 'lucide-react';
 
 // Status configuration
@@ -263,27 +262,23 @@ const CourseApplicationsPage = () => {
                 </div>
 
                 {/* Statistics Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                     {[
-                        { label: 'Total', value: stats.total, color: 'from-blue-500 to-cyan-500', icon: null },
-                        { label: 'Pending', value: stats.pending, color: 'from-amber-500 to-orange-500', icon: null },
-                        { label: 'Approved', value: stats.approved, color: 'from-green-500 to-emerald-500', icon: null },
-                        { label: 'Completed', value: stats.completed, color: 'from-purple-500 to-violet-500', icon: null },
-                        { label: 'Rejected', value: stats.rejected, color: 'from-red-500 to-rose-500', icon: null },
+                        { label: 'Total Applications', value: stats.total, color: 'bg-blue-50 text-blue-700 border-blue-200' },
+                        { label: 'Pending Review', value: stats.pending, color: 'bg-amber-50 text-amber-700 border-amber-200' },
+                        { label: 'Approved', value: stats.approved, color: 'bg-green-50 text-green-700 border-green-200' },
+                        { label: 'Rejected', value: stats.rejected, color: 'bg-red-50 text-red-700 border-red-200' },
                         { 
                             label: 'Total Revenue', 
                             value: `GHS ${totalRevenue.toFixed(2)}`, 
-                            color: 'from-teal-500 to-cyan-600',
-                            icon: <DollarSign size={20} className="mb-1" />,
-                            fullWidth: true
+                            color: 'bg-gray-50 text-gray-900 border-gray-200'
                         }
                     ].map((stat, idx) => (
-                        <div key={idx} className={`bg-gradient-to-br ${stat.color} rounded-xl p-4 text-white shadow-sm ${stat.fullWidth ? 'md:col-span-3 lg:col-span-2' : ''}`}>
-                            {stat.icon && <div className="mb-1">{stat.icon}</div>}
-                            <div className={`${typeof stat.value === 'string' && stat.value.includes('GHS') ? 'text-xl' : 'text-2xl'} font-bold`}>
+                        <div key={idx} className={`${stat.color} rounded-lg border p-4`}>
+                            <div className="text-2xl font-bold">
                                 {stat.value}
                             </div>
-                            <div className="text-xs opacity-90 mt-1">{stat.label}</div>
+                            <div className="text-xs mt-1 opacity-75">{stat.label}</div>
                         </div>
                     ))}
                 </div>
