@@ -4,7 +4,7 @@
  * Connected directly to live ZyraTech API and Redux auth store.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { useAuth } from '../../../hooks/useAuth';
@@ -39,6 +39,9 @@ import {
 const AdminProfilePage = () => {
     const { user } = useAuth();
     const dispatch = useDispatch();
+
+    // Track if form has been initialized
+    const initializedRef = useRef(false);
 
     // Tab & state
     const [activeTab, setActiveTab] = useState('profile');
@@ -95,7 +98,8 @@ const AdminProfilePage = () => {
 
     // Sync state with live user data from Redux / API
     useEffect(() => {
-        if (user) {
+        if (user && !initializedRef.current) {
+            initializedRef.current = true;
             const firstName = user.firstName || (user.name ? user.name.split(' ')[0] : '') || '';
             const lastName = user.lastName || (user.name ? user.name.split(' ').slice(1).join(' ') : '') || '';
             const displayName = (firstName && lastName)
@@ -999,3 +1003,6 @@ const AdminProfilePage = () => {
 };
 
 export default AdminProfilePage;
+
+
+
