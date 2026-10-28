@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Admin Profile Page
  * Professional interface for managing admin profile, security settings, and preferences.
  * Connected directly to live ZyraTech API and Redux auth store.
@@ -51,6 +51,7 @@ const AdminProfilePage = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
     const [imageError, setImageError] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
 
     // User profile state
     const [userData, setUserData] = useState({
@@ -721,7 +722,7 @@ const AdminProfilePage = () => {
                                                     value={passwordData.currentPassword}
                                                     onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
                                                     className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
-                                                    placeholder="••••••••••••"
+                                                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                                                     required
                                                 />
                                             </div>
@@ -813,7 +814,7 @@ const AdminProfilePage = () => {
                                                 <Monitor className="text-gray-400 shrink-0" size={20} />
                                                 <div>
                                                     <p className="font-semibold text-gray-900 text-sm">Active Browser Session</p>
-                                                    <p className="text-xs text-gray-500">{userData.location || 'Ghana'} • Authenticated Admin</p>
+                                                    <p className="text-xs text-gray-500">{userData.location || 'Ghana'} â€¢ Authenticated Admin</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-3">
@@ -980,7 +981,7 @@ const AdminProfilePage = () => {
                                                         </time>
                                                     </div>
                                                     <div className="text-slate-500 text-xs">
-                                                        {item.details?.device ? `${item.details.device} • ${item.details.browser || ''}` : 'Admin activity recorded'}
+                                                        {item.details?.device ? `${item.details.device} â€¢ ${item.details.browser || ''}` : 'Admin activity recorded'}
                                                     </div>
                                                 </div>
                                             </div>
@@ -1003,6 +1004,8 @@ const AdminProfilePage = () => {
 };
 
 export default AdminProfilePage;
+
+
 
 
 
