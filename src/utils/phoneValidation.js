@@ -62,12 +62,10 @@ export const validatePhoneNumber = (phone) => {
 
 /**
  * Get phone input HTML attributes for validation
- * @returns {object} Pattern, maxLength, title attributes
+ * @returns {object} maxLength attribute only (pattern removed as it can block typing)
  */
 export const getPhoneInputAttributes = () => ({
-  pattern: '[\\d\\s\\-\\+\\(\\)]{0,20}',
-  maxLength: '20',
-  title: 'Phone can only contain digits, spaces, hyphens, +, and parentheses'
+  maxLength: '20'
 });
 
 /**

@@ -431,7 +431,10 @@ const AdminProfilePage = () => {
                             </div>
                         ) : (
                             <button
-                                onClick={() => setIsEditing(true)}
+                                onClick={() => {
+                                    console.log('Edit Profile clicked - setting isEditing to true');
+                                    setIsEditing(true);
+                                }}
                                 className="flex items-center gap-2 px-5 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm font-medium text-sm"
                             >
                                 <Edit size={16} />
