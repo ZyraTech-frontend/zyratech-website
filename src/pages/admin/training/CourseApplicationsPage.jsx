@@ -10,6 +10,7 @@ import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlic
 import trainingApplicationService from '../../../services/trainingApplicationService';
 import api from '../../../services/api';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
+import RejectApplicationDialog from '../../../components/admin/training/RejectApplicationDialog';
 import {
     Users,
     Search,
@@ -60,6 +61,9 @@ const CourseApplicationsPage = () => {
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [selectedCourse, setSelectedCourse] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
+    const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
+    const [selectedApplication, setSelectedApplication] = useState(null);
+    const [paymentInfo, setPaymentInfo] = useState(null);
     
     const itemsPerPage = 10;
     
@@ -213,29 +217,55 @@ const CourseApplicationsPage = () => {
         }));
     };
     
-    const handleReject = (application) => {
-        dispatch(openConfirmDialog({
-            title: 'Reject Application',
-            message: `Reject ${application.fullName || application.applicantName}'s application?`,
-            confirmLabel: 'Reject',
-            isDangerous: true,
-            onConfirm: async () => {
-                try {
-                    const appId = application.id || application.applicationId;
-                    await trainingApplicationService.updateApplicationStatus(appId, 'rejected');
-                    await loadApplications();
-                    dispatch(addNotification({
-                        type: 'success',
-                        message: 'Application rejected'
-                    }));
-                } catch (error) {
-                    dispatch(addNotification({
-                        type: 'error',
-                        message: 'Failed to reject application'
-                    }));
-                }
-            }
-        }));
+    const handleReject = async (application) => {
+        try {
+            const appId = application.id || application.applicationId;
+            
+            // Check payment status first
+            const paymentStatus = await trainingApplicationService.checkPaymentStatus(appId);
+            console.log('💰 Payment status:', paymentStatus);
+            
+            setSelectedApplication(application);
+            setPaymentInfo(paymentStatus);
+            setRejectDialogOpen(true);
+        } catch (error) {
+            console.error('Failed to check payment status:', error);
+            dispatch(addNotification({
+                type: 'error',
+                message: 'Failed to check payment status. Please try again.'
+            }));
+        }
+    };
+    
+    const handleConfirmReject = async (shouldRefund, reviewNotes) => {
+        try {
+            const appId = selectedApplication.id || selectedApplication.applicationId;
+            
+            await trainingApplicationService.updateApplicationStatus(
+                appId,
+                'rejected',
+                { shouldRefund, reviewNotes }
+            );
+            
+            await loadApplications();
+            
+            dispatch(addNotification({
+                type: 'success',
+                message: shouldRefund 
+                    ? 'Application rejected and refund processed ✅'
+                    : 'Application rejected'
+            }));
+            
+            setRejectDialogOpen(false);
+            setSelectedApplication(null);
+            setPaymentInfo(null);
+        } catch (error) {
+            dispatch(addNotification({
+                type: 'error',
+                message: error.response?.data?.message || 'Failed to reject application'
+            }));
+            throw error; // Re-throw to keep dialog open
+        }
     };
     
     return (
@@ -438,6 +468,21 @@ const CourseApplicationsPage = () => {
                     )}
                 </div>
             </div>
+            
+            {/* Rejection Dialog */}
+            {selectedApplication && (
+                <RejectApplicationDialog
+                    isOpen={rejectDialogOpen}
+                    onClose={() => {
+                        setRejectDialogOpen(false);
+                        setSelectedApplication(null);
+                        setPaymentInfo(null);
+                    }}
+                    onConfirm={handleConfirmReject}
+                    paymentInfo={paymentInfo}
+                    applicantName={selectedApplication.fullName || selectedApplication.applicantName}
+                />
+            )}
         </AdminLayout>
     );
 };
