@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import trainingApplicationService from '../../../services/trainingApplicationService';
+import api from '../../../services/api';
 import LoadingSpinner from '../../../components/admin/shared/LoadingSpinner';
 import RejectApplicationDialog from '../../../components/admin/training/RejectApplicationDialog';
 import {
@@ -156,6 +157,42 @@ const ApplicationDetailsPage = () => {
             }));
             throw error; // Re-throw to keep dialog open
         }
+    };
+    
+    const handleRefundPayment = () => {
+        if (!payment || !payment.reference) {
+            dispatch(addNotification({
+                type: 'error',
+                message: 'No payment reference found'
+            }));
+            return;
+        }
+        
+        dispatch(openConfirmDialog({
+            title: 'Refund Payment',
+            message: `Refund ${payment.currency} ${payment.amount} to ${application.applicantName}?`,
+            confirmLabel: 'Process Refund',
+            isDangerous: true,
+            onConfirm: async () => {
+                try {
+                    // Call refund API
+                    const response = await api.post(`/admin/transactions/${payment.reference}/refund`);
+                    
+                    dispatch(addNotification({
+                        type: 'success',
+                        message: 'Refund processed successfully! Money will be returned in 5-7 business days.'
+                    }));
+                    
+                    // Refresh application data
+                    fetchApplication();
+                } catch (error) {
+                    dispatch(addNotification({
+                        type: 'error',
+                        message: error.response?.data?.message || 'Failed to process refund'
+                    }));
+                }
+            }
+        }));
     };
 
     const handleDownloadCV = async () => {
@@ -434,6 +471,22 @@ const ApplicationDetailsPage = () => {
                                             </div>
                                         )}
                                     </div>
+                                    
+                                    {/* Refund Button - Only show if rejected and payment not refunded */}
+                                    {application.status === 'rejected' && payment.status === 'completed' && (
+                                        <div className="pt-3 border-t border-gray-200">
+                                            <button
+                                                onClick={handleRefundPayment}
+                                                className="w-full px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm flex items-center justify-center gap-2"
+                                            >
+                                                <DollarSign size={16} />
+                                                Refund Payment
+                                            </button>
+                                            <p className="text-xs text-gray-500 mt-2 text-center">
+                                                Money will be returned in 5-7 business days
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         )}
