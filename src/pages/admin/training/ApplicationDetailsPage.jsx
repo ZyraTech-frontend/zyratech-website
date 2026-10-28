@@ -5,6 +5,7 @@ import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlic
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import trainingApplicationService from '../../../services/trainingApplicationService';
 import LoadingSpinner from '../../../components/admin/shared/LoadingSpinner';
+import RejectApplicationDialog from '../../../components/admin/training/RejectApplicationDialog';
 import {
     Users,
     ChevronLeft,
@@ -35,6 +36,8 @@ const ApplicationDetailsPage = () => {
     const [payment, setPayment] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
+    const [paymentInfo, setPaymentInfo] = useState(null);
 
     useEffect(() => {
         fetchApplication();
@@ -113,27 +116,46 @@ const ApplicationDetailsPage = () => {
         }));
     };
 
-    const handleReject = () => {
-        dispatch(openConfirmDialog({
-            title: 'Reject Application',
-            message: `Are you sure you want to reject ${application.applicantName}'s application?`,
-            isDangerous: true,
-            onConfirm: async () => {
-                try {
-                    await trainingApplicationService.updateApplicationStatus(application.id, 'rejected');
-                    dispatch(addNotification({
-                        type: 'success',
-                        message: 'Application rejected'
-                    }));
-                    navigate('/admin/training');
-                } catch (error) {
-                    dispatch(addNotification({
-                        type: 'error',
-                        message: error.response?.data?.message || 'Failed to reject application'
-                    }));
-                }
-            }
-        }));
+    const handleReject = async () => {
+        try {
+            // Check payment status first
+            const paymentStatus = await trainingApplicationService.checkPaymentStatus(application.id);
+            console.log('💰 Payment status:', paymentStatus);
+            
+            setPaymentInfo(paymentStatus);
+            setRejectDialogOpen(true);
+        } catch (error) {
+            console.error('Failed to check payment status:', error);
+            dispatch(addNotification({
+                type: 'error',
+                message: 'Failed to check payment status. Please try again.'
+            }));
+        }
+    };
+    
+    const handleConfirmReject = async (shouldRefund, reviewNotes) => {
+        try {
+            await trainingApplicationService.updateApplicationStatus(
+                application.id,
+                'rejected',
+                { shouldRefund, reviewNotes }
+            );
+            
+            dispatch(addNotification({
+                type: 'success',
+                message: shouldRefund 
+                    ? 'Application rejected and refund processed ✅'
+                    : 'Application rejected'
+            }));
+            
+            navigate('/admin/training');
+        } catch (error) {
+            dispatch(addNotification({
+                type: 'error',
+                message: error.response?.data?.message || 'Failed to reject application'
+            }));
+            throw error; // Re-throw to keep dialog open
+        }
     };
 
     const handleDownloadCV = async () => {
@@ -487,6 +509,15 @@ const ApplicationDetailsPage = () => {
                     </div>
                 </div>
             </div>
+            
+            {/* Rejection Dialog */}
+            <RejectApplicationDialog
+                isOpen={rejectDialogOpen}
+                onClose={() => setRejectDialogOpen(false)}
+                onConfirm={handleConfirmReject}
+                paymentInfo={paymentInfo}
+                applicantName={application.applicantName}
+            />
         </AdminLayout>
     );
 };

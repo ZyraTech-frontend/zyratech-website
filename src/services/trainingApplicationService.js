@@ -122,13 +122,39 @@ export const trainingApplicationService = {
     }
   },
 
-  // Update application status (admin only)
-  updateApplicationStatus: async (applicationId, status, notes = '') => {
+  // Check payment status for an application (admin only)
+  checkPaymentStatus: async (applicationId) => {
     try {
-      const response = await api.put(`/admin/enrollments/${applicationId}/status`, {
-        status,
-        notes
-      });
+      const response = await api.get(`/admin/enrollments/${applicationId}/payment-status`);
+      return response.data?.data || response.data;
+    } catch (error) {
+      console.error('Failed to check payment status:', error);
+      throw error;
+    }
+  },
+
+  // Update application status with optional refund (admin only)
+  updateApplicationStatus: async (applicationId, status, options = {}) => {
+    try {
+      const payload = {
+        status
+      };
+      
+      // Add optional parameters
+      if (options.reviewNotes) {
+        payload.reviewNotes = options.reviewNotes;
+      }
+      
+      if (options.shouldRefund !== undefined) {
+        payload.shouldRefund = options.shouldRefund;
+      }
+      
+      // Legacy support for 'notes' parameter
+      if (options.notes && !options.reviewNotes) {
+        payload.reviewNotes = options.notes;
+      }
+      
+      const response = await api.put(`/admin/enrollments/${applicationId}/status`, payload);
       return response.data?.data || response.data;
     } catch (error) {
       console.error('Failed to update application status:', error);
