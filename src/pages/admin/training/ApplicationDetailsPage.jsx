@@ -85,7 +85,7 @@ const ApplicationDetailsPage = () => {
                     <h2 className="text-xl font-bold text-gray-900 mb-2">Application Not Found</h2>
                     <p className="text-gray-500 mb-4">{error || 'The application you are looking for does not exist.'}</p>
                     <button
-                        onClick={() => navigate('/admin/training')}
+                        onClick={() => navigate('/admin/course-applications')}
                         className="text-[#004fa2] hover:underline"
                     >
                         Return to Training
@@ -106,7 +106,7 @@ const ApplicationDetailsPage = () => {
                         type: 'success',
                         message: 'Application approved successfully'
                     }));
-                    navigate('/admin/training');
+                    navigate('/admin/course-applications');
                 } catch (error) {
                     dispatch(addNotification({
                         type: 'error',
@@ -230,7 +230,7 @@ const ApplicationDetailsPage = () => {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <button
-                            onClick={() => navigate('/admin/training')}
+                            onClick={() => navigate('/admin/course-applications')}
                             className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
                         >
                             <ChevronLeft size={20} />
