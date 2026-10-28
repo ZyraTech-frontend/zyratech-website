@@ -628,10 +628,12 @@ const AdminProfilePage = () => {
                                         <input
                                             type="text"
                                             name="firstName"
-                                            value={userData.firstName}
+                                            value={userData.firstName || ''}
                                             onChange={handleInputChange}
                                             disabled={!isEditing}
+                                            readOnly={!isEditing}
                                             placeholder="First Name"
+                                            autoComplete="off"
                                             className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                                         />
                                     </div>
@@ -640,10 +642,12 @@ const AdminProfilePage = () => {
                                         <input
                                             type="text"
                                             name="lastName"
-                                            value={userData.lastName}
+                                            value={userData.lastName || ''}
                                             onChange={handleInputChange}
                                             disabled={!isEditing}
+                                            readOnly={!isEditing}
                                             placeholder="Last Name"
+                                            autoComplete="off"
                                             className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                                         />
                                     </div>
@@ -654,9 +658,11 @@ const AdminProfilePage = () => {
                                             <input
                                                 type="email"
                                                 name="email"
-                                                value={userData.email}
+                                                value={userData.email || ''}
                                                 disabled={!isEditing || (user?.role !== 'super_admin' && user?.role !== 'admin_super')}
+                                                readOnly={!isEditing || (user?.role !== 'super_admin' && user?.role !== 'admin_super')}
                                                 onChange={handleInputChange}
+                                                autoComplete="off"
                                                 className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
                                                     (!isEditing || (user?.role !== 'super_admin' && user?.role !== 'admin_super'))
                                                         ? 'bg-gray-100 text-gray-600 cursor-not-allowed'
@@ -682,10 +688,12 @@ const AdminProfilePage = () => {
                                             <input
                                                 type="tel"
                                                 name="phone"
-                                                value={userData.phone}
+                                                value={userData.phone || ''}
                                                 onChange={handleInputChange}
                                                 disabled={!isEditing}
+                                                readOnly={!isEditing}
                                                 placeholder="+233..."
+                                                autoComplete="off"
                                                 {...getPhoneInputAttributes()}
                                                 className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                                             />
@@ -698,10 +706,12 @@ const AdminProfilePage = () => {
                                             <input
                                                 type="text"
                                                 name="department"
-                                                value={userData.department}
+                                                value={userData.department || ''}
                                                 onChange={handleInputChange}
                                                 disabled={!isEditing}
+                                                readOnly={!isEditing}
                                                 placeholder="Department"
+                                                autoComplete="off"
                                                 className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                                             />
                                         </div>
@@ -713,10 +723,12 @@ const AdminProfilePage = () => {
                                             <input
                                                 type="text"
                                                 name="location"
-                                                value={userData.location}
+                                                value={userData.location || ''}
                                                 onChange={handleInputChange}
                                                 disabled={!isEditing}
+                                                readOnly={!isEditing}
                                                 placeholder="City, Country"
+                                                autoComplete="off"
                                                 className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                                             />
                                         </div>
@@ -725,11 +737,13 @@ const AdminProfilePage = () => {
                                         <label className="text-sm font-medium text-gray-700">Bio</label>
                                         <textarea
                                             name="bio"
-                                            value={userData.bio}
+                                            value={userData.bio || ''}
                                             onChange={handleInputChange}
                                             disabled={!isEditing}
+                                            readOnly={!isEditing}
                                             rows={4}
                                             placeholder="A short description about yourself..."
+                                            autoComplete="off"
                                             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all resize-none"
                                         />
                                     </div>
