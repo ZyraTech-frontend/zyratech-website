@@ -630,11 +630,12 @@ const AdminProfilePage = () => {
                                             name="firstName"
                                             value={userData.firstName || ''}
                                             onChange={handleInputChange}
-                                            disabled={!isEditing}
                                             readOnly={!isEditing}
                                             placeholder="First Name"
                                             autoComplete="off"
-                                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                                            className={`w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
+                                                !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-gray-50'
+                                            }`}
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -644,11 +645,12 @@ const AdminProfilePage = () => {
                                             name="lastName"
                                             value={userData.lastName || ''}
                                             onChange={handleInputChange}
-                                            disabled={!isEditing}
                                             readOnly={!isEditing}
                                             placeholder="Last Name"
                                             autoComplete="off"
-                                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                                            className={`w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
+                                                !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-gray-50'
+                                            }`}
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -659,7 +661,6 @@ const AdminProfilePage = () => {
                                                 type="email"
                                                 name="email"
                                                 value={userData.email || ''}
-                                                disabled={!isEditing || (user?.role !== 'super_admin' && user?.role !== 'admin_super')}
                                                 readOnly={!isEditing || (user?.role !== 'super_admin' && user?.role !== 'admin_super')}
                                                 onChange={handleInputChange}
                                                 autoComplete="off"
@@ -690,12 +691,13 @@ const AdminProfilePage = () => {
                                                 name="phone"
                                                 value={userData.phone || ''}
                                                 onChange={handleInputChange}
-                                                disabled={!isEditing}
                                                 readOnly={!isEditing}
                                                 placeholder="+233..."
                                                 autoComplete="off"
                                                 {...getPhoneInputAttributes()}
-                                                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                                                className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
+                                                    !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-gray-50'
+                                                }`}
                                             />
                                         </div>
                                     </div>
@@ -708,11 +710,12 @@ const AdminProfilePage = () => {
                                                 name="department"
                                                 value={userData.department || ''}
                                                 onChange={handleInputChange}
-                                                disabled={!isEditing}
                                                 readOnly={!isEditing}
                                                 placeholder="Department"
                                                 autoComplete="off"
-                                                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                                                className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
+                                                    !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-gray-50'
+                                                }`}
                                             />
                                         </div>
                                     </div>
@@ -725,11 +728,12 @@ const AdminProfilePage = () => {
                                                 name="location"
                                                 value={userData.location || ''}
                                                 onChange={handleInputChange}
-                                                disabled={!isEditing}
                                                 readOnly={!isEditing}
                                                 placeholder="City, Country"
                                                 autoComplete="off"
-                                                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                                                className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
+                                                    !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-gray-50'
+                                                }`}
                                             />
                                         </div>
                                     </div>
@@ -739,12 +743,13 @@ const AdminProfilePage = () => {
                                             name="bio"
                                             value={userData.bio || ''}
                                             onChange={handleInputChange}
-                                            disabled={!isEditing}
                                             readOnly={!isEditing}
                                             rows={4}
                                             placeholder="A short description about yourself..."
                                             autoComplete="off"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] disabled:opacity-60 disabled:cursor-not-allowed transition-all resize-none"
+                                            className={`w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all resize-none ${
+                                                !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-gray-50'
+                                            }`}
                                         />
                                     </div>
                                 </div>
