@@ -630,11 +630,11 @@ const AdminProfilePage = () => {
                                             name="firstName"
                                             value={userData.firstName || ''}
                                             onChange={handleInputChange}
-                                            readOnly={!isEditing}
-                                            placeholder="First Name"
+                                            placeholder={isEditing ? "First Name" : ""}
                                             autoComplete="off"
+                                            style={{ pointerEvents: isEditing ? 'auto' : 'none' }}
                                             className={`w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                                                !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-gray-50'
+                                                !isEditing ? 'bg-gray-100 text-gray-600' : 'bg-white'
                                             }`}
                                         />
                                     </div>
@@ -645,11 +645,11 @@ const AdminProfilePage = () => {
                                             name="lastName"
                                             value={userData.lastName || ''}
                                             onChange={handleInputChange}
-                                            readOnly={!isEditing}
-                                            placeholder="Last Name"
+                                            placeholder={isEditing ? "Last Name" : ""}
                                             autoComplete="off"
+                                            style={{ pointerEvents: isEditing ? 'auto' : 'none' }}
                                             className={`w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                                                !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-gray-50'
+                                                !isEditing ? 'bg-gray-100 text-gray-600' : 'bg-white'
                                             }`}
                                         />
                                     </div>
@@ -661,13 +661,13 @@ const AdminProfilePage = () => {
                                                 type="email"
                                                 name="email"
                                                 value={userData.email || ''}
-                                                readOnly={!isEditing || (user?.role !== 'super_admin' && user?.role !== 'admin_super')}
+                                                style={{ pointerEvents: (isEditing && (user?.role === 'super_admin' || user?.role === 'admin_super')) ? 'auto' : 'none' }}
                                                 onChange={handleInputChange}
                                                 autoComplete="off"
                                                 className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
                                                     (!isEditing || (user?.role !== 'super_admin' && user?.role !== 'admin_super'))
                                                         ? 'bg-gray-100 text-gray-600 cursor-not-allowed'
-                                                        : 'bg-gray-50'
+                                                        : 'bg-white'
                                                 }`}
                                             />
                                         </div>
@@ -691,12 +691,12 @@ const AdminProfilePage = () => {
                                                 name="phone"
                                                 value={userData.phone || ''}
                                                 onChange={handleInputChange}
-                                                readOnly={!isEditing}
+                                                style={{ pointerEvents: isEditing ? 'auto' : 'none' }}
                                                 placeholder="+233..."
                                                 autoComplete="off"
                                                 {...getPhoneInputAttributes()}
                                                 className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                                                    !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-gray-50'
+                                                    !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-white'
                                                 }`}
                                             />
                                         </div>
@@ -710,11 +710,11 @@ const AdminProfilePage = () => {
                                                 name="department"
                                                 value={userData.department || ''}
                                                 onChange={handleInputChange}
-                                                readOnly={!isEditing}
+                                                style={{ pointerEvents: isEditing ? 'auto' : 'none' }}
                                                 placeholder="Department"
                                                 autoComplete="off"
                                                 className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                                                    !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-gray-50'
+                                                    !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-white'
                                                 }`}
                                             />
                                         </div>
@@ -728,11 +728,11 @@ const AdminProfilePage = () => {
                                                 name="location"
                                                 value={userData.location || ''}
                                                 onChange={handleInputChange}
-                                                readOnly={!isEditing}
+                                                style={{ pointerEvents: isEditing ? 'auto' : 'none' }}
                                                 placeholder="City, Country"
                                                 autoComplete="off"
                                                 className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                                                    !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-gray-50'
+                                                    !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-white'
                                                 }`}
                                             />
                                         </div>
@@ -743,12 +743,12 @@ const AdminProfilePage = () => {
                                             name="bio"
                                             value={userData.bio || ''}
                                             onChange={handleInputChange}
-                                            readOnly={!isEditing}
+                                            style={{ pointerEvents: isEditing ? 'auto' : 'none' }}
                                             rows={4}
                                             placeholder="A short description about yourself..."
                                             autoComplete="off"
                                             className={`w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all resize-none ${
-                                                !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-gray-50'
+                                                !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-white'
                                             }`}
                                         />
                                     </div>
