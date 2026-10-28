@@ -40,9 +40,8 @@ const AdminProfilePage = () => {
     const { user } = useAuth();
     const dispatch = useDispatch();
 
-    // Tab & Edit state
+    // Tab & state
     const [activeTab, setActiveTab] = useState('profile');
-    const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [successMessage, setSuccessMessage] = useState('Profile updated successfully!');
@@ -273,7 +272,6 @@ const AdminProfilePage = () => {
 
             setSuccessMessage('Profile updated successfully!');
             setShowSuccess(true);
-            setIsEditing(false);
             setTimeout(() => setShowSuccess(false), 4000);
         } catch (err) {
             const msg = typeof err === 'string' ? err : err?.message || 'Failed to update profile. Please try again.';
@@ -398,50 +396,7 @@ const AdminProfilePage = () => {
                         </p>
                     </div>
 
-                    {activeTab === 'profile' && (
-                        isEditing ? (
-                            <div className="flex items-center gap-3">
-                                <button
-                                    onClick={() => {
-                                        setIsEditing(false);
-                                        setErrorMessage('');
-                                    }}
-                                    disabled={isSaving}
-                                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl transition-colors font-medium text-sm"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={handleSave}
-                                    disabled={isSaving}
-                                    className={`flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:from-[#003d7a] hover:to-[#004fa2] transition-all duration-200 shadow-md ${isSaving ? 'opacity-70 cursor-wait' : ''}`}
-                                >
-                                    {isSaving ? (
-                                        <>
-                                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                            Saving...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Save size={18} />
-                                            Save Changes
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-                        ) : (
-                            <button
-                                onClick={() => {
-                                    console.log('Edit Profile clicked - setting isEditing to true');
-                                    setIsEditing(true);
-                                }}
-                                className="flex items-center gap-2 px-5 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm font-medium text-sm"
-                            >
-                                <Edit size={16} />
-                                Edit Profile
-                            </button>
-                        )
-                    )}
+                    {activeTab === 'profile' && null}
                 </div>
 
                 {/* Alerts */}
@@ -617,58 +572,82 @@ const AdminProfilePage = () => {
                         {/* PERSONAL INFORMATION TAB */}
                         {activeTab === 'profile' && (
                             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
-                                <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                    <User size={20} className="text-[#004fa2]" />
-                                    Personal Information
-                                </h3>
+                                {/* Header with Save Changes Button */}
+                                <div className="flex items-center justify-between mb-6">
+                                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                        <User size={20} className="text-[#004fa2]" />
+                                        Personal Information
+                                    </h3>
+                                    {isSaving ? (
+                                        <button disabled className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium cursor-wait">
+                                            <Loader2 size={16} className="animate-spin" />
+                                            Saving...
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={handleSave}
+                                            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-lg text-sm font-medium hover:from-[#003d7a] hover:to-[#004fa2] transition-all"
+                                        >
+                                            <Save size={16} />
+                                            Save Changes
+                                        </button>
+                                    )}
+                                </div>
 
+                                {/* Success/Error Messages */}
+                                {showSuccess && (
+                                    <div className="mb-4 bg-green-50 border border-green-200 text-green-700 rounded-lg p-3 text-sm flex items-center gap-2">
+                                        <CheckCircle size={16} />
+                                        <span>{successMessage}</span>
+                                    </div>
+                                )}
+
+                                {errorMessage && (
+                                    <div className="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm flex items-center gap-2">
+                                        <AlertCircle size={16} />
+                                        <span>{errorMessage}</span>
+                                    </div>
+                                )}
+
+                                {/* Form Fields - All Always Visible and Editable */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700">First Name</label>
                                         <input
                                             type="text"
-                                            name="firstName"
                                             value={userData.firstName || ''}
-                                            onChange={handleInputChange}
-                                            placeholder={isEditing ? "First Name" : ""}
-                                            autoComplete="off"
-                                            style={{ pointerEvents: isEditing ? 'auto' : 'none' }}
-                                            className={`w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                                                !isEditing ? 'bg-gray-100 text-gray-600' : 'bg-white'
-                                            }`}
+                                            onChange={(e) => setUserData(prev => ({ ...prev, firstName: e.target.value, name: `${e.target.value} ${prev.lastName}`.trim() }))}
+                                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                            placeholder="First Name"
                                         />
                                     </div>
+
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700">Last Name</label>
                                         <input
                                             type="text"
-                                            name="lastName"
                                             value={userData.lastName || ''}
-                                            onChange={handleInputChange}
-                                            placeholder={isEditing ? "Last Name" : ""}
-                                            autoComplete="off"
-                                            style={{ pointerEvents: isEditing ? 'auto' : 'none' }}
-                                            className={`w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                                                !isEditing ? 'bg-gray-100 text-gray-600' : 'bg-white'
-                                            }`}
+                                            onChange={(e) => setUserData(prev => ({ ...prev, lastName: e.target.value, name: `${prev.firstName} ${e.target.value}`.trim() }))}
+                                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                            placeholder="Last Name"
                                         />
                                     </div>
+
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700">Email Address</label>
                                         <div className="relative">
                                             <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                                             <input
                                                 type="email"
-                                                name="email"
                                                 value={userData.email || ''}
-                                                style={{ pointerEvents: (isEditing && (user?.role === 'super_admin' || user?.role === 'admin_super')) ? 'auto' : 'none' }}
-                                                onChange={handleInputChange}
+                                                onChange={(e) => setUserData(prev => ({ ...prev, email: e.target.value }))}
                                                 autoComplete="off"
                                                 className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                                                    (!isEditing || (user?.role !== 'super_admin' && user?.role !== 'admin_super'))
+                                                    (user?.role !== 'super_admin' && user?.role !== 'admin_super')
                                                         ? 'bg-gray-100 text-gray-600 cursor-not-allowed'
                                                         : 'bg-white'
                                                 }`}
+                                                disabled={(user?.role !== 'super_admin' && user?.role !== 'admin_super')}
                                             />
                                         </div>
                                         {(user?.role !== 'super_admin' && user?.role !== 'admin_super') && (
@@ -676,80 +655,68 @@ const AdminProfilePage = () => {
                                                 <span className="text-amber-600">⚠️</span> Email assigned by Super Admin - cannot be changed
                                             </p>
                                         )}
-                                        {(user?.role === 'super_admin' || user?.role === 'admin_super') && isEditing && (
+                                        {(user?.role === 'super_admin' || user?.role === 'admin_super') && (
                                             <p className="text-xs text-blue-600">
                                                 As Super Admin, you can edit your email address
                                             </p>
                                         )}
                                     </div>
+
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700">Phone Number</label>
                                         <div className="relative">
                                             <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                                             <input
                                                 type="tel"
-                                                name="phone"
                                                 value={userData.phone || ''}
-                                                onChange={handleInputChange}
-                                                style={{ pointerEvents: isEditing ? 'auto' : 'none' }}
+                                                onChange={(e) => setUserData(prev => ({ ...prev, phone: e.target.value }))}
                                                 placeholder="+233..."
                                                 autoComplete="off"
                                                 {...getPhoneInputAttributes()}
-                                                className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                                                    !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-white'
-                                                }`}
+                                                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
                                             />
                                         </div>
                                     </div>
+
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700">Department</label>
                                         <div className="relative">
                                             <Briefcase className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                                             <input
                                                 type="text"
-                                                name="department"
                                                 value={userData.department || ''}
-                                                onChange={handleInputChange}
-                                                style={{ pointerEvents: isEditing ? 'auto' : 'none' }}
+                                                onChange={(e) => setUserData(prev => ({ ...prev, department: e.target.value }))}
                                                 placeholder="Department"
                                                 autoComplete="off"
-                                                className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                                                    !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-white'
-                                                }`}
+                                                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
                                             />
                                         </div>
                                     </div>
+
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700">Location</label>
                                         <div className="relative">
                                             <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                                             <input
                                                 type="text"
-                                                name="location"
                                                 value={userData.location || ''}
-                                                onChange={handleInputChange}
-                                                style={{ pointerEvents: isEditing ? 'auto' : 'none' }}
+                                                onChange={(e) => setUserData(prev => ({ ...prev, location: e.target.value }))}
                                                 placeholder="City, Country"
                                                 autoComplete="off"
-                                                className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                                                    !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-white'
-                                                }`}
+                                                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
                                             />
                                         </div>
                                     </div>
+
                                     <div className="md:col-span-2 space-y-2">
                                         <label className="text-sm font-medium text-gray-700">Bio</label>
                                         <textarea
-                                            name="bio"
                                             value={userData.bio || ''}
-                                            onChange={handleInputChange}
-                                            style={{ pointerEvents: isEditing ? 'auto' : 'none' }}
+                                            onChange={(e) => setUserData(prev => ({ ...prev, bio: e.target.value }))}
                                             rows={4}
                                             placeholder="A short description about yourself..."
                                             autoComplete="off"
-                                            className={`w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all resize-none ${
-                                                !isEditing ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-white'
-                                            }`}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all resize-none"
                                         />
                                     </div>
                                 </div>
