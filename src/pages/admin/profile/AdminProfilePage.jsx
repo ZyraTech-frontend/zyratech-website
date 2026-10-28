@@ -572,29 +572,19 @@ const AdminProfilePage = () => {
                         {/* PERSONAL INFORMATION TAB */}
                         {activeTab === 'profile' && (
                             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
-                                {/* Header with Save Changes Button */}
-                                <div className="flex items-center justify-between mb-6">
-                                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                                        <User size={20} className="text-[#004fa2]" />
-                                        Personal Information
-                                    </h3>
-                                    {isSaving ? (
-                                        <button disabled className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium cursor-wait">
-                                            <Loader2 size={16} className="animate-spin" />
-                                            Saving...
-                                        </button>
-                                    ) : (
-                                        <button
-                                            onClick={handleSave}
-                                            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-lg text-sm font-medium hover:from-[#003d7a] hover:to-[#004fa2] transition-all"
-                                        >
-                                            <Save size={16} />
-                                            Save Changes
-                                        </button>
-                                    )}
+                                {/* Save Changes Button */}
+                                <div className="flex justify-end mb-6">
+                                    <button
+                                        onClick={handleSave}
+                                        disabled={isSaving}
+                                        className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-lg text-sm font-medium hover:from-[#003d7a] hover:to-[#004fa2] transition-all disabled:opacity-50"
+                                    >
+                                        <Save size={16} />
+                                        {isSaving ? 'Saving...' : 'Save Changes'}
+                                    </button>
                                 </div>
 
-                                {/* Success/Error Messages */}
+                                {/* Success Message */}
                                 {showSuccess && (
                                     <div className="mb-4 bg-green-50 border border-green-200 text-green-700 rounded-lg p-3 text-sm flex items-center gap-2">
                                         <CheckCircle size={16} />
@@ -602,6 +592,7 @@ const AdminProfilePage = () => {
                                     </div>
                                 )}
 
+                                {/* Error Message */}
                                 {errorMessage && (
                                     <div className="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm flex items-center gap-2">
                                         <AlertCircle size={16} />
@@ -609,14 +600,14 @@ const AdminProfilePage = () => {
                                     </div>
                                 )}
 
-                                {/* Form Fields - All Always Visible and Editable */}
+                                {/* Form Fields */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700">First Name</label>
                                         <input
                                             type="text"
                                             value={userData.firstName || ''}
-                                            onChange={(e) => setUserData(prev => ({ ...prev, firstName: e.target.value, name: `${e.target.value} ${prev.lastName}`.trim() }))}
+                                            onChange={(e) => setUserData(prev => ({...prev, firstName: e.target.value}))}
                                             className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
                                             placeholder="First Name"
                                         />
@@ -627,7 +618,7 @@ const AdminProfilePage = () => {
                                         <input
                                             type="text"
                                             value={userData.lastName || ''}
-                                            onChange={(e) => setUserData(prev => ({ ...prev, lastName: e.target.value, name: `${prev.firstName} ${e.target.value}`.trim() }))}
+                                            onChange={(e) => setUserData(prev => ({...prev, lastName: e.target.value}))}
                                             className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
                                             placeholder="Last Name"
                                         />
@@ -635,88 +626,57 @@ const AdminProfilePage = () => {
 
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700">Email Address</label>
-                                        <div className="relative">
-                                            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                                            <input
-                                                type="email"
-                                                value={userData.email || ''}
-                                                onChange={(e) => setUserData(prev => ({ ...prev, email: e.target.value }))}
-                                                autoComplete="off"
-                                                className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
-                                                    (user?.role !== 'super_admin' && user?.role !== 'admin_super')
-                                                        ? 'bg-gray-100 text-gray-600 cursor-not-allowed'
-                                                        : 'bg-white'
-                                                }`}
-                                                disabled={(user?.role !== 'super_admin' && user?.role !== 'admin_super')}
-                                            />
-                                        </div>
-                                        {(user?.role !== 'super_admin' && user?.role !== 'admin_super') && (
-                                            <p className="text-xs text-gray-500">
-                                                <span className="text-amber-600">⚠️</span> Email assigned by Super Admin - cannot be changed
-                                            </p>
-                                        )}
-                                        {(user?.role === 'super_admin' || user?.role === 'admin_super') && (
-                                            <p className="text-xs text-blue-600">
-                                                As Super Admin, you can edit your email address
-                                            </p>
-                                        )}
+                                        <input
+                                            type="email"
+                                            value={userData.email || ''}
+                                            onChange={(e) => setUserData(prev => ({...prev, email: e.target.value}))}
+                                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                            disabled={user?.role !== 'super_admin'}
+                                            placeholder="Email Address"
+                                        />
                                     </div>
 
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700">Phone Number</label>
-                                        <div className="relative">
-                                            <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                                            <input
-                                                type="tel"
-                                                value={userData.phone || ''}
-                                                onChange={(e) => setUserData(prev => ({ ...prev, phone: e.target.value }))}
-                                                placeholder="+233..."
-                                                autoComplete="off"
-                                                {...getPhoneInputAttributes()}
-                                                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
-                                            />
-                                        </div>
+                                        <input
+                                            type="tel"
+                                            value={userData.phone || ''}
+                                            onChange={(e) => setUserData(prev => ({...prev, phone: e.target.value}))}
+                                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                            placeholder="Phone Number"
+                                        />
                                     </div>
 
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700">Department</label>
-                                        <div className="relative">
-                                            <Briefcase className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                                            <input
-                                                type="text"
-                                                value={userData.department || ''}
-                                                onChange={(e) => setUserData(prev => ({ ...prev, department: e.target.value }))}
-                                                placeholder="Department"
-                                                autoComplete="off"
-                                                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
-                                            />
-                                        </div>
+                                        <input
+                                            type="text"
+                                            value={userData.department || ''}
+                                            onChange={(e) => setUserData(prev => ({...prev, department: e.target.value}))}
+                                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                            placeholder="Department"
+                                        />
                                     </div>
 
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700">Location</label>
-                                        <div className="relative">
-                                            <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                                            <input
-                                                type="text"
-                                                value={userData.location || ''}
-                                                onChange={(e) => setUserData(prev => ({ ...prev, location: e.target.value }))}
-                                                placeholder="City, Country"
-                                                autoComplete="off"
-                                                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
-                                            />
-                                        </div>
+                                        <input
+                                            type="text"
+                                            value={userData.location || ''}
+                                            onChange={(e) => setUserData(prev => ({...prev, location: e.target.value}))}
+                                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
+                                            placeholder="Location"
+                                        />
                                     </div>
 
                                     <div className="md:col-span-2 space-y-2">
                                         <label className="text-sm font-medium text-gray-700">Bio</label>
                                         <textarea
                                             value={userData.bio || ''}
-                                            onChange={(e) => setUserData(prev => ({ ...prev, bio: e.target.value }))}
+                                            onChange={(e) => setUserData(prev => ({...prev, bio: e.target.value}))}
                                             rows={4}
-                                            placeholder="A short description about yourself..."
-                                            autoComplete="off"
                                             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all resize-none"
+                                            placeholder="Bio"
                                         />
                                     </div>
                                 </div>
