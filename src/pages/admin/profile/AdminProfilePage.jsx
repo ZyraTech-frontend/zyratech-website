@@ -652,11 +652,25 @@ const AdminProfilePage = () => {
                                                 type="email"
                                                 name="email"
                                                 value={userData.email}
-                                                disabled={true}
-                                                className="w-full pl-10 pr-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-600 cursor-not-allowed"
+                                                disabled={!isEditing || (user?.role !== 'super_admin' && user?.role !== 'admin_super')}
+                                                onChange={handleInputChange}
+                                                className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all ${
+                                                    (!isEditing || (user?.role !== 'super_admin' && user?.role !== 'admin_super'))
+                                                        ? 'bg-gray-100 text-gray-600 cursor-not-allowed'
+                                                        : 'bg-gray-50'
+                                                }`}
                                             />
                                         </div>
-                                        <p className="text-xs text-gray-400">Account email cannot be modified directly</p>
+                                        {(user?.role !== 'super_admin' && user?.role !== 'admin_super') && (
+                                            <p className="text-xs text-gray-500">
+                                                <span className="text-amber-600">⚠️</span> Email assigned by Super Admin - cannot be changed
+                                            </p>
+                                        )}
+                                        {(user?.role === 'super_admin' || user?.role === 'admin_super') && isEditing && (
+                                            <p className="text-xs text-blue-600">
+                                                As Super Admin, you can edit your email address
+                                            </p>
+                                        )}
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700">Phone Number</label>
