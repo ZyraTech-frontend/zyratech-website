@@ -287,6 +287,17 @@ const AdminProfilePage = () => {
         }
     };
 
+
+    // Handle edit mode
+    const handleEditMode = () => {
+        setIsEditMode(true);
+    };
+
+    // Handle cancel
+    const handleCancel = () => {
+        setIsEditMode(false);
+        setErrorMessage('');
+    };
     // Handle password change
     const handlePasswordChange = async (e) => {
         e.preventDefault();
