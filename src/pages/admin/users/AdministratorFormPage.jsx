@@ -471,52 +471,45 @@ const AdministratorFormPage = () => {
                 Select the section this administrator will primarily manage.
               </p>
 
-              <div className="space-y-5">
-                {DEPARTMENTS.map(section => (
-                  <div key={dept.value}>
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{dept.value}</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {DEPARTMENTS.map(dept => {
-                        const isSelected = formData.department === dept.value;
-                        return (
-                          <button
-                            key={dept.value}
-                            type="button"
-                            onClick={() => {
-                              const defaultPerms = DEPARTMENT_PERMISSIONS_MAP[dept.value] || [dept.value.toLowerCase().replace(/\s+/g, '_')];
-                              setFormData(prev => {
-                                const currentPerms = prev.permissions.length > 0 ? prev.permissions : [];
-                                const mergedPerms = Array.from(new Set([...currentPerms, ...defaultPerms]));
-                                return {
-                                  ...prev,
-                                  department: dept.value,
-                                  permissions: mergedPerms
-                                };
-                              });
-                              if (errors.department) setErrors(prev => ({ ...prev, department: undefined }));
-                              if (errors.permissions) setErrors(prev => ({ ...prev, permissions: undefined }));
-                            }}
-                            className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left ${
-                              isSelected
-                                ? 'border-[#004fa2] bg-[#004fa2]/5'
-                                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                            }`}
-                          >
-                            <div className={`w-6 h-6 md:w-8 md:h-8 rounded-lg flex items-center justify-center ${
-                              isSelected ? 'bg-[#004fa2] text-white' : 'bg-gray-100 text-gray-500'
-                            }`}>
-                              <Shield size={16} />
-                            </div>
-                            <p className={`text-sm font-medium ${isSelected ? 'text-[#004fa2]' : 'text-gray-700'}`}>{dept.value}</p>
-                            {isSelected && (
-                              <Check size={16} className="text-[#004fa2] ml-auto" />
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {DEPARTMENTS.map(dept => {
+                  const isSelected = formData.department === dept.value;
+                  return (
+                    <button
+                      key={dept.value}
+                      type="button"
+                      onClick={() => {
+                        const defaultPerms = DEPARTMENT_PERMISSIONS_MAP[dept.value] || [dept.value.toLowerCase().replace(/\s+/g, '_')];
+                        setFormData(prev => {
+                          const currentPerms = prev.permissions.length > 0 ? prev.permissions : [];
+                          const mergedPerms = Array.from(new Set([...currentPerms, ...defaultPerms]));
+                          return {
+                            ...prev,
+                            department: dept.value,
+                            permissions: mergedPerms
+                          };
+                        });
+                        if (errors.department) setErrors(prev => ({ ...prev, department: undefined }));
+                        if (errors.permissions) setErrors(prev => ({ ...prev, permissions: undefined }));
+                      }}
+                      className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left ${
+                        isSelected
+                          ? 'border-[#004fa2] bg-[#004fa2]/5'
+                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className={`w-6 h-6 md:w-8 md:h-8 rounded-lg flex items-center justify-center ${
+                        isSelected ? 'bg-[#004fa2] text-white' : 'bg-gray-100 text-gray-500'
+                      }`}>
+                        <Shield size={16} />
+                      </div>
+                      <p className={`text-sm font-medium ${isSelected ? 'text-[#004fa2]' : 'text-gray-700'}`}>{dept.value}</p>
+                      {isSelected && (
+                        <Check size={16} className="text-[#004fa2] ml-auto" />
+                      )}
+                    </button>
+                  );
+                })}
               </div>
               {errors.department && <p className="text-red-500 text-sm mt-1">{errors.department}</p>}
             </div>
@@ -1034,3 +1027,6 @@ const AdministratorFormPage = () => {
 };
 
 export default AdministratorFormPage;
+
+
+
