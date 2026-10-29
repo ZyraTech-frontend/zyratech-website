@@ -13,7 +13,7 @@ import { fetchUsers, updateUser, deactivateUser, reactivateUser } from '../../..
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { ROLES, ROLE_LABELS } from '../../../utils/constants';
+import { ROLES, ROLE_LABELS, DEPARTMENTS, DEPARTMENT_COLORS } from '../../../utils/constants';
 import { normalizeAvatarUrl } from '../../../utils/avatar';
 import {
   UserPlus, Edit, Shield, ShieldCheck, ShieldX,
@@ -42,6 +42,18 @@ const KYC_STATUSES = {
   pending: { value: 'pending', label: 'Pending Review', icon: Clock, colorClass: 'bg-amber-100 text-amber-700', dotColor: 'bg-amber-500' },
   verified: { value: 'verified', label: 'Verified', icon: BadgeCheck, colorClass: 'bg-green-100 text-green-700', dotColor: 'bg-green-500' },
   rejected: { value: 'rejected', label: 'Rejected', icon: XCircle, colorClass: 'bg-red-100 text-red-700', dotColor: 'bg-red-500' }
+};
+
+
+// Helper function to get department display color
+const getDepartmentColor = (dept) => {
+  switch(dept) {
+    case 'Media': return 'bg-purple-100 text-purple-700';
+    case 'Software': return 'bg-blue-100 text-blue-700';
+    case 'Training': return 'bg-green-100 text-green-700';
+    case 'CAO': return 'bg-orange-100 text-orange-700';
+    default: return 'bg-gray-100 text-gray-700';
+  }
 };
 
 const UsersPage = () => {
@@ -468,7 +480,7 @@ const UsersPage = () => {
                   <div className="flex items-center justify-between md:justify-end gap-3 md:w-1/3 shrink-0">
                     <div className="text-[10px] text-gray-500 hidden xl:block">
                       <p className="truncate w-24"><Phone size={10} className="inline mr-1"/>{admin.phone || 'N/A'}</p>
-                      <p className="truncate w-24"><Shield size={10} className="inline mr-1"/>{admin.department || 'N/A'}</p>
+                      <span className={`inline-block px-2 py-0.5 rounded text-[9px] font-semibold ${getDepartmentColor(admin.department)}`}>{admin.department || "Not Assigned"}</span>
                     </div>
 
                     <div className="flex items-center gap-0.5 border-l border-gray-100 pl-2">
@@ -1044,7 +1056,7 @@ const UsersPage = () => {
                          <Briefcase size={12} />
                          Department
                       </div>
-                      <p className="font-semibold text-gray-900 text-sm">{selectedAdmin.department || 'Not Assigned'}</p>
+                      <span className={`inline-block px-3 py-1.5 rounded-lg text-sm font-semibold ${getDepartmentColor(selectedAdmin.department)}`}>{selectedAdmin.department || "Not Assigned"}</span>
                     </div>
                     <div className="p-4 sm:p-5 hover:bg-gray-50/50 transition-colors">
                       <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
