@@ -578,15 +578,34 @@ const AdminProfilePage = () => {
                         {activeTab === 'profile' && (
                             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
                                 {/* Save Changes Button */}
-                                <div className="flex justify-end mb-6">
-                                    <button
-                                        onClick={handleSave}
-                                        disabled={isSaving}
-                                        className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-lg text-sm font-medium hover:from-[#003d7a] hover:to-[#004fa2] transition-all disabled:opacity-50"
-                                    >
-                                        <Save size={16} />
-                                        {isSaving ? 'Saving...' : 'Save Changes'}
-                                    </button>
+                                <div className="flex justify-end gap-2 mb-6">
+                                    {!isEditMode ? (
+                                        <button
+                                            onClick={handleEditMode}
+                                            className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-lg text-sm font-medium hover:from-[#003d7a] hover:to-[#004fa2] transition-all"
+                                        >
+                                            <Edit size={16} />
+                                            Edit Profile
+                                        </button>
+                                    ) : (
+                                        <>
+                                            <button
+                                                onClick={handleCancel}
+                                                className="flex items-center gap-2 px-6 py-2.5 bg-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-400 transition-all"
+                                            >
+                                                X
+                                                Cancel
+                                            </button>
+                                            <button
+                                                onClick={handleSave}
+                                                disabled={isSaving}
+                                                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-lg text-sm font-medium hover:from-[#003d7a] hover:to-[#004fa2] transition-all disabled:opacity-50"
+                                            >
+                                                <Save size={16} />
+                                                {isSaving ? 'Saving...' : 'Save Changes'}
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
 
                                 {/* Success Message */}
