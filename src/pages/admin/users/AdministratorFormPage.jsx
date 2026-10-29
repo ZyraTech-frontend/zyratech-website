@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import { createUser, updateUser } from '../../../store/slices/usersSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
+import { useAuth } from '../../../hooks/useAuth';
 import { ROLE_LABELS } from '../../../utils/constants';
 import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import {
@@ -126,6 +127,7 @@ const AdministratorFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { user: currentUser } = useAuth();
 
   const isEditing = Boolean(id);
   const { items: administrators } = useSelector((state) => state.users);
@@ -1032,6 +1034,9 @@ const AdministratorFormPage = () => {
 };
 
 export default AdministratorFormPage;
+
+
+
 
 
 
