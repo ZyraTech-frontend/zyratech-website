@@ -696,7 +696,7 @@ const AdminProfilePage = () => {
                                             value={userData.department || ''}
                                             onChange={(e) => setUserData(prev => ({...prev, department: e.target.value}))}
                                             className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all"
-                                            disabled={!isEditMode} placeholder="Department" />
+                                            disabled={user?.role !== "super_admin" || !isEditMode} placeholder="Department" />
                                     </div>
 
                                     <div className="space-y-2">
@@ -1039,6 +1039,8 @@ const AdminProfilePage = () => {
 };
 
 export default AdminProfilePage;
+
+
 
 
 

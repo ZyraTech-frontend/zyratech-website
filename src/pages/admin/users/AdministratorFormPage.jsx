@@ -478,7 +478,10 @@ const AdministratorFormPage = () => {
                     <button
                       key={dept.value}
                       type="button"
+                      disabled={currentUser?.role !== 'super_admin'}
+                      title={currentUser?.role !== 'super_admin' ? 'Only super admins can assign departments' : ''}
                       onClick={() => {
+                        if (currentUser?.role !== 'super_admin') return;
                         const defaultPerms = DEPARTMENT_PERMISSIONS_MAP[dept.value] || [dept.value.toLowerCase().replace(/\s+/g, '_')];
                         setFormData(prev => {
                           const currentPerms = prev.permissions.length > 0 ? prev.permissions : [];
@@ -493,6 +496,8 @@ const AdministratorFormPage = () => {
                         if (errors.permissions) setErrors(prev => ({ ...prev, permissions: undefined }));
                       }}
                       className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left ${
+                        currentUser?.role !== 'super_admin' ? 'opacity-50 cursor-not-allowed' : ''
+                      } ${
                         isSelected
                           ? 'border-[#004fa2] bg-[#004fa2]/5'
                           : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
@@ -1027,6 +1032,9 @@ const AdministratorFormPage = () => {
 };
 
 export default AdministratorFormPage;
+
+
+
 
 
 
