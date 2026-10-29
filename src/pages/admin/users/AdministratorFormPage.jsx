@@ -35,47 +35,23 @@ import {
   IdCard
 } from 'lucide-react';
 
-// Department options — aligned with admin sidebar sections
+// Official departments (approved by management)
 const DEPARTMENTS = [
-  { value: 'Training Courses', section: 'Content' },
-  { value: 'Blog Articles', section: 'Content' },
-  { value: 'Job Listings', section: 'Content' },
-  { value: 'Gallery', section: 'Content' },
-  { value: 'Projects', section: 'Content' },
-  { value: 'FAQ', section: 'Content' },
-  { value: 'Testimonials', section: 'Content' },
-  { value: 'Team Members', section: 'Content' },
-  { value: 'Payments', section: 'Business' },
-  { value: 'Enrollments', section: 'Business' },
-  { value: 'Partnerships', section: 'Business' },
-  { value: 'Contact Inquiries', section: 'Business' },
-  { value: 'Impact Stories', section: 'Business' },
-  { value: 'Newsletter', section: 'Business' }
+  { value: 'Media', label: 'Media', description: 'Content, blogs, gallery, partnerships' },
+  { value: 'Software', label: 'Software', description: 'Projects, technical work, system settings' },
+  { value: 'Training', label: 'Training', description: 'Training courses, student management' },
+  { value: 'CAO', label: 'CAO', description: 'Operations, finance, HR, job management' }
 ];
 
-// Group departments by section for display
-const DEPARTMENT_SECTIONS = [
-  { label: 'Content Management', departments: DEPARTMENTS.filter(d => d.section === 'Content') },
-  { label: 'Business Operations', departments: DEPARTMENTS.filter(d => d.section === 'Business') }
-];
 
 // Mapping of department to its default backend permissions
 const DEPARTMENT_PERMISSIONS_MAP = {
-  'Training Courses': ['training_courses', 'enrollments'],
-  'Blog Articles': ['blog_articles'],
-  'Job Listings': ['job_listings'],
-  'Gallery': ['gallery'],
-  'Projects': ['projects'],
-  'FAQ': ['faq'],
-  'Testimonials': ['testimonials'],
-  'Team Members': ['about_page', 'about_section'],
-  'Payments': ['payments'],
-  'Enrollments': ['enrollments', 'training_courses'],
-  'Partnerships': ['partnership_requests', 'partnership_content'],
-  'Contact Inquiries': ['contact_inquiries'],
-  'Impact Stories': ['impact_stories'],
-  'Newsletter': ['newsletter']
+  'Media': ['content', 'blog_articles', 'gallery', 'partnerships'],
+  'Software': ['projects', 'messages', 'settings'],
+  'Training': ['training_courses', 'enrollments'],
+  'CAO': ['transactions', 'jobs', 'job_applications', 'messages']
 };
+
 
 const AVAILABLE_PERMISSIONS = [
   // Content Management
