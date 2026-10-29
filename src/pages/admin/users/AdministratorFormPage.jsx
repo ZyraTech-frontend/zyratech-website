@@ -472,11 +472,11 @@ const AdministratorFormPage = () => {
               </p>
 
               <div className="space-y-5">
-                {DEPARTMENT_SECTIONS.map(section => (
-                  <div key={section.label}>
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{section.label}</p>
+                {DEPARTMENTS.map(section => (
+                  <div key={dept.value}>
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{dept.value}</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {section.departments.map(dept => {
+                      {DEPARTMENTS.map(dept => {
                         const isSelected = formData.department === dept.value;
                         return (
                           <button
