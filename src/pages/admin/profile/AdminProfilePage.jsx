@@ -36,6 +36,17 @@ import {
     Loader2
 } from 'lucide-react';
 
+
+// Helper function to get department display color
+const getDepartmentColor = (dept) => {
+  switch(dept) {
+    case 'Media': return 'bg-purple-100 text-purple-700';
+    case 'Software': return 'bg-blue-100 text-blue-700';
+    case 'Training': return 'bg-green-100 text-green-700';
+    case 'CAO': return 'bg-orange-100 text-orange-700';
+    default: return 'bg-gray-100 text-gray-700';
+  }
+};
 const AdminProfilePage = () => {
     const { user } = useAuth();
     const dispatch = useDispatch();
