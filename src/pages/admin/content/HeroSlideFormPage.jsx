@@ -14,7 +14,6 @@ import {
     ExternalLink
 } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
-import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import LinkPicker from '../../../components/admin/common/LinkPicker';
 import heroService from '../../../services/heroService';
@@ -415,4 +414,3 @@ const HeroSlideFormPage = () => {
 };
 
 export default HeroSlideFormPage;
-

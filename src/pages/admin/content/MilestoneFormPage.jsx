@@ -14,9 +14,9 @@ import {
     Target
 } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
-import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
+import { addNotification } from '../../../store/slices/uiSlice';
 import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 const MILESTONE_ICONS = [
@@ -244,4 +244,3 @@ const MilestoneFormPage = () => {
 };
 
 export default MilestoneFormPage;
-

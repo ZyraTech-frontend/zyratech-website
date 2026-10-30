@@ -18,7 +18,7 @@ import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 // --- Sub-components (defined outside to preserve focus) ---
 
-const HeroForm = ({ data, onChange, onSubmit, saving, onImageUpload, uploading }) => {
+const HeroForm = ({ data, onChange, onSubmit, saving, onImageUpload, uploading, canCreateContent, handlePermissionDenied }) => {
     const handleFileClick = () => {
         document.getElementById('partnership-hero-upload').click();
     };
@@ -143,12 +143,13 @@ const HeroForm = ({ data, onChange, onSubmit, saving, onImageUpload, uploading }
     );
 };
 
-const ImpactStatsManager = ({ stats, setStats }) => {
+const ImpactStatsManager = ({ stats, setStats, canCreateContent, handlePermissionDenied }) => {
     const handleStatChange = (id, field, value) => {
         setStats(stats.map(s => s.id === id ? { ...s, [field]: value } : s));
     };
 
     const handleSave = async (stat) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         await contentService.updateImpactStat(stat.id, stat);
         // Show success toast?
     };
@@ -190,6 +191,7 @@ const WhyPartnerManager = ({ whyPartners, setWhyPartners, dispatch, navigate, ca
     };
 
     const handleSave = async () => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         if (!formData.title || !formData.description) return;
         
         setSaving(true);
@@ -495,6 +497,7 @@ const PartnershipContentManagementPage = () => {
     };
 
     const handleHeroSubmit = async (e) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         e.preventDefault();
         setSavingHero(true);
         await contentService.updatePartnershipHero(heroData);
@@ -503,6 +506,7 @@ const PartnershipContentManagementPage = () => {
     };
 
     const handleWhySubmit = async (e) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         e.preventDefault();
         setSavingWhy(true);
         await contentService.updateWhyPartner(whyPartner);
@@ -553,7 +557,7 @@ const PartnershipContentManagementPage = () => {
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                    {activeTab === 'hero' && <HeroForm data={heroData} onChange={(e) => setHeroData({ ...heroData, [e.target.name]: e.target.value })} onSubmit={handleHeroSubmit} saving={savingHero} onImageUpload={handleHeroImageUpload} uploading={uploadingHero} />}
+                    {activeTab === 'hero' && <HeroForm data={heroData} onChange={(e) => setHeroData({ ...heroData, [e.target.name]: e.target.value })} onSubmit={handleHeroSubmit} saving={savingHero} onImageUpload={handleHeroImageUpload} uploading={uploadingHero} canCreateContent={canCreateContent} handlePermissionDenied={handlePermissionDenied} />}
                     {activeTab === 'why' && <WhyPartnerManager whyPartners={whyPartner} setWhyPartners={setWhyPartner} dispatch={dispatch} navigate={navigate} canCreateContent={canCreateContent} handlePermissionDenied={handlePermissionDenied} />}
                     {activeTab === 'stories' && <StoriesManager stories={stories} setStories={setStories} dispatch={dispatch} navigate={navigate} canCreateContent={canCreateContent} handlePermissionDenied={handlePermissionDenied} />}
                 </div>

@@ -397,6 +397,7 @@ const AboutPageManagementPage = () => {
     // Generic Handlers
     const handleHeroChange = (e) => setHeroData({ ...heroData, [e.target.name]: e.target.value });
     const handleHeroSubmit = async (e) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         e.preventDefault();
         setSavingHero(true);
         await contentService.updateAboutHero(heroData);
@@ -406,6 +407,7 @@ const AboutPageManagementPage = () => {
 
     const handleMissionChange = (e) => setMissionData({ ...missionData, [e.target.name]: e.target.value });
     const handleMissionSubmit = async (e) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         e.preventDefault();
         setSavingMission(true);
         await contentService.updateMission(missionData);
@@ -415,6 +417,7 @@ const AboutPageManagementPage = () => {
 
     const handleWhyGhanaChange = (e) => setWhyGhanaData({ ...whyGhanaData, [e.target.name]: e.target.value });
     const handleWhyGhanaSubmit = async (e) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         e.preventDefault();
         setSavingWhyGhana(true);
         await contentService.updateWhyGhana(whyGhanaData);
@@ -424,6 +427,7 @@ const AboutPageManagementPage = () => {
 
     // Image Upload Handler for Hero Background
     const handleHeroImageUpload = async (e) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -450,6 +454,7 @@ const AboutPageManagementPage = () => {
 
     const handleQuoteChange = (e) => setQuoteData({ ...quoteData, [e.target.name]: e.target.value });
     const handleQuoteSubmit = async (e) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         e.preventDefault();
         setSavingQuote(true);
         try {

@@ -28,9 +28,10 @@ import {
     CheckCircle
 } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
-import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../../store/slices/uiSlice';
 import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 const ICON_OPTIONS = [
@@ -55,6 +56,20 @@ const ICON_OPTIONS = [
 
 const BenefitFormPage = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+
+    // Permission checks
+    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to manage benefits.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const { id } = useParams();
     const { logAction } = useActivityLogger();
     
@@ -100,6 +115,7 @@ const BenefitFormPage = () => {
     };
 
     const handleSubmit = async (e) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         e.preventDefault();
         
         if (!formData.title.trim() || !formData.description.trim()) {
@@ -272,4 +288,3 @@ const BenefitFormPage = () => {
 };
 
 export default BenefitFormPage;
-
