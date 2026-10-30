@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+
 import projectsService from '../../../services/projectsService';
 import { getProjectsByStatus, getCategories, getStatuses } from '../../../data/projectsData';
 import {
@@ -105,7 +105,8 @@ const ProgressBar = ({ progress }) => {
 const ProjectsManagementPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isSuperAdmin } = usePermissions();
+    const { userRole } = useAuth();
+  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
     // State management
     const [projects, setProjects] = useState([]);

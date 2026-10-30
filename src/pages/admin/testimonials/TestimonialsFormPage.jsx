@@ -7,7 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+
 import {
     Save,
     X,
@@ -21,7 +21,8 @@ import testimonialsService from '../../../services/testimonialsService';
 export default function TestimonialsFormPage() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { isSuperAdmin } = usePermissions();
+    const { userRole } = useAuth();
+  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [errors, setErrors] = useState({});

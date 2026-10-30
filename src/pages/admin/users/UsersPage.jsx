@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchUsers, updateUser, deactivateUser, reactivateUser } from '../../../store/slices/usersSlice';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+
 import { ROLES, ROLE_LABELS, DEPARTMENTS, DEPARTMENT_COLORS } from '../../../utils/constants';
 import { normalizeAvatarUrl } from '../../../utils/avatar';
 import {
@@ -59,7 +59,8 @@ const getDepartmentColor = (dept) => {
 const UsersPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isSuperAdmin } = usePermissions();
+  const { userRole } = useAuth();
+  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
   const { items: administrators, loading } = useSelector((state) => state.users);
 
   // UI State

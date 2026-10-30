@@ -6,7 +6,7 @@
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+
 import activityLogService from '../../../services/activityLogService';
 import {
     Activity,
@@ -497,7 +497,8 @@ const formatFullTimestamp = (dateString) => {
 };
 
 const ActivityLogsPage = () => {
-    const { isSuperAdmin } = usePermissions();
+    const { userRole } = useAuth();
+  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
     // State management
     const [searchQuery, setSearchQuery] = useState('');

@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+
 import { projectsData, getProjectById } from '../../../data/projectsData';
 import projectsService from '../../../services/projectsService';
 import api from '../../../services/api';
@@ -45,7 +45,8 @@ const ProjectFormPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { id } = useParams();
-    const { isSuperAdmin } = usePermissions();
+    const { userRole } = useAuth();
+  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
     const [formData, setFormData] = useState({
         title: '',

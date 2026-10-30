@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+
 import {
     TrendingUp,
     Search,
@@ -136,7 +136,8 @@ const formatDate = (dateString) => {
 const ImpactManagementPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isSuperAdmin } = usePermissions();
+    const { userRole } = useAuth();
+  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
     // State management
     const [activeTab, setActiveTab] = useState('metrics');

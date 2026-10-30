@@ -6,7 +6,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../../components/admin/layout/AdminLayout';
 import { useAuth } from '../../hooks/useAuth';
-import { usePermissions } from '../../hooks/usePermissions';
+
 import { useDispatch } from 'react-redux';
 import { fetchSettings } from '../../store/slices/settingsSlice';
 
@@ -16,7 +16,8 @@ import RegularAdminDashboard from './dashboards/RegularAdminDashboard';
 
 const DashboardPage = () => {
   const { user } = useAuth();
-  const { isSuperAdmin } = usePermissions();
+  const { userRole } = useAuth();
+  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
   const dispatch = useDispatch();
   
   return (

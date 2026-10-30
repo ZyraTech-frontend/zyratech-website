@@ -8,7 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+
 import faqService, { FAQ_CATEGORIES } from '../../../services/faqService';
 import {
     Save,
@@ -31,7 +31,8 @@ export default function FaqFormPage() {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { isSuperAdmin } = usePermissions();
+    const { userRole } = useAuth();
+  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({

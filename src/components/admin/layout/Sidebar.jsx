@@ -42,7 +42,7 @@ import {
   Layers
 } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
-import { usePermissions } from '../../../hooks/usePermissions';
+
 import { logoutUser } from '../../../store/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { normalizeAvatarUrl } from '../../../utils/avatar';
@@ -98,7 +98,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
   const { user: authUser } = useAuth();
   const reduxUser = useSelector((state) => state.auth.user);
   const user = reduxUser || authUser;
-  const { isSuperAdmin } = usePermissions();
+  const { userRole } = useAuth();
+  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [avatarLoadError, setAvatarLoadError] = useState(false);

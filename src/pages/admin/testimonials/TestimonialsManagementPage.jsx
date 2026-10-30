@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+
 import testimonialsService from '../../../services/testimonialsService';
 import {
     MessageCircle,
@@ -116,7 +116,8 @@ const AvatarDisplay = ({ name, avatarUrl, size = 'md' }) => {
 const TestimonialsManagementPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isSuperAdmin } = usePermissions();
+    const { userRole } = useAuth();
+  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
     // State management - Initialize as empty array to prevent undefined errors
     const [testimonials, setTestimonials] = useState([]);

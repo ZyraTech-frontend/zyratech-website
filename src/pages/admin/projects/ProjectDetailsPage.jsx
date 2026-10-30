@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+
 import projectsService from '../../../services/projectsService';
 import {
     ArrowLeft,
@@ -27,7 +27,8 @@ const ProjectDetailsPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { id } = useParams();
-    const { isSuperAdmin } = usePermissions();
+    const { userRole } = useAuth();
+  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);

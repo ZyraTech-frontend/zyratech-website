@@ -9,14 +9,15 @@ import { useAuth } from '../../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../../store/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { usePermissions } from '../../../hooks/usePermissions';
+
 import { normalizeAvatarUrl } from '../../../utils/avatar';
 
 const Header = ({ onMenuClick, sidebarOpen }) => {
   const { user: hookUser } = useAuth();
   const reduxUser = useSelector((state) => state.auth.user);
   const user = reduxUser || hookUser;
-  const { isSuperAdmin } = usePermissions();
+  const { userRole } = useAuth();
+  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
   const location = useLocation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');

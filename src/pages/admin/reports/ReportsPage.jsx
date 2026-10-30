@@ -5,7 +5,7 @@
 
 import React, { useState, useMemo } from 'react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+
 import {
     FileBarChart,
     Search,
@@ -315,7 +315,8 @@ const formatRelativeDate = (dateString) => {
 };
 
 const ReportsPage = () => {
-    const { isSuperAdmin } = usePermissions();
+    const { userRole } = useAuth();
+  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
     // State management
     const [activeTab, setActiveTab] = useState('reports');

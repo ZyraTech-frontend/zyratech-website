@@ -7,13 +7,13 @@ import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useAuth } from '../../../hooks/useAuth';
-import { usePermissions } from '../../../hooks/usePermissions';
+import { hasPermission } from '../../../utils/permissionHelper';
 import { verifySession } from '../../../store/slices/authSlice';
 
 const ProtectedRoute = ({ children, requiredPermission = null, requiredRole = null }) => {
   const dispatch = useDispatch();
   const { isAuthenticated, userRole } = useAuth();
-  const { can } = usePermissions();
+  
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -32,7 +32,7 @@ const ProtectedRoute = ({ children, requiredPermission = null, requiredRole = nu
   }
 
   // Check permission requirement
-  if (requiredPermission && !can(requiredPermission)) {
+  if (requiredPermission && !hasPermission(userRole && userRole.permissions, requiredPermission)) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="bg-white p-8 rounded shadow text-center">
