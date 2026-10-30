@@ -248,6 +248,7 @@ const JobFormPage = () => {
     };
 
     const handleSubmit = async () => {
+        if (!canJobs) { handlePermissionDenied(); return; }
         // Validate all steps
         let hasErrors = false;
         for (let i = 0; i < STEPS.length - 1; i++) {

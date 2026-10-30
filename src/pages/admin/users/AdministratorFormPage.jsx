@@ -128,7 +128,18 @@ const AdministratorFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user: currentUser, userRole } = useAuth();
+  const { user: currentUser, userRole, userPermissions } = useAuth();
+    const canAdministrators = userPermissions?.includes('administrators') ?? false;
+
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create or edit administrators.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
   const isSuperAdminUser = isSuperAdmin(userRole);
 
   const isEditing = Boolean(id);
@@ -269,6 +280,7 @@ const AdministratorFormPage = () => {
   };
 
   const handleSubmit = async () => {
+    if (!canAdministrators && !isSuperAdminUser) { handlePermissionDenied(); return; }
     // Validate all content steps
     for (let i = 0; i < STEPS.length - 1; i++) {
       if (!validateStep(i)) {

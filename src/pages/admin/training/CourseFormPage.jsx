@@ -432,6 +432,7 @@ const CourseFormPage = () => {
     };
 
     const handleSubmit = async () => {
+        if (!canTrainingCourses) { handlePermissionDenied(); return; }
         // Validate all steps
         let hasErrors = false;
         for (let i = 0; i < STEPS.length - 1; i++) {
