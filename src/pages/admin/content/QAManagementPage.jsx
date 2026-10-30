@@ -58,6 +58,7 @@ const QAManagementPage = () => {
     };
 
     const handleSave = async (section) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         setSaving(true);
         try {
             await contentService.updateQA(section, data[section]);

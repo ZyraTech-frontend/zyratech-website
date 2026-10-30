@@ -166,6 +166,7 @@ const WorkWithUsManagementPage = () => {
     };
 
     const handleSave = async (section) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         setSaving(true);
         try {
             // Get existing items to preserve the ID
