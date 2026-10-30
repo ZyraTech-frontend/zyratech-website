@@ -204,16 +204,6 @@ const ProjectRequestDetailsPage = () => {
         );
     }
 
-    // Get initials from full name
-    const getInitials = (name) => {
-        return name
-            .split(' ')
-            .map(n => n[0])
-            .join('')
-            .toUpperCase()
-            .slice(0, 2);
-    };
-
     return (
         <AdminLayout>
             <div className="max-w-7xl mx-auto px-4 py-6 pb-8">
@@ -235,47 +225,44 @@ const ProjectRequestDetailsPage = () => {
                     {/* LEFT COLUMN - 60% (2/3) */}
                     <div className="col-span-2 space-y-6">
                         {/* APPLICANT CARD */}
-                        <div className="bg-white border border-gray-100 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-200 hover:-translate-y-0.5">
-                            <div className="flex items-start gap-4">
-                                {/* Avatar */}
-                                <div className="flex-shrink-0">
-                                    <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-xl font-bold shadow-sm">
-                                        {getInitials(request.fullName)}
-                                    </div>
-                                </div>
-
-                                {/* Applicant Info */}
+                        <div className="bg-white border border-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 hover:-translate-y-0.5">
+                            {/* Header Section */}
+                            <div className="px-6 py-5 flex items-start justify-between gap-4 border-b border-gray-300">
                                 <div className="flex-1 min-w-0">
-                                    <div className="flex items-start justify-between gap-4 mb-4">
-                                        <div className="min-w-0">
-                                            <h2 className="text-lg font-bold text-gray-900">{request.fullName}</h2>
-                                            <p className="text-sm text-gray-600 mt-1">{request.company || 'Individual'}</p>
-                                        </div>
-                                        <StatusBadge status={request.status} />
+                                    <h2 className="text-2xl font-bold text-gray-900">{request.fullName}</h2>
+                                    <a 
+                                        href={`mailto:${request.email}`} 
+                                        className="text-base text-blue-600 hover:text-blue-800 font-medium mt-2 block"
+                                    >
+                                        {request.email}
+                                    </a>
+                                </div>
+                                <div className="flex-shrink-0">
+                                    <StatusBadge status={request.status} />
+                                </div>
+                            </div>
+
+                            {/* Contact Info Section */}
+                            <div className="px-6 py-5">
+                                <div className="grid grid-cols-3 gap-0 divide-x divide-gray-300">
+                                    {/* Phone */}
+                                    <div className="pr-6">
+                                        <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Phone</p>
+                                        <a href={`tel:${request.phone}`} className="text-sm text-blue-600 hover:text-blue-800 font-medium block break-all">
+                                            {request.phone}
+                                        </a>
                                     </div>
 
-                                    {/* Contact Info Grid */}
-                                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
-                                        <div className="min-w-0">
-                                            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">Email</p>
-                                            <a href={`mailto:${request.email}`} className="text-sm text-blue-600 hover:underline truncate block">
-                                                {request.email}
-                                            </a>
-                                        </div>
-                                        <div className="min-w-0">
-                                            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">Phone</p>
-                                            <a href={`tel:${request.phone}`} className="text-sm text-blue-600 hover:underline truncate block">
-                                                {request.phone}
-                                            </a>
-                                        </div>
-                                        <div className="min-w-0">
-                                            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">Project Type</p>
-                                            <p className="text-sm text-gray-900 font-medium capitalize truncate">{request.projectType}</p>
-                                        </div>
-                                        <div className="min-w-0">
-                                            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">Package</p>
-                                            <p className="text-sm text-gray-900 font-medium capitalize truncate">{request.packageType?.replace('-', ' ')}</p>
-                                        </div>
+                                    {/* Project Type */}
+                                    <div className="px-6">
+                                        <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Project Type</p>
+                                        <p className="text-sm text-gray-900 font-medium capitalize">{request.projectType}</p>
+                                    </div>
+
+                                    {/* Package Type */}
+                                    <div className="pl-6">
+                                        <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Package Type</p>
+                                        <p className="text-sm text-gray-900 font-medium capitalize">{request.packageType?.replace('-', ' ')}</p>
                                     </div>
                                 </div>
                             </div>
