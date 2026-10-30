@@ -106,7 +106,6 @@ const ProjectRequestsManagementPage = () => {
     const [selectedPackageType, setSelectedPackageType] = useState('all');
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
-    const [detailsModal, setDetailsModal] = useState(null);
     const [statusModal, setStatusModal] = useState(null);
     const [statusNotes, setStatusNotes] = useState('');
 
@@ -243,7 +242,7 @@ const ProjectRequestsManagementPage = () => {
     };
 
     const handleView = (request) => {
-        setDetailsModal(request);
+        navigate(`/admin/project-requests/${request.id}`);
     };
 
     const resetFilters = () => {
@@ -611,197 +610,12 @@ const ProjectRequestsManagementPage = () => {
                     </div>
                 )}
 
-                {/* Details Modal */}
-                {detailsModal && (
-                    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-                        <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full my-8">
-                            {/* Modal Header */}
-                            <div className="sticky top-0 bg-blue-600 text-white px-6 md:px-8 py-6 flex items-start justify-between rounded-t-xl shadow-sm">
-                                <div className="flex-1">
-                                    <h2 className="text-xl md:text-2xl font-bold">Project Request Details</h2>
-                                    <p className="text-blue-100 text-sm mt-2">Request ID: {detailsModal.id}</p>
-                                </div>
-                                <button 
-                                    onClick={() => setDetailsModal(null)} 
-                                    className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors flex-shrink-0"
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
-
-                            {/* Modal Content */}
-                            <div className="p-6 md:p-8 space-y-6 max-h-[calc(90vh-140px)] overflow-y-auto">
-                                
-                                {/* Requester Information Section */}
-                                <div className="bg-blue-50 rounded-xl p-6 border border-blue-100">
-                                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                        <span className="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">👤</span>
-                                        Requester Information
-                                    </h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                        <div>
-                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Full Name</label>
-                                            <p className="text-sm font-medium text-gray-900">{detailsModal.fullName}</p>
-                                        </div>
-                                        <div>
-                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Email Address</label>
-                                            <a href={`mailto:${detailsModal.email}`} className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline break-all inline-block">
-                                                {detailsModal.email}
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Phone</label>
-                                            <a href={`tel:${detailsModal.phone}`} className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline">
-                                                {detailsModal.phone}
-                                            </a>
-                                        </div>
-                                        {detailsModal.company && (
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Company</label>
-                                                <p className="text-sm font-medium text-gray-900">{detailsModal.company}</p>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Project Information Section */}
-                                <div className="bg-purple-50 rounded-xl p-6 border border-purple-100">
-                                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                        <span className="w-8 h-8 bg-purple-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">📋</span>
-                                        Project Information
-                                    </h3>
-                                    <div className="space-y-5">
-                                        <div>
-                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Project Title</label>
-                                            <p className="text-base font-bold text-gray-900">{detailsModal.projectTitle}</p>
-                                        </div>
-                                        <div>
-                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Project Description</label>
-                                            <div className="bg-white rounded-lg p-4 border border-purple-100">
-                                                <p className="text-sm text-gray-700 whitespace-pre-wrap line-clamp-4">{detailsModal.description}</p>
-                                            </div>
-                                        </div>
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Project Type</label>
-                                                <p className="text-sm font-medium text-gray-900 capitalize">{detailsModal.projectType}</p>
-                                            </div>
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Package Type</label>
-                                                <PackageTypeBadge packageType={detailsModal.packageType} size="sm" />
-                                            </div>
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Status</label>
-                                                <StatusBadge status={detailsModal.status} size="sm" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Additional Details Section */}
-                                {(detailsModal.budget || detailsModal.timeline || detailsModal.technologies || detailsModal.additionalNotes) && (
-                                    <div className="bg-amber-50 rounded-xl p-6 border border-amber-100">
-                                        <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                            <span className="w-8 h-8 bg-amber-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">⚡</span>
-                                            Additional Details
-                                        </h3>
-                                        <div className="space-y-5">
-                                            {detailsModal.budget && (
-                                                <div>
-                                                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Budget</label>
-                                                    <p className="text-sm font-medium text-gray-900">{detailsModal.budget}</p>
-                                                </div>
-                                            )}
-                                            {detailsModal.timeline && (
-                                                <div>
-                                                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Timeline</label>
-                                                    <p className="text-sm font-medium text-gray-900">{detailsModal.timeline}</p>
-                                                </div>
-                                            )}
-                                            {detailsModal.technologies && detailsModal.technologies.length > 0 && (
-                                                <div>
-                                                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Technologies</label>
-                                                    <div className="flex flex-wrap gap-2">
-                                                        {detailsModal.technologies.map((tech, idx) => (
-                                                            <span key={idx} className="text-xs bg-blue-100 text-blue-700 px-3 py-1.5 rounded-full font-semibold">
-                                                                {tech}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
-                                            {detailsModal.additionalNotes && (
-                                                <div>
-                                                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Additional Notes</label>
-                                                    <div className="bg-white rounded-lg p-4 border border-amber-100">
-                                                        <p className="text-sm text-gray-700 whitespace-pre-wrap">{detailsModal.additionalNotes}</p>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Metadata Section */}
-                                <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                        <span className="w-8 h-8 bg-gray-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">📅</span>
-                                        Submission Details
-                                    </h3>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Submitted</label>
-                                            <p className="text-sm font-medium text-gray-900">{formatDate(detailsModal.createdAt)}</p>
-                                            <p className="text-xs text-gray-600 mt-1">{formatTime(detailsModal.createdAt)}</p>
-                                        </div>
-                                        {detailsModal.updatedAt && (
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Last Updated</label>
-                                                <p className="text-sm font-medium text-gray-900">{formatDate(detailsModal.updatedAt)}</p>
-                                                <p className="text-xs text-gray-600 mt-1">{formatTime(detailsModal.updatedAt)}</p>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Modal Footer */}
-                            <div className="bg-gray-50 border-t border-gray-200 px-6 md:px-8 py-5 flex items-center justify-between rounded-b-xl">
-                                <div className="flex items-center gap-3">
-                                    {detailsModal.status !== 'approved' && (
-                                        <button
-                                            onClick={() => { setStatusModal({ ...detailsModal, newStatus: 'approved' }); }}
-                                            className="px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg hover:bg-green-700 transition-colors duration-150 shadow-sm hover:shadow-md"
-                                        >
-                                            ✓ Approve Request
-                                        </button>
-                                    )}
-                                    {detailsModal.status !== 'rejected' && (
-                                        <button
-                                            onClick={() => { setStatusModal({ ...detailsModal, newStatus: 'rejected' }); }}
-                                            className="px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors duration-150 shadow-sm hover:shadow-md"
-                                        >
-                                            ✕ Reject Request
-                                        </button>
-                                    )}
-                                </div>
-                                <button
-                                    onClick={() => setDetailsModal(null)}
-                                    className="px-4 py-2 bg-white text-gray-700 text-sm font-semibold rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors duration-150"
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
                 {/* Status Update Modal */}
                 {statusModal && (
                     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
                         <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full">
                             {/* Modal Header */}
-                            <div className={`bg-gradient-to-r ${statusModal.newStatus === 'approved' ? 'from-green-600 to-green-700' : 'from-red-600 to-red-700'} text-white px-6 md:px-8 py-6 flex items-start justify-between rounded-t-xl`}>
+                            <div className={`${statusModal.newStatus === 'approved' ? 'bg-green-600' : 'bg-red-600'} text-white px-6 md:px-8 py-6 flex items-start justify-between rounded-t-xl`}>
                                 <div>
                                     <h2 className="text-xl md:text-2xl font-bold">
                                         {statusModal.newStatus === 'approved' ? '✓ Approve Request' : '✕ Reject Request'}
