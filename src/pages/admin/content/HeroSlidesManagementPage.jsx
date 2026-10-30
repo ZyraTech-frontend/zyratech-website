@@ -19,7 +19,6 @@ import {
     Loader
 } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
-import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import heroService from '../../../services/heroService';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
@@ -32,14 +31,16 @@ const HeroSlidesManagementPage = () => {
     const [loading, setLoading] = useState(true);
 
     // Permission check helper
-    const checkContentPermission = () => {
-        const isSuperAdminUser = isSuperAdmin(userRole);
-        const hasContentPermission = canAccessFeature(userPermissions, userRole, 'content');
-        if (!isSuperAdminUser && !hasContentPermission) {
-            checkPermissionAndShowError(userPermissions, userRole, 'content', dispatch, 'content', 'Media');
-            return false;
-        }
-        return true;
+    // Permission checks
+    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to manage hero slides.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
     };
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -62,7 +63,10 @@ const HeroSlidesManagementPage = () => {
     };
 
     const handleDelete = (id) => {
-        if (!checkContentPermission()) return;
+        if (!canCreateContent) {
+            handlePermissionDenied();
+            return;
+        }
         dispatch(openConfirmDialog({
             title: 'Delete Hero Slide',
             message: 'Are you sure you want to delete this slide? This action cannot be undone.',

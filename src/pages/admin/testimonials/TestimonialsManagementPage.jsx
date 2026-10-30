@@ -6,7 +6,7 @@
 import React, { useState, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import { useAuth } from '../../../hooks/useAuth';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 
@@ -116,8 +116,18 @@ const AvatarDisplay = ({ name, avatarUrl, size = 'md' }) => {
 
 const TestimonialsManagementPage = () => {
     const dispatch = useDispatch();
+    const canManageTestimonials = userPermissions?.includes('testimonials') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to manage testimonials.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const navigate = useNavigate();
-    const { userRole } = useAuth();
+    const { userPermissions, userRole } = useAuth();
   const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
     // State management - Initialize as empty array to prevent undefined errors
