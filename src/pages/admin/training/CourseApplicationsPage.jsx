@@ -6,6 +6,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useAuth } from '../../../hooks/useAuth';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import trainingApplicationService from '../../../services/trainingApplicationService';
 import api from '../../../services/api';
@@ -53,6 +54,19 @@ const StatusBadge = ({ status }) => {
 const CourseApplicationsPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+
+    // Permission checks
+    const canManageEnrollments = userPermissions?.includes('enrollments') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to manage course enrollments.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -194,6 +208,10 @@ const CourseApplicationsPage = () => {
     };
     
     const handleApprove = (application) => {
+        if (!canManageEnrollments) {
+            handlePermissionDenied();
+            return;
+        }
         dispatch(openConfirmDialog({
             title: 'Approve Application',
             message: `Approve ${application.fullName || application.applicantName}'s application?`,
@@ -218,6 +236,10 @@ const CourseApplicationsPage = () => {
     };
     
     const handleReject = async (application) => {
+        if (!canManageEnrollments) {
+            handlePermissionDenied();
+            return;
+        }
         try {
             const appId = application.id || application.applicationId;
             

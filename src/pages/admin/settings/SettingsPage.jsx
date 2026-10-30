@@ -42,6 +42,18 @@ const SettingsPage = () => {
   const { values: settings, loading } = useSelector((state) => state.settings);
   const [activeTab, setActiveTab] = useState('branding');
   const [formData, setFormData] = useState({});
+  // Permission checks
+  const canManageSettings = userPermissions?.includes('settings') ?? false;
+  const handlePermissionDenied = () => {
+    dispatch(addNotification({
+      type: 'error',
+      title: 'Permission Required',
+      message: 'You do not have permission to manage settings.',
+      description: 'Contact Super Admin at admin@zyratechhub.com',
+      duration: 6000
+    }));
+  };
+
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -70,6 +82,10 @@ const SettingsPage = () => {
   }
 
   const handleSave = async (category) => {
+    if (!canManageSettings) {
+      handlePermissionDenied();
+      return;
+    }
     setSaving(true);
     try {
       // Save all settings in the category
