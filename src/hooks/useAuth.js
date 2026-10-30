@@ -30,6 +30,8 @@ export const useAuth = () => {
     userRole: auth.user?.role || null,
     userId: auth.user?.id || null,
     userName: fullName,
-    userFirstName: firstName
+    userFirstName: firstName,
+    userPermissions: auth.user?.permissions || [],
+    userDepartment: auth.user?.department || null
   };
 };

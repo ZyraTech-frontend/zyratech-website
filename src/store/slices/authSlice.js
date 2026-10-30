@@ -49,6 +49,11 @@ export const sanitizeUser = (rawUser) => {
     user.avatar = savedAvatar;
   }
 
+  // Ensure permissions array is always present
+  if (!Array.isArray(user.permissions)) {
+    user.permissions = [];
+  }
+
   return user;
 };
 

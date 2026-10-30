@@ -10,6 +10,8 @@ import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import projectRequestService from '../../../services/projectRequestService';
+import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import {
     ArrowLeft,
     AlertCircle,
@@ -41,6 +43,11 @@ const ProjectRequestDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { userRole, userPermissions, userDepartment } = useAuth();
+
+    // Permission check for projects management
+    const hasProjectsPermission = canAccessFeature(userPermissions, userRole, 'projects');
+    const isSuperAdminUser = isSuperAdmin(userRole);
 
     const [request, setRequest] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -73,6 +80,19 @@ const ProjectRequestDetailsPage = () => {
     };
 
     const handleDelete = () => {
+        // Permission check
+        if (!isSuperAdminUser && !hasProjectsPermission) {
+            checkPermissionAndShowError(
+                userPermissions,
+                userRole,
+                'projects',
+                dispatch,
+                'Software Projects',
+                'Software'
+            );
+            return;
+        }
+
         dispatch(openConfirmDialog({
             title: 'Delete Project Request',
             message: `Are you sure you want to delete this project request from ${request.fullName}? This action cannot be undone.`,
@@ -97,6 +117,19 @@ const ProjectRequestDetailsPage = () => {
     };
 
     const handleStatusUpdate = async (newStatus) => {
+        // Permission check
+        if (!isSuperAdminUser && !hasProjectsPermission) {
+            checkPermissionAndShowError(
+                userPermissions,
+                userRole,
+                'projects',
+                dispatch,
+                'Software Projects',
+                'Software'
+            );
+            return;
+        }
+
         try {
             setUpdatingStatus(true);
             await projectRequestService.updateProjectRequestStatus(id, {
@@ -345,8 +378,22 @@ const ProjectRequestDetailsPage = () => {
                         <div className="space-y-3">
                             {request.status !== 'approved' && (
                                 <button
-                                    onClick={() => setStatusModal('approved')}
-                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white text-sm font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-sm"
+                                    onClick={() => {
+                                        if (isSuperAdminUser || hasProjectsPermission) {
+                                            setStatusModal('approved');
+                                        } else {
+                                            checkPermissionAndShowError(
+                                                userPermissions,
+                                                userRole,
+                                                'projects',
+                                                dispatch,
+                                                'Software Projects',
+                                                'Software'
+                                            );
+                                        }
+                                    }}
+                                    disabled={!isSuperAdminUser && !hasProjectsPermission}
+                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white text-sm font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     <Check size={16} />
                                     Approve
@@ -354,8 +401,22 @@ const ProjectRequestDetailsPage = () => {
                             )}
                             {request.status !== 'rejected' && (
                                 <button
-                                    onClick={() => setStatusModal('rejected')}
-                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors shadow-sm"
+                                    onClick={() => {
+                                        if (isSuperAdminUser || hasProjectsPermission) {
+                                            setStatusModal('rejected');
+                                        } else {
+                                            checkPermissionAndShowError(
+                                                userPermissions,
+                                                userRole,
+                                                'projects',
+                                                dispatch,
+                                                'Software Projects',
+                                                'Software'
+                                            );
+                                        }
+                                    }}
+                                    disabled={!isSuperAdminUser && !hasProjectsPermission}
+                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     <X size={16} />
                                     Reject
@@ -363,7 +424,8 @@ const ProjectRequestDetailsPage = () => {
                             )}
                             <button
                                 onClick={handleDelete}
-                                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-200 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-300 transition-colors shadow-sm"
+                                disabled={!isSuperAdminUser && !hasProjectsPermission}
+                                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-200 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-300 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Trash2 size={16} />
                                 Delete

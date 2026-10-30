@@ -17,6 +17,8 @@ import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import projectRequestService from '../../../services/projectRequestService';
+import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import {
     Inbox,
     Search,
@@ -96,6 +98,11 @@ const PackageTypeBadge = ({ packageType, size = 'sm' }) => {
 const ProjectRequestsManagementPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { user, userRole, userPermissions, userDepartment } = useAuth();
+
+    // Permission check for projects management
+    const hasProjectsPermission = canAccessFeature(userPermissions, userRole, 'projects');
+    const isSuperAdminUser = isSuperAdmin(userRole);
 
     // State management
     const [requests, setRequests] = useState([]);
@@ -187,6 +194,19 @@ const ProjectRequestsManagementPage = () => {
 
     // Handlers
     const handleDelete = (request) => {
+        // Permission check
+        if (!isSuperAdminUser && !hasProjectsPermission) {
+            checkPermissionAndShowError(
+                userPermissions,
+                userRole,
+                'projects',
+                dispatch,
+                'Software Projects',
+                'Software'
+            );
+            return;
+        }
+
         dispatch(openConfirmDialog({
             title: 'Delete Project Request',
             message: `Are you sure you want to delete the request from ${request.fullName}? This action cannot be undone.`,
@@ -211,6 +231,19 @@ const ProjectRequestsManagementPage = () => {
     };
 
     const handleStatusUpdate = async (request, newStatus) => {
+        // Permission check
+        if (!isSuperAdminUser && !hasProjectsPermission) {
+            checkPermissionAndShowError(
+                userPermissions,
+                userRole,
+                'projects',
+                dispatch,
+                'Software Projects',
+                'Software'
+            );
+            return;
+        }
+
         try {
             await projectRequestService.updateProjectRequestStatus(request.id, {
                 status: newStatus,
@@ -482,23 +515,52 @@ const ProjectRequestsManagementPage = () => {
                                                         <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50 invisible group-hover/menu:visible">
                                                             {request.status !== 'approved' && (
                                                                 <button
-                                                                    onClick={() => { setStatusModal({ ...request, newStatus: 'approved' }); }}
-                                                                    className="block w-full text-left px-4 py-2.5 text-sm font-medium text-green-700 hover:bg-green-50 border-b border-gray-100 transition-colors"
+                                                                    onClick={() => { 
+                                                                        if (isSuperAdminUser || hasProjectsPermission) {
+                                                                            setStatusModal({ ...request, newStatus: 'approved' }); 
+                                                                        } else {
+                                                                            checkPermissionAndShowError(
+                                                                                userPermissions,
+                                                                                userRole,
+                                                                                'projects',
+                                                                                dispatch,
+                                                                                'Software Projects',
+                                                                                'Software'
+                                                                            );
+                                                                        }
+                                                                    }}
+                                                                    disabled={!isSuperAdminUser && !hasProjectsPermission}
+                                                                    className="block w-full text-left px-4 py-2.5 text-sm font-medium text-green-700 hover:bg-green-50 border-b border-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                                                 >
                                                                     ✓ Approve
                                                                 </button>
                                                             )}
                                                             {request.status !== 'rejected' && (
                                                                 <button
-                                                                    onClick={() => { setStatusModal({ ...request, newStatus: 'rejected' }); }}
-                                                                    className="block w-full text-left px-4 py-2.5 text-sm font-medium text-red-700 hover:bg-red-50 border-b border-gray-100 transition-colors"
+                                                                    onClick={() => { 
+                                                                        if (isSuperAdminUser || hasProjectsPermission) {
+                                                                            setStatusModal({ ...request, newStatus: 'rejected' }); 
+                                                                        } else {
+                                                                            checkPermissionAndShowError(
+                                                                                userPermissions,
+                                                                                userRole,
+                                                                                'projects',
+                                                                                dispatch,
+                                                                                'Software Projects',
+                                                                                'Software'
+                                                                            );
+                                                                        }
+                                                                    }}
+                                                                    disabled={!isSuperAdminUser && !hasProjectsPermission}
+                                                                    className="block w-full text-left px-4 py-2.5 text-sm font-medium text-red-700 hover:bg-red-50 border-b border-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                                                 >
                                                                     ✕ Reject
                                                                 </button>
                                                             )}
                                                             <button
                                                                 onClick={() => handleDelete(request)}
-                                                                className="block w-full text-left px-4 py-2.5 text-sm font-medium text-red-700 hover:bg-red-50 transition-colors"
+                                                                disabled={!isSuperAdminUser && !hasProjectsPermission}
+                                                                className="block w-full text-left px-4 py-2.5 text-sm font-medium text-red-700 hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                                             >
                                                                 🗑 Delete
                                                             </button>
@@ -559,8 +621,22 @@ const ProjectRequestsManagementPage = () => {
                                         </button>
                                         {request.status !== 'approved' && (
                                             <button
-                                                onClick={() => { setStatusModal({ ...request, newStatus: 'approved' }); }}
-                                                className="px-3 py-2 bg-green-50 text-green-700 text-sm font-semibold rounded-lg hover:bg-green-100 transition-colors"
+                                                onClick={() => { 
+                                                    if (isSuperAdminUser || hasProjectsPermission) {
+                                                        setStatusModal({ ...request, newStatus: 'approved' }); 
+                                                    } else {
+                                                        checkPermissionAndShowError(
+                                                            userPermissions,
+                                                            userRole,
+                                                            'projects',
+                                                            dispatch,
+                                                            'Software Projects',
+                                                            'Software'
+                                                        );
+                                                    }
+                                                }}
+                                                disabled={!isSuperAdminUser && !hasProjectsPermission}
+                                                className="px-3 py-2 bg-green-50 text-green-700 text-sm font-semibold rounded-lg hover:bg-green-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                                 title="Approve"
                                             >
                                                 ✓
@@ -568,8 +644,22 @@ const ProjectRequestsManagementPage = () => {
                                         )}
                                         {request.status !== 'rejected' && (
                                             <button
-                                                onClick={() => { setStatusModal({ ...request, newStatus: 'rejected' }); }}
-                                                className="px-3 py-2 bg-red-50 text-red-700 text-sm font-semibold rounded-lg hover:bg-red-100 transition-colors"
+                                                onClick={() => { 
+                                                    if (isSuperAdminUser || hasProjectsPermission) {
+                                                        setStatusModal({ ...request, newStatus: 'rejected' }); 
+                                                    } else {
+                                                        checkPermissionAndShowError(
+                                                            userPermissions,
+                                                            userRole,
+                                                            'projects',
+                                                            dispatch,
+                                                            'Software Projects',
+                                                            'Software'
+                                                        );
+                                                    }
+                                                }}
+                                                disabled={!isSuperAdminUser && !hasProjectsPermission}
+                                                className="px-3 py-2 bg-red-50 text-red-700 text-sm font-semibold rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                                 title="Reject"
                                             >
                                                 ✕
@@ -577,7 +667,8 @@ const ProjectRequestsManagementPage = () => {
                                         )}
                                         <button
                                             onClick={() => handleDelete(request)}
-                                            className="px-3 py-2 bg-gray-100 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-200 transition-colors"
+                                            disabled={!isSuperAdminUser && !hasProjectsPermission}
+                                            className="px-3 py-2 bg-gray-100 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                             title="Delete"
                                         >
                                             🗑

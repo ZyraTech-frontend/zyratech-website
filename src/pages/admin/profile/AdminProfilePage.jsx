@@ -8,6 +8,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { useAuth } from '../../../hooks/useAuth';
+import { isSuperAdmin } from '../../../utils/permissionHelper';
 import { updateUserProfile, changePassword, verifySession, uploadUserAvatar } from '../../../store/slices/authSlice';
 import authService from '../../../services/authService';
 import activityLogService from '../../../services/activityLogService';
@@ -48,8 +49,9 @@ const getDepartmentColor = (dept) => {
   }
 };
 const AdminProfilePage = () => {
-    const { user } = useAuth();
+    const { user, userRole } = useAuth();
     const dispatch = useDispatch();
+    const isSuperAdminUser = isSuperAdmin(userRole);
 
     // Track if form has been initialized
     const initializedRef = useRef(false);
