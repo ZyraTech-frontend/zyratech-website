@@ -67,7 +67,7 @@ const JobFormPage = () => {
     };
     const { id } = useParams();
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    
 
     const isEditing = Boolean(id);
 
@@ -778,3 +778,4 @@ const JobFormPage = () => {
 };
 
 export default JobFormPage;
+

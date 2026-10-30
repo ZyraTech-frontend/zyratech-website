@@ -7,7 +7,7 @@
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
 import { useAuth } from '../../../hooks/useAuth';
-import React, { useDispatch } { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import galleryService from '../../../services/galleryService';
@@ -339,3 +339,5 @@ const AlbumFormPage = () => {
 };
 
 export default AlbumFormPage;
+
+
