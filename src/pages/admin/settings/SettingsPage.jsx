@@ -9,7 +9,8 @@ import { fetchSettings, updateSetting } from '../../../store/slices/settingsSlic
 import { addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import LoadingSpinner from '../../../components/admin/shared/LoadingSpinner';
-import { usePermissions } from '../../../hooks/usePermissions';
+import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import { 
   Palette, 
@@ -37,7 +38,7 @@ import PaymentSettingsTab from '../../../components/admin/settings/PaymentSettin
 
 const SettingsPage = () => {
   const dispatch = useDispatch();
-  const { isSuperAdmin } = usePermissions();
+  const { userPermissions, userRole } = useAuth();
   const { values: settings, loading } = useSelector((state) => state.settings);
   const [activeTab, setActiveTab] = useState('branding');
   const [formData, setFormData] = useState({});

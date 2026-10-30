@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import blogService from '../../../services/blogService';
 import {
     FileText,
@@ -137,6 +138,17 @@ const BlogManagementPage = () => {
             categories: allCategories.length,
         };
     }, [articles, pagination.total, allCategories]);
+
+    // Permission check helper
+    const checkBlogPermission = () => {
+        const isSuperAdminUser = isSuperAdmin(userRole);
+        const hasBlogPermission = canAccessFeature(userPermissions, userRole, 'blog_articles');
+        if (!isSuperAdminUser && !hasBlogPermission) {
+            checkPermissionAndShowError(userPermissions, userRole, 'blog_articles', dispatch, 'blog articles', 'Media');
+            return false;
+        }
+        return true;
+    };
 
     // Quick toggle publish / draft
     const handleToggleStatus = async (article) => {
@@ -488,3 +500,6 @@ const BlogManagementPage = () => {
 };
 
 export default BlogManagementPage;
+
+
+

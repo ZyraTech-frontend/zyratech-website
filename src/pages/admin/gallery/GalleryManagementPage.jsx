@@ -10,7 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import galleryService from '../../../services/galleryService';
 import {
     Image,
@@ -82,7 +83,7 @@ const AlbumSkeleton = () => (
 const GalleryManagementPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isSuperAdmin } = usePermissions();
+    const { userPermissions, userRole } = useAuth();
 
     // State management
     const [albums, setAlbums] = useState([]);

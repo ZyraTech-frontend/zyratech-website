@@ -8,7 +8,8 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import faqService from '../../../services/faqService';
 import {
     HelpCircle,
@@ -105,7 +106,7 @@ const StatusBadge = ({ status }) => {
 const FaqManagementPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isSuperAdmin } = usePermissions();
+    const { userPermissions, userRole } = useAuth();
 
     // State management
     const [faqs, setFaqs] = useState([]);

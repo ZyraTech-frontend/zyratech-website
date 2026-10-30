@@ -7,7 +7,8 @@ import React, { useState, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import {
     CreditCard,
     Search,
@@ -240,7 +241,7 @@ const StatusBadge = ({ status }) => {
 
 const PaymentsManagementPage = () => {
     const dispatch = useDispatch();
-    const { isSuperAdmin } = usePermissions();
+    const { userPermissions, userRole } = useAuth();
 
     // State management
     const [searchQuery, setSearchQuery] = useState('');
