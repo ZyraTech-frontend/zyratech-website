@@ -79,15 +79,16 @@ const JobsManagementPage = () => {
     const navigate = useNavigate();
     const { userPermissions, userRole } = useAuth();
 
-    // Permission check helper
-    const checkJobsPermission = () => {
-        const isSuperAdminUser = isSuperAdmin(userRole);
-        const hasJobsPermission = canAccessFeature(userPermissions, userRole, 'jobs');
-        if (!isSuperAdminUser && !hasJobsPermission) {
-            checkPermissionAndShowError(userPermissions, userRole, 'jobs', dispatch, 'jobs', 'CAO');
-            return false;
-        }
-        return true;
+    // Permission checks
+    const canCreateJob = userPermissions?.includes('jobs') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create and manage job listings.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
     };
 
     // State management
@@ -329,6 +330,10 @@ const JobsManagementPage = () => {
 
     // Handlers
     const handleDelete = (job) => {
+        if (!canCreateJob) {
+            handlePermissionDenied();
+            return;
+        }
         dispatch(openConfirmDialog({
             title: 'Delete Job Listing',
             message: `Are you sure you want to delete "${job.title}"? This will also delete all associated applications. This action cannot be undone.`,
@@ -381,10 +386,18 @@ const JobsManagementPage = () => {
     };
 
     const handleEdit = (job) => {
+        if (!canCreateJob) {
+            handlePermissionDenied();
+            return;
+        }
         navigate(`/admin/jobs/edit/${job.id}`);
     };
 
     const handleAddNew = () => {
+        if (!canCreateJob) {
+            handlePermissionDenied();
+            return;
+        }
         navigate('/admin/jobs/new');
     };
 

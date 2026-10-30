@@ -108,15 +108,16 @@ const FaqManagementPage = () => {
     const navigate = useNavigate();
     const { userPermissions, userRole } = useAuth();
 
-    // Permission check helper
-    const checkFaqPermission = () => {
-        const isSuperAdminUser = isSuperAdmin(userRole);
-        const hasFaqPermission = canAccessFeature(userPermissions, userRole, 'content');
-        if (!isSuperAdminUser && !hasFaqPermission) {
-            checkPermissionAndShowError(userPermissions, userRole, 'content', dispatch, 'content', 'Media');
-            return false;
-        }
-        return true;
+    // Permission checks
+    const canCreateFaq = userPermissions?.includes('content') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create and manage FAQs.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
     };
 
     // State management
@@ -228,14 +229,26 @@ const FaqManagementPage = () => {
     };
 
     const handleAddNew = () => {
+        if (!canCreateFaq) {
+            handlePermissionDenied();
+            return;
+        }
         navigate('/admin/faq/new');
     };
 
     const handleEdit = (faq) => {
+        if (!canCreateFaq) {
+            handlePermissionDenied();
+            return;
+        }
         navigate(`/admin/faq/edit/${faq.id}`);
     };
 
     const handleDelete = (faq) => {
+        if (!canCreateFaq) {
+            handlePermissionDenied();
+            return;
+        }
         dispatch(openConfirmDialog({
             title: 'Delete FAQ',
             message: `Are you sure you want to delete "${faq.question}"? This action cannot be undone.`,

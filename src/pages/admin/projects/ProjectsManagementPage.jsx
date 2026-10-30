@@ -107,7 +107,20 @@ const ProjectsManagementPage = () => {
     const dispatch = useDispatch();
     const { userPermissions, userRole } = useAuth();
     const navigate = useNavigate();
-  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
+
+    // Permission checks
+    const canCreateProject = userPermissions?.includes('projects') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create and manage projects.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
+
+    const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
     // State management
     const [projects, setProjects] = useState([]);
@@ -211,6 +224,10 @@ const ProjectsManagementPage = () => {
 
     // Handlers
     const handleDelete = (project) => {
+        if (!canCreateProject) {
+            handlePermissionDenied();
+            return;
+        }
         dispatch(openConfirmDialog({
             title: 'Delete Project',
             message: `Are you sure you want to delete "${project.title}"? This action cannot be undone.`,
@@ -239,6 +256,10 @@ const ProjectsManagementPage = () => {
     };
 
     const handleEdit = (project) => {
+        if (!canCreateProject) {
+            handlePermissionDenied();
+            return;
+        }
         navigate(`/admin/projects/edit/${project.id}`);
     };
 
@@ -268,6 +289,10 @@ const ProjectsManagementPage = () => {
     };
 
     const handleAddNew = () => {
+        if (!canCreateProject) {
+            handlePermissionDenied();
+            return;
+        }
         navigate('/admin/projects/new');
     };
 

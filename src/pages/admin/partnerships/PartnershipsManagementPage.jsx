@@ -61,14 +61,16 @@ const PartnershipsManagementPage = () => {
     const navigate = useNavigate();
 
     // Permission check helper
-    const checkPartnershipsPermission = () => {
-        const isSuperAdminUser = isSuperAdmin(userRole);
-        const hasPartnershipsPermission = canAccessFeature(userPermissions, userRole, 'partnerships');
-        if (!isSuperAdminUser && !hasPartnershipsPermission) {
-            checkPermissionAndShowError(userPermissions, userRole, 'partnerships', dispatch, 'partnerships', 'Media');
-            return false;
-        }
-        return true;
+    // Permission checks
+    const canCreatePartnership = userPermissions?.includes('partnerships') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create and manage partnerships.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
     };
 
     // State management
@@ -156,6 +158,10 @@ const PartnershipsManagementPage = () => {
     };
 
     const handleDelete = (partnership) => {
+        if (!canCreatePartnership) {
+            handlePermissionDenied();
+            return;
+        }
         dispatch(openConfirmDialog({
             title: 'Delete Partnership',
             message: `Are you sure you want to delete this application from "${partnership.name || partnership.organizationName}"? This action cannot be undone.`,

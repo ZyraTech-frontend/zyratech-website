@@ -64,6 +64,7 @@ const CourseBadge = ({ type, children }) => {
 const TrainingCoursesPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { userPermissions } = useAuth();
 
     // Redux courses state
     const { items: courses = [], loading: coursesLoading } = useSelector((state) => state.courses);
@@ -137,6 +138,10 @@ const TrainingCoursesPage = () => {
 
     // Handlers
     const handleDelete = (course) => {
+        if (!canCreateCourse) {
+            handlePermissionDenied();
+            return;
+        }
         dispatch(openConfirmDialog({
             title: 'Delete Course',
             message: `Are you sure you want to delete "${course.title}"? This action cannot be undone.`,
@@ -180,10 +185,30 @@ const TrainingCoursesPage = () => {
     };
 
     const handleEdit = (course) => {
+        if (!canCreateCourse) {
+            handlePermissionDenied();
+            return;
+        }
         navigate(`/admin/training/edit/${course.id}`);
     };
 
+    // Permission checks
+    const canCreateCourse = userPermissions?.includes('training_courses') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create and manage training courses.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
+
     const handleAddNew = () => {
+        if (!canCreateCourse) {
+            handlePermissionDenied();
+            return;
+        }
         navigate('/admin/training/new');
     };
 
