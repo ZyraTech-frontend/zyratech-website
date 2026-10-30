@@ -8,6 +8,8 @@ import {
     Save, Loader, Plus, Edit2, Trash2, X,
     Layout, Info, BookOpen, Handshake
 } from 'lucide-react';
+import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
 import LinkPicker from '../../../components/admin/common/LinkPicker';
@@ -545,3 +547,4 @@ const PartnershipContentManagementPage = () => {
 };
 
 export default PartnershipContentManagementPage;
+

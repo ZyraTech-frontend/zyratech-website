@@ -6,6 +6,8 @@ import {
     Layout, Target, MapPin, Flag, Clock,
     Users, TrendingUp, CheckCircle, Globe, Quote
 } from 'lucide-react';
+import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
 import { useDispatch } from 'react-redux';
@@ -512,3 +514,4 @@ const AboutPageManagementPage = () => {
 };
 
 export default AboutPageManagementPage;
+

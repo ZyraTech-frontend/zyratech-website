@@ -27,6 +27,8 @@ import {
     Users,
     CheckCircle
 } from 'lucide-react';
+import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
 import { useActivityLogger } from '../../../hooks/useActivityLogger';
@@ -270,3 +272,4 @@ const BenefitFormPage = () => {
 };
 
 export default BenefitFormPage;
+

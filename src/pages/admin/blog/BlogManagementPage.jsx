@@ -139,20 +139,14 @@ const BlogManagementPage = () => {
         };
     }, [articles, pagination.total, allCategories]);
 
-    // Permission check helper
-    const checkBlogPermission = () => {
-        const isSuperAdminUser = isSuperAdmin(userRole);
-        const hasBlogPermission = canAccessFeature(userPermissions, userRole, 'blog_articles');
-        if (!isSuperAdminUser && !hasBlogPermission) {
-            checkPermissionAndShowError(userPermissions, userRole, 'blog_articles', dispatch, 'blog articles', 'Media');
-            return false;
-        }
-        return true;
-    };
+    
 
     // Quick toggle publish / draft
     const handleToggleStatus = async (article) => {
-        if (!checkBlogPermission()) return;
+        if (!canCreateBlog) {
+            handlePermissionDenied();
+            return;
+        }
         const newStatus = article.status === 'published' ? 'draft' : 'published';
         setActionLoadingId(article.id);
         try {
@@ -174,7 +168,10 @@ const BlogManagementPage = () => {
 
     // Handle delete article
     const handleDeleteArticle = (article) => {
-        if (!checkBlogPermission()) return;
+        if (!canCreateBlog) {
+            handlePermissionDenied();
+            return;
+        }
         dispatch(openConfirmDialog({
             title: 'Delete Article',
             message: `Are you sure you want to permanently delete "${article.title}"? This action cannot be undone.`,
@@ -227,7 +224,10 @@ const BlogManagementPage = () => {
                             </button>
                             <button
                                 onClick={() => {
-                                    if (!checkBlogPermission()) return;
+                                    if (!canCreateBlog) {
+                                        handlePermissionDenied();
+                                        return;
+                                    }
                                     navigate('/admin/blog/new');
                                 }}
                                 className="bg-[#004fa2] hover:bg-blue-800 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg flex items-center gap-1.5 transition-all shadow-sm"
@@ -458,7 +458,10 @@ const BlogManagementPage = () => {
                                                 </p>
                                                 <button
                                 onClick={() => {
-                                    if (!checkBlogPermission()) return;
+                                    if (!canCreateBlog) {
+                                        handlePermissionDenied();
+                                        return;
+                                    }
                                     navigate('/admin/blog/new');
                                 }}
                                                     className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition-colors shadow-xs"
@@ -508,6 +511,9 @@ const BlogManagementPage = () => {
 };
 
 export default BlogManagementPage;
+
+
+
 
 
 

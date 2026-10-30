@@ -28,6 +28,8 @@ import {
     Layers,
     BadgeCheck
 } from 'lucide-react';
+import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
 import { useActivityLogger } from '../../../hooks/useActivityLogger';
@@ -297,3 +299,4 @@ const ServiceFormPage = () => {
 };
 
 export default ServiceFormPage;
+

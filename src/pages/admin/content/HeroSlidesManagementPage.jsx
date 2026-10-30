@@ -18,15 +18,29 @@ import {
     ExternalLink,
     Loader
 } from 'lucide-react';
+import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import heroService from '../../../services/heroService';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 
 const HeroSlidesManagementPage = () => {
     const navigate = useNavigate();
+    const { userPermissions, userRole } = useAuth();
     const dispatch = useDispatch();
     const [slides, setSlides] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // Permission check helper
+    const checkContentPermission = () => {
+        const isSuperAdminUser = isSuperAdmin(userRole);
+        const hasContentPermission = canAccessFeature(userPermissions, userRole, 'content');
+        if (!isSuperAdminUser && !hasContentPermission) {
+            checkPermissionAndShowError(userPermissions, userRole, 'content', dispatch, 'content', 'Media');
+            return false;
+        }
+        return true;
+    };
     const [searchTerm, setSearchTerm] = useState('');
 
     // Fetch slides on mount
@@ -48,6 +62,7 @@ const HeroSlidesManagementPage = () => {
     };
 
     const handleDelete = (id) => {
+        if (!checkContentPermission()) return;
         dispatch(openConfirmDialog({
             title: 'Delete Hero Slide',
             message: 'Are you sure you want to delete this slide? This action cannot be undone.',
@@ -227,4 +242,6 @@ const HeroSlidesManagementPage = () => {
 };
 
 export default HeroSlidesManagementPage;
+
+
 
