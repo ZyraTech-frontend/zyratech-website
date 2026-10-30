@@ -221,6 +221,7 @@ const GalleryManagementPage = () => {
 
     // Helper to open edit album modal
     const openEditAlbumModal = (album) => {
+        if (!canCreateGallery) { handlePermissionDenied(); return; }
         setEditingAlbum(album);
         setAlbumFormData({
             title: album.title,
@@ -306,6 +307,7 @@ const GalleryManagementPage = () => {
 
     // Handle delete album
     const handleDeleteAlbum = (album) => {
+        if (!canCreateGallery) { handlePermissionDenied(); return; }
         dispatch(openConfirmDialog({
             title: 'Delete Album',
             message: `Are you sure you want to delete "${album.title}"? This will also delete all ${album.media?.length || 0} images in this album. This action cannot be undone.`,
@@ -334,6 +336,7 @@ const GalleryManagementPage = () => {
 
     // Handle publish/unpublish album
     const handleTogglePublish = async (album) => {
+        if (!canCreateGallery) { handlePermissionDenied(); return; }
         const isPublished = album.status === 'published';
         const newStatus = isPublished ? 'draft' : 'published';
         
@@ -424,6 +427,7 @@ const GalleryManagementPage = () => {
 
     // Handle delete image
     const handleDeleteImage = (image) => {
+        if (!canCreateGallery) { handlePermissionDenied(); return; }
         dispatch(openConfirmDialog({
             title: 'Delete Image',
             message: `Are you sure you want to delete this image? This action cannot be undone.`,
@@ -452,6 +456,7 @@ const GalleryManagementPage = () => {
     };
 
     const handleAddNew = () => {
+        if (!canCreateGallery) { handlePermissionDenied(); return; }
         resetAlbumForm();
         setShowAlbumModal(true);
     };
@@ -483,8 +488,7 @@ const GalleryManagementPage = () => {
                     
                     <div className="flex items-center gap-2 w-full md:w-auto">
                         <button
-                            onClick={() => setShowUploadModal(true)}
-                            disabled={!viewingAlbum}
+                            onClick={() => { if (!canCreateGallery) { handlePermissionDenied(); return; } setShowUploadModal(true); }}
                             className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-xs font-semibold"
                         >
                             <Upload size={14} /> Upload
@@ -640,8 +644,9 @@ const GalleryManagementPage = () => {
                                         </button>
                                         <button 
                                             onClick={() => {
-                                                setViewingAlbum(album);
-                                                setShowUploadModal(true);
+                                                if (!canCreateGallery) { handlePermissionDenied(); return; }
+                            setViewingAlbum(album);
+                            setShowUploadModal(true);
                                             }} 
                                             className="px-2 py-1 text-xs rounded bg-green-50 text-green-700 hover:bg-green-100 transition-colors font-medium flex items-center gap-1"
                                             title="Upload photos to this album"
