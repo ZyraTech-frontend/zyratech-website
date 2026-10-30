@@ -4,7 +4,10 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../hooks/useAuth';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import {
     Mail,
@@ -52,6 +55,23 @@ const STATUS_CONFIG = {
 };
 
 const NewsletterManagementPage = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+
+    // Permission checks
+    const canManageNewsletter = userPermissions?.includes('newsletter') ?? false;
+
+    const handlePermissionDenied = (action) => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: `You do not have permission to ${action} newsletters.`,
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
+
     const [subscribers, setSubscribers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -236,26 +256,26 @@ const NewsletterManagementPage = () => {
                         </div>
                     </div>
                     <button
-                        onClick={handleExport}
+                        onClick={() => { if (!canManageNewsletter) { handlePermissionDenied("export"); return; } handleExport(); }}
                         className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-all font-semibold text-[11px] shadow-sm"
                     >
                         <Download size={14} />
                         Export Active
                     </button>
                     <button
-                        onClick={() => setShowSendModal(true)}
+                        onClick={() => { if (!canManageNewsletter) { handlePermissionDenied("send"); return; } setShowSendModal(true); }}
                         className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-semibold text-[11px] shadow-sm"
                     >
                         <Send size={14} />
                         Send Newsletter
                     </button>
-                    <Link
-                        to="/admin/newsletter/templates"
+                    <button
+                        onClick={() => { if (!canManageNewsletter) { handlePermissionDenied("manage email templates"); return; } navigate("/admin/newsletter/templates"); }}
                         className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all font-semibold text-[11px] shadow-sm"
                     >
                         <Mail size={14} />
                         Email Templates
-                    </Link>
+                    </button>
                 </div>
 
                 {/* Stats Cards */}
@@ -353,7 +373,7 @@ const NewsletterManagementPage = () => {
                                         {formatDate(subscriber.createdAt || subscriber.subscribedAt)}
                                     </div>
                                     <button
-                                        className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"
+                                        onClick={() => { if (!canManageNewsletter) { handlePermissionDenied("delete"); return; } }} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"
                                         title="Remove subscriber"
                                     >
                                         <Trash2 size={12} />
@@ -549,3 +569,9 @@ const NewsletterManagementPage = () => {
 };
 
 export default NewsletterManagementPage;
+
+
+
+
+
+
