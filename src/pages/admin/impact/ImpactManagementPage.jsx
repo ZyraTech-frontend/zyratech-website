@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
+import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 
 import {
     TrendingUp,
@@ -809,3 +811,4 @@ const ImpactManagementPage = () => {
 };
 
 export default ImpactManagementPage;
+

@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
+import { useAuth } from '../../../hooks/useAuth';
+import { canAccessFeature, isSuperAdmin, checkPermissionAndShowError } from '../../../utils/permissionHelper';
 import partnersService from '../../../services/partnersService';
 import {
     Handshake,
@@ -740,4 +742,5 @@ const PartnershipsManagementPage = () => {
 };
 
 export default PartnershipsManagementPage;
+
 
