@@ -44,7 +44,7 @@ const STATUSES = [
 
 const ProjectFormPage = () => {
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
     
     // Permission checks
     const canProjects = userPermissions?.includes('projects') ?? false;
@@ -59,8 +59,6 @@ const ProjectFormPage = () => {
         }));
     };
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const { userPermissions, userRole } = useAuth();
     const { id } = useParams();
   const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
@@ -642,6 +640,9 @@ const ProjectFormPage = () => {
 };
 
 export default ProjectFormPage;
+
+
+
 
 
 

@@ -49,7 +49,6 @@ const BlogFormPage = () => {
     };
     const { id } = useParams();
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const isEditing = Boolean(id && id !== 'new');
     const fileInputRef = useRef(null);
 
@@ -619,3 +618,5 @@ const BlogFormPage = () => {
 };
 
 export default BlogFormPage;
+
+

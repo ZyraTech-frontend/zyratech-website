@@ -4,7 +4,7 @@
  */
 
 import { useDispatch } from 'react-redux';
-import React, { useDispatch } { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
     ArrowLeft,
@@ -261,3 +261,4 @@ const MilestoneFormPage = () => {
 };
 
 export default MilestoneFormPage;
+
