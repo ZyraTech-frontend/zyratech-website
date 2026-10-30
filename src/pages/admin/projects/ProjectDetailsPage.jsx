@@ -26,8 +26,8 @@ import {
 const ProjectDetailsPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { userPermissions, userRole } = useAuth();
     const { id } = useParams();
-    const { userRole } = useAuth();
   const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
     const [project, setProject] = useState(null);
@@ -321,3 +321,6 @@ const ProjectDetailsPage = () => {
 };
 
 export default ProjectDetailsPage;
+
+
+

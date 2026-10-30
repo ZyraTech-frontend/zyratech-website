@@ -104,8 +104,8 @@ const ProgressBar = ({ progress }) => {
 
 const ProjectsManagementPage = () => {
     const dispatch = useDispatch();
+    const { userPermissions, userRole } = useAuth();
     const navigate = useNavigate();
-    const { userRole } = useAuth();
   const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
     // State management
@@ -652,3 +652,6 @@ const ProjectsManagementPage = () => {
 };
 
 export default ProjectsManagementPage;
+
+
+

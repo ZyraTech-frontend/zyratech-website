@@ -57,6 +57,7 @@ const StatusBadge = ({ status }) => {
 
 const PartnershipsManagementPage = () => {
     const dispatch = useDispatch();
+    const { userPermissions, userRole } = useAuth();
     const navigate = useNavigate();
 
     // Permission check helper
@@ -742,5 +743,6 @@ const PartnershipsManagementPage = () => {
 };
 
 export default PartnershipsManagementPage;
+
 
 
