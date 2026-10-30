@@ -5,6 +5,7 @@
  */
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { useAuth } from '../../../hooks/useAuth';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 
 import activityLogService from '../../../services/activityLogService';
@@ -1124,3 +1125,4 @@ const ActivityLogsPage = () => {
 };
 
 export default ActivityLogsPage;
+

@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
+import { useAuth } from '../../../hooks/useAuth';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 
 import faqService, { FAQ_CATEGORIES } from '../../../services/faqService';
@@ -370,3 +371,4 @@ export default function FaqFormPage() {
         </AdminLayout>
     );
 }
+

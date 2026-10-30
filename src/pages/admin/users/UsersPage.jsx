@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchUsers, updateUser, deactivateUser, reactivateUser } from '../../../store/slices/usersSlice';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
+import { useAuth } from '../../../hooks/useAuth';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 
 import { ROLES, ROLE_LABELS, DEPARTMENTS, DEPARTMENT_COLORS } from '../../../utils/constants';
@@ -1150,3 +1151,4 @@ const UsersPage = () => {
 };
 
 export default UsersPage;
+

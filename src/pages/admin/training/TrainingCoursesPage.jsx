@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import { fetchCourses, deleteCourse, togglePublishCourse } from '../../../store/slices/coursesSlice';
+import { useAuth } from '../../../hooks/useAuth';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { getCourseImageUrl } from '../../../utils/imageUrl';
 import {
@@ -663,4 +664,5 @@ const TrainingCoursesPage = () => {
 };
 
 export default TrainingCoursesPage;
+
 

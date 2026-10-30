@@ -7,6 +7,7 @@ import React, { useState, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { useAuth } from '../../../hooks/useAuth';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 
 import testimonialsService from '../../../services/testimonialsService';
@@ -739,3 +740,4 @@ const TestimonialsManagementPage = () => {
 };
 
 export default TestimonialsManagementPage;
+

@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
+import { useAuth } from '../../../hooks/useAuth';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 
 import projectsService from '../../../services/projectsService';
@@ -321,6 +322,7 @@ const ProjectDetailsPage = () => {
 };
 
 export default ProjectDetailsPage;
+
 
 
 
