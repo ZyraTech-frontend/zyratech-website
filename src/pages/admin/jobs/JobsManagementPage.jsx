@@ -358,6 +358,10 @@ const JobsManagementPage = () => {
     };
 
     const handlePublish = async (job) => {
+        if (!canCreateJob) {
+            handlePermissionDenied();
+            return;
+        }
         const isPublishing = job.status !== 'active';
         const newStatus = isPublishing ? 'active' : 'draft';
         
@@ -593,9 +597,9 @@ const JobsManagementPage = () => {
                                         {/* Action Bar */}
                                         <div className="flex items-center justify-between pt-2">
                                             <div className="flex items-center gap-1">
-                                                <button onClick={() => handlePublish(job)} className={`p-1.5 hover:bg-gray-100 rounded transition-colors ${job.status === 'active' ? 'text-green-600 hover:text-green-700' : 'text-gray-400 hover:text-amber-600'}`} title={job.status === 'active' ? 'Unpublish' : 'Publish'}>{job.status === 'active' ? <Eye size={12}/> : <EyeOff size={12}/>}</button>
-                                                <button onClick={() => handleView(job)} className="p-1.5 hover:bg-gray-100 rounded text-gray-400 hover:text-[#004fa2] transition-colors" title="View"><Eye size={12}/></button>
-                                                <button onClick={() => handleEdit(job)} className="p-1.5 hover:bg-gray-100 rounded text-gray-400 hover:text-green-600 transition-colors" title="Edit"><Edit size={12}/></button>
+                                                <button onClick={() => { if (!canCreateJob) { handlePermissionDenied(); return; } handlePublish(job); }} className={`p-1.5 hover:bg-gray-100 rounded transition-colors ${job.status === 'active' ? 'text-green-600 hover:text-green-700' : 'text-gray-400 hover:text-amber-600'}`} title={job.status === 'active' ? 'Unpublish' : 'Publish'}>{job.status === 'active' ? <Eye size={12}/> : <EyeOff size={12}/>}</button>
+                                                <button onClick={() => { if (!canCreateJob) { handlePermissionDenied(); return; } handleView(job); }} className="p-1.5 hover:bg-gray-100 rounded text-gray-400 hover:text-[#004fa2] transition-colors" title="View"><Eye size={12}/></button>
+                                                <button onClick={() => { if (!canCreateJob) { handlePermissionDenied(); return; } handleEdit(job); }} className="p-1.5 hover:bg-gray-100 rounded text-gray-400 hover:text-green-600 transition-colors" title="Edit"><Edit size={12}/></button>
                                                 <button onClick={() => handleDelete(job)} className="p-1.5 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors" title="Delete"><Trash2 size={12}/></button>
                                             </div>
                                             <a href={`/jobs/${job.id}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-[9px] font-bold text-[#004fa2] hover:underline uppercase bg-blue-50 px-2 py-1 rounded">
@@ -889,4 +893,7 @@ const JobsManagementPage = () => {
 };
 
 export default JobsManagementPage;
+
+
+
 
