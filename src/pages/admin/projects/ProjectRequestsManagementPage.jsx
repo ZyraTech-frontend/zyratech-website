@@ -428,13 +428,19 @@ const ProjectRequestsManagementPage = () => {
                                 <tbody className="divide-y divide-gray-100">
                                     {paginatedRequests.map((request) => (
                                         <tr key={request.id} className="hover:bg-blue-50/50 transition-colors duration-150 group">
-                                            <td className="px-6 py-5">
-                                                <p className="font-semibold text-gray-900 text-sm">{request.fullName}</p>
+                                            <td className="px-6 py-5 border-r border-gray-200">
+                                                <div className="flex flex-col justify-center">
+                                                    <p className="font-bold text-gray-900 text-sm leading-snug">{request.fullName}</p>
+                                                    <p className="text-xs text-gray-500 mt-1.5">Requester</p>
+                                                </div>
                                             </td>
                                             <td className="px-6 py-5">
-                                                <a href={`mailto:${request.email}`} className="text-sm text-[#004fa2] hover:text-[#003d80] hover:underline break-all">
-                                                    {request.email}
-                                                </a>
+                                                <div className="flex flex-col justify-center min-w-0">
+                                                    <a href={`mailto:${request.email}`} className="text-sm font-semibold text-[#004fa2] hover:text-[#003d80] hover:underline break-all transition-colors duration-150">
+                                                        {request.email}
+                                                    </a>
+                                                    <p className="text-xs text-gray-500 mt-1.5 truncate">Contact</p>
+                                                </div>
                                             </td>
                                             <td className="px-6 py-5">
                                                 <div className="max-w-xs">
