@@ -3,7 +3,10 @@
  * Form for creating and editing impact metrics
  */
 
-import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../../store/slices/uiSlice';
+import { useAuth } from '../../../hooks/useAuth';
+import React, { useDispatch } { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import {
@@ -21,6 +24,21 @@ import {
 import impactService, { IMPACT_CATEGORIES, METRIC_TYPES, DISPLAY_LOCATIONS } from '../../../services/impactService';
 
 const ImpactMetricFormPage = () => {
+    const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+    
+    // Permission checks
+    const canImpact = userPermissions?.includes('impact') ?? false;
+
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create or edit impact metrics.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const { id } = useParams();
     const navigate = useNavigate();
     const isEditing = id && id !== 'new';
@@ -124,6 +142,7 @@ const ImpactMetricFormPage = () => {
     };
 
     const handleSubmit = async (e) => {
+        if (!canImpact) { handlePermissionDenied(); return; }
         e.preventDefault();
 
         if (!validateForm()) {

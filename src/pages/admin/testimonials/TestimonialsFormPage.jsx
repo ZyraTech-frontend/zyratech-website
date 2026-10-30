@@ -6,6 +6,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../../store/slices/uiSlice';
 import { useAuth } from '../../../hooks/useAuth';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 
@@ -22,8 +24,19 @@ import testimonialsService from '../../../services/testimonialsService';
 export default function TestimonialsFormPage() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { userRole } = useAuth();
-  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
+    const { userPermissions } = useAuth();
+    const dispatch = useDispatch();
+    const canCreateTestimonials = userPermissions?.includes('testimonials') ?? false;
+
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create or edit testimonials.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [errors, setErrors] = useState({});
@@ -178,6 +191,7 @@ export default function TestimonialsFormPage() {
     };
 
     const handleSubmit = async (e) => {
+        if (!canCreateTestimonials) { handlePermissionDenied(); return; }
         e.preventDefault();
 
         if (!validateForm()) {

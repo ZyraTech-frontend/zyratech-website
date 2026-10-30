@@ -3,6 +3,8 @@
  * Dedicated page for creating or editing job listings with step-by-step journey
  */
 
+import { addNotification } from '../../../store/slices/uiSlice';
+import { useAuth } from '../../../hooks/useAuth';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -48,6 +50,21 @@ const STEPS = [
 ];
 
 const JobFormPage = () => {
+    const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+    
+    // Permission checks
+    const canJobs = userPermissions?.includes('jobs') ?? false;
+
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create or edit jobs.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();

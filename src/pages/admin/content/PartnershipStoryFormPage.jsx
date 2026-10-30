@@ -3,7 +3,8 @@
  * Dedicated page for creating and editing partnership stories
  */
 
-import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import React, { useDispatch } { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
     ArrowLeft,
@@ -20,6 +21,21 @@ import { useActivityLogger } from '../../../hooks/useActivityLogger';
 import LinkPicker from '../../../components/admin/common/LinkPicker';
 
 const PartnershipStoryFormPage = () => {
+    const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+    
+    // Permission checks
+    const canContent = userPermissions?.includes('content') ?? false;
+
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create or edit partnership stories.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const navigate = useNavigate();
     const { id } = useParams();
     const { logAction } = useActivityLogger();
@@ -106,6 +122,7 @@ const PartnershipStoryFormPage = () => {
     };
 
     const handleSubmit = async (e) => {
+        if (!canContent) { handlePermissionDenied(); return; }
         e.preventDefault();
         
         if (!formData.title.trim() || !formData.category.trim() || !formData.description.trim() || !formData.impact.trim()) {

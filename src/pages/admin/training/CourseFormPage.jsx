@@ -3,6 +3,7 @@
  * Dedicated page for creating or editing training courses with step-by-step journey
  */
 
+import { useAuth } from '../../../hooks/useAuth';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -109,6 +110,21 @@ const STEPS = [
 
 
 const CourseFormPage = () => {
+    const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+    
+    // Permission checks
+    const canTrainingCourses = userPermissions?.includes('training_courses') ?? false;
+
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create or edit courses.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();

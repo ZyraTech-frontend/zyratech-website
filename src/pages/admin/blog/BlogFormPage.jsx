@@ -3,6 +3,7 @@
  * Form for creating and editing blog articles with live backend API & image upload.
  */
 
+import { useAuth } from '../../../hooks/useAuth';
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -31,6 +32,21 @@ const CATEGORIES = [
 ];
 
 const BlogFormPage = () => {
+    const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+    
+    // Permission checks
+    const canBlogArticles = userPermissions?.includes('blog_articles') ?? false;
+
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create or edit blog articles.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -191,6 +207,7 @@ const BlogFormPage = () => {
     };
 
     const handleSubmit = async (e) => {
+        if (!canBlogArticles) { handlePermissionDenied(); return; }
         e.preventDefault();
 
         if (!validateForm()) {

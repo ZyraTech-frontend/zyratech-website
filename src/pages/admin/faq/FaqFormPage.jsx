@@ -32,8 +32,18 @@ export default function FaqFormPage() {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { userRole } = useAuth();
-  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
+    const { userPermissions } = useAuth();
+    const canCreateContent = userPermissions?.includes('content') ?? false;
+
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create or edit FAQ items.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
@@ -141,6 +151,7 @@ export default function FaqFormPage() {
     };
 
     const handleSubmit = async (e) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         e.preventDefault();
 
         if (!validateForm()) {

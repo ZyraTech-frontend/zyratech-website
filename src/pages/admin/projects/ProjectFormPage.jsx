@@ -43,6 +43,21 @@ const STATUSES = [
 ];
 
 const ProjectFormPage = () => {
+    const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+    
+    // Permission checks
+    const canProjects = userPermissions?.includes('projects') ?? false;
+
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create or edit projects.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { userPermissions, userRole } = useAuth();
@@ -220,6 +235,7 @@ const ProjectFormPage = () => {
 
     // Handle form submission
     const handleSubmit = async (e) => {
+        if (!canProjects) { handlePermissionDenied(); return; }
         e.preventDefault();
         setSubmitError('');
 
