@@ -152,6 +152,7 @@ const BlogManagementPage = () => {
 
     // Quick toggle publish / draft
     const handleToggleStatus = async (article) => {
+        if (!checkBlogPermission()) return;
         const newStatus = article.status === 'published' ? 'draft' : 'published';
         setActionLoadingId(article.id);
         try {
@@ -173,6 +174,7 @@ const BlogManagementPage = () => {
 
     // Handle delete article
     const handleDeleteArticle = (article) => {
+        if (!checkBlogPermission()) return;
         dispatch(openConfirmDialog({
             title: 'Delete Article',
             message: `Are you sure you want to permanently delete "${article.title}"? This action cannot be undone.`,
@@ -506,6 +508,7 @@ const BlogManagementPage = () => {
 };
 
 export default BlogManagementPage;
+
 
 
 
