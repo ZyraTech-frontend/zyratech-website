@@ -85,22 +85,6 @@ export default function FaqFormPage() {
         };
         loadFaq();
     }, [id]);
-
-    // Check permissions
-    if (!isSuperAdmin) {
-        return (
-            <AdminLayout>
-                <div className="flex items-center justify-center min-h-screen">
-                    <div className="text-center">
-                        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                        <h2 className="text-xl font-semibold text-gray-900">Access Denied</h2>
-                        <p className="text-gray-600 mt-2">You don't have permission to access this page.</p>
-                    </div>
-                </div>
-            </AdminLayout>
-        );
-    }
-
     const validateForm = () => {
         const newErrors = {};
 
@@ -382,4 +366,5 @@ export default function FaqFormPage() {
         </AdminLayout>
     );
 }
+
 
