@@ -127,7 +127,7 @@ const CourseFormPage = () => {
     };
     const { id } = useParams();
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    
 
     const isEditing = Boolean(id);
     const [isLoadingCourse, setIsLoadingCourse] = useState(false);
@@ -1421,3 +1421,4 @@ const CourseFormPage = () => {
 };
 
 export default CourseFormPage;
+
