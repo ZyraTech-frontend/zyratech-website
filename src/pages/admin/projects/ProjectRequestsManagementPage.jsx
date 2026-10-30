@@ -1,6 +1,14 @@
 /**
  * Project Requests Management Page (Admin)
  * Professional admin interface for managing submitted project requests
+ * 
+ * Improvements:
+ * - Enhanced table layout with better spacing and readability
+ * - Professional modal design with clear sections
+ * - Better visual hierarchy and typography
+ * - Improved mobile responsiveness
+ * - Subtle shadows and borders for depth
+ * - Professional status badges and visual indicators
  */
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -29,6 +37,8 @@ import {
     Calendar,
     Zap,
     MoreVertical,
+    Divider,
+    ArrowRight,
 } from 'lucide-react';
 
 // Status configuration for project requests
@@ -45,25 +55,40 @@ const PACKAGE_TYPE_CONFIG = {
     'enterprise': { label: 'Enterprise', color: 'bg-red-100 text-red-700', icon: '🏢' }
 };
 
-// Status badge component
-const StatusBadge = ({ status }) => {
+// Status badge component with improved styling
+const StatusBadge = ({ status, size = 'sm' }) => {
     const config = STATUS_CONFIG[status] || STATUS_CONFIG['pending'];
     const Icon = config.icon;
 
+    const sizeClasses = {
+        xs: 'px-2 py-0.5 text-[9px]',
+        sm: 'px-2.5 py-1 text-[10px]',
+        md: 'px-3 py-1.5 text-xs',
+        lg: 'px-3.5 py-2 text-sm'
+    };
+
     return (
-        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border ${config.color}`}>
-            <Icon size={10} />
+        <span className={`inline-flex items-center gap-1.5 rounded-lg font-semibold uppercase tracking-wide border ${config.color} transition-all ${sizeClasses[size]}`}>
+            <Icon size={size === 'xs' ? 10 : size === 'sm' ? 12 : size === 'md' ? 14 : 16} className="flex-shrink-0" />
             {config.label}
         </span>
     );
 };
 
-// Package type badge component
-const PackageTypeBadge = ({ packageType }) => {
+// Package type badge component with improved styling
+const PackageTypeBadge = ({ packageType, size = 'sm' }) => {
     const config = PACKAGE_TYPE_CONFIG[packageType] || PACKAGE_TYPE_CONFIG['student-projects'];
+    
+    const sizeClasses = {
+        xs: 'px-2 py-0.5 text-[9px]',
+        sm: 'px-2.5 py-1 text-[10px]',
+        md: 'px-3 py-1.5 text-xs',
+        lg: 'px-3.5 py-2 text-sm'
+    };
+
     return (
-        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${config.color}`}>
-            <span>{config.icon}</span>
+        <span className={`inline-flex items-center gap-1.5 rounded-lg font-semibold uppercase tracking-wide ${config.color} transition-all ${sizeClasses[size]}`}>
+            <span className="text-lg leading-none">{config.icon}</span>
             {config.label}
         </span>
     );
@@ -374,89 +399,104 @@ const ProjectRequestsManagementPage = () => {
                     </div>
                 ) : (
                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full min-w-[1000px]">
-                                <thead className="bg-gray-50 border-b border-gray-100">
+                        {/* Desktop Table View */}
+                        <div className="hidden md:block overflow-x-auto">
+                            <table className="w-full">
+                                <thead className="bg-gray-50 border-b border-gray-200">
                                     <tr>
-                                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Name & Email</th>
-                                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Project</th>
-                                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Package</th>
-                                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
-                                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                                        <th className="px-6 py-4 text-left">
+                                            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Name</span>
+                                        </th>
+                                        <th className="px-6 py-4 text-left">
+                                            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</span>
+                                        </th>
+                                        <th className="px-6 py-4 text-left">
+                                            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Project</span>
+                                        </th>
+                                        <th className="px-6 py-4 text-left">
+                                            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Package</span>
+                                        </th>
+                                        <th className="px-6 py-4 text-left">
+                                            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</span>
+                                        </th>
+                                        <th className="px-6 py-4 text-left">
+                                            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</span>
+                                        </th>
+                                        <th className="px-6 py-4 text-right">
+                                            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</span>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">
                                     {paginatedRequests.map((request) => (
-                                        <tr key={request.id} className="hover:bg-gray-50 transition-colors">
-                                            <td className="px-4 py-4">
-                                                <div>
-                                                    <p className="font-semibold text-gray-900 text-sm">{request.fullName}</p>
-                                                    <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
-                                                        <Mail size={12} />
-                                                        <a href={`mailto:${request.email}`} className="hover:text-[#004fa2] break-all">{request.email}</a>
-                                                    </div>
-                                                    {request.phone && (
-                                                        <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
-                                                            <Phone size={12} />
-                                                            <a href={`tel:${request.phone}`} className="hover:text-[#004fa2]">{request.phone}</a>
-                                                        </div>
+                                        <tr key={request.id} className="hover:bg-blue-50/50 transition-colors duration-150 group">
+                                            <td className="px-6 py-5">
+                                                <p className="font-semibold text-gray-900 text-sm">{request.fullName}</p>
+                                            </td>
+                                            <td className="px-6 py-5">
+                                                <a href={`mailto:${request.email}`} className="text-sm text-[#004fa2] hover:text-[#003d80] hover:underline break-all">
+                                                    {request.email}
+                                                </a>
+                                            </td>
+                                            <td className="px-6 py-5">
+                                                <div className="max-w-xs">
+                                                    <p className="font-semibold text-gray-900 text-sm line-clamp-1 group-hover:text-[#004fa2] transition-colors">
+                                                        {request.projectTitle}
+                                                    </p>
+                                                    {request.description && (
+                                                        <p className="text-xs text-gray-500 mt-1 line-clamp-1">
+                                                            {request.description.substring(0, 100)}{request.description.length > 100 ? '...' : ''}
+                                                        </p>
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="px-4 py-4">
-                                                <div>
-                                                    <p className="font-semibold text-gray-900 text-sm line-clamp-1">{request.projectTitle}</p>
-                                                    <p className="text-xs text-gray-500 mt-1 line-clamp-1">{request.description}</p>
+                                            <td className="px-6 py-5">
+                                                <PackageTypeBadge packageType={request.packageType} size="sm" />
+                                            </td>
+                                            <td className="px-6 py-5">
+                                                <StatusBadge status={request.status} size="sm" />
+                                            </td>
+                                            <td className="px-6 py-5">
+                                                <div className="text-sm">
+                                                    <p className="font-medium text-gray-900">{formatDate(request.createdAt)}</p>
+                                                    <p className="text-xs text-gray-500 mt-0.5">{formatTime(request.createdAt)}</p>
                                                 </div>
                                             </td>
-                                            <td className="px-4 py-4">
-                                                <PackageTypeBadge packageType={request.packageType} />
-                                            </td>
-                                            <td className="px-4 py-4">
-                                                <StatusBadge status={request.status} />
-                                            </td>
-                                            <td className="px-4 py-4">
-                                                <div className="text-xs">
-                                                    <p className="font-semibold text-gray-900">{formatDate(request.createdAt)}</p>
-                                                    <p className="text-gray-500">{formatTime(request.createdAt)}</p>
-                                                </div>
-                                            </td>
-                                            <td className="px-4 py-4">
+                                            <td className="px-6 py-5">
                                                 <div className="flex items-center justify-end gap-1">
                                                     <button
                                                         onClick={() => handleView(request)}
-                                                        className="p-2 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
+                                                        className="p-2 text-gray-500 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-all duration-150"
                                                         title="View details"
                                                     >
-                                                        <Eye size={14} />
+                                                        <Eye size={16} />
                                                     </button>
-                                                    <div className="relative group">
-                                                        <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                                                            <MoreVertical size={14} />
+                                                    <div className="relative group/menu">
+                                                        <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-150">
+                                                            <MoreVertical size={16} />
                                                         </button>
-                                                        <div className="absolute right-0 top-full mt-1 w-32 bg-white border border-gray-200 rounded shadow-lg z-50 invisible group-hover:visible">
+                                                        <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50 invisible group-hover/menu:visible">
                                                             {request.status !== 'approved' && (
                                                                 <button
                                                                     onClick={() => { setStatusModal({ ...request, newStatus: 'approved' }); }}
-                                                                    className="block w-full text-left px-3 py-2 text-xs font-medium text-green-600 hover:bg-green-50 border-b border-gray-100"
+                                                                    className="block w-full text-left px-4 py-2.5 text-sm font-medium text-green-700 hover:bg-green-50 border-b border-gray-100 transition-colors"
                                                                 >
-                                                                    Approve
+                                                                    ✓ Approve
                                                                 </button>
                                                             )}
                                                             {request.status !== 'rejected' && (
                                                                 <button
                                                                     onClick={() => { setStatusModal({ ...request, newStatus: 'rejected' }); }}
-                                                                    className="block w-full text-left px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 border-b border-gray-100"
+                                                                    className="block w-full text-left px-4 py-2.5 text-sm font-medium text-red-700 hover:bg-red-50 border-b border-gray-100 transition-colors"
                                                                 >
-                                                                    Reject
+                                                                    ✕ Reject
                                                                 </button>
                                                             )}
                                                             <button
                                                                 onClick={() => handleDelete(request)}
-                                                                className="block w-full text-left px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50"
+                                                                className="block w-full text-left px-4 py-2.5 text-sm font-medium text-red-700 hover:bg-red-50 transition-colors"
                                                             >
-                                                                Delete
+                                                                🗑 Delete
                                                             </button>
                                                         </div>
                                                     </div>
@@ -468,27 +508,102 @@ const ProjectRequestsManagementPage = () => {
                             </table>
                         </div>
 
+                        {/* Mobile Card View */}
+                        <div className="md:hidden divide-y divide-gray-100">
+                            {paginatedRequests.map((request) => (
+                                <div key={request.id} className="p-4 hover:bg-blue-50/50 transition-colors duration-150 space-y-3">
+                                    {/* Header */}
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-semibold text-gray-900 text-sm truncate">{request.fullName}</p>
+                                            <a href={`mailto:${request.email}`} className="text-xs text-[#004fa2] hover:underline truncate block mt-1">
+                                                {request.email}
+                                            </a>
+                                        </div>
+                                        <StatusBadge status={request.status} size="xs" />
+                                    </div>
+
+                                    {/* Project Info */}
+                                    <div className="border-t border-gray-100 pt-3">
+                                        <p className="text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide">Project</p>
+                                        <p className="font-semibold text-gray-900 text-sm line-clamp-1">{request.projectTitle}</p>
+                                        {request.description && (
+                                            <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                                                {request.description.substring(0, 80)}{request.description.length > 80 ? '...' : ''}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* Meta Info */}
+                                    <div className="flex items-center gap-3 border-t border-gray-100 pt-3">
+                                        <div className="flex-1">
+                                            <PackageTypeBadge packageType={request.packageType} size="xs" />
+                                        </div>
+                                        <div className="text-right text-xs text-gray-500">
+                                            <p>{formatDate(request.createdAt)}</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Actions */}
+                                    <div className="flex items-center gap-2 border-t border-gray-100 pt-3">
+                                        <button
+                                            onClick={() => handleView(request)}
+                                            className="flex-1 px-3 py-2 bg-blue-50 text-[#004fa2] text-sm font-semibold rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-2"
+                                        >
+                                            <Eye size={14} />
+                                            View
+                                        </button>
+                                        {request.status !== 'approved' && (
+                                            <button
+                                                onClick={() => { setStatusModal({ ...request, newStatus: 'approved' }); }}
+                                                className="px-3 py-2 bg-green-50 text-green-700 text-sm font-semibold rounded-lg hover:bg-green-100 transition-colors"
+                                                title="Approve"
+                                            >
+                                                ✓
+                                            </button>
+                                        )}
+                                        {request.status !== 'rejected' && (
+                                            <button
+                                                onClick={() => { setStatusModal({ ...request, newStatus: 'rejected' }); }}
+                                                className="px-3 py-2 bg-red-50 text-red-700 text-sm font-semibold rounded-lg hover:bg-red-100 transition-colors"
+                                                title="Reject"
+                                            >
+                                                ✕
+                                            </button>
+                                        )}
+                                        <button
+                                            onClick={() => handleDelete(request)}
+                                            className="px-3 py-2 bg-gray-100 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-200 transition-colors"
+                                            title="Delete"
+                                        >
+                                            🗑
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
                         {/* Pagination */}
                         {totalPages > 1 && (
-                            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 bg-gray-50">
-                                <p className="text-xs text-gray-600">
+                            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50">
+                                <p className="text-xs text-gray-600 font-medium">
                                     Page {currentPage} of {totalPages} • Showing {paginatedRequests.length} of {filteredRequests.length}
                                 </p>
                                 <div className="flex items-center gap-1">
                                     <button
                                         onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                                         disabled={currentPage === 1}
-                                        className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="p-2 text-gray-500 hover:text-gray-700 hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors"
                                     >
-                                        <ChevronLeft size={14} />
+                                        <ChevronLeft size={16} />
                                     </button>
-                                    <span className="text-xs text-gray-600 mx-2">{currentPage}</span>
+                                    <span className="text-xs text-gray-600 font-medium px-3">{currentPage}</span>
                                     <button
                                         onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                                         disabled={currentPage === totalPages}
-                                        className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="p-2 text-gray-500 hover:text-gray-700 hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors"
                                     >
-                                        <ChevronRight size={14} />
+                                        <ChevronRight size={16} />
                                     </button>
                                 </div>
                             </div>
@@ -498,127 +613,152 @@ const ProjectRequestsManagementPage = () => {
 
                 {/* Details Modal */}
                 {detailsModal && (
-                    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                        <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                        <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full my-8">
                             {/* Modal Header */}
-                            <div className="sticky top-0 bg-gradient-to-r from-blue-50 to-white border-b border-gray-100 p-4 md:p-6 flex items-start justify-between">
-                                <div>
-                                    <h2 className="text-lg md:text-xl font-bold text-gray-900">Project Request Details</h2>
-                                    <p className="text-xs md:text-sm text-gray-500 mt-1">ID: {detailsModal.id}</p>
+                            <div className="sticky top-0 bg-blue-600 text-white px-6 md:px-8 py-6 flex items-start justify-between rounded-t-xl shadow-sm">
+                                <div className="flex-1">
+                                    <h2 className="text-xl md:text-2xl font-bold">Project Request Details</h2>
+                                    <p className="text-blue-100 text-sm mt-2">Request ID: {detailsModal.id}</p>
                                 </div>
-                                <button onClick={() => setDetailsModal(null)} className="text-gray-400 hover:text-gray-600">
+                                <button 
+                                    onClick={() => setDetailsModal(null)} 
+                                    className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors flex-shrink-0"
+                                >
                                     <X size={20} />
                                 </button>
                             </div>
 
                             {/* Modal Content */}
-                            <div className="p-4 md:p-6 space-y-6">
-                                {/* Requester Information */}
-                                <div>
-                                    <h3 className="font-semibold text-gray-900 text-sm mb-3">Requester Information</h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                            <div className="p-6 md:p-8 space-y-6 max-h-[calc(90vh-140px)] overflow-y-auto">
+                                
+                                {/* Requester Information Section */}
+                                <div className="bg-blue-50 rounded-xl p-6 border border-blue-100">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                        <span className="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">👤</span>
+                                        Requester Information
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                         <div>
-                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Full Name</label>
-                                            <p className="text-sm text-gray-900 mt-1">{detailsModal.fullName}</p>
+                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Full Name</label>
+                                            <p className="text-sm font-medium text-gray-900">{detailsModal.fullName}</p>
                                         </div>
                                         <div>
-                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Email</label>
-                                            <a href={`mailto:${detailsModal.email}`} className="text-sm text-[#004fa2] hover:underline mt-1 break-all">{detailsModal.email}</a>
+                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Email Address</label>
+                                            <a href={`mailto:${detailsModal.email}`} className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline break-all inline-block">
+                                                {detailsModal.email}
+                                            </a>
                                         </div>
                                         <div>
-                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Phone</label>
-                                            <a href={`tel:${detailsModal.phone}`} className="text-sm text-[#004fa2] hover:underline mt-1">{detailsModal.phone}</a>
+                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Phone</label>
+                                            <a href={`tel:${detailsModal.phone}`} className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline">
+                                                {detailsModal.phone}
+                                            </a>
                                         </div>
                                         {detailsModal.company && (
                                             <div>
-                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Company</label>
-                                                <p className="text-sm text-gray-900 mt-1">{detailsModal.company}</p>
+                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Company</label>
+                                                <p className="text-sm font-medium text-gray-900">{detailsModal.company}</p>
                                             </div>
                                         )}
                                     </div>
                                 </div>
 
-                                {/* Project Information */}
-                                <div>
-                                    <h3 className="font-semibold text-gray-900 text-sm mb-3">Project Information</h3>
-                                    <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
+                                {/* Project Information Section */}
+                                <div className="bg-purple-50 rounded-xl p-6 border border-purple-100">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                        <span className="w-8 h-8 bg-purple-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">📋</span>
+                                        Project Information
+                                    </h3>
+                                    <div className="space-y-5">
                                         <div>
-                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Project Title</label>
-                                            <p className="text-sm text-gray-900 mt-1">{detailsModal.projectTitle}</p>
+                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Project Title</label>
+                                            <p className="text-base font-bold text-gray-900">{detailsModal.projectTitle}</p>
                                         </div>
                                         <div>
-                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Description</label>
-                                            <p className="text-sm text-gray-700 mt-1 whitespace-pre-wrap">{detailsModal.description}</p>
+                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Project Description</label>
+                                            <div className="bg-white rounded-lg p-4 border border-purple-100">
+                                                <p className="text-sm text-gray-700 whitespace-pre-wrap line-clamp-4">{detailsModal.description}</p>
+                                            </div>
                                         </div>
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                             <div>
-                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Project Type</label>
-                                                <p className="text-sm text-gray-900 mt-1 capitalize">{detailsModal.projectType}</p>
+                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Project Type</label>
+                                                <p className="text-sm font-medium text-gray-900 capitalize">{detailsModal.projectType}</p>
                                             </div>
                                             <div>
-                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Package Type</label>
-                                                <div className="mt-1">
-                                                    <PackageTypeBadge packageType={detailsModal.packageType} />
-                                                </div>
+                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Package Type</label>
+                                                <PackageTypeBadge packageType={detailsModal.packageType} size="sm" />
                                             </div>
                                             <div>
-                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Status</label>
-                                                <div className="mt-1">
-                                                    <StatusBadge status={detailsModal.status} />
-                                                </div>
+                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Status</label>
+                                                <StatusBadge status={detailsModal.status} size="sm" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Additional Details */}
-                                <div>
-                                    <h3 className="font-semibold text-gray-900 text-sm mb-3">Additional Details</h3>
-                                    <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
-                                        {detailsModal.budget && (
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Budget</label>
-                                                <p className="text-sm text-gray-900 mt-1">{detailsModal.budget}</p>
-                                            </div>
-                                        )}
-                                        {detailsModal.timeline && (
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Timeline</label>
-                                                <p className="text-sm text-gray-900 mt-1">{detailsModal.timeline}</p>
-                                            </div>
-                                        )}
-                                        {detailsModal.technologies && detailsModal.technologies.length > 0 && (
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Technologies</label>
-                                                <div className="flex flex-wrap gap-2 mt-2">
-                                                    {detailsModal.technologies.map((tech, idx) => (
-                                                        <span key={idx} className="text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full font-medium">
-                                                            {tech}
-                                                        </span>
-                                                    ))}
+                                {/* Additional Details Section */}
+                                {(detailsModal.budget || detailsModal.timeline || detailsModal.technologies || detailsModal.additionalNotes) && (
+                                    <div className="bg-amber-50 rounded-xl p-6 border border-amber-100">
+                                        <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                            <span className="w-8 h-8 bg-amber-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">⚡</span>
+                                            Additional Details
+                                        </h3>
+                                        <div className="space-y-5">
+                                            {detailsModal.budget && (
+                                                <div>
+                                                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Budget</label>
+                                                    <p className="text-sm font-medium text-gray-900">{detailsModal.budget}</p>
                                                 </div>
-                                            </div>
-                                        )}
-                                        {detailsModal.additionalNotes && (
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Additional Notes</label>
-                                                <p className="text-sm text-gray-700 mt-1 whitespace-pre-wrap">{detailsModal.additionalNotes}</p>
-                                            </div>
-                                        )}
+                                            )}
+                                            {detailsModal.timeline && (
+                                                <div>
+                                                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Timeline</label>
+                                                    <p className="text-sm font-medium text-gray-900">{detailsModal.timeline}</p>
+                                                </div>
+                                            )}
+                                            {detailsModal.technologies && detailsModal.technologies.length > 0 && (
+                                                <div>
+                                                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Technologies</label>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {detailsModal.technologies.map((tech, idx) => (
+                                                            <span key={idx} className="text-xs bg-blue-100 text-blue-700 px-3 py-1.5 rounded-full font-semibold">
+                                                                {tech}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {detailsModal.additionalNotes && (
+                                                <div>
+                                                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Additional Notes</label>
+                                                    <div className="bg-white rounded-lg p-4 border border-amber-100">
+                                                        <p className="text-sm text-gray-700 whitespace-pre-wrap">{detailsModal.additionalNotes}</p>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
+                                )}
 
-                                {/* Metadata */}
-                                <div className="border-t border-gray-100 pt-4">
-                                    <div className="grid grid-cols-2 gap-4 text-xs text-gray-600">
+                                {/* Metadata Section */}
+                                <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                        <span className="w-8 h-8 bg-gray-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">📅</span>
+                                        Submission Details
+                                    </h3>
+                                    <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <span className="font-semibold">Submitted:</span>
-                                            <p className="mt-1">{formatDate(detailsModal.createdAt)} at {formatTime(detailsModal.createdAt)}</p>
+                                            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Submitted</label>
+                                            <p className="text-sm font-medium text-gray-900">{formatDate(detailsModal.createdAt)}</p>
+                                            <p className="text-xs text-gray-600 mt-1">{formatTime(detailsModal.createdAt)}</p>
                                         </div>
                                         {detailsModal.updatedAt && (
                                             <div>
-                                                <span className="font-semibold">Last Updated:</span>
-                                                <p className="mt-1">{formatDate(detailsModal.updatedAt)} at {formatTime(detailsModal.updatedAt)}</p>
+                                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-2">Last Updated</label>
+                                                <p className="text-sm font-medium text-gray-900">{formatDate(detailsModal.updatedAt)}</p>
+                                                <p className="text-xs text-gray-600 mt-1">{formatTime(detailsModal.updatedAt)}</p>
                                             </div>
                                         )}
                                     </div>
@@ -626,28 +766,28 @@ const ProjectRequestsManagementPage = () => {
                             </div>
 
                             {/* Modal Footer */}
-                            <div className="bg-gray-50 border-t border-gray-100 p-4 md:p-6 flex items-center justify-between">
-                                <div className="flex items-center gap-2">
+                            <div className="bg-gray-50 border-t border-gray-200 px-6 md:px-8 py-5 flex items-center justify-between rounded-b-xl">
+                                <div className="flex items-center gap-3">
                                     {detailsModal.status !== 'approved' && (
                                         <button
                                             onClick={() => { setStatusModal({ ...detailsModal, newStatus: 'approved' }); }}
-                                            className="px-3 py-1.5 bg-green-600 text-white text-xs font-semibold rounded-lg hover:bg-green-700 transition-colors"
+                                            className="px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg hover:bg-green-700 transition-colors duration-150 shadow-sm hover:shadow-md"
                                         >
-                                            Approve
+                                            ✓ Approve Request
                                         </button>
                                     )}
                                     {detailsModal.status !== 'rejected' && (
                                         <button
                                             onClick={() => { setStatusModal({ ...detailsModal, newStatus: 'rejected' }); }}
-                                            className="px-3 py-1.5 bg-red-600 text-white text-xs font-semibold rounded-lg hover:bg-red-700 transition-colors"
+                                            className="px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors duration-150 shadow-sm hover:shadow-md"
                                         >
-                                            Reject
+                                            ✕ Reject Request
                                         </button>
                                     )}
                                 </div>
                                 <button
                                     onClick={() => setDetailsModal(null)}
-                                    className="px-3 py-1.5 bg-gray-300 text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-400 transition-colors"
+                                    className="px-4 py-2 bg-white text-gray-700 text-sm font-semibold rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors duration-150"
                                 >
                                     Close
                                 </button>
@@ -659,56 +799,90 @@ const ProjectRequestsManagementPage = () => {
                 {/* Status Update Modal */}
                 {statusModal && (
                     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                        <div className="bg-white rounded-xl shadow-xl max-w-md w-full">
+                        <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full">
                             {/* Modal Header */}
-                            <div className="bg-gradient-to-r from-blue-50 to-white border-b border-gray-100 p-6 flex items-center justify-between">
+                            <div className={`bg-gradient-to-r ${statusModal.newStatus === 'approved' ? 'from-green-600 to-green-700' : 'from-red-600 to-red-700'} text-white px-6 md:px-8 py-6 flex items-start justify-between rounded-t-xl`}>
                                 <div>
-                                    <h2 className="text-lg font-bold text-gray-900">Update Status</h2>
-                                    <p className="text-xs text-gray-500 mt-1">Reviewing request from {statusModal.fullName}</p>
+                                    <h2 className="text-xl md:text-2xl font-bold">
+                                        {statusModal.newStatus === 'approved' ? '✓ Approve Request' : '✕ Reject Request'}
+                                    </h2>
+                                    <p className={`text-sm mt-2 ${statusModal.newStatus === 'approved' ? 'text-green-100' : 'text-red-100'}`}>
+                                        Reviewing request from {statusModal.fullName}
+                                    </p>
                                 </div>
-                                <button onClick={() => setStatusModal(null)} className="text-gray-400 hover:text-gray-600">
+                                <button onClick={() => setStatusModal(null)} className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors flex-shrink-0">
                                     <X size={20} />
                                 </button>
                             </div>
 
                             {/* Modal Content */}
-                            <div className="p-6 space-y-4">
-                                <div>
-                                    <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">New Status</label>
-                                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                                        <p className="text-sm font-semibold text-gray-900 capitalize">{statusModal.newStatus}</p>
+                            <div className="p-6 md:p-8 space-y-6">
+                                {/* Status Summary */}
+                                <div className={`${statusModal.newStatus === 'approved' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} border rounded-lg p-4`}>
+                                    <p className={`text-sm font-medium ${statusModal.newStatus === 'approved' ? 'text-green-900' : 'text-red-900'}`}>
+                                        {statusModal.newStatus === 'approved' 
+                                            ? '✓ This request will be marked as Approved' 
+                                            : '✕ This request will be marked as Rejected'}
+                                    </p>
+                                </div>
+
+                                {/* Request Summary */}
+                                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">Request Summary</h4>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <p className="text-xs text-gray-600 font-medium uppercase tracking-wide">Name</p>
+                                            <p className="text-sm font-semibold text-gray-900 mt-1">{statusModal.fullName}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-600 font-medium uppercase tracking-wide">Project</p>
+                                            <p className="text-sm font-semibold text-gray-900 mt-1 line-clamp-1">{statusModal.projectTitle}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-600 font-medium uppercase tracking-wide">Package Type</p>
+                                            <div className="mt-2">
+                                                <PackageTypeBadge packageType={statusModal.packageType} size="sm" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
+                                {/* Review Notes */}
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Review Notes (Optional)</label>
+                                    <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">
+                                        Review Notes {statusModal.newStatus === 'rejected' && '(Recommended)'}
+                                    </label>
                                     <textarea
                                         value={statusNotes}
                                         onChange={(e) => setStatusNotes(e.target.value)}
-                                        placeholder="Add any notes about this decision..."
+                                        placeholder={statusModal.newStatus === 'approved' 
+                                            ? "Add any notes about this approval..." 
+                                            : "Explain why this request is being rejected..."}
                                         rows="4"
-                                        className="w-full px-3 py-2 text-sm bg-white border border-gray-100 rounded-lg focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] outline-none transition-all resize-none"
+                                        maxLength="500"
+                                        className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all resize-none"
                                     />
+                                    <p className="text-xs text-gray-500 mt-2">{statusNotes.length}/500 characters</p>
                                 </div>
                             </div>
 
                             {/* Modal Footer */}
-                            <div className="bg-gray-50 border-t border-gray-100 p-6 flex items-center justify-end gap-3">
+                            <div className="bg-gray-50 border-t border-gray-200 px-6 md:px-8 py-5 flex items-center justify-end gap-3 rounded-b-xl">
                                 <button
                                     onClick={() => setStatusModal(null)}
-                                    className="px-4 py-2 bg-gray-200 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-300 transition-colors"
+                                    className="px-4 py-2.5 bg-white text-gray-700 text-sm font-semibold rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors duration-150"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={() => handleStatusUpdate(statusModal, statusModal.newStatus)}
-                                    className={`px-4 py-2 text-white text-sm font-semibold rounded-lg transition-colors ${
+                                    className={`px-6 py-2.5 text-white text-sm font-semibold rounded-lg transition-colors duration-150 shadow-sm hover:shadow-md flex items-center gap-2 ${
                                         statusModal.newStatus === 'approved'
                                             ? 'bg-green-600 hover:bg-green-700'
                                             : 'bg-red-600 hover:bg-red-700'
                                     }`}
                                 >
-                                    Confirm
+                                    {statusModal.newStatus === 'approved' ? '✓ Approve' : '✕ Reject'}
                                 </button>
                             </div>
                         </div>
@@ -720,3 +894,4 @@ const ProjectRequestsManagementPage = () => {
 };
 
 export default ProjectRequestsManagementPage;
+
