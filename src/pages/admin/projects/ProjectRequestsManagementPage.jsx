@@ -88,7 +88,6 @@ const PackageTypeBadge = ({ packageType, size = 'sm' }) => {
 
     return (
         <span className={`inline-flex items-center gap-1.5 rounded-lg font-semibold uppercase tracking-wide ${config.color} transition-all ${sizeClasses[size]}`}>
-            <span className="text-lg leading-none">{config.icon}</span>
             {config.label}
         </span>
     );
