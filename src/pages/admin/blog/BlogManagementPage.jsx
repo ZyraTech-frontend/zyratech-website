@@ -145,7 +145,7 @@ const BlogManagementPage = () => {
         dispatch(addNotification({
             type: 'error',
             title: 'Permission Required',
-            message: 'You do not have permission to create or manage blog articles.',
+            message: 'You do not have permission to create blog articles.',
             description: 'Contact Super Admin at admin@zyratechhub.com',
             duration: 6000
         }));

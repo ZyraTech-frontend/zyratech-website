@@ -85,15 +85,16 @@ const GalleryManagementPage = () => {
     const navigate = useNavigate();
     const { userPermissions, userRole } = useAuth();
 
-    // Permission check helper
-    const checkGalleryPermission = () => {
-        const isSuperAdminUser = isSuperAdmin(userRole);
-        const hasGalleryPermission = canAccessFeature(userPermissions, userRole, 'gallery');
-        if (!isSuperAdminUser && !hasGalleryPermission) {
-            checkPermissionAndShowError(userPermissions, userRole, 'gallery', dispatch, 'gallery', 'Media');
-            return false;
-        }
-        return true;
+    // Permission check
+    const canCreateGallery = userPermissions?.includes('gallery') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to create or manage gallery content.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
     };
 
     // State management
