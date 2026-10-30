@@ -751,7 +751,7 @@ const JobsManagementPage = () => {
                                                                 <td className="w-full md:w-auto md:table-cell md:px-4 md:py-3 mt-2 md:mt-0 pt-2 border-t border-gray-100 md:border-none">
                                                                     <div className="flex items-center justify-end gap-1">
                                                                         <button
-                                                                            onClick={() => handleViewApplication(application.id)}
+                                                                            onClick={() => { if (!canCreateJob) { handlePermissionDenied(); return; } handleViewApplication(application.id); }}
                                                                             className="p-1.5 flex items-center justify-center hover:bg-gray-100 rounded text-gray-500 hover:text-[#004fa2] md:shadow-sm md:border border-transparent md:hover:border-gray-200 transition-colors"
                                                                             title="View Application"
                                                                         >
@@ -759,13 +759,13 @@ const JobsManagementPage = () => {
                                                                         </button>
                                                                         <button
                                                                             className="p-1.5 flex items-center justify-center hover:bg-gray-100 rounded text-gray-500 hover:text-green-600 md:shadow-sm md:border border-transparent md:hover:border-gray-200 transition-colors"
-                                                                            title="Send Email"
+                                                                            onClick={() => { if (!canCreateJob) { handlePermissionDenied(); return; } }} title="Send Email"
                                                                         >
                                                                             <Mail size={14} className="md:w-3.5 md:h-3.5" />
                                                                         </button>
                                                                         <button
                                                                             className="p-1.5 flex items-center justify-center hover:bg-gray-100 rounded text-gray-500 hover:text-purple-600 md:shadow-sm md:border border-transparent md:hover:border-gray-200 transition-colors"
-                                                                            title="Schedule Interview"
+                                                                            onClick={() => { if (!canCreateJob) { handlePermissionDenied(); return; } }} title="Schedule Interview"
                                                                         >
                                                                             <Calendar size={14} className="md:w-3.5 md:h-3.5" />
                                                                         </button>
@@ -893,6 +893,10 @@ const JobsManagementPage = () => {
 };
 
 export default JobsManagementPage;
+
+
+
+
 
 
 
