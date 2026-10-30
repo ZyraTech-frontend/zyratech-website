@@ -295,9 +295,9 @@ const ProjectRequestDetailsPage = () => {
                                 
                                 <div>
                                     <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Description</p>
-                                    <p className="text-sm text-gray-700 leading-relaxed bg-gray-50 p-3 rounded border border-gray-100">
+                                    <div className="text-sm text-gray-700 leading-relaxed bg-gray-50 p-3 rounded border border-gray-100 break-words whitespace-normal max-w-full overflow-hidden">
                                         {request.description}
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -343,9 +343,9 @@ const ProjectRequestDetailsPage = () => {
                                 {request.additionalNotes && (
                                     <div>
                                         <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Additional Notes</p>
-                                        <p className="text-sm text-gray-700 leading-relaxed bg-gray-50 p-3 rounded border border-gray-100">
+                                        <div className="text-sm text-gray-700 leading-relaxed bg-gray-50 p-3 rounded border border-gray-100 break-words whitespace-normal max-w-full overflow-hidden">
                                             {request.additionalNotes}
-                                        </p>
+                                        </div>
                                     </div>
                                 )}
                             </div>
