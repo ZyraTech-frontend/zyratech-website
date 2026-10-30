@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Search, Eye, Trash2, RefreshCw, Filter, Mail, Phone, Calendar } from 'lucide-react';
 import { useDispatch } from 'react-redux';
@@ -10,6 +11,21 @@ import ConfirmDialog from '../../../components/admin/shared/ConfirmDialog';
 const ContactInquiriesPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { userPermissions } = useAuth();
+
+  // Permission checks
+  const canViewInquiries = userPermissions?.includes('contact_inquiries') ?? false;
+  const canDeleteInquiries = userPermissions?.includes('contact_inquiries') ?? false;
+
+  const handlePermissionDenied = (action) => {
+    dispatch(addNotification({
+      type: 'error',
+      title: 'Permission Required',
+      message: `You do not have permission to ${action} contact inquiries.`,
+      description: 'Contact Super Admin at admin@zyratechhub.com',
+      duration: 6000
+    }));
+  };
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -74,6 +90,7 @@ const ContactInquiriesPage = () => {
 
   // Open delete confirmation dialog
   const openDeleteDialog = (id) => {
+    if (!canDeleteInquiries) { handlePermissionDenied('delete'); return; }
     setDeletingId(id);
     dispatch(openConfirmDialog({
       title: 'Delete Inquiry',
@@ -220,14 +237,14 @@ const ContactInquiriesPage = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           <button
-                            onClick={() => navigate(`/admin/contact-inquiries/${inquiry.id}`)}
+                            onClick={() => { if (!canViewInquiries) { handlePermissionDenied('view'); return; } navigate(`/admin/contact-inquiries/${inquiry.id}`); }}
                             className="p-2 text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
                             title="View details"
                           >
                             <Eye size={18} />
                           </button>
                           <button
-                            onClick={() => openDeleteDialog(inquiry.id)}
+                            onClick={() => { if (!canDeleteInquiries) { handlePermissionDenied('delete'); return; } openDeleteDialog(inquiry.id); }}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             title="Delete"
                           >
@@ -276,3 +293,5 @@ const ContactInquiriesPage = () => {
 };
 
 export default ContactInquiriesPage;
+
+
