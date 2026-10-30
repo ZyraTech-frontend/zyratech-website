@@ -663,3 +663,4 @@ const TrainingCoursesPage = () => {
 };
 
 export default TrainingCoursesPage;
+

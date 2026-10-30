@@ -224,7 +224,10 @@ const BlogManagementPage = () => {
                                 <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
                             </button>
                             <button
-                                onClick={() => navigate('/admin/blog/new')}
+                                onClick={() => {
+                                    if (!checkBlogPermission()) return;
+                                    navigate('/admin/blog/new');
+                                }}
                                 className="bg-[#004fa2] hover:bg-blue-800 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg flex items-center gap-1.5 transition-all shadow-sm"
                             >
                                 <Plus size={16} />
@@ -452,7 +455,10 @@ const BlogManagementPage = () => {
                                                         : 'Get started by creating your first blog article!'}
                                                 </p>
                                                 <button
-                                                    onClick={() => navigate('/admin/blog/new')}
+                                onClick={() => {
+                                    if (!checkBlogPermission()) return;
+                                    navigate('/admin/blog/new');
+                                }}
                                                     className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition-colors shadow-xs"
                                                 >
                                                     <Plus size={14} />
@@ -500,6 +506,10 @@ const BlogManagementPage = () => {
 };
 
 export default BlogManagementPage;
+
+
+
+
 
 
 

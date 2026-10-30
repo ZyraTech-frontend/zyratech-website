@@ -79,6 +79,17 @@ const JobsManagementPage = () => {
     const navigate = useNavigate();
     const { userPermissions, userRole } = useAuth();
 
+    // Permission check helper
+    const checkJobsPermission = () => {
+        const isSuperAdminUser = isSuperAdmin(userRole);
+        const hasJobsPermission = canAccessFeature(userPermissions, userRole, 'jobs');
+        if (!isSuperAdminUser && !hasJobsPermission) {
+            checkPermissionAndShowError(userPermissions, userRole, 'jobs', dispatch, 'jobs', 'CAO');
+            return false;
+        }
+        return true;
+    };
+
     // State management
     const [jobs, setJobs] = useState([]);
     const [applications, setApplications] = useState([]);
@@ -865,3 +876,4 @@ const JobsManagementPage = () => {
 };
 
 export default JobsManagementPage;
+

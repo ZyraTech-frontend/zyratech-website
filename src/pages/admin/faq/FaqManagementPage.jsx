@@ -108,6 +108,17 @@ const FaqManagementPage = () => {
     const navigate = useNavigate();
     const { userPermissions, userRole } = useAuth();
 
+    // Permission check helper
+    const checkFaqPermission = () => {
+        const isSuperAdminUser = isSuperAdmin(userRole);
+        const hasFaqPermission = canAccessFeature(userPermissions, userRole, 'content');
+        if (!isSuperAdminUser && !hasFaqPermission) {
+            checkPermissionAndShowError(userPermissions, userRole, 'content', dispatch, 'content', 'Media');
+            return false;
+        }
+        return true;
+    };
+
     // State management
     const [faqs, setFaqs] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -615,3 +626,4 @@ const FaqManagementPage = () => {
 };
 
 export default FaqManagementPage;
+

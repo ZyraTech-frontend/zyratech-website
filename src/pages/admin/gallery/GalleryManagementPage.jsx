@@ -85,6 +85,17 @@ const GalleryManagementPage = () => {
     const navigate = useNavigate();
     const { userPermissions, userRole } = useAuth();
 
+    // Permission check helper
+    const checkGalleryPermission = () => {
+        const isSuperAdminUser = isSuperAdmin(userRole);
+        const hasGalleryPermission = canAccessFeature(userPermissions, userRole, 'gallery');
+        if (!isSuperAdminUser && !hasGalleryPermission) {
+            checkPermissionAndShowError(userPermissions, userRole, 'gallery', dispatch, 'gallery', 'Media');
+            return false;
+        }
+        return true;
+    };
+
     // State management
     const [albums, setAlbums] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -1215,3 +1226,4 @@ const GalleryManagementPage = () => {
 };
 
 export default GalleryManagementPage;
+

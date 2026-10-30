@@ -57,6 +57,17 @@ const PartnershipsManagementPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    // Permission check helper
+    const checkPartnershipsPermission = () => {
+        const isSuperAdminUser = isSuperAdmin(userRole);
+        const hasPartnershipsPermission = canAccessFeature(userPermissions, userRole, 'partnerships');
+        if (!isSuperAdminUser && !hasPartnershipsPermission) {
+            checkPermissionAndShowError(userPermissions, userRole, 'partnerships', dispatch, 'partnerships', 'Media');
+            return false;
+        }
+        return true;
+    };
+
     // State management
     const [partnerships, setPartnerships] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -729,3 +740,4 @@ const PartnershipsManagementPage = () => {
 };
 
 export default PartnershipsManagementPage;
+

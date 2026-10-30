@@ -243,6 +243,17 @@ const PaymentsManagementPage = () => {
     const dispatch = useDispatch();
     const { userPermissions, userRole } = useAuth();
 
+    // Permission check helper
+    const checkPaymentsPermission = () => {
+        const isSuperAdminUser = isSuperAdmin(userRole);
+        const hasPaymentsPermission = canAccessFeature(userPermissions, userRole, 'transactions');
+        if (!isSuperAdminUser && !hasPaymentsPermission) {
+            checkPermissionAndShowError(userPermissions, userRole, 'transactions', dispatch, 'payments', 'CAO');
+            return false;
+        }
+        return true;
+    };
+
     // State management
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('all');
@@ -619,3 +630,4 @@ const PaymentsManagementPage = () => {
 };
 
 export default PaymentsManagementPage;
+
