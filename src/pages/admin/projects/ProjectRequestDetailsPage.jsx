@@ -235,7 +235,7 @@ const ProjectRequestDetailsPage = () => {
                     {/* LEFT COLUMN - 60% (2/3) */}
                     <div className="col-span-2 space-y-6">
                         {/* APPLICANT CARD */}
-                        <div className="bg-white border border-gray-200 rounded-lg p-6">
+                        <div className="bg-white border border-gray-100 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-200 hover:-translate-y-0.5">
                             <div className="flex items-start gap-4">
                                 {/* Avatar */}
                                 <div className="flex-shrink-0">
@@ -282,7 +282,7 @@ const ProjectRequestDetailsPage = () => {
                         </div>
 
                         {/* PROJECT DESCRIPTION */}
-                        <div className="bg-white border border-gray-200 rounded-lg p-6">
+                        <div className="bg-white border border-gray-100 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-200 hover:-translate-y-0.5">
                             <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4 pb-3 border-b border-gray-100">
                                 Project Overview
                             </h3>
@@ -303,7 +303,7 @@ const ProjectRequestDetailsPage = () => {
                         </div>
 
                         {/* PROJECT DETAILS */}
-                        <div className="bg-white border border-gray-200 rounded-lg p-6">
+                        <div className="bg-white border border-gray-100 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-200 hover:-translate-y-0.5">
                             <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4 pb-3 border-b border-gray-100">
                                 Project Details
                             </h3>
@@ -384,7 +384,7 @@ const ProjectRequestDetailsPage = () => {
                         </div>
 
                         {/* REQUEST INFO CARD */}
-                        <div className="bg-white border border-gray-200 rounded-lg p-6">
+                        <div className="bg-white border border-gray-100 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-200 hover:-translate-y-0.5">
                             <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4 pb-3 border-b border-gray-100">
                                 Request Info
                             </h3>
@@ -415,7 +415,7 @@ const ProjectRequestDetailsPage = () => {
                         </div>
 
                         {/* TIMELINE CARD */}
-                        <div className="bg-white border border-gray-200 rounded-lg p-6">
+                        <div className="bg-white border border-gray-100 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-200 hover:-translate-y-0.5">
                             <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4 pb-3 border-b border-gray-100">
                                 Timeline
                             </h3>
