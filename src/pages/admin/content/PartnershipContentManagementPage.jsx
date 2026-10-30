@@ -13,7 +13,7 @@ import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
 import LinkPicker from '../../../components/admin/common/LinkPicker';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 // --- Sub-components (defined outside to preserve focus) ---
@@ -171,18 +171,20 @@ const ImpactStatsManager = ({ stats, setStats }) => {
     );
 };
 
-const WhyPartnerManager = ({ whyPartners, setWhyPartners, dispatch, navigate }) => {
+const WhyPartnerManager = ({ whyPartners, setWhyPartners, dispatch, navigate, canCreateContent, handlePermissionDenied }) => {
     const [formData, setFormData] = useState({ title: '', description: '' });
     const [editingId, setEditingId] = useState(null);
     const [saving, setSaving] = useState(false);
     const { logAction } = useActivityLogger();
 
     const handleAdd = () => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         setFormData({ title: '', description: '' });
         setEditingId(null);
     };
 
     const handleEdit = (item) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         setFormData({ title: item.title, description: item.description });
         setEditingId(item.id);
     };
@@ -224,6 +226,7 @@ const WhyPartnerManager = ({ whyPartners, setWhyPartners, dispatch, navigate }) 
     };
 
     const handleDelete = (item) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         dispatch(openConfirmDialog({
             title: 'Delete Reason',
             message: `Remove "${item.title}" from why partner reasons?`,
@@ -327,10 +330,11 @@ const WhyPartnerManager = ({ whyPartners, setWhyPartners, dispatch, navigate }) 
 };
 
 // Simple Stories Manager Component (removed modal, uses navigation)
-const StoriesManager = ({ stories, setStories, dispatch, navigate }) => {
+const StoriesManager = ({ stories, setStories, dispatch, navigate, canCreateContent, handlePermissionDenied }) => {
     const { logAction } = useActivityLogger();
 
     const handleDelete = (item) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         dispatch(openConfirmDialog({
             title: 'Delete Story',
             message: 'Are you sure?',
@@ -407,6 +411,19 @@ const StoriesManager = ({ stories, setStories, dispatch, navigate }) => {
 const PartnershipContentManagementPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+
+    // Permission checks
+    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to manage this content.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const [activeTab, setActiveTab] = useState('hero');
     const [loading, setLoading] = useState(true);
     const [uploadingHero, setUploadingHero] = useState(false);
@@ -537,8 +554,8 @@ const PartnershipContentManagementPage = () => {
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                     {activeTab === 'hero' && <HeroForm data={heroData} onChange={(e) => setHeroData({ ...heroData, [e.target.name]: e.target.value })} onSubmit={handleHeroSubmit} saving={savingHero} onImageUpload={handleHeroImageUpload} uploading={uploadingHero} />}
-                    {activeTab === 'why' && <WhyPartnerManager whyPartners={whyPartner} setWhyPartners={setWhyPartner} dispatch={dispatch} navigate={navigate} />}
-                    {activeTab === 'stories' && <StoriesManager stories={stories} setStories={setStories} dispatch={dispatch} navigate={navigate} />}
+                    {activeTab === 'why' && <WhyPartnerManager whyPartners={whyPartner} setWhyPartners={setWhyPartner} dispatch={dispatch} navigate={navigate} canCreateContent={canCreateContent} handlePermissionDenied={handlePermissionDenied} />}
+                    {activeTab === 'stories' && <StoriesManager stories={stories} setStories={setStories} dispatch={dispatch} navigate={navigate} canCreateContent={canCreateContent} handlePermissionDenied={handlePermissionDenied} />}
                 </div>
             </div>
         </AdminLayout>
@@ -546,4 +563,3 @@ const PartnershipContentManagementPage = () => {
 };
 
 export default PartnershipContentManagementPage;
-

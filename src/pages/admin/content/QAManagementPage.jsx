@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import { useAuth } from '../../../hooks/useAuth';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
@@ -11,6 +11,19 @@ import {
 
 const QAManagementPage = () => {
     const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+
+    // Permission checks
+    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to manage this content.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [activeTab, setActiveTab] = useState('hero');
@@ -373,4 +386,3 @@ const SaveButton = ({ onClick, saving }) => (
 );
 
 export default QAManagementPage;
-

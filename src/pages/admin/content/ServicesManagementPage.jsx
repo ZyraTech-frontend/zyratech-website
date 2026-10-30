@@ -18,12 +18,25 @@ import { useAuth } from '../../../hooks/useAuth';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 const ServicesManagementPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+
+    // Permission checks
+    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to manage services.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const { logAction } = useActivityLogger();
     const [activeTab, setActiveTab] = useState('services'); // 'services' or 'benefits'
     const [services, setServices] = useState([]);
@@ -58,6 +71,7 @@ const ServicesManagementPage = () => {
 
 
     const handleDelete = (item) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         const isService = activeTab === 'services';
         dispatch(openConfirmDialog({
             title: `Delete ${isService ? 'Service' : 'Benefit'}`,
@@ -93,6 +107,7 @@ const ServicesManagementPage = () => {
     };
 
     const handleAddClick = () => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         if (activeTab === 'services') {
             navigate('/admin/content/services/add');
         } else {
@@ -101,6 +116,7 @@ const ServicesManagementPage = () => {
     };
 
     const handleEditClick = (item) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         if (activeTab === 'services') {
             navigate(`/admin/content/services/edit/${item.id}`);
         } else {
@@ -265,4 +281,3 @@ const ServicesManagementPage = () => {
 };
 
 export default ServicesManagementPage;
-

@@ -10,7 +10,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 // --- Sub-components (inline forms for unchanging sections) ---
@@ -190,10 +190,11 @@ const AboutQuoteForm = ({ data, onSubmit, onChange, saving }) => {
 };
 
 // Simple Milestone Manager Component (removed modal, uses navigation)
-const MilestonesManager = ({ milestones, setMilestones, dispatch, navigate }) => {
+const MilestonesManager = ({ milestones, setMilestones, dispatch, navigate, canCreateContent, handlePermissionDenied }) => {
     const { logAction } = useActivityLogger();
 
     const handleDelete = (item) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         dispatch(openConfirmDialog({
             title: 'Delete Milestone',
             message: 'Are you sure?',
@@ -258,10 +259,11 @@ const MilestonesManager = ({ milestones, setMilestones, dispatch, navigate }) =>
 };
 
 // Simple Timeline Manager Component (removed modal, uses navigation)
-const TimelineManager = ({ timeline, setTimeline, dispatch, navigate }) => {
+const TimelineManager = ({ timeline, setTimeline, dispatch, navigate, canCreateContent, handlePermissionDenied }) => {
     const { logAction } = useActivityLogger();
 
     const handleDelete = (item) => {
+        if (!canCreateContent) { handlePermissionDenied(); return; }
         dispatch(openConfirmDialog({
             title: 'Delete Timeline Item',
             message: 'Are you sure?',
@@ -332,6 +334,19 @@ const TimelineManager = ({ timeline, setTimeline, dispatch, navigate }) => {
 const AboutPageManagementPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+
+    // Permission checks
+    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to manage this content.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const [activeTab, setActiveTab] = useState('hero');
     const [loading, setLoading] = useState(true);
 
@@ -504,8 +519,8 @@ const AboutPageManagementPage = () => {
                     {activeTab === 'mission' && <MissionForm data={missionData} onChange={handleMissionChange} onSubmit={handleMissionSubmit} saving={savingMission} />}
                     {activeTab === 'quote' && <AboutQuoteForm data={quoteData} onChange={handleQuoteChange} onSubmit={handleQuoteSubmit} saving={savingQuote} />}
                     {activeTab === 'why' && <WhyGhanaForm data={whyGhanaData} onChange={handleWhyGhanaChange} onSubmit={handleWhyGhanaSubmit} saving={savingWhyGhana} />}
-                    {activeTab === 'milestones' && <MilestonesManager milestones={milestones} setMilestones={setMilestones} dispatch={dispatch} navigate={navigate} />}
-                    {activeTab === 'timeline' && <TimelineManager timeline={timeline} setTimeline={setTimeline} dispatch={dispatch} navigate={navigate} />}
+                    {activeTab === 'milestones' && <MilestonesManager milestones={milestones} setMilestones={setMilestones} dispatch={dispatch} navigate={navigate} canCreateContent={canCreateContent} handlePermissionDenied={handlePermissionDenied} />}
+                    {activeTab === 'timeline' && <TimelineManager timeline={timeline} setTimeline={setTimeline} dispatch={dispatch} navigate={navigate} canCreateContent={canCreateContent} handlePermissionDenied={handlePermissionDenied} />}
                 </div>
             </div>
         </AdminLayout>
@@ -513,4 +528,3 @@ const AboutPageManagementPage = () => {
 };
 
 export default AboutPageManagementPage;
-

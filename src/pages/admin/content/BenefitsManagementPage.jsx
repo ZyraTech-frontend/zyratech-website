@@ -17,12 +17,25 @@ import { useAuth } from '../../../hooks/useAuth';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import contentService from '../../../services/contentService';
 import { useDispatch } from 'react-redux';
-import { openConfirmDialog } from '../../../store/slices/uiSlice';
+import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 const BenefitsManagementPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { userPermissions } = useAuth();
+
+    // Permission checks for content
+    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const handlePermissionDenied = () => {
+        dispatch(addNotification({
+            type: 'error',
+            title: 'Permission Required',
+            message: 'You do not have permission to manage benefits.',
+            description: 'Contact Super Admin at admin@zyratechhub.com',
+            duration: 6000
+        }));
+    };
     const { logAction } = useActivityLogger();
     const [benefits, setBenefits] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -47,6 +60,10 @@ const BenefitsManagementPage = () => {
     };
 
     const handleDelete = (item) => {
+        if (!canCreateContent) {
+            handlePermissionDenied();
+            return;
+        }
         dispatch(openConfirmDialog({
             title: 'Delete Benefit',
             message: `Are you sure you want to delete "${item.title}"?`,
@@ -70,10 +87,18 @@ const BenefitsManagementPage = () => {
     };
 
     const handleAddClick = () => {
+        if (!canCreateContent) {
+            handlePermissionDenied();
+            return;
+        }
         navigate('/admin/content/benefits/add');
     };
 
     const handleEditClick = (item) => {
+        if (!canCreateContent) {
+            handlePermissionDenied();
+            return;
+        }
         navigate(`/admin/content/benefits/edit/${item.id}`);
     };
 
@@ -184,4 +209,3 @@ const BenefitsManagementPage = () => {
 };
 
 export default BenefitsManagementPage;
-

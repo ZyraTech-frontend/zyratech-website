@@ -95,10 +95,18 @@ const HeroSlidesManagementPage = () => {
     };
 
     const handleAddClick = () => {
+        if (!canCreateContent) {
+            handlePermissionDenied();
+            return;
+        }
         navigate('/admin/content/hero/add');
     };
 
     const handleEditClick = (slide) => {
+        if (!canCreateContent) {
+            handlePermissionDenied();
+            return;
+        }
         navigate(`/admin/content/hero/edit/${slide.id}`);
     };
 
