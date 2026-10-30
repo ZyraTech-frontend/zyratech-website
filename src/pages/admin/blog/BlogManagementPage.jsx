@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
+import { useAuth } from '../../../hooks/useAuth';
 import blogService from '../../../services/blogService';
 import {
     FileText,
@@ -54,7 +54,7 @@ const StatusBadge = ({ status = 'draft' }) => {
 const BlogManagementPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isSuperAdmin } = usePermissions();
+    const { userPermissions, userRole } = useAuth();
 
     // State management
     const [articles, setArticles] = useState([]);
