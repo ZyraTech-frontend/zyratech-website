@@ -1,6 +1,6 @@
 ﻿/**
- * Super Admin Dashboard - Clean 2-Column Layout
- * Redesigned for better visual hierarchy and usability
+ * Super Admin Dashboard - Clean Professional Layout
+ * Money First - Revenue at the TOP
  */
 
 import React, { useEffect, useState } from 'react';
@@ -28,7 +28,6 @@ const SuperAdminDashboard = ({ user }) => {
     const [refreshing, setRefreshing] = useState(false);
     const [error, setError] = useState(null);
     
-    // Initialize with safe defaults
     const [dashboardData, setDashboardData] = useState({
         stats: {
             totalRevenue: 0,
@@ -136,7 +135,7 @@ const SuperAdminDashboard = ({ user }) => {
                 </div>
             </div>
 
-            <div className="px-6">
+            <div className="px-6 max-w-[1600px] mx-auto">
                 {/* Error Alert */}
                 {error && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start gap-3">
@@ -170,47 +169,42 @@ const SuperAdminDashboard = ({ user }) => {
                     </div>
                 )}
 
-                {/* Main 2-Column Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    
-                    {/* LEFT COLUMN - Primary Metrics (2/3 width) */}
-                    <div className="lg:col-span-2 space-y-6">
-                        
-                        {/* Row 1: System Health, User Engagement, Revenue Breakdown */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <SystemHealthCard health={systemHealth} />
-                            <UserEngagementCard engagement={userEngagement} />
-                            <RevenueBreakdownCard breakdown={revenueBreakdown} />
-                        </div>
-
-                        {/* Row 2: Revenue Summary and Chart */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <FinancialCard
-                                totalRevenue={stats.totalRevenue || 0}
-                                weeklyRevenue={weeklyRevenue}
-                                weeklyGrowth={weeklyGrowth}
-                            />
-                            <div className="md:col-span-2">
-                                <ChartCard
-                                    title="Revenue Trend"
-                                    subtitle="Last 6 months"
-                                    data={revenueChart}
-                                    color="#10b981"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Row 3: Pending Actions and Recent Activity */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <PendingActionsCard actions={pendingActions} />
-                            <RecentActivityCard activities={recentActivity} />
-                        </div>
-
+                {/* ROW 1: REVENUE FIRST - Revenue Card + Chart + Revenue Breakdown */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
+                    {/* Revenue Card (3 cols) */}
+                    <div className="md:col-span-3">
+                        <FinancialCard
+                            totalRevenue={stats.totalRevenue || 0}
+                            weeklyRevenue={weeklyRevenue}
+                            weeklyGrowth={weeklyGrowth}
+                        />
                     </div>
 
-                    {/* RIGHT COLUMN - Stats Sidebar (1/3 width) */}
-                    <div className="space-y-4">
-                        
+                    {/* Revenue Chart (6 cols) */}
+                    <div className="md:col-span-6">
+                        <ChartCard
+                            title="Revenue Trend"
+                            subtitle="Last 6 months"
+                            data={revenueChart}
+                            color="#10b981"
+                        />
+                    </div>
+
+                    {/* Revenue Breakdown (3 cols) */}
+                    <div className="md:col-span-3">
+                        <RevenueBreakdownCard breakdown={revenueBreakdown} />
+                    </div>
+                </div>
+
+                {/* ROW 2: System Health + User Engagement + Quick Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
+                    <div className="md:col-span-4">
+                        <SystemHealthCard health={systemHealth} />
+                    </div>
+                    <div className="md:col-span-4">
+                        <UserEngagementCard engagement={userEngagement} />
+                    </div>
+                    <div className="md:col-span-4 space-y-4">
                         <StatCard
                             title="Total Users"
                             value={stats.totalUsers || 0}
@@ -219,48 +213,53 @@ const SuperAdminDashboard = ({ user }) => {
                             icon={Users}
                             color="#3b82f6"
                         />
-
-                        <StatCard
-                            title="Pending KYC"
-                            value={stats.pendingKYC || 0}
-                            subtitle="Awaiting verification"
-                            icon={AlertCircle}
-                            color="#f59e0b"
-                            alert={(stats.pendingKYC || 0) > 0}
-                        />
-
                         <StatCard
                             title="Training Enrollments"
                             value={stats.enrollments?.total || 0}
-                            subtitle={`${stats.enrollments?.pending || 0} pending approval`}
+                            subtitle={`${stats.enrollments?.pending || 0} pending`}
                             icon={GraduationCap}
                             color="#8b5cf6"
                             alert={(stats.enrollments?.pending || 0) > 0}
                         />
-
-                        <StatCard
-                            title="Job Applications"
-                            value={stats.pendingApplications || 0}
-                            subtitle={`From ${stats.activeJobs || 0} active jobs`}
-                            icon={Briefcase}
-                            color="#3b82f6"
-                            alert={(stats.pendingApplications || 0) > 0}
-                        />
-
-                        <StatCard
-                            title="Contact Inquiries"
-                            value={stats.totalInquiries || 0}
-                            subtitle={`${stats.unreadInquiries || 0} unread`}
-                            icon={MessageSquare}
-                            color="#ef4444"
-                            alert={(stats.unreadInquiries || 0) > 0}
-                        />
-
                     </div>
                 </div>
 
-                {/* Quick Actions - Full Width at Bottom */}
-                <div className="mt-6">
+                {/* ROW 3: Pending Actions + Recent Activity */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <PendingActionsCard actions={pendingActions} />
+                    <RecentActivityCard activities={recentActivity} />
+                </div>
+
+                {/* ROW 4: More Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <StatCard
+                        title="Pending KYC"
+                        value={stats.pendingKYC || 0}
+                        subtitle="Awaiting verification"
+                        icon={AlertCircle}
+                        color="#f59e0b"
+                        alert={(stats.pendingKYC || 0) > 0}
+                    />
+                    <StatCard
+                        title="Job Applications"
+                        value={stats.pendingApplications || 0}
+                        subtitle={`From ${stats.activeJobs || 0} active jobs`}
+                        icon={Briefcase}
+                        color="#3b82f6"
+                        alert={(stats.pendingApplications || 0) > 0}
+                    />
+                    <StatCard
+                        title="Contact Inquiries"
+                        value={stats.totalInquiries || 0}
+                        subtitle={`${stats.unreadInquiries || 0} unread`}
+                        icon={MessageSquare}
+                        color="#ef4444"
+                        alert={(stats.unreadInquiries || 0) > 0}
+                    />
+                </div>
+
+                {/* BOTTOM: Quick Actions */}
+                <div>
                     <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                         {quickActions.map((action, index) => (
