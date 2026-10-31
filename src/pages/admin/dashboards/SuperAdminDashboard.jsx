@@ -1,13 +1,12 @@
 ﻿/**
- * Super Admin Dashboard - Professional Redesign
+ * Super Admin Dashboard - Enhanced with comprehensive metrics
  */
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-    Users, GraduationCap, Briefcase, FolderKanban, 
-    MessageSquare, Mail, Handshake, Image, FileText,
-    Calendar, Bell, RefreshCw, TrendingUp, CreditCard, Eye
+    Users, GraduationCap, Briefcase, AlertCircle, 
+    MessageSquare, CreditCard, Handshake, TrendingUp, RefreshCw
 } from 'lucide-react';
 
 import StatCard from '../../../components/admin/dashboard/StatCard';
@@ -17,39 +16,19 @@ import ActivityTable from '../../../components/admin/dashboard/ActivityTable';
 import QuickActionCard from '../../../components/admin/dashboard/QuickActionCard';
 
 import dashboardService from '../../../services/dashboardService';
-import paymentService from '../../../services/paymentService';
 
 const SuperAdminDashboard = ({ user }) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const [stats, setStats] = useState(null);
-    const [revenueChart, setRevenueChart] = useState([]);
-    const [recentPayments, setRecentPayments] = useState([]);
+    const [dashboardData, setDashboardData] = useState(null);
     const [currentDate] = useState(new Date());
+    
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
-            const [statsData, chartData, paymentsData] = await Promise.all([
-                dashboardService.getDashboardStats(),
-                dashboardService.getRevenueChart(6),
-                paymentService.getAdminPayments({ limit: 5 })
-            ]);
-
-            setStats(statsData);
-            setRevenueChart(chartData);
-            
-            const formattedPayments = (paymentsData.payments || []).slice(0, 5).map(payment => ({
-                name: payment.courseName || payment.description || 'Payment',
-                subtitle: payment.payerEmail || payment.reference,
-                date: new Date(payment.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
-                time: new Date(payment.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-                status: payment.status === 'success' ? 'Successful' : payment.status,
-                amount: `GHS ${parseFloat(payment.amount).toLocaleString()}`,
-                icon: payment.courseName?.charAt(0) || 'P'
-            }));
-            
-            setRecentPayments(formattedPayments);
+            const data = await dashboardService.getDashboardData();
+            setDashboardData(data);
         } catch (error) {
             console.error('[Dashboard] Error fetching data:', error);
         } finally {
@@ -71,11 +50,6 @@ const SuperAdminDashboard = ({ user }) => {
         day: 'numeric', month: 'long', year: 'numeric'
     });
 
-    const formattedDateRange = `${currentDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })} - ${new Date(currentDate.getTime() + 30*24*60*60*1000).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}`;
-
-    const weeklyRevenue = stats?.payments.totalRevenue ? (stats.payments.totalRevenue * 0.08).toFixed(0) : 0;
-    const weeklyGrowth = 12.5;
-
     if (loading) {
         return (
             <div className="flex items-center justify-center h-96">
@@ -86,8 +60,18 @@ const SuperAdminDashboard = ({ user }) => {
             </div>
         );
     }
+
+    const stats = dashboardData?.stats || {};
+    const revenueChart = dashboardData?.revenueChart || [];
+    const recentActivity = dashboardData?.recentActivity || [];
+    const quickActions = dashboardData?.quickActions || [];
+
+    const weeklyRevenue = stats.totalRevenue ? (stats.totalRevenue * 0.08).toFixed(0) : 0;
+    const weeklyGrowth = 12.5;
+
     return (
         <div className="min-h-screen bg-gray-50 pb-8">
+            {/* Header */}
             <div className="bg-white border-b border-gray-100 px-6 py-4 mb-6">
                 <div className="flex items-center justify-between">
                     <div>
@@ -97,93 +81,126 @@ const SuperAdminDashboard = ({ user }) => {
                         <p className="text-sm text-gray-500 mt-1">{formattedDate}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                        <button className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
-                            <Calendar size={16} />
-                            <span className="hidden md:inline">{formattedDateRange}</span>
-                        </button>
                         <button 
                             onClick={handleRefresh}
-                            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
                             disabled={refreshing}
+                            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#004fa2] hover:bg-[#003d82] rounded-lg transition-colors disabled:opacity-50"
                         >
-                            <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
-                            <span className="hidden md:inline">Refresh</span>
-                        </button>
-                        <button className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
-                            <Bell size={20} />
-                            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                            <RefreshCw className={refreshing ? 'animate-spin' : ''} size={16} />
+                            Refresh
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div className="px-6 space-y-6">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <div className="lg:col-span-3 space-y-6">
+            <div className="px-6">
+                {/* Needs Attention Alert */}
+                {(stats.pendingKYC > 0 || stats.pendingApplications > 0 || stats.enrollments?.pending > 0) && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 flex items-start gap-3">
+                        <AlertCircle className="text-amber-600 flex-shrink-0 mt-0.5" size={20} />
+                        <div className="flex-1">
+                            <h3 className="font-semibold text-amber-900 mb-1">Items Requiring Attention</h3>
+                            <div className="text-sm text-amber-800 space-y-1">
+                                {stats.pendingKYC > 0 && <p>• {stats.pendingKYC} users pending KYC verification</p>}
+                                {stats.pendingApplications > 0 && <p>• {stats.pendingApplications} job applications pending review</p>}
+                                {stats.enrollments?.pending > 0 && <p>• {stats.enrollments.pending} training enrollments pending approval</p>}
+                                {stats.unreadInquiries > 0 && <p>• {stats.unreadInquiries} unread inquiries</p>}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Main Grid */}
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
+                    {/* Left Column - Stats & Financial */}
+                    <div className="space-y-6">
                         <FinancialCard
-                            totalRevenue={stats?.payments.totalRevenue || 0}
-                            weeklyRevenue={weeklyRevenue}
-                            weeklyGrowth={weeklyGrowth}
+                            title="Total Revenue"
+                            amount={stats.totalRevenue || 0}
+                            subtitle={`Weekly: GHS ${weeklyRevenue}`}
+                            trend={weeklyGrowth}
+                            icon={CreditCard}
+                            color="#10b981"
                         />
-                        <div className="grid grid-cols-2 gap-3">
-                            <StatCard icon={Users} label="Total Users" value={stats?.users.total || 0} color="purple" onClick={() => navigate('/admin/users')} />
-                            <StatCard icon={CreditCard} label="Payments" value={stats?.payments.completed || 0} color="green" onClick={() => navigate('/admin/payments')} />
-                        </div>
+
+                        <StatCard
+                            title="Total Users"
+                            value={stats.totalUsers || 0}
+                            subtitle={`${stats.activeUsers || 0} active`}
+                            trend={5.2}
+                            icon={Users}
+                            color="#3b82f6"
+                        />
+
+                        <StatCard
+                            title="Pending KYC"
+                            value={stats.pendingKYC || 0}
+                            subtitle="Awaiting verification"
+                            icon={AlertCircle}
+                            color="#f59e0b"
+                            alert={stats.pendingKYC > 0}
+                        />
                     </div>
-                    <div className="lg:col-span-6">
-                        <ChartCard title="Revenue Trend" data={revenueChart} type="bar" metric="Revenue" />
+
+                    {/* Center Column - Revenue Chart */}
+                    <div>
+                        <ChartCard
+                            title="Revenue Trend"
+                            subtitle="Last 6 months"
+                            data={revenueChart}
+                            color="#10b981"
+                        />
                     </div>
-                    <div className="lg:col-span-3 space-y-6">
-                        <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
-                            <h3 className="text-sm font-semibold text-gray-700 mb-4">System Health</h3>
-                            <div className="mb-4">
-                                <p className="text-xs text-gray-500 mb-1">Total Revenue</p>
-                                <p className="text-3xl font-bold text-gray-900">GHS {(stats?.payments.totalRevenue || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                                <div className="mt-3 h-16 flex items-end gap-1">
-                                    {revenueChart.slice(0, 6).map((item, i) => {
-                                        const max = Math.max(...revenueChart.map(d => d.amount));
-                                        const height = max > 0 ? (item.amount / max) * 100 : 0;
-                                        return <div key={i} className="flex-1 bg-gradient-to-t from-[#1a7f64] to-[#2d9f7f] rounded-sm" style={{ height: `${height}%`, minHeight: '4px' }}></div>;
-                                    })}
-                                </div>
-                            </div>
-                            <div className="flex gap-2 mb-4">
-                                <button onClick={() => navigate('/admin/reports')} className="flex-1 py-2 px-3 text-xs font-semibold text-white bg-[#1a7f64] rounded-lg hover:bg-[#2d9f7f] transition-colors">View Reports</button>
-                                <button className="flex-1 py-2 px-3 text-xs font-semibold text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Export</button>
-                            </div>
-                            <div className="space-y-2">
-                                <div className="flex items-center justify-between text-sm"><span className="text-gray-600">Pending</span><span className="font-semibold">{stats?.payments.pending || 0}</span></div>
-                                <div className="flex items-center justify-between text-sm"><span className="text-gray-600">Completed</span><span className="font-semibold text-green-600">{stats?.payments.completed || 0}</span></div>
-                            </div>
-                        </div>
-                        <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
-                            <h3 className="text-sm font-semibold text-gray-700 mb-3">Active Admins</h3>
-                            <div className="flex -space-x-2">
-                                {[...Array(Math.min(stats?.users.admins || 0, 5))].map((_, i) => (
-                                    <div key={i} className="w-10 h-10 rounded-full bg-gradient-to-br from-[#004fa2] to-[#0066cc] border-2 border-white flex items-center justify-center text-white text-xs font-bold">A{i + 1}</div>
-                                ))}
-                                {stats?.users.admins > 5 && <div className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-gray-600 text-xs font-bold">+{stats.users.admins - 5}</div>}
-                            </div>
-                        </div>
+
+                    {/* Right Column - Enrollments & Applications */}
+                    <div className="space-y-6">
+                        <StatCard
+                            title="Training Enrollments"
+                            value={stats.enrollments?.total || 0}
+                            subtitle={`${stats.enrollments?.pending || 0} pending approval`}
+                            icon={GraduationCap}
+                            color="#8b5cf6"
+                            alert={stats.enrollments?.pending > 0}
+                        />
+
+                        <StatCard
+                            title="Job Applications"
+                            value={stats.pendingApplications || 0}
+                            subtitle={`From ${stats.activeJobs || 0} active jobs`}
+                            icon={Briefcase}
+                            color="#3b82f6"
+                            alert={stats.pendingApplications > 0}
+                        />
+
+                        <StatCard
+                            title="Contact Inquiries"
+                            value={stats.totalInquiries || 0}
+                            subtitle={`${stats.unreadInquiries || 0} unread`}
+                            icon={MessageSquare}
+                            color="#ef4444"
+                            alert={stats.unreadInquiries > 0}
+                        />
                     </div>
                 </div>
-                <ActivityTable title="Recent Payments" activities={recentPayments} />
-                <div>
-                    <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                        <QuickActionCard icon={FileText} label="Blog Posts" path="/admin/blog" count={stats?.blog.total} color="blue" />
-                        <QuickActionCard icon={Briefcase} label="Jobs" path="/admin/jobs" count={stats?.jobs.total} color="green" />
-                        <QuickActionCard icon={GraduationCap} label="Training" path="/admin/training/applications" color="purple" />
-                        <QuickActionCard icon={FolderKanban} label="Projects" path="/admin/projects" color="orange" />
-                        <QuickActionCard icon={MessageSquare} label="Inquiries" path="/admin/contact-inquiries" count={stats?.inquiries.unread} color="cyan" />
-                        <QuickActionCard icon={Handshake} label="Partnerships" path="/admin/partnerships" count={stats?.partnerships.pending} color="pink" />
+
+                {/* Bottom Section - Activity & Quick Actions */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <ActivityTable activities={recentActivity} />
+                    
+                    <div>
+                        <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+                        <div className="grid grid-cols-2 gap-4">
+                            {quickActions.map((action, index) => (
+                                <QuickActionCard
+                                    key={index}
+                                    title={action.title}
+                                    count={action.count}
+                                    color={action.color}
+                                    onClick={() => navigate(action.path)}
+                                />
+                            ))}
+                        </div>
                     </div>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <StatCard icon={Mail} label="Newsletter" value={stats?.newsletter.active || 0} color="cyan" onClick={() => navigate('/admin/newsletter')} />
-                    <StatCard icon={Image} label="Gallery" value={'-'} color="purple" onClick={() => navigate('/admin/gallery')} />
-                    <StatCard icon={FileText} label="Blog Posts" value={stats?.blog.published || 0} color="blue" onClick={() => navigate('/admin/blog')} />
-                    <StatCard icon={Users} label="Admins" value={stats?.users.admins || 0} color="green" onClick={() => navigate('/admin/users')} />
                 </div>
             </div>
         </div>
