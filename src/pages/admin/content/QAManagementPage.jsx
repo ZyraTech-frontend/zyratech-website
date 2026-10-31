@@ -165,9 +165,9 @@ const QAManagementPage = () => {
                 {/* HERO TAB */}
                 {activeTab === 'hero' && (
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-4">
-                        <Input label="Title" value={data.hero.title} onChange={(e) => handleNestedChange('hero', 'title', e.target.value)} />
-                        <TextArea label="Description" value={data.hero.description} onChange={(e) => handleNestedChange('hero', 'description', e.target.value)} />
-                        <Input label="Image URL" value={data.hero.image} onChange={(e) => handleNestedChange('hero', 'image', e.target.value)} />
+                        <Input label="Title" value={data.hero?.title} onChange={(e) => handleNestedChange('hero', 'title', e.target.value)} />
+                        <TextArea label="Description" value={data.hero?.description} onChange={(e) => handleNestedChange('hero', 'description', e.target.value)} />
+                        <Input label="Image URL" value={data.hero?.image} onChange={(e) => handleNestedChange('hero', 'image', e.target.value)} />
                         <SaveButton onClick={() => handleSave('hero')} saving={saving} />
                     </div>
                 )}
@@ -178,41 +178,41 @@ const QAManagementPage = () => {
                         {/* How It Works */}
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-4">
                             <h2 className="text-lg font-semibold border-b pb-2">How Do We Work?</h2>
-                            <Input label="Title" value={data.intro.howItWorks.title} onChange={(e) => handleDeepNestedChange('intro', 'howItWorks', 'title', e.target.value)} />
-                            <TextArea label="Description" value={data.intro.howItWorks.description} onChange={(e) => handleDeepNestedChange('intro', 'howItWorks', 'description', e.target.value)} />
+                            <Input label="Title" value={data.intro?.howItWorks?.title} onChange={(e) => handleDeepNestedChange('intro', 'howItWorks', 'title', e.target.value)} />
+                            <TextArea label="Description" value={data.intro?.howItWorks?.description} onChange={(e) => handleDeepNestedChange('intro', 'howItWorks', 'description', e.target.value)} />
                         </div>
 
                         {/* Standards */}
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-4">
                             <h2 className="text-lg font-semibold border-b pb-2">Our Quality Standards</h2>
-                            <Input label="Title" value={data.intro.standards.title} onChange={(e) => handleDeepNestedChange('intro', 'standards', 'title', e.target.value)} />
-                            <TextArea label="Description" value={data.intro.standards.description} onChange={(e) => handleDeepNestedChange('intro', 'standards', 'description', e.target.value)} />
+                            <Input label="Title" value={data.intro?.standards?.title} onChange={(e) => handleDeepNestedChange('intro', 'standards', 'title', e.target.value)} />
+                            <TextArea label="Description" value={data.intro?.standards?.description} onChange={(e) => handleDeepNestedChange('intro', 'standards', 'description', e.target.value)} />
 
                             <div className="mt-4 space-y-4">
                                 <h3 className="text-sm font-semibold text-gray-500 uppercase">Certificates / Standards</h3>
-                                {data.intro.standards.items.map((item, idx) => (
+                                {data.intro?.standards?.items || [].map((item, idx) => (
                                     <div key={idx} className="p-4 bg-gray-50 rounded-lg border border-gray-200 relative group">
                                         <button onClick={() => {
-                                            const newItems = [...data.intro.standards.items];
+                                            const newItems = [...data.intro?.standards?.items || []];
                                             newItems.splice(idx, 1);
                                             setData(prev => ({ ...prev, intro: { ...prev.intro, standards: { ...prev.intro.standards, items: newItems } } }));
                                         }} className="absolute top-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <Trash2 size={16} />
                                         </button>
                                         <TextArea label="Description" value={item.text} onChange={(e) => {
-                                            const newItems = [...data.intro.standards.items];
+                                            const newItems = [...data.intro?.standards?.items || []];
                                             newItems[idx] = { ...newItems[idx], text: e.target.value };
                                             setData(prev => ({ ...prev, intro: { ...prev.intro, standards: { ...prev.intro.standards, items: newItems } } }));
                                         }} />
                                         <Input label="Result / Status" value={item.result} onChange={(e) => {
-                                            const newItems = [...data.intro.standards.items];
+                                            const newItems = [...data.intro?.standards?.items || []];
                                             newItems[idx] = { ...newItems[idx], result: e.target.value };
                                             setData(prev => ({ ...prev, intro: { ...prev.intro, standards: { ...prev.intro.standards, items: newItems } } }));
                                         }} />
                                     </div>
                                 ))}
                                 <button onClick={() => {
-                                    const newItems = [...data.intro.standards.items, { text: '', result: '' }];
+                                    const newItems = [...data.intro?.standards?.items || [], { text: '', result: '' }];
                                     setData(prev => ({ ...prev, intro: { ...prev.intro, standards: { ...prev.intro.standards, items: newItems } } }));
                                 }} className="flex items-center gap-2 text-[#004fa2] text-sm font-medium hover:underline">
                                     <Plus size={16} /> Add Standard
@@ -387,3 +387,4 @@ const SaveButton = ({ onClick, saving }) => (
 );
 
 export default QAManagementPage;
+
