@@ -1,6 +1,6 @@
 ﻿/**
- * Super Admin Dashboard - Enhanced with System Health, User Engagement, Revenue Breakdown
- * Fixed: Safe defaults, error handling, proper guards for toLocaleString
+ * Super Admin Dashboard - Clean 2-Column Layout
+ * Redesigned for better visual hierarchy and usability
  */
 
 import React, { useEffect, useState } from 'react';
@@ -170,23 +170,47 @@ const SuperAdminDashboard = ({ user }) => {
                     </div>
                 )}
 
-                {/* Top Row - System Health & User Engagement */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                    <SystemHealthCard health={systemHealth} />
-                    <UserEngagementCard engagement={userEngagement} />
-                    <RevenueBreakdownCard breakdown={revenueBreakdown} />
-                </div>
+                {/* Main 2-Column Layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    {/* LEFT COLUMN - Primary Metrics (2/3 width) */}
+                    <div className="lg:col-span-2 space-y-6">
+                        
+                        {/* Row 1: System Health, User Engagement, Revenue Breakdown */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <SystemHealthCard health={systemHealth} />
+                            <UserEngagementCard engagement={userEngagement} />
+                            <RevenueBreakdownCard breakdown={revenueBreakdown} />
+                        </div>
 
-                {/* Main Grid */}
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
-                    {/* Left Column - Stats & Financial */}
-                    <div className="space-y-6">
-                        <FinancialCard
-                            totalRevenue={stats.totalRevenue || 0}
-                            weeklyRevenue={weeklyRevenue}
-                            weeklyGrowth={weeklyGrowth}
-                        />
+                        {/* Row 2: Revenue Summary and Chart */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <FinancialCard
+                                totalRevenue={stats.totalRevenue || 0}
+                                weeklyRevenue={weeklyRevenue}
+                                weeklyGrowth={weeklyGrowth}
+                            />
+                            <div className="md:col-span-2">
+                                <ChartCard
+                                    title="Revenue Trend"
+                                    subtitle="Last 6 months"
+                                    data={revenueChart}
+                                    color="#10b981"
+                                />
+                            </div>
+                        </div>
 
+                        {/* Row 3: Pending Actions and Recent Activity */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <PendingActionsCard actions={pendingActions} />
+                            <RecentActivityCard activities={recentActivity} />
+                        </div>
+
+                    </div>
+
+                    {/* RIGHT COLUMN - Stats Sidebar (1/3 width) */}
+                    <div className="space-y-4">
+                        
                         <StatCard
                             title="Total Users"
                             value={stats.totalUsers || 0}
@@ -204,20 +228,7 @@ const SuperAdminDashboard = ({ user }) => {
                             color="#f59e0b"
                             alert={(stats.pendingKYC || 0) > 0}
                         />
-                    </div>
 
-                    {/* Center Column - Revenue Chart */}
-                    <div>
-                        <ChartCard
-                            title="Revenue Trend"
-                            subtitle="Last 6 months"
-                            data={revenueChart}
-                            color="#10b981"
-                        />
-                    </div>
-
-                    {/* Right Column - Enrollments & Applications */}
-                    <div className="space-y-6">
                         <StatCard
                             title="Training Enrollments"
                             value={stats.enrollments?.total || 0}
@@ -244,19 +255,14 @@ const SuperAdminDashboard = ({ user }) => {
                             color="#ef4444"
                             alert={(stats.unreadInquiries || 0) > 0}
                         />
+
                     </div>
                 </div>
 
-                {/* Bottom Section - Pending Actions, Recent Activity */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    <PendingActionsCard actions={pendingActions} />
-                    <RecentActivityCard activities={recentActivity} />
-                </div>
-
-                {/* Quick Actions Grid */}
-                <div>
+                {/* Quick Actions - Full Width at Bottom */}
+                <div className="mt-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                         {quickActions.map((action, index) => (
                             <QuickActionCard
                                 key={index}
