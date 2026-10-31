@@ -358,7 +358,7 @@ const BlogManagementPage = () => {
                                                             />
                                                             <div className="min-w-0 flex-1">
                                                                 <button
-                                                                    onClick={() => navigate(`/admin/blog/${article.id}`)}
+                                                                    onClick={() => { if (!canCreateBlog) { handlePermissionDenied(); return; } navigate(`/admin/blog/${article.id}`); }}
                                                                     className="text-left font-bold text-gray-900 text-xs line-clamp-1 group-hover:text-[#004fa2] transition-colors"
                                                                 >
                                                                     {article.title}
@@ -420,7 +420,7 @@ const BlogManagementPage = () => {
                                                             ) : (
                                                                 <>
                                                                     <button
-                                                                        onClick={() => navigate(`/admin/blog/${article.id}`)}
+                                                                        onClick={() => { if (!canCreateBlog) { handlePermissionDenied(); return; } navigate(`/admin/blog/${article.id}`); }}
                                                                         title="View Details"
                                                                         className="p-1.5 text-gray-500 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
                                                                     >
@@ -521,6 +521,7 @@ const BlogManagementPage = () => {
 };
 
 export default BlogManagementPage;
+
 
 
 
