@@ -15,7 +15,7 @@ import { useActivityLogger } from '../../../hooks/useActivityLogger';
 
 // --- Sub-components (inline forms for unchanging sections) ---
 
-const HeroForm = ({ data, onSubmit, onChange, saving, onImageUpload, uploading }) => (
+const HeroForm = ({ data, onSubmit, onChange, saving, onImageUpload, uploading, canCreateContent }) => (
     <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
         <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Hero Section</h3>
         <div><label className="block text-sm font-medium mb-1">Title</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="title" value={data.title || ''} onChange={onChange} /></div>
@@ -50,20 +50,20 @@ const HeroForm = ({ data, onSubmit, onChange, saving, onImageUpload, uploading }
             )}
         </div>
 
-        <button type="submit" disabled={saving || uploading} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Hero</button>
+        <button type="submit" disabled={saving || uploading || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Hero</button>
     </form>
 );
 
-const MissionForm = ({ data, onSubmit, onChange, saving }) => (
+const MissionForm = ({ data, onSubmit, onChange, saving, canCreateContent }) => (
     <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
         <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Mission Section</h3>
         <div><label className="block text-sm font-medium mb-1">Title</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="title" value={data.title || ''} onChange={onChange} /></div>
         <div><label className="block text-sm font-medium mb-1">Content</label><textarea className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="content" value={data.content || ''} onChange={onChange} rows={4} /></div>
-        <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Mission</button>
+        <button type="submit" disabled={saving || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Mission</button>
     </form>
 );
 
-const WhyGhanaForm = ({ data, onSubmit, onChange, saving }) => (
+const WhyGhanaForm = ({ data, onSubmit, onChange, saving, canCreateContent }) => (
     <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
         <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Why Ghana Section</h3>
         <div><label className="block text-sm font-medium mb-1">Title</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="title" value={data.title || ''} onChange={onChange} /></div>
@@ -73,11 +73,11 @@ const WhyGhanaForm = ({ data, onSubmit, onChange, saving }) => (
             <div><label className="block text-sm font-medium mb-1">Link Text</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="linkText" value={data.linkText || ''} onChange={onChange} /></div>
             <div><label className="block text-sm font-medium mb-1">Link URL</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="linkUrl" value={data.linkUrl || ''} onChange={onChange} /></div>
         </div>
-        <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Why Ghana</button>
+        <button type="submit" disabled={saving || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Why Ghana</button>
     </form>
 );
 
-const AboutQuoteForm = ({ data, onSubmit, onChange, saving }) => {
+const AboutQuoteForm = ({ data, onSubmit, onChange, saving, canCreateContent }) => {
     // Available images from public/images folder
     const AVAILABLE_IMAGES = [
         '/images/Dalene.webp',
@@ -184,7 +184,7 @@ const AboutQuoteForm = ({ data, onSubmit, onChange, saving }) => {
                 </div>
             </div>
 
-            <button type="submit" disabled={saving} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Quote & Statistics</button>
+            <button type="submit" disabled={saving || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Quote & Statistics</button>
         </form>
     );
 };
@@ -520,10 +520,10 @@ const AboutPageManagementPage = () => {
 
                 {/* Content Area */}
                 <div className="flex-1 min-w-0">
-                    {activeTab === 'hero' && <HeroForm data={heroData} onChange={handleHeroChange} onSubmit={handleHeroSubmit} saving={savingHero} onImageUpload={handleHeroImageUpload} uploading={uploadingHero} />}
-                    {activeTab === 'mission' && <MissionForm data={missionData} onChange={handleMissionChange} onSubmit={handleMissionSubmit} saving={savingMission} />}
-                    {activeTab === 'quote' && <AboutQuoteForm data={quoteData} onChange={handleQuoteChange} onSubmit={handleQuoteSubmit} saving={savingQuote} />}
-                    {activeTab === 'why' && <WhyGhanaForm data={whyGhanaData} onChange={handleWhyGhanaChange} onSubmit={handleWhyGhanaSubmit} saving={savingWhyGhana} />}
+                    {activeTab === 'hero' && <HeroForm data={heroData} onChange={handleHeroChange} onSubmit={handleHeroSubmit} saving={savingHero} onImageUpload={handleHeroImageUpload} uploading={uploadingHero} canCreateContent={canCreateContent} />}
+                    {activeTab === 'mission' && <MissionForm data={missionData} onChange={handleMissionChange} onSubmit={handleMissionSubmit} saving={savingMission} canCreateContent={canCreateContent} />}
+                    {activeTab === 'quote' && <AboutQuoteForm data={quoteData} onChange={handleQuoteChange} onSubmit={handleQuoteSubmit} saving={savingQuote} canCreateContent={canCreateContent} />}
+                    {activeTab === 'why' && <WhyGhanaForm data={whyGhanaData} onChange={handleWhyGhanaChange} onSubmit={handleWhyGhanaSubmit} saving={savingWhyGhana} canCreateContent={canCreateContent} />}
                     {activeTab === 'milestones' && <MilestonesManager milestones={milestones} setMilestones={setMilestones} dispatch={dispatch} navigate={navigate} canCreateContent={canCreateContent} handlePermissionDenied={handlePermissionDenied} />}
                     {activeTab === 'timeline' && <TimelineManager timeline={timeline} setTimeline={setTimeline} dispatch={dispatch} navigate={navigate} canCreateContent={canCreateContent} handlePermissionDenied={handlePermissionDenied} />}
                 </div>
@@ -533,5 +533,8 @@ const AboutPageManagementPage = () => {
 };
 
 export default AboutPageManagementPage;
+
+
+
 
 
