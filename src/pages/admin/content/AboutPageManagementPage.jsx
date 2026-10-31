@@ -289,7 +289,7 @@ const TimelineManager = ({ timeline, setTimeline, dispatch, navigate, canCreateC
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold text-gray-800">Timeline Items</h3>
                 <button 
-                    onClick={() => navigate('/admin/content/about-page/timeline/add')}
+                    onClick={() => { if (!canCreateContent) { handlePermissionDenied(); return; } navigate('/admin/content/about-page/timeline/add'); }}
                     className="flex items-center gap-2 bg-[#004fa2] text-white px-4 py-2 rounded-lg hover:bg-[#003d7a] transition-colors"
                 >
                     <Plus size={16} /> Add Item
@@ -533,3 +533,5 @@ const AboutPageManagementPage = () => {
 };
 
 export default AboutPageManagementPage;
+
+
