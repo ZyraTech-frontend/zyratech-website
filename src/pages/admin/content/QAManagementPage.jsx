@@ -83,7 +83,7 @@ const QAManagementPage = () => {
         setData(prev => ({
             ...prev,
             [section]: {
-                ...prev[section],
+                ...(prev[section] || {}),
                 [field]: value
             }
         }));
@@ -93,9 +93,9 @@ const QAManagementPage = () => {
         setData(prev => ({
             ...prev,
             [section]: {
-                ...prev[section],
+                ...(prev[section] || {}),
                 [subSection]: {
-                    ...prev[section][subSection],
+                    ...((prev[section] || {})[subSection] || {}),
                     [field]: value
                 }
             }
@@ -103,7 +103,7 @@ const QAManagementPage = () => {
     };
 
     const handleArrayChange = (section, index, field, value) => {
-        const newArray = [...data[section]];
+        const newArray = [...(data[section] || [])];
         newArray[index] = { ...newArray[index], [field]: value };
         setData(prev => ({ ...prev, [section]: newArray }));
     };
@@ -111,33 +111,39 @@ const QAManagementPage = () => {
     const addItem = (section, template) => {
         setData(prev => ({
             ...prev,
-            [section]: [...prev[section], { id: Date.now(), ...template }]
+            [section]: [...(prev[section] || []), { id: Date.now(), ...template }]
         }));
     };
 
     const deleteItem = (section, index) => {
-        const newArray = [...data[section]];
+        const newArray = [...(data[section] || [])];
         newArray.splice(index, 1);
         setData(prev => ({ ...prev, [section]: newArray }));
     };
 
     // Special handler for Feature Content (array of strings)
     const handleFeatureContentChange = (featureIndex, contentIndex, value) => {
-        const newFeatures = [...data.features];
-        newFeatures[featureIndex].content[contentIndex] = value;
-        setData(prev => ({ ...prev, features: newFeatures }));
+        const newFeatures = [...(data.features || [])];
+        if (newFeatures[featureIndex]) {
+            newFeatures[featureIndex].content[contentIndex] = value;
+            setData(prev => ({ ...prev, features: newFeatures }));
+        }
     };
 
     const addFeatureContent = (featureIndex) => {
-        const newFeatures = [...data.features];
-        newFeatures[featureIndex].content.push('');
-        setData(prev => ({ ...prev, features: newFeatures }));
+        const newFeatures = [...(data.features || [])];
+        if (newFeatures[featureIndex]) {
+            newFeatures[featureIndex].content.push('');
+            setData(prev => ({ ...prev, features: newFeatures }));
+        }
     };
 
     const deleteFeatureContent = (featureIndex, contentIndex) => {
-        const newFeatures = [...data.features];
-        newFeatures[featureIndex].content.splice(contentIndex, 1);
-        setData(prev => ({ ...prev, features: newFeatures }));
+        const newFeatures = [...(data.features || [])];
+        if (newFeatures[featureIndex]) {
+            newFeatures[featureIndex].content.splice(contentIndex, 1);
+            setData(prev => ({ ...prev, features: newFeatures }));
+        }
     };
 
     if (loading) return <AdminLayout><Loader /></AdminLayout>;
@@ -387,4 +393,5 @@ const SaveButton = ({ onClick, saving }) => (
 );
 
 export default QAManagementPage;
+
 
