@@ -50,7 +50,7 @@ const HeroForm = ({ data, onSubmit, onChange, saving, onImageUpload, uploading, 
             )}
         </div>
 
-        <button type="submit" onClick={(e) => { if (!canCreateContent) { handlePermissionDenied(); e.preventDefault(); } }} disabled={saving || uploading || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Hero</button>
+        <button type="submit" onClick={(e) => { if (!canCreateContent) { handlePermissionDenied(); e.preventDefault(); } }} disabled={saving || uploading || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50 disabled:cursor-not-allowed">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Hero</button>
     </form>
 );
 
@@ -59,7 +59,7 @@ const MissionForm = ({ data, onSubmit, onChange, saving, canCreateContent, handl
         <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Mission Section</h3>
         <div><label className="block text-sm font-medium mb-1">Title</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="title" value={data.title || ''} onChange={onChange} /></div>
         <div><label className="block text-sm font-medium mb-1">Content</label><textarea className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="content" value={data.content || ''} onChange={onChange} rows={4} /></div>
-        <button type="submit" onClick={(e) => { if (!canCreateContent) { handlePermissionDenied(); e.preventDefault(); } }} disabled={saving || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Mission</button>
+        <button type="submit" onClick={(e) => { if (!canCreateContent) { handlePermissionDenied(); e.preventDefault(); } }} disabled={saving || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50 disabled:cursor-not-allowed">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Mission</button>
     </form>
 );
 
@@ -73,7 +73,7 @@ const WhyGhanaForm = ({ data, onSubmit, onChange, saving, canCreateContent, hand
             <div><label className="block text-sm font-medium mb-1">Link Text</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="linkText" value={data.linkText || ''} onChange={onChange} /></div>
             <div><label className="block text-sm font-medium mb-1">Link URL</label><input className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2]" name="linkUrl" value={data.linkUrl || ''} onChange={onChange} /></div>
         </div>
-        <button type="submit" onClick={(e) => { if (!canCreateContent) { handlePermissionDenied(); e.preventDefault(); } }} disabled={saving || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Why Ghana</button>
+        <button type="submit" onClick={(e) => { if (!canCreateContent) { handlePermissionDenied(); e.preventDefault(); } }} disabled={saving || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50 disabled:cursor-not-allowed">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Why Ghana</button>
     </form>
 );
 
@@ -184,7 +184,7 @@ const AboutQuoteForm = ({ data, onSubmit, onChange, saving, canCreateContent, ha
                 </div>
             </div>
 
-            <button type="submit" onClick={(e) => { if (!canCreateContent) { handlePermissionDenied(); e.preventDefault(); } }} disabled={saving || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Quote & Statistics</button>
+            <button type="submit" onClick={(e) => { if (!canCreateContent) { handlePermissionDenied(); e.preventDefault(); } }} disabled={saving || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-50 disabled:cursor-not-allowed">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Quote & Statistics</button>
         </form>
     );
 };
@@ -533,6 +533,7 @@ const AboutPageManagementPage = () => {
 };
 
 export default AboutPageManagementPage;
+
 
 
 
