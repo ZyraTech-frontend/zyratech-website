@@ -360,7 +360,7 @@ const StoriesManager = ({ stories, setStories, dispatch, navigate, canCreateCont
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold text-gray-800">Partnership Stories</h3>
                 <button 
-                    onClick={() => navigate('/admin/content/partnership/story/add')}
+                    onClick={() => { if (!canCreateContent) { handlePermissionDenied(); return; } navigate('/admin/content/partnership/story/add'); }}
                     className="flex items-center gap-2 bg-[#004fa2] text-white px-4 py-2 rounded-lg hover:bg-[#003d7a] transition-colors"
                 >
                     <Plus size={16} /> Add Story
@@ -390,7 +390,7 @@ const StoriesManager = ({ stories, setStories, dispatch, navigate, canCreateCont
                             </div>
                             <div className="flex gap-2">
                                 <button 
-                                    onClick={() => navigate(`/admin/content/partnership/story/edit/${s.id}`)}
+                                    onClick={() => { if (!canCreateContent) { handlePermissionDenied(); return; } navigate(`/admin/content/partnership/story/edit/${s.id}`); }}
                                     className="p-2 text-blue-600 hover:bg-blue-50 rounded"
                                 >
                                     <Edit2 size={18} />
@@ -567,3 +567,4 @@ const PartnershipContentManagementPage = () => {
 };
 
 export default PartnershipContentManagementPage;
+
