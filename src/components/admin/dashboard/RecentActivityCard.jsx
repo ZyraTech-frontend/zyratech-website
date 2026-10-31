@@ -1,5 +1,5 @@
 ﻿/**
- * RecentActivityCard Component
+ * RecentActivityCard Component - Compact version
  * Timeline view of recent activities in the last 24 hours
  */
 
@@ -24,17 +24,17 @@ const RecentActivityCard = ({ activities = [], title = "Recent Activity", subtit
 
   const getIconBgColor = (type) => {
     const colors = {
-      'contact': 'bg-blue-100',
-      'enrollment': 'bg-purple-100',
-      'testimonial': 'bg-yellow-100',
-      'partnership': 'bg-green-100',
-      'blog': 'bg-pink-100',
-      'job': 'bg-indigo-100',
-      'payment': 'bg-emerald-100',
-      'user': 'bg-cyan-100',
-      'inquiry': 'bg-orange-100'
+      'contact': 'bg-blue-50',
+      'enrollment': 'bg-purple-50',
+      'testimonial': 'bg-yellow-50',
+      'partnership': 'bg-green-50',
+      'blog': 'bg-pink-50',
+      'job': 'bg-indigo-50',
+      'payment': 'bg-emerald-50',
+      'user': 'bg-cyan-50',
+      'inquiry': 'bg-orange-50'
     };
-    return colors[type?.toLowerCase()] || 'bg-gray-100';
+    return colors[type?.toLowerCase()] || 'bg-gray-50';
   };
 
   const formatRelativeTime = (timestamp) => {
@@ -53,48 +53,48 @@ const RecentActivityCard = ({ activities = [], title = "Recent Activity", subtit
   };
 
   return (
-    <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-sm">
+      <div className="flex items-center justify-between mb-3">
         <div>
           <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
-          <p className="text-xs text-gray-500">{subtitle}</p>
+          <p className="text-[10px] text-gray-500">{subtitle}</p>
         </div>
         <button className="text-[#004fa2] hover:text-[#003d82] text-xs font-semibold flex items-center gap-1">
           View All
-          <ChevronRight size={14} />
+          <ChevronRight size={12} />
         </button>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {activities.length > 0 ? (
           activities.map((activity, index) => (
             <div
               key={index}
-              className="group flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+              className="group flex items-start gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
             >
               {/* Icon */}
-              <div className={`w-8 h-8 rounded-full ${getIconBgColor(activity.type)} flex items-center justify-center flex-shrink-0 text-base`}>
+              <div className={`w-7 h-7 rounded-full ${getIconBgColor(activity.type)} flex items-center justify-center flex-shrink-0 text-sm`}>
                 {getActivityIcon(activity.type)}
               </div>
 
               {/* Content */}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 group-hover:text-[#004fa2] transition-colors">
+                <p className="text-xs font-semibold text-gray-900 group-hover:text-[#004fa2] transition-colors">
                   {activity.title}
                 </p>
-                <p className="text-xs text-gray-500 truncate">{activity.description || activity.subtitle}</p>
+                <p className="text-[10px] text-gray-500 truncate">{activity.description || activity.subtitle}</p>
               </div>
 
               {/* Time */}
-              <div className="text-[10px] text-gray-400 flex items-center gap-1 flex-shrink-0">
-                <Clock size={10} />
+              <div className="text-[9px] text-gray-400 flex items-center gap-0.5 flex-shrink-0">
+                <Clock size={9} />
                 {activity.time || formatRelativeTime(activity.timestamp)}
               </div>
             </div>
           ))
         ) : (
-          <div className="text-center py-8 text-gray-400 text-sm">
-            <Clock className="mx-auto mb-2 text-gray-300" size={24} />
+          <div className="text-center py-6 text-gray-400 text-xs">
+            <Clock className="mx-auto mb-1 text-gray-300" size={20} />
             <p>No recent activity</p>
           </div>
         )}
