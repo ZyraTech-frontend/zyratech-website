@@ -1,16 +1,30 @@
-/**
- * ChartCard Component
+﻿/**
+ * ChartCard Component - Fixed with safe defaults and solid colors
  * Revenue/Engagement chart with period toggle
  */
 
 import React, { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 
-const ChartCard = ({ title, data, type = 'bar', metric = 'Revenue' }) => {
+const ChartCard = ({ title = 'Revenue Trend', data = [], type = 'bar', metric = 'Revenue' }) => {
   const [period, setPeriod] = useState('monthly');
 
-  const maxValue = Math.max(...data.map(d => d.amount || d.value || 0));
-  const peakMonth = data.reduce((max, d) => (d.amount || d.value) > (max.amount || max.value || 0) ? d : max, data[0]);
+  // Safe data processing
+  const safeData = Array.isArray(data) && data.length > 0 ? data : [
+    { month: 'Jan', revenue: 0 },
+    { month: 'Feb', revenue: 0 },
+    { month: 'Mar', revenue: 0 },
+    { month: 'Apr', revenue: 0 },
+    { month: 'May', revenue: 0 },
+    { month: 'Jun', revenue: 0 }
+  ];
+
+  const maxValue = Math.max(...safeData.map(d => Number(d.amount || d.value || d.revenue) || 0), 1);
+  const peakMonth = safeData.reduce((max, d) => {
+    const currentVal = Number(d.amount || d.value || d.revenue) || 0;
+    const maxVal = Number(max.amount || max.value || max.revenue) || 0;
+    return currentVal > maxVal ? d : max;
+  }, safeData[0]);
 
   return (
     <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm h-full">
@@ -48,30 +62,30 @@ const ChartCard = ({ title, data, type = 'bar', metric = 'Revenue' }) => {
       {/* Chart */}
       <div className="relative h-64">
         <div className="absolute inset-0 flex items-end justify-around gap-3 px-2">
-          {data.map((item, index) => {
-            const value = item.amount || item.value || 0;
+          {safeData.map((item, index) => {
+            const value = Number(item.amount || item.value || item.revenue) || 0;
             const percentage = maxValue > 0 ? (value / maxValue) * 100 : 0;
             const isPeak = item.month === peakMonth?.month;
 
             return (
               <div key={index} className="flex-1 flex flex-col items-center">
                 <div className="w-full flex flex-col items-center mb-2">
-                  {isPeak && (
+                  {isPeak && value > 0 && (
                     <div className="mb-1 px-2 py-0.5 bg-[#1a7f64] text-white rounded text-[10px] font-bold">
                       {(value / 1000).toFixed(1)}k
                     </div>
                   )}
                   <div
-                    className="w-full bg-gradient-to-t from-[#1a7f64] to-[#2d9f7f] rounded-t-lg transition-all duration-500 hover:opacity-80 cursor-pointer relative group"
+                    className="w-full bg-[#1a7f64] rounded-t-lg transition-all duration-500 hover:opacity-80 cursor-pointer relative group"
                     style={{ height: `${percentage}%`, minHeight: '8px' }}
                   >
                     <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                      GHS {value.toLocaleString()}
+                      GHS {value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                     </div>
                     <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_4px,rgba(255,255,255,0.1)_4px,rgba(255,255,255,0.1)_8px)]"></div>
                   </div>
                 </div>
-                <p className="text-[10px] font-medium text-gray-500 mt-2">{item.month}</p>
+                <p className="text-[10px] font-medium text-gray-500 mt-2">{item.month || `M${index + 1}`}</p>
               </div>
             );
           })}

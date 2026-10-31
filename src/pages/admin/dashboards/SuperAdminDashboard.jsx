@@ -1,5 +1,6 @@
 ﻿/**
  * Super Admin Dashboard - Enhanced with comprehensive metrics
+ * Fixed: Safe defaults, error handling, proper guards for toLocaleString
  */
 
 import React, { useEffect, useState } from 'react';
@@ -21,16 +22,46 @@ const SuperAdminDashboard = ({ user }) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const [dashboardData, setDashboardData] = useState(null);
+    const [error, setError] = useState(null);
+    
+    // Initialize with safe defaults
+    const [dashboardData, setDashboardData] = useState({
+        stats: {
+            totalRevenue: 0,
+            totalPayments: 0,
+            pendingPayments: 0,
+            completedPayments: 0,
+            totalUsers: 0,
+            activeUsers: 0,
+            admins: 0,
+            pendingKYC: 0,
+            enrollments: { total: 0, pending: 0, approved: 0, rejected: 0 },
+            totalJobs: 0,
+            activeJobs: 0,
+            pendingApplications: 0,
+            totalInquiries: 0,
+            unreadInquiries: 0,
+            resolvedInquiries: 0,
+            totalPartnerships: 0,
+            pendingPartnerships: 0,
+            approvedPartnerships: 0
+        },
+        recentActivity: [],
+        revenueChart: [],
+        quickActions: []
+    });
+    
     const [currentDate] = useState(new Date());
     
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
+            setError(null);
             const data = await dashboardService.getDashboardData();
             setDashboardData(data);
         } catch (error) {
             console.error('[Dashboard] Error fetching data:', error);
+            setError('Failed to load dashboard data. Please try refreshing.');
         } finally {
             setLoading(false);
         }
@@ -46,7 +77,7 @@ const SuperAdminDashboard = ({ user }) => {
         setTimeout(() => setRefreshing(false), 1000);
     };
 
-    const formattedDate = currentDate.toLocaleDateString('en-US', {
+    const formattedDate = currentDate.toLocaleString('en-US', {
         day: 'numeric', month: 'long', year: 'numeric'
     });
 
@@ -66,7 +97,7 @@ const SuperAdminDashboard = ({ user }) => {
     const recentActivity = dashboardData?.recentActivity || [];
     const quickActions = dashboardData?.quickActions || [];
 
-    const weeklyRevenue = stats.totalRevenue ? (stats.totalRevenue * 0.08).toFixed(0) : 0;
+    const weeklyRevenue = stats.totalRevenue ? (Number(stats.totalRevenue) * 0.08).toFixed(0) : 0;
     const weeklyGrowth = 12.5;
 
     return (
@@ -94,17 +125,34 @@ const SuperAdminDashboard = ({ user }) => {
             </div>
 
             <div className="px-6">
+                {/* Error Alert */}
+                {error && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start gap-3">
+                        <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+                        <div className="flex-1">
+                            <h3 className="font-semibold text-red-900 mb-1">Error Loading Dashboard</h3>
+                            <p className="text-sm text-red-800">{error}</p>
+                        </div>
+                        <button 
+                            onClick={fetchDashboardData}
+                            className="text-sm font-medium text-red-600 hover:text-red-800"
+                        >
+                            Retry
+                        </button>
+                    </div>
+                )}
+
                 {/* Needs Attention Alert */}
-                {(stats.pendingKYC > 0 || stats.pendingApplications > 0 || stats.enrollments?.pending > 0) && (
+                {((stats.pendingKYC || 0) > 0 || (stats.pendingApplications || 0) > 0 || (stats.enrollments?.pending || 0) > 0) && (
                     <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 flex items-start gap-3">
                         <AlertCircle className="text-amber-600 flex-shrink-0 mt-0.5" size={20} />
                         <div className="flex-1">
                             <h3 className="font-semibold text-amber-900 mb-1">Items Requiring Attention</h3>
                             <div className="text-sm text-amber-800 space-y-1">
-                                {stats.pendingKYC > 0 && <p>• {stats.pendingKYC} users pending KYC verification</p>}
-                                {stats.pendingApplications > 0 && <p>• {stats.pendingApplications} job applications pending review</p>}
-                                {stats.enrollments?.pending > 0 && <p>• {stats.enrollments.pending} training enrollments pending approval</p>}
-                                {stats.unreadInquiries > 0 && <p>• {stats.unreadInquiries} unread inquiries</p>}
+                                {(stats.pendingKYC || 0) > 0 && <p>• {stats.pendingKYC} users pending KYC verification</p>}
+                                {(stats.pendingApplications || 0) > 0 && <p>• {stats.pendingApplications} job applications pending review</p>}
+                                {(stats.enrollments?.pending || 0) > 0 && <p>• {stats.enrollments.pending} training enrollments pending approval</p>}
+                                {(stats.unreadInquiries || 0) > 0 && <p>• {stats.unreadInquiries} unread inquiries</p>}
                             </div>
                         </div>
                     </div>
@@ -115,12 +163,9 @@ const SuperAdminDashboard = ({ user }) => {
                     {/* Left Column - Stats & Financial */}
                     <div className="space-y-6">
                         <FinancialCard
-                            title="Total Revenue"
-                            amount={stats.totalRevenue || 0}
-                            subtitle={`Weekly: GHS ${weeklyRevenue}`}
-                            trend={weeklyGrowth}
-                            icon={CreditCard}
-                            color="#10b981"
+                            totalRevenue={stats.totalRevenue || 0}
+                            weeklyRevenue={weeklyRevenue}
+                            weeklyGrowth={weeklyGrowth}
                         />
 
                         <StatCard
@@ -138,7 +183,7 @@ const SuperAdminDashboard = ({ user }) => {
                             subtitle="Awaiting verification"
                             icon={AlertCircle}
                             color="#f59e0b"
-                            alert={stats.pendingKYC > 0}
+                            alert={(stats.pendingKYC || 0) > 0}
                         />
                     </div>
 
@@ -160,7 +205,7 @@ const SuperAdminDashboard = ({ user }) => {
                             subtitle={`${stats.enrollments?.pending || 0} pending approval`}
                             icon={GraduationCap}
                             color="#8b5cf6"
-                            alert={stats.enrollments?.pending > 0}
+                            alert={(stats.enrollments?.pending || 0) > 0}
                         />
 
                         <StatCard
@@ -169,7 +214,7 @@ const SuperAdminDashboard = ({ user }) => {
                             subtitle={`From ${stats.activeJobs || 0} active jobs`}
                             icon={Briefcase}
                             color="#3b82f6"
-                            alert={stats.pendingApplications > 0}
+                            alert={(stats.pendingApplications || 0) > 0}
                         />
 
                         <StatCard
@@ -178,7 +223,7 @@ const SuperAdminDashboard = ({ user }) => {
                             subtitle={`${stats.unreadInquiries || 0} unread`}
                             icon={MessageSquare}
                             color="#ef4444"
-                            alert={stats.unreadInquiries > 0}
+                            alert={(stats.unreadInquiries || 0) > 0}
                         />
                     </div>
                 </div>
@@ -194,7 +239,7 @@ const SuperAdminDashboard = ({ user }) => {
                                 <QuickActionCard
                                     key={index}
                                     title={action.title}
-                                    count={action.count}
+                                    count={action.count || 0}
                                     color={action.color}
                                     onClick={() => navigate(action.path)}
                                 />
