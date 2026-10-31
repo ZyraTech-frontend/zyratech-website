@@ -1,6 +1,6 @@
-/**
- * StatCard Component
- * Displays a single metric with icon, value, and trend
+﻿/**
+ * StatCard Component - Fixed to match dashboard usage
+ * Displays a single metric with icon, value, subtitle, and optional trend
  */
 
 import React from 'react';
@@ -8,43 +8,39 @@ import { TrendingUp, TrendingDown } from 'lucide-react';
 
 const StatCard = ({ 
   icon: Icon, 
-  label, 
+  title,  // Changed from 'label' to match usage
+  subtitle,  // Added subtitle prop
   value, 
-  trend, 
-  trendValue,
-  color = 'blue',
+  trend,  // trend value as number
+  color = '#3b82f6',  // Now accepts hex color
+  alert = false,  // Added alert prop
   onClick 
 }) => {
-  const colorClasses = {
-    blue: 'bg-blue-50 text-blue-600',
-    green: 'bg-green-50 text-green-600',
-    purple: 'bg-purple-50 text-purple-600',
-    orange: 'bg-orange-50 text-orange-600',
-    red: 'bg-red-50 text-red-600',
-    cyan: 'bg-cyan-50 text-cyan-600',
-  };
-
-  const isPositive = trend === 'up';
+  const isPositive = trend && trend > 0;
 
   return (
     <div 
-      className={`bg-white rounded-xl p-4 border border-gray-100 hover:border-${color}-200 transition-all duration-200 hover:shadow-md ${onClick ? 'cursor-pointer' : ''}`}
+      className={`bg-white rounded-xl p-5 border ${alert ? 'border-amber-300' : 'border-gray-100'} shadow-sm hover:shadow-md transition-all duration-200 ${onClick ? 'cursor-pointer' : ''}`}
       onClick={onClick}
     >
       <div className="flex items-start justify-between mb-3">
-        <div className={`w-10 h-10 rounded-lg ${colorClasses[color]} flex items-center justify-center`}>
-          <Icon size={20} />
+        <div 
+          className="w-12 h-12 rounded-lg flex items-center justify-center"
+          style={{ backgroundColor: `${color}15`, color: color }}
+        >
+          {Icon && <Icon size={24} />}
         </div>
-        {trendValue && (
-          <div className={`flex items-center gap-1 text-xs font-semibold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-            {isPositive ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-            {trendValue}
+        {trend !== undefined && trend !== null && (
+          <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${isPositive ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'}`}>
+            {isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+            {Math.abs(trend).toFixed(1)}%
           </div>
         )}
       </div>
       <div>
-        <p className="text-gray-500 text-xs font-medium mb-1">{label}</p>
-        <p className="text-2xl font-bold text-gray-900">{value}</p>
+        <p className="text-gray-500 text-xs font-medium mb-1">{title}</p>
+        <p className="text-2xl font-bold text-gray-900 mb-1">{value?.toLocaleString() || 0}</p>
+        {subtitle && <p className="text-xs text-gray-500">{subtitle}</p>}
       </div>
     </div>
   );
