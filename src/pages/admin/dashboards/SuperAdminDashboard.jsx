@@ -1,5 +1,5 @@
 ﻿/**
- * Super Admin Dashboard - Enhanced with comprehensive metrics
+ * Super Admin Dashboard - Enhanced with Pending Actions and Recent Activity
  * Fixed: Safe defaults, error handling, proper guards for toLocaleString
  */
 
@@ -7,14 +7,15 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Users, GraduationCap, Briefcase, AlertCircle, 
-    MessageSquare, CreditCard, Handshake, TrendingUp, RefreshCw
+    MessageSquare, CreditCard, RefreshCw
 } from 'lucide-react';
 
 import StatCard from '../../../components/admin/dashboard/StatCard';
 import FinancialCard from '../../../components/admin/dashboard/FinancialCard';
 import ChartCard from '../../../components/admin/dashboard/ChartCard';
-import ActivityTable from '../../../components/admin/dashboard/ActivityTable';
 import QuickActionCard from '../../../components/admin/dashboard/QuickActionCard';
+import PendingActionsCard from '../../../components/admin/dashboard/PendingActionsCard';
+import RecentActivityCard from '../../../components/admin/dashboard/RecentActivityCard';
 
 import dashboardService from '../../../services/dashboardService';
 
@@ -47,6 +48,7 @@ const SuperAdminDashboard = ({ user }) => {
             approvedPartnerships: 0
         },
         recentActivity: [],
+        pendingActions: [],
         revenueChart: [],
         quickActions: []
     });
@@ -95,6 +97,7 @@ const SuperAdminDashboard = ({ user }) => {
     const stats = dashboardData?.stats || {};
     const revenueChart = dashboardData?.revenueChart || [];
     const recentActivity = dashboardData?.recentActivity || [];
+    const pendingActions = dashboardData?.pendingActions || [];
     const quickActions = dashboardData?.quickActions || [];
 
     const weeklyRevenue = stats.totalRevenue ? (Number(stats.totalRevenue) * 0.08).toFixed(0) : 0;
@@ -228,23 +231,25 @@ const SuperAdminDashboard = ({ user }) => {
                     </div>
                 </div>
 
-                {/* Bottom Section - Activity & Quick Actions */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <ActivityTable activities={recentActivity} />
-                    
-                    <div>
-                        <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-                        <div className="grid grid-cols-2 gap-4">
-                            {quickActions.map((action, index) => (
-                                <QuickActionCard
-                                    key={index}
-                                    title={action.title}
-                                    count={action.count || 0}
-                                    color={action.color}
-                                    onClick={() => navigate(action.path)}
-                                />
-                            ))}
-                        </div>
+                {/* Bottom Section - Pending Actions, Recent Activity & Quick Actions */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <PendingActionsCard actions={pendingActions} />
+                    <RecentActivityCard activities={recentActivity} />
+                </div>
+
+                {/* Quick Actions Grid */}
+                <div>
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {quickActions.map((action, index) => (
+                            <QuickActionCard
+                                key={index}
+                                title={action.title}
+                                count={action.count || 0}
+                                color={action.color}
+                                onClick={() => navigate(action.path)}
+                            />
+                        ))}
                     </div>
                 </div>
             </div>

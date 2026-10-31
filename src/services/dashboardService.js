@@ -10,6 +10,101 @@ import userService from './userService';
 import { trainingApplicationService } from './trainingApplicationService';
 import jobsService from './jobsService';
 
+// Helper: Generate pending actions from various sources
+const getPendingActions = (payments, inquiries, enrollments, users, jobs, partnerships) => {
+  const actions = [];
+  const now = new Date();
+
+  // Add pending job applications
+  if (Array.isArray(jobs)) {
+    jobs.forEach(job => {
+      const pendingApplicants = job.applicants?.filter(a => a.status === 'pending') || [];
+      pendingApplicants.slice(0, 2).forEach(applicant => {
+        actions.push({
+          title: `New Job Application: ${job.title || 'Position'}`,
+          category: 'Applications',
+          priority: 'high',
+          time: getRelativeTime(applicant.appliedAt || applicant.createdAt),
+          timestamp: applicant.appliedAt || applicant.createdAt
+        });
+      });
+    });
+  }
+
+  // Add pending inquiries
+  if (Array.isArray(inquiries)) {
+    inquiries
+      .filter(i => i.status === 'new' || i.status === 'unread' || i.status === 'pending')
+      .slice(0, 2)
+      .forEach(inquiry => {
+        actions.push({
+          title: `${inquiry.subject || 'Contact Form Inquiry'}`,
+          category: 'Contact Form',
+          priority: 'medium',
+          time: getRelativeTime(inquiry.createdAt || inquiry.submittedAt),
+          timestamp: inquiry.createdAt || inquiry.submittedAt
+        });
+      });
+  }
+
+  // Add pending enrollments
+  if (Array.isArray(enrollments)) {
+    enrollments
+      .filter(e => e.status === 'pending')
+      .slice(0, 2)
+      .forEach(enrollment => {
+        actions.push({
+          title: `Course Enrollment: ${enrollment.courseName || 'Training Program'}`,
+          category: 'Training',
+          priority: 'medium',
+          time: getRelativeTime(enrollment.createdAt),
+          timestamp: enrollment.createdAt
+        });
+      });
+  }
+
+  // Add pending partnerships
+  if (Array.isArray(partnerships)) {
+    partnerships
+      .filter(p => p.status === 'pending')
+      .slice(0, 1)
+      .forEach(partnership => {
+        actions.push({
+          title: `Partnership Application: ${partnership.organizationName || partnership.companyName || 'Organization'}`,
+          category: 'Partnerships',
+          priority: 'medium',
+          time: getRelativeTime(partnership.createdAt),
+          timestamp: partnership.createdAt
+        });
+      });
+  }
+
+  // Sort by timestamp and return top 6
+  return actions
+    .filter(a => a.timestamp)
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+    .slice(0, 6);
+};
+
+// Helper: Format relative time
+const getRelativeTime = (timestamp) => {
+  if (!timestamp) return 'Just now';
+  
+  const now = new Date();
+  const time = new Date(timestamp);
+  const diffMs = now - time;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+  
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins} mins ago`;
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return `${diffDays} days ago`;
+  return time.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+};
+
 // Helper: Enhanced recent activity with mixed event types
 const getRecentActivity = (payments, inquiries, enrollments, users) => {
   const activities = [];
@@ -20,6 +115,7 @@ const getRecentActivity = (payments, inquiries, enrollments, users) => {
       activities.push({
         type: 'payment',
         title: `Payment received: $${payment.amount || 0}`,
+        description: payment.courseName || payment.description || 'Payment processed',
         user: payment.userName || payment.payerName || 'Unknown',
         timestamp: payment.createdAt || payment.paidAt,
         status: payment.status
@@ -32,7 +128,8 @@ const getRecentActivity = (payments, inquiries, enrollments, users) => {
     inquiries.slice(0, 5).forEach(inquiry => {
       activities.push({
         type: 'inquiry',
-        title: `New inquiry: ${inquiry.subject || 'No subject'}`,
+        title: 'New contact form submission',
+        description: inquiry.subject || 'General inquiry',
         user: inquiry.name || 'Unknown',
         timestamp: inquiry.createdAt || inquiry.submittedAt,
         status: inquiry.status || 'new'
@@ -45,7 +142,8 @@ const getRecentActivity = (payments, inquiries, enrollments, users) => {
     enrollments.slice(0, 5).forEach(enrollment => {
       activities.push({
         type: 'enrollment',
-        title: `Training application: ${enrollment.courseName || enrollment.trainingId || 'Unknown'}`,
+        title: 'Enrollment application received',
+        description: enrollment.courseName || enrollment.trainingId || 'Training program',
         user: enrollment.userName || enrollment.applicantName || 'Unknown',
         timestamp: enrollment.createdAt || enrollment.submittedAt,
         status: enrollment.status
@@ -59,7 +157,8 @@ const getRecentActivity = (payments, inquiries, enrollments, users) => {
       if (user.createdAt) {
         activities.push({
           type: 'user',
-          title: `New user registered`,
+          title: 'New user registered',
+          description: user.email || 'User account created',
           user: user.name || user.firstName || user.email || 'Unknown',
           timestamp: user.createdAt,
           status: user.kycStatus || user.verificationStatus || 'pending'
@@ -205,6 +304,7 @@ const getDashboardData = async () => {
     return {
       stats,
       recentActivity: getRecentActivity(payments, inquiries, enrollments, users),
+      pendingActions: getPendingActions(payments, inquiries, enrollments, users, jobs, partnerships),
       revenueChart: getRevenueChart(payments),
       quickActions: [
         { title: 'Pending KYC', count: stats.pendingKYC || 0, path: '/admin/users', color: '#f59e0b' },
@@ -240,6 +340,7 @@ const getDashboardData = async () => {
         approvedPartnerships: 0
       },
       recentActivity: [],
+      pendingActions: [],
       revenueChart: [],
       quickActions: []
     };
