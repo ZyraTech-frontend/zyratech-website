@@ -1,5 +1,5 @@
 ﻿/**
- * Super Admin Dashboard - Enhanced with Pending Actions and Recent Activity
+ * Super Admin Dashboard - Enhanced with System Health, User Engagement, Revenue Breakdown
  * Fixed: Safe defaults, error handling, proper guards for toLocaleString
  */
 
@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Users, GraduationCap, Briefcase, AlertCircle, 
-    MessageSquare, CreditCard, RefreshCw
+    MessageSquare, RefreshCw
 } from 'lucide-react';
 
 import StatCard from '../../../components/admin/dashboard/StatCard';
@@ -16,6 +16,9 @@ import ChartCard from '../../../components/admin/dashboard/ChartCard';
 import QuickActionCard from '../../../components/admin/dashboard/QuickActionCard';
 import PendingActionsCard from '../../../components/admin/dashboard/PendingActionsCard';
 import RecentActivityCard from '../../../components/admin/dashboard/RecentActivityCard';
+import SystemHealthCard from '../../../components/admin/dashboard/SystemHealthCard';
+import UserEngagementCard from '../../../components/admin/dashboard/UserEngagementCard';
+import RevenueBreakdownCard from '../../../components/admin/dashboard/RevenueBreakdownCard';
 
 import dashboardService from '../../../services/dashboardService';
 
@@ -50,6 +53,9 @@ const SuperAdminDashboard = ({ user }) => {
         recentActivity: [],
         pendingActions: [],
         revenueChart: [],
+        systemHealth: {},
+        userEngagement: {},
+        revenueBreakdown: {},
         quickActions: []
     });
     
@@ -99,6 +105,9 @@ const SuperAdminDashboard = ({ user }) => {
     const recentActivity = dashboardData?.recentActivity || [];
     const pendingActions = dashboardData?.pendingActions || [];
     const quickActions = dashboardData?.quickActions || [];
+    const systemHealth = dashboardData?.systemHealth || {};
+    const userEngagement = dashboardData?.userEngagement || {};
+    const revenueBreakdown = dashboardData?.revenueBreakdown || {};
 
     const weeklyRevenue = stats.totalRevenue ? (Number(stats.totalRevenue) * 0.08).toFixed(0) : 0;
     const weeklyGrowth = 12.5;
@@ -160,6 +169,13 @@ const SuperAdminDashboard = ({ user }) => {
                         </div>
                     </div>
                 )}
+
+                {/* Top Row - System Health & User Engagement */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                    <SystemHealthCard health={systemHealth} />
+                    <UserEngagementCard engagement={userEngagement} />
+                    <RevenueBreakdownCard breakdown={revenueBreakdown} />
+                </div>
 
                 {/* Main Grid */}
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
@@ -231,7 +247,7 @@ const SuperAdminDashboard = ({ user }) => {
                     </div>
                 </div>
 
-                {/* Bottom Section - Pending Actions, Recent Activity & Quick Actions */}
+                {/* Bottom Section - Pending Actions, Recent Activity */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                     <PendingActionsCard actions={pendingActions} />
                     <RecentActivityCard activities={recentActivity} />
