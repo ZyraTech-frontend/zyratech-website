@@ -196,7 +196,7 @@ const QAManagementPage = () => {
 
                             <div className="mt-4 space-y-4">
                                 <h3 className="text-sm font-semibold text-gray-500 uppercase">Certificates / Standards</h3>
-                                {data.intro?.standards?.items || [].map((item, idx) => (
+                                {(data.intro?.standards?.items || []).map((item, idx) => (
                                     <div key={idx} className="p-4 bg-gray-50 rounded-lg border border-gray-200 relative group">
                                         <button onClick={() => {
                                             const newItems = [...data.intro?.standards?.items || []];
@@ -235,7 +235,7 @@ const QAManagementPage = () => {
                 {activeTab === 'tools' && (
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {data.tools.map((tool, index) => (
+                            {(data.tools || []).map((tool, index) => (
                                 <div key={tool.id || index} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 relative group">
                                     <button onClick={() => deleteItem('tools', index)} className="absolute top-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <Trash2 size={16} />
@@ -263,7 +263,7 @@ const QAManagementPage = () => {
                 {/* FEATURES TAB (Alternating Sections) */}
                 {activeTab === 'features' && (
                     <div className="space-y-8">
-                        {data.features.map((feature, fIndex) => (
+                        {(data.features || []).map((feature, fIndex) => (
                             <div key={feature.id || fIndex} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 relative group">
                                 <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button onClick={() => deleteItem('features', fIndex)} className="text-gray-400 hover:text-red-500 p-1">
@@ -292,7 +292,7 @@ const QAManagementPage = () => {
 
                                     <div className="space-y-2">
                                         <label className="block text-sm font-medium text-gray-700">Bullet Points</label>
-                                        {feature.content.map((point, cIndex) => (
+                                        {(feature.content || []).map((point, cIndex) => (
                                             <div key={cIndex} className="flex gap-2">
                                                 <input
                                                     type="text"
@@ -324,7 +324,7 @@ const QAManagementPage = () => {
                 {/* FAQ TAB */}
                 {activeTab === 'faq' && (
                     <div className="space-y-6">
-                        {data.faq.map((item, index) => (
+                        {(data.faq || []).map((item, index) => (
                             <div key={item.id || index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 relative group">
                                 <button onClick={() => deleteItem('faq', index)} className="absolute top-4 right-4 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <Trash2 size={18} />
@@ -393,5 +393,6 @@ const SaveButton = ({ onClick, saving }) => (
 );
 
 export default QAManagementPage;
+
 
 
