@@ -436,7 +436,7 @@ const BlogManagementPage = () => {
                                                                         </button>
                                                                     )}
                                                                     <button
-                                                                        onClick={() => navigate(`/admin/blog/edit/${article.id}`)}
+                                                                        onClick={() => { if (!canCreateBlog) { handlePermissionDenied(); return; } navigate(`/admin/blog/edit/${article.id}`); }}
                                                                         title="Edit Article"
                                                                         className="p-1.5 text-gray-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
                                                                     >
@@ -521,6 +521,8 @@ const BlogManagementPage = () => {
 };
 
 export default BlogManagementPage;
+
+
 
 
 
