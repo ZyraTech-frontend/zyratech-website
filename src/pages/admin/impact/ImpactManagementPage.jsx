@@ -339,7 +339,7 @@ const ImpactManagementPage = () => {
                             Export
                         </button>
                         <button
-                            onClick={() => navigate(activeTab === 'metrics' ? '/admin/impact/metrics/new' : '/admin/impact/stories/new')}
+                            onClick={() => { if (!canManageImpact) { handlePermissionDenied(); return; } navigate(activeTab === 'metrics' ? '/admin/impact/metrics/new' : '/admin/impact/stories/new'); }}
                             className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-all font-semibold text-[11px] shadow-sm"
                         >
                             <Plus size={14} />
@@ -487,7 +487,7 @@ const ImpactManagementPage = () => {
                                             </div>
                                         </div>
                                         <button
-                                            onClick={() => handleToggleActive(metric)}
+                                            onClick={() => { if (!canManageImpact) { handlePermissionDenied(); return; } handleToggleActive(metric); }}
                                             className={`px-1.5 py-0.5 rounded text-[9px] font-bold shrink-0 transition-colors ${metric.active ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
                                             title={metric.active ? "Set Inactive" : "Set Active"}
                                         >
@@ -517,7 +517,7 @@ const ImpactManagementPage = () => {
                                     {/* Footer / Actions */}
                                     <div className="flex items-center justify-between pt-2 border-t border-gray-50">
                                         <button
-                                            onClick={() => handleToggleFeatured(metric)}
+                                            onClick={() => { if (!canManageImpact) { handlePermissionDenied(); return; } handleToggleFeatured(metric); }}
                                             className="p-1 hover:bg-amber-50 rounded text-gray-400 hover:text-amber-500 transition-colors"
                                             title={metric.featured ? "Remove Featured" : "Set Featured"}
                                         >
@@ -525,14 +525,14 @@ const ImpactManagementPage = () => {
                                         </button>
                                         <div className="flex items-center gap-0.5">
                                             <button
-                                                onClick={() => handleEditMetric(metric)}
+                                                onClick={() => { if (!canManageImpact) { handlePermissionDenied(); return; } handleEditMetric(metric); }}
                                                 className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors"
                                                 title="Edit Metric"
                                             >
                                                 <Edit size={12} />
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(metric, 'metric')}
+                                                onClick={() => { if (!canManageImpact) { handlePermissionDenied(); return; } handleDelete(metric, 'metric'); }}
                                                 className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"
                                                 title="Delete Metric"
                                             >
@@ -572,7 +572,7 @@ const ImpactManagementPage = () => {
                                         </div>
                                     </div>
                                     <button
-                                        onClick={() => handleToggleActive(story)}
+                                        onClick={() => { if (!canManageImpact) { handlePermissionDenied(); return; } handleToggleActive(story); }}
                                         className={`px-1.5 py-0.5 rounded text-[9px] font-bold shrink-0 transition-colors ${story.active ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
                                         title={story.active ? "Set Inactive" : "Set Active"}
                                     >
@@ -622,21 +622,21 @@ const ImpactManagementPage = () => {
                                     </button>
                                     <div className="flex items-center gap-0.5">
                                         <button
-                                            onClick={() => handleToggleFeatured(story)}
+                                            onClick={() => { if (!canManageImpact) { handlePermissionDenied(); return; } handleToggleFeatured(story); }}
                                             className="p-1 hover:bg-amber-50 rounded text-gray-400 hover:text-amber-500 transition-colors"
                                             title={story.featured ? "Remove Featured" : "Set Featured"}
                                         >
                                             <Star size={12} className={story.featured ? 'text-amber-500 fill-amber-500' : ''} />
                                         </button>
                                         <button
-                                            onClick={() => handleEditStory(story)}
+                                            onClick={() => { if (!canManageImpact) { handlePermissionDenied(); return; } handleEditStory(story); }}
                                             className="p-1 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
                                             title="Edit"
                                         >
                                             <Edit size={12} />
                                         </button>
                                         <button
-                                            onClick={() => handleDelete(story, 'story')}
+                                            onClick={() => { if (!canManageImpact) { handlePermissionDenied(); return; } handleDelete(story, 'story'); }}
                                             className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                                             title="Delete"
                                         >

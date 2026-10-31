@@ -335,7 +335,7 @@ const FaqManagementPage = () => {
                     </div>
                     
                     <button
-                        onClick={handleAddNew}
+                        onClick={() => { if (!canCreateFaq) { handlePermissionDenied(); return; } handleAddNew(); }}
                         className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-all shadow-sm text-xs font-semibold"
                     >
                         <Plus size={14} /> Add FAQ
@@ -446,10 +446,7 @@ const FaqManagementPage = () => {
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <div
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    navigate('/admin/faq/new');
-                                                }}
+                                                onClick={(e) => { e.stopPropagation(); if (!canCreateFaq) { handlePermissionDenied(); return; } navigate('/admin/faq/new'); }}
                                                 className="p-1.5 text-gray-400 hover:text-[#004fa2] hover:bg-blue-50 rounded bg-white border border-gray-100 transition-colors cursor-pointer shadow-sm"
                                                 title="Add FAQ to this category"
                                             >
@@ -510,19 +507,19 @@ const FaqManagementPage = () => {
                                                                     {expandedFaqs[faq.id] ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
                                                                 </button>
                                                                 <button 
-                                                                    onClick={() => handlePublish(faq)} 
+                                                                    onClick={() => { if (!canCreateFaq) { handlePermissionDenied(); return; } handlePublish(faq); }} 
                                                                     className={`p-1 rounded transition-colors ${faq.status === 'published' ? 'hover:bg-amber-50 text-amber-600' : 'hover:bg-green-50 text-green-600'}`}
                                                                     title={faq.status === 'published' ? "Unpublish" : "Publish"}
                                                                 >
                                                                     {faq.status === 'published' ? <Eye size={12} /> : <EyeOff size={12} />}
                                                                 </button>
-                                                                <button onClick={() => handleEdit(faq)} className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors">
+                                                                <button onClick={() => { if (!canCreateFaq) { handlePermissionDenied(); return; } handleEdit(faq); }} className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors">
                                                                     <Edit size={12} />
                                                                 </button>
-                                                                <button onClick={() => handleDuplicate(faq)} className="p-1 hover:bg-purple-50 rounded text-gray-400 hover:text-purple-600 transition-colors">
+                                                                <button onClick={() => { if (!canCreateFaq) { handlePermissionDenied(); return; } handleDuplicate(faq); }} className="p-1 hover:bg-purple-50 rounded text-gray-400 hover:text-purple-600 transition-colors">
                                                                     <Copy size={12} />
                                                                 </button>
-                                                                <button onClick={() => handleDelete(faq)} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors">
+                                                                <button onClick={() => { if (!canCreateFaq) { handlePermissionDenied(); return; } handleDelete(faq); }} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors">
                                                                     <Trash2 size={12} />
                                                                 </button>
                                                             </div>
@@ -557,15 +554,15 @@ const FaqManagementPage = () => {
                                     </div>
                                     <div className="flex items-center gap-0.5">
                                         <button 
-                                            onClick={() => handlePublish(faq)} 
+                                            onClick={() => { if (!canCreateFaq) { handlePermissionDenied(); return; } handlePublish(faq); }} 
                                             className={`p-1 rounded transition-colors ${faq.status === 'published' ? 'hover:bg-amber-50 text-amber-600' : 'hover:bg-green-50 text-green-600'}`}
                                             title={faq.status === 'published' ? "Unpublish" : "Publish"}
                                         >
                                             {faq.status === 'published' ? <Eye size={12} /> : <EyeOff size={12} />}
                                         </button>
-                                        <button onClick={() => handleEdit(faq)} className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors"><Edit size={12} /></button>
-                                        <button onClick={() => handleDuplicate(faq)} className="p-1 hover:bg-purple-50 rounded text-gray-400 hover:text-purple-600 transition-colors"><Copy size={12} /></button>
-                                        <button onClick={() => handleDelete(faq)} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"><Trash2 size={12} /></button>
+                                        <button onClick={() => { if (!canCreateFaq) { handlePermissionDenied(); return; } handleEdit(faq); }} className="p-1 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors"><Edit size={12} /></button>
+                                        <button onClick={() => { if (!canCreateFaq) { handlePermissionDenied(); return; } handleDuplicate(faq); }} className="p-1 hover:bg-purple-50 rounded text-gray-400 hover:text-purple-600 transition-colors"><Copy size={12} /></button>
+                                        <button onClick={() => { if (!canCreateFaq) { handlePermissionDenied(); return; } handleDelete(faq); }} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors"><Trash2 size={12} /></button>
                                     </div>
                                 </div>
                             </div>

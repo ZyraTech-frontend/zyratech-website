@@ -344,7 +344,7 @@ const ProjectsManagementPage = () => {
                     </div>
                     
                     <button
-                        onClick={handleAddNew}
+                        onClick={() => { if (!canCreateProject) { handlePermissionDenied(); return; } handleAddNew(); }}
                         className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-all shadow-sm text-xs font-semibold"
                     >
                         <Plus size={14} /> Add Project
@@ -501,8 +501,8 @@ const ProjectsManagementPage = () => {
                                 <div className="mt-auto flex items-center justify-between pt-2 border-t border-gray-50 px-1">
                                     <div className="flex items-center gap-1">
                                         <button onClick={() => handleView(project)} className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-[#004fa2]"><Eye size={12}/></button>
-                                        <button onClick={() => handleEdit(project)} className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-green-600"><Edit size={12}/></button>
-                                        <button onClick={() => handleDelete(project)} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600"><Trash2 size={12}/></button>
+                                        <button onClick={() => { if (!canCreateProject) { handlePermissionDenied(); return; } handleEdit(project); }} className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-green-600"><Edit size={12}/></button>
+                                        <button onClick={() => { if (!canCreateProject) { handlePermissionDenied(); return; } handleDelete(project); }} className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600"><Trash2 size={12}/></button>
                                     </div>
                                     <a href={project.link || '#'} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-[9px] font-bold text-[#004fa2] hover:underline uppercase bg-blue-50 px-1.5 py-0.5 rounded">
                                         Preview <ExternalLink size={10} />
@@ -590,14 +590,14 @@ const ProjectsManagementPage = () => {
                                                     <Eye size={16} />
                                                 </button>
                                                 <button
-                                                    onClick={() => handleEdit(project)}
+                                                    onClick={() => { if (!canCreateProject) { handlePermissionDenied(); return; } handleEdit(project); }}
                                                     className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                                                     title="Edit Project"
                                                 >
                                                     <Edit size={16} />
                                                 </button>
                                                 <button
-                                                    onClick={() => handleDelete(project)}
+                                                    onClick={() => { if (!canCreateProject) { handlePermissionDenied(); return; } handleDelete(project); }}
                                                     className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                                     title="Delete Project"
                                                 >

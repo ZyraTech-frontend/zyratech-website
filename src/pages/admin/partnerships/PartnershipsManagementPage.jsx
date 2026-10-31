@@ -435,7 +435,7 @@ const PartnershipsManagementPage = () => {
                                         <Eye size={16} />
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(partnership)}
+                                        onClick={() => { if (!canCreatePartnership) { handlePermissionDenied(); return; } handleDelete(partnership); }}
                                         className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                         title="Delete"
                                     >
@@ -443,7 +443,7 @@ const PartnershipsManagementPage = () => {
                                     </button>
                                     <select
                                         value={partnership.status}
-                                        onChange={(e) => handleStatusChange(partnership, e.target.value)}
+                                        onChange={(e) => { if (!canCreatePartnership) { handlePermissionDenied(); return; } handleStatusChange(partnership, e.target.value); }}
                                         className="text-xs px-2 py-1 border border-gray-200 rounded bg-white focus:outline-none focus:ring-1 focus:ring-[#004fa2]"
                                     >
                                         <option value="approved">Mark as Approved</option>
@@ -514,7 +514,7 @@ const PartnershipsManagementPage = () => {
                                                         <Eye size={16} />
                                                     </button>
                                                     <button
-                                                        onClick={() => handleDelete(partnership)}
+                                                        onClick={() => { if (!canCreatePartnership) { handlePermissionDenied(); return; } handleDelete(partnership); }}
                                                         className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                                                         title="Delete"
                                                     >

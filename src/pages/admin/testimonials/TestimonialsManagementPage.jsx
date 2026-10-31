@@ -116,6 +116,10 @@ const AvatarDisplay = ({ name, avatarUrl, size = 'md' }) => {
 
 const TestimonialsManagementPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { userPermissions, userRole } = useAuth();
+    
+    // Permission checks
     const canManageTestimonials = userPermissions?.includes('testimonials') ?? false;
     const handlePermissionDenied = () => {
         dispatch(addNotification({
@@ -126,9 +130,6 @@ const TestimonialsManagementPage = () => {
             duration: 6000
         }));
     };
-    const navigate = useNavigate();
-    const { userPermissions, userRole } = useAuth();
-  const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
     // State management - Initialize as empty array to prevent undefined errors
     const [testimonials, setTestimonials] = useState([]);
@@ -310,7 +311,7 @@ const TestimonialsManagementPage = () => {
                     </div>
                     
                     <button
-                        onClick={handleAddNew}
+                        onClick={() => { if (!canManageTestimonials) { handlePermissionDenied(); return; } handleAddNew(); }}
                         className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#004fa2] text-white rounded-lg hover:bg-blue-800 transition-all shadow-sm text-xs font-semibold"
                     >
                         <Plus size={14} /> Add Testimonial
@@ -441,7 +442,7 @@ const TestimonialsManagementPage = () => {
                                                     <Eye size={16} className="group-hover/btn:scale-110 transition-transform" />
                                                 </button>
                                                 <button 
-                                                    onClick={() => handleEdit(testimonial)} 
+                                                    onClick={() => { if (!canManageTestimonials) { handlePermissionDenied(); return; } handleEdit(testimonial); }} 
                                                     className="p-2 hover:bg-green-100 rounded-lg text-gray-500 hover:text-green-600 transition-all group/btn"
                                                     title="Edit"
                                                 >
@@ -449,7 +450,7 @@ const TestimonialsManagementPage = () => {
                                                 </button>
                                                 {testimonial.status !== 'published' && (
                                                     <button 
-                                                        onClick={() => handlePublish(testimonial)} 
+                                                        onClick={() => { if (!canManageTestimonials) { handlePermissionDenied(); return; } handlePublish(testimonial); }} 
                                                         className="p-2 rounded-lg text-gray-500 hover:bg-emerald-100 hover:text-emerald-600 transition-all group/btn"
                                                         title="Publish"
                                                     >
@@ -459,7 +460,7 @@ const TestimonialsManagementPage = () => {
                                             </div>
                                             <div className="flex items-center gap-1 border-l border-gray-200 pl-2">
                                                 <button 
-                                                    onClick={() => handleToggleFeatured(testimonial)} 
+                                                    onClick={() => { if (!canManageTestimonials) { handlePermissionDenied(); return; } handleToggleFeatured(testimonial); }} 
                                                     className={`p-2 rounded-lg transition-all group/btn ${
                                                         testimonial.isFeatured 
                                                             ? 'bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-600 hover:from-amber-200 hover:to-yellow-200' 
@@ -470,7 +471,7 @@ const TestimonialsManagementPage = () => {
                                                     <Star size={16} className={`${testimonial.isFeatured ? "fill-amber-500" : ""} group-hover/btn:scale-110 transition-transform`} />
                                                 </button>
                                                 <button 
-                                                    onClick={() => handleDelete(testimonial)} 
+                                                    onClick={() => { if (!canManageTestimonials) { handlePermissionDenied(); return; } handleDelete(testimonial); }} 
                                                     className="p-2 hover:bg-red-100 rounded-lg text-gray-500 hover:text-red-600 transition-all group/btn"
                                                     title="Delete"
                                                 >
@@ -507,11 +508,11 @@ const TestimonialsManagementPage = () => {
                                         <StatusBadge status={testimonial.status} />
                                         <div className="flex items-center gap-0.5 border-l border-gray-100 pl-2">
                                             <button onClick={() => handleView(testimonial)} className="p-1.5 hover:bg-blue-50 rounded text-gray-400 hover:text-[#004fa2] transition-colors" title="View"><Eye size={14} /></button>
-                                            <button onClick={() => handleEdit(testimonial)} className="p-1.5 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors" title="Edit"><Edit size={14} /></button>
+                                            <button onClick={() => { if (!canManageTestimonials) { handlePermissionDenied(); return; } handleEdit(testimonial); }} className="p-1.5 hover:bg-green-50 rounded text-gray-400 hover:text-green-600 transition-colors" title="Edit"><Edit size={14} /></button>
                                             {testimonial.status !== 'published' && (
-                                                <button onClick={() => handlePublish(testimonial)} className="p-1.5 hover:bg-emerald-50 rounded text-gray-400 hover:text-emerald-600 transition-colors" title="Publish"><Send size={14} /></button>
+                                                <button onClick={() => { if (!canManageTestimonials) { handlePermissionDenied(); return; } handlePublish(testimonial); }} className="p-1.5 hover:bg-emerald-50 rounded text-gray-400 hover:text-emerald-600 transition-colors" title="Publish"><Send size={14} /></button>
                                             )}
-                                            <button onClick={() => handleDelete(testimonial)} className="p-1.5 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors" title="Delete"><Trash2 size={14} /></button>
+                                            <button onClick={() => { if (!canManageTestimonials) { handlePermissionDenied(); return; } handleDelete(testimonial); }} className="p-1.5 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-colors" title="Delete"><Trash2 size={14} /></button>
                                         </div>
                                     </div>
                                 </div>
@@ -680,7 +681,7 @@ const TestimonialsManagementPage = () => {
                                     Edit
                                 </button>
                                 <button
-                                    onClick={() => handleToggleFeatured(viewingTestimonial)}
+                                    onClick={() => { if (!canManageTestimonials) { handlePermissionDenied(); return; } handleToggleFeatured(viewingTestimonial); }}
                                     className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors font-medium text-sm flex items-center gap-1.5"
                                 >
                                     <Star size={14} className={viewingTestimonial.isFeatured ? 'fill-white' : ''} />
