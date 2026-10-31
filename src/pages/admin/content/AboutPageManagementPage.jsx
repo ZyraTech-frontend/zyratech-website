@@ -184,7 +184,7 @@ const AboutQuoteForm = ({ data, onSubmit, onChange, saving, canCreateContent, ha
                 </div>
             </div>
 
-            <button type="submit" onClick={(e) => { if (!canCreateContent) { handlePermissionDenied(); e.preventDefault(); } }} disabled={saving || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:bg-gray-400">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Quote & Statistics</button>
+            <button type="submit" onClick={(e) => { if (!canCreateContent) { handlePermissionDenied(); e.preventDefault(); } }} disabled={saving || !canCreateContent} className="bg-[#004fa2] text-white px-6 py-2 rounded-lg flex items-center gap-2 mt-4 transition-colors hover:bg-[#003d7a] disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:bg-gray-400">{saving ? <Loader className="animate-spin" size={18} /> : <Save size={18} />} Save Changes</button>
         </form>
     );
 };
@@ -533,6 +533,7 @@ const AboutPageManagementPage = () => {
 };
 
 export default AboutPageManagementPage;
+
 
 
 
