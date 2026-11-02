@@ -95,14 +95,14 @@ const TrainingCoursesPage = () => {
 
     // Fetch courses on mount
     useEffect(() => {
-        dispatch(fetchCourses());
+        dispatch(fetchCourses({ limit: 1000 }));
     }, [dispatch]);
 
     // Refetch courses when page becomes visible (e.g., after navigating back)
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.visibilityState === 'visible') {
-                dispatch(fetchCourses());
+                dispatch(fetchCourses({ limit: 1000 }));
             }
         };
 
