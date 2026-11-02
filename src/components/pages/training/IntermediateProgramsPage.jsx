@@ -38,7 +38,7 @@ const IntermediateProgramsPage = () => {
     const loadCourses = async () => {
       try {
         setError(null);
-        const allCourses = await trainingService.getAllCourses();
+        const allCourses = await trainingService.getAllCourses({ limit: 1000 });
         if (isMounted) {
           const intermediateCourses = Array.isArray(allCourses) 
             ? allCourses.filter(c => (c.category || '').toLowerCase() === 'intermediate')

@@ -39,7 +39,7 @@ const MaturedProgramsPage = () => {
     const loadCourses = async () => {
       try {
         setError(null);
-        const allCourses = await trainingService.getAllCourses();
+        const allCourses = await trainingService.getAllCourses({ limit: 1000 });
         if (isMounted) {
           const maturedCourses = Array.isArray(allCourses) 
             ? allCourses.filter(c => (c.category || '').toLowerCase() === 'matured')
