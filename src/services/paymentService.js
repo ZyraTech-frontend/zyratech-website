@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Payments Service
  * Manage transactions and revenue
  */
@@ -18,44 +18,24 @@ export const paymentService = {
     return response.data.data;
   },
 
-  // Admin: Get all transactions
+  // Admin: Get all transactions with pagination and filters
   getTransactions: async (params = {}) => {
     const response = await api.get('/admin/transactions', { params });
-    return response.data.data;
+    return response.data; // Returns { success, message, data: [...], pagination: {...} }
   },
 
-  // Admin: Get single transaction
-  getTransaction: async (id) => {
-    const response = await api.get(`/admin/transactions/${id}`);
-    return response.data.data;
-  },
-
-  // Super Admin: Refund payment
-  refundPayment: async (transactionId, data) => {
-    const response = await api.post(`/admin/transactions/${transactionId}/refund`, data);
-    return response.data.data;
-  },
-
-  // Admin: Get invoices
-  getInvoices: async (params = {}) => {
-    const response = await api.get('/admin/invoices', { params });
-    return response.data.data;
-  },
-
-  // Admin: Download invoice
-  downloadInvoice: async (invoiceId) => {
-    const response = await api.get(`/admin/invoices/${invoiceId}/download`, {
-      responseType: 'blob'
+  // Admin: Get single transaction by reference
+  getTransactionByReference: async (reference) => {
+    const response = await api.get('/admin/transactions', {
+      params: { search: reference }
     });
     return response.data;
   },
 
-  // Super Admin: Get revenue stats
-  getRevenueStats: async (period = 'month') => {
-    const response = await api.get('/admin/revenue-stats', {
-      params: { period }
-    });
-    return response.data.data;
+  // Admin: Refund payment
+  refundPayment: async (reference, data) => {
+    const response = await api.post(`/admin/transactions/${reference}/refund`, data);
+    return response.data;
   }
 };
 

@@ -1,4 +1,4 @@
-name: CI — Build Check
+﻿name: CI — Build Check
 
 on:
   push:
@@ -28,7 +28,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run lint
+      - name: Run lint (errors only)
+        run: npx eslint . --quiet || true
+
+      - name: Run lint (full)
         run: npm run lint
 
       - name: Build
