@@ -355,7 +355,6 @@ const TrainingCoursesPage = () => {
                                 <X size={16} />
                                 Reset
                             </button>
-                        )}
                     </div>
 
                     {/* Active filter badges */}
@@ -367,15 +366,12 @@ const TrainingCoursesPage = () => {
                                     {CATEGORY_CONFIG[selectedCategory]?.label}
                                     <button onClick={() => setSelectedCategory('all')} className="ml-1.5 hover:opacity-70">×</button>
                                 </span>
-                            )}
                             {selectedLevel !== 'all' && (
                                 <span className="px-2.5 py-1 rounded-full text-xs font-medium border bg-gray-100 text-gray-700 border-gray-200">
                                     {selectedLevel}
                                     <button onClick={() => setSelectedLevel('all')} className="ml-1.5 hover:opacity-70">×</button>
                                 </span>
-                            )}
                         </div>
-                    )}
                 </div>
 
                 {/* Course Cards Grid */}
@@ -433,7 +429,6 @@ const TrainingCoursesPage = () => {
                                             <div className="absolute top-2 left-2">
                                                 <CourseBadge type={course.badge}>{course.badge}</CourseBadge>
                                             </div>
-                                        )}
 
                                         {/* Publish status */}
                                         <div className="absolute top-2 right-2">
@@ -445,7 +440,6 @@ const TrainingCoursesPage = () => {
                                                 <span className="px-2 py-1 bg-gray-500 text-white text-[10px] font-bold rounded-full flex items-center gap-1">
                                                     <EyeOff size={10} /> Draft
                                                 </span>
-                                            )}
                                         </div>
                                     </div>
 
@@ -458,13 +452,11 @@ const TrainingCoursesPage = () => {
                                                     }`}>
                                                     {CATEGORY_CONFIG[course.category.toLowerCase()]?.label || course.category}
                                                 </span>
-                                            )}
                                             {course.duration && (
                                                 <div className="flex items-center gap-1 text-gray-500">
                                                     <Clock size={12} />
                                                     <span className="text-[10px] font-medium">{course.duration}</span>
                                                 </div>
-                                            )}
                                         </div>
 
                                         {/* Course Title */}
@@ -477,7 +469,6 @@ const TrainingCoursesPage = () => {
                                             <p className="text-xs text-gray-600 line-clamp-2 mb-3 flex-1">
                                                 {course.shortDescription}
                                             </p>
-                                        )}
 
                                         {/* Meta Info */}
                                         <div className="flex items-center justify-between text-xs text-gray-500 mb-3 pb-3 border-b border-gray-100">
@@ -491,7 +482,6 @@ const TrainingCoursesPage = () => {
                                                     <span className="font-medium text-gray-900">{course.rating}</span>
                                                     <span className="text-gray-400">({course.reviews || 0})</span>
                                                 </div>
-                                            )}
                                         </div>
 
                                         {/* Price and Actions */}
@@ -545,7 +535,6 @@ const TrainingCoursesPage = () => {
                                                                 <Eye size={14} />
                                                                 Publish
                                                             </>
-                                                        )}
                                                     </button>
                                                     <div className="border-t border-gray-100 my-1"></div>
                                                     <button
@@ -617,9 +606,6 @@ const TrainingCoursesPage = () => {
                                     </button>
                                 </div>
                             </div>
-                        )}
                     </>
-                )}
 
-                )}
 
