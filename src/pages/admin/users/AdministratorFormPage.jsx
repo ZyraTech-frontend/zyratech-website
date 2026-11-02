@@ -638,7 +638,7 @@ const AdministratorFormPage = () => {
                 <div className="pt-2 flex items-center justify-between text-xs text-gray-500 font-medium">
                   <span>Selected: <strong className="text-gray-900">{formData.permissions.length}</strong> modules</span>
                   {formData.permissions.length === 0 && (
-                    <span className="text-amber-600 font-semibold">âš ï¸ At least 1 permission required</span>
+                    <span className="text-amber-600 font-semibold">âš ï¸ At least 1 permission required</span>
                   )}
                 </div>
               </div>
@@ -861,7 +861,7 @@ const AdministratorFormPage = () => {
                       })}
                     </div>
                   ) : (
-                    <p className="text-xs text-amber-600 font-medium">âš ï¸ No permissions selected (At least 1 required)</p>
+                    <p className="text-xs text-amber-600 font-medium">âš ï¸ No permissions selected (At least 1 required)</p>
                   )}
                 </div>
               </div>
@@ -1048,6 +1048,7 @@ const AdministratorFormPage = () => {
 };
 
 export default AdministratorFormPage;
+
 
 
 
