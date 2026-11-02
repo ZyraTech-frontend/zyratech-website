@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testimonials Management Page (Admin)
  * Professional admin interface for managing customer testimonials
  */
@@ -120,7 +120,7 @@ const TestimonialsManagementPage = () => {
     const { userPermissions, userRole } = useAuth();
     
     // Permission checks
-    const canManageTestimonials = userPermissions?.includes('testimonials') ?? false;
+    const canManageTestimonials = userRole === 'super_admin' || (userPermissions?.includes('testimonials') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',

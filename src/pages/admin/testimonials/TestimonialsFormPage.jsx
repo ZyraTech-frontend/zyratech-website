@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testimonials Form Page (Admin)
  * Create and edit testimonials - matches backend API spec
  * Backend expects: name, content, role, organization, avatarUrl, rating, isFeatured, status
@@ -24,9 +24,9 @@ import testimonialsService from '../../../services/testimonialsService';
 export default function TestimonialsFormPage() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
     const dispatch = useDispatch();
-    const canCreateTestimonials = userPermissions?.includes('testimonials') ?? false;
+    const canCreateTestimonials = userRole === 'super_admin' || (userPermissions?.includes('testimonials') ?? false);
 
     const handlePermissionDenied = () => {
         dispatch(addNotification({

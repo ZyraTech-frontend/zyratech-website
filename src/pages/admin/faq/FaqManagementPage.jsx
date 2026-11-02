@@ -1,4 +1,4 @@
-/**
+﻿/**
  * FAQ Management Page (Admin)
  * Professional admin interface for managing frequently asked questions
  */
@@ -109,7 +109,7 @@ const FaqManagementPage = () => {
     const { userPermissions, userRole } = useAuth();
 
     // Permission checks
-    const canCreateFaq = userPermissions?.includes('content') ?? false;
+    const canCreateFaq = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',

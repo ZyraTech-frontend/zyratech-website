@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Timeline Item Add/Edit Form Page
  * Dedicated page for creating and editing timeline items
  */
@@ -34,10 +34,10 @@ const TIMELINE_ICONS = [
 
 const TimelineItemFormPage = () => {
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
     
     // Permission checks
-    const canContent = userPermissions?.includes('content') ?? false;
+    const canContent = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
 
     const handlePermissionDenied = () => {
         dispatch(addNotification({

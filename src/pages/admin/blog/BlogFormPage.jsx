@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Blog Article Form Page (Admin)
  * Form for creating and editing blog articles with live backend API & image upload.
  */
@@ -33,10 +33,10 @@ const CATEGORIES = [
 
 const BlogFormPage = () => {
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
     
     // Permission checks
-    const canBlogArticles = userPermissions?.includes('blog_articles') ?? false;
+    const canBlogArticles = userRole === 'super_admin' || (userPermissions?.includes('blog_articles') ?? false);
 
     const handlePermissionDenied = () => {
         dispatch(addNotification({

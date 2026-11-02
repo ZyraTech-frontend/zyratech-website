@@ -1,4 +1,4 @@
-
+﻿
 /**
  * About Quote Management Page
  * Admin interface to manage the "About ZyraTech" quote and stats section on homepage
@@ -19,10 +19,10 @@ import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlic
 
 const AboutQuoteManagementPage = () => {
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
 
     // Permission checks
-    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const canCreateContent = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',
@@ -54,15 +54,15 @@ const AboutQuoteManagementPage = () => {
             try {
                 setLoading(true);
                 const { data } = await contentService.getAboutQuote();
-                console.log('📊 AboutQuoteManagementPage - API response:', data); // DEBUG
+                console.log('ðŸ“Š AboutQuoteManagementPage - API response:', data); // DEBUG
                 
                 // API returns array, extract first item
                 if (data && Array.isArray(data) && data.length > 0) {
-                    console.log('✅ Setting form from array:', data[0]); // DEBUG
+                    console.log('âœ… Setting form from array:', data[0]); // DEBUG
                     setFormData(data[0]);
                 } else if (data && !Array.isArray(data)) {
                     // Fallback: if data is already an object
-                    console.log('✅ Setting form from object:', data); // DEBUG
+                    console.log('âœ… Setting form from object:', data); // DEBUG
                     setFormData(data);
                 }
             } catch (error) {

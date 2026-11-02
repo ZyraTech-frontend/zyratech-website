@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Settings Page (Super Admin Only)
  * Manage site-wide settings, branding, payment keys, etc.
  */
@@ -43,7 +43,7 @@ const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState('branding');
   const [formData, setFormData] = useState({});
   // Permission checks
-  const canManageSettings = userPermissions?.includes('settings') ?? false;
+  const canManageSettings = userRole === 'super_admin' || (userPermissions?.includes('settings') ?? false);
   const handlePermissionDenied = () => {
     dispatch(addNotification({
       type: 'error',
@@ -1237,7 +1237,7 @@ const SettingsPage = () => {
                           value={formData.smtpPassword || ''}
                           onChange={(e) => setFormData({ ...formData, smtpPassword: e.target.value })}
                           className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400"
-                          placeholder="••••••••"
+                          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                         />
                       </div>
                     </div>

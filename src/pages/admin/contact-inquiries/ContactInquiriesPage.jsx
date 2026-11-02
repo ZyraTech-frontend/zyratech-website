@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Search, Eye, Trash2, RefreshCw, Filter, Mail, Phone, Calendar } from 'lucide-react';
@@ -11,11 +11,11 @@ import ConfirmDialog from '../../../components/admin/shared/ConfirmDialog';
 const ContactInquiriesPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { userPermissions } = useAuth();
+  const { userPermissions, userRole } = useAuth();
 
   // Permission checks
-  const canViewInquiries = userPermissions?.includes('contact_inquiries') ?? false;
-  const canDeleteInquiries = userPermissions?.includes('contact_inquiries') ?? false;
+  const canViewInquiries = userRole === 'super_admin' || (userPermissions?.includes('contact_inquiries') ?? false);
+  const canDeleteInquiries = userRole === 'super_admin' || (userPermissions?.includes('contact_inquiries') ?? false);
 
   const handlePermissionDenied = (action) => {
     dispatch(addNotification({

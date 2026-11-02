@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Jobs Management Page (Admin)
  * Professional admin interface for managing job listings and applications
  */
@@ -80,7 +80,7 @@ const JobsManagementPage = () => {
     const { userPermissions, userRole } = useAuth();
 
     // Permission checks
-    const canCreateJob = userPermissions?.includes('jobs') ?? false;
+    const canCreateJob = userRole === 'super_admin' || (userPermissions?.includes('jobs') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',
@@ -146,21 +146,21 @@ const JobsManagementPage = () => {
         try {
           setCountsLoading(true);
           const counts = {};
-          console.log('🔄 Starting to fetch application counts for', jobs.length, 'jobs');
+          console.log('ðŸ”„ Starting to fetch application counts for', jobs.length, 'jobs');
           console.log('First job ID:', jobs[0]?.id, 'Type:', typeof jobs[0]?.id);
           
           // Fetch applications count for each job - do it in parallel
           const countPromises = jobs.map(async (job) => {
             try {
-              console.log(`📋 Fetching applications for job ${job.id} (${job.title})...`);
+              console.log(`ðŸ“‹ Fetching applications for job ${job.id} (${job.title})...`);
               const jobApps = await jobsService.getJobApplications(job.id);
               console.log(`Response for job ${job.id}:`, jobApps);
               const count = Array.isArray(jobApps) ? jobApps.length : 0;
-              console.log(`✅ Job ${job.id} (${job.title}): ${count} applications`);
+              console.log(`âœ… Job ${job.id} (${job.title}): ${count} applications`);
               counts[job.id] = count;
               return count;
             } catch (err) {
-              console.error(`❌ Failed to fetch applications count for job ${job.id}:`, err.message);
+              console.error(`âŒ Failed to fetch applications count for job ${job.id}:`, err.message);
               // Fallback: default to 0 for now, data will load when user clicks Applications tab
               counts[job.id] = 0;
               return 0;
@@ -169,14 +169,14 @@ const JobsManagementPage = () => {
           
           // Wait for all to complete
           const results = await Promise.all(countPromises);
-          console.log('🔄 Fetch results:', results);
+          console.log('ðŸ”„ Fetch results:', results);
           
           if (isMounted) {
             setApplicationCounts(counts);
-            console.log('✅ Final application counts:', counts);
+            console.log('âœ… Final application counts:', counts);
           }
         } catch (err) {
-          console.error('❌ Failed to fetch application counts:', err);
+          console.error('âŒ Failed to fetch application counts:', err);
           if (isMounted) {
             setApplicationCounts({});
           }
@@ -435,7 +435,7 @@ const JobsManagementPage = () => {
                         </div>
                         <div>
                             <h1 className="text-[11px] md:text-base font-bold text-gray-900 leading-tight">Recruitment Hub</h1>
-                            <p className="text-[10px] text-gray-500">Post Jobs • Track Applications • Manage Candidates</p>
+                            <p className="text-[10px] text-gray-500">Post Jobs â€¢ Track Applications â€¢ Manage Candidates</p>
                         </div>
                     </div>
                     

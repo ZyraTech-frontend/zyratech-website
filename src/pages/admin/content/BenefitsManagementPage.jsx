@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Benefits Management Page
  * Standalone page for managing "Why Choose Us" benefits
  */
@@ -23,10 +23,10 @@ import { useActivityLogger } from '../../../hooks/useActivityLogger';
 const BenefitsManagementPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
 
     // Permission checks for content
-    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const canCreateContent = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',

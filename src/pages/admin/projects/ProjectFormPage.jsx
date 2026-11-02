@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Project Form Page (Admin)
  * For creating and editing portfolio projects
  */
@@ -35,7 +35,7 @@ const CATEGORIES = [
     'FinTech'
 ];
 
-// ⚠️ IMPORTANT: Only these 3 status values are valid for the API
+// âš ï¸ IMPORTANT: Only these 3 status values are valid for the API
 const STATUSES = [
     { value: 'draft', label: 'Draft (In Progress)' },
     { value: 'published', label: 'Published (Live)' },
@@ -47,7 +47,7 @@ const ProjectFormPage = () => {
     const { userPermissions, userRole } = useAuth();
     
     // Permission checks
-    const canProjects = userPermissions?.includes('projects') ?? false;
+    const canProjects = userRole === 'super_admin' || (userPermissions?.includes('projects') ?? false);
 
     const handlePermissionDenied = () => {
         dispatch(addNotification({
@@ -221,7 +221,7 @@ const ProjectFormPage = () => {
             newErrors.progress = 'Progress must be between 0 and 100';
         }
 
-        // ⚠️ IMPORTANT: status must ONLY be "draft", "published", or "archived"
+        // âš ï¸ IMPORTANT: status must ONLY be "draft", "published", or "archived"
         const validStatuses = ['draft', 'published', 'archived'];
         if (!validStatuses.includes(formData.status)) {
             newErrors.status = 'Invalid status - must be draft, published, or archived';
@@ -259,10 +259,10 @@ const ProjectFormPage = () => {
                 description: formData.description.trim(),
                 status: formData.status, // "draft" or "published"
                 image: formData.image.trim(), // Backend maps this to coverImageUrl
-                projectLink: formData.link.trim() || null, // CHANGED: link → projectLink
+                projectLink: formData.link.trim() || null, // CHANGED: link â†’ projectLink
                 featured: formData.featured,
                 technologies: formData.technologies,
-                teamSize: formData.team, // CHANGED: team → teamSize
+                teamSize: formData.team, // CHANGED: team â†’ teamSize
                 startDate: formData.startDate,
                 progress: formData.progress
             };
@@ -393,7 +393,7 @@ const ProjectFormPage = () => {
                                     ))}
                                 </select>
                                 <p className="text-[10px] text-gray-500 mt-1">
-                                    ⚠️ Backend accepts only: draft, published, or archived
+                                    âš ï¸ Backend accepts only: draft, published, or archived
                                 </p>
                             </div>
 

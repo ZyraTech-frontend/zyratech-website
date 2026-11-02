@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Service Add/Edit Form Page
  * Dedicated page for creating and editing services
  */
@@ -58,10 +58,10 @@ const ICON_OPTIONS = [
 
 const ServiceFormPage = () => {
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
     
     // Permission checks
-    const canContent = userPermissions?.includes('content') ?? false;
+    const canContent = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
 
     const handlePermissionDenied = () => {
         dispatch(addNotification({

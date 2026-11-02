@@ -1,4 +1,4 @@
-
+﻿
 /**
  * Partnership Page Content Management
  */
@@ -413,10 +413,10 @@ const StoriesManager = ({ stories, setStories, dispatch, navigate, canCreateCont
 const PartnershipContentManagementPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
 
     // Permission checks
-    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const canCreateContent = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',

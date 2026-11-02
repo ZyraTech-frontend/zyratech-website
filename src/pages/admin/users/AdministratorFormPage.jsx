@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Administrator Form Page (Add/Edit) - Multi-Step Wizard
  * Dedicated page for creating or editing administrator accounts
  * Follows the same pattern as JobFormPage / CourseFormPage
@@ -129,7 +129,7 @@ const AdministratorFormPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user: currentUser, userRole, userPermissions } = useAuth();
-    const canAdministrators = userPermissions?.includes('administrators') ?? false;
+    const canAdministrators = userRole === 'super_admin' || (userPermissions?.includes('administrators') ?? false);
 
     const handlePermissionDenied = () => {
         dispatch(addNotification({
@@ -638,7 +638,7 @@ const AdministratorFormPage = () => {
                 <div className="pt-2 flex items-center justify-between text-xs text-gray-500 font-medium">
                   <span>Selected: <strong className="text-gray-900">{formData.permissions.length}</strong> modules</span>
                   {formData.permissions.length === 0 && (
-                    <span className="text-amber-600 font-semibold">⚠️ At least 1 permission required</span>
+                    <span className="text-amber-600 font-semibold">âš ï¸ At least 1 permission required</span>
                   )}
                 </div>
               </div>
@@ -650,7 +650,7 @@ const AdministratorFormPage = () => {
         return (
           <div className="space-y-6">
             {isEditing ? (
-              // Edit mode — no password section
+              // Edit mode â€” no password section
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
                 <div className="flex items-start gap-3">
                   <KeyRound size={22} className="text-blue-600 mt-0.5 shrink-0" />
@@ -671,7 +671,7 @@ const AdministratorFormPage = () => {
                 </div>
               </div>
             ) : (
-              // Create mode — temp password
+              // Create mode â€” temp password
               <>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -738,25 +738,25 @@ const AdministratorFormPage = () => {
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 p-3 bg-white rounded-lg border border-gray-200/80">
                       <div className={`flex items-center gap-1.5 text-xs font-medium ${formData.tempPassword.length >= 8 ? 'text-green-600' : 'text-gray-400'}`}>
                         <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${formData.tempPassword.length >= 8 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
-                          {formData.tempPassword.length >= 8 ? '✓' : '•'}
+                          {formData.tempPassword.length >= 8 ? 'âœ“' : 'â€¢'}
                         </span>
                         8+ characters
                       </div>
                       <div className={`flex items-center gap-1.5 text-xs font-medium ${/[A-Z]/.test(formData.tempPassword) ? 'text-green-600' : 'text-gray-400'}`}>
                         <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${/[A-Z]/.test(formData.tempPassword) ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
-                          {/[A-Z]/.test(formData.tempPassword) ? '✓' : '•'}
+                          {/[A-Z]/.test(formData.tempPassword) ? 'âœ“' : 'â€¢'}
                         </span>
                         Uppercase (A-Z)
                       </div>
                       <div className={`flex items-center gap-1.5 text-xs font-medium ${/[0-9]/.test(formData.tempPassword) ? 'text-green-600' : 'text-gray-400'}`}>
                         <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${/[0-9]/.test(formData.tempPassword) ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
-                          {/[0-9]/.test(formData.tempPassword) ? '✓' : '•'}
+                          {/[0-9]/.test(formData.tempPassword) ? 'âœ“' : 'â€¢'}
                         </span>
                         Number (0-9)
                       </div>
                       <div className={`flex items-center gap-1.5 text-xs font-medium ${/[!@#$%^&*]/.test(formData.tempPassword) ? 'text-green-600' : 'text-gray-400'}`}>
                         <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${/[!@#$%^&*]/.test(formData.tempPassword) ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
-                          {/[!@#$%^&*]/.test(formData.tempPassword) ? '✓' : '•'}
+                          {/[!@#$%^&*]/.test(formData.tempPassword) ? 'âœ“' : 'â€¢'}
                         </span>
                         Special (!@#$%^&*)
                       </div>
@@ -768,7 +768,7 @@ const AdministratorFormPage = () => {
                         <p className="font-semibold mb-1">Important</p>
                         <ul className="space-y-1 text-xs">
                           <li>Share this password securely with the administrator (in person or encrypted channel).</li>
-                          <li>The password will only be shown once — make sure to copy it before proceeding.</li>
+                          <li>The password will only be shown once â€” make sure to copy it before proceeding.</li>
                           <li>The administrator must change this password on their first login.</li>
                         </ul>
                       </div>
@@ -810,15 +810,15 @@ const AdministratorFormPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-white rounded-lg p-4">
                     <p className="text-xs text-gray-500 mb-1">Full Name</p>
-                    <p className="font-semibold text-gray-900">{formData.name || '—'}</p>
+                    <p className="font-semibold text-gray-900">{formData.name || 'â€”'}</p>
                   </div>
                   <div className="bg-white rounded-lg p-4">
                     <p className="text-xs text-gray-500 mb-1">Email Address</p>
-                    <p className="font-semibold text-gray-900">{formData.email || '—'}</p>
+                    <p className="font-semibold text-gray-900">{formData.email || 'â€”'}</p>
                   </div>
                   <div className="bg-white rounded-lg p-4">
                     <p className="text-xs text-gray-500 mb-1">Phone Number</p>
-                    <p className="font-semibold text-gray-900">{formData.phone || '—'}</p>
+                    <p className="font-semibold text-gray-900">{formData.phone || 'â€”'}</p>
                   </div>
                 </div>
               </div>
@@ -861,7 +861,7 @@ const AdministratorFormPage = () => {
                       })}
                     </div>
                   ) : (
-                    <p className="text-xs text-amber-600 font-medium">⚠️ No permissions selected (At least 1 required)</p>
+                    <p className="text-xs text-amber-600 font-medium">âš ï¸ No permissions selected (At least 1 required)</p>
                   )}
                 </div>
               </div>

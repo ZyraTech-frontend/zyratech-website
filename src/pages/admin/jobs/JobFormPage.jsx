@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Job Form Page (Add/Edit Job) - Multi-Step Wizard
  * Dedicated page for creating or editing job listings with step-by-step journey
  */
@@ -51,10 +51,10 @@ const STEPS = [
 
 const JobFormPage = () => {
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
     
     // Permission checks
-    const canJobs = userPermissions?.includes('jobs') ?? false;
+    const canJobs = userRole === 'super_admin' || (userPermissions?.includes('jobs') ?? false);
 
     const handlePermissionDenied = () => {
         dispatch(addNotification({
@@ -185,16 +185,16 @@ const JobFormPage = () => {
         try {
             if (!jobId && stepKey === 'basic') {
                 // First step: Create new job
-                console.log('📝 Creating new job with Step 1 data:', stepData);
+                console.log('ðŸ“ Creating new job with Step 1 data:', stepData);
                 const response = await jobsService.createJob({ ...stepData, status: 'draft' });
                 const newJobId = response.id;
                 setJobId(newJobId);
-                console.log('✅ Job created with ID:', newJobId);
+                console.log('âœ… Job created with ID:', newJobId);
             } else if (jobId) {
                 // Subsequent steps: Update existing job with PATCH
-                console.log(`📝 Updating job ${jobId} with ${stepKey} data:`, stepData);
+                console.log(`ðŸ“ Updating job ${jobId} with ${stepKey} data:`, stepData);
                 await jobsService.updateJob(jobId, stepData);
-                console.log(`✅ Job ${jobId} updated successfully`);
+                console.log(`âœ… Job ${jobId} updated successfully`);
             }
         } catch (error) {
             console.error(`Failed to save step data: ${stepKey}`, error);
@@ -266,7 +266,7 @@ const JobFormPage = () => {
         try {
             // If we haven't saved the job yet (not on review step with jobId), save all remaining steps
             if (!jobId) {
-                console.log('📝 First-time submission: Creating job with all data');
+                console.log('ðŸ“ First-time submission: Creating job with all data');
                 const jobData = {
                     title: formData.title,
                     type: formData.type,
@@ -286,7 +286,7 @@ const JobFormPage = () => {
                 setJobId(response.id);
             } else {
                 // Job exists, make final PATCH to set status to active
-                console.log(`📝 Final submission: Publishing job ${jobId}`);
+                console.log(`ðŸ“ Final submission: Publishing job ${jobId}`);
                 await jobsService.updateJob(jobId, { status: 'draft' });
             }
 

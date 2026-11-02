@@ -1,4 +1,4 @@
-
+﻿
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -334,10 +334,10 @@ const TimelineManager = ({ timeline, setTimeline, dispatch, navigate, canCreateC
 const AboutPageManagementPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
 
     // Permission checks
-    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const canCreateContent = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',

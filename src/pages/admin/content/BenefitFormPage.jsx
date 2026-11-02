@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Benefit Add/Edit Form Page
  * Dedicated page for creating and editing "Why Choose Us" benefits
  */
@@ -57,10 +57,10 @@ const ICON_OPTIONS = [
 const BenefitFormPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
 
     // Permission checks
-    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const canCreateContent = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',

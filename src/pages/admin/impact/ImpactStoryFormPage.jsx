@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Impact Success Story Form Page (Admin)
  * Form for creating and editing success stories
  */
@@ -21,10 +21,10 @@ import impactService from '../../../services/impactService';
 
 const ImpactStoryFormPage = () => {
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
     
     // Permission checks
-    const canImpact = userPermissions?.includes('impact') ?? false;
+    const canImpact = userRole === 'super_admin' || (userPermissions?.includes('impact') ?? false);
 
     const handlePermissionDenied = () => {
         dispatch(addNotification({

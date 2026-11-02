@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Services & Benefits Management Page
  * Admin interface to manage services and "Why Choose Us" benefits
  */
@@ -24,10 +24,10 @@ import { useActivityLogger } from '../../../hooks/useActivityLogger';
 const ServicesManagementPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
 
     // Permission checks
-    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const canCreateContent = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',
@@ -250,7 +250,7 @@ const ServicesManagementPage = () => {
                                     {activeTab === 'services' && item.highlights && (
                                         <div className="text-xs text-gray-500 space-y-1">
                                             {Array.isArray(item.highlights) && item.highlights.map((h, idx) => (
-                                                <div key={idx}>• {h}</div>
+                                                <div key={idx}>â€¢ {h}</div>
                                             ))}
                                         </div>
                                     )}

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Partnerships Management Page (Admin)
  * Manage partnership applications and create public partnerships
  */
@@ -62,7 +62,7 @@ const PartnershipsManagementPage = () => {
 
     // Permission check helper
     // Permission checks
-    const canCreatePartnership = userPermissions?.includes('partnerships') ?? false;
+    const canCreatePartnership = userRole === 'super_admin' || (userPermissions?.includes('partnerships') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',
@@ -711,7 +711,7 @@ const PartnershipsManagementPage = () => {
                                         <StatusBadge status={viewingPartnership.status} />
                                     </div>
                                 </div>
-                                <p className="text-xs text-gray-500 italic">ℹ️ Read-only view. Application data cannot be edited.</p>
+                                <p className="text-xs text-gray-500 italic">â„¹ï¸ Read-only view. Application data cannot be edited.</p>
                             </div>
                         </div>
 

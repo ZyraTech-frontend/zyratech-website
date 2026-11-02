@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Newsletter Management Page (Admin)
  * View and manage newsletter subscribers and send campaigns
  */
@@ -57,10 +57,10 @@ const STATUS_CONFIG = {
 const NewsletterManagementPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
 
     // Permission checks
-    const canManageNewsletter = userPermissions?.includes('newsletter') ?? false;
+    const canManageNewsletter = userRole === 'super_admin' || (userPermissions?.includes('newsletter') ?? false);
 
     const handlePermissionDenied = (action) => {
         dispatch(addNotification({
@@ -120,7 +120,7 @@ const NewsletterManagementPage = () => {
                 if (Array.isArray(response)) {
                     data = response;
                 } else if (response?.data?.data && Array.isArray(response.data.data)) {
-                    // ✅ Correct path: response.data.data (double-nested)
+                    // âœ… Correct path: response.data.data (double-nested)
                     data = response.data.data;
                 } else if (response?.data?.subscribers && Array.isArray(response.data.subscribers)) {
                     data = response.data.subscribers;

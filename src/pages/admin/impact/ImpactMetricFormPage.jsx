@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Impact Metric Form Page (Admin)
  * Form for creating and editing impact metrics
  */
@@ -25,10 +25,10 @@ import impactService, { IMPACT_CATEGORIES, METRIC_TYPES, DISPLAY_LOCATIONS } fro
 
 const ImpactMetricFormPage = () => {
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
     
     // Permission checks
-    const canImpact = userPermissions?.includes('impact') ?? false;
+    const canImpact = userRole === 'super_admin' || (userPermissions?.includes('impact') ?? false);
 
     const handlePermissionDenied = () => {
         dispatch(addNotification({
@@ -401,8 +401,8 @@ const ImpactMetricFormPage = () => {
                                     onChange={handleChange}
                                     className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] transition-all text-sm bg-white"
                                 >
-                                    <option value="up">↑ Upward Trend</option>
-                                    <option value="down">↓ Downward Trend</option>
+                                    <option value="up">â†‘ Upward Trend</option>
+                                    <option value="down">â†“ Downward Trend</option>
                                 </select>
                             </div>
                         </div>

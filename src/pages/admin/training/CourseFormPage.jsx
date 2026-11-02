@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Course Form Page (Add/Edit Course) - Multi-Step Wizard
  * Dedicated page for creating or editing training courses with step-by-step journey
  */
@@ -111,10 +111,10 @@ const STEPS = [
 
 const CourseFormPage = () => {
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
     
     // Permission checks
-    const canTrainingCourses = userPermissions?.includes('training_courses') ?? false;
+    const canTrainingCourses = userRole === 'super_admin' || (userPermissions?.includes('training_courses') ?? false);
 
     const handlePermissionDenied = () => {
         dispatch(addNotification({
@@ -1232,7 +1232,7 @@ const CourseFormPage = () => {
                                 {formData.rating && (
                                     <div>
                                         <p className="text-xs text-gray-500 mb-1">Rating</p>
-                                        <p className="font-semibold text-gray-900">⭐ {formData.rating} ({formData.reviews || 0} reviews)</p>
+                                        <p className="font-semibold text-gray-900">â­ {formData.rating} ({formData.reviews || 0} reviews)</p>
                                     </div>
                                 )}
                                 {formData.heroImage && (

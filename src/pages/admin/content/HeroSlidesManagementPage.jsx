@@ -1,4 +1,4 @@
-
+﻿
 /**
  * Hero Slides Management Page
  * Admin interface to manage homepage hero carousel slides
@@ -32,7 +32,7 @@ const HeroSlidesManagementPage = () => {
 
     // Permission check helper
     // Permission checks
-    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const canCreateContent = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Impact Management Page (Admin)
  * Professional admin interface for managing impact metrics, success stories, and achievements
  */
@@ -136,7 +136,7 @@ const formatDate = (dateString) => {
 
 const ImpactManagementPage = () => {
     const dispatch = useDispatch();
-    const canManageImpact = userPermissions?.includes('impact') ?? false;
+    const canManageImpact = userRole === 'super_admin' || (userPermissions?.includes('impact') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',
@@ -434,9 +434,9 @@ const ImpactManagementPage = () => {
                             className="shrink-0 px-2.5 py-1.5 text-[11px] bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#004fa2] transition-colors appearance-none min-w-[120px] cursor-pointer"
                         >
                             <option value="all">All Items</option>
-                            <option value="featured">⭐ Featured</option>
-                            <option value="active">✓ Active</option>
-                            <option value="inactive">✗ Inactive</option>
+                            <option value="featured">â­ Featured</option>
+                            <option value="active">âœ“ Active</option>
+                            <option value="inactive">âœ— Inactive</option>
                             {activeTab === 'metrics' && (
                                 <optgroup label="Categories">
                                     {Object.entries(CATEGORY_CONFIG).map(([key, val]) => (
@@ -778,7 +778,7 @@ const ImpactManagementPage = () => {
                                         "{viewingStory.quote}"
                                     </p>
                                     <p className="mt-4 text-sm font-semibold text-gray-600">
-                                        — {viewingStory.name}
+                                        â€” {viewingStory.name}
                                     </p>
                                 </div>
 

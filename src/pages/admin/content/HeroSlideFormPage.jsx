@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Hero Slide Add/Edit Form Page
  * Dedicated page for creating and editing hero slides
  */
@@ -23,10 +23,10 @@ import contentService from '../../../services/contentService';
 
 const HeroSlideFormPage = () => {
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
     
     // Permission checks
-    const canContent = userPermissions?.includes('content') ?? false;
+    const canContent = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
 
     const handlePermissionDenied = () => {
         dispatch(addNotification({

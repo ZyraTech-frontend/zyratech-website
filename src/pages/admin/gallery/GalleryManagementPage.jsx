@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Gallery Management Page (Admin)
  * Production-ready admin interface for managing media gallery albums and images
  * Features: Album CRUD, image uploads with progress, search, filtering, pagination
@@ -86,7 +86,7 @@ const GalleryManagementPage = () => {
     const { userPermissions, userRole } = useAuth();
 
     // Permission check
-    const canCreateGallery = userPermissions?.includes('gallery') ?? false;
+    const canCreateGallery = userRole === 'super_admin' || (userPermissions?.includes('gallery') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',
@@ -1070,7 +1070,7 @@ const GalleryManagementPage = () => {
                                                 <Image className="text-gray-400 group-hover:text-[#004fa2]" size={24} />
                                             </div>
                                             <p className="text-gray-700 font-medium">Choose cover photo</p>
-                                            <p className="text-xs text-gray-500">JPG, PNG, WEBP • Max 5MB</p>
+                                            <p className="text-xs text-gray-500">JPG, PNG, WEBP â€¢ Max 5MB</p>
                                         </div>
                                     )}
                                 </div>
@@ -1145,7 +1145,7 @@ const GalleryManagementPage = () => {
                                     Browse Photos
                                 </button>
                                 <p className="text-xs text-gray-400 mt-4">
-                                    JPG, PNG, WEBP, GIF • Max 10MB each • Upload up to 100+ photos at once
+                                    JPG, PNG, WEBP, GIF â€¢ Max 10MB each â€¢ Upload up to 100+ photos at once
                                 </p>
                             </div>
 

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * FAQ Form Page (Admin)
  * Create and edit FAQ items with validation and status management
  */
@@ -32,8 +32,8 @@ export default function FaqFormPage() {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
-    const canCreateContent = userPermissions?.includes('content') ?? false;
+    const { userPermissions, userRole } = useAuth();
+    const canCreateContent = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
 
     const handlePermissionDenied = () => {
         dispatch(addNotification({

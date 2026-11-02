@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Blog Management Page (Admin)
  * Professional admin interface for managing blog articles via live API.
  */
@@ -140,7 +140,7 @@ const BlogManagementPage = () => {
     }, [articles, pagination.total, allCategories]);
 
     // Permission checks
-    const canCreateBlog = userPermissions?.includes('blog_articles') ?? false;
+    const canCreateBlog = userRole === 'super_admin' || (userPermissions?.includes('blog_articles') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',
@@ -363,7 +363,7 @@ const BlogManagementPage = () => {
                                                                 >
                                                                     {article.title}
                                                                 </button>
-                                                                <p className="text-gray-500 text-[10px] mt-0.5 truncate">{article.readingTime} â€¢ /{article.slug}</p>
+                                                                <p className="text-gray-500 text-[10px] mt-0.5 truncate">{article.readingTime} Ã¢â‚¬Â¢ /{article.slug}</p>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -491,7 +491,7 @@ const BlogManagementPage = () => {
                     {pagination.totalPages > 1 && (
                         <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-600">
                             <p>
-                                Showing {((currentPage - 1) * itemsPerPage) + 1}â€“{Math.min(currentPage * itemsPerPage, pagination.total)} of {pagination.total} articles
+                                Showing {((currentPage - 1) * itemsPerPage) + 1}Ã¢â‚¬â€œ{Math.min(currentPage * itemsPerPage, pagination.total)} of {pagination.total} articles
                             </p>
                             <div className="flex items-center gap-1.5">
                                 <button

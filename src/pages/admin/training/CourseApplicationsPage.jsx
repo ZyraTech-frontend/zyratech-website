@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Course Applications Management Page
  * Standalone page for managing course enrollment applications
  */
@@ -54,10 +54,10 @@ const StatusBadge = ({ status }) => {
 const CourseApplicationsPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
 
     // Permission checks
-    const canManageEnrollments = userPermissions?.includes('enrollments') ?? false;
+    const canManageEnrollments = userRole === 'super_admin' || (userPermissions?.includes('enrollments') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',
@@ -120,18 +120,18 @@ const CourseApplicationsPage = () => {
             // Handle nested data structure: response.data.data
             const transactions = response.data?.data?.data || response.data?.data || [];
             
-            console.log('💰 Fetched transactions:', transactions);
-            console.log('📊 Response structure:', response.data);
+            console.log('ðŸ’° Fetched transactions:', transactions);
+            console.log('ðŸ“Š Response structure:', response.data);
             
             // Filter only training payments and sum them up
             const trainingPayments = transactions.filter(t => t.paymentType === 'training');
-            console.log('🎓 Training payments:', trainingPayments.length);
+            console.log('ðŸŽ“ Training payments:', trainingPayments.length);
             
             const total = trainingPayments.reduce((sum, payment) => {
                 return sum + (parseFloat(payment.amount) || 0);
             }, 0);
             
-            console.log('💵 Total revenue calculated:', total);
+            console.log('ðŸ’µ Total revenue calculated:', total);
             
             setTotalRevenue(total);
         } catch (error) {
@@ -245,7 +245,7 @@ const CourseApplicationsPage = () => {
             
             // Check payment status first
             const paymentStatus = await trainingApplicationService.checkPaymentStatus(appId);
-            console.log('💰 Payment status:', paymentStatus);
+            console.log('ðŸ’° Payment status:', paymentStatus);
             
             setSelectedApplication(application);
             setPaymentInfo(paymentStatus);
@@ -274,7 +274,7 @@ const CourseApplicationsPage = () => {
             dispatch(addNotification({
                 type: 'success',
                 message: shouldRefund 
-                    ? 'Application rejected and refund processed ✅'
+                    ? 'Application rejected and refund processed âœ…'
                     : 'Application rejected'
             }));
             

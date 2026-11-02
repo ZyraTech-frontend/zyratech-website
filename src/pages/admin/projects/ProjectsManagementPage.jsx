@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Projects Management Page (Admin)
  * Professional admin interface for managing portfolio projects
  */
@@ -109,7 +109,7 @@ const ProjectsManagementPage = () => {
     const navigate = useNavigate();
 
     // Permission checks
-    const canCreateProject = userPermissions?.includes('projects') ?? false;
+    const canCreateProject = userRole === 'super_admin' || (userPermissions?.includes('projects') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',

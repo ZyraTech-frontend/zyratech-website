@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Album Form Page (Admin)
  * Legacy form page - Use GalleryManagementPage modal for creating/editing albums instead
  * This page is kept for backwards compatibility but uses API instead of mock data
@@ -23,10 +23,10 @@ import {
 
 const AlbumFormPage = () => {
     const dispatch = useDispatch();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
     
     // Permission checks
-    const canGallery = userPermissions?.includes('gallery') ?? false;
+    const canGallery = userRole === 'super_admin' || (userPermissions?.includes('gallery') ?? false);
 
     const handlePermissionDenied = () => {
         dispatch(addNotification({
