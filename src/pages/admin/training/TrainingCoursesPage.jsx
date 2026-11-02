@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Training Courses Management Page (Super Admin)
  * Professional admin interface for managing training courses only
  */
@@ -368,13 +368,13 @@ const TrainingCoursesPage = () => {
                             {selectedCategory !== 'all' && (
                                 <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${CATEGORY_CONFIG[selectedCategory]?.color}`}>
                                     {CATEGORY_CONFIG[selectedCategory]?.label}
-                                    <button onClick={() => setSelectedCategory('all')} className="ml-1.5 hover:opacity-70">Ã—</button>
+                                    <button onClick={() => setSelectedCategory('all')} className="ml-1.5 hover:opacity-70">×</button>
                                 </span>
                             )}
                             {selectedLevel !== 'all' && (
                                 <span className="px-2.5 py-1 rounded-full text-xs font-medium border bg-gray-100 text-gray-700 border-gray-200">
                                     {selectedLevel}
-                                    <button onClick={() => setSelectedLevel('all')} className="ml-1.5 hover:opacity-70">Ã—</button>
+                                    <button onClick={() => setSelectedLevel('all')} className="ml-1.5 hover:opacity-70">×</button>
                                 </span>
                             )}
                         </div>
@@ -500,14 +500,17 @@ const TrainingCoursesPage = () => {
                                         {/* Price and Actions */}
                                         <div className="flex items-center justify-between gap-2">
                                             <div className="flex items-center gap-1">
-                                                {course.price > 0 ? (
-                                                    <>
-                                                        <DollarSign size={14} className="text-green-600" />
-                                                        <span className="text-base font-bold text-gray-900">{course.price}</span>
-                                                    </>
-                                                ) : (
-                                                    <span className="text-sm font-bold text-green-600">FREE</span>
-                                                )}
+                                                {(() => {
+                                                    const displayPrice = formatPrice(course.price);
+                                                    return displayPrice ? (
+                                                        <>
+                                                            <DollarSign size={14} className="text-green-600" />
+                                                            <span className="text-base font-bold text-gray-900">{displayPrice}</span>
+                                                        </>
+                                                    ) : (
+                                                        <span className="text-sm font-bold text-green-600">FREE</span>
+                                                    );
+                                                })()}
                                             </div>
 
                                             {/* Actions Menu */}
