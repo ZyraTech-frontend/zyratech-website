@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Training Courses Management Page (Super Admin)
  * Professional admin interface for managing training courses only
  */
@@ -64,7 +64,7 @@ const CourseBadge = ({ type, children }) => {
 const TrainingCoursesPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { userPermissions } = useAuth();
+    const { userPermissions, userRole } = useAuth();
 
     // Redux courses state
     const { items: courses = [], loading: coursesLoading } = useSelector((state) => state.courses);
@@ -193,7 +193,7 @@ const TrainingCoursesPage = () => {
     };
 
     // Permission checks
-    const canCreateCourse = userPermissions?.includes('training_courses') ?? false;
+    const canCreateCourse = userRole === 'super_admin' || (userPermissions?.includes('training_courses') ?? false);
     const handlePermissionDenied = () => {
         dispatch(addNotification({
             type: 'error',
@@ -352,13 +352,13 @@ const TrainingCoursesPage = () => {
                             {selectedCategory !== 'all' && (
                                 <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${CATEGORY_CONFIG[selectedCategory]?.color}`}>
                                     {CATEGORY_CONFIG[selectedCategory]?.label}
-                                    <button onClick={() => setSelectedCategory('all')} className="ml-1.5 hover:opacity-70">×</button>
+                                    <button onClick={() => setSelectedCategory('all')} className="ml-1.5 hover:opacity-70">Ã—</button>
                                 </span>
                             )}
                             {selectedLevel !== 'all' && (
                                 <span className="px-2.5 py-1 rounded-full text-xs font-medium border bg-gray-100 text-gray-700 border-gray-200">
                                     {selectedLevel}
-                                    <button onClick={() => setSelectedLevel('all')} className="ml-1.5 hover:opacity-70">×</button>
+                                    <button onClick={() => setSelectedLevel('all')} className="ml-1.5 hover:opacity-70">Ã—</button>
                                 </span>
                             )}
                         </div>
@@ -689,5 +689,6 @@ const TrainingCoursesPage = () => {
 };
 
 export default TrainingCoursesPage;
+
 
 
