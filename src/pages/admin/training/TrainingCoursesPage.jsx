@@ -98,6 +98,18 @@ const TrainingCoursesPage = () => {
         dispatch(fetchCourses());
     }, [dispatch]);
 
+    // Refetch courses when page becomes visible (e.g., after navigating back)
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                dispatch(fetchCourses());
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+    }, [dispatch]);
+
     // Filter and search courses
     const filteredCourses = useMemo(() => {
         let result = [...courses];
