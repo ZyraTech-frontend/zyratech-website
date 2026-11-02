@@ -61,6 +61,23 @@ const CourseBadge = ({ type, children }) => {
     );
 };
 
+
+// Helper function to extract numeric price from string
+const getPriceValue = (priceStr) => {
+    if (!priceStr) return 0;
+    if (typeof priceStr === 'number') return priceStr;
+    // Extract number from strings like "GHS 500.00" or "GHS2,000.00"
+    const numStr = priceStr.toString().replace(/[^\d.]/g, '');
+    return parseFloat(numStr) || 0;
+};
+
+// Helper function to format price display
+const formatPrice = (priceStr) => {
+    const value = getPriceValue(priceStr);
+    if (value === 0) return null;
+    return `GHS ${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+};
+
 const TrainingCoursesPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -484,16 +501,16 @@ const TrainingCoursesPage = () => {
                                         {/* Price and Actions */}
                                         <div className="flex items-center justify-between gap-2">
                                             <div className="flex items-center gap-1">
-                                                {course.price > 0 ? (
-                                                    <>
-                                                        <DollarSign size={14} className="text-green-600" />
-                                                        <span className="text-base font-bold text-gray-900">{course.price}</span>
-                                                    </>
-                                                ) : (
-                                                    <span className="text-sm font-bold text-green-600">FREE</span>
-                                                )}
-                                            </div>
-
+                                                {(() => {
+                                                    const displayPrice = formatPrice(course.price);
+                                                    return displayPrice ? (
+                                                        <>
+                                                            <DollarSign size={14} className="text-green-600" />
+                                                            <span className="text-base font-bold text-gray-900">{displayPrice}</span>
+                                                        </>
+                                                    ) : (
+                                                    );
+                                                })()}
                                             {/* Actions Menu */}
                                             <div className="relative group/menu">
                                                 <button className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
@@ -645,7 +662,7 @@ const TrainingCoursesPage = () => {
                                     <div>
                                         <p className="text-sm text-gray-500 mb-1">Price</p>
                                         <p className="font-semibold text-gray-900">
-                                            {viewingCourse.price > 0 ? `$${viewingCourse.price}` : 'FREE'}
+                                            {formatPrice(viewingCourse.price) || 'FREE'}
                                         </p>
                                     </div>
                                     <div>
@@ -689,6 +706,10 @@ const TrainingCoursesPage = () => {
 };
 
 export default TrainingCoursesPage;
+
+
+
+
 
 
 
