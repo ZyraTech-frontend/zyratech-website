@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import { getCourseImageUrl } from '../../../utils/imageUrl';
-import { ArrowLeft, Edit, Clock, Users, BookOpen, Tag } from 'lucide-react';
+import { ArrowLeft, Edit, Clock, Users, BookOpen, Tag, Calendar, Award, Target, CheckCircle } from 'lucide-react';
 import trainingService from '../../../services/trainingService';
 
 // Helper to extract numeric price from string like "GHS 500.00"
