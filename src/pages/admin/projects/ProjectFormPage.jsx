@@ -35,7 +35,7 @@ const CATEGORIES = [
     'FinTech'
 ];
 
-// ⚠️ IMPORTANT: Only these 3 status values are valid for the API
+// WARNING: IMPORTANT: Only these 3 status values are valid for the API
 const STATUSES = [
     { value: 'draft', label: 'Draft (In Progress)' },
     { value: 'published', label: 'Published (Live)' },
@@ -221,7 +221,7 @@ const ProjectFormPage = () => {
             newErrors.progress = 'Progress must be between 0 and 100';
         }
 
-        // ⚠️ IMPORTANT: status must ONLY be "draft", "published", or "archived"
+        // WARNING: IMPORTANT: status must ONLY be "draft", "published", or "archived"
         const validStatuses = ['draft', 'published', 'archived'];
         if (!validStatuses.includes(formData.status)) {
             newErrors.status = 'Invalid status - must be draft, published, or archived';
@@ -393,7 +393,7 @@ const ProjectFormPage = () => {
                                     ))}
                                 </select>
                                 <p className="text-[10px] text-gray-500 mt-1">
-                                    ⚠️ Backend accepts only: draft, published, or archived
+                                    WARNING: Backend accepts only: draft, published, or archived
                                 </p>
                             </div>
 
