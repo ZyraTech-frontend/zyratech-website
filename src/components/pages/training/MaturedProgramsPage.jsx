@@ -39,13 +39,10 @@ const MaturedProgramsPage = () => {
     const loadCourses = async () => {
       try {
         setError(null);
-        const allCourses = await trainingService.getAllCourses({ limit: 1000 });
+        // Fetch matured courses directly using category filter
+        const maturedCourses = await trainingService.getCoursesByCategory('matured', { limit: 100 });
         if (isMounted) {
-          const maturedCourses = Array.isArray(allCourses) 
-            ? allCourses.filter(c => (c.category || '').toLowerCase() === 'matured')
-            : [];
-          
-          setMaturedPrograms(maturedCourses);
+          setMaturedPrograms(Array.isArray(maturedCourses) ? maturedCourses : []);
           if (maturedCourses.length === 0) {
             console.warn('No matured courses returned from backend API');
           }

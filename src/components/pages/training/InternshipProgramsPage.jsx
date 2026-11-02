@@ -39,13 +39,10 @@ const InternshipProgramsPage = () => {
     const loadCourses = async () => {
       try {
         setError(null);
-        const allCourses = await trainingService.getAllCourses({ limit: 1000 });
+        // Fetch internship courses directly using category filter
+        const internshipCourses = await trainingService.getCoursesByCategory('internship', { limit: 100 });
         if (isMounted) {
-          const internshipCourses = Array.isArray(allCourses) 
-            ? allCourses.filter(c => (c.category || '').toLowerCase() === 'internship')
-            : [];
-          
-          setInternshipPrograms(internshipCourses);
+          setInternshipPrograms(Array.isArray(internshipCourses) ? internshipCourses : []);
           if (internshipCourses.length === 0) {
             console.warn('No internship courses returned from backend API');
           }

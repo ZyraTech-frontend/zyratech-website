@@ -38,13 +38,10 @@ const AdvancedProgramsPage = () => {
     const loadCourses = async () => {
       try {
         setError(null);
-        const allCourses = await trainingService.getAllCourses({ limit: 1000 });
+        // Fetch advanced courses directly using category filter
+        const advancedCourses = await trainingService.getCoursesByCategory('advanced', { limit: 100 });
         if (isMounted) {
-          const advancedCourses = Array.isArray(allCourses) 
-            ? allCourses.filter(c => (c.category || '').toLowerCase() === 'advanced')
-            : [];
-          
-          setAdvancedPrograms(advancedCourses);
+          setAdvancedPrograms(Array.isArray(advancedCourses) ? advancedCourses : []);
           if (advancedCourses.length === 0) {
             console.warn('No advanced courses returned from backend API');
           }

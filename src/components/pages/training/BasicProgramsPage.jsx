@@ -40,13 +40,10 @@ const BasicProgramsPage = () => {
       try {
         setError(null);
         // Fetch all courses from backend API only
-        const allCourses = await trainingService.getAllCourses({ limit: 1000 });
+        // Fetch basic courses directly using category filter
+        const basicCourses = await trainingService.getCoursesByCategory('basic', { limit: 100 });
         if (isMounted) {
-          const basicCourses = Array.isArray(allCourses) 
-            ? allCourses.filter(c => (c.category || '').toLowerCase() === 'basic')
-            : [];
-          
-          setBasicPrograms(basicCourses);
+          setBasicPrograms(Array.isArray(basicCourses) ? basicCourses : []);
           
           if (basicCourses.length === 0) {
             console.warn('No basic courses returned from backend API');
