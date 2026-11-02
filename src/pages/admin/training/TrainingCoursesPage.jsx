@@ -623,8 +623,6 @@ const TrainingCoursesPage = () => {
                     </>
                 )}
 
-                {/* Quick View Modal */}
-                )}
             </div>
         </AdminLayout>
     );
