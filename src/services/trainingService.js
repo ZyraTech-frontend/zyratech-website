@@ -20,6 +20,12 @@ export const trainingService = {
     return response.data.data?.data || response.data.data || response.data;
   },
 
+  // Public: Get courses by category
+  getCoursesByCategory: async (category, params = {}) => {
+    const response = await api.get('/training-courses', { params: { ...params, category } });
+    return response.data.data?.data || response.data.data || [];
+  },
+
   // Admin: Get all courses
   getAllCoursesAdmin: async (params = {}) => {
     const response = await api.get('/admin/training-courses', { params });
