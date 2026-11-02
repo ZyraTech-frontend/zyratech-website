@@ -22,7 +22,6 @@ import {
     EyeOff,
     Clock,
     Users,
-    DollarSign,
     Star,
     MoreVertical,
     ChevronLeft,
@@ -504,7 +503,6 @@ const TrainingCoursesPage = () => {
                                                     const displayPrice = formatPrice(course.price);
                                                     return displayPrice ? (
                                                         <>
-                                                            <DollarSign size={14} className="text-green-600" />
                                                             <span className="text-base font-bold text-gray-900">{displayPrice}</span>
                                                         </>
                                                     ) : (
