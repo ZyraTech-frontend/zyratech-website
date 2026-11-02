@@ -89,8 +89,6 @@ const TrainingCoursesPage = () => {
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [selectedLevel, setSelectedLevel] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
-    const [viewingCourse, setViewingCourse] = useState(null);
-
     const itemsPerPage = 8;
 
     // Fetch courses on mount
@@ -196,7 +194,7 @@ const TrainingCoursesPage = () => {
     };
 
     const handleView = (course) => {
-        setViewingCourse(course);
+        navigate('/admin/training/view/' + course.id);
     };
 
     const handleEdit = (course) => {
@@ -623,93 +621,5 @@ const TrainingCoursesPage = () => {
                     </>
                 )}
 
-                {/* Quick View Modal */}
-                {viewingCourse && (
-                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={() => setViewingCourse(null)}>
-                        <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-                            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between">
-                                <h2 className="text-lg font-bold text-gray-900">Course Details</h2>
-                                <button onClick={() => setViewingCourse(null)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                                    <X size={20} />
-                                </button>
-                            </div>
-
-                            <div className="p-6 space-y-4">
-                                {getCourseImageUrl(viewingCourse) && (
-                                    <img
-                                        src={getCourseImageUrl(viewingCourse)}
-                                        alt={viewingCourse.title}
-                                        className="w-full h-48 object-cover rounded-lg"
-                                    />
-                                )}
-
-                                <div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-2">{viewingCourse.title}</h3>
-                                    {viewingCourse.shortDescription && (
-                                        <p className="text-gray-600 mb-4">{viewingCourse.shortDescription}</p>
-                                    )}
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-4 py-4 border-y border-gray-200">
-                                    <div>
-                                        <p className="text-sm text-gray-500 mb-1">Category</p>
-                                        <p className="font-semibold text-gray-900">{viewingCourse.category}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500 mb-1">Duration</p>
-                                        <p className="font-semibold text-gray-900">{viewingCourse.duration || 'N/A'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500 mb-1">Price</p>
-                                        <p className="font-semibold text-gray-900">
-                                            {formatPrice(viewingCourse.price) || 'FREE'}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500 mb-1">Enrollments</p>
-                                        <p className="font-semibold text-gray-900">{viewingCourse.enrollments || 0}</p>
-                                    </div>
-                                </div>
-
-                                {viewingCourse.description && (
-                                    <div>
-                                        <h4 className="font-semibold text-gray-900 mb-2">Description</h4>
-                                        <div className="text-gray-600 whitespace-pre-wrap">{viewingCourse.description}</div>
-                                    </div>
-                                )}
-
-                                <div className="flex gap-3 pt-4">
-                                    <button
-                                        onClick={() => {
-                                            setViewingCourse(null);
-                                            handleEdit(viewingCourse);
-                                        }}
-                                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
-                                    >
-                                        <Edit size={16} />
-                                        Edit Course
-                                    </button>
-                                    <button
-                                        onClick={() => setViewingCourse(null)}
-                                        className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                                    >
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 )}
-            </div>
-        </AdminLayout>
-    );
-};
-
-export default TrainingCoursesPage;
-
-
-
-
-
-
 
