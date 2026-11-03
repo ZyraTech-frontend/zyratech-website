@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { openConfirmDialog, addNotification } from '../../../store/slices/uiSlice';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
@@ -96,6 +97,7 @@ const StatusBadge = ({ status }) => {
 
 const PaymentsManagementPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { userPermissions, userRole } = useAuth();
 
     // Permission check helper
@@ -313,141 +315,6 @@ const PaymentsManagementPage = () => {
                     </div>
                 </div>
 
-                {/* Payment Details Modal */}
-                {showDetailsModal && selectedPayment && (
-                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowDetailsModal(false)}>
-                        <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-auto" onClick={(e) => e.stopPropagation()}>
-                            {/* Modal Header */}
-                            <div className="sticky top-0 bg-white border-b border-gray-100 p-4 flex items-center justify-between">
-                                <div>
-                                    <h2 className="text-lg font-bold text-gray-900">Transaction Details</h2>
-                                    <p className="text-xs text-gray-500 font-mono">{selectedPayment.reference}</p>
-                                </div>
-                                <button 
-                                    onClick={() => setShowDetailsModal(false)}
-                                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
-
-                            {/* Modal Body */}
-                            <div className="p-6 space-y-6">
-                                {/* Status and Amount */}
-                                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                                    <div>
-                                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Status</p>
-                                        <StatusBadge status={selectedPayment.status} />
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Amount</p>
-                                        <p className="text-2xl font-black text-gray-900">{formatCurrency(selectedPayment.amount, selectedPayment.currency)}</p>
-                                    </div>
-                                </div>
-
-                                {/* Student Information */}
-                                <div>
-                                    <h3 className="text-sm font-bold text-gray-900 mb-3">Student Information</h3>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <p className="text-xs text-gray-500 mb-1">Name</p>
-                                            <p className="text-sm font-semibold text-gray-900">{selectedPayment.studentName}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-gray-500 mb-1">Email</p>
-                                            <p className="text-sm font-semibold text-gray-900">{selectedPayment.studentEmail}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-gray-500 mb-1">Phone</p>
-                                            <p className="text-sm font-semibold text-gray-900">{selectedPayment.studentPhone || 'N/A'}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-gray-500 mb-1">Student ID</p>
-                                            <p className="text-sm font-semibold text-gray-900 font-mono">{selectedPayment.studentId || 'N/A'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Course/Project Information */}
-                                <div>
-                                    <h3 className="text-sm font-bold text-gray-900 mb-3">
-                                        {selectedPayment.paymentType === 'training' ? 'Course' : 'Project'} Information
-                                    </h3>
-                                    <div className="space-y-2">
-                                        <div>
-                                            <p className="text-xs text-gray-500 mb-1">Title</p>
-                                            <p className="text-sm font-semibold text-gray-900">{selectedPayment.courseTitle || selectedPayment.projectTitle || 'N/A'}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-gray-500 mb-1">Type</p>
-                                            <span className={`text-xs px-2 py-1 rounded font-medium ${selectedPayment.paymentType === 'training' ? 'bg-blue-50 text-blue-700' : 'bg-purple-50 text-purple-700'}`}>
-                                                {selectedPayment.paymentType === 'training' ? 'Training' : 'Project'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Payment Information */}
-                                <div>
-                                    <h3 className="text-sm font-bold text-gray-900 mb-3">Payment Information</h3>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <p className="text-xs text-gray-500 mb-1">Payment Method</p>
-                                            <p className="text-sm font-semibold text-gray-900">{PAYMENT_METHODS[selectedPayment.paymentMethod]?.label || selectedPayment.paymentMethod}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-gray-500 mb-1">Reference</p>
-                                            <p className="text-sm font-semibold text-gray-900 font-mono">{selectedPayment.reference}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-gray-500 mb-1">Transaction Date</p>
-                                            <p className="text-sm font-semibold text-gray-900">{formatDate(selectedPayment.createdAt)}</p>
-                                        </div>
-                                        {selectedPayment.completedAt && (
-                                            <div>
-                                                <p className="text-xs text-gray-500 mb-1">Completed At</p>
-                                                <p className="text-sm font-semibold text-gray-900">{formatDate(selectedPayment.completedAt)}</p>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Additional Details */}
-                                {selectedPayment.metadata && (
-                                    <div>
-                                        <h3 className="text-sm font-bold text-gray-900 mb-3">Additional Details</h3>
-                                        <div className="bg-gray-50 rounded-lg p-3">
-                                            <pre className="text-xs text-gray-600 whitespace-pre-wrap">{JSON.stringify(selectedPayment.metadata, null, 2)}</pre>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Modal Footer */}
-                            <div className="sticky bottom-0 bg-white border-t border-gray-100 p-4 flex items-center justify-end gap-2">
-                                <button
-                                    onClick={() => handleDownloadReceipt(selectedPayment)}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold flex items-center gap-2"
-                                >
-                                    <Receipt size={16} />
-                                    Download Receipt
-                                </button>
-                                {selectedPayment.status === 'completed' && (
-                                    <button
-                                        onClick={() => {
-                                            setShowDetailsModal(false);
-                                            handleRefund(selectedPayment);
-                                        }}
-                                        className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-semibold flex items-center gap-2"
-                                    >
-                                        <RefreshCcw size={16} />
-                                        Refund
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                )}
             </AdminLayout>
         );
     }

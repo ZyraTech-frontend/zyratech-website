@@ -65,6 +65,7 @@ const FaqFormPage = lazy(() => import('./pages/admin/faq/FaqFormPage'));
 const TestimonialsManagementPage = lazy(() => import('./pages/admin/testimonials/TestimonialsManagementPage'));
 const TestimonialsFormPage = lazy(() => import('./pages/admin/testimonials/TestimonialsFormPage'));
 const PaymentsManagementPage = lazy(() => import('./pages/admin/payments/PaymentsManagementPage'));
+const PaymentDetailsPage = lazy(() => import('./pages/admin/payments/PaymentDetailsPage'));
 const PartnershipsManagementPage = lazy(() => import('./pages/admin/partnerships/PartnershipsManagementPage'));
 const ContactInquiriesPage = lazy(() => import('./pages/admin/contact-inquiries/ContactInquiriesPage'));
 const ContactInquiryDetailsPage = lazy(() => import('./pages/admin/contact-inquiries/ContactInquiryDetailsPage'));
