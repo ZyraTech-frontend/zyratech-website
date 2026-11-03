@@ -247,6 +247,14 @@ const getDashboardData = async () => {
     const paymentsData = paymentsRes.status === 'fulfilled' ? paymentsRes.value : { data: { transactions: [] } };
     const payments = paymentsData?.data?.transactions || paymentsData?.transactions || [];
     
+    // Debug: Log payments immediately after extraction
+    console.log('=== DASHBOARD REFUND DEBUG ===');
+    console.log('[Dashboard] Payments extracted:', payments.length);
+    if (payments.length > 0) {
+      console.log('[Dashboard] First payment structure:', payments[0]);
+      console.log('[Dashboard] All payment statuses:', [...new Set(payments.map(p => p.status))]);
+    }
+    
     const inquiriesData = inquiriesRes.status === 'fulfilled' ? inquiriesRes.value : { inquiries: [] };
     const inquiries = inquiriesData?.inquiries || [];
     
@@ -438,6 +446,7 @@ const getDashboardData = async () => {
 export default {
   getDashboardData
 };
+
 
 
 
