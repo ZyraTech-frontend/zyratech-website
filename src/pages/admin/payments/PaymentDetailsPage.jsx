@@ -1,31 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Mail, Phone, Calendar, Send, RefreshCw, Copy, Check } from 'lucide-react';
+import { ArrowLeft, CreditCard, User, Mail, Calendar, Receipt, CheckCircle, XCircle, Clock, RefreshCcw, BookOpen, Briefcase } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../store/slices/uiSlice';
-import paymentService, { payment_STATUS } from '../../../services/paymentService';
-import emailNotificationService from '../../../services/emailNotificationService';
+import paymentService from '../../../services/paymentService';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 
+const STATUS_CONFIG = {
+  completed: { label: 'Completed', color: 'bg-green-100 text-green-700 border border-green-200', icon: CheckCircle },
+  pending: { label: 'Pending', color: 'bg-amber-100 text-amber-700 border border-amber-200', icon: Clock },
+  failed: { label: 'Failed', color: 'bg-red-100 text-red-700 border border-red-200', icon: XCircle },
+  refunded: { label: 'Refunded', color: 'bg-purple-100 text-purple-700 border border-purple-200', icon: RefreshCcw }
+};
+
+const PAYMENT_METHODS = {
+  mobile_money: { label: 'Mobile Money', color: 'bg-amber-100 text-amber-700' },
+  card: { label: 'Card', color: 'bg-blue-100 text-blue-700' },
+  bank: { label: 'Bank Transfer', color: 'bg-green-100 text-green-700' }
+};
+
+const formatCurrency = (amount, currency = 'GHS') => {
+  return `${currency} ${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+};
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+};
+
+const StatusBadge = ({ status }) => {
+  const config = STATUS_CONFIG[status] || STATUS_CONFIG.pending;
+  const Icon = config.icon;
+  return (
+    <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide ${config.color}`}>
+      <Icon size={14} />
+      {config.label}
+    </span>
+  );
+};
+
 const PaymentDetailsPage = () => {
-  const { id } = useParams();
+  const { reference } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [payment, setpayment] = useState(null);
+  const [payment, setPayment] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [status, setStatus] = useState('');
-  const [response, setResponse] = useState('');
 
-  // Fetch payment details
-  const fetchpayment = async () => {
+  useEffect(() => {
+    fetchPaymentDetails();
+  }, [reference]);
+
+  const fetchPaymentDetails = async () => {
     setLoading(true);
     try {
-      const data = await paymentService.getpaymentById(id);
-      setpayment(data);
-      setStatus(data.status || 'new');
-      setResponse(data.response || '');
+      const response = await paymentService.getTransactionDetails(reference);
+      if (response.success) {
+        setPayment(response.data);
+      }
     } catch (error) {
       console.error('Failed to fetch payment:', error);
       dispatch(addNotification({
@@ -38,102 +69,23 @@ const PaymentDetailsPage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchpayment();
-  }, [id]);
-
-  // Update payment
-  const handleUpdate = async () => {
-    if (!response.trim()) {
-      dispatch(addNotification({
-        message: 'Please enter a response message',
-        type: 'warning'
-      }));
-      return;
-    }
-
-    setUpdating(true);
+  const handleDownloadReceipt = async () => {
     try {
-      const updated = await paymentService.updatepayment(id, {
-        status,
-        response
-      });
-      setpayment(updated);
-
-      // Send response email via AWS SES
-      try {
-        await emailNotificationService.sendContactResponse({
-          email: payment.email,
-          name: payment.name,
-          response: response,
-          subject: payment.subject
-        });
-      } catch (emailError) {
-        console.error('Failed to send response email:', emailError);
-        // Don't fail the update if email fails
-      }
-
-      dispatch(addNotification({
-        message: 'payment updated and response email sent successfully',
-        type: 'success'
-      }));
+      dispatch(addNotification({ type: 'info', message: 'Downloading receipt...' }));
+      await paymentService.downloadReceipt(reference);
+      dispatch(addNotification({ type: 'success', message: 'Receipt downloaded successfully' }));
     } catch (error) {
-      console.error('Failed to update payment:', error);
-      dispatch(addNotification({
-        message: error.response?.data?.message || 'Failed to update payment',
-        type: 'error'
-      }));
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  // Copy email to clipboard
-  const copyEmail = () => {
-    if (payment?.email) {
-      navigator.clipboard.writeText(payment.email);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
-  // Format date
-  const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  // Get status badge color
-  const getStatusColor = (statusValue) => {
-    switch (statusValue) {
-      case 'new':
-        return 'bg-blue-100 text-blue-800';
-      case 'viewed':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'in_progress':
-        return 'bg-purple-100 text-purple-800';
-      case 'responded':
-        return 'bg-green-100 text-green-800';
-      case 'closed':
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
+      dispatch(addNotification({ type: 'error', message: error.message || 'Failed to download receipt' }));
     }
   };
 
   if (loading) {
     return (
       <AdminLayout>
-        <div className="flex items-center justify-center min-h-96">
+        <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
-            <RefreshCw className="animate-spin text-[#004fa2] mx-auto mb-2" size={32} />
-            <p className="text-gray-600">Loading payment...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading transaction details...</p>
           </div>
         </div>
       </AdminLayout>
@@ -144,7 +96,7 @@ const PaymentDetailsPage = () => {
     return (
       <AdminLayout>
         <div className="text-center py-12">
-          <p className="text-gray-600">payment not found</p>
+          <p className="text-gray-600">Transaction not found</p>
         </div>
       </AdminLayout>
     );
@@ -152,184 +104,107 @@ const PaymentDetailsPage = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate('/admin/payments')}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <ArrowLeft size={20} className="text-gray-600" />
-          </button>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">payment Details</h1>
-            <p className="text-gray-600 mt-1">ID: {payment.id}</p>
+      <div className="max-w-5xl mx-auto space-y-6 pb-8">
+        <button onClick={() => navigate('/admin/payments')} className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors">
+          <ArrowLeft size={20} />
+          <span className="font-medium">Back to Payments</span>
+        </button>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">Transaction Details</h1>
+              <p className="text-sm text-gray-500 font-mono">{payment.reference}</p>
+            </div>
+            <StatusBadge status={payment.status} />
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* payment Information */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900">payment Information</h2>
+          <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-8 text-white mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <CreditCard size={24} />
+              <span className="text-sm font-medium opacity-90">Transaction Amount</span>
+            </div>
+            <p className="text-4xl font-black">{formatCurrency(payment.amount, payment.currency)}</p>
+            {payment.status === 'refunded' && <p className="text-sm mt-2 opacity-90">This payment has been refunded</p>}
+          </div>
 
-              {/* Name */}
-              <div>
-                <label className="text-sm font-medium text-gray-700 block mb-1">Full Name</label>
-                <p className="text-gray-900 font-medium">{payment.name}</p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <User size={20} className="text-blue-600" />
+                <h2 className="text-lg font-bold text-gray-900">Student Information</h2>
               </div>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Full Name</p>
+                  <p className="text-sm font-semibold text-gray-900">{payment.studentName}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Email Address</p>
+                  <div className="flex items-center gap-2">
+                    <Mail size={14} className="text-gray-400" />
+                    <p className="text-sm font-semibold text-gray-900">{payment.studentEmail}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-              {/* Email */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                {payment.paymentType === 'training' ? <BookOpen size={20} className="text-blue-600" /> : <Briefcase size={20} className="text-purple-600" />}
+                <h2 className="text-lg font-bold text-gray-900">{payment.paymentType === 'training' ? 'Course' : 'Project'} Details</h2>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Title</p>
+                  <p className="text-sm font-semibold text-gray-900">{payment.courseTitle || payment.projectTitle || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Type</p>
+                  <span className={`inline-block text-xs px-3 py-1 rounded-full font-semibold ${payment.paymentType === 'training' ? 'bg-blue-50 text-blue-700' : 'bg-purple-50 text-purple-700'}`}>
+                    {payment.paymentType === 'training' ? 'Training Course' : 'Project'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-100 pt-6">
+            <div className="flex items-center gap-2 mb-4">
+              <CreditCard size={20} className="text-blue-600" />
+              <h2 className="text-lg font-bold text-gray-900">Payment Information</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-1">Email Address</label>
+                <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Payment Method</p>
+                <span className={`inline-block text-xs px-3 py-1 rounded-full font-semibold ${PAYMENT_METHODS[payment.paymentMethod]?.color || 'bg-gray-100 text-gray-700'}`}>
+                  {PAYMENT_METHODS[payment.paymentMethod]?.label || payment.paymentMethod}
+                </span>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Transaction Date</p>
                 <div className="flex items-center gap-2">
-                  <a href={`mailto:${payment.email}`} className="text-[#004fa2] hover:underline">
-                    {payment.email}
-                  </a>
-                  <button
-                    onClick={copyEmail}
-                    className="p-1 hover:bg-gray-100 rounded transition-colors"
-                    title="Copy email"
-                  >
-                    {copied ? (
-                      <Check size={16} className="text-green-600" />
-                    ) : (
-                      <Copy size={16} className="text-gray-400" />
-                    )}
-                  </button>
+                  <Calendar size={14} className="text-gray-400" />
+                  <p className="text-sm font-semibold text-gray-900">{formatDate(payment.createdAt)}</p>
                 </div>
               </div>
-
-              {/* Phone */}
-              {payment.phone && (
+              {payment.paidAt && (
                 <div>
-                  <label className="text-sm font-medium text-gray-700 block mb-1">Phone Number</label>
-                  <a href={`tel:${payment.phone}`} className="text-[#004fa2] hover:underline flex items-center gap-2">
-                    <Phone size={16} />
-                    {payment.phone}
-                  </a>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Paid At</p>
+                  <div className="flex items-center gap-2">
+                    <Calendar size={14} className="text-gray-400" />
+                    <p className="text-sm font-semibold text-gray-900">{formatDate(payment.paidAt)}</p>
+                  </div>
                 </div>
               )}
-
-              {/* Subject */}
-              <div>
-                <label className="text-sm font-medium text-gray-700 block mb-1">Subject</label>
-                <p className="text-gray-900 font-medium">{payment.subject}</p>
-              </div>
-
-              {/* Date */}
-              <div>
-                <label className="text-sm font-medium text-gray-700 block mb-1">Submitted Date</label>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Calendar size={16} />
-                  {formatDate(payment.submittedAt || payment.createdAt)}
-                </div>
-              </div>
-
-              {/* Message */}
-              <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">Message</label>
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">{payment.message}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Response Section */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900">Your Response</h2>
-
-              {/* Status */}
-              <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">Status</label>
-                <select
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent"
-                >
-                  {Object.entries(payment_STATUS).map(([key, label]) => (
-                    <option key={key} value={key}>{label}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Response Message */}
-              <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">Response Message</label>
-                <textarea
-                  value={response}
-                  onChange={(e) => setResponse(e.target.value)}
-                  placeholder="Enter your response message. This will be sent to the inquirer via email."
-                  rows={6}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent resize-vertical"
-                />
-              </div>
-
-              {/* Send Button */}
-              <button
-                onClick={handleUpdate}
-                disabled={updating}
-                className="w-full bg-[#004fa2] hover:bg-[#003a7a] text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {updating ? (
-                  <>
-                    <RefreshCw size={18} className="animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send size={18} />
-                    Send Response & Update Status
-                  </>
-                )}
-              </button>
-
-              <p className="text-xs text-gray-500">
-                A confirmation email will be sent to {payment.email} with your response.
-              </p>
             </div>
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Status Card */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">Current Status</h3>
-              <span className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${getStatusColor(payment.status)}`}>
-                {payment_STATUS[payment.status] || payment.status}
-              </span>
-            </div>
-
-            {/* Quick Info */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-3">
-              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">Quick Info</h3>
-              
-              <div>
-                <p className="text-xs text-gray-500 uppercase font-semibold">payment ID</p>
-                <p className="text-gray-900 font-mono text-sm break-all">{payment.id}</p>
-              </div>
-
-              {payment.response && (
-                <div>
-                  <p className="text-xs text-gray-500 uppercase font-semibold">Last Response</p>
-                  <p className="text-xs text-gray-600 mt-1">
-                    {formatDate(payment.updatedAt || payment.createdAt)}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Actions */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">Actions</h3>
-              <button
-                onClick={() => navigate('/admin/payments')}
-                className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Back to List
-              </button>
-            </div>
+          <div className="flex items-center gap-3 mt-6">
+            <button onClick={handleDownloadReceipt} className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-semibold shadow-sm">
+              <Receipt size={20} />
+              Download Receipt
+            </button>
           </div>
         </div>
       </div>
