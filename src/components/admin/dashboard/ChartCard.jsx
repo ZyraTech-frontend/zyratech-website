@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ChartCard Component - Fixed with safe defaults and solid colors
  * Revenue/Engagement chart with period toggle
  */
@@ -27,7 +27,7 @@ const ChartCard = ({ title = 'Revenue Trend', data = [], type = 'bar', metric = 
   }, safeData[0]);
 
   return (
-    <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm h-full">
+    <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
