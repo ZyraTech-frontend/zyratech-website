@@ -274,8 +274,15 @@ const getDashboardData = async () => {
     console.log('[Enrollments]:', enrollments.length, 'items');
 
     // ? CORRECT: Filter KYC client-side (backend doesn't support kycStatus query param)
+    const allKycStatuses = users.map(u => u.kycStatus);
+    const kycStatusCounts = {};
+    allKycStatuses.forEach(status => {
+      kycStatusCounts[status] = (kycStatusCounts[status] || 0) + 1;
+    });
     const pendingKyc = users.filter(u => u.kycStatus === 'pending' || u.verificationStatus === 'pending').length;
-    console.log('[KYC] Pending KYC users:', pendingKyc);
+    console.log('[KYC] All KYC statuses in system:', kycStatusCounts);
+    console.log('[KYC] Pending KYC users (kycStatus=pending):', pendingKyc);
+    console.log('[KYC] Not submitted (kycStatus=not_submitted):', users.filter(u => u.kycStatus === 'not_submitted').length);
 
     // Calculate payment metrics
     const completedPayments = transactions.filter(t => t.status === 'completed' || t.status === 'success' || t.status === 'paid');
