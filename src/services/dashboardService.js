@@ -1,40 +1,34 @@
 /**
- * Dashboard Service - Enhanced with comprehensive metrics
- * Fixed: Correct API function names, error handling, and safe defaults
+ * Dashboard Service - Fixed based on backend team guidance
+ * Using direct axios calls to correct endpoints
+ * All endpoints return: { success, data: { data: [...], pagination: {...} } }
  */
 
-import paymentService from './paymentService';
-import contactInquiryService from './contactInquiryService';
-import partnersService from './partnersService';
-import userService from './userService';
-import { trainingApplicationService } from './trainingApplicationService';
-import jobsService from './jobsService';
+import api from './api';
 
 // Helper: Generate pending actions from various sources
-const getPendingActions = (payments, inquiries, enrollments, users, jobs, partnerships) => {
+const getPendingActions = (payments, inquiries, enrollments, users, jobApplications, partnerships) => {
   const actions = [];
-  const now = new Date();
 
   // Add pending job applications
-  if (Array.isArray(jobs)) {
-    jobs.forEach(job => {
-      const pendingApplicants = job.applicants?.filter(a => a.status === 'pending') || [];
-      pendingApplicants.slice(0, 2).forEach(applicant => {
+  if (Array.isArray(jobApplications)) {
+    jobApplications
+      .filter(app => app.status === 'pending')
+      .slice(0, 2)
+      .forEach(app => {
         actions.push({
-          title: `New Job Application: ${job.title || 'Position'}`,
+          title: `New Job Application: ${app.jobTitle || app.positionTitle || 'Position'}`,
           category: 'Applications',
           priority: 'high',
-          time: getRelativeTime(applicant.appliedAt || applicant.createdAt),
-          timestamp: applicant.appliedAt || applicant.createdAt
+          time: getRelativeTime(app.appliedAt || app.createdAt),
+          timestamp: app.appliedAt || app.createdAt
         });
       });
-    });
   }
 
   // Add pending inquiries
   if (Array.isArray(inquiries)) {
     inquiries
-      .filter(i => i.status === 'new' || i.status === 'unread' || i.status === 'pending')
       .slice(0, 2)
       .forEach(inquiry => {
         actions.push({
@@ -54,7 +48,7 @@ const getPendingActions = (payments, inquiries, enrollments, users, jobs, partne
       .slice(0, 2)
       .forEach(enrollment => {
         actions.push({
-          title: `Course Enrollment: ${enrollment.courseName || 'Training Program'}`,
+          title: `Course Enrollment: ${enrollment.courseName || enrollment.trainingTitle || 'Training Program'}`,
           category: 'Training',
           priority: 'medium',
           time: getRelativeTime(enrollment.createdAt),
@@ -109,12 +103,12 @@ const getRelativeTime = (timestamp) => {
 const getRecentActivity = (payments, inquiries, enrollments, users) => {
   const activities = [];
   
-  // Add payment activities (safely)
+  // Add payment activities
   if (Array.isArray(payments)) {
     payments.slice(0, 5).forEach(payment => {
       activities.push({
         type: 'payment',
-        title: `Payment received: $${payment.amount || 0}`,
+        title: `Payment received: GHS ${payment.amount || 0}`,
         description: payment.courseName || payment.description || 'Payment processed',
         user: payment.userName || payment.payerName || 'Unknown',
         timestamp: payment.createdAt || payment.paidAt,
@@ -123,35 +117,35 @@ const getRecentActivity = (payments, inquiries, enrollments, users) => {
     });
   }
   
-  // Add inquiry activities (safely)
+  // Add inquiry activities
   if (Array.isArray(inquiries)) {
     inquiries.slice(0, 5).forEach(inquiry => {
       activities.push({
         type: 'inquiry',
         title: 'New contact form submission',
         description: inquiry.subject || 'General inquiry',
-        user: inquiry.name || 'Unknown',
+        user: inquiry.name || inquiry.email || 'Unknown',
         timestamp: inquiry.createdAt || inquiry.submittedAt,
-        status: inquiry.status || 'new'
+        status: inquiry.status || 'pending'
       });
     });
   }
   
-  // Add enrollment activities (safely)
+  // Add enrollment activities
   if (Array.isArray(enrollments)) {
     enrollments.slice(0, 5).forEach(enrollment => {
       activities.push({
         type: 'enrollment',
         title: 'Enrollment application received',
-        description: enrollment.courseName || enrollment.trainingId || 'Training program',
-        user: enrollment.userName || enrollment.applicantName || 'Unknown',
+        description: enrollment.courseName || enrollment.trainingTitle || 'Training program',
+        user: enrollment.userName || enrollment.applicantName || enrollment.fullName || 'Unknown',
         timestamp: enrollment.createdAt || enrollment.submittedAt,
         status: enrollment.status
       });
     });
   }
   
-  // Add user registration activities (safely)
+  // Add user registration activities
   if (Array.isArray(users)) {
     users.slice(0, 5).forEach(user => {
       if (user.createdAt) {
@@ -169,7 +163,7 @@ const getRecentActivity = (payments, inquiries, enrollments, users) => {
   
   // Sort by timestamp descending and return top 10
   return activities
-    .filter(a => a.timestamp) // Only keep activities with valid timestamps
+    .filter(a => a.timestamp)
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
     .slice(0, 10);
 };
@@ -205,148 +199,154 @@ const getRevenueChart = (payments) => {
   return months;
 };
 
-// Main service function with proper error handling
+// Main service function using CORRECT endpoints per backend team guidance
 const getDashboardData = async () => {
   try {
-    // Fetch all data in parallel with Promise.allSettled (prevents one failure from killing all)
+    console.log('=== DASHBOARD DATA FETCH START ===');
+    
+    // ? CORRECT: Using direct axios calls to proper endpoints
+    // Backend confirmed ALL endpoints return: { success, data: { data: [...], pagination: {...} } }
     const [
-      paymentsRes,
-      inquiriesRes,
-      partnershipsRes,
       usersRes,
-      enrollmentsRes,
-      jobsRes
+      jobApplicationsRes,
+      activeJobsRes,
+      contactInquiriesRes,
+      transactionsRes,
+      enrollmentsRes
     ] = await Promise.allSettled([
-      paymentService.getTransactions({ limit: 1000 }).catch(err => {
-        console.warn('[Dashboard] Failed to fetch payments:', err);
-        return { data: { transactions: [] } };
-      }),
-      contactInquiryService.getInquiries({ limit: 1000 }).catch(err => {
-        console.warn('[Dashboard] Failed to fetch inquiries:', err);
-        return { inquiries: [] };
-      }),
-      partnersService.getAdminPartnerships({ limit: 1000 }).catch(err => {
-        console.warn('[Dashboard] Failed to fetch partnerships:', err);
-        return { data: [] };
-      }),
-      userService.getAllUsers().catch(err => {
-        console.warn('[Dashboard] Failed to fetch users:', err);
-        return [];
-      }),
-      trainingApplicationService.getAllApplications({ limit: 1000 }).catch(err => {
-        console.warn('[Dashboard] Failed to fetch enrollments:', err);
-        return [];
-      }),
-      jobsService.getAllJobsAdmin().catch(err => {
-        console.warn('[Dashboard] Failed to fetch jobs:', err);
-        return [];
-      })
+      // 1. Users (for KYC count) - fetch ALL users, filter client-side
+      api.get('/admin/users', { params: { limit: 1000 } }),
+      
+      // 2. Job Applications (NOT /admin/jobs!) - this is the CORRECT endpoint
+      api.get('/admin/job-applications', { params: { limit: 1000 } }),
+      
+      // 3. Active Jobs (for "from X active jobs" count)
+      api.get('/admin/jobs', { params: { status: 'active', limit: 1000 } }),
+      
+      // 4. Contact Inquiries - pending only
+      api.get('/admin/contact-inquiries', { params: { status: 'pending', limit: 1000 } }),
+      
+      // 5. Transactions (payments)
+      api.get('/admin/transactions', { params: { limit: 1000 } }),
+      
+      // 6. Enrollments (training applications)
+      api.get('/admin/enrollments', { params: { limit: 1000 } })
     ]);
 
-    // Extract data with safe fallbacks
-    const paymentsData = paymentsRes.status === 'fulfilled' ? paymentsRes.value : { data: { transactions: [] } };
-    // Backend returns { success, data: { data: [...], pagination: {...} } }
-    const transactionsResponse = paymentsData?.data;  // { data: [...], pagination: {...} }
-    const payments = Array.isArray(transactionsResponse?.data) 
-      ? transactionsResponse.data  // The actual array is nested in data.data
-      : [];
-    
-    // Debug: Log payments immediately after extraction
-    console.log('=== DASHBOARD REFUND DEBUG ===');
-    console.log('[Dashboard] paymentsData structure:', paymentsData);
-    console.log('[Dashboard] Payments is array:', Array.isArray(payments));
-    console.log('[Dashboard] Payments extracted:', payments.length);
-    if (Array.isArray(payments) && payments.length > 0) {
-      console.log('[Dashboard] First payment structure:', payments[0]);
-      console.log('[Dashboard] All payment statuses:', [...new Set(payments.map(p => p.status))]);
-    }
+    console.log('=== API RESPONSES DEBUG ===');
+    console.log('[1/6] Users response status:', usersRes.status);
+    console.log('[2/6] Job Applications response status:', jobApplicationsRes.status);
+    console.log('[3/6] Active Jobs response status:', activeJobsRes.status);
+    console.log('[4/6] Contact Inquiries response status:', contactInquiriesRes.status);
+    console.log('[5/6] Transactions response status:', transactionsRes.status);
+    console.log('[6/6] Enrollments response status:', enrollmentsRes.status);
 
-    
-    const inquiriesData = inquiriesRes.status === 'fulfilled' ? inquiriesRes.value : { inquiries: [] };
-    const inquiries = Array.isArray(inquiriesData?.data?.data) ? inquiriesData.data.data : [];
-    
-    const partnershipsData = partnershipsRes.status === 'fulfilled' ? partnershipsRes.value : { data: [] };
-    const partnerships = Array.isArray(partnershipsData?.data?.data) ? partnershipsData.data.data : [];
-    
-    const users = usersRes.status === 'fulfilled' && Array.isArray(usersRes.value?.data?.data) ? usersRes.value.data.data : [];
-    const enrollments = enrollmentsRes.status === 'fulfilled' && Array.isArray(enrollmentsRes.value?.data?.data) ? enrollmentsRes.value.data.data : [];
-    const jobs = jobsRes.status === 'fulfilled' && Array.isArray(jobsRes.value?.data?.data) ? jobsRes.value.data.data : [];
-    
-    // Debug other data sources (AFTER they're declared)
-    console.log('=== OTHER DATA SOURCES DEBUG ===');
-    console.log('[Dashboard] inquiriesData:', inquiriesData);
-    console.log('[Dashboard] inquiries extracted:', Array.isArray(inquiries) ? inquiries.length : 'NOT AN ARRAY');
-    console.log('[Dashboard] usersRes.value:', usersRes.status === 'fulfilled' ? usersRes.value : 'REJECTED');
-    console.log('[Dashboard] users extracted:', Array.isArray(users) ? users.length : 'NOT AN ARRAY');
-    console.log('[Dashboard] enrollmentsRes.value:', enrollmentsRes.status === 'fulfilled' ? enrollmentsRes.value : 'REJECTED');
-    console.log('[Dashboard] enrollments extracted:', Array.isArray(enrollments) ? enrollments.length : 'NOT AN ARRAY');
-    console.log('[Dashboard] jobsRes.value:', jobsRes.status === 'fulfilled' ? jobsRes.value : 'REJECTED');
-    console.log('[Dashboard] jobs extracted:', Array.isArray(jobs) ? jobs.length : 'NOT AN ARRAY');
+    // ? CORRECT: Extract data from response.data (axios wraps backend response in .data)
+    const usersData = usersRes.status === 'fulfilled' ? usersRes.value.data : null;
+    const jobAppsData = jobApplicationsRes.status === 'fulfilled' ? jobApplicationsRes.value.data : null;
+    const activeJobsData = activeJobsRes.status === 'fulfilled' ? activeJobsRes.value.data : null;
+    const inquiriesData = contactInquiriesRes.status === 'fulfilled' ? contactInquiriesRes.value.data : null;
+    const transactionsData = transactionsRes.status === 'fulfilled' ? transactionsRes.value.data : null;
+    const enrollmentsData = enrollmentsRes.status === 'fulfilled' ? enrollmentsRes.value.data : null;
 
-    // Calculate comprehensive stats with safe defaults
+    console.log('=== EXTRACTED DATA STRUCTURES ===');
+    console.log('[Users] Has data.data:', !!usersData?.data?.data, 'Length:', Array.isArray(usersData?.data?.data) ? usersData.data.data.length : 'NOT ARRAY');
+    console.log('[Job Apps] Has data.data:', !!jobAppsData?.data?.data, 'Length:', Array.isArray(jobAppsData?.data?.data) ? jobAppsData.data.data.length : 'NOT ARRAY');
+    console.log('[Active Jobs] Has data.data:', !!activeJobsData?.data?.data, 'Length:', Array.isArray(activeJobsData?.data?.data) ? activeJobsData.data.data.length : 'NOT ARRAY');
+    console.log('[Inquiries] Has data.data:', !!inquiriesData?.data?.data, 'Length:', Array.isArray(inquiriesData?.data?.data) ? inquiriesData.data.data.length : 'NOT ARRAY');
+    console.log('[Transactions] Has data.data:', !!transactionsData?.data?.data, 'Length:', Array.isArray(transactionsData?.data?.data) ? transactionsData.data.data.length : 'NOT ARRAY');
+    console.log('[Enrollments] Has data.data:', !!enrollmentsData?.data?.data, 'Length:', Array.isArray(enrollmentsData?.data?.data) ? enrollmentsData.data.data.length : 'NOT ARRAY');
+
+    // ? CORRECT: Extract arrays from nested data.data structure
+    const users = Array.isArray(usersData?.data?.data) ? usersData.data.data : [];
+    const jobApplications = Array.isArray(jobAppsData?.data?.data) ? jobAppsData.data.data : [];
+    const activeJobs = Array.isArray(activeJobsData?.data?.data) ? activeJobsData.data.data : [];
+    const contactInquiries = Array.isArray(inquiriesData?.data?.data) ? inquiriesData.data.data : [];
+    const transactions = Array.isArray(transactionsData?.data?.data) ? transactionsData.data.data : [];
+    const enrollments = Array.isArray(enrollmentsData?.data?.data) ? enrollmentsData.data.data : [];
+
+    console.log('=== FINAL ARRAYS ===');
+    console.log('[Users]:', users.length, 'items');
+    console.log('[Job Applications]:', jobApplications.length, 'items');
+    console.log('[Active Jobs]:', activeJobs.length, 'items');
+    console.log('[Contact Inquiries]:', contactInquiries.length, 'items (pending only)');
+    console.log('[Transactions]:', transactions.length, 'items');
+    console.log('[Enrollments]:', enrollments.length, 'items');
+
+    // ? CORRECT: Filter KYC client-side (backend doesn't support kycStatus query param)
+    const pendingKyc = users.filter(u => u.kycStatus === 'pending' || u.verificationStatus === 'pending').length;
+    console.log('[KYC] Pending KYC users:', pendingKyc);
+
+    // Calculate payment metrics
+    const completedPayments = transactions.filter(t => t.status === 'completed' || t.status === 'success' || t.status === 'paid');
+    const pendingPayments = transactions.filter(t => t.status === 'pending');
+    const refundedPayments = transactions.filter(t => t.status === 'refunded');
+    const refundingPayments = transactions.filter(t => t.status === 'refunding');
+    
+    const totalRevenue = completedPayments.reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
+    const allRefundPayments = [...refundedPayments, ...refundingPayments];
+
+    console.log('[Payments] Total:', transactions.length, 'Completed:', completedPayments.length, 'Refunded/Refunding:', allRefundPayments.length);
+
+    // Calculate comprehensive stats
     const stats = {
       // Payments
-      totalRevenue: Array.isArray(payments)
-        ? payments
-            .filter(p => p.status === 'completed' || p.status === 'success' || p.status === 'paid')
-            .reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0)
-        : 0,
-      totalPayments: Array.isArray(payments) ? payments.length : 0,
-      pendingPayments: Array.isArray(payments) ? payments.filter(p => p.status === 'pending').length : 0,
-      completedPayments: Array.isArray(payments) ? payments.filter(p => p.status === 'completed' || p.status === 'success' || p.status === 'paid').length : 0,
+      totalRevenue,
+      totalPayments: transactions.length,
+      pendingPayments: pendingPayments.length,
+      completedPayments: completedPayments.length,
 
-      // Users
-      totalUsers: Array.isArray(users) ? users.length : 0,
-      activeUsers: Array.isArray(users) ? users.filter(u => u.isActive || u.status === 'active').length : 0,
-      admins: Array.isArray(users) ? users.filter(u => u.role === 'admin' || u.role === 'super_admin').length : 0,
-      pendingKYC: Array.isArray(users) ? users.filter(u => u.kycStatus === 'pending' || u.verificationStatus === 'pending').length : 0,
+      // Users - filter client-side for KYC
+      totalUsers: users.length,
+      activeUsers: users.filter(u => u.isActive || u.status === 'active').length,
+      admins: users.filter(u => u.role === 'admin' || u.role === 'super_admin').length,
+      pendingKYC: pendingKyc,
 
       // Enrollments
       enrollments: {
-        total: Array.isArray(enrollments) ? enrollments.length : 0,
-        pending: Array.isArray(enrollments) ? enrollments.filter(e => e.status === 'pending').length : 0,
-        approved: Array.isArray(enrollments) ? enrollments.filter(e => e.status === 'approved').length : 0,
-        rejected: Array.isArray(enrollments) ? enrollments.filter(e => e.status === 'rejected').length : 0
+        total: enrollments.length,
+        pending: enrollments.filter(e => e.status === 'pending').length,
+        approved: enrollments.filter(e => e.status === 'approved').length,
+        rejected: enrollments.filter(e => e.status === 'rejected').length
       },
 
-      // Jobs & Applications
-      totalJobs: Array.isArray(jobs) ? jobs.length : 0,
-      activeJobs: Array.isArray(jobs) ? jobs.filter(j => j.status === 'active' || j.status === 'published').length : 0,
-      pendingApplications: Array.isArray(jobs) 
-        ? jobs.reduce((sum, job) => sum + (job.applicants?.filter(a => a.status === 'pending').length || 0), 0)
-        : 0,
+      // Jobs & Applications - using CORRECT job-applications endpoint
+      totalJobs: activeJobs.length,
+      activeJobs: activeJobs.length,
+      pendingApplications: jobApplications.filter(app => app.status === 'pending').length,
 
-      // Inquiries
-      totalInquiries: Array.isArray(inquiries) ? inquiries.length : 0,
-      unreadInquiries: Array.isArray(inquiries) ? inquiries.filter(i => i.status === 'unread' || i.status === 'pending' || i.status === 'new').length : 0,
-      resolvedInquiries: Array.isArray(inquiries) ? inquiries.filter(i => i.status === 'resolved' || i.status === 'completed' || i.status === 'closed').length : 0,
+      // Inquiries - already filtered to pending on server
+      totalInquiries: contactInquiries.length,
+      unreadInquiries: contactInquiries.length, // Already filtered to pending
+      resolvedInquiries: 0, // Would need separate call for resolved
 
-      // Partnerships
-      totalPartnerships: Array.isArray(partnerships) ? partnerships.length : 0,
-      pendingPartnerships: Array.isArray(partnerships) ? partnerships.filter(p => p.status === 'pending').length : 0,
-      approvedPartnerships: Array.isArray(partnerships) ? partnerships.filter(p => p.status === 'approved' || p.status === 'active').length : 0
+      // Partnerships (not implemented yet, default to 0)
+      totalPartnerships: 0,
+      pendingPartnerships: 0,
+      approvedPartnerships: 0
     };
 
+    console.log('=== CALCULATED STATS ===', stats);
 
-    // Generate system health data (mock for now - can be enhanced with real monitoring)
+    // Generate system health
     const systemHealth = {
       apiStatus: 'healthy',
       dbStatus: 'healthy',
-      paymentStatus: payments.length > 0 ? 'healthy' : 'warning',
+      paymentStatus: transactions.length > 0 ? 'healthy' : 'warning',
       emailStatus: 'healthy',
       errorCount: 0
     };
 
     // Generate user engagement metrics
     const userEngagement = {
-      activeToday: Math.floor(stats.activeUsers * 0.3), // ~30% of active users are active today
+      activeToday: Math.floor(stats.activeUsers * 0.3),
       activeTodayTrend: 8.5,
-      newThisWeek: Array.isArray(users) ? users.filter(u => {
+      newThisWeek: users.filter(u => {
         const createdDate = new Date(u.createdAt);
         const weekAgo = new Date();
         weekAgo.setDate(weekAgo.getDate() - 7);
         return createdDate >= weekAgo;
-      }).length : 0,
+      }).length,
       newThisWeekTrend: 12.3,
       avgSession: '8m 42s',
       retentionRate: 76,
@@ -354,35 +354,30 @@ const getDashboardData = async () => {
       peakCount: Math.floor(stats.activeUsers * 0.15)
     };
 
-    // Generate revenue breakdown by source
+    // Generate revenue breakdown
     const revenueBreakdown = {
-      training: Array.isArray(enrollments) && Array.isArray(payments)
-        ? payments.filter(p => (p.status === 'completed' || p.status === 'success') && p.type === 'training').reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0)
-        : stats.totalRevenue * 0.45, // 45% from training (estimated)
-      jobs: stats.totalRevenue * 0.25, // 25% from jobs (estimated)
-      partnerships: Array.isArray(partnerships) && Array.isArray(payments)
-        ? payments.filter(p => (p.status === 'completed' || p.status === 'success') && p.type === 'partnership').reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0)
-        : stats.totalRevenue * 0.20, // 20% from partnerships (estimated)
-      other: stats.totalRevenue * 0.10, // 10% from other sources (estimated)
+      training: transactions
+        .filter(t => (t.status === 'completed' || t.status === 'success') && (t.type === 'training' || t.type === 'enrollment'))
+        .reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0),
+      jobs: transactions
+        .filter(t => (t.status === 'completed' || t.status === 'success') && t.type === 'job')
+        .reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0),
+      partnerships: transactions
+        .filter(t => (t.status === 'completed' || t.status === 'success') && t.type === 'partnership')
+        .reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0),
+      other: transactions
+        .filter(t => (t.status === 'completed' || t.status === 'success') && !['training', 'enrollment', 'job', 'partnership'].includes(t.type))
+        .reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0),
       growth: 15.7
     };
+
     // Calculate refund statistics
-    const refundedPayments = Array.isArray(payments) ? payments.filter(p => p.status === 'refunded') : [];
-    const refundingPayments = Array.isArray(payments) ? payments.filter(p => p.status === 'refunding') : [];
-    
-    // Debug logging
-    console.log('[Dashboard] Total payments fetched:', payments.length);
-    console.log('[Dashboard] Payment statuses:', payments.map(p => p.status));
-    console.log('[Dashboard] Refunded payments:', refundedPayments.length);
-    console.log('[Dashboard] Refunding payments:', refundingPayments.length);
-    
-    const allRefundPayments = [...refundedPayments, ...refundingPayments];
     const refundData = {
       totalRefundAmount: allRefundPayments.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0),
       totalRefunds: allRefundPayments.length,
-      pendingRefunds: refundingPayments.length,  // Processing refunds are "pending"
+      pendingRefunds: refundingPayments.length,
       processedRefunds: refundedPayments.length,
-      rejectedRefunds: 0,  // Backend will mark as 'refunding' with processingNotes if failed
+      rejectedRefunds: 0,
       refundRate: stats.totalPayments > 0 ? (allRefundPayments.length / stats.totalPayments) * 100 : 0,
       recentRefunds: allRefundPayments
         .sort((a, b) => new Date(b.refundedAt || b.updatedAt) - new Date(a.refundedAt || a.updatedAt))
@@ -392,7 +387,7 @@ const getDashboardData = async () => {
           amount: parseFloat(p.amount) || 0,
           reason: p.refundReason || p.cancellationReason || p.processingNotes || 'No reason provided',
           refundedAt: p.refundedAt || p.updatedAt,
-          status: p.status  // Include status to show 'refunding' vs 'refunded'
+          status: p.status
         })),
       topCancellationReasons: (() => {
         const reasonCounts = {};
@@ -406,12 +401,14 @@ const getDashboardData = async () => {
           .slice(0, 5);
       })()
     };
-    console.log('[Dashboard] RefundData calculated:', refundData);
+
+    console.log('=== DASHBOARD DATA FETCH COMPLETE ===');
+
     return {
       stats,
-      recentActivity: getRecentActivity(payments, inquiries, enrollments, users),
-      pendingActions: getPendingActions(payments, inquiries, enrollments, users, jobs, partnerships),
-      revenueChart: getRevenueChart(payments),
+      recentActivity: getRecentActivity(transactions, contactInquiries, enrollments, users),
+      pendingActions: getPendingActions(transactions, contactInquiries, enrollments, users, jobApplications, []),
+      revenueChart: getRevenueChart(transactions),
       systemHealth,
       userEngagement,
       revenueBreakdown,
@@ -426,8 +423,10 @@ const getDashboardData = async () => {
       ]
     };
   } catch (error) {
-    console.error('[dashboardService] Critical error fetching dashboard data:', error);
-    // Return safe defaults instead of throwing
+    console.error('[dashboardService] CRITICAL ERROR:', error);
+    console.error('[dashboardService] Error details:', error.response?.data || error.message);
+    
+    // Return safe defaults
     return {
       stats: {
         totalRevenue: 0,
@@ -464,22 +463,3 @@ const getDashboardData = async () => {
 export default {
   getDashboardData
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
