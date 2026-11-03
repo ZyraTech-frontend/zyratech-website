@@ -1,10 +1,10 @@
 /**
  * RefundTrackerCard Component
- * Displays refund statistics, recent refunds, and cancellation reasons
+ * Displays refund statistics, recent refunds with timestamps, and cancellation reasons
  */
 
 import React from 'react';
-import { DollarSign, AlertCircle, TrendingDown, RefreshCcw } from 'lucide-react';
+import { DollarSign, AlertCircle, TrendingDown, RefreshCcw, Clock } from 'lucide-react';
 
 const RefundTrackerCard = ({ refundData = {} }) => {
   const {
@@ -18,6 +18,13 @@ const RefundTrackerCard = ({ refundData = {} }) => {
   } = refundData;
 
   const refundRate = refundData.refundRate || 0;
+
+  // Format refund date
+  const formatRefundDate = (dateString) => {
+    if (!dateString) return 'Processing...';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  };
 
   return (
     <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-sm h-64 flex flex-col overflow-y-auto">
@@ -67,18 +74,35 @@ const RefundTrackerCard = ({ refundData = {} }) => {
         </div>
       </div>
 
-      {/* Recent Refunds */}
+      {/* Recent Refunds with Timestamps */}
       {recentRefunds.length > 0 && (
         <div className="border-t border-gray-200 pt-3">
           <h4 className="text-[10px] font-semibold text-gray-700 mb-2">Recent Refunds</h4>
           <div className="space-y-2">
             {recentRefunds.slice(0, 3).map((refund, index) => (
-              <div key={index} className="flex items-center justify-between text-xs">
-                <div className="flex-1 truncate">
-                  <p className="text-gray-900 font-medium truncate">{refund.userName || 'Unknown'}</p>
-                  <p className="text-[10px] text-gray-500">{refund.reason || 'No reason provided'}</p>
+              <div key={index} className="bg-gray-50 rounded-lg p-2 border border-gray-100">
+                <div className="flex items-start justify-between mb-1">
+                  <div className="flex-1 truncate">
+                    <p className="text-xs font-semibold text-gray-900 truncate">{refund.userName || 'Unknown'}</p>
+                    <p className="text-[10px] text-gray-500 line-clamp-1">{refund.reason || 'No reason provided'}</p>
+                  </div>
+                  <span className="text-orange-600 font-bold text-xs ml-2">GHS {refund.amount?.toLocaleString() || 0}</span>
                 </div>
-                <span className="text-orange-600 font-bold ml-2">GHS {refund.amount?.toLocaleString() || 0}</span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1">
+                    {refund.status === 'refunding' ? (
+                      <span className="inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 bg-yellow-100 text-yellow-700 rounded-full font-medium">
+                        <Clock size={8} />
+                        Processing
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 bg-green-100 text-green-700 rounded-full font-medium">
+                        ? Completed
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[9px] text-gray-500">{formatRefundDate(refund.refundedAt)}</span>
+                </div>
               </div>
             ))}
           </div>

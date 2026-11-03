@@ -200,6 +200,81 @@ const PaymentDetailsPage = () => {
             </div>
           </div>
 
+          {/* Refund Information Section */}
+          {(payment.status === 'refunded' || payment.status === 'refunding') && (
+            <div className="border-t border-gray-100 pt-6 mt-6">
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-100">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-purple-100 p-3 rounded-lg">
+                      <RefreshCcw size={24} className={`text-purple-600 ${payment.status === 'refunding' ? 'animate-spin' : ''}`} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-900">Refund Information</h3>
+                      <p className="text-sm text-gray-600">
+                        {payment.status === 'refunding' ? 'Refund is being processed by Paystack' : 'This transaction has been refunded'}
+                      </p>
+                    </div>
+                  </div>
+                  {payment.status === 'refunding' ? (
+                    <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-full text-xs font-semibold">
+                      <Clock size={14} />
+                      PROCESSING
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
+                      <CheckCircle size={14} />
+                      COMPLETED
+                    </span>
+                  )}
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div className="bg-white rounded-lg p-4 border border-purple-100">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Refund Amount</p>
+                    <p className="text-2xl font-bold text-purple-600">{formatCurrency(payment.amount, payment.currency)}</p>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg p-4 border border-purple-100">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Refund Status</p>
+                    <p className="text-lg font-bold text-gray-900">
+                      {payment.status === 'refunding' ? 'Processing by Paystack' : 'Refunded to Customer'}
+                    </p>
+                  </div>
+                  
+                  {payment.refundReason && (
+                    <div className="bg-white rounded-lg p-4 border border-purple-100 md:col-span-2">
+                      <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Refund Reason</p>
+                      <p className="text-sm text-gray-900">{payment.refundReason}</p>
+                    </div>
+                  )}
+                  
+                  {payment.refundedAt && payment.status === 'refunded' && (
+                    <div className="bg-white rounded-lg p-4 border border-green-100 md:col-span-2">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Calendar size={16} className="text-green-600" />
+                        <p className="text-xs text-gray-500 uppercase tracking-wide">Refund Completed At</p>
+                      </div>
+                      <p className="text-lg font-bold text-green-600">{formatDate(payment.refundedAt)}</p>
+                      <p className="text-xs text-gray-500 mt-1">Funds were returned to the customer's account by Paystack</p>
+                    </div>
+                  )}
+                  
+                  {payment.status === 'refunding' && (
+                    <div className="bg-white rounded-lg p-4 border border-yellow-100 md:col-span-2">
+                      <div className="flex items-center gap-2">
+                        <Clock size={16} className="text-yellow-600" />
+                        <p className="text-sm text-yellow-700 font-medium">
+                          Refund request sent to Paystack. Processing typically takes 5-10 business days.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center gap-3 mt-6">
             <button onClick={handleDownloadReceipt} className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-semibold shadow-sm">
               <Receipt size={20} />
