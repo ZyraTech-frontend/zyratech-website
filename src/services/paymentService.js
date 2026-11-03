@@ -51,6 +51,15 @@ export const paymentService = {
       responseType: 'blob'
     });
     
+    // Check if response is actually CSV or an error JSON
+    const contentType = response.headers['content-type'];
+    if (contentType && contentType.includes('application/json')) {
+      // Backend returned JSON error, parse it
+      const text = await response.data.text();
+      const error = JSON.parse(text);
+      throw new Error(error.message || 'Failed to export CSV');
+    }
+    
     // Create blob and trigger download
     const blob = new Blob([response.data], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -68,6 +77,25 @@ export const paymentService = {
     const response = await api.get(`/admin/transactions/${reference}/receipt`, {
       responseType: 'blob'
     });
+    
+    // Check if response is actually PDF or an error
+    const contentType = response.headers['content-type'];
+    console.log('Receipt response content-type:', contentType);
+    console.log('Receipt response size:', response.data.size);
+    
+    if (contentType && contentType.includes('application/json')) {
+      // Backend returned JSON error, parse it
+      const text = await response.data.text();
+      const error = JSON.parse(text);
+      throw new Error(error.message || 'Failed to download receipt');
+    }
+    
+    if (!contentType || !contentType.includes('application/pdf')) {
+      // Not a PDF - might be HTML error page
+      const text = await response.data.text();
+      console.error('Receipt response is not PDF:', text.substring(0, 200));
+      throw new Error('Backend did not return a PDF. Please check if the endpoint is working correctly.');
+    }
     
     // Create blob and trigger download
     const blob = new Blob([response.data], { type: 'application/pdf' });
