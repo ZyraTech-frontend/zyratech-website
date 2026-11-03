@@ -223,8 +223,8 @@ const getDashboardData = async () => {
       // 3. Active Jobs (for "from X active jobs" count)
       api.get('/admin/jobs', { params: { status: 'active', limit: 1000 } }),
       
-      // 4. Contact Inquiries - pending only
-      api.get('/admin/contact-inquiries', { params: { status: 'pending', limit: 1000 } }),
+      // 4. Contact Inquiries - NEW only (unread/pending)
+      api.get('/admin/contact-inquiries', { params: { status: 'new', limit: 1000 } }),
       
       // 5. Transactions (payments)
       api.get('/admin/transactions', { params: { limit: 1000 } }),
@@ -269,7 +269,7 @@ const getDashboardData = async () => {
     console.log('[Users]:', users.length, 'items');
     console.log('[Job Applications]:', jobApplications.length, 'items');
     console.log('[Active Jobs]:', activeJobs.length, 'items');
-    console.log('[Contact Inquiries]:', contactInquiries.length, 'items (pending only)');
+    console.log('[Contact Inquiries]:', contactInquiries.length, 'items (status=new only)');
     console.log('[Transactions]:', transactions.length, 'items');
     console.log('[Enrollments]:', enrollments.length, 'items');
 
@@ -285,8 +285,8 @@ const getDashboardData = async () => {
     console.log('[KYC] Not submitted (kycStatus=not_submitted):', users.filter(u => u.kycStatus === 'not_submitted').length);
 
     // Contact Inquiries status (already filtered to pending on server)
-    console.log('[Inquiries] Pending contact inquiries:', contactInquiries.length);
-    console.log('[Inquiries] Note: Already filtered to status=pending by API call');
+    console.log('[Inquiries] NEW (unread) contact inquiries:', contactInquiries.length);
+    console.log('[Inquiries] Note: Filtered to status=new by API call (new/read/replied are valid statuses)');
 
     // Enrollments status breakdown
     const enrollmentStatuses = enrollments.map(e => e.status);
