@@ -1,4 +1,4 @@
-ï»¿/**
+/**
  * Super Admin Dashboard - Clean Professional Layout
  * Money First - Revenue at the TOP
  */
@@ -160,10 +160,10 @@ const SuperAdminDashboard = ({ user }) => {
                         <div className="flex-1">
                             <h3 className="font-semibold text-amber-900 mb-1">Items Requiring Attention</h3>
                             <div className="text-sm text-amber-800 space-y-1">
-                                {(stats.pendingKYC || 0) > 0 && <p>â€¢ {stats.pendingKYC} users pending KYC verification</p>}
-                                {(stats.pendingApplications || 0) > 0 && <p>â€¢ {stats.pendingApplications} job applications pending review</p>}
-                                {(stats.enrollments?.pending || 0) > 0 && <p>â€¢ {stats.enrollments.pending} training enrollments pending approval</p>}
-                                {(stats.unreadInquiries || 0) > 0 && <p>â€¢ {stats.unreadInquiries} unread inquiries</p>}
+                                {(stats.pendingKYC || 0) > 0 && <p>• {stats.pendingKYC} users pending KYC verification</p>}
+                                {(stats.pendingApplications || 0) > 0 && <p>• {stats.pendingApplications} job applications pending review</p>}
+                                {(stats.enrollments?.pending || 0) > 0 && <p>• {stats.enrollments.pending} training enrollments pending approval</p>}
+                                {(stats.unreadInquiries || 0) > 0 && <p>• {stats.unreadInquiries} unread inquiries</p>}
                             </div>
                         </div>
                     </div>
@@ -171,8 +171,8 @@ const SuperAdminDashboard = ({ user }) => {
 
                 {/* ROW 1: REVENUE FIRST - Revenue Card + Chart + Revenue Breakdown */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
-                    {/* Revenue Card (3 cols) */}
-                    <div className="md:col-span-3">
+                    {/* Revenue Card (4 cols - wider for better display) */}
+                    <div className="md:col-span-4">
                         <FinancialCard
                             totalRevenue={stats.totalRevenue || 0}
                             weeklyRevenue={weeklyRevenue}
@@ -180,8 +180,8 @@ const SuperAdminDashboard = ({ user }) => {
                         />
                     </div>
 
-                    {/* Revenue Chart (6 cols) */}
-                    <div className="md:col-span-6">
+                    {/* Revenue Chart (5 cols) */}
+                    <div className="md:col-span-5">
                         <ChartCard
                             title="Revenue Trend"
                             subtitle="Last 6 months"
