@@ -104,6 +104,7 @@ export const getStatusColor = (status) => {
     processing: 'blue',
     failed: 'red',
     refunded: 'orange',
+    refunding: 'orange',
     cancelled: 'gray',
 
     // Course statuses
@@ -133,3 +134,4 @@ export const getInitials = (name) => {
     .toUpperCase()
     .slice(0, 2);
 };
+

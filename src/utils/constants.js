@@ -93,6 +93,8 @@ export const TRANSACTION_STATUSES = {
   PROCESSING: 'processing',
   COMPLETED: 'completed',
   FAILED: 'failed',
+  refunding: 'Processing Refund',
+  REFUNDING: 'refunding',
   REFUNDED: 'refunded',
   CANCELLED: 'cancelled'
 };
@@ -102,6 +104,8 @@ export const TRANSACTION_STATUS_LABELS = {
   processing: 'Processing',
   completed: 'Completed',
   failed: 'Failed',
+  refunding: 'Processing Refund',
+  REFUNDING: 'refunding',
   refunded: 'Refunded',
   cancelled: 'Cancelled'
 };
@@ -231,3 +235,4 @@ export const AVAILABLE_ICONS = [
   'AlertCircle',
   'XCircle'
 ];
+

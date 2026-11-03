@@ -169,21 +169,34 @@ const ApplicationDetailsPage = () => {
         }
         
         dispatch(openConfirmDialog({
-            title: 'Refund Payment',
-            message: `Refund ${payment.currency} ${payment.amount} to ${application.applicantName}?`,
+            title: 'Process Refund',
+            message: `Refund ${payment.currency} ${payment.amount} to ${application.applicantName}? The customer will be notified via email when the refund is processed.`,
             confirmLabel: 'Process Refund',
             isDangerous: true,
             onConfirm: async () => {
+                const reason = prompt('Enter refund reason (optional):');
+                
                 try {
-                    // Call refund API
-                    const response = await api.post(`/admin/transactions/${payment.reference}/refund`);
+                    // Call async refund API
+                    const response = await api.post(`/admin/transactions/${payment.reference}/refund`, {
+                        reason: reason || 'Refund requested by admin'
+                    });
                     
-                    dispatch(addNotification({
-                        type: 'success',
-                        message: 'Refund processed successfully! Money will be returned in 5-7 business days.'
-                    }));
+                    // Check for new async response format
+                    if (response.data.status === 'processing') {
+                        dispatch(addNotification({
+                            type: 'success',
+                            message: 'Refund is being processed. Customer will be notified via email when completed.'
+                        }));
+                    } else {
+                        // Fallback for any other response
+                        dispatch(addNotification({
+                            type: 'success',
+                            message: response.data.message || 'Refund initiated successfully'
+                        }));
+                    }
                     
-                    // Refresh application data
+                    // Refresh application data to show updated payment status
                     fetchApplication();
                 } catch (error) {
                     dispatch(addNotification({
@@ -576,3 +589,5 @@ const ApplicationDetailsPage = () => {
 };
 
 export default ApplicationDetailsPage;
+
+

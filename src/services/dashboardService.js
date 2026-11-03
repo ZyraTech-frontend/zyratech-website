@@ -342,26 +342,29 @@ const getDashboardData = async () => {
     };
     // Calculate refund statistics
     const refundedPayments = Array.isArray(payments) ? payments.filter(p => p.status === 'refunded') : [];
+    const refundingPayments = Array.isArray(payments) ? payments.filter(p => p.status === 'refunding') : [];
+    const allRefundPayments = [...refundedPayments, ...refundingPayments];
     const refundData = {
-      totalRefundAmount: refundedPayments.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0),
-      totalRefunds: refundedPayments.length,
-      pendingRefunds: Array.isArray(payments) ? payments.filter(p => p.refundStatus === 'pending').length : 0,
+      totalRefundAmount: allRefundPayments.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0),
+      totalRefunds: allRefundPayments.length,
+      pendingRefunds: refundingPayments.length,  // Processing refunds are "pending"
       processedRefunds: refundedPayments.length,
-      rejectedRefunds: Array.isArray(payments) ? payments.filter(p => p.refundStatus === 'rejected').length : 0,
-      refundRate: stats.totalPayments > 0 ? (refundedPayments.length / stats.totalPayments) * 100 : 0,
-      recentRefunds: refundedPayments
+      rejectedRefunds: 0,  // Backend will mark as 'refunding' with processingNotes if failed
+      refundRate: stats.totalPayments > 0 ? (allRefundPayments.length / stats.totalPayments) * 100 : 0,
+      recentRefunds: allRefundPayments
         .sort((a, b) => new Date(b.refundedAt || b.updatedAt) - new Date(a.refundedAt || a.updatedAt))
         .slice(0, 5)
         .map(p => ({
           userName: p.userName || p.payerName || 'Unknown',
           amount: parseFloat(p.amount) || 0,
-          reason: p.refundReason || p.cancellationReason || 'No reason provided',
-          refundedAt: p.refundedAt || p.updatedAt
+          reason: p.refundReason || p.cancellationReason || p.processingNotes || 'No reason provided',
+          refundedAt: p.refundedAt || p.updatedAt,
+          status: p.status  // Include status to show 'refunding' vs 'refunded'
         })),
       topCancellationReasons: (() => {
         const reasonCounts = {};
-        refundedPayments.forEach(p => {
-          const reason = p.refundReason || p.cancellationReason || 'No reason provided';
+        allRefundPayments.forEach(p => {
+          const reason = p.refundReason || p.cancellationReason || p.processingNotes || 'No reason provided';
           reasonCounts[reason] = (reasonCounts[reason] || 0) + 1;
         });
         return Object.entries(reasonCounts)
@@ -427,6 +430,9 @@ const getDashboardData = async () => {
 export default {
   getDashboardData
 };
+
+
+
 
 
 

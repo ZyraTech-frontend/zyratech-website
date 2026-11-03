@@ -192,22 +192,32 @@ const PaymentsManagementPage = () => {
         
         dispatch(openConfirmDialog({
             title: 'Process Refund',
-            message: `Are you sure you want to refund ${formatCurrency(payment.amount)} to ${payment.studentName}? This action cannot be undone.`,
+            message: `Are you sure you want to refund ${formatCurrency(payment.amount)} to ${payment.studentName}? The customer will be notified via email when the refund is processed.`,
             isDangerous: true,
             onConfirm: async () => {
-                const reason = prompt('Enter refund reason:');
-                if (!reason) return;
+                const reason = prompt('Enter refund reason (optional):');
+                if (reason === null) return; // User cancelled
 
                 try {
-                    const response = await paymentService.refundPayment(payment.reference, { reason });
+                    const response = await paymentService.refundPayment(payment.reference, { 
+                        reason: reason || 'Refund requested by admin' 
+                    });
                     
-                    if (response.success) {
+                    // Check for new async response format
+                    if (response.status === 'processing') {
                         dispatch(addNotification({
                             type: 'success',
-                            message: 'Payment refunded successfully'
+                            message: 'Refund is being processed. Customer will be notified via email when completed.'
                         }));
-                        fetchPayments(); // Refresh list
+                    } else {
+                        // Fallback for any other response
+                        dispatch(addNotification({
+                            type: 'success',
+                            message: response.message || 'Refund initiated successfully'
+                        }));
                     }
+                    
+                    fetchPayments(); // Refresh list to show updated status
                 } catch (error) {
                     dispatch(addNotification({
                         type: 'error',
@@ -534,3 +544,4 @@ const PaymentsManagementPage = () => {
 };
 
 export default PaymentsManagementPage;
+
