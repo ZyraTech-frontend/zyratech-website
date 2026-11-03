@@ -245,21 +245,9 @@ const PaymentsManagementPage = () => {
         }
     };
 
-    const handleViewDetails = async (payment) => {
+    const handleViewDetails = (payment) => {
         if (!checkPaymentsPermission()) return;
-        
-        try {
-            const response = await paymentService.getTransactionDetails(payment.reference);
-            if (response.success) {
-                setSelectedPayment(response.data);
-                setShowDetailsModal(true);
-            }
-        } catch (error) {
-            dispatch(addNotification({
-                type: 'error',
-                message: error.response?.data?.message || 'Failed to load payment details'
-            }));
-        }
+        navigate(`/admin/payments/${payment.reference}`);
     };
 
     const handleDownloadReceipt = async (payment) => {
