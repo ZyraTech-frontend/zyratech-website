@@ -245,11 +245,11 @@ const getDashboardData = async () => {
 
     // Extract data with safe fallbacks
     const paymentsData = paymentsRes.status === 'fulfilled' ? paymentsRes.value : { data: { transactions: [] } };
-    const payments = Array.isArray(paymentsData?.data) 
-      ? paymentsData.data 
-      : Array.isArray(paymentsData?.transactions) 
-        ? paymentsData.transactions 
-        : [];  // Ensure we always get an array
+    // Backend returns { success, data: { data: [...], pagination: {...} } }
+    const transactionsResponse = paymentsData?.data;  // { data: [...], pagination: {...} }
+    const payments = Array.isArray(transactionsResponse?.data) 
+      ? transactionsResponse.data  // The actual array is nested in data.data
+      : [];
     
     // Debug: Log payments immediately after extraction
     console.log('=== DASHBOARD REFUND DEBUG ===');
@@ -452,6 +452,7 @@ const getDashboardData = async () => {
 export default {
   getDashboardData
 };
+
 
 
 
