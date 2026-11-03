@@ -1,25 +1,29 @@
-﻿/**
+/**
  * RecentActivityCard Component - Compact version
  * Timeline view of recent activities in the last 24 hours
+ * Shows only first 4 items, "View All" navigates to activity logs
  */
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Clock, ChevronRight } from 'lucide-react';
 
 const RecentActivityCard = ({ activities = [], title = "Recent Activity", subtitle = "Last 24 hours" }) => {
+  const navigate = useNavigate();
+  
   const getActivityIcon = (type) => {
     const icons = {
-      'contact': '📧',
-      'enrollment': '🎓',
-      'testimonial': '⭐',
-      'partnership': '🤝',
-      'blog': '📝',
-      'job': '💼',
-      'payment': '💳',
-      'user': '👤',
-      'inquiry': '💬'
+      'contact': '??',
+      'enrollment': '??',
+      'testimonial': '?',
+      'partnership': '??',
+      'blog': '??',
+      'job': '??',
+      'payment': '??',
+      'user': '??',
+      'inquiry': '??'
     };
-    return icons[type?.toLowerCase()] || '📌';
+    return icons[type?.toLowerCase()] || '??';
   };
 
   const getIconBgColor = (type) => {
@@ -52,6 +56,15 @@ const RecentActivityCard = ({ activities = [], title = "Recent Activity", subtit
     return 'Yesterday';
   };
 
+  // Navigate to activity logs
+  const handleViewAll = () => {
+    navigate('/admin/activity-logs');
+  };
+
+  // Show only first 4 items
+  const displayedActivities = activities.slice(0, 4);
+  const hasMore = activities.length > 4;
+
   return (
     <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-sm">
       <div className="flex items-center justify-between mb-3">
@@ -59,39 +72,56 @@ const RecentActivityCard = ({ activities = [], title = "Recent Activity", subtit
           <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
           <p className="text-[10px] text-gray-500">{subtitle}</p>
         </div>
-        <button className="text-[#004fa2] hover:text-[#003d82] text-xs font-semibold flex items-center gap-1">
-          View All
-          <ChevronRight size={12} />
-        </button>
+        {activities.length > 0 && (
+          <button 
+            onClick={handleViewAll}
+            className="text-[#004fa2] hover:text-[#003d82] text-xs font-semibold flex items-center gap-1 transition-colors"
+          >
+            View All
+            <ChevronRight size={12} />
+          </button>
+        )}
       </div>
 
       <div className="space-y-2">
-        {activities.length > 0 ? (
-          activities.map((activity, index) => (
-            <div
-              key={index}
-              className="group flex items-start gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-            >
-              {/* Icon */}
-              <div className={`w-7 h-7 rounded-full ${getIconBgColor(activity.type)} flex items-center justify-center flex-shrink-0 text-sm`}>
-                {getActivityIcon(activity.type)}
-              </div>
+        {displayedActivities.length > 0 ? (
+          <>
+            {displayedActivities.map((activity, index) => (
+              <div
+                key={index}
+                className="group flex items-start gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                {/* Icon */}
+                <div className={`w-7 h-7 rounded-full ${getIconBgColor(activity.type)} flex items-center justify-center flex-shrink-0 text-sm`}>
+                  {getActivityIcon(activity.type)}
+                </div>
 
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-gray-900 group-hover:text-[#004fa2] transition-colors">
-                  {activity.title}
-                </p>
-                <p className="text-[10px] text-gray-500 truncate">{activity.description || activity.subtitle}</p>
-              </div>
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-gray-900 group-hover:text-[#004fa2] transition-colors">
+                    {activity.title}
+                  </p>
+                  <p className="text-[10px] text-gray-500 truncate">{activity.description || activity.subtitle}</p>
+                </div>
 
-              {/* Time */}
-              <div className="text-[9px] text-gray-400 flex items-center gap-0.5 flex-shrink-0">
-                <Clock size={9} />
-                {activity.time || formatRelativeTime(activity.timestamp)}
+                {/* Time */}
+                <div className="text-[9px] text-gray-400 flex items-center gap-0.5 flex-shrink-0">
+                  <Clock size={9} />
+                  {activity.time || formatRelativeTime(activity.timestamp)}
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+            {hasMore && (
+              <div className="text-center pt-2">
+                <button
+                  onClick={handleViewAll}
+                  className="text-[10px] text-gray-500 hover:text-[#004fa2] font-medium"
+                >
+                  +{activities.length - 4} more activities
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <div className="text-center py-6 text-gray-400 text-xs">
             <Clock className="mx-auto mb-1 text-gray-300" size={20} />
