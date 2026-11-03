@@ -387,17 +387,17 @@ const PaymentsManagementPage = () => {
                                 
                                 {/* Course/Project Info */}
                                 <div className="xl:w-1/3 py-1 xl:py-0 border-y xl:border-y-0 border-gray-50">
-                                    <p className="text-[11px] font-medium text-gray-800 line-clamp-1 mb-1">
+                                    <p className="text-xs font-medium text-gray-800 line-clamp-1 mb-1">
                                         {payment.courseTitle || payment.projectTitle || 'N/A'}
                                     </p>
                                     <div className="flex items-center gap-1.5 flex-wrap">
                                         {payment.paymentType === 'training' ? (
-                                            <span className="text-[9px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-medium">Training</span>
+                                            <span className="text-[10px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-medium">Training</span>
                                         ) : (
-                                            <span className="text-[9px] bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-medium">Project</span>
+                                            <span className="text-[10px] bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-medium">Project</span>
                                         )}
-                                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-medium ${methodConfig.color}`}>{methodConfig.label}</span>
-                                        <span className="text-[9px] text-gray-400">{formatDate(payment.createdAt)}</span>
+                                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${methodConfig.color}`}>{methodConfig.label}</span>
+                                        <span className="text-[10px] text-gray-400">{formatDate(payment.createdAt)}</span>
                                     </div>
                                 </div>
 
