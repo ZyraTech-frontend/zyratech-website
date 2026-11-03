@@ -245,12 +245,18 @@ const getDashboardData = async () => {
 
     // Extract data with safe fallbacks
     const paymentsData = paymentsRes.status === 'fulfilled' ? paymentsRes.value : { data: { transactions: [] } };
-    const payments = paymentsData?.data || paymentsData?.transactions || [];  // API returns { data: [...] }
+    const payments = Array.isArray(paymentsData?.data) 
+      ? paymentsData.data 
+      : Array.isArray(paymentsData?.transactions) 
+        ? paymentsData.transactions 
+        : [];  // Ensure we always get an array
     
     // Debug: Log payments immediately after extraction
     console.log('=== DASHBOARD REFUND DEBUG ===');
+    console.log('[Dashboard] paymentsData structure:', paymentsData);
+    console.log('[Dashboard] Payments is array:', Array.isArray(payments));
     console.log('[Dashboard] Payments extracted:', payments.length);
-    if (payments.length > 0) {
+    if (Array.isArray(payments) && payments.length > 0) {
       console.log('[Dashboard] First payment structure:', payments[0]);
       console.log('[Dashboard] All payment statuses:', [...new Set(payments.map(p => p.status))]);
     }
@@ -446,6 +452,8 @@ const getDashboardData = async () => {
 export default {
   getDashboardData
 };
+
+
 
 
 
