@@ -343,6 +343,13 @@ const getDashboardData = async () => {
     // Calculate refund statistics
     const refundedPayments = Array.isArray(payments) ? payments.filter(p => p.status === 'refunded') : [];
     const refundingPayments = Array.isArray(payments) ? payments.filter(p => p.status === 'refunding') : [];
+    
+    // Debug logging
+    console.log('[Dashboard] Total payments fetched:', payments.length);
+    console.log('[Dashboard] Payment statuses:', payments.map(p => p.status));
+    console.log('[Dashboard] Refunded payments:', refundedPayments.length);
+    console.log('[Dashboard] Refunding payments:', refundingPayments.length);
+    
     const allRefundPayments = [...refundedPayments, ...refundingPayments];
     const refundData = {
       totalRefundAmount: allRefundPayments.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0),
@@ -373,6 +380,7 @@ const getDashboardData = async () => {
           .slice(0, 5);
       })()
     };
+    console.log('[Dashboard] RefundData calculated:', refundData);
     return {
       stats,
       recentActivity: getRecentActivity(payments, inquiries, enrollments, users),
@@ -430,6 +438,9 @@ const getDashboardData = async () => {
 export default {
   getDashboardData
 };
+
+
+
 
 
 
