@@ -396,9 +396,7 @@ const PaymentsManagementPage = () => {
                                         ) : (
                                             <span className="text-[9px] bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-medium">Project</span>
                                         )}
-                                        <span className="text-gray-300">•</span>
                                         <span className={`px-1.5 py-0.5 rounded text-[9px] font-medium ${methodConfig.color}`}>{methodConfig.label}</span>
-                                        <span className="text-gray-300">•</span>
                                         <span className="text-[9px] text-gray-400">{formatDate(payment.createdAt)}</span>
                                     </div>
                                 </div>
@@ -484,4 +482,3 @@ const PaymentsManagementPage = () => {
 };
 
 export default PaymentsManagementPage;
-
