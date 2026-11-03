@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DollarSign, AlertCircle, TrendingDown, RefreshCcw, Clock, ExternalLink } from 'lucide-react';
+import { DollarSign, AlertCircle, TrendingDown, RefreshCcw, Clock, ExternalLink, BookOpen } from 'lucide-react';
 
 const RefundTrackerCard = ({ refundData = {} }) => {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const RefundTrackerCard = ({ refundData = {} }) => {
 
   // Format refund date
   const formatRefundDate = (dateString) => {
-    if (!dateString) return 'Processing...';
+    if (!dateString) return 'No date';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   };
@@ -88,26 +88,31 @@ const RefundTrackerCard = ({ refundData = {} }) => {
       {/* Recent Refunds with Timestamps - CLICKABLE */}
       {recentRefunds.length > 0 && (
         <div className="border-t border-gray-200 pt-3">
-          <h4 className="text-[10px] font-semibold text-gray-700 mb-2">Recent Refunds (Click to view details)</h4>
+          <h4 className="text-[10px] font-semibold text-gray-700 mb-2">
+            Recent Refunds <span className="text-gray-500">(Click for details)</span>
+          </h4>
           <div className="space-y-2">
             {recentRefunds.slice(0, 3).map((refund, index) => (
               <div 
                 key={index} 
                 onClick={() => handleRefundClick(refund)}
                 className="bg-gray-50 rounded-lg p-2 border border-gray-100 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-all group"
-                title="Click to view full refund details"
+                title={`Click to view full details for ${refund.userName || 'this refund'}`}
               >
                 <div className="flex items-start justify-between mb-1">
-                  <div className="flex-1 truncate">
-                    <p className="text-xs font-semibold text-gray-900 truncate group-hover:text-blue-600">
-                      {refund.userName || 'Unknown'}
-                    </p>
-                    <p className="text-[10px] text-gray-500 line-clamp-1">{refund.reason || 'No reason provided'}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1 mb-0.5">
+                      <p className="text-xs font-semibold text-gray-900 truncate group-hover:text-blue-600">
+                        {refund.userName || 'Unknown Student'}
+                      </p>
+                      <ExternalLink size={10} className="text-gray-400 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <BookOpen size={9} className="text-gray-400 flex-shrink-0" />
+                      <p className="text-[10px] text-gray-500 truncate">{refund.courseTitle || 'Course'}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-orange-600 font-bold text-xs">{refund.amount?.toLocaleString() || 0}</span>
-                    <ExternalLink size={10} className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
+                  <span className="text-orange-600 font-bold text-xs ml-2 flex-shrink-0">GHS {refund.amount?.toLocaleString() || 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1">

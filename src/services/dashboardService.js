@@ -405,10 +405,11 @@ const getDashboardData = async () => {
         .slice(0, 5)
         .map(p => ({
           reference: p.reference,  // Add reference for navigation
-          userName: p.userName || p.payerName || 'Unknown',
+          userName: p.studentName || p.userName || p.payerName || 'Unknown',
+          courseTitle: p.courseTitle || p.projectTitle || 'N/A',
           amount: parseFloat(p.amount) || 0,
-          reason: p.refundReason || p.cancellationReason || p.processingNotes || 'No reason provided',
-          refundedAt: p.refundedAt || p.updatedAt,
+          reason: p.refundReason || p.cancellationReason || p.processingNotes || 'Refund requested',
+          refundedAt: p.refundedAt || p.refundInitiatedAt || p.updatedAt || p.paidAt,
           status: p.status
         })),
       topCancellationReasons: (() => {
