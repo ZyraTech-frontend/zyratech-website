@@ -263,14 +263,14 @@ const getDashboardData = async () => {
 
     
     const inquiriesData = inquiriesRes.status === 'fulfilled' ? inquiriesRes.value : { inquiries: [] };
-    const inquiries = inquiriesData?.inquiries || [];
+    const inquiries = Array.isArray(inquiriesData?.data?.data) ? inquiriesData.data.data : [];
     
     const partnershipsData = partnershipsRes.status === 'fulfilled' ? partnershipsRes.value : { data: [] };
-    const partnerships = partnershipsData?.data || [];
+    const partnerships = Array.isArray(partnershipsData?.data?.data) ? partnershipsData.data.data : [];
     
-    const users = usersRes.status === 'fulfilled' ? usersRes.value || [] : [];
-    const enrollments = enrollmentsRes.status === 'fulfilled' ? enrollmentsRes.value || [] : [];
-    const jobs = jobsRes.status === 'fulfilled' ? jobsRes.value || [] : [];
+    const users = usersRes.status === 'fulfilled' && Array.isArray(usersRes.value?.data?.data) ? usersRes.value.data.data : [];
+    const enrollments = enrollmentsRes.status === 'fulfilled' && Array.isArray(enrollmentsRes.value?.data?.data) ? enrollmentsRes.value.data.data : [];
+    const jobs = jobsRes.status === 'fulfilled' && Array.isArray(jobsRes.value?.data?.data) ? jobsRes.value.data.data : [];
     
     // Debug other data sources (AFTER they're declared)
     console.log('=== OTHER DATA SOURCES DEBUG ===');
