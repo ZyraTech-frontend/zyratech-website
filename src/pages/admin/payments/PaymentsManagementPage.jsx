@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Payments Management Page (Admin)
  * Matches backend API specification exactly
  */
@@ -366,12 +366,17 @@ const PaymentsManagementPage = () => {
                         return (
                             <div key={payment.id} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col xl:flex-row xl:items-center p-3 gap-3 hover:border-blue-600 transition-colors relative overflow-hidden">
                                 {/* Status indicator */}
-                                <div className={`absolute left-0 top-0 bottom-0 w-1 ${statusConfig?.dotColor}`}></div>
+                                {/* Status indicator removed - no left border */}
                                 
                                 {/* Student Info */}
                                 <div className="flex items-start gap-3 xl:w-1/4 min-w-0 pl-2">
                                     <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                                        {payment.studentName?.split(' ').map(n => n[0]).join('') || '?'}
+                                        {(() => {
+                                            const name = payment.studentName || payment.studentEmail || "User";
+                                            const parts = name.trim().split(" ").filter(n => n);
+                                            if (parts.length >= 2) return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+                                            return parts[0] ? parts[0].substring(0, 2).toUpperCase() : "U";
+                                        })()}
                                     </div>
                                     <div className="min-w-0">
                                         <p className="font-semibold text-gray-900 text-xs truncate">{payment.studentName}</p>
