@@ -284,6 +284,20 @@ const getDashboardData = async () => {
     console.log('[KYC] Pending KYC users (kycStatus=pending):', pendingKyc);
     console.log('[KYC] Not submitted (kycStatus=not_submitted):', users.filter(u => u.kycStatus === 'not_submitted').length);
 
+    // Contact Inquiries status (already filtered to pending on server)
+    console.log('[Inquiries] Pending contact inquiries:', contactInquiries.length);
+    console.log('[Inquiries] Note: Already filtered to status=pending by API call');
+
+    // Enrollments status breakdown
+    const enrollmentStatuses = enrollments.map(e => e.status);
+    const enrollmentStatusCounts = {};
+    enrollmentStatuses.forEach(status => {
+      enrollmentStatusCounts[status] = (enrollmentStatusCounts[status] || 0) + 1;
+    });
+    console.log('[Enrollments] Total enrollments:', enrollments.length);
+    console.log('[Enrollments] Status breakdown:', enrollmentStatusCounts);
+    console.log('[Enrollments] Pending enrollments:', enrollments.filter(e => e.status === 'pending').length);
+
     // Calculate payment metrics
     const completedPayments = transactions.filter(t => t.status === 'completed' || t.status === 'success' || t.status === 'paid');
     const pendingPayments = transactions.filter(t => t.status === 'pending');
