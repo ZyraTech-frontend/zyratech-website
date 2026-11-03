@@ -19,6 +19,7 @@ import RecentActivityCard from '../../../components/admin/dashboard/RecentActivi
 import SystemHealthCard from '../../../components/admin/dashboard/SystemHealthCard';
 import UserEngagementCard from '../../../components/admin/dashboard/UserEngagementCard';
 import RevenueBreakdownCard from '../../../components/admin/dashboard/RevenueBreakdownCard';
+import RefundTrackerCard from '../../../components/admin/dashboard/RefundTrackerCard';
 
 import dashboardService from '../../../services/dashboardService';
 
@@ -107,6 +108,7 @@ const SuperAdminDashboard = ({ user }) => {
     const systemHealth = dashboardData?.systemHealth || {};
     const userEngagement = dashboardData?.userEngagement || {};
     const revenueBreakdown = dashboardData?.revenueBreakdown || {};
+    const refundData = dashboardData?.refundData || {};
 
     const weeklyRevenue = stats.totalRevenue ? (Number(stats.totalRevenue) * 0.08).toFixed(0) : 0;
     const weeklyGrowth = 12.5;
@@ -196,6 +198,14 @@ const SuperAdminDashboard = ({ user }) => {
                     </div>
                 </div>
 
+                
+                {/* ROW 1.5: Refund Tracker */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
+                    <div className="md:col-span-4">
+                        <RefundTrackerCard refundData={refundData} />
+                    </div>
+                </div>
+
                 {/* ROW 2: System Health + User Engagement + Quick Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
                     <div className="md:col-span-4">
@@ -279,3 +289,6 @@ const SuperAdminDashboard = ({ user }) => {
 };
 
 export default SuperAdminDashboard;
+
+
+

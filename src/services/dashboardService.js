@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Dashboard Service - Enhanced with comprehensive metrics
  * Fixed: Correct API function names, error handling, and safe defaults
  */
@@ -340,6 +340,36 @@ const getDashboardData = async () => {
       other: stats.totalRevenue * 0.10, // 10% from other sources (estimated)
       growth: 15.7
     };
+    // Calculate refund statistics
+    const refundedPayments = Array.isArray(payments) ? payments.filter(p => p.status === 'refunded') : [];
+    const refundData = {
+      totalRefundAmount: refundedPayments.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0),
+      totalRefunds: refundedPayments.length,
+      pendingRefunds: Array.isArray(payments) ? payments.filter(p => p.refundStatus === 'pending').length : 0,
+      processedRefunds: refundedPayments.length,
+      rejectedRefunds: Array.isArray(payments) ? payments.filter(p => p.refundStatus === 'rejected').length : 0,
+      refundRate: stats.totalPayments > 0 ? (refundedPayments.length / stats.totalPayments) * 100 : 0,
+      recentRefunds: refundedPayments
+        .sort((a, b) => new Date(b.refundedAt || b.updatedAt) - new Date(a.refundedAt || a.updatedAt))
+        .slice(0, 5)
+        .map(p => ({
+          userName: p.userName || p.payerName || 'Unknown',
+          amount: parseFloat(p.amount) || 0,
+          reason: p.refundReason || p.cancellationReason || 'No reason provided',
+          refundedAt: p.refundedAt || p.updatedAt
+        })),
+      topCancellationReasons: (() => {
+        const reasonCounts = {};
+        refundedPayments.forEach(p => {
+          const reason = p.refundReason || p.cancellationReason || 'No reason provided';
+          reasonCounts[reason] = (reasonCounts[reason] || 0) + 1;
+        });
+        return Object.entries(reasonCounts)
+          .map(([reason, count]) => ({ reason, count }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 5);
+      })()
+    };
     return {
       stats,
       recentActivity: getRecentActivity(payments, inquiries, enrollments, users),
@@ -348,6 +378,7 @@ const getDashboardData = async () => {
       systemHealth,
       userEngagement,
       revenueBreakdown,
+      refundData,
       quickActions: [
         { title: 'Pending KYC', count: stats.pendingKYC || 0, path: '/admin/users', color: '#f59e0b' },
         { title: 'Job Applications', count: stats.pendingApplications || 0, path: '/admin/jobs', color: '#3b82f6' },
@@ -387,6 +418,7 @@ const getDashboardData = async () => {
       systemHealth: {},
       userEngagement: {},
       revenueBreakdown: {},
+      refundData: {},
       quickActions: []
     };
   }
@@ -395,5 +427,8 @@ const getDashboardData = async () => {
 export default {
   getDashboardData
 };
+
+
+
 
 
