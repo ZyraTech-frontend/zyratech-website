@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Payments Management Page (Admin)
  * Matches backend API specification exactly
  */
@@ -389,9 +389,9 @@ const PaymentsManagementPage = () => {
                                 <div className="xl:w-1/3 py-1 xl:py-0 border-y xl:border-y-0 border-gray-50">
                                     <div className="flex items-center gap-1 mb-0.5">
                                         {payment.paymentType === 'training' ? (
-                                            <span className="text-[9px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-medium">?? Training</span>
+                                            <span className="text-[9px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-medium">Training</span>
                                         ) : (
-                                            <span className="text-[9px] bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-medium">??? Project</span>
+                                            <span className="text-[9px] bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-medium">Project</span>
                                         )}
                                     </div>
                                     <p className="text-[11px] font-medium text-gray-800 line-clamp-1">
