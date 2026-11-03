@@ -402,7 +402,6 @@ const PaymentsManagementPage = () => {
                                         <span className="text-[9px] text-gray-400">{formatDate(payment.createdAt)}</span>
                                     </div>
                                 </div>
-                                </div>
 
                                 {/* Amount and Status */}
                                 <div className="flex items-center justify-between xl:justify-end gap-4 xl:w-1/3">
