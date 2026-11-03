@@ -245,7 +245,7 @@ const getDashboardData = async () => {
 
     // Extract data with safe fallbacks
     const paymentsData = paymentsRes.status === 'fulfilled' ? paymentsRes.value : { data: { transactions: [] } };
-    const payments = paymentsData?.data?.transactions || paymentsData?.transactions || [];
+    const payments = paymentsData?.data || paymentsData?.transactions || [];  // API returns { data: [...] }
     
     // Debug: Log payments immediately after extraction
     console.log('=== DASHBOARD REFUND DEBUG ===');
@@ -446,6 +446,7 @@ const getDashboardData = async () => {
 export default {
   getDashboardData
 };
+
 
 
 
