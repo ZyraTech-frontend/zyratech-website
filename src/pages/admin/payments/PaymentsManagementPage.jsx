@@ -59,9 +59,9 @@ const STATUS_CONFIG = {
 
 // Payment method icons
 const PAYMENT_METHODS = {
-    mobile_money: { label: 'Mobile Money', icon: '??', color: 'bg-amber-100 text-amber-700' },
-    card: { label: 'Card', icon: '??', color: 'bg-blue-100 text-blue-700' },
-    bank: { label: 'Bank Transfer', icon: '??', color: 'bg-green-100 text-green-700' }
+    mobile_money: { label: 'Mobile Money', color: 'bg-amber-100 text-amber-700' },
+    card: { label: 'Card', color: 'bg-blue-100 text-blue-700' },
+    bank: { label: 'Bank Transfer', color: 'bg-green-100 text-green-700' }
 };
 
 // Format currency
@@ -398,9 +398,7 @@ const PaymentsManagementPage = () => {
                                         {payment.courseTitle || payment.projectTitle || 'N/A'}
                                     </p>
                                     <div className="flex items-center gap-2 mt-1">
-                                        <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium ${methodConfig.color}`}>
-                                            <span>{methodConfig.icon}</span> {methodConfig.label}
-                                        </span>
+                                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-medium ${methodConfig.color}`}>{methodConfig.label}</span>
                                         <span className="text-[9px] text-gray-400">{formatDate(payment.createdAt)}</span>
                                     </div>
                                 </div>
