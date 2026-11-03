@@ -404,6 +404,7 @@ const getDashboardData = async () => {
         .sort((a, b) => new Date(b.refundedAt || b.updatedAt) - new Date(a.refundedAt || a.updatedAt))
         .slice(0, 5)
         .map(p => ({
+          reference: p.reference,  // Add reference for navigation
           userName: p.userName || p.payerName || 'Unknown',
           amount: parseFloat(p.amount) || 0,
           reason: p.refundReason || p.cancellationReason || p.processingNotes || 'No reason provided',

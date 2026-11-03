@@ -1,12 +1,16 @@
 /**
  * RefundTrackerCard Component
  * Displays refund statistics, recent refunds with timestamps, and cancellation reasons
+ * Clickable refund cards navigate to payment details
  */
 
 import React from 'react';
-import { DollarSign, AlertCircle, TrendingDown, RefreshCcw, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { DollarSign, AlertCircle, TrendingDown, RefreshCcw, Clock, ExternalLink } from 'lucide-react';
 
 const RefundTrackerCard = ({ refundData = {} }) => {
+  const navigate = useNavigate();
+  
   const {
     totalRefundAmount = 0,
     totalRefunds = 0,
@@ -24,6 +28,13 @@ const RefundTrackerCard = ({ refundData = {} }) => {
     if (!dateString) return 'Processing...';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  };
+
+  // Handle click on refund card - navigate to payment details
+  const handleRefundClick = (refund) => {
+    if (refund.reference) {
+      navigate(`/admin/payments/${refund.reference}`);
+    }
   };
 
   return (
@@ -74,19 +85,29 @@ const RefundTrackerCard = ({ refundData = {} }) => {
         </div>
       </div>
 
-      {/* Recent Refunds with Timestamps */}
+      {/* Recent Refunds with Timestamps - CLICKABLE */}
       {recentRefunds.length > 0 && (
         <div className="border-t border-gray-200 pt-3">
-          <h4 className="text-[10px] font-semibold text-gray-700 mb-2">Recent Refunds</h4>
+          <h4 className="text-[10px] font-semibold text-gray-700 mb-2">Recent Refunds (Click to view details)</h4>
           <div className="space-y-2">
             {recentRefunds.slice(0, 3).map((refund, index) => (
-              <div key={index} className="bg-gray-50 rounded-lg p-2 border border-gray-100">
+              <div 
+                key={index} 
+                onClick={() => handleRefundClick(refund)}
+                className="bg-gray-50 rounded-lg p-2 border border-gray-100 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-all group"
+                title="Click to view full refund details"
+              >
                 <div className="flex items-start justify-between mb-1">
                   <div className="flex-1 truncate">
-                    <p className="text-xs font-semibold text-gray-900 truncate">{refund.userName || 'Unknown'}</p>
+                    <p className="text-xs font-semibold text-gray-900 truncate group-hover:text-blue-600">
+                      {refund.userName || 'Unknown'}
+                    </p>
                     <p className="text-[10px] text-gray-500 line-clamp-1">{refund.reason || 'No reason provided'}</p>
                   </div>
-                  <span className="text-orange-600 font-bold text-xs ml-2">GHS {refund.amount?.toLocaleString() || 0}</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-orange-600 font-bold text-xs">{refund.amount?.toLocaleString() || 0}</span>
+                    <ExternalLink size={10} className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1">
