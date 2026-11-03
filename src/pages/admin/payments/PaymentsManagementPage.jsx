@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Payments Management Page (Admin)
  * Matches backend API specification exactly
  */
@@ -59,9 +59,9 @@ const STATUS_CONFIG = {
 
 // Payment method icons
 const PAYMENT_METHODS = {
-    mobile_money: { label: 'Mobile Money', icon: '📱', color: 'bg-amber-100 text-amber-700' },
-    card: { label: 'Card', icon: '💳', color: 'bg-blue-100 text-blue-700' },
-    bank: { label: 'Bank Transfer', icon: '🏦', color: 'bg-green-100 text-green-700' }
+    mobile_money: { label: 'Mobile Money', icon: '??', color: 'bg-amber-100 text-amber-700' },
+    card: { label: 'Card', icon: '??', color: 'bg-blue-100 text-blue-700' },
+    bank: { label: 'Bank Transfer', icon: '??', color: 'bg-green-100 text-green-700' }
 };
 
 // Format currency
@@ -139,8 +139,8 @@ const PaymentsManagementPage = () => {
             const response = await paymentService.getTransactions(params);
             
             if (response.success) {
-                setPayments(response.data || []);
-                setPagination(response.pagination || {
+                setPayments(response.data.data || []);
+                setPagination(response.data.pagination || {
                     page: 1,
                     limit: 20,
                     total: 0,
@@ -165,18 +165,20 @@ const PaymentsManagementPage = () => {
 
     // Statistics calculated from current page data
     const stats = useMemo(() => {
-        const completed = payments.filter(t => t.status === 'completed');
+        // Defensive: ensure payments is always an array
+        const paymentsList = Array.isArray(payments) ? payments : [];
+        const completed = paymentsList.filter(t => t.status === 'completed');
         const totalRevenue = completed.reduce((acc, t) => acc + (t.amount || 0), 0);
-        const refunded = payments.filter(t => t.status === 'refunded');
+        const refunded = paymentsList.filter(t => t.status === 'refunded');
 
         return {
-            totalTransactions: pagination.total || payments.length,
+            totalTransactions: pagination.total || paymentsList.length,
             totalRevenue,
             completedCount: completed.length,
-            pendingCount: payments.filter(t => t.status === 'pending').length,
-            failedCount: payments.filter(t => t.status === 'failed').length,
+            pendingCount: paymentsList.filter(t => t.status === 'pending').length,
+            failedCount: paymentsList.filter(t => t.status === 'failed').length,
             refundedCount: refunded.length,
-            successRate: payments.length > 0 ? Math.round((completed.length / payments.length) * 100) : 0
+            successRate: paymentsList.length > 0 ? Math.round((completed.length / payments.length) * 100) : 0
         };
     }, [payments, pagination.total]);
 
@@ -382,9 +384,9 @@ const PaymentsManagementPage = () => {
                                 <div className="xl:w-1/3 py-1 xl:py-0 border-y xl:border-y-0 border-gray-50">
                                     <div className="flex items-center gap-1 mb-0.5">
                                         {payment.paymentType === 'training' ? (
-                                            <span className="text-[9px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-medium">📚 Training</span>
+                                            <span className="text-[9px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-medium">?? Training</span>
                                         ) : (
-                                            <span className="text-[9px] bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-medium">🏗️ Project</span>
+                                            <span className="text-[9px] bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-medium">??? Project</span>
                                         )}
                                     </div>
                                     <p className="text-[11px] font-medium text-gray-800 line-clamp-1">
@@ -479,3 +481,4 @@ const PaymentsManagementPage = () => {
 };
 
 export default PaymentsManagementPage;
+
