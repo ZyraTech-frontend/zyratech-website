@@ -121,6 +121,8 @@ const PaymentsManagementPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('');
 
+    const [selectedPayment, setSelectedPayment] = useState(null);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
     // Fetch payments from API
     const fetchPayments = async () => {
         if (!checkPaymentsPermission()) return;
@@ -214,12 +216,71 @@ const PaymentsManagementPage = () => {
         }));
     };
 
-    const handleExport = () => {
-        dispatch(addNotification({
-            type: 'info',
-            message: 'Exporting transactions report...'
-        }));
-        // TODO: Implement export functionality
+    const handleExport = async () => {
+        if (!checkPaymentsPermission()) return;
+        
+        try {
+            dispatch(addNotification({
+                type: 'info',
+                message: 'Exporting transactions...'
+            }));
+
+            const params = {};
+            if (selectedStatus) params.status = selectedStatus;
+            if (searchQuery) params.search = searchQuery;
+
+            await paymentService.exportTransactionsCSV(params);
+            
+            dispatch(addNotification({
+                type: 'success',
+                message: 'Transactions exported successfully'
+            }));
+        } catch (error) {
+            dispatch(addNotification({
+                type: 'error',
+                message: error.response?.data?.message || 'Failed to export transactions'
+            }));
+        }
+    };
+
+    const handleViewDetails = async (payment) => {
+        if (!checkPaymentsPermission()) return;
+        
+        try {
+            const response = await paymentService.getTransactionDetails(payment.reference);
+            if (response.success) {
+                setSelectedPayment(response.data);
+                setShowDetailsModal(true);
+            }
+        } catch (error) {
+            dispatch(addNotification({
+                type: 'error',
+                message: error.response?.data?.message || 'Failed to load payment details'
+            }));
+        }
+    };
+
+    const handleDownloadReceipt = async (payment) => {
+        if (!checkPaymentsPermission()) return;
+        
+        try {
+            dispatch(addNotification({
+                type: 'info',
+                message: 'Downloading receipt...'
+            }));
+
+            await paymentService.downloadReceipt(payment.reference);
+            
+            dispatch(addNotification({
+                type: 'success',
+                message: 'Receipt downloaded successfully'
+            }));
+        } catch (error) {
+            dispatch(addNotification({
+                type: 'error',
+                message: error.response?.data?.message || 'Failed to download receipt'
+            }));
+        }
     };
 
     const handleSearch = (value) => {
@@ -415,7 +476,7 @@ const PaymentsManagementPage = () => {
                                     
                                     {/* Actions */}
                                     <div className="flex items-center gap-0.5 border-l border-gray-100 pl-2">
-                                        <button className="p-1.5 hover:bg-blue-50 rounded-lg text-gray-400 hover:text-blue-600 transition-colors">
+                                        <button onClick={() => handleViewDetails(payment)} className="p-1.5 hover:bg-blue-50 rounded-lg text-gray-400 hover:text-blue-600 transition-colors">
                                             <Eye size={14} />
                                         </button>
                                         {payment.status === 'completed' && (
@@ -426,7 +487,7 @@ const PaymentsManagementPage = () => {
                                                 <RefreshCcw size={14} />
                                             </button>
                                         )}
-                                        <button className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-900 transition-colors">
+                                        <button onClick={() => handleDownloadReceipt(payment)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-900 transition-colors">
                                             <Receipt size={14} />
                                         </button>
                                     </div>
