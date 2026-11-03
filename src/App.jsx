@@ -257,6 +257,7 @@ function App() {
 
                 {/* Payments */}
                 <Route path="/admin/payments" element={<ProtectedRoute><PaymentsManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/payments/:reference" element={<ProtectedRoute><PaymentDetailsPage /></ProtectedRoute>} />
 
                 {/* Impact Management */}
                 <Route path="/admin/impact" element={<ProtectedRoute><ImpactManagementPage /></ProtectedRoute>} />
