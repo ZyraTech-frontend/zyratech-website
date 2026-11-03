@@ -261,6 +261,17 @@ const getDashboardData = async () => {
       console.log('[Dashboard] All payment statuses:', [...new Set(payments.map(p => p.status))]);
     }
     
+    // Debug other data sources
+    console.log('=== OTHER DATA SOURCES DEBUG ===');
+    console.log('[Dashboard] inquiriesData:', inquiriesData);
+    console.log('[Dashboard] inquiries extracted:', Array.isArray(inquiries) ? inquiries.length : 'NOT AN ARRAY');
+    console.log('[Dashboard] usersRes.value:', usersRes.status === 'fulfilled' ? usersRes.value : 'REJECTED');
+    console.log('[Dashboard] users extracted:', Array.isArray(users) ? users.length : 'NOT AN ARRAY');
+    console.log('[Dashboard] enrollmentsRes.value:', enrollmentsRes.status === 'fulfilled' ? enrollmentsRes.value : 'REJECTED');
+    console.log('[Dashboard] enrollments extracted:', Array.isArray(enrollments) ? enrollments.length : 'NOT AN ARRAY');
+    console.log('[Dashboard] jobsRes.value:', jobsRes.status === 'fulfilled' ? jobsRes.value : 'REJECTED');
+    console.log('[Dashboard] jobs extracted:', Array.isArray(jobs) ? jobs.length : 'NOT AN ARRAY');
+    
     const inquiriesData = inquiriesRes.status === 'fulfilled' ? inquiriesRes.value : { inquiries: [] };
     const inquiries = inquiriesData?.inquiries || [];
     
@@ -452,6 +463,7 @@ const getDashboardData = async () => {
 export default {
   getDashboardData
 };
+
 
 
 
