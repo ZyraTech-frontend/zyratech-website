@@ -1,4 +1,4 @@
-﻿/**
+/**
  * RevenueBreakdownCard Component
  * Displays revenue distribution by source with donut chart
  */
@@ -41,7 +41,7 @@ const RevenueBreakdownCard = ({ breakdown = {} }) => {
   });
 
   return (
-    <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-sm">
+    <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-sm h-64 flex flex-col overflow-y-auto">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-xs font-semibold text-gray-700">Revenue Sources</h3>
         <div className="flex items-center gap-1 text-green-600">
@@ -100,7 +100,7 @@ const RevenueBreakdownCard = ({ breakdown = {} }) => {
       {sources.length > 0 && (
         <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded-lg">
           <p className="text-[10px] text-green-700 font-semibold">
-            🏆 Top performer: {sources.reduce((max, s) => s.value > max.value ? s : max, sources[0]).name}
+            ?? Top performer: {sources.reduce((max, s) => s.value > max.value ? s : max, sources[0]).name}
           </p>
         </div>
       )}
@@ -109,3 +109,4 @@ const RevenueBreakdownCard = ({ breakdown = {} }) => {
 };
 
 export default RevenueBreakdownCard;
+

@@ -27,8 +27,8 @@ const ChartCard = ({ title = 'Revenue Trend', data = [], type = 'bar', metric = 
   }, safeData[0]);
 
   return (
-    <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
-      <div className="flex items-center justify-between mb-6">
+    <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm h-64 flex flex-col">
+      <div className="flex items-center justify-between mb-3">
         <div>
           <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
         </div>
@@ -60,7 +60,7 @@ const ChartCard = ({ title = 'Revenue Trend', data = [], type = 'bar', metric = 
       </div>
 
       {/* Chart */}
-      <div className="relative h-64">
+      <div className="relative h-40">
         <div className="absolute inset-0 flex items-end justify-around gap-3 px-2">
           {safeData.map((item, index) => {
             const value = Number(item.amount || item.value || item.revenue) || 0;
@@ -103,3 +103,4 @@ const ChartCard = ({ title = 'Revenue Trend', data = [], type = 'bar', metric = 
 };
 
 export default ChartCard;
+
