@@ -69,6 +69,7 @@ const PaymentDetailsPage = lazy(() => import('./pages/admin/payments/PaymentDeta
 const PartnershipsManagementPage = lazy(() => import('./pages/admin/partnerships/PartnershipsManagementPage'));
 const ContactInquiriesPage = lazy(() => import('./pages/admin/contact-inquiries/ContactInquiriesPage'));
 const ContactInquiryDetailsPage = lazy(() => import('./pages/admin/contact-inquiries/ContactInquiryDetailsPage'));
+const PendingActionsPage = lazy(() => import('./pages/admin/pending-actions/PendingActionsPage'));
 const NewsletterManagementPage = lazy(() => import('./pages/admin/newsletter/NewsletterManagementPage'));
 const NewsletterTemplatesPage = lazy(() => import('./pages/admin/newsletter/NewsletterTemplatesPage'));
 const ImpactManagementPage = lazy(() => import('./pages/admin/impact/ImpactManagementPage'));
@@ -270,6 +271,7 @@ function App() {
                 <Route path="/admin/partnerships" element={<ProtectedRoute><PartnershipsManagementPage /></ProtectedRoute>} />
                 <Route path="/admin/contact-inquiries" element={<ProtectedRoute><ContactInquiriesPage /></ProtectedRoute>} />
                 <Route path="/admin/contact-inquiries/:id" element={<ProtectedRoute><ContactInquiryDetailsPage /></ProtectedRoute>} />
+                <Route path="/admin/pending-actions" element={<ProtectedRoute><PendingActionsPage /></ProtectedRoute>} />
                 <Route path="/admin/newsletter" element={<ProtectedRoute><NewsletterManagementPage /></ProtectedRoute>} />
                 <Route path="/admin/newsletter/templates" element={<ProtectedRoute><NewsletterTemplatesPage /></ProtectedRoute>} />
 

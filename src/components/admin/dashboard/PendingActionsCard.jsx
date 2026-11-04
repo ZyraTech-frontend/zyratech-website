@@ -59,9 +59,9 @@ const PendingActionsCard = ({ actions = [], title = "Pending Actions" }) => {
     return icons[category] || <AlertCircle {...iconProps} />;
   };
 
-  // Navigate to contact inquiries (most pending actions are inquiries)
+  // Navigate to pending actions overview page
   const handleViewAll = () => {
-    navigate('/admin/contact-inquiries');
+    navigate('/admin/pending-actions');
   };
 
   // Show only first 4 items
