@@ -289,7 +289,8 @@ const UsersPage = () => {
                 { label: 'Deactivated', value: stats.total - stats.active - stats.pendingPassword, icon: Lock, iconColor: 'text-gray-600' },
                 { label: 'Pending Setup', value: stats.pendingPassword, icon: KeyRound, iconColor: 'text-amber-600' },
                 { label: 'KYC Verified', value: stats.kycVerified, icon: BadgeCheck, iconColor: 'text-emerald-600' },
-                { label: 'KYC Pending', value: stats.kycPending, icon: Clock, iconColor: 'text-amber-600', alert: stats.kycPending > 0 }
+                { label: 'KYC Pending', value: stats.kycPending, icon: Clock, iconColor: 'text-amber-600', alert: stats.kycPending > 0 },
+                { label: 'KYC Not Submitted', value: stats.kycNotSubmitted, icon: FileWarning, iconColor: 'text-orange-600', alert: stats.kycNotSubmitted > 0 }
             ].map((stat, i) => (
                 <div
                     key={i}
@@ -300,6 +301,7 @@ const UsersPage = () => {
                         if (stat.label === 'Pending Setup') setStatusFilter('pending_password');
                         if (stat.label === 'KYC Verified') setKycFilter('verified');
                         if (stat.label === 'KYC Pending') setKycFilter('pending');
+                        if (stat.label === 'KYC Not Submitted') setKycFilter('not_submitted');
                     }}
                     className={`group bg-white rounded-xl p-2.5 sm:p-3 border shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden flex flex-col justify-between cursor-pointer ${stat.alert ? 'border-amber-300 bg-amber-50' : 'border-gray-200 hover:border-[#004fa2]'}`}
                 >
