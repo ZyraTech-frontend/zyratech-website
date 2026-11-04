@@ -24,7 +24,7 @@ const getPendingActions = (payments, inquiries, enrollments, users, jobApplicati
     : 0;
 
   const pendingInquiriesCount = Array.isArray(inquiries) 
-    ? inquiries.length  // Already filtered to status='pending' by API
+    ? inquiries.length  // Already filtered to status='new' by API (new = unread/pending)
     : 0;
 
   const pendingEnrollmentsCount = Array.isArray(enrollments) 
@@ -104,7 +104,7 @@ const getPendingActions = (payments, inquiries, enrollments, users, jobApplicati
   // Add Contact Inquiries summary
   if (pendingInquiriesCount > 0) {
     actions.push({
-      title: `Contact Inquiries: ${pendingInquiriesCount} pending`,
+      title: `Contact Inquiries: ${pendingInquiriesCount} new`,
       category: 'Contact Form',
       priority: 'medium',
       time: getRelativeTime(getLatestTimestamp(inquiries)),
@@ -302,8 +302,8 @@ const getDashboardData = async () => {
       // 3. Active Jobs (for "from X active jobs" count)
       api.get('/admin/jobs', { params: { status: 'active', limit: 1000 } }),
       
-      // 4. Contact Inquiries - PENDING (backend says use 'pending' not 'new')
-      api.get('/admin/contact-inquiries', { params: { status: 'pending', limit: 1000 } }),
+      // 4. Contact Inquiries - NEW (backend says: 'pending' doesn't exist, use 'new')
+      api.get('/admin/contact-inquiries', { params: { status: 'new', limit: 1000 } }),
       
       // 5. Transactions (payments)
       api.get('/admin/transactions', { params: { limit: 1000 } }),
@@ -381,9 +381,9 @@ const getDashboardData = async () => {
     console.log('[KYC] Not Submitted KYC users (server-filtered):', notSubmittedKyc);
     console.log('[KYC] Note: Backend filters by kycStatus=not_submitted - admins who haven\'t submitted KYC docs');
 
-    // Contact Inquiries status (already filtered to pending on server)
-    console.log('[Inquiries] PENDING contact inquiries:', contactInquiries.length);
-    console.log('[Inquiries] Note: Filtered to status=pending by API call per backend specs');
+    // Contact Inquiries status (already filtered to NEW on server)
+    console.log('[Inquiries] NEW (unread) contact inquiries:', contactInquiries.length);
+    console.log('[Inquiries] Note: status=new means unread/pending (pending status does not exist).');
 
     // Enrollments status breakdown
     const enrollmentStatuses = enrollments.map(e => e.status);
