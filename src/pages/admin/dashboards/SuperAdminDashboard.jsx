@@ -206,7 +206,7 @@ const SuperAdminDashboard = ({ user }) => {
                     </div>
                     <div className="md:col-span-3">
                         <StatCard
-                            title="Active Projects"
+                            title="Active Projects" compact={true}
                             value={15}
                             subtitle="3 completed this month"
                             icon={FolderKanban}
@@ -215,7 +215,7 @@ const SuperAdminDashboard = ({ user }) => {
                     </div>
                     <div className="md:col-span-3">
                         <StatCard
-                            title="Website Traffic"
+                            title="Website Traffic" compact={true}
                             value="1,234"
                             subtitle="visitors today (?12%)"
                             icon={TrendingUp}

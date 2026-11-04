@@ -1,4 +1,4 @@
-﻿/**
+/**
  * StatCard Component - Compact version
  * Displays a single metric with icon, value, subtitle, and optional trend
  */
@@ -14,9 +14,39 @@ const StatCard = ({
   trend,
   color = '#3b82f6',
   alert = false,
-  onClick 
+  onClick,
+  compact = false
 }) => {
   const isPositive = trend && trend > 0;
+
+  if (compact) {
+    return (
+      <div 
+        className={`bg-white rounded-lg p-4 border ${alert ? 'border-amber-300' : 'border-gray-100'} shadow-sm h-64 flex flex-col justify-center ${onClick ? 'cursor-pointer hover:shadow-md' : ''} transition-all duration-200`}
+        onClick={onClick}
+      >
+        <div className="flex items-center justify-center mb-4">
+          <div 
+            className="w-14 h-14 rounded-xl flex items-center justify-center"
+            style={{ backgroundColor: `${color}15`, color: color }}
+          >
+            {Icon && <Icon size={28} />}
+          </div>
+        </div>
+        <div className="text-center">
+          <p className="text-gray-600 text-xs font-medium mb-2">{title}</p>
+          <p className="text-3xl font-bold text-gray-900 mb-2">{value?.toLocaleString() || 0}</p>
+          {subtitle && <p className="text-xs text-gray-500">{subtitle}</p>}
+          {trend !== undefined && trend !== null && (
+            <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold mt-2 ${isPositive ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'}`}>
+              {isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+              {Math.abs(trend).toFixed(1)}%
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div 
