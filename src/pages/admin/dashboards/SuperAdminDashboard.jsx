@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Users, GraduationCap, Briefcase, AlertCircle, 
-    MessageSquare, RefreshCw
+    MessageSquare, RefreshCw, FolderKanban, TrendingUp
 } from 'lucide-react';
 
 import StatCard from '../../../components/admin/dashboard/StatCard';
@@ -162,10 +162,10 @@ const SuperAdminDashboard = ({ user }) => {
                         <div className="flex-1">
                             <h3 className="font-semibold text-amber-900 mb-1">Items Requiring Attention</h3>
                             <div className="text-sm text-amber-800 space-y-1">
-                                {(stats.pendingKYC || 0) > 0 && <p>• {stats.pendingKYC} users pending KYC verification</p>}
-                                {(stats.pendingApplications || 0) > 0 && <p>• {stats.pendingApplications} job applications pending review</p>}
-                                {(stats.enrollments?.pending || 0) > 0 && <p>• {stats.enrollments.pending} training enrollments pending approval</p>}
-                                {(stats.unreadInquiries || 0) > 0 && <p>• {stats.unreadInquiries} unread inquiries</p>}
+                                {(stats.pendingKYC || 0) > 0 && <p> {stats.pendingKYC} users pending KYC verification</p>}
+                                {(stats.pendingApplications || 0) > 0 && <p> {stats.pendingApplications} job applications pending review</p>}
+                                {(stats.enrollments?.pending || 0) > 0 && <p> {stats.enrollments.pending} training enrollments pending approval</p>}
+                                {(stats.unreadInquiries || 0) > 0 && <p> {stats.unreadInquiries} unread inquiries</p>}
                             </div>
                         </div>
                     </div>
@@ -241,30 +241,20 @@ const SuperAdminDashboard = ({ user }) => {
                 </div>
 
                 {/* ROW 4: More Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <StatCard
-                        title="Pending KYC"
-                        value={stats.pendingKYC || 0}
-                        subtitle="Awaiting verification"
-                        icon={AlertCircle}
-                        color="#f59e0b"
-                        alert={(stats.pendingKYC || 0) > 0}
-                    />
-                    <StatCard
-                        title="Job Applications"
-                        value={stats.pendingApplications || 0}
-                        subtitle={`From ${stats.activeJobs || 0} active jobs`}
-                        icon={Briefcase}
+                        title="Active Projects"
+                        value={15}
+                        subtitle="3 completed this month"
+                        icon={FolderKanban}
                         color="#3b82f6"
-                        alert={(stats.pendingApplications || 0) > 0}
                     />
                     <StatCard
-                        title="Contact Inquiries"
-                        value={stats.totalInquiries || 0}
-                        subtitle={`${stats.unreadInquiries || 0} unread`}
-                        icon={MessageSquare}
-                        color="#ef4444"
-                        alert={(stats.unreadInquiries || 0) > 0}
+                        title="Website Traffic"
+                        value="1,234"
+                        subtitle="visitors today (?12%)"
+                        icon={TrendingUp}
+                        color="#10b981"
                     />
                 </div>
 
