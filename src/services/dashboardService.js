@@ -11,8 +11,8 @@ const getPendingActions = (payments, inquiries, enrollments, users, jobApplicati
   const actions = [];
 
   // Count pending items by category
-  const pendingKycCount = Array.isArray(users) 
-    ? users.filter(u => u.kycStatus === 'pending' || u.verificationStatus === 'pending').length 
+  const notSubmittedKycCount = Array.isArray(users) 
+    ? users.length  // All users returned have kycStatus=not_submitted (backend filtered)
     : 0;
 
   const pendingPaymentsCount = Array.isArray(payments) 
@@ -57,14 +57,14 @@ const getPendingActions = (payments, inquiries, enrollments, users, jobApplicati
     return timestamps.length > 0 ? Math.max(...timestamps) : null;
   };
 
-  // Add KYC Verifications summary
-  if (pendingKycCount > 0) {
+  // Add KYC Not Submitted summary
+  if (notSubmittedKycCount > 0) {
     actions.push({
-      title: `KYC Verifications: ${pendingKycCount} pending`,
+      title: `KYC Not Submitted: ${notSubmittedKycCount} pending`,
       category: 'KYC',
       priority: 'high',
-      time: getRelativeTime(getLatestTimestamp(users.filter(u => u.kycStatus === 'pending' || u.verificationStatus === 'pending'))),
-      timestamp: getLatestTimestamp(users.filter(u => u.kycStatus === 'pending' || u.verificationStatus === 'pending'))
+      time: getRelativeTime(getLatestTimestamp(users)),  // All users are not_submitted
+      timestamp: getLatestTimestamp(users)
     });
   }
 
@@ -293,8 +293,8 @@ const getDashboardData = async () => {
       newsletterSubscriptionsRes,
       partnershipsRes
     ] = await Promise.allSettled([
-      // 1. Users (for KYC count) - BACKEND NOW SUPPORTS kycStatus FILTER!
-      api.get('/admin/users', { params: { kycStatus: 'pending', limit: 1000 } }),
+      // 1. Users (for KYC count) - NOT SUBMITTED (haven't submitted KYC docs yet)
+      api.get('/admin/users', { params: { kycStatus: 'not_submitted', limit: 1000 } }),
       
       // 2. Job Applications (NOT /admin/jobs!) - this is the CORRECT endpoint
       api.get('/admin/job-applications', { params: { limit: 1000 } }),
@@ -376,10 +376,10 @@ const getDashboardData = async () => {
     console.log('[Newsletter Subscriptions]:', newsletterSubscriptions.length, 'items');
     console.log('[Partnerships]:', partnerships.length, 'items');
 
-    // ? CORRECT: Backend NOW filters KYC server-side using kycStatus param!
-    const pendingKyc = usersData?.data?.pagination?.total || 0;  // Backend filters by kycStatus=pending
-    console.log('[KYC] Pending KYC users (server-filtered):', pendingKyc);
-    console.log('[KYC] Note: Backend now filters by kycStatus=pending, no client-side filtering needed');
+    // ? CORRECT: Backend filters KYC server-side - showing NOT SUBMITTED (haven't uploaded docs)
+    const notSubmittedKyc = usersData?.data?.pagination?.total || 0;  // Backend filters by kycStatus=not_submitted
+    console.log('[KYC] Not Submitted KYC users (server-filtered):', notSubmittedKyc);
+    console.log('[KYC] Note: Backend filters by kycStatus=not_submitted - admins who haven\'t submitted KYC docs');
 
     // Contact Inquiries status (already filtered to pending on server)
     console.log('[Inquiries] PENDING contact inquiries:', contactInquiries.length);
@@ -429,7 +429,7 @@ const getDashboardData = async () => {
       totalUsers: users.length,
       activeUsers: users.filter(u => u.isActive || u.status === 'active').length,
       admins: users.filter(u => u.role === 'admin' || u.role === 'super_admin').length,
-      pendingKYC: pendingKyc,
+      pendingKYC: notSubmittedKyc,
 
       // Enrollments
       enrollments: {
