@@ -2,7 +2,7 @@
  * Activity Log Service - API Integration
  * Fetches activity logs from the backend API with enhanced device and location tracking.
  * 
- * API Endpoint: GET https://admin.zyratechhub.com/api/admin/logs/
+ * API Endpoint: GET https://api.zyratechhub.com/api/admin/logs/
  * Authentication: Bearer token required
  * Permission: super_admin_only
  */
@@ -10,7 +10,7 @@
 import axios from 'axios';
 
 // Activity Logs API base URL (different from main API)
-const ACTIVITY_LOGS_API_BASE = 'https://admin.zyratechhub.com/api/admin/logs';
+const ACTIVITY_LOGS_API_BASE = 'https://api.zyratechhub.com/api/admin/logs';
 
 /**
  * Get the authentication token
