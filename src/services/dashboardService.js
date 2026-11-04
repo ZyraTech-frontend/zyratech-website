@@ -24,7 +24,7 @@ const getPendingActions = (payments, inquiries, enrollments, users, jobApplicati
     : 0;
 
   const pendingInquiriesCount = Array.isArray(inquiries) 
-    ? inquiries.length  // Already filtered to status='new' by API
+    ? inquiries.length  // Already filtered to status='pending' by API
     : 0;
 
   const pendingEnrollmentsCount = Array.isArray(enrollments) 
@@ -104,7 +104,7 @@ const getPendingActions = (payments, inquiries, enrollments, users, jobApplicati
   // Add Contact Inquiries summary
   if (pendingInquiriesCount > 0) {
     actions.push({
-      title: `Contact Inquiries: ${pendingInquiriesCount} new`,
+      title: `Contact Inquiries: ${pendingInquiriesCount} pending`,
       category: 'Contact Form',
       priority: 'medium',
       time: getRelativeTime(getLatestTimestamp(inquiries)),
@@ -293,8 +293,8 @@ const getDashboardData = async () => {
       newsletterSubscriptionsRes,
       partnershipsRes
     ] = await Promise.allSettled([
-      // 1. Users (for KYC count) - fetch ALL users, filter client-side
-      api.get('/admin/users', { params: { limit: 1000 } }),
+      // 1. Users (for KYC count) - BACKEND NOW SUPPORTS kycStatus FILTER!
+      api.get('/admin/users', { params: { kycStatus: 'pending', limit: 1000 } }),
       
       // 2. Job Applications (NOT /admin/jobs!) - this is the CORRECT endpoint
       api.get('/admin/job-applications', { params: { limit: 1000 } }),
@@ -302,8 +302,8 @@ const getDashboardData = async () => {
       // 3. Active Jobs (for "from X active jobs" count)
       api.get('/admin/jobs', { params: { status: 'active', limit: 1000 } }),
       
-      // 4. Contact Inquiries - NEW only (unread/pending)
-      api.get('/admin/contact-inquiries', { params: { status: 'new', limit: 1000 } }),
+      // 4. Contact Inquiries - PENDING (backend says use 'pending' not 'new')
+      api.get('/admin/contact-inquiries', { params: { status: 'pending', limit: 1000 } }),
       
       // 5. Transactions (payments)
       api.get('/admin/transactions', { params: { limit: 1000 } }),
@@ -376,20 +376,14 @@ const getDashboardData = async () => {
     console.log('[Newsletter Subscriptions]:', newsletterSubscriptions.length, 'items');
     console.log('[Partnerships]:', partnerships.length, 'items');
 
-    // ? CORRECT: Filter KYC client-side (backend doesn't support kycStatus query param)
-    const allKycStatuses = users.map(u => u.kycStatus);
-    const kycStatusCounts = {};
-    allKycStatuses.forEach(status => {
-      kycStatusCounts[status] = (kycStatusCounts[status] || 0) + 1;
-    });
-    const pendingKyc = users.filter(u => u.kycStatus === 'pending' || u.verificationStatus === 'pending').length;
-    console.log('[KYC] All KYC statuses in system:', kycStatusCounts);
-    console.log('[KYC] Pending KYC users (kycStatus=pending):', pendingKyc);
-    console.log('[KYC] Not submitted (kycStatus=not_submitted):', users.filter(u => u.kycStatus === 'not_submitted').length);
+    // ? CORRECT: Backend NOW filters KYC server-side using kycStatus param!
+    const pendingKyc = usersData?.data?.pagination?.total || 0;  // Backend filters by kycStatus=pending
+    console.log('[KYC] Pending KYC users (server-filtered):', pendingKyc);
+    console.log('[KYC] Note: Backend now filters by kycStatus=pending, no client-side filtering needed');
 
     // Contact Inquiries status (already filtered to pending on server)
-    console.log('[Inquiries] NEW (unread) contact inquiries:', contactInquiries.length);
-    console.log('[Inquiries] Note: Filtered to status=new by API call (new/read/replied are valid statuses)');
+    console.log('[Inquiries] PENDING contact inquiries:', contactInquiries.length);
+    console.log('[Inquiries] Note: Filtered to status=pending by API call per backend specs');
 
     // Enrollments status breakdown
     const enrollmentStatuses = enrollments.map(e => e.status);
