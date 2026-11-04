@@ -1,12 +1,12 @@
 /**
  * RefundTrackerCard Component
- * Displays refund statistics, recent refunds with timestamps, and cancellation reasons
- * Clickable refund cards navigate to payment details
+ * Professional refund statistics display without gradients
+ * Displays refund metrics, recent refunds, and cancellation reasons
  */
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DollarSign, AlertCircle, TrendingDown, RefreshCcw, Clock, ExternalLink, BookOpen } from 'lucide-react';
+import { AlertCircle, TrendingDown, RefreshCcw, Clock, ExternalLink, BookOpen, CheckCircle, XCircle } from 'lucide-react';
 
 const RefundTrackerCard = ({ refundData = {} }) => {
   const navigate = useNavigate();
@@ -38,66 +38,72 @@ const RefundTrackerCard = ({ refundData = {} }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-sm h-64 flex flex-col overflow-y-auto">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-xs font-semibold text-gray-700">Refunds & Cancellations</h3>
-        <div className="flex items-center gap-1 text-orange-600">
-          <TrendingDown size={12} />
-          <span className="text-[10px] font-bold">{refundRate.toFixed(1)}%</span>
+    <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm h-64 flex flex-col overflow-y-auto">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-semibold text-gray-800">Refunds & Cancellations</h3>
+        <div className="flex items-center gap-1 px-2 py-1 bg-orange-50 rounded-md">
+          <TrendingDown size={14} className="text-orange-600" />
+          <span className="text-xs font-semibold text-orange-600">{refundRate.toFixed(1)}%</span>
         </div>
       </div>
 
-      {/* Total Refund Amount */}
-      <div className="mb-3 p-3 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg">
-        <div className="flex items-center gap-2 mb-1">
-          <RefreshCcw size={16} className="text-orange-600" />
-          <span className="text-[9px] text-gray-600 font-medium">Total Refund Amount</span>
-        </div>
-        <p className="text-xl font-bold text-gray-900">
-          GHS {totalRefundAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-        </p>
-      </div>
-
-      {/* Refund Status Breakdown */}
-      <div className="space-y-2 mb-3">
-        <div className="flex items-center justify-between text-xs">
+      {/* Total Refund Amount - Clean Professional Style */}
+      <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-            <span className="text-gray-600">Pending</span>
+            <div className="p-1.5 bg-orange-100 rounded">
+              <RefreshCcw size={16} className="text-orange-600" />
+            </div>
+            <div>
+              <p className="text-[10px] text-gray-600 font-medium">Total Refunded</p>
+              <p className="text-lg font-bold text-gray-900">
+                GHS {totalRefundAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+              </p>
+            </div>
           </div>
-          <span className="font-bold text-gray-900">{pendingRefunds}</span>
+        </div>
+      </div>
+
+      {/* Refund Status Breakdown - Grid Layout */}
+      <div className="grid grid-cols-3 gap-2 mb-4">
+        <div className="p-2 bg-yellow-50 rounded-lg border border-yellow-100">
+          <div className="flex items-center gap-1 mb-1">
+            <Clock size={12} className="text-yellow-600" />
+            <span className="text-[9px] text-yellow-700 font-medium">Pending</span>
+          </div>
+          <p className="text-lg font-bold text-yellow-900">{pendingRefunds}</p>
         </div>
         
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-green-500"></div>
-            <span className="text-gray-600">Processed</span>
+        <div className="p-2 bg-green-50 rounded-lg border border-green-100">
+          <div className="flex items-center gap-1 mb-1">
+            <CheckCircle size={12} className="text-green-600" />
+            <span className="text-[9px] text-green-700 font-medium">Done</span>
           </div>
-          <span className="font-bold text-gray-900">{processedRefunds}</span>
+          <p className="text-lg font-bold text-green-900">{processedRefunds}</p>
         </div>
         
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-red-500"></div>
-            <span className="text-gray-600">Rejected</span>
+        <div className="p-2 bg-red-50 rounded-lg border border-red-100">
+          <div className="flex items-center gap-1 mb-1">
+            <XCircle size={12} className="text-red-600" />
+            <span className="text-[9px] text-red-700 font-medium">Rejected</span>
           </div>
-          <span className="font-bold text-gray-900">{rejectedRefunds}</span>
+          <p className="text-lg font-bold text-red-900">{rejectedRefunds}</p>
         </div>
       </div>
 
-      {/* Recent Refunds with Timestamps - CLICKABLE */}
+      {/* Recent Refunds - Simplified */}
       {recentRefunds.length > 0 && (
         <div className="border-t border-gray-200 pt-3">
           <h4 className="text-[10px] font-semibold text-gray-700 mb-2">
-            Recent Refunds <span className="text-gray-500">(Click for details)</span>
+            Recent Refunds
           </h4>
           <div className="space-y-2">
-            {recentRefunds.slice(0, 3).map((refund, index) => (
+            {recentRefunds.slice(0, 2).map((refund, index) => (
               <div 
                 key={index} 
                 onClick={() => handleRefundClick(refund)}
-                className="bg-gray-50 rounded-lg p-2 border border-gray-100 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-all group"
-                title={`Click to view full details for ${refund.userName || 'this refund'}`}
+                className="bg-white rounded-lg p-2 border border-gray-200 hover:border-blue-300 hover:shadow-sm cursor-pointer transition-all group"
               >
                 <div className="flex items-start justify-between mb-1">
                   <div className="flex-1 min-w-0">
@@ -105,28 +111,27 @@ const RefundTrackerCard = ({ refundData = {} }) => {
                       <p className="text-xs font-semibold text-gray-900 truncate group-hover:text-blue-600">
                         {refund.userName || 'Unknown Student'}
                       </p>
-                      <ExternalLink size={10} className="text-gray-400 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <ExternalLink size={9} className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                     <div className="flex items-center gap-1">
-                      <BookOpen size={9} className="text-gray-400 flex-shrink-0" />
+                      <BookOpen size={9} className="text-gray-400" />
                       <p className="text-[10px] text-gray-500 truncate">{refund.courseTitle || 'Course'}</p>
                     </div>
                   </div>
-                  <span className="text-orange-600 font-bold text-xs ml-2 flex-shrink-0">GHS {refund.amount?.toLocaleString() || 0}</span>
+                  <span className="text-orange-600 font-bold text-xs ml-2">GHS {refund.amount?.toLocaleString() || 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1">
-                    {refund.status === 'refunding' ? (
-                      <span className="inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 bg-yellow-100 text-yellow-700 rounded-full font-medium">
-                        <Clock size={8} />
-                        Processing
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 bg-green-100 text-green-700 rounded-full font-medium">
-                        ? Completed
-                      </span>
-                    )}
-                  </div>
+                  {refund.status === 'refunding' ? (
+                    <span className="inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 bg-yellow-100 text-yellow-700 rounded font-medium">
+                      <Clock size={8} />
+                      Processing
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 bg-green-100 text-green-700 rounded font-medium">
+                      <CheckCircle size={8} />
+                      Completed
+                    </span>
+                  )}
                   <span className="text-[9px] text-gray-500">{formatRefundDate(refund.refundedAt)}</span>
                 </div>
               </div>
@@ -135,15 +140,15 @@ const RefundTrackerCard = ({ refundData = {} }) => {
         </div>
       )}
 
-      {/* Top Cancellation Reasons */}
+      {/* Top Cancellation Reasons - Compact */}
       {topCancellationReasons.length > 0 && (
         <div className="border-t border-gray-200 pt-3 mt-2">
           <h4 className="text-[10px] font-semibold text-gray-700 mb-2">Top Cancellation Reasons</h4>
-          <div className="space-y-1">
-            {topCancellationReasons.slice(0, 3).map((reason, index) => (
-              <div key={index} className="flex items-center justify-between text-[10px]">
-                <span className="text-gray-600 truncate flex-1">{reason.reason}</span>
-                <span className="text-gray-900 font-bold ml-2">({reason.count})</span>
+          <div className="space-y-1.5">
+            {topCancellationReasons.slice(0, 2).map((reason, index) => (
+              <div key={index} className="flex items-center justify-between p-1.5 bg-gray-50 rounded">
+                <span className="text-[10px] text-gray-700 truncate flex-1">{reason.reason}</span>
+                <span className="text-[10px] text-gray-900 font-bold ml-2 bg-white px-1.5 py-0.5 rounded">{reason.count}</span>
               </div>
             ))}
           </div>
@@ -154,8 +159,9 @@ const RefundTrackerCard = ({ refundData = {} }) => {
       {recentRefunds.length === 0 && topCancellationReasons.length === 0 && (
         <div className="flex-1 flex items-center justify-center border-t border-gray-200 mt-3 pt-3">
           <div className="text-center">
-            <AlertCircle size={24} className="text-gray-300 mx-auto mb-2" />
-            <p className="text-xs text-gray-500">No refunds yet</p>
+            <AlertCircle size={32} className="text-gray-300 mx-auto mb-2" />
+            <p className="text-xs text-gray-500 font-medium">No refunds yet</p>
+            <p className="text-[10px] text-gray-400 mt-1">All transactions are running smoothly</p>
           </div>
         </div>
       )}
