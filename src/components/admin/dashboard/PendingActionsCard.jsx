@@ -20,7 +20,8 @@ import {
   Briefcase,
   FolderKanban,
   Shield,
-  CreditCard
+  CreditCard,
+  Mail
 } from 'lucide-react';
 
 const PendingActionsCard = ({ actions = [], title = "Pending Actions" }) => {
@@ -52,7 +53,8 @@ const PendingActionsCard = ({ actions = [], title = "Pending Actions" }) => {
       'Jobs': <Briefcase {...iconProps} />,
       'Projects': <FolderKanban {...iconProps} />,
       'KYC': <Shield {...iconProps} />,
-      'Payments': <CreditCard {...iconProps} />
+      'Payments': <CreditCard {...iconProps} />,
+      'Newsletter': <Mail {...iconProps} />
     };
     return icons[category] || <AlertCircle {...iconProps} />;
   };
