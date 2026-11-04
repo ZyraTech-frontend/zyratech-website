@@ -39,6 +39,7 @@ const ApplicationDetailsPage = () => {
     const [error, setError] = useState(null);
     const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
     const [paymentInfo, setPaymentInfo] = useState(null);
+    const [refundLoading, setRefundLoading] = useState(false);
 
     useEffect(() => {
         fetchApplication();
@@ -170,39 +171,48 @@ const ApplicationDetailsPage = () => {
         
         dispatch(openConfirmDialog({
             title: 'Process Refund',
-            message: `Refund ${payment.currency} ${payment.amount} to ${application.applicantName}? The customer will be notified via email when the refund is processed.`,
+            message: `Refund ${payment.currency} ${payment.amount} to ${application.applicantName}? This will process a real refund through Paystack and may take 2-5 seconds.`,
             confirmLabel: 'Process Refund',
             isDangerous: true,
             onConfirm: async () => {
                 const reason = prompt('Enter refund reason (optional):');
+                if (reason === null) return; // User cancelled
+                
+                setRefundLoading(true); // Show loading state
                 
                 try {
-                    // Call async refund API
+                    // Call refund API - now waits for Paystack response (2-5 seconds)
                     const response = await api.post(`/admin/transactions/${payment.reference}/refund`, {
                         reason: reason || 'Refund requested by admin'
                     });
                     
-                    // Check for new async response format
-                    if (response.data.status === 'processing') {
+                    // NEW: Check for success/failed status from backend (updated workflow)
+                    if (response.data.status === 'success') {
                         dispatch(addNotification({
                             type: 'success',
-                            message: 'Refund is being processed. Customer will be notified via email when completed.'
+                            message: response.data.message || 'Refund successful! Customer has been notified.'
+                        }));
+                        fetchApplication(); // Refresh to show refunded status
+                    } else if (response.data.status === 'failed') {
+                        dispatch(addNotification({
+                            type: 'error',
+                            message: `Refund failed: ${response.data.error || response.data.message || 'Unknown error'}`
                         }));
                     } else {
-                        // Fallback for any other response
+                        // Fallback for unexpected responses
                         dispatch(addNotification({
-                            type: 'success',
-                            message: response.data.message || 'Refund initiated successfully'
+                            type: 'warning',
+                            message: response.data.message || 'Refund status unknown. Please check transaction details.'
                         }));
+                        fetchApplication();
                     }
-                    
-                    // Refresh application data to show updated payment status
-                    fetchApplication();
                 } catch (error) {
                     dispatch(addNotification({
                         type: 'error',
-                        message: error.response?.data?.message || 'Failed to process refund'
+                        message: error.response?.data?.message || 'Failed to process refund. Please try again.'
                     }));
+                } finally {
+                    setRefundLoading(false); // Clear loading state
                 }
             }
         }));

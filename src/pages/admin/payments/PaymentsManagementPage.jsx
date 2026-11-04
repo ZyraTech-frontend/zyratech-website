@@ -122,6 +122,7 @@ const PaymentsManagementPage = () => {
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('');
+    const [refundingPaymentRef, setRefundingPaymentRef] = useState(null); // Track which payment is being refunded
 
     const [selectedPayment, setSelectedPayment] = useState(null);
     const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -192,37 +193,46 @@ const PaymentsManagementPage = () => {
         
         dispatch(openConfirmDialog({
             title: 'Process Refund',
-            message: `Are you sure you want to refund ${formatCurrency(payment.amount)} to ${payment.studentName}? The customer will be notified via email when the refund is processed.`,
+            message: `Are you sure you want to refund ${formatCurrency(payment.amount)} to ${payment.studentName}? This will process a real refund through Paystack and may take 2-5 seconds.`,
             isDangerous: true,
             onConfirm: async () => {
                 const reason = prompt('Enter refund reason (optional):');
                 if (reason === null) return; // User cancelled
 
+                setRefundingPaymentRef(payment.reference); // Show loading state
+                
                 try {
                     const response = await paymentService.refundPayment(payment.reference, { 
                         reason: reason || 'Refund requested by admin' 
                     });
                     
-                    // Check for new async response format
-                    if (response.status === 'processing') {
+                    // NEW: Check for success/failed status from backend (updated workflow)
+                    if (response.status === 'success') {
                         dispatch(addNotification({
                             type: 'success',
-                            message: 'Refund is being processed. Customer will be notified via email when completed.'
+                            message: response.message || 'Refund successful! Customer has been notified.'
+                        }));
+                        fetchPayments(); // Refresh to show refunded status
+                    } else if (response.status === 'failed') {
+                        dispatch(addNotification({
+                            type: 'error',
+                            message: `Refund failed: ${response.error || response.message || 'Unknown error'}`
                         }));
                     } else {
-                        // Fallback for any other response
+                        // Fallback for unexpected responses
                         dispatch(addNotification({
-                            type: 'success',
-                            message: response.message || 'Refund initiated successfully'
+                            type: 'warning',
+                            message: response.message || 'Refund status unknown. Please check transaction details.'
                         }));
+                        fetchPayments();
                     }
-                    
-                    fetchPayments(); // Refresh list to show updated status
                 } catch (error) {
                     dispatch(addNotification({
                         type: 'error',
-                        message: error.response?.data?.message || 'Failed to process refund'
+                        message: error.response?.data?.message || 'Failed to process refund. Please try again.'
                     }));
+                } finally {
+                    setRefundingPaymentRef(null); // Clear loading state
                 }
             }
         }));
