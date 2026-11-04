@@ -1,4 +1,4 @@
-﻿/**
+/**
  * PendingActionsCard Component - Compact version
  * Displays pending items requiring admin attention with priority levels
  * Shows only first 4 items, "View All" navigates to full list
@@ -17,7 +17,10 @@ import {
   Handshake,
   Image,
   GraduationCap,
-  Briefcase
+  Briefcase,
+  FolderKanban,
+  Shield,
+  CreditCard
 } from 'lucide-react';
 
 const PendingActionsCard = ({ actions = [], title = "Pending Actions" }) => {
@@ -46,7 +49,10 @@ const PendingActionsCard = ({ actions = [], title = "Pending Actions" }) => {
       'Partnerships': <Handshake {...iconProps} />,
       'Gallery': <Image {...iconProps} />,
       'Training': <GraduationCap {...iconProps} />,
-      'Jobs': <Briefcase {...iconProps} />
+      'Jobs': <Briefcase {...iconProps} />,
+      'Projects': <FolderKanban {...iconProps} />,
+      'KYC': <Shield {...iconProps} />,
+      'Payments': <CreditCard {...iconProps} />
     };
     return icons[category] || <AlertCircle {...iconProps} />;
   };

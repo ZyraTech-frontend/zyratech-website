@@ -10,123 +10,135 @@ import api from './api';
 const getPendingActions = (payments, inquiries, enrollments, users, jobApplications, partnerships, projectRequests) => {
   const actions = [];
 
-  // Add pending KYC verifications
-  if (Array.isArray(users)) {
-    const pendingKycUsers = users.filter(u => u.kycStatus === 'pending' || u.verificationStatus === 'pending');
-    pendingKycUsers
-      .slice(0, 4)
-      .forEach(user => {
-        actions.push({
-          title: `KYC Verification: ${user.name || user.firstName || user.email || 'User'}`,
-          category: 'KYC',
-          priority: 'high',
-          time: getRelativeTime(user.kycSubmittedAt || user.updatedAt || user.createdAt),
-          timestamp: user.kycSubmittedAt || user.updatedAt || user.createdAt
-        });
-      });
+  // Count pending items by category
+  const pendingKycCount = Array.isArray(users) 
+    ? users.filter(u => u.kycStatus === 'pending' || u.verificationStatus === 'pending').length 
+    : 0;
+
+  const pendingPaymentsCount = Array.isArray(payments) 
+    ? payments.filter(p => p.status === 'pending').length 
+    : 0;
+
+  const pendingJobAppsCount = Array.isArray(jobApplications) 
+    ? jobApplications.filter(app => app.status === 'pending').length 
+    : 0;
+
+  const pendingInquiriesCount = Array.isArray(inquiries) 
+    ? inquiries.length  // Already filtered to status='new' by API
+    : 0;
+
+  const pendingEnrollmentsCount = Array.isArray(enrollments) 
+    ? enrollments.filter(e => e.status === 'pending').length 
+    : 0;
+
+  const pendingPartnershipsCount = Array.isArray(partnerships) 
+    ? partnerships.filter(p => p.status === 'pending').length 
+    : 0;
+
+  const pendingProjectRequestsCount = Array.isArray(projectRequests) 
+    ? projectRequests.filter(req => req.status === 'pending').length 
+    : 0;
+
+  // Get most recent timestamp for each category (for sorting)
+  const getLatestTimestamp = (items, statusFilter = null) => {
+    if (!Array.isArray(items) || items.length === 0) return null;
+    const filtered = statusFilter 
+      ? items.filter(item => item.status === statusFilter)
+      : items;
+    if (filtered.length === 0) return null;
+    const timestamps = filtered
+      .map(item => item.createdAt || item.submittedAt || item.appliedAt || item.kycSubmittedAt || item.updatedAt)
+      .filter(t => t)
+      .map(t => new Date(t));
+    return timestamps.length > 0 ? Math.max(...timestamps) : null;
+  };
+
+  // Add KYC Verifications summary
+  if (pendingKycCount > 0) {
+    actions.push({
+      title: `KYC Verifications: ${pendingKycCount} pending`,
+      category: 'KYC',
+      priority: 'high',
+      time: getRelativeTime(getLatestTimestamp(users.filter(u => u.kycStatus === 'pending' || u.verificationStatus === 'pending'))),
+      timestamp: getLatestTimestamp(users.filter(u => u.kycStatus === 'pending' || u.verificationStatus === 'pending'))
+    });
   }
 
-  // Add pending payments
-  if (Array.isArray(payments)) {
-    const pendingPayments = payments.filter(p => p.status === 'pending');
-    pendingPayments
-      .slice(0, 2)
-      .forEach(payment => {
-        actions.push({
-          title: `Pending Payment: GHS ${payment.amount || 0}`,
-          category: 'Payments',
-          priority: 'high',
-          time: getRelativeTime(payment.createdAt),
-          timestamp: payment.createdAt
-        });
-      });
+  // Add Pending Payments summary
+  if (pendingPaymentsCount > 0) {
+    actions.push({
+      title: `Pending Payments: ${pendingPaymentsCount} pending`,
+      category: 'Payments',
+      priority: 'high',
+      time: getRelativeTime(getLatestTimestamp(payments, 'pending')),
+      timestamp: getLatestTimestamp(payments, 'pending')
+    });
   }
 
-  // Add pending job applications
-  if (Array.isArray(jobApplications)) {
-    jobApplications
-      .filter(app => app.status === 'pending')
-      .slice(0, 2)
-      .forEach(app => {
-        actions.push({
-          title: `New Job Application: ${app.jobTitle || app.positionTitle || 'Position'}`,
-          category: 'Applications',
-          priority: 'high',
-          time: getRelativeTime(app.appliedAt || app.createdAt),
-          timestamp: app.appliedAt || app.createdAt
-        });
-      });
+  // Add Job Applications summary
+  if (pendingJobAppsCount > 0) {
+    actions.push({
+      title: `Job Applications: ${pendingJobAppsCount} pending`,
+      category: 'Applications',
+      priority: 'high',
+      time: getRelativeTime(getLatestTimestamp(jobApplications, 'pending')),
+      timestamp: getLatestTimestamp(jobApplications, 'pending')
+    });
   }
 
-  // Add pending inquiries
-  if (Array.isArray(inquiries)) {
-    inquiries
-      .slice(0, 2)
-      .forEach(inquiry => {
-        actions.push({
-          title: `${inquiry.subject || 'Contact Form Inquiry'}`,
-          category: 'Contact Form',
-          priority: 'medium',
-          time: getRelativeTime(inquiry.createdAt || inquiry.submittedAt),
-          timestamp: inquiry.createdAt || inquiry.submittedAt
-        });
-      });
+  // Add Project Requests summary
+  if (pendingProjectRequestsCount > 0) {
+    actions.push({
+      title: `Project Requests: ${pendingProjectRequestsCount} pending`,
+      category: 'Projects',
+      priority: 'high',
+      time: getRelativeTime(getLatestTimestamp(projectRequests, 'pending')),
+      timestamp: getLatestTimestamp(projectRequests, 'pending')
+    });
   }
 
-  // Add pending enrollments
-  if (Array.isArray(enrollments)) {
-    enrollments
-      .filter(e => e.status === 'pending')
-      .slice(0, 2)
-      .forEach(enrollment => {
-        actions.push({
-          title: `Course Enrollment: ${enrollment.courseName || enrollment.trainingTitle || 'Training Program'}`,
-          category: 'Training',
-          priority: 'medium',
-          time: getRelativeTime(enrollment.createdAt),
-          timestamp: enrollment.createdAt
-        });
-      });
+  // Add Contact Inquiries summary
+  if (pendingInquiriesCount > 0) {
+    actions.push({
+      title: `Contact Inquiries: ${pendingInquiriesCount} new`,
+      category: 'Contact Form',
+      priority: 'medium',
+      time: getRelativeTime(getLatestTimestamp(inquiries)),
+      timestamp: getLatestTimestamp(inquiries)
+    });
   }
 
-  // Add pending partnerships
-  if (Array.isArray(partnerships)) {
-    partnerships
-      .filter(p => p.status === 'pending')
-      .slice(0, 1)
-      .forEach(partnership => {
-        actions.push({
-          title: `Partnership Application: ${partnership.organizationName || partnership.companyName || 'Organization'}`,
-          category: 'Partnerships',
-          priority: 'medium',
-          time: getRelativeTime(partnership.createdAt),
-          timestamp: partnership.createdAt
-        });
-      });
+  // Add Enrollments summary
+  if (pendingEnrollmentsCount > 0) {
+    actions.push({
+      title: `Course Enrollments: ${pendingEnrollmentsCount} pending`,
+      category: 'Training',
+      priority: 'medium',
+      time: getRelativeTime(getLatestTimestamp(enrollments, 'pending')),
+      timestamp: getLatestTimestamp(enrollments, 'pending')
+    });
   }
 
-
-  // Add pending project requests
-  if (Array.isArray(projectRequests)) {
-    projectRequests
-      .filter(req => req.status === 'pending')
-      .slice(0, 5)
-      .forEach(request => {
-        actions.push({
-          title: `Project Request: ${request.projectTitle || request.title || 'Project'}`,
-          category: 'Projects',
-          priority: 'high',
-          time: getRelativeTime(request.createdAt || request.submittedAt),
-          timestamp: request.createdAt || request.submittedAt
-        });
-      });
+  // Add Partnerships summary
+  if (pendingPartnershipsCount > 0) {
+    actions.push({
+      title: `Partnership Applications: ${pendingPartnershipsCount} pending`,
+      category: 'Partnerships',
+      priority: 'medium',
+      time: getRelativeTime(getLatestTimestamp(partnerships, 'pending')),
+      timestamp: getLatestTimestamp(partnerships, 'pending')
+    });
   }
 
-  // Sort by timestamp and return top 12
+  // Sort by priority (high first) then by timestamp (most recent first)
+  const priorityOrder = { high: 0, medium: 1, low: 2 };
   return actions
     .filter(a => a.timestamp)
-    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-    .slice(0, 12);
+    .sort((a, b) => {
+      const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
+      if (priorityDiff !== 0) return priorityDiff;
+      return new Date(b.timestamp) - new Date(a.timestamp);
+    });
 };
 
 // Helper: Format relative time
