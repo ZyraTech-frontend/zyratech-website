@@ -199,10 +199,28 @@ const SuperAdminDashboard = ({ user }) => {
                 </div>
 
                 
-                {/* ROW 1.5: Refund Tracker */}
+                {/* ROW 1.5: Refund Tracker + Active Projects + Website Traffic */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
                     <div className="md:col-span-4">
                         <RefundTrackerCard refundData={refundData} />
+                    </div>
+                    <div className="md:col-span-4">
+                        <StatCard
+                            title="Active Projects"
+                            value={15}
+                            subtitle="3 completed this month"
+                            icon={FolderKanban}
+                            color="#3b82f6"
+                        />
+                    </div>
+                    <div className="md:col-span-4">
+                        <StatCard
+                            title="Website Traffic"
+                            value="1,234"
+                            subtitle="visitors today (?12%)"
+                            icon={TrendingUp}
+                            color="#10b981"
+                        />
                     </div>
                 </div>
 
@@ -240,23 +258,6 @@ const SuperAdminDashboard = ({ user }) => {
                     <RecentActivityCard activities={recentActivity} />
                 </div>
 
-                {/* ROW 4: More Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <StatCard
-                        title="Active Projects"
-                        value={15}
-                        subtitle="3 completed this month"
-                        icon={FolderKanban}
-                        color="#3b82f6"
-                    />
-                    <StatCard
-                        title="Website Traffic"
-                        value="1,234"
-                        subtitle="visitors today (?12%)"
-                        icon={TrendingUp}
-                        color="#10b981"
-                    />
-                </div>
 
                 {/* BOTTOM: Quick Actions */}
                 <div>
