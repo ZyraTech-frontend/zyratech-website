@@ -199,12 +199,12 @@ const SuperAdminDashboard = ({ user }) => {
                 </div>
 
                 
-                {/* ROW 1.5: Refund Tracker + Active Projects + Website Traffic */}
+                {/* ROW 1.5: Refund Tracker (wider) + Compact Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
-                    <div className="md:col-span-4">
+                    <div className="md:col-span-6">
                         <RefundTrackerCard refundData={refundData} />
                     </div>
-                    <div className="md:col-span-4">
+                    <div className="md:col-span-3">
                         <StatCard
                             title="Active Projects"
                             value={15}
@@ -213,7 +213,7 @@ const SuperAdminDashboard = ({ user }) => {
                             color="#3b82f6"
                         />
                     </div>
-                    <div className="md:col-span-4">
+                    <div className="md:col-span-3">
                         <StatCard
                             title="Website Traffic"
                             value="1,234"
