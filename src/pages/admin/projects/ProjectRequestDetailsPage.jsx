@@ -19,7 +19,10 @@ import {
     X,
     Trash2,
     Loader,
+    DollarSign,
+    CreditCard,
 } from 'lucide-react';
+import paymentService from '../../../services/paymentService';
 
 // Status configuration - simple, no colors
 const STATUS_CONFIG = {
@@ -50,6 +53,8 @@ const ProjectRequestDetailsPage = () => {
     const isSuperAdminUser = isSuperAdmin(userRole);
 
     const [request, setRequest] = useState(null);
+    const [payment, setPayment] = useState(null);
+    const [paymentLoading, setPaymentLoading] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [statusModal, setStatusModal] = useState(null);
@@ -485,6 +490,118 @@ const ProjectRequestDetailsPage = () => {
                                 )}
                             </div>
                         </div>
+                        {/* PAYMENT INFORMATION CARD */}
+                        {payment && (
+                            <div className="bg-white border border-gray-100 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-200 hover:-translate-y-0.5">
+                                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
+                                    <CreditCard size={16} className="text-blue-600" />
+                                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                                        Payment Information
+                                    </h3>
+                                </div>
+
+                                <div className="space-y-4">
+                                    {/* Payment Reference */}
+                                    <div>
+                                        <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">Reference</p>
+                                        <p className="text-xs text-gray-900 font-mono bg-gray-50 px-2 py-1.5 rounded border border-gray-100 break-all">
+                                            {payment.reference}
+                                        </p>
+                                    </div>
+
+                                    {/* Payment Status */}
+                                    <div>
+                                        <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Status</p>
+                                        <span className={`inline-block px-2.5 py-1 rounded text-xs font-semibold uppercase ${
+                                            payment.status === 'completed' ? 'bg-green-100 text-green-700' :
+                                            payment.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                                            payment.status === 'refunded' ? 'bg-purple-100 text-purple-700' :
+                                            'bg-red-100 text-red-700'
+                                        }`}>
+                                            {payment.status}
+                                        </span>
+                                    </div>
+
+                                    {/* Payment Phase */}
+                                    {payment.paymentPhase && (
+                                        <div>
+                                            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">Payment Phase</p>
+                                            <p className="text-sm text-gray-900 font-medium capitalize">{payment.paymentPhase}</p>
+                                        </div>
+                                    )}
+
+                                    {/* Amount Breakdown */}
+                                    <div className="pt-3 border-t border-gray-100">
+                                        <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">Amount Breakdown</p>
+                                        
+                                        {/* Deposit Amount */}
+                                        {payment.depositAmount !== null && payment.depositAmount !== undefined && (
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-sm text-gray-600">Deposit Paid</span>
+                                                <span className="text-sm font-bold text-green-600">
+                                                    {payment.currency} {payment.depositAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        {/* Processing Fee */}
+                                        {payment.processingFee !== null && payment.processingFee !== undefined && (
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-xs text-gray-500">Processing Fee</span>
+                                                <span className="text-xs text-gray-500">
+                                                    {payment.currency} {payment.processingFee.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        {/* Total Paid */}
+                                        <div className="flex justify-between items-center mb-2 pt-2 border-t border-gray-100">
+                                            <span className="text-sm font-semibold text-gray-900">Total Paid</span>
+                                            <span className="text-sm font-bold text-gray-900">
+                                                {payment.currency} {payment.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            </span>
+                                        </div>
+
+                                        {/* Balance Due */}
+                                        {payment.balanceDue !== null && payment.balanceDue !== undefined && payment.balanceDue > 0 && (
+                                            <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-100">
+                                                <span className="text-sm font-semibold text-orange-700">Balance Due</span>
+                                                <span className="text-sm font-bold text-orange-600">
+                                                    {payment.currency} {payment.balanceDue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Payment Method */}
+                                    {payment.paymentMethod && (
+                                        <div className="pt-3 border-t border-gray-100">
+                                            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">Payment Method</p>
+                                            <p className="text-sm text-gray-900 font-medium capitalize">{payment.paymentMethod.replace('_', ' ')}</p>
+                                        </div>
+                                    )}
+
+                                    {/* Payment Date */}
+                                    {payment.paidAt && (
+                                        <div>
+                                            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">Paid On</p>
+                                            <p className="text-sm text-gray-900 font-medium">{new Date(payment.paidAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Loading Payment */}
+                        {paymentLoading && (
+                            <div className="bg-white border border-gray-100 rounded-lg p-6 shadow-md">
+                                <div className="flex items-center justify-center gap-2 text-gray-500">
+                                    <Loader size={16} className="animate-spin" />
+                                    <span className="text-sm">Loading payment info...</span>
+                                </div>
+                            </div>
+                        )}
+
                     </div>
                 </div>
 
