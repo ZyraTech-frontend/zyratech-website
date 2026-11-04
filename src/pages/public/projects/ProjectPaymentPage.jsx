@@ -48,7 +48,7 @@ const ProjectPaymentPage = () => {
   const calculateDepositAmount = (budgetRange) => {
     if (!budgetRange || budgetRange === 'custom') return 0;
     
-    // Parse budget range like "$5,000 - $10,000"
+    // Parse budget range like "GHS 5,000 - GHS 10,000"
     const numbers = budgetRange.match(/[\d,]+/g);
     if (!numbers || numbers.length < 2) return 0;
     

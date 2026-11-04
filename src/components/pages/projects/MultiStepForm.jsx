@@ -81,11 +81,11 @@ const MultiStepForm = ({ onSubmit }) => {
 
   // Budget dropdown options
   const budgetOptions = [
-    { value: '$1,000 - $5,000', label: '$1,000 - $5,000' },
-    { value: '$5,000 - $10,000', label: '$5,000 - $10,000' },
-    { value: '$10,000 - $25,000', label: '$10,000 - $25,000' },
-    { value: '$25,000 - $50,000', label: '$25,000 - $50,000' },
-    { value: '$50,000+', label: '$50,000+' },
+    { value: 'GHS 1,000 - GHS 5,000', label: 'GHS 1,000 - GHS 5,000' },
+    { value: 'GHS 5,000 - GHS 10,000', label: 'GHS 5,000 - GHS 10,000' },
+    { value: 'GHS 10,000 - GHS 25,000', label: 'GHS 10,000 - GHS 25,000' },
+    { value: 'GHS 25,000 - GHS 50,000', label: 'GHS 25,000 - GHS 50,000' },
+    { value: 'GHS 50,000+', label: 'GHS 50,000+' },
     { value: 'custom', label: 'Custom Amount' }
   ];
 
@@ -385,7 +385,7 @@ const MultiStepForm = ({ onSubmit }) => {
                     name="budgetCustom" 
                     value={formData.budgetCustom} 
                     onChange={handleChange} 
-                    placeholder="Enter your custom budget (e.g., $15,000 - $20,000)" 
+                    placeholder="Enter your custom budget (e.g., GHS 15,000 - GHS 20,000)" 
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004fa2] focus:border-transparent mt-2" 
                   />
                 )}
