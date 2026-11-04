@@ -1043,38 +1043,85 @@ const ActivityLogsPage = () => {
                                         <Monitor size={14} />
                                         Technical Details
                                     </h3>
-                                    <div className="grid grid-cols-2 gap-3 text-sm">
-                                        {viewingLog.details.ip && (
-                                            <div className="flex items-center gap-2">
-                                                <Globe size={14} className="text-gray-400" />
-                                                <span className="text-gray-600">IP: </span>
-                                                <span className="font-mono text-gray-900">{viewingLog.details.ip}</span>
-                                                <button onClick={() => copyToClipboard(viewingLog.details.ip)} className="p-1 hover:bg-gray-200 rounded">
-                                                    <Copy size={12} className="text-gray-400" />
-                                                </button>
+                                    <div className="space-y-3">
+                                        {/* Device Information */}
+                                        <div className="space-y-2">
+                                            <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Device & Browser</h4>
+                                            <div className="grid grid-cols-2 gap-3 text-sm">
+                                                {(viewingLog.deviceType || viewingLog.details?.device) && (
+                                                    <div className="flex items-center gap-2">
+                                                        <Monitor size={14} className="text-gray-400" />
+                                                        <span className="text-gray-600">Device:</span>
+                                                        <span className="text-gray-900">{viewingLog.deviceType || viewingLog.details?.device || 'Unknown'}</span>
+                                                    </div>
+                                                )}
+                                                {viewingLog.deviceModel && (
+                                                    <div className="flex items-center gap-2">
+                                                        <Smartphone size={14} className="text-gray-400" />
+                                                        <span className="text-gray-600">Model:</span>
+                                                        <span className="text-gray-900">{viewingLog.deviceModel}</span>
+                                                    </div>
+                                                )}
+                                                {(viewingLog.osName || viewingLog.osVersion) && (
+                                                    <div className="flex items-center gap-2">
+                                                        <Monitor size={14} className="text-gray-400" />
+                                                        <span className="text-gray-600">OS:</span>
+                                                        <span className="text-gray-900">
+                                                            {viewingLog.osName} {viewingLog.osVersion}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {(viewingLog.browserName || viewingLog.browserVersion || viewingLog.details?.browser) && (
+                                                    <div className="flex items-center gap-2">
+                                                        <Globe size={14} className="text-gray-400" />
+                                                        <span className="text-gray-600">Browser:</span>
+                                                        <span className="text-gray-900">
+                                                            {viewingLog.browserName && viewingLog.browserVersion
+                                                                ? `${viewingLog.browserName} ${viewingLog.browserVersion}`
+                                                                : viewingLog.details?.browser || 'Unknown'}
+                                                        </span>
+                                                    </div>
+                                                )}
                                             </div>
-                                        )}
-                                        {viewingLog.details.device && (
-                                            <div className="flex items-center gap-2">
-                                                <Monitor size={14} className="text-gray-400" />
-                                                <span className="text-gray-600">Device: </span>
-                                                <span className="text-gray-900">{viewingLog.details.device}</span>
+                                        </div>
+
+                                        {/* Location Information */}
+                                        <div className="space-y-2 pt-2 border-t border-gray-200">
+                                            <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Location</h4>
+                                            <div className="grid grid-cols-2 gap-3 text-sm">
+                                                {(viewingLog.city || viewingLog.region || viewingLog.country || viewingLog.details?.location) && (
+                                                    <div className="flex items-center gap-2 col-span-2">
+                                                        <MapPin size={14} className="text-gray-400" />
+                                                        <span className="text-gray-600">Location:</span>
+                                                        <span className="text-gray-900">
+                                                            {viewingLog.city && viewingLog.region && viewingLog.country
+                                                                ? `${viewingLog.city}, ${viewingLog.region}, ${viewingLog.country}`
+                                                                : viewingLog.details?.location || 'Unknown'}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {viewingLog.isp && (
+                                                    <div className="flex items-center gap-2">
+                                                        <Globe size={14} className="text-gray-400" />
+                                                        <span className="text-gray-600">ISP:</span>
+                                                        <span className="text-gray-900">{viewingLog.isp}</span>
+                                                    </div>
+                                                )}
+                                                {(viewingLog.ipAddress || viewingLog.details?.ip) && (
+                                                    <div className="flex items-center gap-2">
+                                                        <Globe size={14} className="text-gray-400" />
+                                                        <span className="text-gray-600">IP:</span>
+                                                        <span className="font-mono text-gray-900">{viewingLog.ipAddress || viewingLog.details?.ip}</span>
+                                                        <button 
+                                                            onClick={() => copyToClipboard(viewingLog.ipAddress || viewingLog.details?.ip)} 
+                                                            className="p-1 hover:bg-gray-200 rounded"
+                                                        >
+                                                            <Copy size={12} className="text-gray-400" />
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </div>
-                                        )}
-                                        {viewingLog.details.browser && (
-                                            <div className="flex items-center gap-2">
-                                                <Globe size={14} className="text-gray-400" />
-                                                <span className="text-gray-600">Browser: </span>
-                                                <span className="text-gray-900">{viewingLog.details.browser}</span>
-                                            </div>
-                                        )}
-                                        {viewingLog.details.location && (
-                                            <div className="flex items-center gap-2">
-                                                <MapPin size={14} className="text-gray-400" />
-                                                <span className="text-gray-600">Location: </span>
-                                                <span className="text-gray-900">{viewingLog.details.location}</span>
-                                            </div>
-                                        )}
+                                        </div>
                                     </div>
                                 </div>
 
