@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Activity Logs Page (Admin)
  * Professional admin interface for viewing system activity and audit logs
  * Now reads REAL logs from activityLogService (localStorage-backed) merged with seed data.
@@ -512,14 +512,35 @@ const ActivityLogsPage = () => {
     const [realLogs, setRealLogs] = useState([]);
     const [refreshKey, setRefreshKey] = useState(0);
 
+    const [loading, setLoading] = useState(true);
+    const [apiError, setApiError] = useState(null);
     const itemsPerPage = 15;
 
-    // Load real logs from the activity log service
+    // Load real logs from the backend API
     useEffect(() => {
-        const logsFromService = activityLogService.getLogs();
-        setRealLogs(logsFromService);
-    }, [refreshKey]);
+        const fetchLogs = async () => {
+            try {
+                setLoading(true);
+                setApiError(null);
+                const { logs, error } = await activityLogService.getLogs({ limit: 100 });
+                
+                if (error) {
+                    setApiError(error);
+                    console.error('[ActivityLogsPage] API Error:', error);
+                }
+                
+                setRealLogs(logs || []);
+            } catch (err) {
+                console.error('[ActivityLogsPage] Failed to fetch logs:', err);
+                setApiError(err.message);
+                setRealLogs([]);
+            } finally {
+                setLoading(false);
+            }
+        };
 
+        fetchLogs();
+    }, [refreshKey]);
     // Merge real logs with seed mock data (deduped by ID, real logs first)
     const allLogs = useMemo(() => {
         const realIds = new Set(realLogs.map(l => l.id));
@@ -1172,4 +1193,5 @@ const ActivityLogsPage = () => {
 };
 
 export default ActivityLogsPage;
+
 

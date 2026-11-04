@@ -1,255 +1,240 @@
-/**
- * Activity Log Service
- * Centralized audit trail — records every admin action with the admin's name, role, and details.
- * Stored in localStorage so the super admin can see who did what across sessions.
- *
- * In production, this would be backed by a database API. For now, localStorage serves
- * as a persistent mock store.
+﻿/**
+ * Activity Log Service - API Integration
+ * Fetches activity logs from the backend API with enhanced device and location tracking.
+ * 
+ * API Endpoint: GET https://admin.zyratechhub.com/api/admin/logs/
+ * Authentication: Bearer token required
+ * Permission: super_admin_only
  */
 
-const STORAGE_KEY = 'zyratech_activity_logs';
-const MAX_LOGS = 500; // Keep last 500 logs to prevent localStorage overflow
+import axios from 'axios';
+
+// Activity Logs API base URL (different from main API)
+const ACTIVITY_LOGS_API_BASE = 'https://admin.zyratechhub.com/api/admin/logs';
 
 /**
- * Get stored activity logs from localStorage
+ * Get the authentication token
  */
-const getStoredLogs = () => {
-    try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : [];
-    } catch (e) {
-        console.error('Error reading activity logs:', e);
-        return [];
-    }
+const getAuthToken = () => {
+    return localStorage.getItem('adminToken') || localStorage.getItem('token') || null;
 };
 
 /**
- * Save activity logs to localStorage
+ * Create axios instance for activity logs API
  */
-const saveLogs = (logs) => {
-    try {
-        // Keep only the most recent MAX_LOGS entries
-        const trimmed = logs.slice(0, MAX_LOGS);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
-    } catch (e) {
-        console.error('Error saving activity logs:', e);
-    }
+const createApiClient = () => {
+    const token = getAuthToken();
+    return axios.create({
+        baseURL: ACTIVITY_LOGS_API_BASE,
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` })
+        }
+    });
 };
 
 /**
- * Generate a unique log ID
+ * Transform backend log to match frontend format
  */
-const generateLogId = () => {
-    return `LOG-${Date.now()}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
+const transformLog = (backendLog) => {
+    return {
+        id: backendLog.id,
+        type: mapActionToType(backendLog.action),
+        severity: backendLog.status === 'error' ? 'error' : getSeverityFromAction(backendLog.action),
+        user: {
+            id: backendLog.userId || 'SYSTEM',
+            name: backendLog.user?.name || 'System',
+            email: backendLog.user?.email || 'system@zyratechhub.com',
+            role: 'Admin'
+        },
+        description: generateDescription(backendLog),
+        
+        // NEW: Device & Location fields from backend (at root level)
+        deviceType: backendLog.deviceType,
+        deviceModel: backendLog.deviceModel,
+        deviceBrand: backendLog.deviceBrand,
+        osName: backendLog.osName,
+        osVersion: backendLog.osVersion,
+        browserName: backendLog.browserName,
+        browserVersion: backendLog.browserVersion,
+        
+        country: backendLog.country,
+        region: backendLog.region,
+        city: backendLog.city,
+        postalCode: backendLog.postalCode,
+        latitude: backendLog.latitude,
+        longitude: backendLog.longitude,
+        timezone: backendLog.timezone,
+        isp: backendLog.isp,
+        ipAddress: backendLog.ipAddress,
+        
+        // Legacy details object for backward compatibility
+        details: {
+            ip: backendLog.ipAddress,
+            device: backendLog.deviceType || 'Unknown',
+            browser: backendLog.browserName ? ` `.trim() : 'Unknown',
+            location: backendLog.city && backendLog.region && backendLog.country 
+                ? `, , ` 
+                : 'Unknown',
+            entity: backendLog.entity,
+            entityId: backendLog.entityId,
+            changes: backendLog.changes,
+            userAgent: backendLog.userAgent
+        },
+        
+        timestamp: backendLog.createdAt,
+        metadata: {
+            action: backendLog.action,
+            entity: backendLog.entity,
+            entityId: backendLog.entityId,
+            errorMessage: backendLog.errorMessage
+        }
+    };
 };
 
 /**
- * Detect basic device/browser info from the user agent
+ * Map backend action to frontend activity type
  */
-const getDeviceInfo = () => {
-    const ua = navigator.userAgent;
-    let device = 'Desktop';
-    let browser = 'Unknown';
-
-    // Device detection
-    if (/Mobi|Android/i.test(ua)) device = 'Mobile';
-    else if (/Tablet|iPad/i.test(ua)) device = 'Tablet';
-    else if (/Laptop/i.test(ua)) device = 'Laptop';
-
-    // Browser detection
-    if (ua.includes('Chrome') && !ua.includes('Edg')) browser = `Chrome`;
-    else if (ua.includes('Firefox')) browser = `Firefox`;
-    else if (ua.includes('Safari') && !ua.includes('Chrome')) browser = `Safari`;
-    else if (ua.includes('Edg')) browser = `Edge`;
-
-    return { device, browser };
+const mapActionToType = (action) => {
+    const mapping = {
+        'LOGIN': 'login',
+        'LOGOUT': 'logout',
+        'CHANGE_PASSWORD': 'password_reset',
+        'UPDATE_USER': 'user_updated',
+        'ACTIVATE_USER': 'user_created',
+        'DEACTIVATE_USER': 'user_deleted',
+        'UPDATE_PERMISSIONS': 'role_changed',
+        'CREATE_COURSE': 'content_created',
+        'UPDATE_COURSE': 'content_updated',
+        'DELETE_COURSE': 'content_deleted',
+        'CREATE_PROJECT': 'content_created',
+        'UPDATE_PROJECT': 'content_updated',
+        'DELETE_PROJECT': 'content_deleted',
+        'PAYMENT_RECEIVED': 'payment_received',
+        'PAYMENT_REFUNDED': 'refund_processed',
+        'UPDATE_SETTINGS': 'settings_changed'
+    };
+    return mapping[action] || 'system';
 };
 
+/**
+ * Get severity level from action
+ */
+const getSeverityFromAction = (action) => {
+    if (action.includes('DELETE') || action.includes('DEACTIVATE')) return 'warning';
+    if (action.includes('CREATE') || action.includes('ACTIVATE')) return 'success';
+    if (action.includes('UPDATE') || action.includes('CHANGE')) return 'info';
+    return 'info';
+};
+
+/**
+ * Generate human-readable description from backend log
+ */
+const generateDescription = (log) => {
+    const user = log.user?.name || 'System';
+    const action = log.action.toLowerCase().replace(/_/g, ' ');
+    const entity = log.entity || '';
+    
+    return ` performed  on `.trim();
+};
 
 const activityLogService = {
     /**
-     * Log an admin action
-     * 
-     * @param {Object} params
-     * @param {Object} params.user - The admin performing the action { id, name, email, role }
-     * @param {string} params.type - Activity type (matches ACTIVITY_TYPE_CONFIG keys in ActivityLogsPage)
-     *   Supported types: 'login', 'logout', 'login_failed', 'password_reset',
-     *   'user_created', 'user_updated', 'user_deleted', 'role_changed',
-     *   'content_created', 'content_updated', 'content_deleted', 'content_published',
-     *   'enrollment_created', 'payment_received', 'refund_processed',
-     *   'settings_changed', 'backup_created', 'error_logged', 'notification_sent'
-     * @param {string} params.severity - 'info' | 'success' | 'warning' | 'error'
-     * @param {string} params.description - Human-readable description of the action
-     * @param {Object} [params.details] - Additional details (contentType, contentId, etc.)
-     * @param {Object} [params.metadata] - Extra metadata for search/filtering
-     * @returns {Object} The created log entry
+     * Get activity logs from backend API
      */
-    logAction: ({ user, type, severity = 'info', description, details = {}, metadata = {} }) => {
-        if (!user || !type || !description) {
-            console.warn('activityLogService.logAction: missing required fields (user, type, description)');
-            return null;
-        }
-
-        const { device, browser } = getDeviceInfo();
-
-        const logEntry = {
-            id: generateLogId(),
-            type,
-            severity,
-            user: {
-                id: user.id || 'UNKNOWN',
-                name: user.name || 'Unknown Admin',
-                email: user.email || '',
-                role: user.role === 'super_admin' ? 'Super Admin' :
-                    user.role === 'admin' ? 'Admin' :
-                        user.role === 'editor' ? 'Editor' :
-                            user.role || 'Unknown'
-            },
-            description,
-            details: {
-                device,
-                browser,
-                location: 'Accra, Ghana', // Would be IP-based in production
-                ...details
-            },
-            timestamp: new Date().toISOString(),
-            metadata
-        };
-
-        // Prepend to logs (newest first)
-        const logs = getStoredLogs();
-        logs.unshift(logEntry);
-        saveLogs(logs);
-
-        return logEntry;
-    },
-
-    /**
-     * Get all activity logs, with optional filtering
-     * 
-     * @param {Object} [params] - Filter parameters
-     * @param {string} [params.type] - Filter by activity type  
-     * @param {string} [params.severity] - Filter by severity
-     * @param {string} [params.category] - Filter by category
-     * @param {string} [params.userId] - Filter by user ID
-     * @param {string} [params.search] - Search in description, user name, email
-     * @param {string} [params.dateRange] - 'today' | 'week' | 'month' | 'all'
-     * @returns {Array} Filtered activity logs
-     */
-    getLogs: (params = {}) => {
-        let logs = getStoredLogs();
-
-        if (params.type) {
-            logs = logs.filter(log => log.type === params.type);
-        }
-
-        if (params.severity) {
-            logs = logs.filter(log => log.severity === params.severity);
-        }
-
-        if (params.userId) {
-            logs = logs.filter(log => log.user.id === params.userId);
-        }
-
-        if (params.search) {
-            const q = params.search.toLowerCase();
-            logs = logs.filter(log =>
-                log.description.toLowerCase().includes(q) ||
-                log.user.name.toLowerCase().includes(q) ||
-                log.user.email.toLowerCase().includes(q) ||
-                log.id.toLowerCase().includes(q)
-            );
-        }
-
-        if (params.dateRange && params.dateRange !== 'all') {
-            const now = new Date();
-            let cutoff;
-            switch (params.dateRange) {
-                case 'today':
-                    cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                    break;
-                case 'week':
-                    cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-                    break;
-                case 'month':
-                    cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-                    break;
-                default:
-                    cutoff = null;
+    getLogs: async (params = {}) => {
+        try {
+            const api = createApiClient();
+            
+            const queryParams = {
+                page: params.page || 1,
+                limit: params.limit || 50,
+                ...(params.action && { action: params.action }),
+                ...(params.entity && { entity: params.entity }),
+                ...(params.userId && { userId: params.userId })
+            };
+            
+            console.log('[activityLogService] Fetching logs from API:', queryParams);
+            
+            const response = await api.get('/', { params: queryParams });
+            
+            if (response.data.success) {
+                const logs = response.data.data.data.map(transformLog);
+                const pagination = response.data.data.pagination;
+                
+                console.log('[activityLogService] Received', logs.length, 'logs from API');
+                
+                return { logs, pagination };
+            } else {
+                return { logs: [], pagination: { total: 0, pages: 0, page: 1, limit: 50 } };
             }
-            if (cutoff) {
-                logs = logs.filter(log => new Date(log.timestamp) >= cutoff);
-            }
+        } catch (error) {
+            console.error('[activityLogService] Error fetching logs:', error.response?.data || error.message);
+            return {
+                logs: [],
+                pagination: { total: 0, pages: 0, page: 1, limit: 50 },
+                error: error.response?.data?.message || error.message
+            };
         }
-
-        return logs;
     },
 
-    /**
-     * Get a single log entry by ID
-     */
-    getLogById: (id) => {
-        const logs = getStoredLogs();
-        return logs.find(log => log.id === id) || null;
+    getStats: async () => {
+        try {
+            const { logs } = await activityLogService.getLogs({ limit: 100 });
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            return {
+                total: logs.length,
+                today: logs.filter(l => new Date(l.timestamp) >= today).length,
+                warnings: logs.filter(l => l.severity === 'warning').length,
+                errors: logs.filter(l => l.severity === 'error').length,
+                logins: logs.filter(l => l.type === 'login').length,
+                failedLogins: logs.filter(l => l.metadata?.errorMessage && l.type === 'login').length
+            };
+        } catch (error) {
+            return { total: 0, today: 0, warnings: 0, errors: 0, logins: 0, failedLogins: 0 };
+        }
     },
 
-    /**
-     * Get log statistics
-     */
-    getStats: () => {
-        const logs = getStoredLogs();
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        return {
-            total: logs.length,
-            today: logs.filter(l => new Date(l.timestamp) >= today).length,
-            warnings: logs.filter(l => l.severity === 'warning').length,
-            errors: logs.filter(l => l.severity === 'error').length,
-            logins: logs.filter(l => l.type === 'login').length,
-            failedLogins: logs.filter(l => l.type === 'login_failed').length
-        };
+    getRecentLogs: async (limit = 10) => {
+        try {
+            const { logs } = await activityLogService.getLogs({ limit });
+            return logs;
+        } catch (error) {
+            return [];
+        }
     },
 
-    /**
-     * Get recent logs (for dashboard widgets)
-     * @param {number} [limit=10] - Number of recent logs to return
-     */
-    getRecentLogs: (limit = 10) => {
-        const logs = getStoredLogs();
-        return logs.slice(0, limit);
+    getLogsByUser: async (userId) => {
+        try {
+            const { logs } = await activityLogService.getLogs({ userId, limit: 100 });
+            return logs;
+        } catch (error) {
+            return [];
+        }
     },
 
-    /**
-     * Get logs by a specific admin user
-     * @param {string} userId - The admin's user ID
-     */
-    getLogsByUser: (userId) => {
-        const logs = getStoredLogs();
-        return logs.filter(log => log.user.id === userId);
+    exportLogs: async () => {
+        try {
+            const { logs } = await activityLogService.getLogs({ limit: 100 });
+            const blob = new Blob([JSON.stringify(logs, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `activity-logs-${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('[activityLogService] Error exporting logs:', error);
+        }
     },
 
-    /**
-     * Clear all logs (super admin only, for maintenance)
-     */
-    clearLogs: () => {
-        localStorage.removeItem(STORAGE_KEY);
-    },
-
-    /**
-     * Export logs as JSON for download
-     */
-    exportLogs: () => {
-        const logs = getStoredLogs();
-        const blob = new Blob([JSON.stringify(logs, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `activity-logs-${new Date().toISOString().slice(0, 10)}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+    logAction: ({ user, type, severity, description, details, metadata }) => {
+        console.log('[activityLogService] logAction called (backend handles this now)');
+        return null;
     }
 };
 
