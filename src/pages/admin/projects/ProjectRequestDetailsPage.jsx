@@ -228,6 +228,13 @@ const ProjectRequestDetailsPage = () => {
         });
     };
 
+    // Convert budget from USD ($) to GHS if needed (for old database entries)
+    const formatBudget = (budget) => {
+        if (!budget) return '—';
+        // Replace $ with GHS for display
+        return budget.replace(/\$/g, 'GHS ');
+    };
+
     if (loading) {
         return (
             <AdminLayout>
@@ -384,7 +391,7 @@ const ProjectRequestDetailsPage = () => {
                                     {request.budget && (
                                         <div>
                                             <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Budget</p>
-                                            <p className="text-base text-gray-900 font-semibold">{request.budget}</p>
+                                            <p className="text-base text-gray-900 font-semibold">{formatBudget(request.budget)}</p>
                                         </div>
                                     )}
                                     {request.timeline && (
@@ -508,7 +515,7 @@ const ProjectRequestDetailsPage = () => {
 
                                 <div>
                                     <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">Budget</p>
-                                    <p className="text-sm text-gray-900 font-semibold">{request.budget || 'â€”'}</p>
+                                    <p className="text-sm text-gray-900 font-semibold">{formatBudget(request.budget)}</p>
                                 </div>
                             </div>
                         </div>
