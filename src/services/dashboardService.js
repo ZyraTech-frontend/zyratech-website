@@ -290,7 +290,8 @@ const getDashboardData = async () => {
       transactionsRes,
       enrollmentsRes,
       projectRequestsRes,
-      newsletterSubscriptionsRes
+      newsletterSubscriptionsRes,
+      partnershipsRes
     ] = await Promise.allSettled([
       // 1. Users (for KYC count) - fetch ALL users, filter client-side
       api.get('/admin/users', { params: { limit: 1000 } }),
@@ -314,7 +315,10 @@ const getDashboardData = async () => {
       api.get('/admin/project-requests', { params: { limit: 100 } }),
       
       // 8. Newsletter Subscriptions
-      api.get('/admin/newsletter/', { params: { limit: 1000 } })
+      api.get('/admin/newsletter/', { params: { limit: 1000 } }),
+      
+      // 9. Partnerships
+      api.get('/admin/partnerships', { params: { limit: 1000 } })
     ]);
 
     console.log('=== API RESPONSES DEBUG ===');
@@ -324,8 +328,9 @@ const getDashboardData = async () => {
     console.log('[4/6] Contact Inquiries response status:', contactInquiriesRes.status);
     console.log('[5/6] Transactions response status:', transactionsRes.status);
     console.log('[6/8] Enrollments response status:', enrollmentsRes.status);
-    console.log('[7/8] Project Requests response status:', projectRequestsRes.status);
-    console.log('[8/8] Newsletter Subscriptions response status:', newsletterSubscriptionsRes.status);
+    console.log('[7/9] Project Requests response status:', projectRequestsRes.status);
+    console.log('[8/9] Newsletter Subscriptions response status:', newsletterSubscriptionsRes.status);
+    console.log('[9/9] Partnerships response status:', partnershipsRes.status);
 
     // ? CORRECT: Extract data from response.data (axios wraps backend response in .data)
     const usersData = usersRes.status === 'fulfilled' ? usersRes.value.data : null;
@@ -336,6 +341,7 @@ const getDashboardData = async () => {
     const enrollmentsData = enrollmentsRes.status === 'fulfilled' ? enrollmentsRes.value.data : null;
     const projectRequestsData = projectRequestsRes.status === 'fulfilled' ? projectRequestsRes.value.data : null;
     const newsletterSubscriptionsData = newsletterSubscriptionsRes.status === 'fulfilled' ? newsletterSubscriptionsRes.value.data : null;
+    const partnershipsData = partnershipsRes.status === 'fulfilled' ? partnershipsRes.value.data : null;
 
     console.log('=== EXTRACTED DATA STRUCTURES ===');
     console.log('[Users] Has data.data:', !!usersData?.data?.data, 'Length:', Array.isArray(usersData?.data?.data) ? usersData.data.data.length : 'NOT ARRAY');
@@ -346,6 +352,7 @@ const getDashboardData = async () => {
     console.log('[Enrollments] Has data.data:', !!enrollmentsData?.data?.data, 'Length:', Array.isArray(enrollmentsData?.data?.data) ? enrollmentsData.data.data.length : 'NOT ARRAY');
     console.log('[Project Requests] Has data.data:', !!projectRequestsData?.data?.data, 'Length:', Array.isArray(projectRequestsData?.data?.data) ? projectRequestsData.data.data.length : 'NOT ARRAY');
     console.log('[Newsletter] Has data.data:', !!newsletterSubscriptionsData?.data?.data, 'Length:', Array.isArray(newsletterSubscriptionsData?.data?.data) ? newsletterSubscriptionsData.data.data.length : 'NOT ARRAY');
+    console.log('[Partnerships] Has data.data:', !!partnershipsData?.data?.data, 'Length:', Array.isArray(partnershipsData?.data?.data) ? partnershipsData.data.data.length : 'NOT ARRAY');
 
     // ? CORRECT: Extract arrays from nested data.data structure
     const users = Array.isArray(usersData?.data?.data) ? usersData.data.data : [];
@@ -356,6 +363,7 @@ const getDashboardData = async () => {
     const enrollments = Array.isArray(enrollmentsData?.data?.data) ? enrollmentsData.data.data : [];
     const projectRequests = Array.isArray(projectRequestsData?.data?.data) ? projectRequestsData.data.data : [];
     const newsletterSubscriptions = Array.isArray(newsletterSubscriptionsData?.data?.data) ? newsletterSubscriptionsData.data.data : [];
+    const partnerships = Array.isArray(partnershipsData?.data?.data) ? partnershipsData.data.data : [];
 
     console.log('=== FINAL ARRAYS ===');
     console.log('[Users]:', users.length, 'items');
@@ -366,6 +374,7 @@ const getDashboardData = async () => {
     console.log('[Enrollments]:', enrollments.length, 'items');
     console.log('[Project Requests]:', projectRequests.length, 'items');
     console.log('[Newsletter Subscriptions]:', newsletterSubscriptions.length, 'items');
+    console.log('[Partnerships]:', partnerships.length, 'items');
 
     // ? CORRECT: Filter KYC client-side (backend doesn't support kycStatus query param)
     const allKycStatuses = users.map(u => u.kycStatus);
@@ -446,10 +455,10 @@ const getDashboardData = async () => {
       unreadInquiries: contactInquiries.length, // Already filtered to pending
       resolvedInquiries: 0, // Would need separate call for resolved
 
-      // Partnerships (not implemented yet, default to 0)
-      totalPartnerships: 0,
-      pendingPartnerships: 0,
-      approvedPartnerships: 0
+      // Partnerships
+      totalPartnerships: partnerships.length,
+      pendingPartnerships: partnerships.filter(p => p.status === 'pending').length,
+      approvedPartnerships: partnerships.filter(p => p.status === 'approved').length
     };
 
     console.log('=== CALCULATED STATS ===', stats);
@@ -535,7 +544,7 @@ const getDashboardData = async () => {
     return {
       stats,
       recentActivity: getRecentActivity(transactions, contactInquiries, enrollments, users),
-      pendingActions: getPendingActions(transactions, contactInquiries, enrollments, users, jobApplications, [], projectRequests, newsletterSubscriptions),
+      pendingActions: getPendingActions(transactions, contactInquiries, enrollments, users, jobApplications, partnerships, projectRequests, newsletterSubscriptions),
       revenueChart: getRevenueChart(transactions),
       systemHealth,
       userEngagement,
