@@ -10,6 +10,38 @@ import api from './api';
 const getPendingActions = (payments, inquiries, enrollments, users, jobApplications, partnerships) => {
   const actions = [];
 
+  // Add pending KYC verifications
+  if (Array.isArray(users)) {
+    const pendingKycUsers = users.filter(u => u.kycStatus === 'pending' || u.verificationStatus === 'pending');
+    pendingKycUsers
+      .slice(0, 4)
+      .forEach(user => {
+        actions.push({
+          title: `KYC Verification: ${user.name || user.firstName || user.email || 'User'}`,
+          category: 'KYC',
+          priority: 'high',
+          time: getRelativeTime(user.kycSubmittedAt || user.updatedAt || user.createdAt),
+          timestamp: user.kycSubmittedAt || user.updatedAt || user.createdAt
+        });
+      });
+  }
+
+  // Add pending payments
+  if (Array.isArray(payments)) {
+    const pendingPayments = payments.filter(p => p.status === 'pending');
+    pendingPayments
+      .slice(0, 2)
+      .forEach(payment => {
+        actions.push({
+          title: `Pending Payment: GHS ${payment.amount || 0}`,
+          category: 'Payments',
+          priority: 'high',
+          time: getRelativeTime(payment.createdAt),
+          timestamp: payment.createdAt
+        });
+      });
+  }
+
   // Add pending job applications
   if (Array.isArray(jobApplications)) {
     jobApplications
@@ -73,11 +105,11 @@ const getPendingActions = (payments, inquiries, enrollments, users, jobApplicati
       });
   }
 
-  // Sort by timestamp and return top 6
+  // Sort by timestamp and return top 12
   return actions
     .filter(a => a.timestamp)
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-    .slice(0, 6);
+    .slice(0, 12);
 };
 
 // Helper: Format relative time
