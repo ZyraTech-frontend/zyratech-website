@@ -1,4 +1,4 @@
-/**
+﻿/**
  * RecentActivityCard Component - Compact version
  * Timeline view of recent activities in the last 24 hours
  * Shows only first 4 items, "View All" navigates to activity logs
@@ -6,24 +6,37 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, ChevronRight } from 'lucide-react';
+import { 
+  Clock, 
+  ChevronRight,
+  MessageSquare,
+  UserCheck,
+  Star,
+  Handshake,
+  FileText,
+  Briefcase,
+  DollarSign,
+  User,
+  HelpCircle
+} from 'lucide-react';
 
 const RecentActivityCard = ({ activities = [], title = "Recent Activity", subtitle = "Last 24 hours" }) => {
   const navigate = useNavigate();
   
   const getActivityIcon = (type) => {
+    const iconProps = { size: 14 };
     const icons = {
-      'contact': '??',
-      'enrollment': '??',
-      'testimonial': '?',
-      'partnership': '??',
-      'blog': '??',
-      'job': '??',
-      'payment': '??',
-      'user': '??',
-      'inquiry': '??'
+      'contact': <MessageSquare {...iconProps} />,
+      'enrollment': <UserCheck {...iconProps} />,
+      'testimonial': <Star {...iconProps} />,
+      'partnership': <Handshake {...iconProps} />,
+      'blog': <FileText {...iconProps} />,
+      'job': <Briefcase {...iconProps} />,
+      'payment': <DollarSign {...iconProps} />,
+      'user': <User {...iconProps} />,
+      'inquiry': <HelpCircle {...iconProps} />
     };
-    return icons[type?.toLowerCase()] || '??';
+    return icons[type?.toLowerCase()] || <HelpCircle {...iconProps} />;
   };
 
   const getIconBgColor = (type) => {
@@ -92,7 +105,7 @@ const RecentActivityCard = ({ activities = [], title = "Recent Activity", subtit
                 className="group flex items-start gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 {/* Icon */}
-                <div className={`w-7 h-7 rounded-full ${getIconBgColor(activity.type)} flex items-center justify-center flex-shrink-0 text-sm`}>
+                <div className={`w-7 h-7 rounded-full ${getIconBgColor(activity.type)} flex items-center justify-center flex-shrink-0`}>
                   {getActivityIcon(activity.type)}
                 </div>
 

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PendingActionsCard Component - Compact version
  * Displays pending items requiring admin attention with priority levels
  * Shows only first 4 items, "View All" navigates to full list
@@ -6,7 +6,19 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, AlertCircle, ChevronRight } from 'lucide-react';
+import { 
+  Clock, 
+  AlertCircle, 
+  ChevronRight,
+  FileText,
+  MessageSquare,
+  Star,
+  FileEdit,
+  Handshake,
+  Image,
+  GraduationCap,
+  Briefcase
+} from 'lucide-react';
 
 const PendingActionsCard = ({ actions = [], title = "Pending Actions" }) => {
   const navigate = useNavigate();
@@ -25,17 +37,18 @@ const PendingActionsCard = ({ actions = [], title = "Pending Actions" }) => {
   };
 
   const getCategoryIcon = (category) => {
+    const iconProps = { size: 14, className: "text-gray-600" };
     const icons = {
-      'Applications': '??',
-      'Contact Form': '??',
-      'Testimonials': '?',
-      'Content': '??',
-      'Partnerships': '??',
-      'Gallery': '???',
-      'Training': '??',
-      'Jobs': '??'
+      'Applications': <FileText {...iconProps} />,
+      'Contact Form': <MessageSquare {...iconProps} />,
+      'Testimonials': <Star {...iconProps} />,
+      'Content': <FileEdit {...iconProps} />,
+      'Partnerships': <Handshake {...iconProps} />,
+      'Gallery': <Image {...iconProps} />,
+      'Training': <GraduationCap {...iconProps} />,
+      'Jobs': <Briefcase {...iconProps} />
     };
-    return icons[category] || '??';
+    return icons[category] || <AlertCircle {...iconProps} />;
   };
 
   // Navigate to contact inquiries (most pending actions are inquiries)
@@ -79,7 +92,7 @@ const PendingActionsCard = ({ actions = [], title = "Pending Actions" }) => {
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0 flex items-start gap-2">
-                    <span className="text-base flex-shrink-0">{getCategoryIcon(action.category)}</span>
+                    <span className="flex-shrink-0 mt-0.5">{getCategoryIcon(action.category)}</span>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold text-gray-900 group-hover:text-[#004fa2] transition-colors truncate">
                         {action.title}
