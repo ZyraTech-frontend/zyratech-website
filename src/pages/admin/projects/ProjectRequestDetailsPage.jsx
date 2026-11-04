@@ -90,41 +90,40 @@ const ProjectRequestDetailsPage = () => {
     };
 
     // Fetch payment information by project title
+    // Fetch payment information by project title
     const fetchPaymentInfo = async (projectTitle) => {
         try {
             setPaymentLoading(true);
-            console.log('Searching for payment with projectTitle:', projectTitle);
+            console.log('Fetching ALL project payments...');
             
-            // Search for payment by project title
+            // Fetch ALL project payments (search parameter doesn't work)
             const response = await paymentService.getTransactions({
                 paymentType: 'project',
-                search: projectTitle,
-                limit: 10
+                limit: 100
             });
             
-            console.log('Payment search response:', response);
+            console.log('Payment response:', response);
             
-            // Extract payments from nested structure
+            // Extract payments from response.data.data
             const payments = response?.data?.data || [];
-            console.log('Extracted payments array:', payments);
+            console.log('Found', payments.length, 'project payments');
             
-            if (Array.isArray(payments) && payments.length > 0) {
-                // Find payment that matches this project title
-                const matchingPayment = payments.find(p => 
-                    p.projectTitle?.toLowerCase() === projectTitle?.toLowerCase()
+            if (payments.length > 0) {
+                // Find matching payment by projectTitle
+                const match = payments.find(p => 
+                    p.projectTitle?.toLowerCase().trim() === projectTitle?.toLowerCase().trim()
                 );
                 
-                if (matchingPayment) {
-                    setPayment(matchingPayment);
-                    console.log('Found matching payment:', matchingPayment);
+                if (match) {
+                    setPayment(match);
+                    console.log('FOUND payment:', match);
                 } else {
-                    console.log('No exact match. Payments:', payments.map(p => p.projectTitle));
+                    console.log('No match. Looking for:', projectTitle);
+                    console.log('Available:', payments.map(p => p.projectTitle));
                 }
-            } else {
-                console.log('No payments found');
             }
         } catch (err) {
-            console.error('Failed to fetch payment info:', err);
+            console.error('Error fetching payment:', err);
         } finally {
             setPaymentLoading(false);
         }
