@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Activity Log Service - API Integration
  * Fetches activity logs from the backend API with enhanced device and location tracking.
  * 
@@ -73,10 +73,8 @@ const transformLog = (backendLog) => {
         details: {
             ip: backendLog.ipAddress,
             device: backendLog.deviceType || 'Unknown',
-            browser: backendLog.browserName ? ` `.trim() : 'Unknown',
-            location: backendLog.city && backendLog.region && backendLog.country 
-                ? `, , ` 
-                : 'Unknown',
+            browser: backendLog.browserName ? `${backendLog.browserName} ${backendLog.browserVersion || ''}`.trim() : 'Unknown',
+            location: backendLog.city && backendLog.region && backendLog.country ? `${backendLog.city}, ${backendLog.region}, ${backendLog.country}` : 'Unknown',
             entity: backendLog.entity,
             entityId: backendLog.entityId,
             changes: backendLog.changes,
@@ -136,7 +134,7 @@ const generateDescription = (log) => {
     const action = log.action.toLowerCase().replace(/_/g, ' ');
     const entity = log.entity || '';
     
-    return ` performed  on `.trim();
+    return `${user} performed ${action} on ${entity}`.trim();
 };
 
 const activityLogService = {
@@ -240,3 +238,4 @@ const activityLogService = {
 };
 
 export default activityLogService;
+
