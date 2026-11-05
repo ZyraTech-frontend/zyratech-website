@@ -1,10 +1,11 @@
-﻿/**
+/**
  * Activity Logs Page (Admin)
  * Professional admin interface for viewing system activity and audit logs
  * Now reads REAL logs from activityLogService (localStorage-backed) merged with seed data.
  */
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 
@@ -245,6 +246,7 @@ const formatFullTimestamp = (dateString) => {
 
 const ActivityLogsPage = () => {
     const { userRole } = useAuth();
+    const navigate = useNavigate();
   const isSuperAdmin = userRole?.toLowerCase() === 'super_admin' || userRole?.toLowerCase() === 'super admin';
 
     // State management
@@ -253,7 +255,6 @@ const ActivityLogsPage = () => {
     const [selectedSeverity, setSelectedSeverity] = useState('all');
     const [dateRange, setDateRange] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
-    const [viewingLog, setViewingLog] = useState(null);
     const [expandedLogs, setExpandedLogs] = useState(new Set());
     const [realLogs, setRealLogs] = useState([]);
     const [refreshKey, setRefreshKey] = useState(0);
@@ -370,9 +371,7 @@ const ActivityLogsPage = () => {
     }, [allLogs]);
 
     // Handlers
-    const handleViewDetails = (log) => {
-        setViewingLog(log);
-    };
+    const handleViewDetails = (log) => {        navigate(`/admin/activity-logs/${log.id}`);    };
 
     const toggleExpand = (logId) => {
         const newExpanded = new Set(expandedLogs);
@@ -729,214 +728,12 @@ const ActivityLogsPage = () => {
                     </div>
                 )}
             </div>
-
-            {/* Log Details Modal */}
-            {viewingLog && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 bg-gradient-to-r from-[#004fa2] to-[#0066cc] flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                                    <Activity className="text-white" size={22} />
-                                </div>
-                                <div>
-                                    <h2 className="text-lg font-bold text-white">Activity Details</h2>
-                                    <p className="text-blue-100 text-xs font-mono">{viewingLog.id}</p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => setViewingLog(null)}
-                                className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-                            <div className="space-y-5">
-                                {/* Type & Severity */}
-                                <div className="flex items-center flex-wrap gap-2">
-                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium ${ACTIVITY_TYPE_CONFIG[viewingLog.type]?.color || 'bg-gray-100 text-gray-700'}`}>
-                                        {React.createElement(ACTIVITY_TYPE_CONFIG[viewingLog.type]?.icon || Activity, { size: 12 })}
-                                        {ACTIVITY_TYPE_CONFIG[viewingLog.type]?.label || viewingLog.type}
-                                    </span>
-                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium text-white ${SEVERITY_CONFIG[viewingLog.severity]?.color || 'bg-gray-500'}`}>
-                                        {React.createElement(SEVERITY_CONFIG[viewingLog.severity]?.icon || Info, { size: 12 })}
-                                        {SEVERITY_CONFIG[viewingLog.severity]?.label || viewingLog.severity}
-                                    </span>
-                                </div>
-
-                                {/* Description */}
-                                <div>
-                                    <h3 className="text-sm font-semibold text-gray-500 mb-1">Description</h3>
-                                    <p className="text-gray-900 font-medium">{viewingLog.description}</p>
-                                </div>
-
-                                {/* User Info */}
-                                <div className="bg-gray-50 rounded-xl p-4">
-                                    <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center gap-2">
-                                        <User size={14} />
-                                        Performed By
-                                    </h3>
-                                    <div className="flex items-center gap-3">
-                                        <div className={`shrink-0 w-6 h-6 md:w-8 md:h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white text-sm font-bold ${viewingLog.user.id === 'SYSTEM' ? 'bg-gray-500' : 'bg-gradient-to-br from-[#004fa2] to-[#0066cc]'}`}>
-                                            {viewingLog.user.id === 'SYSTEM' ? <Server size={18} /> : viewingLog.user.name.split(' ').map(n => n[0]).join('')}
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-semibold text-gray-900 truncate">{viewingLog.user.name}</p>
-                                            <p className="text-xs text-gray-500 truncate">{viewingLog.user.email}</p>
-                                        </div>
-                                        <span className="shrink-0 whitespace-nowrap ml-auto px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-medium">
-                                            {viewingLog.user.role}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Timestamp */}
-                                <div className="bg-gray-50 rounded-xl p-4">
-                                    <h3 className="text-sm font-semibold text-gray-500 mb-2 flex items-center gap-2">
-                                        <Calendar size={14} />
-                                        Timestamp
-                                    </h3>
-                                    <p className="text-gray-900 font-medium">{formatFullTimestamp(viewingLog.timestamp)}</p>
-                                </div>
-
-                                {/* Technical Details */}
-                                <div className="bg-gray-50 rounded-xl p-4">
-                                    <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center gap-2">
-                                        <Monitor size={14} />
-                                        Technical Details
-                                    </h3>
-                                    <div className="space-y-3">
-                                        {/* Device Information */}
-                                        <div className="space-y-2">
-                                            <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Device & Browser</h4>
-                                            <div className="grid grid-cols-2 gap-3 text-sm">
-                                                {(viewingLog.deviceType || viewingLog.details?.device) && (
-                                                    <div className="flex items-center gap-2">
-                                                        <Monitor size={14} className="text-gray-400" />
-                                                        <span className="text-gray-600">Device:</span>
-                                                        <span className="text-gray-900">{viewingLog.deviceType || viewingLog.details?.device || 'Unknown'}</span>
-                                                    </div>
-                                                )}
-                                                {viewingLog.deviceModel && (
-                                                    <div className="flex items-center gap-2">
-                                                        <Smartphone size={14} className="text-gray-400" />
-                                                        <span className="text-gray-600">Model:</span>
-                                                        <span className="text-gray-900">{viewingLog.deviceModel}</span>
-                                                    </div>
-                                                )}
-                                                {(viewingLog.osName || viewingLog.osVersion) && (
-                                                    <div className="flex items-center gap-2">
-                                                        <Monitor size={14} className="text-gray-400" />
-                                                        <span className="text-gray-600">OS:</span>
-                                                        <span className="text-gray-900">
-                                                            {viewingLog.osName} {viewingLog.osVersion}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                                {(viewingLog.browserName || viewingLog.browserVersion || viewingLog.details?.browser) && (
-                                                    <div className="flex items-center gap-2">
-                                                        <Globe size={14} className="text-gray-400" />
-                                                        <span className="text-gray-600">Browser:</span>
-                                                        <span className="text-gray-900">
-                                                            {viewingLog.browserName && viewingLog.browserVersion
-                                                                ? `${viewingLog.browserName} ${viewingLog.browserVersion}`
-                                                                : viewingLog.details?.browser || 'Unknown'}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* Location Information */}
-                                        <div className="space-y-2 pt-2 border-t border-gray-200">
-                                            <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Location</h4>
-                                            <div className="grid grid-cols-2 gap-3 text-sm">
-                                                {(viewingLog.city || viewingLog.region || viewingLog.country || viewingLog.details?.location) && (
-                                                    <div className="flex items-center gap-2 col-span-2">
-                                                        <MapPin size={14} className="text-gray-400" />
-                                                        <span className="text-gray-600">Location:</span>
-                                                        <span className="text-gray-900">
-                                                            {viewingLog.city && viewingLog.region && viewingLog.country
-                                                                ? `${viewingLog.city}, ${viewingLog.region}, ${viewingLog.country}`
-                                                                : viewingLog.details?.location || 'Unknown'}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                                {viewingLog.isp && (
-                                                    <div className="flex items-center gap-2">
-                                                        <Globe size={14} className="text-gray-400" />
-                                                        <span className="text-gray-600">ISP:</span>
-                                                        <span className="text-gray-900">{viewingLog.isp}</span>
-                                                    </div>
-                                                )}
-                                                {(viewingLog.ipAddress || viewingLog.details?.ip) && (
-                                                    <div className="flex items-center gap-2">
-                                                        <Globe size={14} className="text-gray-400" />
-                                                        <span className="text-gray-600">IP:</span>
-                                                        <span className="font-mono text-gray-900">{viewingLog.ipAddress || viewingLog.details?.ip}</span>
-                                                        <button 
-                                                            onClick={() => copyToClipboard(viewingLog.ipAddress || viewingLog.details?.ip)} 
-                                                            className="p-1 hover:bg-gray-200 rounded"
-                                                        >
-                                                            <Copy size={12} className="text-gray-400" />
-                                                        </button>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Additional Metadata */}
-                                {Object.entries(viewingLog.details).filter(([key]) => !['ip', 'device', 'browser', 'location'].includes(key)).length > 0 && (
-                                    <div className="bg-blue-50 rounded-xl p-4">
-                                        <h3 className="text-sm font-semibold text-blue-800 mb-3 flex items-center gap-2">
-                                            <Info size={14} />
-                                            Additional Information
-                                        </h3>
-                                        <div className="space-y-2">
-                                            {Object.entries(viewingLog.details)
-                                                .filter(([key]) => !['ip', 'device', 'browser', 'location'].includes(key))
-                                                .map(([key, value]) => (
-                                                    <div key={key} className="flex items-center justify-between text-sm">
-                                                        <span className="text-blue-600 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                                                        <span className="text-blue-900 font-medium">{value}</span>
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Modal Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50">
-                            <button
-                                onClick={() => copyToClipboard(JSON.stringify(viewingLog, null, 2))}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium text-sm flex items-center gap-1.5"
-                            >
-                                <Copy size={14} />
-                                Copy JSON
-                            </button>
-                            <button
-                                onClick={() => setViewingLog(null)}
-                                className="px-4 py-2 bg-[#004fa2] text-white rounded-lg hover:bg-[#003d7a] transition-colors font-medium text-sm"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </AdminLayout>
     );
 };
 
 export default ActivityLogsPage;
+
+
 
 

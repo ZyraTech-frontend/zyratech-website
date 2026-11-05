@@ -76,6 +76,7 @@ const ImpactManagementPage = lazy(() => import('./pages/admin/impact/ImpactManag
 const ImpactMetricFormPage = lazy(() => import('./pages/admin/impact/ImpactMetricFormPage'));
 const ImpactStoryFormPage = lazy(() => import('./pages/admin/impact/ImpactStoryFormPage'));
 const ActivityLogsPage = lazy(() => import('./pages/admin/activity-logs/ActivityLogsPage'));
+const ActivityLogDetailPage = lazy(() => import('./pages/admin/activity-logs/ActivityLogDetailPage'));
 const ReportsPage = lazy(() => import('./pages/admin/reports/ReportsPage'));
 const AdminProfilePage = lazy(() => import('./pages/admin/profile/AdminProfilePage'));
 const HeroSlidesManagementPage = lazy(() => import('./pages/admin/content/HeroSlidesManagementPage'));
@@ -277,6 +278,7 @@ function App() {
 
                 {/* Activity & Reports */}
                 <Route path="/admin/activity-logs" element={<ProtectedRoute><ActivityLogsPage /></ProtectedRoute>} />
+                <Route path="/admin/activity-logs/:logId" element={<ProtectedRoute><ActivityLogDetailPage /></ProtectedRoute>} />
                 <Route path="/admin/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
 
                 {/* Catch-all: any unknown path on the admin subdomain goes to login */}
@@ -410,3 +412,4 @@ function App() {
 }
 
 export default App;
+
