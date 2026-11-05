@@ -45,7 +45,8 @@ const transformLog = (backendLog) => {
             id: backendLog.userId || 'SYSTEM',
             name: backendLog.user?.name || 'System',
             email: backendLog.user?.email || 'system@zyratechhub.com',
-            role: 'Admin'
+            role: 'Admin',
+            avatar: backendLog.user?.avatar || backendLog.user?.profilePicture || null
         },
         description: generateDescription(backendLog),
         

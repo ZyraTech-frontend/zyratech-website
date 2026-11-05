@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Activity Logs Page (Admin)
  * Professional admin interface for viewing system activity and audit logs
  * Now reads REAL logs from activityLogService (localStorage-backed) merged with seed data.
