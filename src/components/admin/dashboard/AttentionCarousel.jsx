@@ -1,6 +1,6 @@
 /**
  * AttentionCarousel Component
- * Minimal professional toast notification
+ * Minimal professional toast notification with colored backgrounds
  */
 
 import React, { useState, useEffect } from 'react';
@@ -25,10 +25,42 @@ const AttentionCarousel = ({ items = [] }) => {
     const currentItem = items[currentIndex];
 
     const colorClasses = {
-        amber: { dot: 'bg-amber-500', text: 'text-amber-600', progress: 'bg-amber-500' },
-        blue: { dot: 'bg-blue-500', text: 'text-blue-600', progress: 'bg-blue-500' },
-        purple: { dot: 'bg-purple-500', text: 'text-purple-600', progress: 'bg-purple-500' },
-        emerald: { dot: 'bg-emerald-500', text: 'text-emerald-600', progress: 'bg-emerald-500' }
+        amber: {
+            bg: 'bg-amber-50',
+            border: 'border-amber-200',
+            dot: 'bg-amber-600',
+            text: 'text-amber-900',
+            countText: 'text-amber-700',
+            progress: 'bg-amber-600',
+            progressBg: 'bg-amber-200'
+        },
+        blue: {
+            bg: 'bg-blue-50',
+            border: 'border-blue-200',
+            dot: 'bg-blue-600',
+            text: 'text-blue-900',
+            countText: 'text-blue-700',
+            progress: 'bg-blue-600',
+            progressBg: 'bg-blue-200'
+        },
+        purple: {
+            bg: 'bg-purple-50',
+            border: 'border-purple-200',
+            dot: 'bg-purple-600',
+            text: 'text-purple-900',
+            countText: 'text-purple-700',
+            progress: 'bg-purple-600',
+            progressBg: 'bg-purple-200'
+        },
+        emerald: {
+            bg: 'bg-emerald-50',
+            border: 'border-emerald-200',
+            dot: 'bg-emerald-600',
+            text: 'text-emerald-900',
+            countText: 'text-emerald-700',
+            progress: 'bg-emerald-600',
+            progressBg: 'bg-emerald-200'
+        }
     };
 
     const colors = colorClasses[currentItem.color] || colorClasses.amber;
@@ -50,7 +82,7 @@ const AttentionCarousel = ({ items = [] }) => {
     return (
         <button
             onClick={currentItem.onClick}
-            className="w-full bg-white rounded-xl p-2.5 mb-3 text-left relative overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200"
+            className={`w-full ${colors.bg} rounded-xl p-2.5 mb-3 text-left relative overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border ${colors.border}`}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
         >
@@ -59,7 +91,7 @@ const AttentionCarousel = ({ items = [] }) => {
                 <div className="flex items-center gap-1.5">
                     {/* Colored status dot */}
                     <div className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
-                    <h3 className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">Items Requiring Attention</h3>
+                    <h3 className={`text-[10px] font-bold ${colors.text} uppercase tracking-wider`}>Items Requiring Attention</h3>
                 </div>
 
                 <div className="flex items-center gap-1.5">
@@ -70,7 +102,7 @@ const AttentionCarousel = ({ items = [] }) => {
                                 <div
                                     key={index}
                                     className={`h-0.5 rounded-full transition-all duration-300 ${
-                                        index === currentIndex ? `${colors.progress} w-3` : 'bg-gray-300 w-0.5'
+                                        index === currentIndex ? `${colors.progress} w-3` : `${colors.progressBg} w-0.5`
                                     }`}
                                 />
                             ))}
@@ -82,17 +114,17 @@ const AttentionCarousel = ({ items = [] }) => {
                         <div className="flex items-center">
                             <button
                                 onClick={handlePrev}
-                                className="p-0.5 hover:bg-gray-100 rounded transition-colors"
+                                className={`p-0.5 hover:bg-white/30 rounded transition-colors`}
                                 aria-label="Previous"
                             >
-                                <ChevronLeft className="text-gray-400" size={12} />
+                                <ChevronLeft className={colors.text} size={12} />
                             </button>
                             <button
                                 onClick={handleNext}
-                                className="p-0.5 hover:bg-gray-100 rounded transition-colors"
+                                className={`p-0.5 hover:bg-white/30 rounded transition-colors`}
                                 aria-label="Next"
                             >
-                                <ChevronRight className="text-gray-400" size={12} />
+                                <ChevronRight className={colors.text} size={12} />
                             </button>
                         </div>
                     )}
@@ -102,17 +134,17 @@ const AttentionCarousel = ({ items = [] }) => {
             {/* Content */}
             <div className="flex items-center justify-between">
                 <div className="flex-1">
-                    <p className="text-xs font-bold text-gray-900 mb-0.5">{currentItem.title}</p>
-                    <p className="text-[10px] text-gray-500">{currentItem.subtitle}</p>
+                    <p className={`text-xs font-bold ${colors.text} mb-0.5`}>{currentItem.title}</p>
+                    <p className={`text-[10px] ${colors.text} opacity-75`}>{currentItem.subtitle}</p>
                 </div>
-                <div className={`text-xl font-bold ${colors.text} ml-3`}>
+                <div className={`text-xl font-bold ${colors.countText} ml-3`}>
                     {currentItem.count}
                 </div>
             </div>
 
             {/* Progress bar */}
             {items.length > 1 && !isPaused && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-100">
+                <div className={`absolute bottom-0 left-0 right-0 h-0.5 ${colors.progressBg}`}>
                     <div
                         className={`h-full ${colors.progress}`}
                         style={{
