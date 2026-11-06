@@ -155,18 +155,79 @@ const SuperAdminDashboard = ({ user }) => {
                     </div>
                 )}
 
-                {/* Needs Attention Alert */}
-                {((stats.pendingKYC || 0) > 0 || (stats.pendingApplications || 0) > 0 || (stats.enrollments?.pending || 0) > 0) && (
-                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 flex items-start gap-3">
-                        <AlertCircle className="text-amber-600 flex-shrink-0 mt-0.5" size={20} />
-                        <div className="flex-1">
-                            <h3 className="font-semibold text-amber-900 mb-1">Items Requiring Attention</h3>
-                            <div className="text-sm text-amber-800 space-y-1">
-                                {(stats.pendingKYC || 0) > 0 && <p> {stats.pendingKYC} users pending KYC verification</p>}
-                                {(stats.pendingApplications || 0) > 0 && <p> {stats.pendingApplications} job applications pending review</p>}
-                                {(stats.enrollments?.pending || 0) > 0 && <p> {stats.enrollments.pending} training enrollments pending approval</p>}
-                                {(stats.unreadInquiries || 0) > 0 && <p> {stats.unreadInquiries} unread inquiries</p>}
+                {/* Items Requiring Attention - Professional Card Grid */}
+                {((stats.pendingKYC || 0) > 0 || (stats.pendingApplications || 0) > 0 || (stats.enrollments?.pending || 0) > 0 || (stats.unreadInquiries || 0) > 0) && (
+                    <div className="mb-6">
+                        <div className="flex items-center gap-2 mb-4">
+                            <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center">
+                                <AlertCircle className="text-white" size={18} />
                             </div>
+                            <h2 className="text-lg font-bold text-gray-900">Items Requiring Attention</h2>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            {(stats.pendingKYC || 0) > 0 && (
+                                <button
+                                    onClick={() => navigate('/admin/users?filter=pending_kyc')}
+                                    className="group bg-white border border-amber-200 hover:border-amber-400 rounded-xl p-4 transition-all duration-200 hover:shadow-md text-left"
+                                >
+                                    <div className="flex items-start justify-between mb-2">
+                                        <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center group-hover:bg-amber-200 transition-colors">
+                                            <Users className="text-amber-600" size={20} />
+                                        </div>
+                                        <span className="text-2xl font-bold text-amber-600">{stats.pendingKYC}</span>
+                                    </div>
+                                    <p className="text-sm font-semibold text-gray-900 mb-1">KYC Verification</p>
+                                    <p className="text-xs text-gray-500">Users pending verification</p>
+                                </button>
+                            )}
+                            
+                            {(stats.pendingApplications || 0) > 0 && (
+                                <button
+                                    onClick={() => navigate('/admin/jobs?tab=applications&status=pending')}
+                                    className="group bg-white border border-blue-200 hover:border-blue-400 rounded-xl p-4 transition-all duration-200 hover:shadow-md text-left"
+                                >
+                                    <div className="flex items-start justify-between mb-2">
+                                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                                            <Briefcase className="text-blue-600" size={20} />
+                                        </div>
+                                        <span className="text-2xl font-bold text-blue-600">{stats.pendingApplications}</span>
+                                    </div>
+                                    <p className="text-sm font-semibold text-gray-900 mb-1">Job Applications</p>
+                                    <p className="text-xs text-gray-500">Applications pending review</p>
+                                </button>
+                            )}
+                            
+                            {(stats.enrollments?.pending || 0) > 0 && (
+                                <button
+                                    onClick={() => navigate('/admin/training?status=pending')}
+                                    className="group bg-white border border-purple-200 hover:border-purple-400 rounded-xl p-4 transition-all duration-200 hover:shadow-md text-left"
+                                >
+                                    <div className="flex items-start justify-between mb-2">
+                                        <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+                                            <GraduationCap className="text-purple-600" size={20} />
+                                        </div>
+                                        <span className="text-2xl font-bold text-purple-600">{stats.enrollments.pending}</span>
+                                    </div>
+                                    <p className="text-sm font-semibold text-gray-900 mb-1">Training Enrollments</p>
+                                    <p className="text-xs text-gray-500">Enrollments awaiting approval</p>
+                                </button>
+                            )}
+                            
+                            {(stats.unreadInquiries || 0) > 0 && (
+                                <button
+                                    onClick={() => navigate('/admin/contact-inquiries?status=unread')}
+                                    className="group bg-white border border-emerald-200 hover:border-emerald-400 rounded-xl p-4 transition-all duration-200 hover:shadow-md text-left"
+                                >
+                                    <div className="flex items-start justify-between mb-2">
+                                        <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
+                                            <MessageSquare className="text-emerald-600" size={20} />
+                                        </div>
+                                        <span className="text-2xl font-bold text-emerald-600">{stats.unreadInquiries}</span>
+                                    </div>
+                                    <p className="text-sm font-semibold text-gray-900 mb-1">Unread Inquiries</p>
+                                    <p className="text-xs text-gray-500">Messages awaiting response</p>
+                                </button>
+                            )}
                         </div>
                     </div>
                 )}
@@ -280,6 +341,7 @@ const SuperAdminDashboard = ({ user }) => {
 };
 
 export default SuperAdminDashboard;
+
 
 
 
