@@ -1,6 +1,6 @@
 /**
  * AttentionCarousel Component
- * Professional 3D toast notification with modern design
+ * Minimal professional toast notification
  */
 
 import React, { useState, useEffect } from 'react';
@@ -25,30 +25,10 @@ const AttentionCarousel = ({ items = [] }) => {
     const currentItem = items[currentIndex];
 
     const colorClasses = {
-        amber: {
-            dot: 'bg-amber-500',
-            accent: 'bg-amber-500',
-            text: 'text-amber-600',
-            progress: 'bg-amber-500'
-        },
-        blue: {
-            dot: 'bg-blue-500',
-            accent: 'bg-blue-500',
-            text: 'text-blue-600',
-            progress: 'bg-blue-500'
-        },
-        purple: {
-            dot: 'bg-purple-500',
-            accent: 'bg-purple-500',
-            text: 'text-purple-600',
-            progress: 'bg-purple-500'
-        },
-        emerald: {
-            dot: 'bg-emerald-500',
-            accent: 'bg-emerald-500',
-            text: 'text-emerald-600',
-            progress: 'bg-emerald-500'
-        }
+        amber: { dot: 'bg-amber-500', text: 'text-amber-600', progress: 'bg-amber-500' },
+        blue: { dot: 'bg-blue-500', text: 'text-blue-600', progress: 'bg-blue-500' },
+        purple: { dot: 'bg-purple-500', text: 'text-purple-600', progress: 'bg-purple-500' },
+        emerald: { dot: 'bg-emerald-500', text: 'text-emerald-600', progress: 'bg-emerald-500' }
     };
 
     const colors = colorClasses[currentItem.color] || colorClasses.amber;
@@ -70,33 +50,27 @@ const AttentionCarousel = ({ items = [] }) => {
     return (
         <button
             onClick={currentItem.onClick}
-            className="w-full bg-white rounded-2xl p-4 mb-4 text-left relative overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
-            style={{
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.05)'
-            }}
+            className="w-full bg-white rounded-xl p-2.5 mb-3 text-left relative overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200"
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
         >
-            {/* Colored accent border on left */}
-            <div className={`absolute left-0 top-0 bottom-0 w-1 ${colors.accent}`} />
-
             {/* Header */}
-            <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-1.5">
                     {/* Colored status dot */}
-                    <div className={`w-2 h-2 rounded-full ${colors.dot}`} />
-                    <h3 className="text-xs font-bold text-gray-700 uppercase tracking-wide">Items Requiring Attention</h3>
+                    <div className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
+                    <h3 className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">Items Requiring Attention</h3>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                     {/* Progress dots */}
                     {items.length > 1 && (
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-0.5">
                             {items.map((_, index) => (
                                 <div
                                     key={index}
-                                    className={`h-1 rounded-full transition-all duration-300 ${
-                                        index === currentIndex ? `${colors.progress} w-4` : 'bg-gray-300 w-1'
+                                    className={`h-0.5 rounded-full transition-all duration-300 ${
+                                        index === currentIndex ? `${colors.progress} w-3` : 'bg-gray-300 w-0.5'
                                     }`}
                                 />
                             ))}
@@ -105,20 +79,20 @@ const AttentionCarousel = ({ items = [] }) => {
 
                     {/* Navigation */}
                     {items.length > 1 && (
-                        <div className="flex items-center gap-0.5 ml-2">
+                        <div className="flex items-center">
                             <button
                                 onClick={handlePrev}
-                                className="p-1 hover:bg-gray-100 rounded transition-colors"
+                                className="p-0.5 hover:bg-gray-100 rounded transition-colors"
                                 aria-label="Previous"
                             >
-                                <ChevronLeft className="text-gray-400" size={14} />
+                                <ChevronLeft className="text-gray-400" size={12} />
                             </button>
                             <button
                                 onClick={handleNext}
-                                className="p-1 hover:bg-gray-100 rounded transition-colors"
+                                className="p-0.5 hover:bg-gray-100 rounded transition-colors"
                                 aria-label="Next"
                             >
-                                <ChevronRight className="text-gray-400" size={14} />
+                                <ChevronRight className="text-gray-400" size={12} />
                             </button>
                         </div>
                     )}
@@ -126,12 +100,12 @@ const AttentionCarousel = ({ items = [] }) => {
             </div>
 
             {/* Content */}
-            <div className="flex items-center justify-between pl-0.5">
+            <div className="flex items-center justify-between">
                 <div className="flex-1">
-                    <p className="text-sm font-bold text-gray-900 mb-0.5">{currentItem.title}</p>
-                    <p className="text-xs text-gray-500">{currentItem.subtitle}</p>
+                    <p className="text-xs font-bold text-gray-900 mb-0.5">{currentItem.title}</p>
+                    <p className="text-[10px] text-gray-500">{currentItem.subtitle}</p>
                 </div>
-                <div className={`text-2xl font-bold ${colors.text} ml-4`}>
+                <div className={`text-xl font-bold ${colors.text} ml-3`}>
                     {currentItem.count}
                 </div>
             </div>
