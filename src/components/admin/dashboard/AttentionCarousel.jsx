@@ -1,6 +1,6 @@
 /**
  * AttentionCarousel Component
- * Minimal professional toast notification with deep colored backgrounds
+ * Professional toast notification with deep colors and white text
  */
 
 import React, { useState, useEffect } from 'react';
@@ -25,40 +25,32 @@ const AttentionCarousel = ({ items = [] }) => {
 
     const colorClasses = {
         amber: {
-            bg: 'bg-amber-400',
-            border: 'border-amber-500',
-            dot: 'bg-amber-700',
-            text: 'text-amber-900',
-            countText: 'text-amber-900',
-            progress: 'bg-amber-700',
-            progressBg: 'bg-amber-300'
+            bg: 'bg-amber-500',
+            border: 'border-amber-600',
+            dot: 'bg-white',
+            progress: 'bg-white',
+            progressBg: 'bg-amber-400'
         },
         blue: {
-            bg: 'bg-blue-400',
-            border: 'border-blue-500',
-            dot: 'bg-blue-700',
-            text: 'text-blue-900',
-            countText: 'text-blue-900',
-            progress: 'bg-blue-700',
-            progressBg: 'bg-blue-300'
+            bg: 'bg-blue-500',
+            border: 'border-blue-600',
+            dot: 'bg-white',
+            progress: 'bg-white',
+            progressBg: 'bg-blue-400'
         },
         purple: {
-            bg: 'bg-purple-400',
-            border: 'border-purple-500',
-            dot: 'bg-purple-700',
-            text: 'text-purple-900',
-            countText: 'text-purple-900',
-            progress: 'bg-purple-700',
-            progressBg: 'bg-purple-300'
+            bg: 'bg-purple-500',
+            border: 'border-purple-600',
+            dot: 'bg-white',
+            progress: 'bg-white',
+            progressBg: 'bg-purple-400'
         },
         emerald: {
-            bg: 'bg-emerald-400',
-            border: 'border-emerald-500',
-            dot: 'bg-emerald-700',
-            text: 'text-emerald-900',
-            countText: 'text-emerald-900',
-            progress: 'bg-emerald-700',
-            progressBg: 'bg-emerald-300'
+            bg: 'bg-emerald-500',
+            border: 'border-emerald-600',
+            dot: 'bg-white',
+            progress: 'bg-white',
+            progressBg: 'bg-emerald-400'
         }
     };
 
@@ -74,12 +66,12 @@ const AttentionCarousel = ({ items = [] }) => {
             {/* Header */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
-                    {/* Colored status dot */}
+                    {/* White status dot */}
                     <div className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
-                    <h3 className={`text-[10px] font-bold ${colors.text} uppercase tracking-wider`}>Items Requiring Attention</h3>
+                    <h3 className="text-xs font-bold text-white uppercase tracking-wider">Items Requiring Attention</h3>
                 </div>
 
-                {/* Progress dots only - no navigation arrows */}
+                {/* Progress dots only */}
                 {items.length > 1 && (
                     <div className="flex items-center gap-0.5">
                         {items.map((_, index) => (
@@ -104,10 +96,10 @@ const AttentionCarousel = ({ items = [] }) => {
             {/* Content */}
             <div className="flex items-center justify-between">
                 <div className="flex-1">
-                    <p className={`text-xs font-bold ${colors.text} mb-0.5`}>{currentItem.title}</p>
-                    <p className={`text-[10px] ${colors.text} opacity-80`}>{currentItem.subtitle}</p>
+                    <p className="text-sm font-bold text-white mb-0.5">{currentItem.title}</p>
+                    <p className="text-xs text-white opacity-90">{currentItem.subtitle}</p>
                 </div>
-                <div className={`text-xl font-bold ${colors.countText} ml-3`}>
+                <div className="text-2xl font-bold text-white ml-3">
                     {currentItem.count}
                 </div>
             </div>
