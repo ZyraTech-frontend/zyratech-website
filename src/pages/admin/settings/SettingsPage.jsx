@@ -1,9 +1,10 @@
-﻿/**
+/**
  * Settings Page (Super Admin Only)
  * Manage site-wide settings, branding, payment keys, etc.
  */
 
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSettings, updateSetting } from '../../../store/slices/settingsSlice';
 import { addNotification } from '../../../store/slices/uiSlice';
@@ -55,6 +56,7 @@ const SettingsPage = () => {
   };
 
   const [saving, setSaving] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchSettings());
@@ -1183,100 +1185,78 @@ const SettingsPage = () => {
             {/* Email Settings Tab */}
             {activeTab === 'email' && (
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                {/* Email Management Navigation */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                  <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
-                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
-                        <Mail size={16} />
-                    </div>
-                    <div>
-                        <h3 className="text-base font-bold text-gray-900">SMTP Configuration</h3>
-                        <p className="text-[11px] text-gray-500 font-medium tracking-wide mt-0.5">Settings for outgoing system emails</p>
-                    </div>
+                  <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50">
+                    <h3 className="text-base font-bold text-gray-900">Email Management System</h3>
+                    <p className="text-[11px] text-gray-500 font-medium tracking-wide mt-0.5">Configure email server, addresses, and templates</p>
                   </div>
-                  <div className="p-6 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">SMTP Host</label>
-                        <input
-                          type="text"
-                          value={formData.smtpHost || ''}
-                          onChange={(e) => setFormData({ ...formData, smtpHost: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400"
-                          placeholder="smtp.gmail.com"
-                        />
-                      </div>
+                  <div className="p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {/* SMTP Configuration Card */}
+                      <button
+                        onClick={() => navigate('/admin/settings/email/smtp')}
+                        className="flex flex-col items-start p-6 bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-xl border-2 border-blue-200 hover:border-[#004fa2] hover:shadow-lg transition-all group text-left"
+                      >
+                        <div className="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-[#004fa2] mb-4 group-hover:scale-110 transition-transform">
+                          <Server size={24} />
+                        </div>
+                        <h4 className="text-base font-bold text-gray-900 mb-2">SMTP Configuration</h4>
+                        <p className="text-xs text-gray-600 mb-4">Configure email server settings and test connection</p>
+                        <div className="flex items-center gap-2 text-[#004fa2] font-bold text-sm mt-auto">
+                          Configure
+                          <ExternalLink size={14} />
+                        </div>
+                      </button>
 
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">SMTP Port</label>
-                        <input
-                          type="number"
-                          value={formData.smtpPort || '587'}
-                          onChange={(e) => setFormData({ ...formData, smtpPort: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400"
-                          placeholder="587"
-                        />
-                      </div>
-                    </div>
+                      {/* Email Addresses Card */}
+                      <button
+                        onClick={() => navigate('/admin/settings/email/addresses')}
+                        className="flex flex-col items-start p-6 bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-xl border-2 border-emerald-200 hover:border-emerald-600 hover:shadow-lg transition-all group text-left"
+                      >
+                        <div className="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-emerald-600 mb-4 group-hover:scale-110 transition-transform">
+                          <Mail size={24} />
+                        </div>
+                        <h4 className="text-base font-bold text-gray-900 mb-2">Email Addresses</h4>
+                        <p className="text-xs text-gray-600 mb-4">Manage company email addresses (support@, noreply@, etc.)</p>
+                        <div className="flex items-center gap-2 text-emerald-600 font-bold text-sm mt-auto">
+                          Manage
+                          <ExternalLink size={14} />
+                        </div>
+                      </button>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">SMTP Username</label>
-                        <input
-                          type="text"
-                          value={formData.smtpUser || ''}
-                          onChange={(e) => setFormData({ ...formData, smtpUser: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400"
-                          placeholder="your-email@gmail.com"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">SMTP Password</label>
-                        <input
-                          type="password"
-                          value={formData.smtpPassword || ''}
-                          onChange={(e) => setFormData({ ...formData, smtpPassword: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400"
-                          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-50">
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">From Email</label>
-                        <input
-                          type="email"
-                          value={formData.fromEmail || ''}
-                          onChange={(e) => setFormData({ ...formData, fromEmail: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400"
-                          placeholder="noreply@zyratech.com"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">From Name</label>
-                        <input
-                          type="text"
-                          value={formData.fromName || ''}
-                          onChange={(e) => setFormData({ ...formData, fromName: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#004fa2]/20 focus:border-[#004fa2] text-sm text-gray-900 bg-gray-50/50 hover:bg-white focus:bg-white transition-all placeholder:text-gray-400"
-                          placeholder="ZyraTech Hub"
-                        />
-                      </div>
+                      {/* Email Templates Card */}
+                      <button
+                        onClick={() => navigate('/admin/settings/email/templates')}
+                        className="flex flex-col items-start p-6 bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-xl border-2 border-purple-200 hover:border-purple-600 hover:shadow-lg transition-all group text-left"
+                      >
+                        <div className="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-purple-600 mb-4 group-hover:scale-110 transition-transform">
+                          <Edit2 size={24} />
+                        </div>
+                        <h4 className="text-base font-bold text-gray-900 mb-2">Email Templates</h4>
+                        <p className="text-xs text-gray-600 mb-4">Create and manage email templates with variables</p>
+                        <div className="flex items-center gap-2 text-purple-600 font-bold text-sm mt-auto">
+                          Manage
+                          <ExternalLink size={14} />
+                        </div>
+                      </button>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex justify-end pt-2">
-                    <button
-                      onClick={() => handleSave('email')}
-                      disabled={saving}
-                      className="flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl shadow-md hover:shadow-blue-500/25 hover:-translate-y-0.5 transition-all font-bold text-sm disabled:opacity-50"
-                    >
-                      <Save size={18} />
-                      {saving ? 'Saving Changes...' : 'Save Email Settings'}
-                    </button>
+                {/* Quick Info */}
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-[#004fa2] shrink-0 mt-0.5">
+                      <Shield size={16} />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-gray-900 mb-1">Email Management System</h4>
+                      <p className="text-xs text-gray-700 leading-relaxed">
+                        Configure all email-related settings from the dashboard. Set up SMTP server, manage 10 company email addresses, and create customizable email templates with variable substitution. All changes are managed by the backend system.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}

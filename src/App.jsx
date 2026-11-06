@@ -42,6 +42,9 @@ const UsersPage = lazy(() => import('./pages/admin/users/UsersPage'));
 const AdministratorFormPage = lazy(() => import('./pages/admin/users/AdministratorFormPage'));
 const SettingsPage = lazy(() => import('./pages/admin/settings/SettingsPage'));
 const TrainingCoursesPage = lazy(() => import('./pages/admin/training/TrainingCoursesPage'));
+const SmtpConfigPage = lazy(() => import('./pages/admin/settings/email/SmtpConfigPage'));
+const EmailAddressesPage = lazy(() => import('./pages/admin/settings/email/EmailAddressesPage'));
+const EmailTemplatesPage = lazy(() => import('./pages/admin/settings/email/EmailTemplatesPage'));
 const CourseApplicationsPage = lazy(() => import('./pages/admin/training/CourseApplicationsPage'));
 const ApplicationDetailsPage = lazy(() => import('./pages/admin/training/ApplicationDetailsPage'));
 const CourseFormPage = lazy(() => import('./pages/admin/training/CourseFormPage'));
@@ -191,6 +194,11 @@ function App() {
                 <Route path="/admin/tracking/website-analytics" element={<ProtectedRoute requiredRole="super_admin"><WebsiteAnalyticsPage /></ProtectedRoute>} />
                 <Route path="/admin/settings" element={<ProtectedRoute requiredRole="super_admin"><SettingsPage /></ProtectedRoute>} />
 
+
+                {/* Email Management */}
+                <Route path="/admin/settings/email/smtp" element={<ProtectedRoute requiredRole="super_admin"><SmtpConfigPage /></ProtectedRoute>} />
+                <Route path="/admin/settings/email/addresses" element={<ProtectedRoute requiredRole="super_admin"><EmailAddressesPage /></ProtectedRoute>} />
+                <Route path="/admin/settings/email/templates" element={<ProtectedRoute requiredRole="super_admin"><EmailTemplatesPage /></ProtectedRoute>} />
                 {/* CMS Content Management */}
                 <Route path="/admin/content/hero" element={<ProtectedRoute><HeroSlidesManagementPage /></ProtectedRoute>} />
                 <Route path="/admin/content/hero/add" element={<ProtectedRoute><HeroSlideFormPage /></ProtectedRoute>} />
