@@ -1,10 +1,9 @@
 /**
  * AttentionCarousel Component
- * Minimal professional toast notification with colored backgrounds
+ * Minimal professional toast notification with deep colored backgrounds
  */
 
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const AttentionCarousel = ({ items = [] }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -26,58 +25,44 @@ const AttentionCarousel = ({ items = [] }) => {
 
     const colorClasses = {
         amber: {
-            bg: 'bg-amber-50',
-            border: 'border-amber-200',
-            dot: 'bg-amber-600',
+            bg: 'bg-amber-400',
+            border: 'border-amber-500',
+            dot: 'bg-amber-700',
             text: 'text-amber-900',
-            countText: 'text-amber-700',
-            progress: 'bg-amber-600',
-            progressBg: 'bg-amber-200'
+            countText: 'text-amber-900',
+            progress: 'bg-amber-700',
+            progressBg: 'bg-amber-300'
         },
         blue: {
-            bg: 'bg-blue-50',
-            border: 'border-blue-200',
-            dot: 'bg-blue-600',
+            bg: 'bg-blue-400',
+            border: 'border-blue-500',
+            dot: 'bg-blue-700',
             text: 'text-blue-900',
-            countText: 'text-blue-700',
-            progress: 'bg-blue-600',
-            progressBg: 'bg-blue-200'
+            countText: 'text-blue-900',
+            progress: 'bg-blue-700',
+            progressBg: 'bg-blue-300'
         },
         purple: {
-            bg: 'bg-purple-50',
-            border: 'border-purple-200',
-            dot: 'bg-purple-600',
+            bg: 'bg-purple-400',
+            border: 'border-purple-500',
+            dot: 'bg-purple-700',
             text: 'text-purple-900',
-            countText: 'text-purple-700',
-            progress: 'bg-purple-600',
-            progressBg: 'bg-purple-200'
+            countText: 'text-purple-900',
+            progress: 'bg-purple-700',
+            progressBg: 'bg-purple-300'
         },
         emerald: {
-            bg: 'bg-emerald-50',
-            border: 'border-emerald-200',
-            dot: 'bg-emerald-600',
+            bg: 'bg-emerald-400',
+            border: 'border-emerald-500',
+            dot: 'bg-emerald-700',
             text: 'text-emerald-900',
-            countText: 'text-emerald-700',
-            progress: 'bg-emerald-600',
-            progressBg: 'bg-emerald-200'
+            countText: 'text-emerald-900',
+            progress: 'bg-emerald-700',
+            progressBg: 'bg-emerald-300'
         }
     };
 
     const colors = colorClasses[currentItem.color] || colorClasses.amber;
-
-    const handlePrev = (e) => {
-        e.stopPropagation();
-        setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
-        setIsPaused(true);
-        setTimeout(() => setIsPaused(false), 8000);
-    };
-
-    const handleNext = (e) => {
-        e.stopPropagation();
-        setCurrentIndex((prev) => (prev + 1) % items.length);
-        setIsPaused(true);
-        setTimeout(() => setIsPaused(false), 8000);
-    };
 
     return (
         <button
@@ -94,48 +79,33 @@ const AttentionCarousel = ({ items = [] }) => {
                     <h3 className={`text-[10px] font-bold ${colors.text} uppercase tracking-wider`}>Items Requiring Attention</h3>
                 </div>
 
-                <div className="flex items-center gap-1.5">
-                    {/* Progress dots */}
-                    {items.length > 1 && (
-                        <div className="flex items-center gap-0.5">
-                            {items.map((_, index) => (
-                                <div
-                                    key={index}
-                                    className={`h-0.5 rounded-full transition-all duration-300 ${
-                                        index === currentIndex ? `${colors.progress} w-3` : `${colors.progressBg} w-0.5`
-                                    }`}
-                                />
-                            ))}
-                        </div>
-                    )}
-
-                    {/* Navigation */}
-                    {items.length > 1 && (
-                        <div className="flex items-center">
+                {/* Progress dots only - no navigation arrows */}
+                {items.length > 1 && (
+                    <div className="flex items-center gap-0.5">
+                        {items.map((_, index) => (
                             <button
-                                onClick={handlePrev}
-                                className={`p-0.5 hover:bg-white/30 rounded transition-colors`}
-                                aria-label="Previous"
-                            >
-                                <ChevronLeft className={colors.text} size={12} />
-                            </button>
-                            <button
-                                onClick={handleNext}
-                                className={`p-0.5 hover:bg-white/30 rounded transition-colors`}
-                                aria-label="Next"
-                            >
-                                <ChevronRight className={colors.text} size={12} />
-                            </button>
-                        </div>
-                    )}
-                </div>
+                                key={index}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setCurrentIndex(index);
+                                    setIsPaused(true);
+                                    setTimeout(() => setIsPaused(false), 8000);
+                                }}
+                                className={`h-0.5 rounded-full transition-all duration-300 ${
+                                    index === currentIndex ? `${colors.progress} w-3` : `${colors.progressBg} w-0.5`
+                                }`}
+                                aria-label={`Go to item ${index + 1}`}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Content */}
             <div className="flex items-center justify-between">
                 <div className="flex-1">
                     <p className={`text-xs font-bold ${colors.text} mb-0.5`}>{currentItem.title}</p>
-                    <p className={`text-[10px] ${colors.text} opacity-75`}>{currentItem.subtitle}</p>
+                    <p className={`text-[10px] ${colors.text} opacity-80`}>{currentItem.subtitle}</p>
                 </div>
                 <div className={`text-xl font-bold ${colors.countText} ml-3`}>
                     {currentItem.count}
