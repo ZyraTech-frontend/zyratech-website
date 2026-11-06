@@ -1,7 +1,6 @@
 /**
  * AttentionCarousel Component
- * Auto-rotating carousel that cycles through items requiring attention
- * Shows one item at a time for 4 seconds, then slides to the next
+ * Compact auto-rotating toast-like notification for items requiring attention
  */
 
 import React, { useState, useEffect } from 'react';
@@ -31,163 +30,140 @@ const AttentionCarousel = ({ items = [] }) => {
         amber: {
             bg: 'bg-amber-50',
             border: 'border-amber-200',
-            iconBg: 'bg-amber-100',
-            iconText: 'text-amber-600',
+            iconBg: 'bg-amber-500',
             countText: 'text-amber-600',
-            dot: 'bg-amber-600'
+            dot: 'bg-amber-500'
         },
         blue: {
             bg: 'bg-blue-50',
             border: 'border-blue-200',
-            iconBg: 'bg-blue-100',
-            iconText: 'text-blue-600',
+            iconBg: 'bg-blue-500',
             countText: 'text-blue-600',
-            dot: 'bg-blue-600'
+            dot: 'bg-blue-500'
         },
         purple: {
             bg: 'bg-purple-50',
             border: 'border-purple-200',
-            iconBg: 'bg-purple-100',
-            iconText: 'text-purple-600',
+            iconBg: 'bg-purple-500',
             countText: 'text-purple-600',
-            dot: 'bg-purple-600'
+            dot: 'bg-purple-500'
         },
         emerald: {
             bg: 'bg-emerald-50',
             border: 'border-emerald-200',
-            iconBg: 'bg-emerald-100',
-            iconText: 'text-emerald-600',
+            iconBg: 'bg-emerald-500',
             countText: 'text-emerald-600',
-            dot: 'bg-emerald-600'
+            dot: 'bg-emerald-500'
         }
     };
 
     const colors = colorClasses[currentItem.color] || colorClasses.amber;
 
-    const handlePrev = () => {
+    const handlePrev = (e) => {
+        e.stopPropagation();
         setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
         setIsPaused(true);
-        setTimeout(() => setIsPaused(false), 8000); // Pause for 8 seconds after manual navigation
+        setTimeout(() => setIsPaused(false), 8000);
     };
 
-    const handleNext = () => {
+    const handleNext = (e) => {
+        e.stopPropagation();
         setCurrentIndex((prev) => (prev + 1) % items.length);
         setIsPaused(true);
         setTimeout(() => setIsPaused(false), 8000);
     };
 
     return (
-        <div className="mb-6">
-            <div
-                className={`relative ${colors.bg} ${colors.border} border rounded-xl p-5 transition-all duration-500 ease-in-out overflow-hidden`}
-                onMouseEnter={() => setIsPaused(true)}
-                onMouseLeave={() => setIsPaused(false)}
-            >
-                {/* Header with Icon and Title */}
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="w-9 h-9 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <AlertCircle className="text-white" size={20} />
-                    </div>
-                    <h2 className="text-base font-bold text-gray-900">Items Requiring Attention</h2>
-                    
-                    {/* Progress Dots */}
-                    {items.length > 1 && (
-                        <div className="flex items-center gap-1.5 ml-auto">
-                            {items.map((_, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => {
-                                        setCurrentIndex(index);
-                                        setIsPaused(true);
-                                        setTimeout(() => setIsPaused(false), 8000);
-                                    }}
-                                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                                        index === currentIndex 
-                                            ? `${colors.dot} w-6` 
-                                            : 'bg-gray-300 w-1.5 hover:bg-gray-400'
-                                    }`}
-                                    aria-label={`Go to item ${index + 1}`}
-                                />
-                            ))}
-                        </div>
-                    )}
+        <button
+            onClick={currentItem.onClick}
+            className={`w-full ${colors.bg} ${colors.border} border rounded-xl p-3 mb-6 transition-all duration-300 hover:shadow-md text-left relative overflow-hidden`}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+        >
+            {/* Main Content */}
+            <div className="flex items-center gap-3">
+                {/* Alert Icon */}
+                <div className="w-9 h-9 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <AlertCircle className="text-white" size={18} />
                 </div>
 
-                {/* Content - Clickable Card */}
-                <button
-                    onClick={currentItem.onClick}
-                    className="w-full text-left group"
-                >
-                    <div className="flex items-center gap-4">
-                        {/* Icon */}
-                        <div className={`w-14 h-14 ${colors.iconBg} rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-200`}>
-                            <Icon className={colors.iconText} size={28} />
-                        </div>
+                {/* Title */}
+                <h3 className="text-sm font-bold text-gray-900 flex-shrink-0">Items Requiring Attention</h3>
 
-                        {/* Text Content */}
-                        <div className="flex-1">
-                            <div className="flex items-baseline gap-3">
-                                <h3 className="text-lg font-bold text-gray-900 group-hover:underline">{currentItem.title}</h3>
-                                <span className={`text-3xl font-bold ${colors.countText}`}>
-                                    {currentItem.count}
-                                </span>
-                            </div>
-                            <p className="text-sm text-gray-600 mt-0.5">{currentItem.subtitle}</p>
-                        </div>
-
-                        {/* Navigation Arrows - Only show if multiple items */}
-                        {items.length > 1 && (
-                            <div className="flex items-center gap-1 ml-auto">
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handlePrev();
-                                    }}
-                                    className="p-2 hover:bg-white/50 rounded-lg transition-colors"
-                                    aria-label="Previous item"
-                                >
-                                    <ChevronLeft className="text-gray-600" size={18} />
-                                </button>
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleNext();
-                                    }}
-                                    className="p-2 hover:bg-white/50 rounded-lg transition-colors"
-                                    aria-label="Next item"
-                                >
-                                    <ChevronRight className="text-gray-600" size={18} />
-                                </button>
-                            </div>
-                        )}
+                {/* Progress Dots */}
+                {items.length > 1 && (
+                    <div className="flex items-center gap-1 ml-auto mr-3">
+                        {items.map((_, index) => (
+                            <div
+                                key={index}
+                                className={`h-1 rounded-full transition-all duration-300 ${
+                                    index === currentIndex 
+                                        ? `${colors.dot} w-4` 
+                                        : 'bg-gray-300 w-1'
+                                }`}
+                            />
+                        ))}
                     </div>
-                </button>
+                )}
 
-                {/* Auto-play indicator */}
-                {items.length > 1 && !isPaused && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-200">
-                        <div 
-                            className={`h-full ${colors.dot} transition-all`}
-                            style={{
-                                animation: 'progress 4s linear',
-                                transformOrigin: 'left'
-                            }}
-                        />
+                {/* Navigation Arrows */}
+                {items.length > 1 && (
+                    <div className="flex items-center gap-0.5">
+                        <button
+                            onClick={handlePrev}
+                            className="p-1 hover:bg-gray-200/50 rounded transition-colors"
+                            aria-label="Previous"
+                        >
+                            <ChevronLeft className="text-gray-600" size={16} />
+                        </button>
+                        <button
+                            onClick={handleNext}
+                            className="p-1 hover:bg-gray-200/50 rounded transition-colors"
+                            aria-label="Next"
+                        >
+                            <ChevronRight className="text-gray-600" size={16} />
+                        </button>
                     </div>
                 )}
             </div>
 
+            {/* Item Content */}
+            <div className="flex items-center gap-3 mt-2 ml-12">
+                {/* Category Icon */}
+                <div className={`w-10 h-10 ${colors.iconBg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                    <Icon className="text-white" size={20} />
+                </div>
+
+                {/* Text */}
+                <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline gap-2">
+                        <p className="text-sm font-bold text-gray-900">{currentItem.title}</p>
+                        <span className={`text-xl font-bold ${colors.countText}`}>{currentItem.count}</span>
+                    </div>
+                    <p className="text-xs text-gray-600">{currentItem.subtitle}</p>
+                </div>
+            </div>
+
+            {/* Auto-play Progress Bar */}
+            {items.length > 1 && !isPaused && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-200">
+                    <div 
+                        className={`h-full ${colors.dot}`}
+                        style={{
+                            animation: 'progress 4s linear',
+                            transformOrigin: 'left'
+                        }}
+                    />
+                </div>
+            )}
+
             <style jsx>{`
                 @keyframes progress {
-                    from {
-                        transform: scaleX(0);
-                    }
-                    to {
-                        transform: scaleX(1);
-                    }
+                    from { transform: scaleX(0); }
+                    to { transform: scaleX(1); }
                 }
             `}</style>
-        </div>
+        </button>
     );
 };
 
