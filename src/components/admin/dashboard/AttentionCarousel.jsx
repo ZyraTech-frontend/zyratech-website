@@ -1,10 +1,10 @@
 /**
  * AttentionCarousel Component
- * Minimal compact toast notification for items requiring attention
+ * Professional 3D toast notification with modern design
  */
 
 import React, { useState, useEffect } from 'react';
-import { AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const AttentionCarousel = ({ items = [] }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -25,10 +25,30 @@ const AttentionCarousel = ({ items = [] }) => {
     const currentItem = items[currentIndex];
 
     const colorClasses = {
-        amber: { bg: 'bg-amber-50', border: 'border-amber-200', countText: 'text-amber-600', dot: 'bg-amber-500' },
-        blue: { bg: 'bg-blue-50', border: 'border-blue-200', countText: 'text-blue-600', dot: 'bg-blue-500' },
-        purple: { bg: 'bg-purple-50', border: 'border-purple-200', countText: 'text-purple-600', dot: 'bg-purple-500' },
-        emerald: { bg: 'bg-emerald-50', border: 'border-emerald-200', countText: 'text-emerald-600', dot: 'bg-emerald-500' }
+        amber: {
+            dot: 'bg-amber-500',
+            accent: 'bg-amber-500',
+            text: 'text-amber-600',
+            progress: 'bg-amber-500'
+        },
+        blue: {
+            dot: 'bg-blue-500',
+            accent: 'bg-blue-500',
+            text: 'text-blue-600',
+            progress: 'bg-blue-500'
+        },
+        purple: {
+            dot: 'bg-purple-500',
+            accent: 'bg-purple-500',
+            text: 'text-purple-600',
+            progress: 'bg-purple-500'
+        },
+        emerald: {
+            dot: 'bg-emerald-500',
+            accent: 'bg-emerald-500',
+            text: 'text-emerald-600',
+            progress: 'bg-emerald-500'
+        }
     };
 
     const colors = colorClasses[currentItem.color] || colorClasses.amber;
@@ -50,61 +70,82 @@ const AttentionCarousel = ({ items = [] }) => {
     return (
         <button
             onClick={currentItem.onClick}
-            className={`w-full ${colors.bg} ${colors.border} border rounded-lg p-2.5 mb-4 transition-all duration-300 hover:shadow-sm text-left relative overflow-hidden`}
+            className="w-full bg-white rounded-2xl p-4 mb-4 text-left relative overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+            style={{
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.05)'
+            }}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
         >
-            <div className="flex items-center gap-2.5">
-                {/* Alert Icon - Small */}
-                <div className="w-7 h-7 bg-gradient-to-br from-amber-500 to-orange-600 rounded-md flex items-center justify-center flex-shrink-0">
-                    <AlertCircle className="text-white" size={14} />
+            {/* Colored accent border on left */}
+            <div className={`absolute left-0 top-0 bottom-0 w-1 ${colors.accent}`} />
+
+            {/* Header */}
+            <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                    {/* Colored status dot */}
+                    <div className={`w-2 h-2 rounded-full ${colors.dot}`} />
+                    <h3 className="text-xs font-bold text-gray-700 uppercase tracking-wide">Items Requiring Attention</h3>
                 </div>
 
-                {/* Title */}
-                <h3 className="text-xs font-bold text-gray-900 flex-shrink-0">Items Requiring Attention</h3>
+                <div className="flex items-center gap-2">
+                    {/* Progress dots */}
+                    {items.length > 1 && (
+                        <div className="flex items-center gap-1">
+                            {items.map((_, index) => (
+                                <div
+                                    key={index}
+                                    className={`h-1 rounded-full transition-all duration-300 ${
+                                        index === currentIndex ? `${colors.progress} w-4` : 'bg-gray-300 w-1'
+                                    }`}
+                                />
+                            ))}
+                        </div>
+                    )}
 
-                {/* Progress Dots - Smaller */}
-                {items.length > 1 && (
-                    <div className="flex items-center gap-1 ml-auto">
-                        {items.map((_, index) => (
-                            <div
-                                key={index}
-                                className={`h-0.5 rounded-full transition-all duration-300 ${
-                                    index === currentIndex ? `${colors.dot} w-3` : 'bg-gray-300 w-0.5'
-                                }`}
-                            />
-                        ))}
-                    </div>
-                )}
-
-                {/* Navigation - Smaller */}
-                {items.length > 1 && (
-                    <div className="flex items-center">
-                        <button onClick={handlePrev} className="p-0.5 hover:bg-gray-200/50 rounded transition-colors" aria-label="Previous">
-                            <ChevronLeft className="text-gray-600" size={14} />
-                        </button>
-                        <button onClick={handleNext} className="p-0.5 hover:bg-gray-200/50 rounded transition-colors" aria-label="Next">
-                            <ChevronRight className="text-gray-600" size={14} />
-                        </button>
-                    </div>
-                )}
-            </div>
-
-            {/* Item Content - No Icon, Just Text */}
-            <div className="flex items-center gap-2 mt-1.5 ml-9">
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline gap-2">
-                        <p className="text-xs font-bold text-gray-900">{currentItem.title}</p>
-                        <span className={`text-base font-bold ${colors.countText}`}>{currentItem.count}</span>
-                    </div>
-                    <p className="text-[10px] text-gray-600">{currentItem.subtitle}</p>
+                    {/* Navigation */}
+                    {items.length > 1 && (
+                        <div className="flex items-center gap-0.5 ml-2">
+                            <button
+                                onClick={handlePrev}
+                                className="p-1 hover:bg-gray-100 rounded transition-colors"
+                                aria-label="Previous"
+                            >
+                                <ChevronLeft className="text-gray-400" size={14} />
+                            </button>
+                            <button
+                                onClick={handleNext}
+                                className="p-1 hover:bg-gray-100 rounded transition-colors"
+                                aria-label="Next"
+                            >
+                                <ChevronRight className="text-gray-400" size={14} />
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {/* Progress Bar */}
+            {/* Content */}
+            <div className="flex items-center justify-between pl-0.5">
+                <div className="flex-1">
+                    <p className="text-sm font-bold text-gray-900 mb-0.5">{currentItem.title}</p>
+                    <p className="text-xs text-gray-500">{currentItem.subtitle}</p>
+                </div>
+                <div className={`text-2xl font-bold ${colors.text} ml-4`}>
+                    {currentItem.count}
+                </div>
+            </div>
+
+            {/* Progress bar */}
             {items.length > 1 && !isPaused && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-200">
-                    <div className={`h-full ${colors.dot}`} style={{ animation: 'progress 4s linear', transformOrigin: 'left' }} />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-100">
+                    <div
+                        className={`h-full ${colors.progress}`}
+                        style={{
+                            animation: 'progress 4s linear',
+                            transformOrigin: 'left'
+                        }}
+                    />
                 </div>
             )}
 
