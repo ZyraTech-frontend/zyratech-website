@@ -1,9 +1,4 @@
-/**
- * Email Addresses Page
- * Manage company email addresses (support@, noreply@, payments@, etc.)
- */
-
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../../store/slices/uiSlice';
 import AdminLayout from '../../../../components/admin/layout/AdminLayout';
@@ -79,19 +74,19 @@ const EmailAddressesPage = () => {
     } catch (error) {
       dispatch(addNotification({
         type: 'error',
-        message: 'Failed to update email address'
+        message: error.userMessage || 'Failed to update email address'
       }));
     } finally {
       setSaving(false);
     }
   };
 
-  const handlePower = async (type) => {
+  const handleToggle = async (type) => {
     if (!canManageSettings) {
       dispatch(addNotification({
         type: 'error',
         title: 'Permission Required',
-        message: 'You do not have permission to Power email addresses.'
+        message: 'You do not have permission to toggle email addresses.'
       }));
       return;
     }
@@ -106,7 +101,7 @@ const EmailAddressesPage = () => {
     } catch (error) {
       dispatch(addNotification({
         type: 'error',
-        message: 'Failed to Power email address'
+        message: error.userMessage || 'Failed to toggle email address'
       }));
     }
   };
@@ -152,7 +147,6 @@ const EmailAddressesPage = () => {
   return (
     <AdminLayout>
       <div className="space-y-3 md:space-y-6 max-w-7xl mx-auto pb-8">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden shrink-0">
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#004fa2]/5 to-[#0066cc]/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl pointer-events-none"></div>
           <div className="flex items-center gap-3 sm:gap-4 relative z-10 min-w-0">
@@ -166,7 +160,6 @@ const EmailAddressesPage = () => {
           </div>
         </div>
 
-        {/* Email Addresses Table */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -223,7 +216,7 @@ const EmailAddressesPage = () => {
                         {canManageSettings && (
                           <>
                             <button
-                              onClick={() => handlePower(address.id)}
+                              onClick={() => handleToggle(address.id)}
                               className="p-2 text-gray-600 hover:text-[#004fa2] hover:bg-blue-50 rounded-lg transition-colors"
                               title={address.enabled ? 'Disable' : 'Enable'}
                             >
@@ -246,7 +239,6 @@ const EmailAddressesPage = () => {
           </div>
         </div>
 
-        {/* Edit Modal */}
         {editingAddress && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">

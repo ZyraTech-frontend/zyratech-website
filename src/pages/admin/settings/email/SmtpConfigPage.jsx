@@ -1,9 +1,4 @@
-﻿/**
- * SMTP Configuration Page
- * Configure email server settings and test connection
- */
-
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../../store/slices/uiSlice';
 import AdminLayout from '../../../../components/admin/layout/AdminLayout';
@@ -39,10 +34,7 @@ const SmtpConfigPage = () => {
       const data = await getSmtpConfig();
       setFormData(data);
     } catch (error) {
-      dispatch(addNotification({
-        type: 'error',
-        message: 'Failed to load SMTP configuration'
-      }));
+      console.log('[SmtpConfigPage] No existing config yet');
     } finally {
       setLoading(false);
     }
@@ -75,7 +67,7 @@ const SmtpConfigPage = () => {
         message: 'SMTP connection successful!'
       }));
     } catch (error) {
-      const errorMsg = error.response?.data?.message || 'Connection failed';
+      const errorMsg = error.userMessage || error.response?.data?.message || 'Connection failed';
       setTestResult({ success: false, message: errorMsg });
       dispatch(addNotification({
         type: 'error',
@@ -106,7 +98,7 @@ const SmtpConfigPage = () => {
     } catch (error) {
       dispatch(addNotification({
         type: 'error',
-        message: 'Failed to save SMTP configuration'
+        message: error.userMessage || 'Failed to save SMTP configuration'
       }));
     } finally {
       setSaving(false);
@@ -138,7 +130,6 @@ const SmtpConfigPage = () => {
   return (
     <AdminLayout>
       <div className="space-y-3 md:space-y-6 max-w-7xl mx-auto pb-8">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden shrink-0">
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#004fa2]/5 to-[#0066cc]/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl pointer-events-none"></div>
           <div className="flex items-center gap-3 sm:gap-4 relative z-10 min-w-0">
@@ -152,7 +143,6 @@ const SmtpConfigPage = () => {
           </div>
         </div>
 
-        {/* SMTP Settings Card */}
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
@@ -212,7 +202,6 @@ const SmtpConfigPage = () => {
             </div>
           </div>
 
-          {/* From Email Settings */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="px-6 py-5 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
               <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600">
@@ -249,7 +238,6 @@ const SmtpConfigPage = () => {
             </div>
           </div>
 
-          {/* Test Result */}
           {testResult && (
             <div className={`p-4 rounded-xl border ${testResult.success ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
               <div className="flex items-center gap-3">
@@ -265,7 +253,6 @@ const SmtpConfigPage = () => {
             </div>
           )}
 
-          {/* Action Buttons */}
           <div className="flex justify-end gap-3 pt-2">
             <button
               onClick={handleTestConnection}
