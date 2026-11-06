@@ -33,7 +33,8 @@ import {
   GripVertical,
   Edit2,
   ChevronDown,
-  ExternalLink
+  ExternalLink,
+  Server
 } from 'lucide-react';
 import PaymentSettingsTab from '../../../components/admin/settings/PaymentSettingsTab';
 
