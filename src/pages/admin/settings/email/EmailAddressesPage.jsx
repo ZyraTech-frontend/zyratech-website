@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../../store/slices/uiSlice';
 import AdminLayout from '../../../../components/admin/layout/AdminLayout';
@@ -9,6 +9,7 @@ import {
   getAllEmailAddresses, 
   updateEmailAddress, 
   toggleEmailAddress,
+  deleteEmailAddress,
   createEmailAddress 
 } from '../../../../services/emailService';
 
@@ -134,6 +135,30 @@ const EmailAddressesPage = () => {
       dispatch(addNotification({
         type: 'error',
         message: error.userMessage || 'Failed to toggle email address'
+      }));
+    }
+  };
+
+  const handleDelete = async (address) => {
+    const confirmed = window.confirm(`Delete Email Address?
+
+Are you sure you want to delete "${address.email}"?
+
+This action cannot be undone.`);
+    
+    if (!confirmed) return;
+
+    try {
+      await deleteEmailAddress(address.type);
+      dispatch(addNotification({
+        type: 'success',
+        message: 'Email address deleted successfully'
+      }));
+      await loadAddresses();
+    } catch (error) {
+      dispatch(addNotification({
+        type: 'error',
+        message: error.userMessage || 'Failed to delete email address'
       }));
     }
   };
@@ -320,6 +345,13 @@ const EmailAddressesPage = () => {
                             title={addr.isActive ? 'Disable' : 'Enable'}
                           >
                             <XCircle size={16} />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(addr)}
+                            className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Delete"
+                          >
+                            <Trash2 size={16} />
                           </button>
                         </div>
                       </td>

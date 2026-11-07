@@ -62,6 +62,11 @@ export const toggleEmailAddress = async (id) => {
   return response.data;
 };
 
+
+export const deleteEmailAddress = async (type) => {
+  const response = await api.delete(`/admin/email-addresses/${type}`);
+  return response.data;
+};
 // Email Templates APIs
 export const getAllEmailTemplates = async (filters = {}) => {
   const params = new URLSearchParams(filters).toString();
@@ -104,3 +109,5 @@ export const previewEmailTemplate = async (id, variables) => {
   const response = await api.post(`/admin/email-templates/${id}/preview`, { variables });
   return response.data;
 };
+
+
