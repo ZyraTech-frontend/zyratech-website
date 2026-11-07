@@ -1,5 +1,24 @@
 ﻿import api from './api';
 
+// Helper to extract list data from various backend response shapes
+const extractList = (response) => {
+  const body = response?.data ?? response;
+  if (Array.isArray(body)) {
+    console.log('[extractList] Got direct array, length:', body.length);
+    return body;
+  }
+  if (Array.isArray(body?.data)) {
+    console.log('[extractList] Got body.data array, length:', body.data.length);
+    return body.data;
+  }
+  if (Array.isArray(body?.data?.data)) {
+    console.log('[extractList] Got body.data.data array, length:', body.data.data.length);
+    return body.data.data;
+  }
+  console.warn('[extractList] Could not extract array from response:', body);
+  return [];
+};
+
 // SMTP Configuration APIs
 export const getSmtpConfig = async () => {
   const response = await api.get('/admin/settings/email/smtp');
@@ -19,7 +38,8 @@ export const testSmtpConnection = async (config) => {
 // Email Addresses APIs
 export const getAllEmailAddresses = async () => {
   const response = await api.get('/admin/email-addresses');
-  return response.data;
+  console.log('[emailService] getAllEmailAddresses raw response:', response.data);
+  return extractList(response);
 };
 
 export const getEmailAddress = async (type) => {
@@ -27,13 +47,18 @@ export const getEmailAddress = async (type) => {
   return response.data;
 };
 
-export const updateEmailAddress = async (type, data) => {
-  const response = await api.put(`/admin/email-addresses/${type}`, data);
+export const createEmailAddress = async (data) => {
+  const response = await api.post('/admin/email-addresses', data);
   return response.data;
 };
 
-export const toggleEmailAddress = async (type) => {
-  const response = await api.patch(`/admin/email-addresses/${type}/toggle`, {});
+export const updateEmailAddress = async (id, data) => {
+  const response = await api.put(`/admin/email-addresses/${id}`, data);
+  return response.data;
+};
+
+export const toggleEmailAddress = async (id) => {
+  const response = await api.patch(`/admin/email-addresses/${id}/toggle`, {});
   return response.data;
 };
 
@@ -41,7 +66,8 @@ export const toggleEmailAddress = async (type) => {
 export const getAllEmailTemplates = async (filters = {}) => {
   const params = new URLSearchParams(filters).toString();
   const response = await api.get(`/admin/email-templates?${params}`);
-  return response.data;
+  console.log('[emailService] getAllEmailTemplates raw response:', response.data);
+  return extractList(response);
 };
 
 export const getEmailTemplate = async (id) => {
