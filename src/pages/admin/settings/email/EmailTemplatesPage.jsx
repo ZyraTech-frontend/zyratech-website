@@ -21,12 +21,17 @@ const EmailTemplatesPage = () => {
 
   const loadTemplates = async () => {
     try {
-      const data = await getAllEmailTemplates();
-      setTemplates(Array.isArray(data) ? data : []);
+      const list = await getAllEmailTemplates();
+      // extractList ensures we always get an array
+      const templateList = Array.isArray(list) ? list : [];
+      console.log('[EmailTemplatesPage] Loaded templates:', templateList);
+      setTemplates(templateList);
     } catch (error) {
+      console.error('[EmailTemplatesPage] Error loading templates:', error);
+      setTemplates([]);
       dispatch(addNotification({
         type: 'error',
-        message: 'Failed to load email templates'
+        message: error.userMessage || 'Failed to load email templates'
       }));
     } finally {
       setLoading(false);
@@ -40,7 +45,7 @@ const EmailTemplatesPage = () => {
           <div className="text-center">
             <Shield className="mx-auto h-12 w-12 text-red-600 mb-4" />
             <h2 className="text-2xl font-bold text-gray-900">Permission Required</h2>
-            <p className="text-gray-600 mt-2">You don't have permission to access this page.</p>
+            <p className="text-gray-600 mt-2">You do not have permission to access this page.</p>
           </div>
         </div>
       </AdminLayout>
@@ -78,7 +83,7 @@ const EmailTemplatesPage = () => {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          {templates.length === 0 ? (
+          {!Array.isArray(templates) || templates.length === 0 ? (
             <div className="p-12 text-center">
               <Mail className="mx-auto h-12 w-12 text-gray-400 mb-4" />
               <h3 className="text-lg font-bold text-gray-900 mb-2">No templates found</h3>
