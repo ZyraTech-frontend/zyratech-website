@@ -27,6 +27,8 @@ const EmailAddressesPage = () => {
     isActive: true
   });
   const [saving, setSaving] = useState(false);
+  const [deletingAddress, setDeletingAddress] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const canManageSettings = userRole === 'super_admin' || (userPermissions?.includes('settings') ?? false);
 
@@ -139,28 +141,35 @@ const EmailAddressesPage = () => {
     }
   };
 
-  const handleDelete = async (address) => {
-    const confirmed = window.confirm(`Delete Email Address?
+  const handleDeleteClick = (address) => {
+    setDeletingAddress(address);
+  };
 
-Are you sure you want to delete "${address.email}"?
+  const handleDeleteConfirm = async () => {
+    if (!deletingAddress) return;
 
-This action cannot be undone.`);
-    
-    if (!confirmed) return;
-
+    setIsDeleting(true);
     try {
-      await deleteEmailAddress(address.type);
+      await deleteEmailAddress(deletingAddress.type);
       dispatch(addNotification({
         type: 'success',
-        message: 'Email address deleted successfully'
+        message: `Email address "${deletingAddress.email}" deleted successfully`
       }));
+      setDeletingAddress(null);
       await loadAddresses();
     } catch (error) {
       dispatch(addNotification({
         type: 'error',
         message: error.userMessage || 'Failed to delete email address'
       }));
+    } finally {
+      setIsDeleting(false);
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeletingAddress(null);
+    setIsDeleting(false);
   };
 
   if (!canManageSettings) {
@@ -173,7 +182,111 @@ This action cannot be undone.`);
             <p className="text-gray-600 mt-2">You don'\''t have permission to access this page.</p>
           </div>
         </div>
-      </AdminLayout>
+  
+      {/* Delete Confirmation Modal */}
+      {deletingAddress && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Trash2 className="text-white" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Delete Email Address?</h3>
+                  <p className="text-sm text-gray-600 mt-1">This action cannot be undone</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
+                <div className="space-y-1">
+                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
+                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
+                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-600 mb-6">
+                This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+              <button
+                onClick={handleDeleteCancel}
+                disabled={isDeleting}
+                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={isDeleting}
+                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:shadow-lg hover:shadow-red-500/30 font-medium text-sm transition-all disabled:opacity-50"
+              >
+                <Trash2 size={16} />
+                {isDeleting ? 'Deleting...' : 'Delete Address'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deletingAddress && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center">
+                  <Trash2 className="text-white" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Delete Email Address?</h3>
+                  <p className="text-sm text-gray-600 mt-1">This action cannot be undone</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
+                <div className="space-y-1">
+                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
+                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
+                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-600 mb-6">
+                This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+              <button
+                onClick={handleDeleteCancel}
+                disabled={isDeleting}
+                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={isDeleting}
+                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:shadow-lg font-medium text-sm transition-all"
+              >
+                <Trash2 size={16} />
+                {isDeleting ? 'Deleting...' : 'Delete Address'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+        </AdminLayout>
     );
   }
 
@@ -181,7 +294,111 @@ This action cannot be undone.`);
     return (
       <AdminLayout>
         <LoadingSpinner text="Loading email addresses..." />
-      </AdminLayout>
+  
+      {/* Delete Confirmation Modal */}
+      {deletingAddress && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Trash2 className="text-white" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Delete Email Address?</h3>
+                  <p className="text-sm text-gray-600 mt-1">This action cannot be undone</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
+                <div className="space-y-1">
+                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
+                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
+                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-600 mb-6">
+                This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+              <button
+                onClick={handleDeleteCancel}
+                disabled={isDeleting}
+                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={isDeleting}
+                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:shadow-lg hover:shadow-red-500/30 font-medium text-sm transition-all disabled:opacity-50"
+              >
+                <Trash2 size={16} />
+                {isDeleting ? 'Deleting...' : 'Delete Address'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deletingAddress && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center">
+                  <Trash2 className="text-white" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Delete Email Address?</h3>
+                  <p className="text-sm text-gray-600 mt-1">This action cannot be undone</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
+                <div className="space-y-1">
+                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
+                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
+                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-600 mb-6">
+                This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+              <button
+                onClick={handleDeleteCancel}
+                disabled={isDeleting}
+                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={isDeleting}
+                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:shadow-lg font-medium text-sm transition-all"
+              >
+                <Trash2 size={16} />
+                {isDeleting ? 'Deleting...' : 'Delete Address'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+        </AdminLayout>
     );
   }
 
@@ -363,8 +580,169 @@ This action cannot be undone.`);
           )}
         </div>
       </div>
-    </AdminLayout>
+
+      {/* Delete Confirmation Modal */}
+      {deletingAddress && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in duration-300">
+            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Trash2 className="text-white" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Delete Email Address?</h3>
+                  <p className="text-sm text-gray-600 mt-1">This action cannot be undone</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
+                <div className="space-y-1">
+                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
+                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
+                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-600 mb-6">
+                This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+              <button
+                onClick={handleDeleteCancel}
+                disabled={isDeleting}
+                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={isDeleting}
+                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:shadow-lg hover:shadow-red-500/30 font-medium text-sm transition-all disabled:opacity-50"
+              >
+                <Trash2 size={16} />
+                {isDeleting ? 'Deleting...' : 'Delete Address'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deletingAddress && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Trash2 className="text-white" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Delete Email Address?</h3>
+                  <p className="text-sm text-gray-600 mt-1">This action cannot be undone</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
+                <div className="space-y-1">
+                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
+                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
+                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-600 mb-6">
+                This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+              <button
+                onClick={handleDeleteCancel}
+                disabled={isDeleting}
+                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={isDeleting}
+                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:shadow-lg hover:shadow-red-500/30 font-medium text-sm transition-all disabled:opacity-50"
+              >
+                <Trash2 size={16} />
+                {isDeleting ? 'Deleting...' : 'Delete Address'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deletingAddress && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center">
+                  <Trash2 className="text-white" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Delete Email Address?</h3>
+                  <p className="text-sm text-gray-600 mt-1">This action cannot be undone</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
+                <div className="space-y-1">
+                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
+                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
+                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-600 mb-6">
+                This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+              <button
+                onClick={handleDeleteCancel}
+                disabled={isDeleting}
+                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={isDeleting}
+                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:shadow-lg font-medium text-sm transition-all"
+              >
+                <Trash2 size={16} />
+                {isDeleting ? 'Deleting...' : 'Delete Address'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+        </AdminLayout>
   );
 };
 
 export default EmailAddressesPage;
+
+
+
+
+
