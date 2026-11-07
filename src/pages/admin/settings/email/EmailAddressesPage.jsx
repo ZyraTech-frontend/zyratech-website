@@ -132,7 +132,7 @@ const EmailAddressesPage = () => {
       
       dispatch(addNotification({
         type: 'success',
-        message: `Email address ${address.isActive ? 'disabled' : 'enabled'}`
+        message: `Email address ${(address.enabled !== undefined ? address.enabled : address.isActive) ? 'disabled' : 'enabled'}`
       }));
       
       // Add small delay then reload
@@ -542,10 +542,10 @@ const EmailAddressesPage = () => {
                       <td className="px-6 py-4 text-sm text-gray-900">{addr.displayName}</td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
-                          addr.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                          (addr.enabled !== undefined ? addr.enabled : addr.isActive) ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                         }`}>
-                          {addr.isActive ? <CheckCircle size={14} /> : <XCircle size={14} />}
-                          {addr.isActive ? 'Active' : 'Inactive'}
+                          {(addr.enabled !== undefined ? addr.enabled : addr.isActive) ? <CheckCircle size={14} /> : <XCircle size={14} />}
+                          {(addr.enabled !== undefined ? addr.enabled : addr.isActive) ? 'Active' : 'Inactive'}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -564,7 +564,7 @@ const EmailAddressesPage = () => {
                                 ? 'text-yellow-600 hover:bg-yellow-50' 
                                 : 'text-green-600 hover:bg-green-50'
                             }`}
-                            title={addr.isActive ? 'Disable' : 'Enable'}
+                            title={(addr.enabled !== undefined ? addr.enabled : addr.isActive) ? 'Disable' : 'Enable'}
                           >
                             <CheckCircle size={16} />
                           </button>
