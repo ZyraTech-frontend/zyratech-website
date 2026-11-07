@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../../store/slices/uiSlice';
 import AdminLayout from '../../../../components/admin/layout/AdminLayout';
@@ -22,7 +22,7 @@ const EmailTemplatesPage = () => {
   const loadTemplates = async () => {
     try {
       const data = await getAllEmailTemplates();
-      setTemplates(data);
+      setTemplates(Array.isArray(data) ? data : []);
     } catch (error) {
       dispatch(addNotification({
         type: 'error',
