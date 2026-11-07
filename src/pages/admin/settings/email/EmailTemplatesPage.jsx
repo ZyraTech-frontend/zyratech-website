@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../../store/slices/uiSlice';
 import AdminLayout from '../../../../components/admin/layout/AdminLayout';
@@ -279,7 +279,7 @@ const EmailTemplatesPage = () => {
                   rows={8}
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm font-mono"
                 />
-                <p className="text-xs text-gray-500 mt-1">Use {{variable}} syntax for dynamic content</p>
+                <p className="text-xs text-gray-500 mt-1">Use {"{"}variable{"}"} syntax for dynamic content</p>
               </div>
 
               <div>
@@ -405,3 +405,4 @@ const EmailTemplatesPage = () => {
 };
 
 export default EmailTemplatesPage;
+
