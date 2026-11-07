@@ -127,11 +127,16 @@ const EmailAddressesPage = () => {
 
   const handleToggle = async (address) => {
     try {
-      await toggleEmailAddress(address.type);
+      const response = await toggleEmailAddress(address.type);
+      console.log('[handleToggle] Response:', response);
+      
       dispatch(addNotification({
         type: 'success',
         message: `Email address ${address.isActive ? 'disabled' : 'enabled'}`
       }));
+      
+      // Add small delay then reload
+      await new Promise(resolve => setTimeout(resolve, 300));
       await loadAddresses();
     } catch (error) {
       dispatch(addNotification({
