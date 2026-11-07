@@ -31,10 +31,26 @@ const SmtpConfigPage = () => {
 
   const loadSmtpConfig = async () => {
     try {
-      const data = await getSmtpConfig();
-      setFormData(data);
+      const response = await getSmtpConfig();
+      console.log('[SmtpConfigPage] Raw SMTP config response:', response);
+      
+      // Handle nested response: { data: {...} } or direct object
+      const config = response?.data ?? response;
+      console.log('[SmtpConfigPage] Extracted SMTP config:', config);
+      
+      // Only set if we have actual data
+      if (config && Object.keys(config).length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          ...config
+        }));
+        console.log('[SmtpConfigPage] Loaded SMTP config successfully');
+      } else {
+        console.log('[SmtpConfigPage] No SMTP config found, using defaults');
+      }
     } catch (error) {
-      console.log('[SmtpConfigPage] No existing config yet');
+      console.error('[SmtpConfigPage] Error loading SMTP config:', error);
+      console.log('[SmtpConfigPage] No existing config yet or error occurred');
     } finally {
       setLoading(false);
     }
@@ -278,3 +294,4 @@ const SmtpConfigPage = () => {
 };
 
 export default SmtpConfigPage;
+
