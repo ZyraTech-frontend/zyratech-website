@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../../../store/slices/uiSlice';
 import AdminLayout from '../../../../components/admin/layout/AdminLayout';
@@ -564,7 +564,7 @@ const EmailAddressesPage = () => {
                             <XCircle size={16} />
                           </button>
                           <button
-                            onClick={() => handleDelete(addr)}
+                            onClick={() => handleDeleteClick(addr)}
                             className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             title="Delete"
                           >
@@ -741,6 +741,8 @@ const EmailAddressesPage = () => {
 };
 
 export default EmailAddressesPage;
+
+
 
 
 
