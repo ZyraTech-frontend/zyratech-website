@@ -1,4 +1,4 @@
-﻿import api from './api';
+import api from './api';
 
 // Helper to extract list data from various backend response shapes
 const extractList = (response) => {

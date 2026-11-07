@@ -127,7 +127,7 @@ const EmailAddressesPage = () => {
 
   const handleToggle = async (address) => {
     try {
-      await toggleEmailAddress(address.id);
+      await toggleEmailAddress(address.type);
       dispatch(addNotification({
         type: 'success',
         message: `Email address ${address.isActive ? 'disabled' : 'enabled'}`
@@ -561,7 +561,7 @@ const EmailAddressesPage = () => {
                             }`}
                             title={addr.isActive ? 'Disable' : 'Enable'}
                           >
-                            <XCircle size={16} />
+                            <CheckCircle size={16} />
                           </button>
                           <button
                             onClick={() => handleDeleteClick(addr)}
