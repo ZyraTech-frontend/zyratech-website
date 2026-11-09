@@ -13,6 +13,19 @@ import {
   createEmailAddress 
 } from '../../../../services/emailService';
 
+const EMAIL_TYPES = [
+  { value: 'noreply', label: 'No Reply', description: 'System automated emails' },
+  { value: 'support', label: 'Support', description: 'Customer support inquiries' },
+  { value: 'payments', label: 'Payments', description: 'Payment receipts and invoices' },
+  { value: 'security', label: 'Security', description: 'Password resets and security alerts' },
+  { value: 'careers', label: 'Careers', description: 'Job applications' },
+  { value: 'training', label: 'Training', description: 'Course enrollments and training inquiries' },
+  { value: 'partnerships', label: 'Partnerships', description: 'Partnership opportunities' },
+  { value: 'projects', label: 'Projects', description: 'Project requests and proposals' },
+  { value: 'admin', label: 'Admin', description: 'Administrative notifications' },
+  { value: 'info', label: 'Info', description: 'General information inquiries' }
+];
+
 const EmailAddressesPage = () => {
   const dispatch = useDispatch();
   const { userPermissions, userRole } = useAuth();
@@ -24,6 +37,7 @@ const EmailAddressesPage = () => {
     type: '',
     email: '',
     displayName: '',
+    description: '',
     isActive: true
   });
   const [saving, setSaving] = useState(false);
@@ -42,7 +56,6 @@ const EmailAddressesPage = () => {
     try {
       const list = await getAllEmailAddresses();
       const addressList = Array.isArray(list) ? list : [];
-      console.log('[EmailAddressesPage] Loaded addresses:', addressList);
       setAddresses(addressList);
     } catch (error) {
       console.error('[EmailAddressesPage] Error loading addresses:', error);
@@ -62,6 +75,7 @@ const EmailAddressesPage = () => {
       type: address.type,
       email: address.email,
       displayName: address.displayName,
+      description: address.description || '',
       isActive: address.isActive !== false
     });
     setIsCreating(false);
@@ -74,6 +88,7 @@ const EmailAddressesPage = () => {
       type: '',
       email: '',
       displayName: '',
+      description: '',
       isActive: true
     });
   };
@@ -85,7 +100,17 @@ const EmailAddressesPage = () => {
       type: '',
       email: '',
       displayName: '',
+      description: '',
       isActive: true
+    });
+  };
+
+  const handleTypeChange = (typeValue) => {
+    const selectedType = EMAIL_TYPES.find(t => t.value === typeValue);
+    setFormData({
+      ...formData,
+      type: typeValue,
+      description: selectedType?.description || ''
     });
   };
 
@@ -127,15 +152,11 @@ const EmailAddressesPage = () => {
 
   const handleToggle = async (address) => {
     try {
-      const response = await toggleEmailAddress(address.type);
-      console.log('[handleToggle] Response:', response);
-      
+      await toggleEmailAddress(address.type);
       dispatch(addNotification({
         type: 'success',
         message: `Email address ${address.isActive ? 'disabled' : 'enabled'}`
       }));
-      
-      // Add small delay then reload
       await new Promise(resolve => setTimeout(resolve, 300));
       await loadAddresses();
     } catch (error) {
@@ -174,7 +195,6 @@ const EmailAddressesPage = () => {
 
   const handleDeleteCancel = () => {
     setDeletingAddress(null);
-    setIsDeleting(false);
   };
 
   if (!canManageSettings) {
@@ -184,114 +204,10 @@ const EmailAddressesPage = () => {
           <div className="text-center">
             <Shield className="mx-auto h-12 w-12 text-red-600 mb-4" />
             <h2 className="text-2xl font-bold text-gray-900">Permission Required</h2>
-            <p className="text-gray-600 mt-2">You don'\''t have permission to access this page.</p>
+            <p className="text-gray-600 mt-2">You don't have permission to access this page.</p>
           </div>
         </div>
-  
-      {/* Delete Confirmation Modal */}
-      {deletingAddress && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
-            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Trash2 className="text-white" size={24} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900">Delete Email Address?</h3>
-                  <p className="text-sm text-gray-600 mt-1">This action cannot be undone</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
-                <div className="space-y-1">
-                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
-                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
-                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-600 mb-6">
-                This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
-              </p>
-            </div>
-
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
-              <button
-                onClick={handleDeleteCancel}
-                disabled={isDeleting}
-                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteConfirm}
-                disabled={isDeleting}
-                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:shadow-lg hover:shadow-red-500/30 font-medium text-sm transition-all disabled:opacity-50"
-              >
-                <Trash2 size={16} />
-                {isDeleting ? 'Deleting...' : 'Delete Address'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {deletingAddress && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
-            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center">
-                  <Trash2 className="text-white" size={24} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900">Delete Email Address?</h3>
-                  <p className="text-sm text-gray-600 mt-1">This action cannot be undone</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
-                <div className="space-y-1">
-                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
-                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
-                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-600 mb-6">
-                This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
-              </p>
-            </div>
-
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
-              <button
-                onClick={handleDeleteCancel}
-                disabled={isDeleting}
-                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteConfirm}
-                disabled={isDeleting}
-                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:shadow-lg font-medium text-sm transition-all"
-              >
-                <Trash2 size={16} />
-                {isDeleting ? 'Deleting...' : 'Delete Address'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-        </AdminLayout>
+      </AdminLayout>
     );
   }
 
@@ -299,111 +215,7 @@ const EmailAddressesPage = () => {
     return (
       <AdminLayout>
         <LoadingSpinner text="Loading email addresses..." />
-  
-      {/* Delete Confirmation Modal */}
-      {deletingAddress && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
-            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Trash2 className="text-white" size={24} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900">Delete Email Address?</h3>
-                  <p className="text-sm text-gray-600 mt-1">This action cannot be undone</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
-                <div className="space-y-1">
-                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
-                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
-                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-600 mb-6">
-                This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
-              </p>
-            </div>
-
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
-              <button
-                onClick={handleDeleteCancel}
-                disabled={isDeleting}
-                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteConfirm}
-                disabled={isDeleting}
-                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:shadow-lg hover:shadow-red-500/30 font-medium text-sm transition-all disabled:opacity-50"
-              >
-                <Trash2 size={16} />
-                {isDeleting ? 'Deleting...' : 'Delete Address'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {deletingAddress && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
-            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center">
-                  <Trash2 className="text-white" size={24} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900">Delete Email Address?</h3>
-                  <p className="text-sm text-gray-600 mt-1">This action cannot be undone</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
-                <div className="space-y-1">
-                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
-                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
-                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-600 mb-6">
-                This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
-              </p>
-            </div>
-
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
-              <button
-                onClick={handleDeleteCancel}
-                disabled={isDeleting}
-                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteConfirm}
-                disabled={isDeleting}
-                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:shadow-lg font-medium text-sm transition-all"
-              >
-                <Trash2 size={16} />
-                {isDeleting ? 'Deleting...' : 'Delete Address'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-        </AdminLayout>
+      </AdminLayout>
     );
   }
 
@@ -411,7 +223,7 @@ const EmailAddressesPage = () => {
     <AdminLayout>
       <div className="space-y-6 max-w-6xl mx-auto pb-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-lg">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center shadow-md">
               <Mail className="text-white" size={24} />
@@ -424,7 +236,7 @@ const EmailAddressesPage = () => {
           {!editingId && !isCreating && (
             <button
               onClick={handleCreate}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:shadow-blue-500/25 font-bold text-sm transition-all"
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-xl hover:shadow-lg font-bold text-sm transition-all"
             >
               <Plus size={18} />
               Add Address
@@ -434,24 +246,32 @@ const EmailAddressesPage = () => {
 
         {/* Form - Create/Edit */}
         {(editingId || isCreating) && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white rounded-2xl shadow-lg p-6">
             <h2 className="text-lg font-bold text-gray-900 mb-6">
               {isCreating ? 'Create New Email Address' : 'Edit Email Address'}
             </h2>
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Type Dropdown */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Type *
+                    Email Type *
                   </label>
-                  <input
-                    type="text"
-                    placeholder="e.g., support, sales, noreply"
+                  <select
                     value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm"
-                  />
+                    onChange={(e) => handleTypeChange(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm"
+                  >
+                    <option value="">Select email type...</option>
+                    {EMAIL_TYPES.map(type => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
+
+                {/* Email Address */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Email Address *
@@ -461,10 +281,12 @@ const EmailAddressesPage = () => {
                     placeholder="email@example.com"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm"
+                    className="w-full px-4 py-2.5 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm"
                   />
                 </div>
               </div>
+
+              {/* Display Name */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Display Name *
@@ -474,33 +296,56 @@ const EmailAddressesPage = () => {
                   placeholder="Display name for outgoing emails"
                   value={formData.displayName}
                   onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm"
+                  className="w-full px-4 py-2.5 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm"
                 />
               </div>
-              <div className="flex items-center gap-3">
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Description <span className="text-gray-400">(Optional)</span>
+                </label>
+                <textarea
+                  placeholder="Additional details about this email address (max 500 characters)"
+                  value={formData.description}
+                  onChange={(e) => {
+                    const text = e.target.value.slice(0, 500);
+                    setFormData({ ...formData, description: text });
+                  }}
+                  maxLength={500}
+                  rows={3}
+                  className="w-full px-4 py-2.5 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm resize-none"
+                />
+                <p className="text-xs text-gray-500 mt-1">{formData.description.length}/500</p>
+              </div>
+
+              {/* Active Toggle */}
+              <div className="flex items-center gap-3 pt-2">
                 <input
                   type="checkbox"
                   id="isActive"
                   checked={formData.isActive}
                   onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                  className="w-4 h-4 rounded"
+                  className="w-4 h-4 rounded cursor-pointer"
                 />
-                <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
+                <label htmlFor="isActive" className="text-sm font-medium text-gray-700 cursor-pointer">
                   Active
                 </label>
               </div>
-              <div className="flex justify-end gap-3 pt-4 border-t">
+
+              {/* Actions */}
+              <div className="flex justify-end gap-3 pt-4">
                 <button
                   onClick={handleCancel}
                   disabled={saving}
-                  className="px-6 py-2.5 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm transition-all"
+                  className="px-6 py-2.5 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-lg hover:shadow-blue-500/25 font-medium text-sm transition-all disabled:opacity-50"
+                  className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#004fa2] to-[#0066cc] text-white rounded-lg hover:shadow-lg font-medium text-sm transition-all disabled:opacity-50"
                 >
                   <Save size={16} />
                   {saving ? 'Saving...' : 'Save'}
@@ -510,8 +355,8 @@ const EmailAddressesPage = () => {
           </div>
         )}
 
-        {/* List */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        {/* Email Addresses Table */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           {!Array.isArray(addresses) || addresses.length === 0 ? (
             <div className="p-12 text-center">
               <Mail className="mx-auto h-12 w-12 text-gray-400 mb-4" />
@@ -521,25 +366,29 @@ const EmailAddressesPage = () => {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b">
+                <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Type</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Email</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Display Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase">Actions</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wide">Type</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wide">Email</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wide">Display Name</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wide">Description</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wide">Status</th>
+                    <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wide">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-200">
                   {addresses.map((addr) => (
-                    <tr key={addr.id} className="border-t hover:bg-gray-50 transition-colors">
+                    <tr key={addr.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4">
                         <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
-                          {addr.type}
+                          {EMAIL_TYPES.find(t => t.value === addr.type)?.label || addr.type}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-900">{addr.email}</td>
                       <td className="px-6 py-4 text-sm text-gray-900">{addr.displayName}</td>
+                      <td className="px-6 py-4 text-sm text-gray-600 max-w-xs truncate" title={addr.description}>
+                        {addr.description || <span className="text-gray-400 italic">No description</span>}
+                      </td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
                           addr.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
@@ -586,11 +435,12 @@ const EmailAddressesPage = () => {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Confirmation Modal - SINGLE INSTANCE */}
       {deletingAddress && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in duration-300">
-            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-red-50 to-red-100 p-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center flex-shrink-0">
                   <Trash2 className="text-white" size={24} />
@@ -602,26 +452,41 @@ const EmailAddressesPage = () => {
               </div>
             </div>
 
+            {/* Content */}
             <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
-                <div className="space-y-1">
-                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
-                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
-                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
+              {/* Details Box - No Border */}
+              <div className="bg-red-50 rounded-lg p-4 mb-6">
+                <p className="text-sm text-gray-600 mb-3 font-medium">You are about to delete:</p>
+                <div className="space-y-2">
+                  <div>
+                    <p className="text-xs text-gray-500">Email</p>
+                    <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Type</p>
+                    <p className="font-semibold text-gray-900">
+                      {EMAIL_TYPES.find(t => t.value === deletingAddress.type)?.label || deletingAddress.type}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Display Name</p>
+                    <p className="font-semibold text-gray-900">{deletingAddress.displayName}</p>
+                  </div>
                 </div>
               </div>
 
+              {/* Warning Message */}
               <p className="text-sm text-gray-600 mb-6">
                 This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
               </p>
             </div>
 
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+            {/* Footer Actions */}
+            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3">
               <button
                 onClick={handleDeleteCancel}
                 disabled={isDeleting}
-                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all disabled:opacity-50"
+                className="px-6 py-2.5 text-gray-700 rounded-lg hover:bg-gray-200 font-medium text-sm transition-all disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -637,119 +502,8 @@ const EmailAddressesPage = () => {
           </div>
         </div>
       )}
-
-      {/* Delete Confirmation Modal */}
-      {deletingAddress && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
-            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Trash2 className="text-white" size={24} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900">Delete Email Address?</h3>
-                  <p className="text-sm text-gray-600 mt-1">This action cannot be undone</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
-                <div className="space-y-1">
-                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
-                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
-                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-600 mb-6">
-                This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
-              </p>
-            </div>
-
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
-              <button
-                onClick={handleDeleteCancel}
-                disabled={isDeleting}
-                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteConfirm}
-                disabled={isDeleting}
-                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:shadow-lg hover:shadow-red-500/30 font-medium text-sm transition-all disabled:opacity-50"
-              >
-                <Trash2 size={16} />
-                {isDeleting ? 'Deleting...' : 'Delete Address'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {deletingAddress && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
-            <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-600 p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center">
-                  <Trash2 className="text-white" size={24} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900">Delete Email Address?</h3>
-                  <p className="text-sm text-gray-600 mt-1">This action cannot be undone</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
-                <div className="space-y-1">
-                  <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
-                  <p className="text-xs text-gray-500">Type: {deletingAddress.type}</p>
-                  <p className="text-xs text-gray-500">Display Name: {deletingAddress.displayName}</p>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-600 mb-6">
-                This will permanently remove this email address from the system. If you depend on this address for sending emails, this action may cause issues.
-              </p>
-            </div>
-
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
-              <button
-                onClick={handleDeleteCancel}
-                disabled={isDeleting}
-                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-sm transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteConfirm}
-                disabled={isDeleting}
-                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:shadow-lg font-medium text-sm transition-all"
-              >
-                <Trash2 size={16} />
-                {isDeleting ? 'Deleting...' : 'Delete Address'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-        </AdminLayout>
+    </AdminLayout>
   );
 };
 
 export default EmailAddressesPage;
-
-
-
-
-
-
-
