@@ -14,16 +14,16 @@ import {
 } from '../../../../services/emailService';
 
 const EMAIL_TYPES = [
+  { value: 'admin', label: 'Admin', description: 'Administrative notifications and alerts' },
+  { value: 'careers', label: 'Careers (HR)', description: 'Job applications and career opportunities' },
+  { value: 'info', label: 'Info', description: 'General information inquiries' },
+  { value: 'newsletter', label: 'Newsletter/Marketing', description: 'Newsletter and marketing emails' },
   { value: 'noreply', label: 'No Reply', description: 'System automated emails' },
-  { value: 'support', label: 'Support', description: 'Customer support inquiries' },
-  { value: 'payments', label: 'Payments', description: 'Payment receipts and invoices' },
-  { value: 'security', label: 'Security', description: 'Password resets and security alerts' },
-  { value: 'careers', label: 'Careers', description: 'Job applications' },
-  { value: 'training', label: 'Training', description: 'Course enrollments and training inquiries' },
   { value: 'partnerships', label: 'Partnerships', description: 'Partnership opportunities' },
-  { value: 'projects', label: 'Projects', description: 'Project requests and proposals' },
-  { value: 'admin', label: 'Admin', description: 'Administrative notifications' },
-  { value: 'info', label: 'Info', description: 'General information inquiries' }
+  { value: 'payments', label: 'Payments', description: 'Payment receipts and invoices' },
+  { value: 'projects', label: 'Projects', description: 'Project inquiries' },
+  { value: 'support', label: 'Support', description: 'Customer support inquiries' },
+  { value: 'training', label: 'Training', description: 'Course enrollments' }
 ];
 
 const EmailAddressesPage = () => {
