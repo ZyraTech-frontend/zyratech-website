@@ -629,26 +629,26 @@ const RegularAdminDashboard = ({ user: propUser }) => {
 
             {/* Bottom Section: Key Areas Needing Attention */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Pending Inquiries */}
+                {/* Contact Inquiries - Real Data */}
                 <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between mb-3">
                         <h4 className="font-bold text-gray-900 flex items-center gap-2 text-sm">
                             <Inbox size={16} className="text-indigo-600" />
                             Contact Inquiries
                         </h4>
-                        <span className="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded-full">{metrics.pendingInquiries}</span>
+                        <span className="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded-full">{stats.totalInquiries || 0}</span>
                     </div>
                     <p className="text-xs text-gray-500 mb-4 truncate">Unread messages from the contact form</p>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <div className="flex -space-x-2">
-                                {[...Array(3)].map((_, i) => (
+                                {recentActivityData.slice(0, 3).map((activity, i) => (
                                     <div key={i} className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 border-2 border-white flex items-center justify-center text-white text-[10px] font-bold">
-                                        {['K', 'A', 'E'][i]}
+                                        {(activity.user || activity.description || '?').charAt(0).toUpperCase()}
                                     </div>
                                 ))}
                             </div>
-                            <span className="text-[10px] text-gray-500">+{metrics.pendingInquiries - 3} more</span>
+                            <span className="text-[10px] text-gray-500">{Math.max(0, (stats.totalInquiries || 0) - 3)} more</span>
                         </div>
                         <Link to="/admin/contact-inquiries" className="text-xs text-[#004fa2] font-semibold hover:underline flex items-center gap-1">
                             View <ArrowRight size={12} />
@@ -656,19 +656,19 @@ const RegularAdminDashboard = ({ user: propUser }) => {
                     </div>
                 </div>
 
-                {/* Pending Enrollments */}
+                {/* Pending Enrollments - Real Data */}
                 <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between mb-3">
                         <h4 className="font-bold text-gray-900 flex items-center gap-2 text-sm">
                             <GraduationCap size={16} className="text-blue-600" />
                             Pending Enrollments
                         </h4>
-                        <span className="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded-full">{metrics.pendingEnrollments}</span>
+                        <span className="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded-full">{stats.enrollments?.pending || 0}</span>
                     </div>
                     <p className="text-xs text-gray-500 mb-4 truncate">New applications to review</p>
                     <div className="flex items-center justify-between">
                         <div className="text-[10px] text-gray-500">
-                            <span className="font-bold text-green-600">{metrics.completedEnrollments}</span> completed this year
+                            <span className="font-bold text-green-600">{stats.enrollments?.approved || 0}</span> approved enrollments
                         </div>
                         <Link to="/admin/enrollments" className="text-xs text-[#004fa2] font-semibold hover:underline flex items-center gap-1">
                             View <ArrowRight size={12} />
@@ -676,19 +676,19 @@ const RegularAdminDashboard = ({ user: propUser }) => {
                     </div>
                 </div>
 
-                {/* Partnership Requests */}
+                {/* Partnership Requests - Real Data */}
                 <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between mb-3">
                         <h4 className="font-bold text-gray-900 flex items-center gap-2 text-sm">
                             <Handshake size={16} className="text-teal-600" />
                             Partnership Requests
                         </h4>
-                        <span className="bg-teal-100 text-teal-700 text-[10px] font-bold px-2 py-0.5 rounded-full">{metrics.partnershipRequests}</span>
+                        <span className="bg-teal-100 text-teal-700 text-[10px] font-bold px-2 py-0.5 rounded-full">{stats.pendingPartnerships || 0}</span>
                     </div>
                     <p className="text-xs text-gray-500 mb-4 truncate">Organizations interested in partnering</p>
                     <div className="flex items-center justify-between">
                         <div className="text-[10px] text-gray-500">
-                            <span className="font-bold text-teal-600">{metrics.newsletterSubs.toLocaleString()}</span> newsletter subscribers
+                            <span className="font-bold text-teal-600">{stats.totalPartnerships || 0}</span> total partnerships
                         </div>
                         <Link to="/admin/partnerships" className="text-xs text-[#004fa2] font-semibold hover:underline flex items-center gap-1">
                             View <ArrowRight size={12} />
