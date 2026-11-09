@@ -82,7 +82,7 @@ const EmailAddressesPage = () => {
       email: address.email,
       displayName: address.displayName,
       description: address.description || '',
-      isActive: address.isActive !== false
+      isActive: address.enabled !== false  // Backend sends 'enabled', not 'isActive'
     });
     setIsCreating(false);
   };
@@ -132,15 +132,18 @@ const EmailAddressesPage = () => {
     setSaving(true);
     try {
       console.log('[EmailAddressesPage] Saving email address:', { isCreating, formData });
+      // Transform formData: frontend uses isActive, backend expects enabled
+      const saveData = { ...formData, enabled: formData.isActive };
+      delete saveData.isActive;
       if (isCreating) {
-        const result = await createEmailAddress(formData);
+        const result = await createEmailAddress(saveData);
         console.log('[EmailAddressesPage] Create response:', result);
         dispatch(addNotification({
           type: 'success',
           message: 'Email address created successfully'
         }));
       } else {
-        const result = await updateEmailAddress(editingId, formData);
+        const result = await updateEmailAddress(editingId, saveData);
         console.log('[EmailAddressesPage] Update response:', result);
         dispatch(addNotification({
           type: 'success',
@@ -155,7 +158,7 @@ const EmailAddressesPage = () => {
           email: formData.email,
           displayName: formData.displayName,
           description: formData.description,
-          isActive: formData.isActive
+          enabled: formData.isActive  // Backend uses enabled
         };
         setAddresses([...addresses, newAddress]);
       }
@@ -184,7 +187,7 @@ const EmailAddressesPage = () => {
       // Immediately update the local state for instant UI feedback
       setAddresses(addresses.map(addr => 
         addr.type === address.type 
-          ? { ...addr, isActive: newState }
+          ? { ...addr, enabled: newState }  // Backend uses 'enabled', not 'isActive'
           : addr
       ));
     } catch (error) {
@@ -419,10 +422,10 @@ const EmailAddressesPage = () => {
                       </td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
-                          addr.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                          addr.enabled ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                         }`}>
-                          {addr.isActive ? <CheckCircle size={14} /> : <XCircle size={14} />}
-                          {addr.isActive ? 'Active' : 'Inactive'}
+                          {addr.enabled ? <CheckCircle size={14} /> : <XCircle size={14} />}
+                          {addr.enabled ? 'Active' : 'Inactive'}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -437,11 +440,11 @@ const EmailAddressesPage = () => {
                           <button
                             onClick={() => handleToggle(addr)}
                             className={`p-2 rounded-lg transition-colors ${
-                              addr.isActive 
+                              addr.enabled 
                                 ? 'text-yellow-600 hover:bg-yellow-50' 
                                 : 'text-green-600 hover:bg-green-50'
                             }`}
-                            title={addr.isActive ? 'Disable' : 'Enable'}
+                            title={addr.enabled ? 'Disable' : 'Enable'}
                           >
                             <CheckCircle size={16} />
                           </button>
