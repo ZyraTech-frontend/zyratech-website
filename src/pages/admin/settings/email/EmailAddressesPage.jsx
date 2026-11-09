@@ -152,13 +152,18 @@ const EmailAddressesPage = () => {
 
   const handleToggle = async (address) => {
     try {
+      const newState = !address.isActive;
       await toggleEmailAddress(address.type);
       dispatch(addNotification({
         type: 'success',
-        message: `Email address ${address.isActive ? 'disabled' : 'enabled'}`
+        message: `Email address ${newState ? 'enabled' : 'disabled'}`
       }));
-      await new Promise(resolve => setTimeout(resolve, 300));
-      await loadAddresses();
+      // Immediately update the local state for instant UI feedback
+      setAddresses(addresses.map(addr => 
+        addr.type === address.type 
+          ? { ...addr, isActive: newState }
+          : addr
+      ));
     } catch (error) {
       dispatch(addNotification({
         type: 'error',
