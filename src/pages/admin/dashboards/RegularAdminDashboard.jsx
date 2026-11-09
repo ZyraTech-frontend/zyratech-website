@@ -51,6 +51,7 @@ import jobsService from '../../../services/jobsService';
 import dashboardService from '../../../services/dashboardService';
 import FinancialCard from '../../../components/admin/dashboard/FinancialCard';
 import ChartCard from '../../../components/admin/dashboard/ChartCard';
+import RefundTrackerCard from '../../../components/admin/dashboard/RefundTrackerCard';
 import RevenueBreakdownCard from '../../../components/admin/dashboard/RevenueBreakdownCard';
 
 const RegularAdminDashboard = ({ user: propUser }) => {
@@ -172,6 +173,7 @@ const RegularAdminDashboard = ({ user: propUser }) => {
     const stats = dashboardData?.stats || {};
     const revenueChart = dashboardData?.revenueChart || [];
     const revenueBreakdown = dashboardData?.revenueBreakdown || {};
+    const refundData = dashboardData?.refundData || {};
     const weeklyRevenue = stats.totalRevenue ? (Number(stats.totalRevenue) * 0.08).toFixed(0) : 0;
     const weeklyGrowth = 12.5;
 
@@ -321,6 +323,11 @@ const RegularAdminDashboard = ({ user: propUser }) => {
                     {/* Revenue Breakdown (3 cols) */}
                     <div className="md:col-span-3">
                         <RevenueBreakdownCard breakdown={revenueBreakdown} />
+                    </div>
+
+                    {/* Refunds & Cancellations (6 cols) */}
+                    <div className="md:col-span-6">
+                        <RefundTrackerCard refundData={refundData} />
                     </div>
                 </div>
             )}
@@ -584,3 +591,6 @@ const RegularAdminDashboard = ({ user: propUser }) => {
 };
 
 export default RegularAdminDashboard;
+
+
+
