@@ -39,6 +39,7 @@ const EmailAddressesPage = () => {
     type: '',
     email: '',
     displayName: '',
+    description: '',
     isActive: true
   });
   const [saving, setSaving] = useState(false);
@@ -73,6 +74,29 @@ const EmailAddressesPage = () => {
 
   const handleEdit = (address) => {
     setEditingId(address.id);
+    setFormData({
+      type: address.type || '',
+      email: address.email || '',
+      displayName: address.displayName || '',
+      description: address.description || '',
+      isActive: address.isActive !== undefined ? address.isActive : (address.enabled !== undefined ? address.enabled : true)
+    });
+  };
+
+  const handleCreate = () => {
+    setIsCreating(true);
+    setFormData({
+      type: '',
+      email: '',
+      displayName: '',
+      description: '',
+      isActive: true
+    });
+  };
+
+  const handleCancel = () => {
+    setEditingId(null);
+    setIsCreating(false);
     setFormData({
       type: '',
       email: '',
@@ -437,13 +461,25 @@ const EmailAddressesPage = () => {
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Type *
                   </label>
-                  <input
-                    type="text"
-                    placeholder="e.g., support, sales, noreply"
+                  <select
                     value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                    onChange={(e) => {
+                      const selectedType = EMAIL_TYPES.find(t => t.value === e.target.value);
+                      setFormData({ 
+                        ...formData, 
+                        type: e.target.value,
+                        description: selectedType ? selectedType.description : formData.description
+                      });
+                    }}
                     className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm"
-                  />
+                  >
+                    <option value="">Select an email type</option>
+                    {EMAIL_TYPES.map((emailType) => (
+                      <option key={emailType.value} value={emailType.value}>
+                        {emailType.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -469,6 +505,25 @@ const EmailAddressesPage = () => {
                   onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm"
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Description <span className="text-gray-500 font-normal">(optional)</span>
+                </label>
+                <textarea
+                  placeholder="Additional details about this email address (max 500 characters)"
+                  value={formData.description}
+                  onChange={(e) => {
+                    const value = e.target.value.slice(0, 500);
+                    setFormData({ ...formData, description: value });
+                  }}
+                  maxLength={500}
+                  rows={3}
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm resize-none"
+                />
+                <div className="text-xs text-gray-500 mt-1">
+                  {formData.description.length}/500 characters
+                </div>
               </div>
               <div className="flex items-center gap-3">
                 <input
