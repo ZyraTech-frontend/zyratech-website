@@ -175,17 +175,9 @@ const RegularAdminDashboard = ({ user: propUser }) => {
     const weeklyRevenue = stats.totalRevenue ? (Number(stats.totalRevenue) * 0.08).toFixed(0) : 0;
     const weeklyGrowth = 12.5;
 
-    // Recent Activity Feed
-    const recentActivity = [
-        { type: 'inquiry', message: 'New contact form submission', detail: 'Training program inquiry', time: '5 mins ago', icon: Mail, color: 'text-indigo-500', bg: 'bg-indigo-50' },
-        { type: 'enrollment', message: 'Enrollment application received', detail: 'Web Development Bootcamp', time: '18 mins ago', icon: GraduationCap, color: 'text-blue-500', bg: 'bg-blue-50' },
-        { type: 'testimonial', message: 'New testimonial submitted', detail: 'Awaiting approval', time: '45 mins ago', icon: MessageCircle, color: 'text-amber-500', bg: 'bg-amber-50' },
-        { type: 'partnership', message: 'Partnership request received', detail: 'InnovateTech Ltd', time: '1 hour ago', icon: Handshake, color: 'text-teal-500', bg: 'bg-teal-50' },
-        { type: 'blog', message: 'Blog post draft saved', detail: '"AI in Education: 2025 Trends"', time: '2 hours ago', icon: BookOpen, color: 'text-purple-500', bg: 'bg-purple-50' },
-        { type: 'job', message: 'Job listing updated', detail: 'Senior Developer position', time: '3 hours ago', icon: Briefcase, color: 'text-orange-500', bg: 'bg-orange-50' },
-        { type: 'gallery', message: 'New images uploaded', detail: '4 images added to gallery', time: '4 hours ago', icon: Image, color: 'text-pink-500', bg: 'bg-pink-50' },
-        { type: 'newsletter', message: 'Newsletter draft created', detail: 'Monthly update - February', time: '5 hours ago', icon: Mail, color: 'text-cyan-500', bg: 'bg-cyan-50' }
-    ];
+    // Extract real activity and pending data from dashboard
+    const recentActivityData = dashboardData?.recentActivity || [];
+    const pendingItems = dashboardData?.pendingActions || [];
 
     // Quick Action Links for Regular Admin
     const quickActions = [
@@ -203,15 +195,29 @@ const RegularAdminDashboard = ({ user: propUser }) => {
         { label: 'Newsletter', icon: Mail, path: '/admin/newsletter', color: 'from-rose-500 to-pink-500', description: 'Send updates' },
     ];
 
-    // Pending items that need attention
-    const pendingItems = [
-        { title: 'New Job Application: Senior Developer', source: 'Applications', time: '10 mins ago', priority: 'high', icon: Briefcase, color: 'text-orange-600', bg: 'bg-orange-50' },
-        { title: 'Course Inquiry: Data Science Program', source: 'Contact Form', time: '25 mins ago', priority: 'medium', icon: GraduationCap, color: 'text-blue-600', bg: 'bg-blue-50' },
-        { title: 'Testimonial Awaiting Approval', source: 'Testimonials', time: '1 hour ago', priority: 'low', icon: MessageCircle, color: 'text-amber-600', bg: 'bg-amber-50' },
-        { title: 'Blog Post Draft: Review Required', source: 'Content', time: '2 hours ago', priority: 'medium', icon: BookOpen, color: 'text-purple-600', bg: 'bg-purple-50' },
-        { title: 'Partnership Application: TechStart Ghana', source: 'Partnerships', time: '3 hours ago', priority: 'medium', icon: Handshake, color: 'text-teal-600', bg: 'bg-teal-50' },
-        { title: 'Gallery images need alt text', source: 'Gallery', time: 'Yesterday', priority: 'low', icon: Image, color: 'text-pink-600', bg: 'bg-pink-50' },
-    ];
+    // Map icon for pending actions based on category
+    const getCategoryIcon = (category) => {
+        const iconMap = {
+            'KYC': Users,
+            'Payments': CreditCard,
+            'Applications': Briefcase,
+            'Projects': FolderKanban,
+            'Contact Form': Mail,
+            'Training': GraduationCap,
+            'Partnerships': Handshake,
+            'Newsletter': Mail
+        };
+        return iconMap[category] || Inbox;
+    };
+    
+    const getPriorityColor = (priority) => {
+        switch(priority) {
+            case 'high': return { bg: 'bg-red-50', text: 'text-red-600' };
+            case 'medium': return { bg: 'bg-amber-50', text: 'text-amber-600' };
+            case 'low': return { bg: 'bg-gray-50', text: 'text-gray-600' };
+            default: return { bg: 'bg-gray-50', text: 'text-gray-600' };
+        }
+    };
 
     return (
         <div className="space-y-3 md:space-y-6 pb-8">
@@ -521,26 +527,33 @@ const RegularAdminDashboard = ({ user: propUser }) => {
                         </Link>
                     </div>
                     <div className="divide-y divide-gray-50">
-                        {pendingItems.map((item, i) => (
-                            <div key={i} className="p-3 hover:bg-gray-50 transition-colors flex items-center gap-3">
-                                <div className={`w-6 h-6 md:w-8 md:h-8 ${item.bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                                    <item.icon className={item.color} size={14} />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{item.title}</p>
-                                    <p className="text-[10px] text-gray-500">{item.source}</p>
-                                </div>
-                                <div className="flex items-center gap-3 flex-shrink-0">
-                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${item.priority === 'high' ? 'bg-red-100 text-red-700' :
-                                            item.priority === 'medium' ? 'bg-amber-100 text-amber-700' :
-                                                'bg-gray-100 text-gray-600'
-                                        }`}>
-                                        {item.priority}
-                                    </span>
-                                    <span className="text-xs text-gray-400 whitespace-nowrap">{item.time}</span>
-                                </div>
+                        {pendingItems.length > 0 ? (
+                            pendingItems.map((item, i) => {
+                                const Icon = getCategoryIcon(item.category);
+                                const colors = getPriorityColor(item.priority);
+                                return (
+                                    <div key={i} className="p-3 hover:bg-gray-50 transition-colors flex items-center gap-3">
+                                        <div className={`w-6 h-6 md:w-8 md:h-8 ${colors.bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                                            <Icon className={colors.text} size={14} />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{item.title}</p>
+                                            <p className="text-[10px] text-gray-500">{item.category}</p>
+                                        </div>
+                                        <div className="flex items-center gap-3 flex-shrink-0">
+                                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${colors.bg} ${colors.text}`}>
+                                                {item.priority}
+                                            </span>
+                                            <span className="text-xs text-gray-400 whitespace-nowrap">{item.time}</span>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <div className="p-6 text-center text-gray-500">
+                                <p className="text-sm">No pending actions</p>
                             </div>
-                        ))}
+                        )}
                     </div>
                 </div>
 
@@ -551,20 +564,42 @@ const RegularAdminDashboard = ({ user: propUser }) => {
                         <span className="text-[10px] text-gray-400">Last 24 hours</span>
                     </div>
                     <div className="divide-y divide-gray-50 max-h-[350px] overflow-y-auto">
-                        {recentActivity.map((activity, i) => (
-                            <div key={i} className="p-3 hover:bg-gray-50 transition">
-                                <div className="flex items-start gap-2.5">
-                                    <div className={`w-6 h-6 ${activity.bg} rounded-full flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                                        <activity.icon className={activity.color} size={12} />
+                        {recentActivityData.length > 0 ? (
+                            recentActivityData.map((activity, i) => {
+                                const typeIconMap = {
+                                    payment: CreditCard,
+                                    inquiry: Mail,
+                                    enrollment: GraduationCap,
+                                    user: UserPlus
+                                };
+                                const typeColorMap = {
+                                    payment: { bg: 'bg-green-50', text: 'text-green-600' },
+                                    inquiry: { bg: 'bg-indigo-50', text: 'text-indigo-600' },
+                                    enrollment: { bg: 'bg-blue-50', text: 'text-blue-600' },
+                                    user: { bg: 'bg-purple-50', text: 'text-purple-600' }
+                                };
+                                const Icon = typeIconMap[activity.type] || Mail;
+                                const colors = typeColorMap[activity.type] || { bg: 'bg-gray-50', text: 'text-gray-600' };
+                                return (
+                                    <div key={i} className="p-3 hover:bg-gray-50 transition">
+                                        <div className="flex items-start gap-2.5">
+                                            <div className={`w-6 h-6 ${colors.bg} rounded-full flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                                                <Icon className={colors.text} size={12} />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">{activity.title}</p>
+                                                <p className="text-[10px] text-gray-500 truncate">{activity.description || activity.user}</p>
+                                            </div>
+                                            <span className="text-[10px] text-gray-400 whitespace-nowrap">{activity.timestamp ? new Date(activity.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'Just now'}</span>
+                                        </div>
                                     </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">{activity.message}</p>
-                                        <p className="text-[10px] text-gray-500 truncate">{activity.detail}</p>
-                                    </div>
-                                    <span className="text-[10px] text-gray-400 whitespace-nowrap">{activity.time}</span>
-                                </div>
+                                );
+                            })
+                        ) : (
+                            <div className="p-6 text-center text-gray-500">
+                                <p className="text-sm">No recent activity</p>
                             </div>
-                        ))}
+                        )}
                     </div>
                 </div>
             </div>
