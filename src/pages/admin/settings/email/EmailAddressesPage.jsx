@@ -13,6 +13,21 @@ import {
   createEmailAddress 
 } from '../../../../services/emailService';
 
+
+// Predefined email types with descriptions
+const EMAIL_TYPES = [
+  { value: 'noreply', label: 'No Reply', description: 'System automated emails' },
+  { value: 'support', label: 'Support', description: 'Customer support inquiries' },
+  { value: 'payments', label: 'Payments', description: 'Payment receipts and invoices' },
+  { value: 'security', label: 'Security', description: 'Password resets and security alerts' },
+  { value: 'careers', label: 'Careers', description: 'Job applications' },
+  { value: 'training', label: 'Training', description: 'Course enrollments and training inquiries' },
+  { value: 'partnerships', label: 'Partnerships', description: 'Partnership opportunities' },
+  { value: 'projects', label: 'Projects', description: 'Project requests and proposals' },
+  { value: 'admin', label: 'Admin', description: 'Administrative notifications' },
+  { value: 'info', label: 'Info', description: 'General information inquiries' }
+];
+
 const EmailAddressesPage = () => {
   const dispatch = useDispatch();
   const { userPermissions, userRole } = useAuth();
@@ -59,32 +74,10 @@ const EmailAddressesPage = () => {
   const handleEdit = (address) => {
     setEditingId(address.id);
     setFormData({
-      type: address.type,
-      email: address.email,
-      displayName: address.displayName,
-      isActive: address.isActive !== false
-    });
-    setIsCreating(false);
-  };
-
-  const handleCreate = () => {
-    setIsCreating(true);
-    setEditingId(null);
-    setFormData({
       type: '',
       email: '',
       displayName: '',
-      isActive: true
-    });
-  };
-
-  const handleCancel = () => {
-    setEditingId(null);
-    setIsCreating(false);
-    setFormData({
-      type: '',
-      email: '',
-      displayName: '',
+      description: '',
       isActive: true
     });
   };
