@@ -332,35 +332,6 @@ const RegularAdminDashboard = ({ user: propUser }) => {
                 </div>
             )}
 
-            {/* Summary Statistics Row */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 md:gap-4">
-                {[
-                    { label: 'Courses', value: metrics.totalCourses, icon: GraduationCap, iconColor: 'text-blue-600', link: '/admin/training' },
-                    { label: 'Jobs', value: metrics.totalJobs, icon: Briefcase, iconColor: 'text-orange-600', link: '/admin/jobs' },
-                    { label: 'Blog Posts', value: metrics.blogPosts, icon: BookOpen, iconColor: 'text-purple-600', link: '/admin/blog' },
-                    { label: 'Projects', value: metrics.projects, icon: FolderKanban, iconColor: 'text-cyan-600', link: '/admin/projects' },
-                    { label: 'Inquiries', value: metrics.pendingInquiries, icon: Inbox, iconColor: 'text-indigo-600', link: '/admin/contact-inquiries' },
-                    { label: 'Gallery', value: metrics.galleryImages, icon: Image, iconColor: 'text-emerald-600', link: '/admin/gallery' },
-                    { label: 'Enrollments', value: metrics.activeEnrollments, icon: FileText, iconColor: 'text-slate-600', link: '/admin/enrollments' },
-                ].map((stat, i) => (
-                    <Link
-                        key={i}
-                        to={stat.link}
-                        className="group bg-white rounded-xl p-2.5 sm:p-3 border border-gray-200 shadow-sm hover:shadow-md hover:border-[#004fa2] transition-all duration-300 relative overflow-hidden cursor-pointer flex flex-col justify-between"
-                    >
-                        <div className="flex items-center gap-2 mb-1 sm:mb-2">
-                            <stat.icon className={`${stat.iconColor} group-hover:scale-110 transition-transform duration-300 flex-shrink-0 w-3.5 h-3.5 sm:w-5 sm:h-5`} />
-                            <p className="text-base sm:text-xl font-bold text-gray-900 truncate">
-                                {stat.value.toLocaleString()}
-                            </p>
-                        </div>
-                        <p className="text-[9px] sm:text-[10px] font-semibold text-gray-500 uppercase tracking-wide truncate">
-                            {stat.label}
-                        </p>
-                    </Link>
-                ))}
-            </div>
-
 
 
             {/* Two Column Layout: Pending Actions & Recent Activity */}
@@ -591,6 +562,8 @@ const RegularAdminDashboard = ({ user: propUser }) => {
 };
 
 export default RegularAdminDashboard;
+
+
 
 
 
