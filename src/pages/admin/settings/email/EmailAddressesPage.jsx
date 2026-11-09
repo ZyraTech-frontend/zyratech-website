@@ -222,7 +222,7 @@ const EmailAddressesPage = () => {
             </div>
 
             <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div className="bg-red-50 rounded-lg p-4 mb-6">
                 <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
@@ -236,7 +236,7 @@ const EmailAddressesPage = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 flex items-center justify-end gap-3">
               <button
                 onClick={handleDeleteCancel}
                 disabled={isDeleting}
@@ -274,7 +274,7 @@ const EmailAddressesPage = () => {
             </div>
 
             <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div className="bg-red-50 rounded-lg p-4 mb-6">
                 <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
@@ -288,7 +288,7 @@ const EmailAddressesPage = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 flex items-center justify-end gap-3">
               <button
                 onClick={handleDeleteCancel}
                 disabled={isDeleting}
@@ -334,7 +334,7 @@ const EmailAddressesPage = () => {
             </div>
 
             <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div className="bg-red-50 rounded-lg p-4 mb-6">
                 <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
@@ -348,7 +348,7 @@ const EmailAddressesPage = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 flex items-center justify-end gap-3">
               <button
                 onClick={handleDeleteCancel}
                 disabled={isDeleting}
@@ -386,7 +386,7 @@ const EmailAddressesPage = () => {
             </div>
 
             <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div className="bg-red-50 rounded-lg p-4 mb-6">
                 <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
@@ -400,7 +400,7 @@ const EmailAddressesPage = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 flex items-center justify-end gap-3">
               <button
                 onClick={handleDeleteCancel}
                 disabled={isDeleting}
@@ -428,7 +428,7 @@ const EmailAddressesPage = () => {
     <AdminLayout>
       <div className="space-y-6 max-w-6xl mx-auto pb-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-8 rounded-2xl shadow-lg">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-gradient-to-br from-[#004fa2] to-[#0066cc] rounded-xl flex items-center justify-center shadow-md">
               <Mail className="text-white" size={24} />
@@ -451,14 +451,14 @@ const EmailAddressesPage = () => {
 
         {/* Form - Create/Edit */}
         {(editingId || isCreating) && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white rounded-2xl shadow-lg p-8">
             <h2 className="text-lg font-bold text-gray-900 mb-6">
               {isCreating ? 'Create New Email Address' : 'Edit Email Address'}
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
                     Type *
                   </label>
                   <select
@@ -471,7 +471,7 @@ const EmailAddressesPage = () => {
                         description: selectedType ? selectedType.description : formData.description
                       });
                     }}
-                    className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm"
+                    className="w-full px-4 py-2.5 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-\[#004fa2\] focus:bg-white transition-all text-sm"
                   >
                     <option value="">Select an email type</option>
                     {EMAIL_TYPES.map((emailType) => (
@@ -482,7 +482,7 @@ const EmailAddressesPage = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
                     Email Address *
                   </label>
                   <input
@@ -490,12 +490,12 @@ const EmailAddressesPage = () => {
                     placeholder="email@example.com"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm"
+                    className="w-full px-4 py-2.5 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-\[#004fa2\] focus:bg-white transition-all text-sm"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Display Name *
                 </label>
                 <input
@@ -503,11 +503,11 @@ const EmailAddressesPage = () => {
                   placeholder="Display name for outgoing emails"
                   value={formData.displayName}
                   onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm"
+                  className="w-full px-4 py-2.5 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-\[#004fa2\] focus:bg-white transition-all text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Description <span className="text-gray-500 font-normal">(optional)</span>
                 </label>
                 <textarea
@@ -519,7 +519,7 @@ const EmailAddressesPage = () => {
                   }}
                   maxLength={500}
                   rows={3}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004fa2] text-sm resize-none"
+                  className="w-full px-4 py-2.5 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-\[#004fa2\] focus:bg-white transition-all text-sm resize-none"
                 />
                 <div className="text-xs text-gray-500 mt-1">
                   {formData.description.length}/500 characters
@@ -527,11 +527,11 @@ const EmailAddressesPage = () => {
               </div>
               <div className="flex items-center gap-3">
                 <input
-                  type="checkbox"
-                  id="isActive"
-                  checked={formData.isActive}
-                  onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                  className="w-4 h-4 rounded"
+                    type="checkbox"
+                    id="isActive"
+                    checked={formData.isActive}
+                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                    className="w-4 h-4 rounded cursor-pointer accent-[#004fa2]"
                 />
                 <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
                   Active
@@ -559,7 +559,7 @@ const EmailAddressesPage = () => {
         )}
 
         {/* List */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           {!Array.isArray(addresses) || addresses.length === 0 ? (
             <div className="p-12 text-center">
               <Mail className="mx-auto h-12 w-12 text-gray-400 mb-4" />
@@ -651,7 +651,7 @@ const EmailAddressesPage = () => {
             </div>
 
             <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div className="bg-red-50 rounded-lg p-4 mb-6">
                 <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
@@ -665,7 +665,7 @@ const EmailAddressesPage = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 flex items-center justify-end gap-3">
               <button
                 onClick={handleDeleteCancel}
                 disabled={isDeleting}
@@ -703,7 +703,7 @@ const EmailAddressesPage = () => {
             </div>
 
             <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div className="bg-red-50 rounded-lg p-4 mb-6">
                 <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
@@ -717,7 +717,7 @@ const EmailAddressesPage = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 flex items-center justify-end gap-3">
               <button
                 onClick={handleDeleteCancel}
                 disabled={isDeleting}
@@ -755,7 +755,7 @@ const EmailAddressesPage = () => {
             </div>
 
             <div className="p-6">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div className="bg-red-50 rounded-lg p-4 mb-6">
                 <p className="text-sm text-gray-600 mb-2">You are about to delete:</p>
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-900">{deletingAddress.email}</p>
@@ -769,7 +769,7 @@ const EmailAddressesPage = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t">
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 flex items-center justify-end gap-3">
               <button
                 onClick={handleDeleteCancel}
                 disabled={isDeleting}
