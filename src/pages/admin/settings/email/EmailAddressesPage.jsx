@@ -55,7 +55,13 @@ const EmailAddressesPage = () => {
   const loadAddresses = async () => {
     try {
       const list = await getAllEmailAddresses();
+      console.log('[EmailAddressesPage] Loaded addresses:', list);
       const addressList = Array.isArray(list) ? list : [];
+      console.log('[EmailAddressesPage] Setting addresses state:', addressList);
+      // Verify each address has isActive property
+      addressList.forEach((addr, idx) => {
+        console.log(`  [${idx}] ${addr.email}: isActive=${addr.isActive}, type=${addr.type}`);
+      });
       setAddresses(addressList);
     } catch (error) {
       console.error('[EmailAddressesPage] Error loading addresses:', error);
@@ -125,22 +131,39 @@ const EmailAddressesPage = () => {
 
     setSaving(true);
     try {
+      console.log('[EmailAddressesPage] Saving email address:', { isCreating, formData });
       if (isCreating) {
-        await createEmailAddress(formData);
+        const result = await createEmailAddress(formData);
+        console.log('[EmailAddressesPage] Create response:', result);
         dispatch(addNotification({
           type: 'success',
           message: 'Email address created successfully'
         }));
       } else {
-        await updateEmailAddress(editingId, formData);
+        const result = await updateEmailAddress(editingId, formData);
+        console.log('[EmailAddressesPage] Update response:', result);
         dispatch(addNotification({
           type: 'success',
           message: 'Email address updated successfully'
         }));
       }
+      // Add newly created address to local list for instant feedback
+      if (isCreating) {
+        const newAddress = {
+          id: `temp-${Date.now()}`,
+          type: formData.type,
+          email: formData.email,
+          displayName: formData.displayName,
+          description: formData.description,
+          isActive: formData.isActive
+        };
+        setAddresses([...addresses, newAddress]);
+      }
       handleCancel();
-      await loadAddresses();
+      // Reload to sync with backend (in case of race conditions)
+      setTimeout(() => loadAddresses(), 500);
     } catch (error) {
+      console.error('[EmailAddressesPage] Error saving:', error);
       dispatch(addNotification({
         type: 'error',
         message: error.userMessage || 'Failed to save email address'
