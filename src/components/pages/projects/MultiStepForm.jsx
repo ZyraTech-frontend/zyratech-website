@@ -20,7 +20,7 @@ const MultiStepForm = ({ onSubmit }) => {
     'student-projects': {
       title: 'Student Project Request',
       icon: GraduationCap,
-      description: 'Final year project? Capstone? We'll build it with you.',
+      description: 'Final year project? Capstone? We will build it with you.',
       infoBanner: 'Special rates for students! We work with your academic timeline and provide documentation support.',
       projectTypes: [
         { value: 'web', label: 'Web Application' },
