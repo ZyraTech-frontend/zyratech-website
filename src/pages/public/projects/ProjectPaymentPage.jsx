@@ -397,7 +397,7 @@ const ProjectPaymentPage = () => {
                       <Clock size={16} />
                       Deposit
                     </span>
-                    <span className="font-medium text-gray-900">30% Upfront</span>
+                    <span className="font-medium text-gray-900">60% Upfront</span>
                   </div>
                 </div>
 
