@@ -123,17 +123,17 @@ const ProjectPaymentPage = () => {
       // Redirect to Paystack checkout page
       if (response.authorizationUrl) {
         // Store backend-calculated amounts for display
-        if (response.depositAmount) setDepositAmount(response.depositAmount);
-        if (response.processingFee) setProcessingFee(response.processingFee);
-        if (response.totalAmount) setTotalAmount(response.totalAmount);
-        if (response.balanceDue) setBalanceDue(response.balanceDue);
+        if (paymentResponse.depositAmount) setDepositAmount(paymentResponse.depositAmount);
+        if (paymentResponse.processingFee) setProcessingFee(paymentResponse.processingFee);
+        if (paymentResponse.totalAmount) setTotalAmount(paymentResponse.totalAmount);
+        if (paymentResponse.balanceDue) setBalanceDue(paymentResponse.balanceDue);
         
         // Store payment reference in sessionStorage for verification after redirect
-        sessionStorage.setItem('payment_reference', response.reference);
+        sessionStorage.setItem('payment_reference', paymentResponse.reference);
         sessionStorage.setItem('payment_project_id', projectRequestId);
         
         // Redirect to Paystack
-        window.location.href = response.authorizationUrl;
+        window.location.href = paymentResponse.authorizationUrl;
       } else {
         throw new Error('No payment URL received');
       }
