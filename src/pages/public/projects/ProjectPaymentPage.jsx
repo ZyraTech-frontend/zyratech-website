@@ -119,9 +119,10 @@ const ProjectPaymentPage = () => {
       console.log('💼 Sending payment data:', paymentData);
 
       const response = await paymentService.initializePayment(paymentData);
+      const paymentResponse = response.data || response; // Extract from wrapper
       
       // Redirect to Paystack checkout page
-      if (response.authorizationUrl) {
+      if (paymentResponse.authorizationUrl) {
         // Store backend-calculated amounts for display
         if (paymentResponse.depositAmount) setDepositAmount(paymentResponse.depositAmount);
         if (paymentResponse.processingFee) setProcessingFee(paymentResponse.processingFee);
@@ -450,6 +451,7 @@ const ProjectPaymentPage = () => {
 };
 
 export default ProjectPaymentPage;
+
 
 
 
