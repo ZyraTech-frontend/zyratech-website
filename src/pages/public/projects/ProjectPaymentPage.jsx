@@ -96,16 +96,12 @@ const ProjectPaymentPage = () => {
       console.log('💼 Payment initialization - Callback URL:', callbackUrl);
       
       // Calculate budget midpoint for totalProjectBudget
-      const budgetNumbers = budgetRange.match(/[\d,]+/g);
-      const budgetMin = parseFloat(budgetNumbers[0].replace(/,/g, ''));
-      const budgetMax = parseFloat(budgetNumbers[1].replace(/,/g, ''));
-      const totalProjectBudget = (budgetMin + budgetMax) / 2;
-      const balanceDue = totalProjectBudget - depositAmount;
+      const projectCost = parseFloat(budgetRange) || 0; // Exact amount selected by user
 
       const paymentData = {
         // Required fields (per backend spec)
         projectRequestId: projectRequestId,
-        amount: totalAmount, // Total including processing fee
+        amount: projectCost, // Total including processing fee
         currency: 'GHS', // Currency (was NGN, but your payment shows GHS)
         totalProjectBudget: totalProjectBudget, // REQUIRED for project payments
         paymentPhase: 'deposit', // REQUIRED: "deposit" | "milestone" | "balance" | "final"
