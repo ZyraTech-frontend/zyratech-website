@@ -47,7 +47,7 @@ const ProjectPaymentPage = () => {
   const [processingFee, setProcessingFee] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
 
-  // Calculate deposit amount (30% of budget midpoint)
+  // Backend calculates 60% deposit + processing fee
 
 
   const handleInputChange = (e) => {
@@ -216,7 +216,7 @@ const ProjectPaymentPage = () => {
                 Secure Project Deposit
               </h1>
               <p className="text-white/80 text-sm mt-1">
-                30% deposit to start your project
+                60% deposit to start your project
               </p>
             </div>
           </div>
@@ -411,7 +411,7 @@ const ProjectPaymentPage = () => {
                 {/* Pricing */}
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Project Deposit (30%)</span>
+                    <span className="text-gray-600">Project Deposit (60%)</span>
                     <span className="text-gray-900 font-medium">GHS {depositAmount.toFixed(2)}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
@@ -434,7 +434,7 @@ const ProjectPaymentPage = () => {
                     <div>
                       <p className="text-sm font-medium text-green-900">Secure Deposit</p>
                       <p className="text-xs text-green-700 mt-1">
-                        30% deposit secures your project. Remaining 70% due upon project completion.
+                        60% deposit secures your project. Remaining 40% due upon project completion.
                       </p>
                     </div>
                   </div>
