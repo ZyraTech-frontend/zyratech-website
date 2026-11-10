@@ -43,26 +43,12 @@ const ProjectPaymentPage = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [depositAmount, setDepositAmount] = useState(0);
+  const [processingFee, setProcessingFee] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
 
   // Calculate deposit amount (30% of budget midpoint)
-  const calculateDepositAmount = (budgetRange) => {
-    if (!budgetRange || budgetRange === 'custom') return 0;
-    
-    // Parse budget range like "GHS 5,000 - GHS 10,000"
-    const numbers = budgetRange.match(/[\d,]+/g);
-    if (!numbers || numbers.length < 2) return 0;
-    
-    const min = parseFloat(numbers[0].replace(/,/g, ''));
-    const max = parseFloat(numbers[1].replace(/,/g, ''));
-    const midpoint = (min + max) / 2;
-    
-    // 30% deposit
-    return midpoint * 0.30;
-  };
 
-  const depositAmount = calculateDepositAmount(budgetRange);
-  const processingFee = (depositAmount * 0.015) + 0.50;
-  const totalAmount = depositAmount + processingFee;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -142,6 +128,11 @@ const ProjectPaymentPage = () => {
       
       // Redirect to Paystack checkout page
       if (response.authorizationUrl) {
+        // Store backend-calculated amounts for display
+        if (response.depositAmount) setDepositAmount(response.depositAmount);
+        if (response.processingFee) setProcessingFee(response.processingFee);
+        if (response.totalAmount) setTotalAmount(response.totalAmount);
+        
         // Store payment reference in sessionStorage for verification after redirect
         sessionStorage.setItem('payment_reference', response.reference);
         sessionStorage.setItem('payment_project_id', projectRequestId);
@@ -460,3 +451,6 @@ const ProjectPaymentPage = () => {
 };
 
 export default ProjectPaymentPage;
+
+
+
