@@ -46,6 +46,7 @@ const ProjectPaymentPage = () => {
   const [depositAmount, setDepositAmount] = useState(0);
   const [processingFee, setProcessingFee] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [balanceDue, setBalanceDue] = useState(0);
 
   // Backend calculates 60% deposit + processing fee
 
@@ -103,17 +104,12 @@ const ProjectPaymentPage = () => {
         projectRequestId: projectRequestId,
         amount: projectCost, // Total including processing fee
         currency: 'GHS', // Currency (was NGN, but your payment shows GHS)
-        totalProjectBudget: totalProjectBudget, // REQUIRED for project payments
-        paymentPhase: 'deposit', // REQUIRED: "deposit" | "milestone" | "balance" | "final"
+        
+        paymentPhase: 'deposit',
         studentName: formData.fullName,
         studentEmail: formData.email,
         callbackUrl: callbackUrl,
         
-        // Optional deposit tracking fields (backend saves these)
-        depositAmount: depositAmount, // Actual deposit excluding fees
-        depositPercentage: 30, // Deposit percentage
-        processingFee: processingFee, // Payment gateway fee
-        balanceDue: balanceDue, // Remaining balance after deposit
         projectTitle: projectTitle, // Project name
         projectType: projectType // Project category
       };
@@ -128,6 +124,7 @@ const ProjectPaymentPage = () => {
         if (response.depositAmount) setDepositAmount(response.depositAmount);
         if (response.processingFee) setProcessingFee(response.processingFee);
         if (response.totalAmount) setTotalAmount(response.totalAmount);
+        if (response.balanceDue) setBalanceDue(response.balanceDue);
         
         // Store payment reference in sessionStorage for verification after redirect
         sessionStorage.setItem('payment_reference', response.reference);
@@ -418,6 +415,10 @@ const ProjectPaymentPage = () => {
                     <span className="text-lg font-bold text-gray-900">Total Payment</span>
                     <span className="text-2xl font-bold text-[#004fa2]">GHS {totalAmount.toFixed(2)}</span>
                   </div>
+                  <div className="flex items-center justify-between text-sm pt-3 mt-3 border-t border-gray-200">
+                    <span className="font-medium text-gray-600">Balance Due (40%)</span>
+                    <span className="font-medium text-[#004fa2]">GHS {balanceDue.toFixed(2)}</span>
+                  </div>
                   <p className="text-xs text-gray-500 text-center pt-2">
                     Processing fee covers payment gateway charges (1.5% + GHS 0.50)
                   </p>
@@ -447,6 +448,8 @@ const ProjectPaymentPage = () => {
 };
 
 export default ProjectPaymentPage;
+
+
 
 
 
