@@ -98,11 +98,13 @@ const ProjectPaymentPage = () => {
       
       // Calculate budget midpoint for totalProjectBudget
       const projectCost = parseFloat(budgetRange) || 0; // Exact amount selected by user
+      const totalProjectBudget = projectCost; // Backend requires this field
 
       const paymentData = {
         // Required fields (per backend spec)
         projectRequestId: projectRequestId,
         amount: projectCost, // Total including processing fee
+        totalProjectBudget: totalProjectBudget, // Required by backend validation
         currency: 'GHS', // Currency (was NGN, but your payment shows GHS)
         
         paymentPhase: 'deposit',
