@@ -6,7 +6,8 @@ import {
   MessageSquare, Phone
 } from 'lucide-react';
 import TrainingLayout from '../../../components/TrainingLayout';
-import useSEO from '../../../hooks/useSEO';
+import useSEO from '../../../hooks/useSEO'
+import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 
 const TrainingPaymentSuccessPage = () => {
   const navigate = useNavigate();
@@ -234,8 +235,11 @@ const TrainingPaymentSuccessPage = () => {
           </div>
         </div>
       </section>
+
+      <NewsletterHero />
     </TrainingLayout>
   );
 };
 
 export default TrainingPaymentSuccessPage;
+

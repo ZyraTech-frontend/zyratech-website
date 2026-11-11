@@ -11,7 +11,8 @@ import trainingService from '../../../services/trainingService';
 import useSEO from '../../../hooks/useSEO';
 import { validatePhoneNumber, getPhoneInputAttributes } from '../../../utils/phoneValidation';
 import paymentService from '../../../services/paymentService';
-import LoadingSpinner from '../../../components/admin/shared/LoadingSpinner';
+import LoadingSpinner from '../../../components/admin/shared/LoadingSpinner'
+import NewsletterHero from '../../../components/pages/home/NewsletterHero';
 
 const TrainingPaymentPage = () => {
   console.log('💳 PAYMENT PAGE LOADED');
@@ -486,8 +487,11 @@ const TrainingPaymentPage = () => {
           </div>
         </div>
       </section>
+
+      <NewsletterHero />
     </TrainingLayout>
   );
 };
 
 export default TrainingPaymentPage;
+

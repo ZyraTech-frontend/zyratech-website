@@ -3,7 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Cloud, BarChart3, Server, Clock, Users, Star, ChevronRight, Award, Database, Network, Target } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
-import HrContactSection from '../../common/HrContactSection.jsx';
+import HrContactSection from '../../common/HrContactSection.jsx'
+import NewsletterHero from '../home/NewsletterHero.jsx';
 import CourseGridSkeleton from '../../common/skeletons/CourseGridSkeleton';
 import trainingService from '../../../services/trainingService.js';
 import { getCourseImageUrl } from '../../../utils/imageUrl';
@@ -394,8 +395,11 @@ const IntermediateProgramsPage = () => {
         imageUrl="/images/Dalene.webp"
         email="magdalene@zyratech.com"
       />
+
+      <NewsletterHero />
     </div>
   );
 };
 
 export default IntermediateProgramsPage;
+

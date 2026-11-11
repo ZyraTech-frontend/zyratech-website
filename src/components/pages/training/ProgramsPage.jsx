@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { BookOpen, Award, Rocket, Briefcase, Users, ChevronRight, Check } from 'lucide-react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation.js';
-import HrContactSection from '../../common/HrContactSection.jsx';
+import HrContactSection from '../../common/HrContactSection.jsx'
+import NewsletterHero from '../home/NewsletterHero.jsx';
 import useSEO from '../../../hooks/useSEO';
 
 const ProgramsPage = () => {
@@ -423,3 +424,4 @@ const ProgramsPage = () => {
 };
 
 export default ProgramsPage;
+
