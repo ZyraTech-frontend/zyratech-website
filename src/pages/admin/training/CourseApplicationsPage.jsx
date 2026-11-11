@@ -108,9 +108,11 @@ const CourseApplicationsPage = () => {
             const response = await api.get('/admin/enrollments', { params });
             
             // Extract data and pagination info
-            const data = response.data || {};
-            const list = Array.isArray(data.data) ? data.data : (Array.isArray(data.enrollments) ? data.enrollments : []);
-            const pagination = data.pagination || {};
+            // Handle nested structure: response.data.data (array) and response.data.pagination
+            const responseData = response.data || {};
+            const wrappedData = responseData.data || {};
+            const list = Array.isArray(wrappedData.data) ? wrappedData.data : (Array.isArray(wrappedData) ? wrappedData : []);
+            const pagination = wrappedData.pagination || {};
             
             setApplications(list);
             setTotalApplications(pagination.total || 0);
@@ -498,3 +500,4 @@ const CourseApplicationsPage = () => {
 };
 
 export default CourseApplicationsPage;
+
