@@ -28,7 +28,7 @@ const CollaborationModels = () => {
       {/* Hero */}
       <CollaborationHeroSection hero={collaborationHero} />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax8.webp" />
+      <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax8.webp" />
 
       {/* Models */}
       <CollaborationModelsNavSection models={collaborationModels} />
@@ -36,17 +36,17 @@ const CollaborationModels = () => {
         <CollaborationModelSection key={model.id} model={model} reverse={idx % 2 !== 0} />
       ))}
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax9.webp" />
+      <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax9.webp" />
 
       {/* Value Proposition + Markets */}
       <CollaborationTestimonialSection testimonial={collaborationTestimonial} />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax10.webp" />
+      <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax10.webp" />
 
       {/* Process / Steps */}
       <CollaborationProcessSection steps={collaborationProcessSteps} />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax1.webp" />
+      <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax1.webp" />
 
       {/* CTA */}
       <NewsletterHero />
@@ -57,3 +57,4 @@ const CollaborationModels = () => {
 };
 
 export default CollaborationModels;
+
