@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Course Applications Management Page
  * Standalone page for managing course enrollment applications
  */
@@ -120,18 +120,18 @@ const CourseApplicationsPage = () => {
             // Handle nested data structure: response.data.data
             const transactions = response.data?.data?.data || response.data?.data || [];
             
-            console.log('ðŸ’° Fetched transactions:', transactions);
-            console.log('ðŸ“Š Response structure:', response.data);
+            console.log('💰 Fetched transactions:', transactions);
+            console.log('📊 Response structure:', response.data);
             
             // Filter only training payments and sum them up
             const trainingPayments = transactions.filter(t => t.paymentType === 'training');
-            console.log('ðŸŽ“ Training payments:', trainingPayments.length);
+            console.log('🎓 Training payments:', trainingPayments.length);
             
             const total = trainingPayments.reduce((sum, payment) => {
                 return sum + (parseFloat(payment.amount) || 0);
             }, 0);
             
-            console.log('ðŸ’µ Total revenue calculated:', total);
+            console.log('💵 Total revenue calculated:', total);
             
             setTotalRevenue(total);
         } catch (error) {
@@ -245,7 +245,7 @@ const CourseApplicationsPage = () => {
             
             // Check payment status first
             const paymentStatus = await trainingApplicationService.checkPaymentStatus(appId);
-            console.log('ðŸ’° Payment status:', paymentStatus);
+            console.log('💰 Payment status:', paymentStatus);
             
             setSelectedApplication(application);
             setPaymentInfo(paymentStatus);
@@ -274,7 +274,7 @@ const CourseApplicationsPage = () => {
             dispatch(addNotification({
                 type: 'success',
                 message: shouldRefund 
-                    ? 'Application rejected and refund processed âœ…'
+                    ? 'Application rejected and refund processed ✅'
                     : 'Application rejected'
             }));
             
@@ -436,14 +436,14 @@ const CourseApplicationsPage = () => {
                                                         {app.status === 'pending' && (
                                                             <>
                                                                 <button
-                                                                    onClick={() => handleApprove(app)}
+                                                                    onClick={(e) => { e.stopPropagation(); handleApprove(app); }}
                                                                     className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
                                                                     title="Approve"
                                                                 >
                                                                     <CheckCircle size={18} />
                                                                 </button>
                                                                 <button
-                                                                    onClick={() => handleReject(app)}
+                                                                    onClick={(e) => { e.stopPropagation(); handleReject(app); }}
                                                                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
                                                                     title="Reject"
                                                                 >
@@ -510,3 +510,6 @@ const CourseApplicationsPage = () => {
 };
 
 export default CourseApplicationsPage;
+
+
+
