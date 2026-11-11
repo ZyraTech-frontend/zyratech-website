@@ -16,7 +16,6 @@ const ProjectPaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Get project data from location state (passed from project request form)
   const projectData = location.state?.projectData || {};
   const applicantName = location.state?.name || '';
   const applicantEmail = location.state?.email || '';
@@ -25,9 +24,9 @@ const ProjectPaymentPage = () => {
   const projectType = location.state?.projectType || 'student-projects';
   const budgetRange = location.state?.budget || '';
 
-  console.log('💼 PROJECT PAYMENT PAGE LOADED');
-  console.log('💼 Project Request ID:', projectRequestId);
-  console.log('💼 Project Data:', { projectTitle, projectType, budgetRange, applicantName, applicantEmail });
+  console.log('?? PROJECT PAYMENT PAGE LOADED');
+  console.log('?? Project Request ID:', projectRequestId);
+  console.log('?? Project Data:', { projectTitle, projectType, budgetRange, applicantName, applicantEmail });
 
   useSEO({
     title: 'Project Payment - Secure Deposit',
@@ -47,9 +46,8 @@ const ProjectPaymentPage = () => {
   const [processingFee, setProcessingFee] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const [balanceDue, setBalanceDue] = useState(0);
-
-  // Backend calculates 60% deposit + processing fee
-
+  const [showPaymentSummary, setShowPaymentSummary] = useState(false);
+  const [paymentAuthUrl, setPaymentAuthUrl] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -89,52 +87,46 @@ const ProjectPaymentPage = () => {
     setIsProcessing(true);
 
     try {
-      // Get the current app URL from environment
       const appUrl = import.meta.env.VITE_APP_URL || window.location.origin;
       const callbackUrl = `${appUrl}/payment/verify`;
       
-      console.log('💼 Payment initialization - App URL:', appUrl);
-      console.log('💼 Payment initialization - Callback URL:', callbackUrl);
+      console.log('?? Payment initialization - App URL:', appUrl);
+      console.log('?? Payment initialization - Callback URL:', callbackUrl);
       
-      // Calculate budget midpoint for totalProjectBudget
-      const projectCost = parseFloat(budgetRange) || 0; // Exact amount selected by user
-      const totalProjectBudget = projectCost; // Backend requires this field
+      const projectCost = parseFloat(budgetRange) || 0;
+      const totalProjectBudget = projectCost;
 
       const paymentData = {
-        // Required fields (per backend spec)
         projectRequestId: projectRequestId,
-        amount: projectCost, // Total including processing fee
-        totalProjectBudget: totalProjectBudget, // Required by backend validation
-        currency: 'GHS', // Currency (was NGN, but your payment shows GHS)
-        
+        amount: projectCost,
+        totalProjectBudget: totalProjectBudget,
+        currency: 'GHS',
         paymentPhase: 'deposit',
         studentName: formData.fullName,
         studentEmail: formData.email,
         callbackUrl: callbackUrl,
-        
-        projectTitle: projectTitle, // Project name
-        projectType: projectType // Project category
+        projectTitle: projectTitle,
+        projectType: projectType
       };
 
-      console.log('💼 Sending payment data:', paymentData);
+      console.log('?? Sending payment data:', paymentData);
 
       const response = await paymentService.initializePayment(paymentData);
-      const paymentResponse = response.data || response; // Extract from wrapper
+      const paymentResponse = response.data || response;
       
-      // Redirect to Paystack checkout page
       if (paymentResponse.authorizationUrl) {
-        // Store backend-calculated amounts for display
         if (paymentResponse.depositAmount) setDepositAmount(paymentResponse.depositAmount);
         if (paymentResponse.processingFee) setProcessingFee(paymentResponse.processingFee);
         if (paymentResponse.totalAmount) setTotalAmount(paymentResponse.totalAmount);
         if (paymentResponse.balanceDue) setBalanceDue(paymentResponse.balanceDue);
         
-        // Store payment reference in sessionStorage for verification after redirect
+        setPaymentAuthUrl(paymentResponse.authorizationUrl);
+        
         sessionStorage.setItem('payment_reference', paymentResponse.reference);
         sessionStorage.setItem('payment_project_id', projectRequestId);
         
-        // Redirect to Paystack
-        window.location.href = paymentResponse.authorizationUrl;
+        setShowPaymentSummary(true);
+        setIsProcessing(false);
       } else {
         throw new Error('No payment URL received');
       }
@@ -142,12 +134,20 @@ const ProjectPaymentPage = () => {
       console.error('Payment initialization failed:', error);
       setIsProcessing(false);
       
-      // Show error notification
       alert(error.response?.data?.message || 'Failed to initialize payment. Please try again.');
     }
   };
 
-  // Validate we have required data
+  const handleProceedToPaystack = () => {
+    if (paymentAuthUrl) {
+      window.location.href = paymentAuthUrl;
+    }
+  };
+
+  const handleEditDetails = () => {
+    setShowPaymentSummary(false);
+  };
+
   if (!projectRequestId || !budgetRange) {
     return (
       <>
@@ -191,7 +191,6 @@ const ProjectPaymentPage = () => {
     <>
       <Navbar />
       
-      {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-[#004fa2] via-[#003d7a] to-[#002952] py-12 sm:py-16">
         <div className="absolute inset-0 bg-[url('/images/image3.webp')] bg-cover bg-center opacity-10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -219,16 +218,13 @@ const ProjectPaymentPage = () => {
         </div>
       </section>
 
-      {/* Main Content */}
       <section className="py-10 sm:py-14 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            {/* Payment Form */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
                 
-                {/* Progress Indicator */}
                 <div className="mb-8 pb-6 border-b border-gray-100">
                   <div className="hidden sm:flex items-center gap-3">
                     <div className="flex items-center gap-2">
@@ -248,7 +244,6 @@ const ProjectPaymentPage = () => {
                 </div>
 
                 <form onSubmit={handleSubmit}>
-                  {/* Contact Information */}
                   <div className="mb-8">
                     <h3 className="text-lg font-bold text-gray-900 mb-4">Contact Information</h3>
                     <p className="text-sm text-gray-600 mb-4">We'll send your payment receipt and project confirmation to these details.</p>
@@ -305,20 +300,18 @@ const ProjectPaymentPage = () => {
                     </div>
                   </div>
 
-                  {/* Payment Info Notice */}
                   <div className="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
                     <div className="flex items-start gap-3">
                       <Shield size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
                       <div>
                         <p className="text-sm font-medium text-blue-900">Secure Payment via Paystack</p>
                         <p className="text-xs text-blue-700 mt-1">
-                          After clicking "Proceed to Payment", you'll be redirected to Paystack's secure checkout where you can choose your preferred payment method (Mobile Money, Card, or Bank Transfer).
+                          After clicking "Proceed to Payment", you'll review your payment summary before being redirected to Paystack's secure checkout where you can choose your preferred payment method (Mobile Money, Card, or Bank Transfer).
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Submit Buttons */}
                   <div className="flex flex-col sm:flex-row gap-4">
                     <button
                       type="submit"
@@ -351,7 +344,6 @@ const ProjectPaymentPage = () => {
                     </button>
                   </div>
 
-                  {/* Security Badges */}
                   <div className="flex flex-wrap items-center justify-center gap-6 mt-8 pt-6 border-t border-gray-100">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <Shield size={18} className="text-green-600" />
@@ -369,10 +361,71 @@ const ProjectPaymentPage = () => {
                 </form>
               </div>
             </div>
-
-            </div>
+          </div>
         </div>
       </section>
+
+      {showPaymentSummary && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mx-auto mb-4">
+              <CheckCircle size={24} className="text-green-600" />
+            </div>
+            
+            <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">
+              Payment Summary
+            </h2>
+            <p className="text-sm text-gray-600 text-center mb-6">
+              Review your payment breakdown before proceeding
+            </p>
+            
+            <div className="space-y-4 mb-8 pb-8 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-600">Project Budget:</span>
+                <span className="text-sm font-semibold text-gray-900">GHS {parseFloat(budgetRange || 0).toFixed(2)}</span>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-600">60% Deposit Amount:</span>
+                <span className="text-sm font-semibold text-gray-900">GHS {depositAmount.toFixed(2)}</span>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-600">Processing Fee (1.5% + ?0.50):</span>
+                <span className="text-sm font-semibold text-gray-900">GHS {processingFee.toFixed(2)}</span>
+              </div>
+              
+              <div className="bg-blue-50 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-gray-900">Total Amount to Pay:</span>
+                  <span className="text-lg font-bold text-blue-600">GHS {totalAmount.toFixed(2)}</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between pt-2">
+                <span className="text-sm font-medium text-gray-600">Remaining Balance (40%):</span>
+                <span className="text-sm font-semibold text-gray-900">GHS {balanceDue.toFixed(2)}</span>
+              </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={handleEditDetails}
+                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-semibold transition-all"
+              >
+                Edit Details
+              </button>
+              <button
+                onClick={handleProceedToPaystack}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-all"
+              >
+                <Lock size={16} />
+                Proceed to Paystack
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </>
@@ -380,11 +433,3 @@ const ProjectPaymentPage = () => {
 };
 
 export default ProjectPaymentPage;
-
-
-
-
-
-
-
-
