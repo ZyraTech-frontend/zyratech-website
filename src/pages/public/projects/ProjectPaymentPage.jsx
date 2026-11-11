@@ -370,78 +370,7 @@ const ProjectPaymentPage = () => {
               </div>
             </div>
 
-            {/* Order Summary Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sticky top-24">
-                <h3 className="text-lg font-bold text-gray-900 mb-6">Payment Summary</h3>
-
-                {/* Project Info */}
-                <div className="flex items-start gap-4 mb-6 pb-6 border-b border-gray-100">
-                  <div className="w-14 h-14 bg-[#004fa2]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <ProjectIcon size={24} className="text-[#004fa2]" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 leading-snug">{projectTitle || 'Your Project'}</h4>
-                    <p className="text-sm text-gray-500 mt-1 capitalize">{projectType.replace(/-/g, ' ')}</p>
-                  </div>
-                </div>
-
-                {/* Project Details */}
-                <div className="space-y-3 mb-6 pb-6 border-b border-gray-100">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600 flex items-center gap-2">
-                      <DollarSign size={16} />
-                      Budget Range
-                    </span>
-                    <span className="font-medium text-gray-900">{budgetRange}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600 flex items-center gap-2">
-                      <Clock size={16} />
-                      Deposit
-                    </span>
-                    <span className="font-medium text-gray-900">60% Upfront</span>
-                  </div>
-                </div>
-
-                {/* Pricing */}
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Project Deposit (60%)</span>
-                    <span className="text-gray-900 font-medium">GHS {depositAmount.toFixed(2)}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Processing Fee</span>
-                    <span className="text-gray-900 font-medium">GHS {processingFee.toFixed(2)}</span>
-                  </div>
-                  <div className="flex items-center justify-between pt-3 border-t-2 border-gray-200">
-                    <span className="text-lg font-bold text-gray-900">Total Payment</span>
-                    <span className="text-2xl font-bold text-[#004fa2]">GHS {totalAmount.toFixed(2)}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm pt-3 mt-3 border-t border-gray-200">
-                    <span className="font-medium text-gray-600">Balance Due (40%)</span>
-                    <span className="font-medium text-[#004fa2]">GHS {balanceDue.toFixed(2)}</span>
-                  </div>
-                  <p className="text-xs text-gray-500 text-center pt-2">
-                    Processing fee covers payment gateway charges (1.5% + GHS 0.50)
-                  </p>
-                </div>
-
-                {/* Trust Message */}
-                <div className="p-4 bg-green-50 border border-green-100 rounded-xl">
-                  <div className="flex items-start gap-3">
-                    <CheckCircle size={20} className="text-green-600 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium text-green-900">Secure Deposit</p>
-                      <p className="text-xs text-green-700 mt-1">
-                        60% deposit secures your project. Remaining 40% due upon project completion.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
       </section>
 
@@ -451,6 +380,7 @@ const ProjectPaymentPage = () => {
 };
 
 export default ProjectPaymentPage;
+
 
 
 
