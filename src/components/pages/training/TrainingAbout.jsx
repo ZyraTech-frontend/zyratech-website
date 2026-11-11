@@ -34,7 +34,7 @@ const TrainingAbout = () => {
         </motion.div>
 
         <ParallaxDivider
-          heightClassName="h-56 sm:h-64 md:h-72"
+          heightClassName="h-24 sm:h-32 md:h-40"
           imageUrl="/images/parallax6.webp"
           className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
         />
@@ -190,7 +190,7 @@ const TrainingAbout = () => {
               </div>
 
               <ParallaxDivider
-                heightClassName="h-56 sm:h-64 md:h-72"
+                heightClassName="h-24 sm:h-32 md:h-40"
                 imageUrl="/images/parallax7.webp"
                 className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
               />
@@ -263,7 +263,7 @@ const TrainingAbout = () => {
         </div>
 
         <ParallaxDivider
-          heightClassName="h-56 sm:h-64 md:h-72"
+          heightClassName="h-24 sm:h-32 md:h-40"
           imageUrl="/images/parallax8.webp"
           className="my-12 sm:my-16 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
         />
@@ -336,3 +336,4 @@ const TrainingAbout = () => {
 };
 
 export default TrainingAbout;
+

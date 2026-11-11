@@ -109,11 +109,11 @@ const WorkWithUs = () => {
 
       <HowWeAreSetUpSection items={data.setup} />
 
-      <ParallaxDivider heightClassName="h-32 sm:h-40 md:h-48" imageUrl="/images/parallax3.webp" />
+      <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax3.webp" />
 
       <ProjectSetupSection steps={data.projectSteps} />
 
-      <ParallaxDivider heightClassName="h-32 sm:h-40 md:h-48" imageUrl="/images/parallax4.webp" />
+      <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax4.webp" />
 
       <InterculturalCollaborationSection
         title={data.collaboration?.title}
@@ -134,3 +134,4 @@ const WorkWithUs = () => {
 };
 
 export default WorkWithUs;
+

@@ -30,7 +30,7 @@ const HomePage = () => {
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax1.webp" />
+        <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax1.webp" />
       </ErrorBoundary>
 
       <ErrorBoundary>
@@ -41,7 +41,7 @@ const HomePage = () => {
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax2.webp" />
+        <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax2.webp" />
       </ErrorBoundary>
 
       <ErrorBoundary>
@@ -52,7 +52,7 @@ const HomePage = () => {
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <ParallaxDivider heightClassName="h-48 sm:h-56 md:h-64" imageUrl="/images/parallax3.webp" />
+        <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax3.webp" />
       </ErrorBoundary>
 
       <ErrorBoundary>
@@ -69,3 +69,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+

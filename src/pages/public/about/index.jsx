@@ -25,27 +25,27 @@ const AboutPage = () => {
 
       <OurMission />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax1.webp" />
+      <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax1.webp" />
 
       <WhyGhana />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax9.webp" />
+      <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax9.webp" />
 
       <Milestones />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax3.webp" />
+      <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax3.webp" />
 
       <SplitTestimonial />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax8.webp" bgPosition="bg-top" />
+      <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax8.webp" bgPosition="bg-top" />
 
       <ImpactCTA />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax7.webp" bgPosition="bg-top" />
+      <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax7.webp" bgPosition="bg-top" />
 
       <Timeline />
 
-      <ParallaxDivider heightClassName="h-56 sm:h-64 md:h-72" imageUrl="/images/parallax10.webp" bgPosition="bg-top" />
+      <ParallaxDivider heightClassName="h-24 sm:h-32 md:h-40" imageUrl="/images/parallax10.webp" bgPosition="bg-top" />
       <HrContactSection />
 
       <NewsletterHero />
@@ -54,3 +54,4 @@ const AboutPage = () => {
 };
 
 export default AboutPage;
+
