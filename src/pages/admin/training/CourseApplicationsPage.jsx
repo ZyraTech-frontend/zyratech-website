@@ -1,6 +1,7 @@
 /**
  * Course Applications Management Page
  * Standalone page for managing course enrollment applications
+ * Now with backend-aware pagination for better scalability
  */
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -75,24 +76,45 @@ const CourseApplicationsPage = () => {
     const [selectedStatus, setSelectedStatus] = useState('all');
     const [selectedCourse, setSelectedCourse] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalApplications, setTotalApplications] = useState(0);
+    const [totalPages, setTotalPages] = useState(1);
     const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
     const [selectedApplication, setSelectedApplication] = useState(null);
     const [paymentInfo, setPaymentInfo] = useState(null);
     
     const itemsPerPage = 10;
     
-    // Fetch applications
+    // Fetch applications with backend pagination
     useEffect(() => {
         loadApplications();
-    }, []);
+    }, [currentPage, selectedStatus, selectedCourse, searchQuery]);
     
     const loadApplications = async () => {
         try {
             setLoading(true);
-            // Use the correct backend endpoint: /admin/enrollments
-            const data = await trainingApplicationService.getAllApplications();
-            const list = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.enrollments || []));
+            
+            // Build query params
+            const params = {
+                page: currentPage,
+                limit: itemsPerPage
+            };
+            
+            // Add filters to backend request
+            if (selectedStatus !== 'all') params.status = selectedStatus;
+            if (selectedCourse !== 'all') params.courseId = selectedCourse;
+            if (searchQuery) params.search = searchQuery;
+            
+            // Call API with pagination params
+            const response = await api.get('/admin/enrollments', { params });
+            
+            // Extract data and pagination info
+            const data = response.data || {};
+            const list = Array.isArray(data.data) ? data.data : (Array.isArray(data.enrollments) ? data.enrollments : []);
+            const pagination = data.pagination || {};
+            
             setApplications(list);
+            setTotalApplications(pagination.total || 0);
+            setTotalPages(pagination.totalPages || 1);
             
             // Calculate total revenue from completed payments
             await calculateTotalRevenue();
@@ -102,6 +124,9 @@ const CourseApplicationsPage = () => {
                 type: 'error',
                 message: 'Failed to load applications'
             }));
+            setApplications([]);
+            setTotalApplications(0);
+            setTotalPages(1);
         } finally {
             setLoading(false);
         }
@@ -109,7 +134,6 @@ const CourseApplicationsPage = () => {
     
     const calculateTotalRevenue = async () => {
         try {
-            // Use api service instead of raw fetch to avoid URL issues
             const response = await api.get('/admin/transactions', {
                 params: {
                     status: 'completed',
@@ -117,21 +141,12 @@ const CourseApplicationsPage = () => {
                 }
             });
             
-            // Handle nested data structure: response.data.data
             const transactions = response.data?.data?.data || response.data?.data || [];
-            
-            console.log('💰 Fetched transactions:', transactions);
-            console.log('📊 Response structure:', response.data);
-            
-            // Filter only training payments and sum them up
             const trainingPayments = transactions.filter(t => t.paymentType === 'training');
-            console.log('🎓 Training payments:', trainingPayments.length);
             
             const total = trainingPayments.reduce((sum, payment) => {
                 return sum + (parseFloat(payment.amount) || 0);
             }, 0);
-            
-            console.log('💵 Total revenue calculated:', total);
             
             setTotalRevenue(total);
         } catch (error) {
@@ -140,54 +155,14 @@ const CourseApplicationsPage = () => {
         }
     };
     
-    // Filter applications
-    const filteredApplications = useMemo(() => {
-        let result = [...applications];
-        
-        // Search filter
-        if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            result = result.filter(app => {
-                const name = app.fullName || app.applicantName || '';
-                const email = app.emailAddress || app.email || '';
-                const course = app.courseTitle || app.courseName || '';
-                const id = app.id || app.applicationId || '';
-                
-                return name.toLowerCase().includes(query) ||
-                       email.toLowerCase().includes(query) ||
-                       course.toLowerCase().includes(query) ||
-                       id.toLowerCase().includes(query);
-            });
-        }
-        
-        // Status filter
-        if (selectedStatus !== 'all') {
-            result = result.filter(app => app.status === selectedStatus);
-        }
-        
-        // Course filter
-        if (selectedCourse !== 'all') {
-            result = result.filter(app => (app.courseId || app.course?.id) === selectedCourse);
-        }
-        
-        return result;
-    }, [applications, searchQuery, selectedStatus, selectedCourse]);
-    
-    // Statistics
+    // Get stats from current page data (or track separately if needed)
     const stats = useMemo(() => ({
-        total: applications.length,
+        total: totalApplications,
         pending: applications.filter(a => a.status === 'pending').length,
         approved: applications.filter(a => a.status === 'approved').length,
         rejected: applications.filter(a => a.status === 'rejected').length,
         completed: applications.filter(a => a.status === 'completed').length
-    }), [applications]);
-    
-    // Pagination
-    const totalPages = Math.ceil(filteredApplications.length / itemsPerPage);
-    const paginatedApplications = filteredApplications.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
+    }), [applications, totalApplications]);
     
     // Unique courses for filter
     const uniqueCourses = useMemo(() => {
@@ -242,10 +217,7 @@ const CourseApplicationsPage = () => {
         }
         try {
             const appId = application.id || application.applicationId;
-            
-            // Check payment status first
             const paymentStatus = await trainingApplicationService.checkPaymentStatus(appId);
-            console.log('💰 Payment status:', paymentStatus);
             
             setSelectedApplication(application);
             setPaymentInfo(paymentStatus);
@@ -274,7 +246,7 @@ const CourseApplicationsPage = () => {
             dispatch(addNotification({
                 type: 'success',
                 message: shouldRefund 
-                    ? 'Application rejected and refund processed ✅'
+                    ? 'Application rejected and refund processed ?'
                     : 'Application rejected'
             }));
             
@@ -286,7 +258,14 @@ const CourseApplicationsPage = () => {
                 type: 'error',
                 message: error.response?.data?.message || 'Failed to reject application'
             }));
-            throw error; // Re-throw to keep dialog open
+            throw error;
+        }
+    };
+    
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
     
@@ -341,7 +320,10 @@ const CourseApplicationsPage = () => {
                                 type="text"
                                 placeholder="Search applications..."
                                 value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onChange={(e) => {
+                                    setSearchQuery(e.target.value);
+                                    setCurrentPage(1); // Reset to first page on search
+                                }}
                                 className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                             />
                         </div>
@@ -349,7 +331,10 @@ const CourseApplicationsPage = () => {
                         {/* Status Filter */}
                         <select
                             value={selectedStatus}
-                            onChange={(e) => setSelectedStatus(e.target.value)}
+                            onChange={(e) => {
+                                setSelectedStatus(e.target.value);
+                                setCurrentPage(1); // Reset to first page on filter change
+                            }}
                             className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                         >
                             <option value="all">All Statuses</option>
@@ -363,7 +348,10 @@ const CourseApplicationsPage = () => {
                         {/* Course Filter */}
                         <select
                             value={selectedCourse}
-                            onChange={(e) => setSelectedCourse(e.target.value)}
+                            onChange={(e) => {
+                                setSelectedCourse(e.target.value);
+                                setCurrentPage(1); // Reset to first page on filter change
+                            }}
                             className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                         >
                             <option value="all">All Courses</option>
@@ -380,7 +368,7 @@ const CourseApplicationsPage = () => {
                         <div className="flex items-center justify-center py-12">
                             <Loader className="animate-spin text-blue-600" size={32} />
                         </div>
-                    ) : paginatedApplications.length === 0 ? (
+                    ) : applications.length === 0 ? (
                         <div className="text-center py-12 text-gray-500">
                             <Users size={48} className="mx-auto mb-3 opacity-30" />
                             <p className="font-medium">No applications found</p>
@@ -399,8 +387,8 @@ const CourseApplicationsPage = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200">
-                                        {paginatedApplications.map((app) => (
-                                            <tr key={app.id || app.applicationId} className="hover:bg-gray-50 transition">
+                                        {applications.map((app) => (
+                                            <tr key={app.id || app.applicationId} onClick={() => handleViewApplication(app)} className="hover:bg-gray-50 transition cursor-pointer">
                                                 <td className="px-6 py-4">
                                                     <div>
                                                         <div className="font-medium text-gray-900">{app.fullName || app.applicantName}</div>
@@ -427,7 +415,7 @@ const CourseApplicationsPage = () => {
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center justify-end gap-2">
                                                         <button
-                                                            onClick={() => handleViewApplication(app)}
+                                                            onClick={(e) => { e.stopPropagation(); handleViewApplication(app); }}
                                                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
                                                             title="View Details"
                                                         >
@@ -459,15 +447,15 @@ const CourseApplicationsPage = () => {
                                 </table>
                             </div>
 
-                            {/* Pagination */}
+                            {/* Backend Pagination */}
                             {totalPages > 1 && (
                                 <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
                                     <div className="text-sm text-gray-600">
-                                        Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredApplications.length)} of {filteredApplications.length}
+                                        Showing page {currentPage} of {totalPages} ({totalApplications} total applications)
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <button
-                                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                            onClick={() => handlePageChange(currentPage - 1)}
                                             disabled={currentPage === 1}
                                             className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
@@ -477,7 +465,7 @@ const CourseApplicationsPage = () => {
                                             Page {currentPage} of {totalPages}
                                         </span>
                                         <button
-                                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                            onClick={() => handlePageChange(currentPage + 1)}
                                             disabled={currentPage === totalPages}
                                             className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
@@ -510,6 +498,3 @@ const CourseApplicationsPage = () => {
 };
 
 export default CourseApplicationsPage;
-
-
-
