@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { DollarSign, TrendingUp } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 
 const RevenueBreakdownCard = ({ breakdown = {} }) => {
   // Only two revenue sources from backend API
@@ -41,10 +41,7 @@ const RevenueBreakdownCard = ({ breakdown = {} }) => {
 
       {/* Total Revenue */}
       <div className="mb-3 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
-        <div className="flex items-center gap-2 mb-1">
-          <DollarSign size={16} className="text-blue-600" />
-          <span className="text-[9px] text-gray-600 font-medium">Total Revenue</span>
-        </div>
+        <span className="text-[9px] text-gray-600 font-medium">Total Revenue</span>
         <p className="text-xl font-bold text-gray-900">
           GHS {total.toLocaleString('en-US', { minimumFractionDigits: 2 })}
         </p>
@@ -88,8 +85,7 @@ const RevenueBreakdownCard = ({ breakdown = {} }) => {
       {/* Highest Performer */}
       {sources.length > 0 && (
         <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-[10px] text-green-700 font-semibold">
-            ?? Top performer: {sources.reduce((max, s) => s.value > max.value ? s : max, sources[0]).name}
+          <p className="text-[10px] text-green-700 font-semibold"> Top performer: {sources.reduce((max, s) => s.value > max.value ? s : max, sources[0]).name}
           </p>
         </div>
       )}
