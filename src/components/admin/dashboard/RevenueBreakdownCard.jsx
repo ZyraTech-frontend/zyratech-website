@@ -7,29 +7,18 @@ import React from 'react';
 import { DollarSign, TrendingUp } from 'lucide-react';
 
 const RevenueBreakdownCard = ({ breakdown = {} }) => {
+  // Only two revenue sources from backend API
   const sources = [
     { 
       name: 'Training Courses', 
       value: breakdown.training || 0, 
-      color: '#8b5cf6',
+      color: '#10b981', // green
       percentage: 0
     },
     { 
-      name: 'Job Postings', 
-      value: breakdown.jobs || 0, 
-      color: '#3b82f6',
-      percentage: 0
-    },
-    { 
-      name: 'Partnerships', 
-      value: breakdown.partnerships || 0, 
-      color: '#10b981',
-      percentage: 0
-    },
-    { 
-      name: 'Other Services', 
-      value: breakdown.other || 0, 
-      color: '#f59e0b',
+      name: 'Projects', 
+      value: breakdown.projects || 0, 
+      color: '#3b82f6', // blue
       percentage: 0
     }
   ];

@@ -137,7 +137,14 @@ const SuperAdminDashboard = ({ user }) => {
     const quickActions = dashboardData?.quickActions || [];
     const systemHealth = dashboardData?.systemHealth || {};
     const userEngagement = dashboardData?.userEngagement || {};
-    const revenueBreakdown = dashboardData?.revenueBreakdown || {};
+    // Use analytics API data for revenue breakdown (only Training and Projects)
+    const revenueBreakdown = {
+      training: analyticsData?.revenueBySource?.training || 0,
+      projects: analyticsData?.revenueBySource?.projects || 0,
+      growth: analyticsData?.growth?.revenueGrowth 
+        ? parseFloat(analyticsData.growth.revenueGrowth.replace(/[^0-9.-]/g, '')) 
+        : 0
+    };
     const refundData = dashboardData?.refundData || {};
     
     // Use analytics data for monthly trend if available, fallback to dashboard revenueChart
