@@ -71,26 +71,38 @@ const PaymentVerificationPage = () => {
           const details = response.data || response;
           
           if (isProjectPayment) {
-            // Redirect to project payment success
+            // Redirect to project payment success - PASS ALL PAYMENT DETAILS
             navigate('/projects/payment-success', {
               state: {
+                reference: details.reference,
                 projectTitle: details.projectTitle || 'Your Project',
                 amount: details.amount,
+                depositAmount: details.depositAmount,
+                processingFee: details.processingFee,
+                balanceDue: details.balanceDue,
+                paymentPhase: details.paymentPhase,
+                paidAt: details.paidAt,
+                status: details.status,
                 paymentMethod: details.paymentMethod || details.channel || 'Card',
-                transactionId: details.reference,
                 applicantName: details.studentName,
                 applicantEmail: details.studentEmail,
                 projectType: details.projectType || 'business-projects'
               }
             });
           } else {
-            // Redirect to training payment success (default)
+            // Redirect to training payment success - PASS ALL PAYMENT DETAILS
             navigate('/training/payment-success', {
               state: {
+                reference: details.reference,
                 courseTitle: details.courseTitle || details.metadata?.courseName || 'Training Course',
                 amount: details.amount,
+                depositAmount: details.depositAmount,
+                processingFee: details.processingFee,
+                balanceDue: details.balanceDue,
+                paymentPhase: details.paymentPhase,
+                paidAt: details.paidAt,
+                status: details.status,
                 paymentMethod: details.paymentMethod || details.channel || 'Card',
-                transactionId: details.reference,
                 applicantName: details.studentName || details.metadata?.applicantName,
                 applicantEmail: details.studentEmail || details.customer?.email
               }
