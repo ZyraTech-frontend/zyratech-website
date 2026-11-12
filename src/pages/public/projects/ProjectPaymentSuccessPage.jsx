@@ -75,20 +75,41 @@ const ProjectPaymentSuccessPage = () => {
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
-                  <p className="text-sm text-gray-500 mb-1">Transaction ID</p>
-                  <p className="font-mono text-sm font-semibold text-gray-900">{transactionId}</p>
+                  <p className="text-sm text-gray-500 mb-1">Transaction Reference</p>
+                  <p className="font-mono text-sm font-semibold text-gray-900">{location.state?.reference || transactionId}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Payment Method</p>
-                  <p className="font-semibold text-gray-900">{paymentMethod}</p>
+                  <p className="font-semibold text-gray-900 capitalize">{paymentMethod?.replace(/_/g, ' ')}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Deposit Amount</p>
-                  <p className="text-2xl font-bold text-green-600">GHS {amount}</p>
+                  <p className="text-2xl font-bold text-green-600">GHS {location.state?.depositAmount || amount}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 mb-1">Date</p>
-                  <p className="font-semibold text-gray-900">{new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                  <p className="text-sm text-gray-500 mb-1">Processing Fee</p>
+                  <p className="font-semibold text-gray-600">GHS {location.state?.processingFee || '0.00'}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Total Amount Paid</p>
+                  <p className="text-lg font-bold text-blue-600">GHS {amount}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Balance Due</p>
+                  <p className="font-semibold text-amber-600">GHS {location.state?.balanceDue || '0.00'}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Payment Phase</p>
+                  <p className="font-semibold text-gray-900 capitalize">{location.state?.paymentPhase || 'full'}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Date Paid</p>
+                  <p className="font-semibold text-gray-900">
+                    {location.state?.paidAt 
+                      ? new Date(location.state.paidAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+                      : new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+                    }
+                  </p>
                 </div>
               </div>
 
