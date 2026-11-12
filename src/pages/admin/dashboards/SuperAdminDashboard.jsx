@@ -143,13 +143,21 @@ const SuperAdminDashboard = ({ user }) => {
     // Use analytics data for monthly trend if available, fallback to dashboard revenueChart
     const revenueChart = analyticsData?.monthlyTrend && analyticsData.monthlyTrend.length > 0 
         ? analyticsData.monthlyTrend.map(item => ({
-            month: new Date(item.year, item.month - 1).toLocaleString('default', { month: 'short' }),
-            revenue: item.amount || 0
+            month: item.month || '', // month is already a string like "Nov"
+            revenue: parseFloat(item.amount) || 0
           }))
         : dashboardData?.revenueChart || [];
 
     const weeklyRevenue = stats.totalRevenue ? (Number(stats.totalRevenue) * 0.08).toFixed(0) : 0;
-    const weeklyGrowth = analyticsData?.growth?.revenueGrowth || 12.5;
+    // Extract numeric value from growth string if present (e.g., "+100.0%" -> 100)
+    const weeklyGrowth = (() => {
+        const growth = analyticsData?.growth?.revenueGrowth;
+        if (typeof growth === 'string') {
+            const num = parseFloat(growth.replace(/[^0-9.-]/g, ''));
+            return isNaN(num) ? 12.5 : num;
+        }
+        return typeof growth === 'number' ? growth : 12.5;
+    })();
 
     return (
         <div className="min-h-screen bg-gray-50 pb-8">
