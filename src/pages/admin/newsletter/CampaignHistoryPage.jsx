@@ -8,19 +8,8 @@ import newsletterService from '../../../services/newsletterService';
 const CampaignHistoryPage = () => {
   const navigate = useNavigate();
   const { userPermissions, userRole } = useAuth();
-  const canViewCampaigns = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
-
-  if (!canViewCampaigns) {
-    return (
-      <AdminLayout>
-        <div className='p-6'>
-          <AlertCircle className='inline mr-2' />
-          Permission denied
-        </div>
-      </AdminLayout>
-    );
-  }
-
+  
+  // Initialize all hooks BEFORE any conditional returns
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,9 +17,14 @@ const CampaignHistoryPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [statusFilter, setStatusFilter] = useState('all');
 
+  // Now check permissions AFTER hooks
+  const canViewCampaigns = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
+
   useEffect(() => {
-    fetchCampaigns();
-  }, [page, statusFilter]);
+    if (canViewCampaigns) {
+      fetchCampaigns();
+    }
+  }, [page, statusFilter, canViewCampaigns]);
 
   const fetchCampaigns = async () => {
     try {
@@ -59,6 +53,17 @@ const CampaignHistoryPage = () => {
     };
     return config[status] || config.draft;
   };
+
+  if (!canViewCampaigns) {
+    return (
+      <AdminLayout>
+        <div className='p-6'>
+          <AlertCircle className='inline mr-2' />
+          Permission denied
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout>

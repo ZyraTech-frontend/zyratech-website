@@ -1,1 +1,180 @@
-import React, { useState } from 'react'; import { useNavigate } from 'react-router-dom'; import { useAuth } from '../../../hooks/useAuth'; import { useDispatch } from 'react-redux'; import { addNotification } from '../../../store/slices/uiSlice'; import AdminLayout from '../../../components/admin/layout/AdminLayout'; import { Send, AlertCircle, Loader, ArrowLeft, Eye, X } from 'lucide-react'; import newsletterService from '../../../services/newsletterService'; const NewCampaignPage = () => { const navigate = useNavigate(); const dispatch = useDispatch(); const { userPermissions, userRole } = useAuth(); const canSend = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false); if (!canSend) return <AdminLayout><div className='p-6'><AlertCircle /> Permission denied</div></AdminLayout>; const [form, setForm] = useState({ subject: '', content: '', plainTextContent: '' }); const [loading, setLoading] = useState(false); const [showPreview, setShowPreview] = useState(false); const [showConfirm, setShowConfirm] = useState(false); const [error, setError] = useState(null); const handleSend = async () => { try { setLoading(true); const res = await newsletterService.sendCampaign(form.subject, form.content, form.plainTextContent); dispatch(addNotification({ type: 'success', title: 'Sent', message: 'Campaign sent successfully', duration: 5000 })); setTimeout(() => navigate('/admin/newsletter/campaigns'), 1500); } catch (err) { setError(err.response?.data?.message || 'Failed'); } finally { setLoading(false); setShowConfirm(false); } }; return <AdminLayout><div className='p-6 max-w-4xl mx-auto'><button onClick={() => navigate('/admin/newsletter/campaigns')} className='text-blue-600 mb-4'><ArrowLeft className='inline' size={18} /> Back</button><h1 className='text-3xl font-bold mb-6'>Create Newsletter Campaign</h1>{error && <div className='mb-6 bg-red-50 p-4 rounded border border-red-200'><p className='text-red-800'>{error}</p></div>}<div className='bg-white p-6 rounded shadow border'><div className='mb-6'><label className='block font-semibold mb-2'>Subject *</label><input type='text' value={form.subject} onChange={(e) => setForm({...form, subject: e.target.value})} placeholder='Campaign subject' className='w-full px-4 py-2 border rounded' maxLength='200' /></div><div className='mb-6'><label className='block font-semibold mb-2'>Content (HTML) *</label><textarea value={form.content} onChange={(e) => setForm({...form, content: e.target.value})} placeholder='Enter HTML...' className='w-full px-4 py-2 border rounded font-mono' rows='12' /></div><div className='mb-6'><label className='block font-semibold mb-2'>Plain Text (Optional)</label><textarea value={form.plainTextContent} onChange={(e) => setForm({...form, plainTextContent: e.target.value})} placeholder='Auto-generated if empty' className='w-full px-4 py-2 border rounded' rows='6' /></div><div className='flex gap-3'><button onClick={() => setShowPreview(true)} className='px-4 py-2 border rounded'><Eye className='inline' size={18} /> Preview</button><button onClick={() => setShowConfirm(true)} disabled={loading} className='ml-auto px-6 py-2 bg-blue-600 text-white rounded'>{loading ? 'Sending...' : <><Send className='inline' size={18} /> Send</> }</button></div></div>{showPreview && <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'><div className='bg-white p-6 rounded max-w-2xl w-full'><button onClick={() => setShowPreview(false)} className='float-right'><X size={20} /></button><p className='font-semibold mb-4'>{form.subject}</p><div className='bg-gray-50 p-4 rounded' dangerouslySetInnerHTML={{__html: form.content}} /></div></div>}{showConfirm && <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'><div className='bg-white p-6 rounded max-w-sm'><h3 className='font-semibold mb-4'>Send to all subscribers?</h3><div className='flex gap-3'><button onClick={() => setShowConfirm(false)} className='flex-1 px-4 py-2 border rounded'>Cancel</button><button onClick={handleSend} disabled={loading} className='flex-1 px-4 py-2 bg-blue-600 text-white rounded'>{loading ? 'Sending...' : 'Confirm'}</button></div></div></div>}</div></AdminLayout>; }; export default NewCampaignPage;
+﻿import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../hooks/useAuth';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../../store/slices/uiSlice';
+import AdminLayout from '../../../components/admin/layout/AdminLayout';
+import { Send, AlertCircle, Loader, ArrowLeft, Eye, X } from 'lucide-react';
+import newsletterService from '../../../services/newsletterService';
+
+const NewCampaignPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { userPermissions, userRole } = useAuth();
+
+  // Initialize all hooks BEFORE any conditional returns
+  const [form, setForm] = useState({ subject: '', content: '', plainTextContent: '' });
+  const [loading, setLoading] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Now check permissions AFTER hooks
+  const canSend = userRole === 'super_admin' || (userPermissions?.includes('content') ?? false);
+
+  if (!canSend) {
+    return (
+      <AdminLayout>
+        <div className='p-6'>
+          <AlertCircle /> Permission denied
+        </div>
+      </AdminLayout>
+    );
+  }
+
+  const handleSend = async () => {
+    try {
+      setLoading(true);
+      const res = await newsletterService.sendCampaign(
+        form.subject,
+        form.content,
+        form.plainTextContent
+      );
+      dispatch(
+        addNotification({
+          type: 'success',
+          title: 'Sent',
+          message: 'Campaign sent successfully',
+          duration: 5000,
+        })
+      );
+      setTimeout(() => navigate('/admin/newsletter/campaigns'), 1500);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed');
+    } finally {
+      setLoading(false);
+      setShowConfirm(false);
+    }
+  };
+
+  return (
+    <AdminLayout>
+      <div className='p-6 max-w-4xl mx-auto'>
+        <button
+          onClick={() => navigate('/admin/newsletter/campaigns')}
+          className='text-blue-600 mb-4'
+        >
+          <ArrowLeft className='inline' size={18} /> Back
+        </button>
+        <h1 className='text-3xl font-bold mb-6'>Create Newsletter Campaign</h1>
+
+        {error && (
+          <div className='mb-6 bg-red-50 p-4 rounded border border-red-200'>
+            <p className='text-red-800'>{error}</p>
+          </div>
+        )}
+
+        <div className='bg-white p-6 rounded shadow border'>
+          <div className='mb-6'>
+            <label className='block font-semibold mb-2'>Subject *</label>
+            <input
+              type='text'
+              value={form.subject}
+              onChange={(e) => setForm({ ...form, subject: e.target.value })}
+              placeholder='Campaign subject'
+              className='w-full px-4 py-2 border rounded'
+              maxLength='200'
+            />
+          </div>
+
+          <div className='mb-6'>
+            <label className='block font-semibold mb-2'>Content (HTML) *</label>
+            <textarea
+              value={form.content}
+              onChange={(e) => setForm({ ...form, content: e.target.value })}
+              placeholder='Enter HTML...'
+              className='w-full px-4 py-2 border rounded font-mono'
+              rows='12'
+            />
+          </div>
+
+          <div className='mb-6'>
+            <label className='block font-semibold mb-2'>Plain Text (Optional)</label>
+            <textarea
+              value={form.plainTextContent}
+              onChange={(e) => setForm({ ...form, plainTextContent: e.target.value })}
+              placeholder='Auto-generated if empty'
+              className='w-full px-4 py-2 border rounded'
+              rows='6'
+            />
+          </div>
+
+          <div className='flex gap-3'>
+            <button
+              onClick={() => setShowPreview(true)}
+              className='px-4 py-2 border rounded'
+            >
+              <Eye className='inline' size={18} /> Preview
+            </button>
+            <button
+              onClick={() => setShowConfirm(true)}
+              disabled={loading}
+              className='ml-auto px-6 py-2 bg-blue-600 text-white rounded'
+            >
+              {loading ? (
+                'Sending...'
+              ) : (
+                <>
+                  <Send className='inline' size={18} /> Send
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {showPreview && (
+          <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
+            <div className='bg-white p-6 rounded max-w-2xl w-full'>
+              <button
+                onClick={() => setShowPreview(false)}
+                className='float-right'
+              >
+                <X size={20} />
+              </button>
+              <p className='font-semibold mb-4'>{form.subject}</p>
+              <div
+                className='bg-gray-50 p-4 rounded'
+                dangerouslySetInnerHTML={{ __html: form.content }}
+              />
+            </div>
+          </div>
+        )}
+
+        {showConfirm && (
+          <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
+            <div className='bg-white p-6 rounded max-w-sm'>
+              <h3 className='font-semibold mb-4'>Send to all subscribers?</h3>
+              <div className='flex gap-3'>
+                <button
+                  onClick={() => setShowConfirm(false)}
+                  className='flex-1 px-4 py-2 border rounded'
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSend}
+                  disabled={loading}
+                  className='flex-1 px-4 py-2 bg-blue-600 text-white rounded'
+                >
+                  {loading ? 'Sending...' : 'Confirm'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </AdminLayout>
+  );
+};
+
+export default NewCampaignPage;
