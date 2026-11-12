@@ -75,6 +75,8 @@ const ContactInquiryDetailsPage = lazy(() => import('./pages/admin/contact-inqui
 const PendingActionsPage = lazy(() => import('./pages/admin/pending-actions/PendingActionsPage'));
 const NewsletterManagementPage = lazy(() => import('./pages/admin/newsletter/NewsletterManagementPage'));
 const NewsletterTemplatesPage = lazy(() => import('./pages/admin/newsletter/NewsletterTemplatesPage'));
+const NewCampaignPage = lazy(() => import('./pages/admin/newsletter/NewCampaignPage'));
+const CampaignHistoryPage = lazy(() => import('./pages/admin/newsletter/CampaignHistoryPage'));
 const ImpactManagementPage = lazy(() => import('./pages/admin/impact/ImpactManagementPage'));
 const ImpactMetricFormPage = lazy(() => import('./pages/admin/impact/ImpactMetricFormPage'));
 const ImpactStoryFormPage = lazy(() => import('./pages/admin/impact/ImpactStoryFormPage'));
@@ -281,7 +283,7 @@ function App() {
                 <Route path="/admin/contact-inquiries" element={<ProtectedRoute><ContactInquiriesPage /></ProtectedRoute>} />
                 <Route path="/admin/contact-inquiries/:id" element={<ProtectedRoute><ContactInquiryDetailsPage /></ProtectedRoute>} />
                 <Route path="/admin/pending-actions" element={<ProtectedRoute><PendingActionsPage /></ProtectedRoute>} />
-                <Route path="/admin/newsletter" element={<ProtectedRoute><NewsletterManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/newsletter" element={<ProtectedRoute><NewsletterManagementPage /></ProtectedRoute>} />`n                <Route path="/admin/newsletter/send" element={<ProtectedRoute><NewCampaignPage /></ProtectedRoute>} />`n                <Route path="/admin/newsletter/campaigns" element={<ProtectedRoute><CampaignHistoryPage /></ProtectedRoute>} />
                 <Route path="/admin/newsletter/templates" element={<ProtectedRoute><NewsletterTemplatesPage /></ProtectedRoute>} />
 
                 {/* Activity & Reports */}
@@ -420,4 +422,6 @@ function App() {
 }
 
 export default App;
+
+
 
