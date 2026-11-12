@@ -530,6 +530,28 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
           </Link>
 
           <Link
+            to="/admin/newsletter/send"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/newsletter/send')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <Mail size={20} />
+            <span className="font-medium">Send Campaign</span>
+          </Link>
+
+          <Link
+            to="/admin/newsletter/campaigns"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/newsletter/campaigns')
+              ? 'bg-white/15 text-white'
+              : 'text-blue-200 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <Mail size={20} />
+            <span className="font-medium">Campaign History</span>
+          </Link>
+
+          <Link
             to="/admin/newsletter/templates"
             className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin/newsletter/templates')
               ? 'bg-white/15 text-white'
