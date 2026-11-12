@@ -46,7 +46,7 @@ const PaymentVerificationPage = () => {
       // Verify payment with backend
       const response = await paymentService.verifyPayment(paymentRef);
       
-      console.log('💳 Payment verification response:', response);
+      console.log('ðŸ’³ Payment verification response:', response);
       
       // Check for success in multiple possible formats
       const isSuccess = 
