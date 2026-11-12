@@ -143,8 +143,8 @@ const SuperAdminDashboard = ({ user }) => {
     // Use analytics data for monthly trend if available, fallback to dashboard revenueChart
     const revenueChart = analyticsData?.monthlyTrend && analyticsData.monthlyTrend.length > 0 
         ? analyticsData.monthlyTrend.map(item => ({
-            month: item.month || '', // month is already a string like "Nov"
-            revenue: parseFloat(item.amount) || 0
+            month: item.month || '',
+            amount: parseFloat(item.amount) || 0  // Keep 'amount' key to match ChartCard expectations
           }))
         : dashboardData?.revenueChart || [];
 
