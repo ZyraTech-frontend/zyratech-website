@@ -591,7 +591,66 @@ const getDashboardData = async () => {
   }
 };
 
-export default {
-  getDashboardData
+// Analytics API - Fetch real monthly revenue data
+const getAnalyticsDashboard = async () => {
+  try {
+    console.log('[Analytics API] Fetching dashboard analytics...');
+    
+    // Call the new analytics endpoint
+    const response = await api.get('/admin/analytics/dashboard');
+    
+    // Extract data from response - backend returns: { success, data: { ... } }
+    const analyticsData = response.data?.data || {};
+    
+    console.log('[Analytics API] Response received:', {
+      totalRevenue: analyticsData.totalRevenue,
+      monthlyTrendLength: Array.isArray(analyticsData.monthlyTrend) ? analyticsData.monthlyTrend.length : 0,
+      revenueBySource: analyticsData.revenueBySource,
+      metricsKeys: analyticsData.metrics ? Object.keys(analyticsData.metrics) : [],
+      growth: analyticsData.growth
+    });
+    
+    return {
+      totalRevenue: analyticsData.totalRevenue || 0,
+      monthlyTrend: Array.isArray(analyticsData.monthlyTrend) ? analyticsData.monthlyTrend : [],
+      revenueBySource: analyticsData.revenueBySource || { training: 0, projects: 0 },
+      metrics: analyticsData.metrics || {
+        totalPayments: 0,
+        successfulPayments: 0,
+        failedPayments: 0,
+        refundedPayments: 0,
+        averageAmount: 0
+      },
+      growth: analyticsData.growth || {
+        revenueGrowth: 0,
+        paymentsGrowth: 0
+      }
+    };
+  } catch (error) {
+    console.error('[Analytics API] Error fetching analytics:', error);
+    console.error('[Analytics API] Error details:', error.response?.data || error.message);
+    
+    // Return empty/safe defaults
+    return {
+      totalRevenue: 0,
+      monthlyTrend: [],
+      revenueBySource: { training: 0, projects: 0 },
+      metrics: {
+        totalPayments: 0,
+        successfulPayments: 0,
+        failedPayments: 0,
+        refundedPayments: 0,
+        averageAmount: 0
+      },
+      growth: {
+        revenueGrowth: 0,
+        paymentsGrowth: 0
+      }
+    };
+  }
 };
 
+export default {
+  getDashboardData,
+  getAnalyticsDashboard
+};

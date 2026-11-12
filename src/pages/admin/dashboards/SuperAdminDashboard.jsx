@@ -1,6 +1,7 @@
 /**
  * Super Admin Dashboard - Clean Professional Layout
  * Money First - Revenue at the TOP
+ * Analytics Data Integration - Real monthly revenue trends
  */
 
 import React, { useEffect, useState } from 'react';
@@ -60,14 +61,43 @@ const SuperAdminDashboard = ({ user }) => {
         quickActions: []
     });
     
+    const [analyticsData, setAnalyticsData] = useState({
+        totalRevenue: 0,
+        monthlyTrend: [],
+        revenueBySource: { training: 0, projects: 0 },
+        metrics: {
+            totalPayments: 0,
+            successfulPayments: 0,
+            failedPayments: 0,
+            refundedPayments: 0,
+            averageAmount: 0
+        },
+        growth: {
+            revenueGrowth: 0,
+            paymentsGrowth: 0
+        }
+    });
+    
     const [currentDate] = useState(new Date());
     
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
             setError(null);
-            const data = await dashboardService.getDashboardData();
-            setDashboardData(data);
+            
+            // Fetch main dashboard data and analytics in parallel
+            const [dashboardDataRes, analyticsDataRes] = await Promise.all([
+                dashboardService.getDashboardData(),
+                dashboardService.getAnalyticsDashboard()
+            ]);
+            
+            setDashboardData(dashboardDataRes);
+            setAnalyticsData(analyticsDataRes);
+            
+            console.log('[Dashboard] Data loaded successfully:');
+            console.log('[Dashboard] Analytics - Monthly Trend:', analyticsDataRes.monthlyTrend);
+            console.log('[Dashboard] Analytics - Revenue by Source:', analyticsDataRes.revenueBySource);
+            console.log('[Dashboard] Analytics - Growth:', analyticsDataRes.growth);
         } catch (error) {
             console.error('[Dashboard] Error fetching data:', error);
             setError('Failed to load dashboard data. Please try refreshing.');
@@ -102,7 +132,6 @@ const SuperAdminDashboard = ({ user }) => {
     }
 
     const stats = dashboardData?.stats || {};
-    const revenueChart = dashboardData?.revenueChart || [];
     const recentActivity = dashboardData?.recentActivity || [];
     const pendingActions = dashboardData?.pendingActions || [];
     const quickActions = dashboardData?.quickActions || [];
@@ -110,9 +139,17 @@ const SuperAdminDashboard = ({ user }) => {
     const userEngagement = dashboardData?.userEngagement || {};
     const revenueBreakdown = dashboardData?.revenueBreakdown || {};
     const refundData = dashboardData?.refundData || {};
+    
+    // Use analytics data for monthly trend if available, fallback to dashboard revenueChart
+    const revenueChart = analyticsData?.monthlyTrend && analyticsData.monthlyTrend.length > 0 
+        ? analyticsData.monthlyTrend.map(item => ({
+            month: new Date(item.year, item.month - 1).toLocaleString('default', { month: 'short' }),
+            revenue: item.amount || 0
+          }))
+        : dashboardData?.revenueChart || [];
 
     const weeklyRevenue = stats.totalRevenue ? (Number(stats.totalRevenue) * 0.08).toFixed(0) : 0;
-    const weeklyGrowth = 12.5;
+    const weeklyGrowth = analyticsData?.growth?.revenueGrowth || 12.5;
 
     return (
         <div className="min-h-screen bg-gray-50 pb-8">
@@ -201,17 +238,17 @@ const SuperAdminDashboard = ({ user }) => {
                     {/* Revenue Card (4 cols - wider for better display) */}
                     <div className="md:col-span-4">
                         <FinancialCard
-                            totalRevenue={stats.totalRevenue || 0}
+                            totalRevenue={analyticsData?.totalRevenue || stats.totalRevenue || 0}
                             weeklyRevenue={weeklyRevenue}
                             weeklyGrowth={weeklyGrowth}
                         />
                     </div>
 
-                    {/* Revenue Chart (5 cols) */}
+                    {/* Revenue Chart (5 cols) - Using Analytics Monthly Trend */}
                     <div className="md:col-span-5">
                         <ChartCard
                             title="Revenue Trend"
-                            subtitle="Last 6 months"
+                            subtitle="Last 6 months (from analytics API)"
                             data={revenueChart}
                             color="#10b981"
                         />
@@ -305,9 +342,3 @@ const SuperAdminDashboard = ({ user }) => {
 };
 
 export default SuperAdminDashboard;
-
-
-
-
-
-
