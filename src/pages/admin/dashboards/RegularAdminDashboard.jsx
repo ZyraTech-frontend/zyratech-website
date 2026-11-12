@@ -63,15 +63,26 @@ const RegularAdminDashboard = ({ user: propUser }) => {
     const [, setTick] = useState(0);
     const [jobsData, setJobsData] = useState([]);
     const [dashboardData, setDashboardData] = useState(null);
+    const [analyticsData, setAnalyticsData] = useState({
+        totalRevenue: 0,
+        monthlyTrend: [],
+        revenueBySource: { training: 0, projects: 0 },
+        growth: { revenueGrowth: 0, paymentsGrowth: 0 }
+    });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Fetch dashboard data (revenue, charts, etc)
+    // Fetch dashboard data and analytics API in parallel
     const fetchDashboardData = async () => {
         try {
             setError(null);
-            const data = await dashboardService.getDashboardData();
-            setDashboardData(data);
+            const [dashboardDataRes, analyticsDataRes] = await Promise.all([
+                dashboardService.getDashboardData(),
+                dashboardService.getAnalyticsDashboard()
+            ]);
+            setDashboardData(dashboardDataRes);
+            setAnalyticsData(analyticsDataRes);
+            console.log('[RegularAdminDashboard] Analytics loaded:', analyticsDataRes.totalRevenue);
         } catch (err) {
             console.error('[RegularAdminDashboard] Error fetching data:', err);
             setError('Failed to load revenue data');
@@ -171,11 +182,34 @@ const RegularAdminDashboard = ({ user: propUser }) => {
 
     // Extract data from dashboard
     const stats = dashboardData?.stats || {};
-    const revenueChart = dashboardData?.revenueChart || [];
-    const revenueBreakdown = dashboardData?.revenueBreakdown || {};
     const refundData = dashboardData?.refundData || {};
-    const weeklyRevenue = stats.totalRevenue ? (Number(stats.totalRevenue) * 0.08).toFixed(0) : 0;
-    const weeklyGrowth = 12.5;
+    
+    // Use analytics API data for revenue breakdown (only Training and Projects)
+    const revenueBreakdown = {
+        training: analyticsData?.revenueBySource?.training || 0,
+        projects: analyticsData?.revenueBySource?.projects || 0,
+        growth: analyticsData?.growth?.revenueGrowth 
+            ? parseFloat(analyticsData.growth.revenueGrowth.replace(/[^0-9.-]/g, '')) 
+            : 0
+    };
+    
+    // Use analytics data for monthly trend if available
+    const revenueChart = analyticsData?.monthlyTrend && analyticsData.monthlyTrend.length > 0 
+        ? analyticsData.monthlyTrend.map(item => ({
+            month: item.month || '',
+            amount: parseFloat(item.amount) || 0
+        }))
+        : dashboardData?.revenueChart || [];
+    
+    const weeklyRevenue = analyticsData?.totalRevenue ? (Number(analyticsData.totalRevenue) * 0.08).toFixed(0) : 0;
+    const weeklyGrowth = (() => {
+        const growth = analyticsData?.growth?.revenueGrowth;
+        if (typeof growth === 'string') {
+            const num = parseFloat(growth.replace(/[^0-9.-]/g, ''));
+            return isNaN(num) ? 0 : num;
+        }
+        return typeof growth === 'number' ? growth : 0;
+    })();
 
     // Extract real activity and pending data from dashboard
     const recentActivityData = dashboardData?.recentActivity || [];
@@ -304,7 +338,7 @@ const RegularAdminDashboard = ({ user: propUser }) => {
                     {/* Revenue Card (4 cols) */}
                     <div className="md:col-span-4">
                         <FinancialCard
-                            totalRevenue={stats.totalRevenue || 0}
+                            totalRevenue={analyticsData?.totalRevenue || stats.totalRevenue || 0}
                             weeklyRevenue={weeklyRevenue}
                             weeklyGrowth={weeklyGrowth}
                         />
