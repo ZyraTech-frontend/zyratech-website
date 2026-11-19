@@ -83,7 +83,7 @@ export const contactInquiryService = {
 
   /**
    * Reply to inquiry - sends response email and updates status to replied (admin)
-   * POST /admin/contact/:id/reply
+   * POST /admin/contact-inquiries/:id/reply
    * Automatically handles:
    * - Status update to replied
    * - Email notification to customer
@@ -93,8 +93,8 @@ export const contactInquiryService = {
    * @returns {Promise} Updated inquiry with reply info
    */
   replyToInquiry: async (id, replyMessage) => {
-    const response = await api.post('/admin/contact/' + id + '/reply', {
-      replyMessage: replyMessage
+    const response = await api.post('/admin/contact-inquiries/' + id + '/reply', {
+      message: replyMessage
     });
     return response.data?.data || response.data;
   },
