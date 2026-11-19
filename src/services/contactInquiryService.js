@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Contact Inquiry Service
  * Contact form submissions and inquiry management
  * 
@@ -14,10 +14,8 @@ import api from './api';
 
 export const INQUIRY_STATUS = {
   'new': 'New',
-  'viewed': 'Viewed',
-  'in_progress': 'In Progress',
-  'responded': 'Responded',
-  'closed': 'Closed'
+  'read': 'Read',
+  'replied': 'Replied'
 };
 
 export const contactInquiryService = {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, Phone, Calendar, Send, RefreshCw, Copy, Check } from 'lucide-react';
 import { useDispatch } from 'react-redux';
@@ -114,18 +114,14 @@ const ContactInquiryDetailsPage = () => {
     switch (statusValue) {
       case 'new':
         return 'bg-blue-100 text-blue-800';
-      case 'viewed':
+      case 'read':
         return 'bg-yellow-100 text-yellow-800';
-      case 'in_progress':
-        return 'bg-purple-100 text-purple-800';
-      case 'responded':
+      case 'replied':
         return 'bg-green-100 text-green-800';
-      case 'closed':
-        return 'bg-gray-100 text-gray-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
-  };
+  }
 
   if (loading) {
     return (
