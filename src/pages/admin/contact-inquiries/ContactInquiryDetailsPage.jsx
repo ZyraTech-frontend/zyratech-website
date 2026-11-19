@@ -54,33 +54,17 @@ const ContactInquiryDetailsPage = () => {
 
     setUpdating(true);
     try {
-      const updated = await contactInquiryService.updateInquiry(id, {
-        status,
-        response
-      });
+      const updated = await contactInquiryService.replyToInquiry(id, response);
       setInquiry(updated);
 
-      // Send response email via AWS SES
-      try {
-        await emailNotificationService.sendContactResponse({
-          email: inquiry.email,
-          name: inquiry.name,
-          response: response,
-          subject: inquiry.subject
-        });
-      } catch (emailError) {
-        console.error('Failed to send response email:', emailError);
-        // Don't fail the update if email fails
-      }
-
       dispatch(addNotification({
-        message: 'Inquiry updated and response email sent successfully',
+        message: 'Reply sent successfully and inquiry status updated',
         type: 'success'
       }));
     } catch (error) {
       console.error('Failed to update inquiry:', error);
       dispatch(addNotification({
-        message: error.response?.data?.message || 'Failed to update inquiry',
+        message: error.response?.data?.message || 'Failed to send reply',
         type: 'error'
       }));
     } finally {

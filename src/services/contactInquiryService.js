@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Contact Inquiry Service
  * Contact form submissions and inquiry management
  * 
@@ -6,7 +6,7 @@
  * - POST /contact - Submit contact inquiry
  * - GET /admin/contact-inquiries - Get all inquiries (admin)
  * - GET /admin/contact-inquiries/:id - Get single inquiry (admin)
- * - PATCH /admin/contact-inquiries/:id - Update inquiry status (admin)
+ * - POST /admin/contact/:id/reply - Send reply and update status (admin)
  * - DELETE /admin/contact-inquiries/:id - Delete inquiry (admin)
  */
 
@@ -77,24 +77,24 @@ export const contactInquiryService = {
    * @returns {Promise} Inquiry details
    */
   getInquiryById: async (id) => {
-    const response = await api.get(`/admin/contact-inquiries/${id}`);
+    const response = await api.get('/admin/contact-inquiries/' + id);
     return response.data?.data || response.data;
   },
 
   /**
-   * Update inquiry status and add response (admin)
-   * PATCH /admin/contact-inquiries/:id
+   * Reply to inquiry - sends response email and updates status to replied (admin)
+   * POST /admin/contact/:id/reply
+   * Automatically handles:
+   * - Status update to replied
+   * - Email notification to customer
+   * 
    * @param {string} id - Inquiry ID
-   * @param {Object} data - Update data
-   * @param {string} data.status - New status
-   * @param {string} data.response - Response message to send to inquirer
-   * @returns {Promise} Updated inquiry
+   * @param {string} replyMessage - Admin response message
+   * @returns {Promise} Updated inquiry with reply info
    */
-  updateInquiry: async (id, data) => {
-    const response = await api.patch(`/admin/contact-inquiries/${id}`, {
-      status: data.status,
-      response: data.response || '',
-      updatedAt: new Date().toISOString()
+  replyToInquiry: async (id, replyMessage) => {
+    const response = await api.post('/admin/contact/' + id + '/reply', {
+      replyMessage: replyMessage
     });
     return response.data?.data || response.data;
   },
@@ -106,7 +106,7 @@ export const contactInquiryService = {
    * @returns {Promise} Deletion response
    */
   deleteInquiry: async (id) => {
-    const response = await api.delete(`/admin/contact-inquiries/${id}`);
+    const response = await api.delete('/admin/contact-inquiries/' + id);
     return response.data;
   }
 };
